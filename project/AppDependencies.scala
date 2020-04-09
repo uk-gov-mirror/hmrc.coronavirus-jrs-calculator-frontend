@@ -9,7 +9,8 @@ object AppDependencies {
 
     "uk.gov.hmrc"             %% "govuk-template"           % "5.54.0-play-26",
     "uk.gov.hmrc"             %% "play-ui"                  % "8.8.0-play-26",
-    "uk.gov.hmrc"             %% "bootstrap-play-26"        % "1.7.0"
+    "uk.gov.hmrc"             %% "bootstrap-play-26"        % "1.7.0",
+    "uk.gov.hmrc"             %% "tax-year"                 % "1.0.0"
   )
 
   val test = Seq(
