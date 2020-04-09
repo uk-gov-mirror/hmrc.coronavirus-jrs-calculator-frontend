@@ -24,8 +24,8 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import scala.concurrent.Future
 
 @Singleton
-class CalculatorController @Inject()(mcc: MessagesControllerComponents,
-                                     warmUpView: warm_up) extends FrontendController(mcc) {
+class CalculatorController @Inject()(mcc: MessagesControllerComponents, warmUpView: warm_up)
+    extends FrontendController(mcc) {
 
   def warmUp = Action.async { implicit request =>
     Future successful Ok(warmUpView())

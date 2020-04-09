@@ -16,6 +16,4 @@
 
 package uk.gov.hmrc.coronavirus.jrs.calculator.services
 
-class CalculatorService {
-
-}
+class CalculatorService {}
