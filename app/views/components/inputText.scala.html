@@ -1,0 +1,35 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(govukInput: GovukInput)
+
+@(
+        form: Form[_],
+        id: String,
+        name: String,
+        label: String,
+        isPageHeading: Boolean,
+        headingMessageArgs: Seq[String] = Seq(),
+        hint: Option[String] = None,
+        classes: Option[String] = None,
+        stripWhitespace: Boolean = false
+)(implicit messages: Messages)
+
+@govukInput(Input(
+  id,
+  name,
+  classes = classes.fold("")(x => x),
+  label = Label(
+    content = Text(messages(label, headingMessageArgs:_*)),
+    isPageHeading = isPageHeading,
+    classes = if(isPageHeading) "govuk-label--xl" else ""
+  ),
+  hint = hint.map(hintKey => Hint(
+      content = HtmlContent(messages(hintKey))
+  )),
+  value = form(name).value,
+  errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
+))
+

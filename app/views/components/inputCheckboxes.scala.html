@@ -1,0 +1,30 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(govukCheckboxes: GovukCheckboxes)
+
+@(
+        form: Form[_],
+        legend: String,
+        items: Seq[CheckboxItem],
+        legendAsHeading: Boolean = true,
+        hint: Option[Html] = None
+)(implicit messages: Messages)
+
+    @govukCheckboxes(Checkboxes(
+        name = "value",
+        fieldset = Some(Fieldset(
+            legend = Some(Legend(
+                content = Text(messages(legend)),
+                isPageHeading = legendAsHeading,
+                classes = "govuk-fieldset__legend--xl"
+            ))
+        )),
+        hint = hint.map(hintHtml => Hint(
+            content = HtmlContent(hintHtml)
+        )),
+        items = items,
+        errorMessage = form.errors.headOption.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
+    ))

@@ -1,0 +1,16 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(govukWarningText: GovukWarningText)
+
+@(msg: String)(implicit messages: Messages)
+
+@govukWarningText(WarningText(
+                              iconFallbackText = Text(messages(msg)),
+                              classes = "",
+                              attributes = Map.empty,
+                              content = Text(messages(msg))
+                              )
+                            )

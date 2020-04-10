@@ -1,0 +1,19 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(govukPhaseBanner: GovukPhaseBanner, appConfig: config.FrontendAppConfig)
+
+@(phase: String)(implicit request: Request[_], messages: Messages)
+
+@feedbackBanner = {
+    @messages("feedback.before")
+    <a class='govuk-link' href='@{appConfig.feedbackUrl}'>@messages("feedback.link")</a>
+    @messages("feedback.after")
+}
+
+@govukPhaseBanner(PhaseBanner(
+    tag = Some(Tag(content = Text(phase))),
+    content = HtmlContent(feedbackBanner)
+))

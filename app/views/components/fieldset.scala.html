@@ -1,0 +1,18 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(govukFieldset: GovukFieldset)
+
+@(legend: String, asHeading: Boolean = true)(content: Html)(implicit messages: Messages)
+
+@govukFieldset(Fieldset(
+    legend = Some(Legend(
+        content = Text(messages(legend)),
+        classes = if(asHeading) "govuk-fieldset__legend--xl" else "",
+        isPageHeading = asHeading
+    )),
+    html = content
+))
+

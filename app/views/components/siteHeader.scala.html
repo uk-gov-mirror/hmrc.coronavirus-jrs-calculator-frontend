@@ -1,0 +1,16 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(govukHeader: GovukHeader)
+
+@(showSignOut: Boolean = true)(implicit messages: Messages)
+
+@govukHeader(Header(
+    homepageUrl = Some(controllers.routes.IndexController.onPageLoad().url),
+    serviceName = Some(messages("service.name")),
+    serviceUrl = Some(controllers.routes.IndexController.onPageLoad().url),
+    containerClasses = Some("govuk-width-container"),
+    navigation = None // TODO: Put in signout link, or use HMRC header (preferably the latter)
+))

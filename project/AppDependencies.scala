@@ -1,26 +1,40 @@
-import play.core.PlayVersion.current
-import play.sbt.PlayImport._
-import sbt.Keys.libraryDependencies
 import sbt._
 
 object AppDependencies {
+  import play.core.PlayVersion
 
   val compile = Seq(
-
-    "uk.gov.hmrc"             %% "govuk-template"                % "5.54.0-play-26",
-    "uk.gov.hmrc"             %% "play-ui"                       % "8.8.0-play-26",
-    "uk.gov.hmrc"             %% "play-conditional-form-mapping" % "1.2.0-play-26",
-    "uk.gov.hmrc"             %% "bootstrap-play-26"             % "1.7.0",
-    "uk.gov.hmrc"             %% "tax-year"                      % "1.0.0"
+    play.sbt.PlayImport.ws,
+    "org.reactivemongo" %% "play2-reactivemongo"            % "0.18.6-play26",
+    "uk.gov.hmrc"       %% "logback-json-logger"            % "4.8.0",
+    "uk.gov.hmrc"       %% "play-health"                    % "3.14.0-play-26",
+    "uk.gov.hmrc"       %% "play-conditional-form-mapping"  % "1.2.0-play-26",
+    "uk.gov.hmrc"       %% "bootstrap-play-26"              % "1.6.0",
+    "uk.gov.hmrc"       %% "play-whitelist-filter"          % "3.1.0-play-26",
+    "uk.gov.hmrc"       %% "play-frontend-govuk"            % "0.40.0-play-26",
+    "uk.gov.hmrc"       %% "tax-year"                       % "1.0.0"
   )
 
   val test = Seq(
-    "uk.gov.hmrc"             %% "bootstrap-play-26"        % "1.7.0" % Test classifier "tests",
-    "org.scalatest"           %% "scalatest"                % "3.0.8"                 % "test",
-    "org.jsoup"               %  "jsoup"                    % "1.10.2"                % "test",
-    "com.typesafe.play"       %% "play-test"                % current                 % "test",
-    "org.pegdown"             %  "pegdown"                  % "1.6.0"                 % "test, it",
-    "org.scalatestplus.play"  %% "scalatestplus-play"       % "3.1.2"                 % "test, it"
-  )
+    "org.scalatest"               %% "scalatest"          % "3.0.8",
+    "org.scalatestplus.play"      %% "scalatestplus-play" % "3.1.2",
+    "org.pegdown"                 %  "pegdown"            % "1.6.0",
+    "org.jsoup"                   %  "jsoup"              % "1.12.1",
+    "com.typesafe.play"           %% "play-test"          % PlayVersion.current,
+    "org.mockito"                 %  "mockito-all"        % "1.10.19",
+    "org.scalacheck"              %% "scalacheck"         % "1.14.1"
+  ).map(_ % Test)
 
+  def apply(): Seq[ModuleID] = compile ++ test
+
+  val akkaVersion = "2.5.23"
+  val akkaHttpVersion = "10.0.15"
+
+  val overrides = Seq(
+    "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+    "com.typesafe.akka" %% "akka-protobuf" % akkaVersion,
+    "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+    "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+    "com.typesafe.akka" %% "akka-http-core" % akkaHttpVersion
+  )
 }
