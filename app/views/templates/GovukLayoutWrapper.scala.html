@@ -1,0 +1,69 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@import views.components.FooterLinks
+
+@this(
+    govukLayout: GovukLayout,
+    govukPhaseBanner: GovukPhaseBanner,
+    govukBackLink: GovukBackLink,
+    siteHeader: components.siteHeader,
+    phaseBanner: components.phaseBanner,
+    languageSelection: components.languageSelection,
+    link: components.link,
+    gtmSnippet: GtmSnippet,
+    appConfig: config.FrontendAppConfig,
+    footerLinks: FooterLinks
+)
+
+@(pageTitle: Option[String] = None, timeout: Boolean = true, js: Option[Html] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+
+@head = {
+    @gtmSnippet()
+    <!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
+}
+
+@scripts = {
+    <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+    <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
+    <script>window.GOVUKFrontend.initAll();</script>
+    <script>
+        if (@timeout) {
+            timeoutDialog({
+                title: '@messages("timeout.title")',
+                message: '@messages("timeout.message")',
+                keepAliveButtonText: '@messages("timeout.keepAlive")',
+                signOutButtonText: '@messages("timeout.signOut")',
+                timeout: @{appConfig.timeout},
+                countdown: @{appConfig.countdown},
+                keepAliveUrl: '@{request.uri}',
+                signOutUrl: '' // TODO: Put in signout URL
+            });
+        };
+    </script>
+    @js.map(x => x)
+}
+
+@beforeContentBlock = {
+
+    @phaseBanner("alpha")
+
+    @govukBackLink(BackLink(href = "#", content = Text("Back"), attributes = Map("id" -> "back-link")))
+
+    @if(appConfig.languageTranslationEnabled) {
+        @languageSelection()
+    }
+}
+
+@govukLayout(
+  pageTitle = pageTitle,
+  headBlock = Some(head),
+  beforeContentBlock = Some(beforeContentBlock),
+  bodyEndBlock = None,
+  scriptsBlock = Some(scripts),
+  headerBlock = Some(siteHeader(timeout)),
+  footerItems = footerLinks.items
+)(contentBlock)

@@ -1,0 +1,18 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+    main_template: templates.GovukLayoutWrapper,
+    h1: components.h1
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@main_template(Some(titleNoForm("session_expired.title")), timeout = false) {
+
+    @h1(messages("session_expired.heading"))
+
+    <p class="govuk-body">@messages("session_expired.guidance")</p>
+}
