@@ -16,7 +16,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   lazy val host: String = configuration.get[String]("host")
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
-  private val contactFormServiceIdentifier = "seiss"
+  private val contactFormServiceIdentifier = "jrsc"
 
   val gtmContainer: Option[String] = (Try {
     configuration.get[String]("gtm.container")
