@@ -1,0 +1,11 @@
+@this(
+    govukLayout: templates.GovukLayoutWrapper,
+    h1: components.h1
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(titleNoForm("$className;format="decap"$.title"))) {
+
+    @h1("$className;format="decap"$.heading")
+}
