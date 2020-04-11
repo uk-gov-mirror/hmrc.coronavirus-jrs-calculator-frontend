@@ -13,3 +13,8 @@ GET        /check-your-answers                          controllers.CheckYourAns
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET        /accessibility                               controllers.AccessibilityStatementController.onPageLoad
+
+GET        /claim-period                  controllers.ClaimPeriodController.onPageLoad(mode: Mode = NormalMode)
+POST       /claim-period                  controllers.ClaimPeriodController.onSubmit(mode: Mode = NormalMode)
+GET        /change-claim-period                        controllers.ClaimPeriodController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-claim-period                        controllers.ClaimPeriodController.onSubmit(mode: Mode = CheckMode)

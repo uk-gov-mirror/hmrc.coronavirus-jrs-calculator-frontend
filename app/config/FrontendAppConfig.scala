@@ -5,6 +5,8 @@
 
 package config
 
+import java.time.LocalDate
+
 import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 
@@ -43,5 +45,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   lazy val privacy: String         = host + configuration.get[String]("urls.footer.privacy")
   lazy val termsConditions: String = host + configuration.get[String]("urls.footer.termsConditions")
   lazy val govukHelp: String       = configuration.get[String]("urls.footer.govukHelp")
+
+  lazy val schemeStartDate = LocalDate.parse(configuration.get[String]("scheme.startDate"))
+  lazy val schemeEndDate = LocalDate.parse(configuration.get[String]("scheme.endDate"))
 
 }
