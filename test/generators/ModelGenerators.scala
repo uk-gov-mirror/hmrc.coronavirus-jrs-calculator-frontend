@@ -13,8 +13,8 @@ import org.scalacheck.{Arbitrary, Gen}
 trait ModelGenerators {
 
   val claimPeriodModelGen = for {
-    startDate <- periodDatesBetween(LocalDate.of(1900, 1, 1), LocalDate.of(2100, 1, 1))
-    endDate <- periodDatesBetween(LocalDate.of(1900, 1, 1), LocalDate.of(2100, 1, 1))
+    startDate <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
+    endDate   <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
   } yield ClaimPeriodModel(startDate, endDate)
 
   implicit lazy val arbitraryClaimPeriodModel: Arbitrary[ClaimPeriodModel] = Arbitrary(claimPeriodModelGen)
@@ -24,9 +24,8 @@ trait ModelGenerators {
     def toMillis(date: LocalDate): Long =
       date.atStartOfDay.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
 
-    Gen.choose(toMillis(min), toMillis(max)).map {
-      millis =>
-        Instant.ofEpochMilli(millis).atOffset(ZoneOffset.UTC).toLocalDate
+    Gen.choose(toMillis(min), toMillis(max)).map { millis =>
+      Instant.ofEpochMilli(millis).atOffset(ZoneOffset.UTC).toLocalDate
     }
   }
 }

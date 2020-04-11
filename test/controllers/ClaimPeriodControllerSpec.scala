@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class ClaimPeriodControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new ClaimPeriodFormProvider()
+  val formProvider = new ClaimPeriodFormProvider(frontendAppConfig)
   private def form = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
@@ -39,21 +39,19 @@ class ClaimPeriodControllerSpec extends SpecBase with MockitoSugar {
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, claimPeriodRoute)
-      .withCSRFToken
+    FakeRequest(GET, claimPeriodRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, claimPeriodRoute)
-      .withCSRFToken
+    FakeRequest(POST, claimPeriodRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
         "startDateValue.day"   -> validAnswer.startDate.getDayOfMonth.toString,
         "startDateValue.month" -> validAnswer.startDate.getMonthValue.toString,
         "startDateValue.year"  -> validAnswer.startDate.getYear.toString,
-        "endDateValue.day"   -> validAnswer.endDate.getDayOfMonth.toString,
-        "endDateValue.month" -> validAnswer.endDate.getMonthValue.toString,
-        "endDateValue.year"  -> validAnswer.endDate.getYear.toString
+        "endDateValue.day"     -> validAnswer.endDate.getDayOfMonth.toString,
+        "endDateValue.month"   -> validAnswer.endDate.getMonthValue.toString,
+        "endDateValue.year"    -> validAnswer.endDate.getYear.toString
       )
 
   "ClaimPeriod Controller" must {
@@ -159,8 +157,7 @@ class ClaimPeriodControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, claimPeriodRoute)
-          .withCSRFToken
+        FakeRequest(POST, claimPeriodRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
