@@ -66,7 +66,22 @@ class NicCalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
       FourWeekly,
       FurloughPayment(5000.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
       TaxYearEnding2020,
-      226.32)
+      226.32),
+    (
+      FourWeekly,
+      FurloughPayment(670.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+      TaxYearEnding2021,
+      0.00),
+    (
+      FourWeekly,
+      FurloughPayment(1000.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+      TaxYearEnding2021,
+      44.71),
+    (
+      FourWeekly,
+      FurloughPayment(5000.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+      TaxYearEnding2021,
+      224.66),
   )
 
 }

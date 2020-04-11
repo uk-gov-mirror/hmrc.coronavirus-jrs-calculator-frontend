@@ -10,6 +10,7 @@ object FrequencyTaxYearThresholdMapping {
   val mappings: Map[FrequencyTaxYearKey, Threshold] = Map(
     FrequencyTaxYearKey(Monthly, TaxYearEnding2020)    -> Threshold(719.00, 2500.00),
     FrequencyTaxYearKey(Monthly, TaxYearEnding2021)    -> Threshold(732.00, 2500.00),
-    FrequencyTaxYearKey(FourWeekly, TaxYearEnding2020) -> Threshold(664.00, 2304.00)
+    FrequencyTaxYearKey(FourWeekly, TaxYearEnding2020) -> Threshold(664.00, 2304.00),
+    FrequencyTaxYearKey(FourWeekly, TaxYearEnding2021) -> Threshold(676.00, 2304.00)
   )
 }
