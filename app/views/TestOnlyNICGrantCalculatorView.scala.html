@@ -1,0 +1,61 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        errorSummary: components.errorSummary,
+        inputDate: components.inputDate,
+        inputCurrency: components.inputCurrency,
+        inputRadio: components.inputRadio,
+        formHelper: FormWithCSRF,
+        button: components.button,
+        h1: components.h1
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(title(form, "testOnlyNICGrantCalculator.title"))) {
+
+    @formHelper(action = TestOnlyNICGrantCalculatorController.onSubmit(mode), 'autoComplete -> "on") {
+
+        @errorSummary(form.errors)
+
+        @h1("testOnlyNICGrantCalculator.heading")
+
+        @inputDate(
+            form = form,
+            legendContent = "testOnlyNICGrantCalculator.startDate.legend",
+            id = "startDate",
+            legendAsPageHeading = false,
+            legendClasses = "govuk-label--m"
+        )
+
+        @inputDate(
+            form = form,
+            legendContent = "testOnlyNICGrantCalculator.endDate.legend",
+            id = "endDate",
+            legendAsPageHeading = false,
+            legendClasses = "govuk-label--m"
+        )
+
+        @inputCurrency(
+            form = form,
+            name = "furloughedAmount",
+            id = "furloughedAmount",
+            label = "testOnlyNICGrantCalculator.amount.legend",
+            isPageHeading = false
+        )
+
+        @inputRadio(
+            form = form,
+            legend = "frequency",
+            items = PaymentFrequency.items,
+            legendAsHeading = false,
+            classes = "govuk-label--m"
+        )
+
+        @button("site.saveAndContinue")
+    }
+}

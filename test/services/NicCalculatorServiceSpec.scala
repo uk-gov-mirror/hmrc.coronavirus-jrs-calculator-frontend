@@ -8,7 +8,8 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{FourWeekly, FurloughPayment, Monthly, PayPeriod, TaxYearEnding2020, TaxYearEnding2021}
+import models.PaymentFrequency.{FourWeekly, Monthly}
+import models.{FurloughPayment, PayPeriod, TaxYearEnding2020, TaxYearEnding2021}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class NicCalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {

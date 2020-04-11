@@ -1,35 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration ClaimPeriod"
+echo "Applying migration TestOnlyNICGrantCalculator"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /claimPeriod                  controllers.ClaimPeriodController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /claimPeriod                  controllers.ClaimPeriodController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /testOnlyNICGrantCalculator                  controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /testOnlyNICGrantCalculator                  controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeClaimPeriod                        controllers.ClaimPeriodController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeClaimPeriod                        controllers.ClaimPeriodController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeTestOnlyNICGrantCalculator                        controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeTestOnlyNICGrantCalculator                        controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "claimPeriod.title = ClaimPeriod" >> ../conf/messages.en
-echo "claimPeriod.heading = ClaimPeriod" >> ../conf/messages.en
-echo "claimPeriod.checkYourAnswersLabel = ClaimPeriod" >> ../conf/messages.en
-echo "claimPeriod.error.required.all = Enter the claimPeriod" >> ../conf/messages.en
-echo "claimPeriod.error.required.two = The claimPeriod" must include {0} and {1} >> ../conf/messages.en
-echo "claimPeriod.error.required = The claimPeriod must include {0}" >> ../conf/messages.en
-echo "claimPeriod.error.invalid = Enter a real ClaimPeriod" >> ../conf/messages.en
+echo "testOnlyNICGrantCalculator.title = TestOnlyNICGrantCalculator" >> ../conf/messages.en
+echo "testOnlyNICGrantCalculator.heading = TestOnlyNICGrantCalculator" >> ../conf/messages.en
+echo "testOnlyNICGrantCalculator.checkYourAnswersLabel = TestOnlyNICGrantCalculator" >> ../conf/messages.en
+echo "testOnlyNICGrantCalculator.error.required.all = Enter the testOnlyNICGrantCalculator" >> ../conf/messages.en
+echo "testOnlyNICGrantCalculator.error.required.two = The testOnlyNICGrantCalculator" must include {0} and {1} >> ../conf/messages.en
+echo "testOnlyNICGrantCalculator.error.required = The testOnlyNICGrantCalculator must include {0}" >> ../conf/messages.en
+echo "testOnlyNICGrantCalculator.error.invalid = Enter a real TestOnlyNICGrantCalculator" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryClaimPeriodUserAnswersEntry: Arbitrary[(ClaimPeriodPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryTestOnlyNICGrantCalculatorUserAnswersEntry: Arbitrary[(TestOnlyNICGrantCalculatorPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[ClaimPeriodPage.type]";\
+    print "        page  <- arbitrary[TestOnlyNICGrantCalculatorPage.type]";\
     print "        value <- arbitrary[Int].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
@@ -39,14 +39,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryClaimPeriodPage: Arbitrary[ClaimPeriodPage.type] =";\
-    print "    Arbitrary(ClaimPeriodPage)";\
+    print "  implicit lazy val arbitraryTestOnlyNICGrantCalculatorPage: Arbitrary[TestOnlyNICGrantCalculatorPage.type] =";\
+    print "    Arbitrary(TestOnlyNICGrantCalculatorPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(ClaimPeriodPage.type, JsValue)] ::";\
+    print "    arbitrary[(TestOnlyNICGrantCalculatorPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration ClaimPeriod completed"
+echo "Migration TestOnlyNICGrantCalculator completed"

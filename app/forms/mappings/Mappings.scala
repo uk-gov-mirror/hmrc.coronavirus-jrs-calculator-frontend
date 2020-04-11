@@ -7,9 +7,9 @@ package forms.mappings
 
 import java.time.LocalDate
 
+import models.Enumerable
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
-import models.Enumerable
 
 trait Mappings extends Formatters with Constraints {
 
@@ -21,6 +21,11 @@ trait Mappings extends Formatters with Constraints {
     wholeNumberKey: String = "error.wholeNumber",
     nonNumericKey: String = "error.nonNumeric"): FieldMapping[Int] =
     of(intFormatter(requiredKey, wholeNumberKey, nonNumericKey))
+
+  protected def double(
+    requiredKey: String = "error.required",
+    nonNumericKey: String = "error.nonNumeric"): FieldMapping[Double] =
+    of(doubleFormatter(requiredKey, nonNumericKey))
 
   protected def boolean(
     requiredKey: String = "error.required",

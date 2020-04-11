@@ -183,3 +183,20 @@ claimPeriod.end.error.required.two = The end date must include {0} and {1}
 claimPeriod.end.error.required = The end date must include {0}
 claimPeriod.end.error.invalid = Enter a real end date
 claimPeriod.end.error.outofrange = The claim period end should be between {0} and {1}
+
+testOnlyNICGrantCalculator.title = Test only form for NIC Calculations 
+testOnlyNICGrantCalculator.heading = Test only form for NIC Calculations
+testOnlyNICGrantCalculator.checkYourAnswersLabel = TestOnlyNICGrantCalculator
+testOnlyNICGrantCalculator.error.required.all = Enter the testOnlyNICGrantCalculator
+testOnlyNICGrantCalculator.error.required.two = The testOnlyNICGrantCalculator must include {0} and {1}
+testOnlyNICGrantCalculator.error.required = The testOnlyNICGrantCalculator must include {0}
+testOnlyNICGrantCalculator.error.invalid = Enter a real TestOnlyNICGrantCalculator
+
+testOnlyNICGrantCalculator.startDate.legend=Start date
+testOnlyNICGrantCalculator.endDate.legend=End date
+testOnlyNICGrantCalculator.amount.legend=Furloughed Amount
+testOnlyNICGrantCalculator.startDate.error.required.all=Enter the start date
+testOnlyNICGrantCalculator.endDate.error.required.all=Enter the end date
+testOnlyNICGrantCalculator.furloughedAmount.error.required=Enter the furloughed amount
+testOnlyNICGrantCalculator.frequency.required=Enter Pay frequency
+testOnlyNICGrantCalculator.frequency.invalid=Invalid Pay frequency

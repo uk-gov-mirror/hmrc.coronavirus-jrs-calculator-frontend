@@ -5,7 +5,8 @@
 
 package services
 
-import models.{FourWeekly, FurloughPayment, Monthly, PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
+import models.PaymentFrequency.{FourWeekly, Monthly}
+import models.{FurloughPayment, PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
 import utils.TaxYearFinder
 
 trait NicCalculatorService extends TaxYearFinder {
