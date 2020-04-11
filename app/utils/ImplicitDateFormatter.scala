@@ -12,5 +12,5 @@ import scala.language.implicitConversions
 
 trait ImplicitDateFormatter {
   private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-  implicit def dateToString(date:LocalDate): String = dateFormatter.format(date)
+  implicit def dateToString(date: LocalDate): String = dateFormatter.format(date)
 }

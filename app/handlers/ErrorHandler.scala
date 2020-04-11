@@ -14,10 +14,11 @@ import views.html.ErrorTemplate
 
 @Singleton
 class ErrorHandler @Inject()(
-                              val messagesApi: MessagesApi,
-                              view: ErrorTemplate
-                            ) extends FrontendErrorHandler with I18nSupport {
+  val messagesApi: MessagesApi,
+  view: ErrorTemplate
+) extends FrontendErrorHandler with I18nSupport {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(
+    implicit rh: Request[_]): Html =
     view(pageTitle, heading, message)
 }

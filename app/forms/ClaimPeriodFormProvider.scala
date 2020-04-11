@@ -19,32 +19,43 @@ import utils.ImplicitDateFormatter
 class ClaimPeriodFormProvider @Inject()(appConfig: FrontendAppConfig) extends Mappings with ImplicitDateFormatter {
 
   def apply(): Form[ClaimPeriodModel] =
-    Form(mapping(
-      "startDateValue" -> localDate(
-        invalidKey     = "claimPeriod.start.error.invalid",
-        allRequiredKey = "claimPeriod.start.error.required.all",
-        twoRequiredKey = "claimPeriod.start.error.required.two",
-        requiredKey    = "claimPeriod.start.error.required"
-      )
-        .verifying(validStartDate),
-      "endDateValue" -> localDate(
-        invalidKey     = "claimPeriod.end.error.invalid",
-        allRequiredKey = "claimPeriod.end.error.required.all",
-        twoRequiredKey = "claimPeriod.end.error.required.two",
-        requiredKey    = "claimPeriod.end.error.required"
-      )
-          .verifying(validEndDate)
-    )(ClaimPeriodModel.apply)(ClaimPeriodModel.unapply))
+    Form(
+      mapping(
+        "startDateValue" -> localDate(
+          invalidKey = "claimPeriod.start.error.invalid",
+          allRequiredKey = "claimPeriod.start.error.required.all",
+          twoRequiredKey = "claimPeriod.start.error.required.two",
+          requiredKey = "claimPeriod.start.error.required"
+        ).verifying(validStartDate),
+        "endDateValue" -> localDate(
+          invalidKey = "claimPeriod.end.error.invalid",
+          allRequiredKey = "claimPeriod.end.error.required.all",
+          twoRequiredKey = "claimPeriod.end.error.required.two",
+          requiredKey = "claimPeriod.end.error.required"
+        ).verifying(validEndDate)
+      )(ClaimPeriodModel.apply)(ClaimPeriodModel.unapply))
 
   private def validStartDate: Constraint[LocalDate] = Constraint { claimStartDate =>
-    if(!claimStartDate.isBefore(appConfig.schemeStartDate)) Valid else {
-      Invalid("claimPeriod.start.error.beforeSchemeStart", dateToString(appConfig.schemeStartDate))
+    if (!claimStartDate.isBefore(appConfig.schemeStartDate) &&
+        !claimStartDate.isAfter(appConfig.schemeEndDate))
+      Valid
+    else {
+      Invalid(
+        "claimPeriod.start.error.outofrange",
+        dateToString(appConfig.schemeStartDate),
+        dateToString((appConfig.schemeEndDate)))
     }
   }
 
   private def validEndDate: Constraint[LocalDate] = Constraint { claimEndDate =>
-    if(!claimEndDate.isAfter(appConfig.schemeEndDate)) Valid else {
-      Invalid("claimPeriod.end.error.afterSchemeEnd", dateToString(appConfig.schemeEndDate))
+    if (!claimEndDate.isAfter(appConfig.schemeEndDate) &&
+        !claimEndDate.isBefore(appConfig.schemeStartDate))
+      Valid
+    else {
+      Invalid(
+        "claimPeriod.end.error.outofrange",
+        dateToString(appConfig.schemeStartDate),
+        dateToString(appConfig.schemeEndDate))
     }
   }
 }

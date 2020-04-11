@@ -13,7 +13,7 @@ import play.api.Configuration
 import scala.util.Try
 
 @Singleton
-class FrontendAppConfig @Inject() (configuration: Configuration) {
+class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   lazy val host: String = configuration.get[String]("host")
 
@@ -23,9 +23,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val gtmContainer: Option[String] = (Try {
     configuration.get[String]("gtm.container")
   } map {
-    case "main" => Some("GTM-NDJKHWK")
+    case "main"         => Some("GTM-NDJKHWK")
     case "transitional" => Some("GTM-TSFTCWZ")
-  }) getOrElse(None)
+  }) getOrElse (None)
 
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
@@ -41,10 +41,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   lazy val languageTranslationEnabled: Boolean = configuration.get[Boolean]("features.welsh-translation")
 
-  lazy val cookies: String         = host + configuration.get[String]("urls.footer.cookies")
-  lazy val privacy: String         = host + configuration.get[String]("urls.footer.privacy")
+  lazy val cookies: String = host + configuration.get[String]("urls.footer.cookies")
+  lazy val privacy: String = host + configuration.get[String]("urls.footer.privacy")
   lazy val termsConditions: String = host + configuration.get[String]("urls.footer.termsConditions")
-  lazy val govukHelp: String       = configuration.get[String]("urls.footer.govukHelp")
+  lazy val govukHelp: String = configuration.get[String]("urls.footer.govukHelp")
 
   lazy val schemeStartDate = LocalDate.parse(configuration.get[String]("scheme.startDate"))
   lazy val schemeEndDate = LocalDate.parse(configuration.get[String]("scheme.endDate"))
