@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly}
+import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{FurloughPayment, PayPeriod, TaxYearEnding2020, TaxYearEnding2021}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
@@ -111,7 +111,37 @@ class NicCalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
       FortNightly,
       FurloughPayment(2500.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 14))),
       TaxYearEnding2021,
-      112.33)
+      112.33),
+    (
+      Weekly,
+      FurloughPayment(150.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
+      TaxYearEnding2020,
+      0.00),
+    (
+      Weekly,
+      FurloughPayment(250.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
+      TaxYearEnding2020,
+      11.59),
+    (
+      Weekly,
+      FurloughPayment(1000.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
+      TaxYearEnding2020,
+      56.58),
+    (
+      Weekly,
+      FurloughPayment(168, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 7))),
+      TaxYearEnding2021,
+      0.00),
+    (
+      Weekly,
+      FurloughPayment(179, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 7))),
+      TaxYearEnding2021,
+      1.38),
+    (
+      Weekly,
+      FurloughPayment(1000, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 7))),
+      TaxYearEnding2021,
+      56.17)
   )
 
 }

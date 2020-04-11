@@ -1,6 +1,6 @@
 package services
 
-import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly}
+import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
 
 case class FrequencyTaxYearKey(paymentFrequency: PaymentFrequency, taxYear: TaxYear)
@@ -14,6 +14,8 @@ object FrequencyTaxYearThresholdMapping {
     FrequencyTaxYearKey(FourWeekly, TaxYearEnding2020) -> Threshold(664.00, 2304.00),
     FrequencyTaxYearKey(FourWeekly, TaxYearEnding2021) -> Threshold(676.00, 2304.00),
     FrequencyTaxYearKey(FortNightly, TaxYearEnding2020) -> Threshold(332.00, 1152.00),
-    FrequencyTaxYearKey(FortNightly, TaxYearEnding2021) -> Threshold(338.00, 1152.00)
+    FrequencyTaxYearKey(FortNightly, TaxYearEnding2021) -> Threshold(338.00, 1152.00),
+    FrequencyTaxYearKey(Weekly, TaxYearEnding2020) -> Threshold(166.00, 576.00),
+    FrequencyTaxYearKey(Weekly, TaxYearEnding2021) -> Threshold(169.00, 576.00)
   )
 }
