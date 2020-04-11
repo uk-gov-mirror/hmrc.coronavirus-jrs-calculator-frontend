@@ -5,12 +5,12 @@
 
 package controllers
 
-import base.SpecBase
+import base.SpecBaseWithApplication
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends SpecBase {
+class CheckYourAnswersControllerSpecWithApplication extends SpecBaseWithApplication {
 
   "Check Your Answers Controller" must {
 

@@ -5,14 +5,14 @@
 
 package controllers.actions
 
-import base.SpecBase
+import base.SpecBaseWithApplication
 import play.api.mvc.{BodyParsers, Results}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class SessionActionSpec extends SpecBase {
+class SessionActionSpecWithApplication extends SpecBaseWithApplication {
 
   class Harness(action: IdentifierAction) {
     def onPageLoad() = action { request =>

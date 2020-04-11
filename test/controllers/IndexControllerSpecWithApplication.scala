@@ -5,24 +5,24 @@
 
 package controllers
 
-import base.SpecBase
+import base.SpecBaseWithApplication
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.UnauthorisedView
+import views.html.IndexView
 
-class UnauthorisedControllerSpec extends SpecBase {
+class IndexControllerSpecWithApplication extends SpecBaseWithApplication {
 
-  "Unauthorised Controller" must {
+  "Index Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, routes.UnauthorisedController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[UnauthorisedView]
+      val view = application.injector.instanceOf[IndexView]
 
       status(result) mustEqual OK
 

@@ -7,7 +7,7 @@ package controllers
 
 import java.time.{LocalDate, ZoneOffset}
 
-import base.SpecBase
+import base.SpecBaseWithApplication
 import forms.ClaimPeriodFormProvider
 import models.{ClaimPeriodModel, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -25,7 +25,7 @@ import views.html.ClaimPeriodView
 
 import scala.concurrent.Future
 
-class ClaimPeriodControllerSpec extends SpecBase with MockitoSugar {
+class ClaimPeriodControllerSpecWithApplication extends SpecBaseWithApplication with MockitoSugar {
 
   val formProvider = new ClaimPeriodFormProvider(frontendAppConfig)
   private def form = formProvider()

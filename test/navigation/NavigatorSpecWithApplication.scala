@@ -5,12 +5,12 @@
 
 package navigation
 
-import base.SpecBase
+import base.SpecBaseWithApplication
 import controllers.routes
 import pages._
 import models._
 
-class NavigatorSpec extends SpecBase {
+class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
   val navigator = new Navigator
 
