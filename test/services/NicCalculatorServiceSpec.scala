@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.PaymentFrequency.{FourWeekly, Monthly}
+import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly}
 import models.{FurloughPayment, PayPeriod, TaxYearEnding2020, TaxYearEnding2021}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
@@ -54,34 +54,64 @@ class NicCalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
       243.98),
     (
       FourWeekly,
-      FurloughPayment(600.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+      FurloughPayment(600.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
       TaxYearEnding2020,
       0.00),
     (
       FourWeekly,
-      FurloughPayment(700.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+      FurloughPayment(700.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
       TaxYearEnding2020,
       4.97),
     (
       FourWeekly,
-      FurloughPayment(5000.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+      FurloughPayment(5000.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
       TaxYearEnding2020,
       226.32),
     (
       FourWeekly,
-      FurloughPayment(670.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+      FurloughPayment(670.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 28))),
       TaxYearEnding2021,
       0.00),
     (
       FourWeekly,
-      FurloughPayment(1000.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+      FurloughPayment(1000.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 28))),
       TaxYearEnding2021,
       44.71),
     (
       FourWeekly,
-      FurloughPayment(5000.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+      FurloughPayment(5000.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 28))),
       TaxYearEnding2021,
       224.66),
+    (
+      FortNightly,
+      FurloughPayment(300.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
+      TaxYearEnding2020,
+      0.00),
+    (
+      FortNightly,
+      FurloughPayment(333.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
+      TaxYearEnding2020,
+      0.14),
+    (
+      FortNightly,
+      FurloughPayment(2500.00, PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
+      TaxYearEnding2020,
+      113.16),
+    (
+      FortNightly,
+      FurloughPayment(335.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 14))),
+      TaxYearEnding2021,
+      0.00),
+    (
+      FortNightly,
+      FurloughPayment(339.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 14))),
+      TaxYearEnding2021,
+      0.14),
+    (
+      FortNightly,
+      FurloughPayment(2500.00, PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 14))),
+      TaxYearEnding2021,
+      112.33)
   )
 
 }
