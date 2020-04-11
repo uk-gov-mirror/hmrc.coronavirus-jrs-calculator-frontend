@@ -1,0 +1,15 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+        main_template: templates.GovukLayoutWrapper,
+        h1: components.h1
+)
+
+@(nic: String)(implicit request: Request[_], messages: Messages)
+
+@main_template(Some(titleNoForm("index.title")), timeout = false) {
+ @nic
+}

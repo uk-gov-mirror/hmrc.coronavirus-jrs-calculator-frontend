@@ -23,3 +23,5 @@ GET        /test-only/nic-grant                  controllers.TestOnlyNICGrantCal
 POST       /test-only/nic-grant                  controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)
 GET        /test-only/change-nic-grant                        controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = CheckMode)
 POST       /test-only/change-nic-grant                        controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = CheckMode)
+
+GET       /test-only/nic-grant-response      controllers.TestOnlyNICGrantCalculatorController.showResult()

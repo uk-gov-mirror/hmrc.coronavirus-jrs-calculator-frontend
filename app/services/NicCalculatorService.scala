@@ -8,16 +8,24 @@ package services
 import models.{FurloughPayment, PaymentFrequency}
 import utils.TaxYearFinder
 
-trait NicCalculatorService extends TaxYearFinder {
+trait NicCalculatorService {
+  def calculateNic(paymentFrequency: PaymentFrequency, furloughPayment: FurloughPayment): Double
+}
+
+class NicCalculatorServiceImpl extends TaxYearFinder with NicCalculatorService {
 
   def calculateNic(paymentFrequency: PaymentFrequency, furloughPayment: FurloughPayment): Double = {
     val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.payPeriod))
 
     FrequencyTaxYearThresholdMapping.mappings.get(frequencyTaxYearKey).fold(0.00) { threshold =>
-      val cappedFurloughPayment = if (furloughPayment.amount > threshold.upper) threshold.upper else furloughPayment.amount
+      val cappedFurloughPayment =
+        if (furloughPayment.amount > threshold.upper) threshold.upper else furloughPayment.amount
 
       if (cappedFurloughPayment < threshold.lower) 0.00
-      else BigDecimal(((cappedFurloughPayment - threshold.lower) * 0.138)).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+      else
+        BigDecimal(((cappedFurloughPayment - threshold.lower) * 0.138))
+          .setScale(2, BigDecimal.RoundingMode.HALF_UP)
+          .toDouble
     }
   }
 

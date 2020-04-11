@@ -17,6 +17,7 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.TestOnlyNICGrantCalculatorPage
 import play.api.inject.bind
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
@@ -56,6 +57,10 @@ class TestOnlyNICGrantCalculatorControllerSpec extends SpecBaseWithApplication w
         "furloughedAmount" -> "1000",
         "value"            -> "weekly"
       )
+
+  val getShowResultRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(GET, routes.TestOnlyNICGrantCalculatorController.showResult().url).withCSRFToken
+      .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   "TestOnlyNICGrantCalculator Controller" must {
 
@@ -111,7 +116,31 @@ class TestOnlyNICGrantCalculatorControllerSpec extends SpecBaseWithApplication w
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual routes.TestOnlyNICGrantCalculatorController.showResult().url
+
+      application.stop()
+    }
+
+    "showResult page should show result as expected" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(
+        Some(UserAnswers("id", Json.obj(("nic", "123")))))
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, getShowResultRequest).value
+
+      status(result) mustEqual 200
+
+      contentAsString(result) must include("123")
 
       application.stop()
     }

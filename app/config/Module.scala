@@ -8,6 +8,7 @@ package config
 import com.google.inject.AbstractModule
 import controllers.actions._
 import repositories.{DefaultSessionRepository, SessionRepository}
+import services.{NicCalculatorService, NicCalculatorServiceImpl}
 
 class Module extends AbstractModule {
 
@@ -20,5 +21,7 @@ class Module extends AbstractModule {
     bind(classOf[IdentifierAction]).to(classOf[SessionIdentifierAction]).asEagerSingleton()
 
     bind(classOf[SessionRepository]).to(classOf[DefaultSessionRepository]).asEagerSingleton()
+
+    bind(classOf[NicCalculatorService]).to(classOf[NicCalculatorServiceImpl]).asEagerSingleton()
   }
 }
