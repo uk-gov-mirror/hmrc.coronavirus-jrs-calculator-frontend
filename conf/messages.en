@@ -174,7 +174,7 @@ claimPeriod.start.error.required.all = Enter the start date
 claimPeriod.start.error.required.two = The start date must include {0} and {1}
 claimPeriod.start.error.required = The start date must include {0}
 claimPeriod.start.error.invalid = Enter a real start date
-claimPeriod.start.error.beforeSchemeStart = The claim period cannot start before {0}
+claimPeriod.start.error.outofrange = The claim period start should be between {0} and {1}
 
 claimPeriod.end.legend = End date
 claimPeriod.end.hint = For example, 31 3 2020
@@ -182,4 +182,4 @@ claimPeriod.end.error.required.all = Enter the end date
 claimPeriod.end.error.required.two = The end date must include {0} and {1}
 claimPeriod.end.error.required = The end date must include {0}
 claimPeriod.end.error.invalid = Enter a real end date
-claimPeriod.end.error.afterSchemeEnd = The claim period cannot end after {0}
+claimPeriod.end.error.outofrange = The claim period end should be between {0} and {1}
