@@ -1,36 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration TestOnlyNICGrantCalculator"
+echo "Applying migration PayQuestion"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /testOnlyNICGrantCalculator                  controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /testOnlyNICGrantCalculator                  controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /payQuestion                        controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /payQuestion                        controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeTestOnlyNICGrantCalculator                        controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeTestOnlyNICGrantCalculator                        controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changePayQuestion                  controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changePayQuestion                  controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "testOnlyNICGrantCalculator.title = TestOnlyNICGrantCalculator" >> ../conf/messages.en
-echo "testOnlyNICGrantCalculator.heading = TestOnlyNICGrantCalculator" >> ../conf/messages.en
-echo "testOnlyNICGrantCalculator.checkYourAnswersLabel = TestOnlyNICGrantCalculator" >> ../conf/messages.en
-echo "testOnlyNICGrantCalculator.error.required.all = Enter the testOnlyNICGrantCalculator" >> ../conf/messages.en
-echo "testOnlyNICGrantCalculator.error.required.two = The testOnlyNICGrantCalculator" must include {0} and {1} >> ../conf/messages.en
-echo "testOnlyNICGrantCalculator.error.required = The testOnlyNICGrantCalculator must include {0}" >> ../conf/messages.en
-echo "testOnlyNICGrantCalculator.error.invalid = Enter a real TestOnlyNICGrantCalculator" >> ../conf/messages.en
+echo "payQuestion.title = How is this employee paid?" >> ../conf/messages.en
+echo "payQuestion.heading = How is this employee paid?" >> ../conf/messages.en
+echo "payQuestion.a regular amount each time = a regular amount each time" >> ../conf/messages.en
+echo "payQuestion.it varies each time = it varies each time" >> ../conf/messages.en
+echo "payQuestion.checkYourAnswersLabel = How is this employee paid?" >> ../conf/messages.en
+echo "payQuestion.error.required = Select payQuestion" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTestOnlyNICGrantCalculatorUserAnswersEntry: Arbitrary[(TestOnlyNICGrantCalculatorPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryPayQuestionUserAnswersEntry: Arbitrary[(PayQuestionPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[TestOnlyNICGrantCalculatorPage.type]";\
-    print "        value <- arbitrary[Int].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[PayQuestionPage.type]";\
+    print "        value <- arbitrary[PayQuestion].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -39,14 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTestOnlyNICGrantCalculatorPage: Arbitrary[TestOnlyNICGrantCalculatorPage.type] =";\
-    print "    Arbitrary(TestOnlyNICGrantCalculatorPage)";\
+    print "  implicit lazy val arbitraryPayQuestionPage: Arbitrary[PayQuestionPage.type] =";\
+    print "    Arbitrary(PayQuestionPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
+
+echo "Adding to ModelGenerators"
+awk '/trait ModelGenerators/ {\
+    print;\
+    print "";\
+    print "  implicit lazy val arbitraryPayQuestion: Arbitrary[PayQuestion] =";\
+    print "    Arbitrary {";\
+    print "      Gen.oneOf(PayQuestion.values.toSeq)";\
+    print "    }";\
+    next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(TestOnlyNICGrantCalculatorPage.type, JsValue)] ::";\
+    print "    arbitrary[(PayQuestionPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration TestOnlyNICGrantCalculator completed"
+echo "Migration PayQuestion completed"

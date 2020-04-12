@@ -1,27 +1,32 @@
 # microservice specific routes
 
-GET        /                                            controllers.IndexController.onPageLoad
+GET         /                                    controllers.IndexController.onPageLoad
 
-GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                        controllers.Assets.versioned(path="/public", file: Asset)
 
-GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: Language)
+GET         /language/:lang                      controllers.LanguageSwitchController.switchToLanguage(lang: Language)
 
-GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
+GET         /this-service-has-been-reset         controllers.SessionExpiredController.onPageLoad
 
-GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
+GET         /check-your-answers                  controllers.CheckYourAnswersController.onPageLoad
 
-GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+GET         /unauthorised                        controllers.UnauthorisedController.onPageLoad
 
-GET        /accessibility                               controllers.AccessibilityStatementController.onPageLoad
+GET         /accessibility                       controllers.AccessibilityStatementController.onPageLoad
 
-GET        /claim-period                  controllers.ClaimPeriodController.onPageLoad(mode: Mode = NormalMode)
-POST       /claim-period                  controllers.ClaimPeriodController.onSubmit(mode: Mode = NormalMode)
-GET        /change-claim-period                        controllers.ClaimPeriodController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-claim-period                        controllers.ClaimPeriodController.onSubmit(mode: Mode = CheckMode)
+GET         /claim-period                        controllers.ClaimPeriodController.onPageLoad(mode: Mode = NormalMode)
+POST        /claim-period                        controllers.ClaimPeriodController.onSubmit(mode: Mode = NormalMode)
+GET         /change-claim-period                 controllers.ClaimPeriodController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-claim-period                 controllers.ClaimPeriodController.onSubmit(mode: Mode = CheckMode)
 
-GET        /test-only/nic-grant                  controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = NormalMode)
-POST       /test-only/nic-grant                  controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)
-GET        /test-only/change-nic-grant                        controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = CheckMode)
-POST       /test-only/change-nic-grant                        controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = CheckMode)
+GET         /test-only/nic-grant                 controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = NormalMode)
+POST        /test-only/nic-grant                 controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)
+GET         /test-only/change-nic-grant          controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = CheckMode)
+POST        /test-only/change-nic-grant          controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = CheckMode)
 
-GET       /test-only/nic-grant-response      controllers.TestOnlyNICGrantCalculatorController.showResult()
+GET         /test-only/nic-grant-response        controllers.TestOnlyNICGrantCalculatorController.showResult()
+
+GET         /pay-question                        controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST        /pay-question                        controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)
+GET         /change-pay-question                 controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-pay-question                 controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)

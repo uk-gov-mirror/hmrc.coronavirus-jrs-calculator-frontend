@@ -35,6 +35,7 @@ class ClaimPeriodControllerSpecWithApplication extends SpecBaseWithApplication w
   val validAnswer = ClaimPeriodModel(LocalDate.now(ZoneOffset.UTC), LocalDate.now(ZoneOffset.UTC))
 
   lazy val claimPeriodRoute = routes.ClaimPeriodController.onPageLoad(NormalMode).url
+  lazy val claimPeriodRoutePost = routes.ClaimPeriodController.onSubmit(NormalMode).url
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
@@ -43,7 +44,7 @@ class ClaimPeriodControllerSpecWithApplication extends SpecBaseWithApplication w
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, claimPeriodRoute).withCSRFToken
+    FakeRequest(POST, claimPeriodRoutePost).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
         "startDateValue.day"   -> validAnswer.startDate.getDayOfMonth.toString,

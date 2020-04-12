@@ -14,6 +14,11 @@ import org.scalacheck.Arbitrary.arbDouble
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryPayQuestion: Arbitrary[PayQuestion] =
+    Arbitrary {
+      Gen.oneOf(PayQuestion.values.toSeq)
+    }
+
   val claimPeriodModelGen = for {
     startDate <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
     endDate   <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
