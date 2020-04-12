@@ -15,7 +15,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 class NicCalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   forAll(scenarios) { (frequency, payment, taxYear, expected) =>
-    s"For payment frequency $frequency, payment amount ${payment.amount} in $taxYear should return $expected" in new NicCalculatorServiceImpl {
+    s"For payment frequency $frequency, payment amount ${payment.amount} in $taxYear should return $expected" in new NicCalculatorService {
       calculateNic(frequency, payment) mustBe expected
     }
   }

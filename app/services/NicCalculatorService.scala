@@ -8,12 +8,7 @@ package services
 import models.{FurloughPayment, PaymentFrequency}
 import utils.TaxYearFinder
 
-trait NicCalculatorService {
-  def calculateNic(paymentFrequency: PaymentFrequency, furloughPayment: FurloughPayment): Double
-}
-
-class NicCalculatorServiceImpl extends TaxYearFinder with NicCalculatorService {
-
+trait NicCalculatorService extends TaxYearFinder {
   def calculateNic(paymentFrequency: PaymentFrequency, furloughPayment: FurloughPayment): Double = {
     val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.payPeriod))
 
@@ -28,5 +23,4 @@ class NicCalculatorServiceImpl extends TaxYearFinder with NicCalculatorService {
           .toDouble
     }
   }
-
 }

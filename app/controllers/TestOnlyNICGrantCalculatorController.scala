@@ -24,7 +24,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class TestOnlyNICGrantCalculatorController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
-  nicCalculatorService: NicCalculatorService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -34,7 +33,7 @@ class TestOnlyNICGrantCalculatorController @Inject()(
   view: TestOnlyNICGrantCalculatorView,
   nicResultView: NicResultView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+    extends FrontendBaseController with I18nSupport with NicCalculatorService {
 
   def form = formProvider()
 
@@ -60,10 +59,9 @@ class TestOnlyNICGrantCalculatorController @Inject()(
                                  .getOrElse(UserAnswers(request.internalId))
                                  .set(TestOnlyNICGrantCalculatorPage, value))
             _ <- {
-              val nic = nicCalculatorService
-                .calculateNic(
-                  value.frequency,
-                  FurloughPayment(value.furloughedAmount, PayPeriod(value.startDate, value.endDate)))
+              val nic = calculateNic(
+                value.frequency,
+                FurloughPayment(value.furloughedAmount, PayPeriod(value.startDate, value.endDate)))
               sessionRepository.set(updatedAnswers.copy(data = updatedAnswers.data.+("nic", JsNumber(nic))))
             }
           } yield {
