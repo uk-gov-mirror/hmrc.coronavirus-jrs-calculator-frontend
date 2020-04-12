@@ -7,15 +7,15 @@ package controllers
 
 import controllers.actions._
 import forms.TestOnlyNICGrantCalculatorFormProvider
+import handlers.NICGrantCalculatorControllerRequestHandler
 import javax.inject.Inject
-import models.{FurloughPayment, Mode, PayPeriod, TestOnlyNICGrantModel, UserAnswers}
+import models.{FurloughPayment, Mode, PayPeriod, UserAnswers}
 import navigation.Navigator
 import pages.TestOnlyNICGrantCalculatorPage
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.{JsNumber, JsString}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import services.NicCalculatorService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.{NicResultView, TestOnlyNICGrantCalculatorView}
 
@@ -33,7 +33,9 @@ class TestOnlyNICGrantCalculatorController @Inject()(
   view: TestOnlyNICGrantCalculatorView,
   nicResultView: NicResultView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with NicCalculatorService {
+    extends FrontendBaseController with I18nSupport {
+
+  val handler = new NICGrantCalculatorControllerRequestHandler
 
   def form = formProvider()
 
@@ -59,10 +61,10 @@ class TestOnlyNICGrantCalculatorController @Inject()(
                                  .getOrElse(UserAnswers(request.internalId))
                                  .set(TestOnlyNICGrantCalculatorPage, value))
             _ <- {
-              val nic = calculateNic(
+              val nic = handler.handleCalculation(
                 value.frequency,
-                FurloughPayment(value.furloughedAmount, PayPeriod(value.startDate, value.endDate)))
-              sessionRepository.set(updatedAnswers.copy(data = updatedAnswers.data.+("nic", JsNumber(nic))))
+                List(FurloughPayment(value.furloughedAmount, PayPeriod(value.startDate, value.endDate)))) //TODO change form to accept multiple
+              sessionRepository.set(updatedAnswers.copy(data = updatedAnswers.data.+("nic", Json.toJson(nic))))
             }
           } yield {
             Redirect(routes.TestOnlyNICGrantCalculatorController.showResult())
