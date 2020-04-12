@@ -7,7 +7,7 @@ package controllers
 
 import controllers.actions._
 import forms.TestOnlyNICGrantCalculatorFormProvider
-import handlers.NICGrantCalculatorControllerRequestHandler
+import handlers.GrantCalculatorControllerRequestHandler
 import javax.inject.Inject
 import models.{FurloughPayment, Mode, PaymentDate, UserAnswers}
 import navigation.Navigator
@@ -16,6 +16,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.NiRate
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.{NicResultView, TestOnlyNICGrantCalculatorView}
 
@@ -35,7 +36,7 @@ class TestOnlyNICGrantCalculatorController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val handler = new NICGrantCalculatorControllerRequestHandler
+  val handler = new GrantCalculatorControllerRequestHandler
 
   def form = formProvider()
 
@@ -63,7 +64,8 @@ class TestOnlyNICGrantCalculatorController @Inject()(
             _ <- {
               val nic = handler.handleCalculation(
                 value.frequency,
-                List(FurloughPayment(value.furloughedAmount, PaymentDate(value.payDate)))) //TODO change form to accept multiple
+                List(FurloughPayment(value.furloughedAmount, PaymentDate(value.endDate))),
+                NiRate()) //TODO change form to accept multiple
               sessionRepository.set(updatedAnswers.copy(data = updatedAnswers.data.+("nic", Json.toJson(nic))))
             }
           } yield {

@@ -11,8 +11,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatest.{FreeSpec, MustMatchers, OptionValues}
 import play.api.libs.json._
 
-class RichJsValueSpec
-    extends FreeSpec with MustMatchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
+class RichJsValueSpec extends FreeSpec with MustMatchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
 
   implicit def dontShrink[A]: Shrink[A] = Shrink.shrinkAny
 
@@ -49,8 +48,7 @@ class RichJsValueSpec
 
           val path = JsPath \ pathKey
 
-          value.set(path, JsString(newValue)) mustEqual JsSuccess(
-            Json.obj(originalKey -> originalValue, pathKey -> newValue))
+          value.set(path, JsString(newValue)) mustEqual JsSuccess(Json.obj(originalKey -> originalValue, pathKey -> newValue))
       }
     }
 

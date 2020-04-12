@@ -74,10 +74,7 @@ trait Formatters {
         baseFormatter.unbind(key, value.toString)
     }
 
-  private[mappings] def doubleFormatter(
-    requiredKey: String,
-    nonNumericKey: String,
-    args: Seq[String] = Seq.empty): Formatter[Double] =
+  private[mappings] def doubleFormatter(requiredKey: String, nonNumericKey: String, args: Seq[String] = Seq.empty): Formatter[Double] =
     new Formatter[Double] {
 
       private val baseFormatter = stringFormatter(requiredKey)
@@ -100,8 +97,7 @@ trait Formatters {
         baseFormatter.unbind(key, value.toString)
     }
 
-  private[mappings] def enumerableFormatter[A](requiredKey: String, invalidKey: String)(
-    implicit ev: Enumerable[A]): Formatter[A] =
+  private[mappings] def enumerableFormatter[A](requiredKey: String, invalidKey: String)(implicit ev: Enumerable[A]): Formatter[A] =
     new Formatter[A] {
 
       private val baseFormatter = stringFormatter(requiredKey)

@@ -40,10 +40,7 @@ class ClaimPeriodFormProvider @Inject()(appConfig: FrontendAppConfig) extends Ma
         !claimStartDate.isAfter(appConfig.schemeEndDate))
       Valid
     else {
-      Invalid(
-        "claimPeriod.start.error.outofrange",
-        dateToString(appConfig.schemeStartDate),
-        dateToString((appConfig.schemeEndDate)))
+      Invalid("claimPeriod.start.error.outofrange", dateToString(appConfig.schemeStartDate), dateToString((appConfig.schemeEndDate)))
     }
   }
 
@@ -52,10 +49,7 @@ class ClaimPeriodFormProvider @Inject()(appConfig: FrontendAppConfig) extends Ma
         !claimEndDate.isBefore(appConfig.schemeStartDate))
       Valid
     else {
-      Invalid(
-        "claimPeriod.end.error.outofrange",
-        dateToString(appConfig.schemeStartDate),
-        dateToString(appConfig.schemeEndDate))
+      Invalid("claimPeriod.end.error.outofrange", dateToString(appConfig.schemeStartDate), dateToString(appConfig.schemeEndDate))
     }
   }
 }

@@ -8,7 +8,7 @@ package utils
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{PayPeriod, PaymentDate, TaxYearEnding2020, TaxYearEnding2021}
+import models.{PaymentDate, TaxYearEnding2020, TaxYearEnding2021}
 
 class TaxYearFinderSpec extends SpecBase {
 

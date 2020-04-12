@@ -13,8 +13,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatest.{MustMatchers, WordSpec}
 import play.api.data.validation.{Invalid, Valid}
 
-class ConstraintsSpec
-    extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with Generators with Constraints {
+class ConstraintsSpec extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with Generators with Constraints {
 
   "firstError" must {
 

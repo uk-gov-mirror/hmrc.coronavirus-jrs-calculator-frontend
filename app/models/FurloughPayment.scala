@@ -14,12 +14,6 @@ sealed trait TaxYear
 case object TaxYearEnding2020 extends TaxYear
 case object TaxYearEnding2021 extends TaxYear
 
-case class PayPeriod(start: LocalDate, end: LocalDate)
-
-object PayPeriod {
-  implicit val defaultFormat: Format[PayPeriod] = Json.format
-}
-
 case class PaymentDate(value: LocalDate)
 
 object PaymentDate {
@@ -39,8 +33,8 @@ object PaymentDateBreakdown {
   implicit val defaultFormat: Format[PaymentDateBreakdown] = Json.format
 }
 
-case class NicCalculationResult(total: Double, paymentDateBreakdowns: Seq[PaymentDateBreakdown])
+case class CalculationResult(total: Double, paymentDateBreakdowns: Seq[PaymentDateBreakdown])
 
-object NicCalculationResult {
-  implicit val defaultFormat: Format[NicCalculationResult] = Json.format[NicCalculationResult]
+object CalculationResult {
+  implicit val defaultFormat: Format[CalculationResult] = Json.format[CalculationResult]
 }

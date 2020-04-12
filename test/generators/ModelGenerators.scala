@@ -47,6 +47,5 @@ trait ModelGenerators {
     payDate   <- periodDatesBetween(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31))
   } yield TestOnlyNICGrantModel(startDate, endDate, 1000, Weekly, payDate)
 
-  implicit lazy val arbitraryTestOnlyNICGrantModel: Arbitrary[TestOnlyNICGrantModel] = Arbitrary(
-    testOnlyNICGrantModelGen)
+  implicit lazy val arbitraryTestOnlyNICGrantModel: Arbitrary[TestOnlyNICGrantModel] = Arbitrary(testOnlyNICGrantModelGen)
 }

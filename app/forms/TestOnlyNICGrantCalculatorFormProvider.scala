@@ -16,8 +16,7 @@ import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import utils.ImplicitDateFormatter
 
-class TestOnlyNICGrantCalculatorFormProvider @Inject()(appConfig: FrontendAppConfig)
-    extends Mappings with ImplicitDateFormatter {
+class TestOnlyNICGrantCalculatorFormProvider @Inject()(appConfig: FrontendAppConfig) extends Mappings with ImplicitDateFormatter {
 
   def apply(): Form[TestOnlyNICGrantModel] =
     Form(

@@ -16,8 +16,7 @@ import org.scalatest.{FreeSpec, MustMatchers}
 import play.api.Configuration
 import play.api.mvc.Call
 
-class WhitelistFilterSpec
-    extends FreeSpec with MustMatchers with ScalaCheckPropertyChecks with MockitoSugar with Generators {
+class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckPropertyChecks with MockitoSugar with Generators {
 
   val mockMaterializer = mock[Materializer]
 
@@ -119,18 +118,17 @@ class WhitelistFilterSpec
 
     "must return a Call to the destination" in {
 
-      forAll(otherConfigGen, arbitrary[String], arbitrary[String], arbitrary[String]) {
-        (otherConfig, ips, destination, excluded) =>
-          val config = Configuration(
-            (otherConfig +
-              ("filters.whitelist.ips"         -> destination) +
-              ("filters.whitelist.excluded"    -> excluded) +
-              ("filters.whitelist.destination" -> destination)).toSeq: _*
-          )
+      forAll(otherConfigGen, arbitrary[String], arbitrary[String], arbitrary[String]) { (otherConfig, ips, destination, excluded) =>
+        val config = Configuration(
+          (otherConfig +
+            ("filters.whitelist.ips"         -> destination) +
+            ("filters.whitelist.excluded"    -> excluded) +
+            ("filters.whitelist.destination" -> destination)).toSeq: _*
+        )
 
-          val whitelistFilter = new WhitelistFilter(config, mockMaterializer)
+        val whitelistFilter = new WhitelistFilter(config, mockMaterializer)
 
-          whitelistFilter.destination mustEqual Call("GET", destination)
+        whitelistFilter.destination mustEqual Call("GET", destination)
       }
     }
   }
@@ -164,22 +162,21 @@ class WhitelistFilterSpec
 
         val gen = Gen.nonEmptyListOf(Gen.alphaNumStr suchThat (_.nonEmpty))
 
-        forAll(gen, otherConfigGen, arbitrary[String], arbitrary[String]) {
-          (excludedPaths, otherConfig, destination, ips) =>
-            val excludedPathString = excludedPaths.mkString(",")
+        forAll(gen, otherConfigGen, arbitrary[String], arbitrary[String]) { (excludedPaths, otherConfig, destination, ips) =>
+          val excludedPathString = excludedPaths.mkString(",")
 
-            val config = Configuration(
-              (otherConfig +
-                ("filters.whitelist.destination" -> destination) +
-                ("filters.whitelist.excluded"    -> excludedPathString) +
-                ("filters.whitelist.ips"         -> ips)).toSeq: _*
-            )
+          val config = Configuration(
+            (otherConfig +
+              ("filters.whitelist.destination" -> destination) +
+              ("filters.whitelist.excluded"    -> excludedPathString) +
+              ("filters.whitelist.ips"         -> ips)).toSeq: _*
+          )
 
-            val expectedCalls = excludedPaths.map(Call("GET", _))
+          val expectedCalls = excludedPaths.map(Call("GET", _))
 
-            val whitelistFilter = new WhitelistFilter(config, mockMaterializer)
+          val whitelistFilter = new WhitelistFilter(config, mockMaterializer)
 
-            whitelistFilter.excludedPaths must contain theSameElementsAs expectedCalls
+          whitelistFilter.excludedPaths must contain theSameElementsAs expectedCalls
         }
       }
     }

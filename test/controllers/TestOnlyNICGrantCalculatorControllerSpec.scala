@@ -129,8 +129,7 @@ class TestOnlyNICGrantCalculatorControllerSpec extends SpecBaseWithApplication w
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(
-        Some(UserAnswers("id", Json.obj(("nic", "123")))))
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(UserAnswers("id", Json.obj(("nic", "123")))))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
