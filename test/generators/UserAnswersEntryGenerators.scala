@@ -29,8 +29,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryTestOnlyNICGrantCalculatorUserAnswersEntry
-    : Arbitrary[(TestOnlyNICGrantCalculatorPage.type, JsValue)] =
+  implicit lazy val arbitraryTestOnlyNICGrantCalculatorUserAnswersEntry: Arbitrary[(TestOnlyNICGrantCalculatorPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[TestOnlyNICGrantCalculatorPage.type]
