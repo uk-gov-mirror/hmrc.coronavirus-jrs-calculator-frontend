@@ -162,10 +162,12 @@ session_expired.guidance = The details you have given have been deleted because 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-claimPeriod.title = Tell us about the claim period
-claimPeriod.heading = Tell us about the claim period
-claimPeriod.p1 = This can be any date during the furlough period. For example, you can align claims with individual payroll runs.
-claimPeriod.p2 = You can claim in advance as long as the employee will be paid within 14 days of the end date.
+claimPeriod.title = What will the claim period be?
+claimPeriod.heading = What will the claim period be?
+claimPeriod.p1 = The start date must be 1 March 2020 or later. For example, you could start your claim from the date the first employee was furloughed.
+claimPeriod.p2 = The end date must be 31 May or earlier. For example, you could align your claim with your payroll run.
+claimPeriod.p3 = You can claim in advance, but the end date of your claim must be no more than 14 days before the employee gets paid.
+
 claimPeriod.checkYourAnswersLabel = Claim Period
 
 claimPeriod.start.legend = Start date
