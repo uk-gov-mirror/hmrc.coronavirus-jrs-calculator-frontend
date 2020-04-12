@@ -202,9 +202,21 @@ testOnlyNICGrantCalculator.endDate.error.required.all=Enter the end date
 testOnlyNICGrantCalculator.furloughedAmount.error.required=Enter the furloughed amount
 testOnlyNICGrantCalculator.frequency.required=Enter Pay frequency
 testOnlyNICGrantCalculator.frequency.invalid=Invalid Pay frequency
+testOnlyNICGrantCalculator.payDate.legend=Pay date
+testOnlyNICGrantCalculator.payDate.error.required.all=Enter the pay date
+
 payQuestion.title = How is this employee paid?
 payQuestion.heading = How is this employee paid?
 payQuestion.regularly= a regular amount each time
 payQuestion.varies = it varies each time
 payQuestion.checkYourAnswersLabel = How is this employee paid?
 payQuestion.error.required = Select one of the options below
+
+payFrequency.title = How often do you pay this employee?
+payFrequency.heading = How often do you pay this employee?
+payFrequency.weekly = Weekly
+payFrequency.fortnightly = Every 2 weeks
+payFrequency.fourweekly = Every 4 weeks
+payFrequency.monthly = Monthly
+payFrequency.checkYourAnswersLabel = How often do you pay this employee?
+payFrequency.error.required = Select paymentFrequency

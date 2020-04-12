@@ -14,6 +14,11 @@ import org.scalacheck.Arbitrary.arbDouble
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryPaymentFrequency: Arbitrary[PaymentFrequency] =
+    Arbitrary {
+      Gen.oneOf(PaymentFrequency.values.toSeq)
+    }
+
   implicit lazy val arbitraryPayQuestion: Arbitrary[PayQuestion] =
     Arbitrary {
       Gen.oneOf(PayQuestion.values.toSeq)
@@ -39,7 +44,8 @@ trait ModelGenerators {
   val testOnlyNICGrantModelGen = for {
     startDate <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
     endDate   <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
-  } yield TestOnlyNICGrantModel(startDate, endDate, 1000, Weekly)
+    payDate   <- periodDatesBetween(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31))
+  } yield TestOnlyNICGrantModel(startDate, endDate, 1000, Weekly, payDate)
 
   implicit lazy val arbitraryTestOnlyNICGrantModel: Arbitrary[TestOnlyNICGrantModel] = Arbitrary(
     testOnlyNICGrantModelGen)

@@ -34,7 +34,8 @@ class TestOnlyNICGrantCalculatorControllerSpec extends SpecBaseWithApplication w
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = TestOnlyNICGrantModel(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31), 1000, Weekly)
+  val validAnswer =
+    TestOnlyNICGrantModel(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31), 1000, Weekly, LocalDate.of(2020, 5, 31))
 
   lazy val testOnlyNICGrantCalculatorRoute = routes.TestOnlyNICGrantCalculatorController.onPageLoad(NormalMode).url
 
@@ -55,7 +56,10 @@ class TestOnlyNICGrantCalculatorControllerSpec extends SpecBaseWithApplication w
         "endDate.month"    -> validAnswer.endDate.getMonthValue.toString,
         "endDate.year"     -> validAnswer.endDate.getYear.toString,
         "furloughedAmount" -> "1000",
-        "value"            -> "weekly"
+        "value"            -> "weekly",
+        "payDate.day"      -> validAnswer.payDate.getDayOfMonth.toString,
+        "payDate.month"    -> validAnswer.payDate.getMonthValue.toString,
+        "payDate.year"     -> validAnswer.payDate.getYear.toString,
       )
 
   val getShowResultRequest: FakeRequest[AnyContentAsEmpty.type] =

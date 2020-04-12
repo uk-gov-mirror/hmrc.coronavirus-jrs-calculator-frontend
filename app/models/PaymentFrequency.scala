@@ -4,8 +4,9 @@
  */
 
 package models
+import play.api.data.Form
+import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait PaymentFrequency
@@ -24,12 +25,12 @@ object PaymentFrequency extends Enumerable.Implicits {
     Monthly
   )
 
-  val items: Seq[RadioItem] = values.toSeq.map { value =>
+  def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = values.toSeq.map { value =>
     RadioItem(
-      content = Text(value.toString),
-      id = Some("frequency"),
       value = Some(value.toString),
-      label = Some(Label(attributes = Map("id" -> "frequency"))))
+      content = Text(messages(s"payFrequency.${value.toString}")),
+      checked = form("value").value.contains(value.toString)
+    )
   }
 
   implicit val enumerable: Enumerable[PaymentFrequency] =

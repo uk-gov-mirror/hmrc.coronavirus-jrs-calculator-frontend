@@ -13,7 +13,8 @@ case class TestOnlyNICGrantModel(
   startDate: LocalDate,
   endDate: LocalDate,
   furloughedAmount: Double,
-  frequency: PaymentFrequency)
+  frequency: PaymentFrequency,
+  payDate: LocalDate)
 
 object TestOnlyNICGrantModel {
   implicit val format = Json.format[TestOnlyNICGrantModel]

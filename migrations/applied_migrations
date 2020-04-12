@@ -1,35 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration PayQuestion"
+echo "Applying migration PaymentFrequency"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /payQuestion                        controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /payQuestion                        controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /paymentFrequency                        controllers.PaymentFrequencyController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /paymentFrequency                        controllers.PaymentFrequencyController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changePayQuestion                  controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changePayQuestion                  controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changePaymentFrequency                  controllers.PaymentFrequencyController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changePaymentFrequency                  controllers.PaymentFrequencyController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "payQuestion.title = How is this employee paid?" >> ../conf/messages.en
-echo "payQuestion.heading = How is this employee paid?" >> ../conf/messages.en
-echo "payQuestion.a regular amount each time = a regular amount each time" >> ../conf/messages.en
-echo "payQuestion.it varies each time = it varies each time" >> ../conf/messages.en
-echo "payQuestion.checkYourAnswersLabel = How is this employee paid?" >> ../conf/messages.en
-echo "payQuestion.error.required = Select payQuestion" >> ../conf/messages.en
+echo "paymentFrequency.title = How often do you pay this employee?" >> ../conf/messages.en
+echo "paymentFrequency.heading = How often do you pay this employee?" >> ../conf/messages.en
+echo "paymentFrequency.weekly = Weekly" >> ../conf/messages.en
+echo "paymentFrequency.fortnightly = Every 2 weeks" >> ../conf/messages.en
+echo "paymentFrequency.checkYourAnswersLabel = How often do you pay this employee?" >> ../conf/messages.en
+echo "paymentFrequency.error.required = Select paymentFrequency" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryPayQuestionUserAnswersEntry: Arbitrary[(PayQuestionPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryPaymentFrequencyUserAnswersEntry: Arbitrary[(PaymentFrequencyPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[PayQuestionPage.type]";\
-    print "        value <- arbitrary[PayQuestion].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[PaymentFrequencyPage.type]";\
+    print "        value <- arbitrary[PaymentFrequency].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -38,24 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryPayQuestionPage: Arbitrary[PayQuestionPage.type] =";\
-    print "    Arbitrary(PayQuestionPage)";\
+    print "  implicit lazy val arbitraryPaymentFrequencyPage: Arbitrary[PaymentFrequencyPage.type] =";\
+    print "    Arbitrary(PaymentFrequencyPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to ModelGenerators"
 awk '/trait ModelGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryPayQuestion: Arbitrary[PayQuestion] =";\
+    print "  implicit lazy val arbitraryPaymentFrequency: Arbitrary[PaymentFrequency] =";\
     print "    Arbitrary {";\
-    print "      Gen.oneOf(PayQuestion.values.toSeq)";\
+    print "      Gen.oneOf(PaymentFrequency.values.toSeq)";\
     print "    }";\
     next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(PayQuestionPage.type, JsValue)] ::";\
+    print "    arbitrary[(PaymentFrequencyPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration PayQuestion completed"
+echo "Migration PaymentFrequency completed"

@@ -63,7 +63,7 @@ class TestOnlyNICGrantCalculatorController @Inject()(
             _ <- {
               val nic = handler.handleCalculation(
                 value.frequency,
-                List(FurloughPayment(value.furloughedAmount, PaymentDate(value.endDate)))) //TODO change form to accept multiple
+                List(FurloughPayment(value.furloughedAmount, PaymentDate(value.payDate)))) //TODO change form to accept multiple
               sessionRepository.set(updatedAnswers.copy(data = updatedAnswers.data.+("nic", Json.toJson(nic))))
             }
           } yield {

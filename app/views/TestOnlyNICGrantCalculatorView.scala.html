@@ -51,9 +51,17 @@
         @inputRadio(
             form = form,
             legend = "frequency",
-            items = PaymentFrequency.items,
+            items = PaymentFrequency.options(form),
             legendAsHeading = false,
             classes = "govuk-label--m"
+        )
+
+        @inputDate(
+            form = form,
+            legendContent = "testOnlyNICGrantCalculator.payDate.legend",
+            id = "payDate",
+            legendAsPageHeading = false,
+            legendClasses = "govuk-label--m"
         )
 
         @button("site.saveAndContinue")

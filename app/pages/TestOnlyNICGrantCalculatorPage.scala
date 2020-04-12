@@ -5,8 +5,6 @@
 
 package pages
 
-import java.time.LocalDate
-
 import models.TestOnlyNICGrantModel
 import play.api.libs.json.JsPath
 

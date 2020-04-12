@@ -41,7 +41,13 @@ class TestOnlyNICGrantCalculatorFormProvider @Inject()(appConfig: FrontendAppCon
         "value" -> enumerable(
           requiredKey = "testOnlyNICGrantCalculator.frequency.required",
           invalidKey = "testOnlyNICGrantCalculator.frequency.invalid"
-        )(PaymentFrequency.enumerable)
+        )(PaymentFrequency.enumerable),
+        "payDate" -> localDate(
+          invalidKey = "testOnlyNICGrantCalculator.payDate.error.invalid",
+          allRequiredKey = "testOnlyNICGrantCalculator.payDate.error.required.all",
+          twoRequiredKey = "testOnlyNICGrantCalculator.payDate.error.required.two",
+          requiredKey = "testOnlyNICGrantCalculator.payDate.error.required"
+        ).verifying(validEndDate)
       )(TestOnlyNICGrantModel.apply)(TestOnlyNICGrantModel.unapply))
 
   private def validStartDate: Constraint[LocalDate] = Constraint { claimStartDate =>

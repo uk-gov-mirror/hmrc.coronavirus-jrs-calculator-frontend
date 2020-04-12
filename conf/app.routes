@@ -30,3 +30,8 @@ GET         /pay-question                        controllers.PayQuestionControll
 POST        /pay-question                        controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)
 GET         /change-pay-question                 controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-pay-question                 controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)
+
+GET        /pay-frequency                        controllers.PaymentFrequencyController.onPageLoad(mode: Mode = NormalMode)
+POST       /pay-frequency                        controllers.PaymentFrequencyController.onSubmit(mode: Mode = NormalMode)
+GET        /change-pay-frequency                  controllers.PaymentFrequencyController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-pay-frequency                  controllers.PaymentFrequencyController.onSubmit(mode: Mode = CheckMode)
