@@ -5,7 +5,7 @@
 
 package services
 
-import models.{FurloughPayment, NicCalculationResult, PayPeriodBreakdown, PaymentFrequency}
+import models.{FurloughPayment, NicCalculationResult, PaymentDateBreakdown, PaymentFrequency}
 import utils.TaxYearFinder
 
 trait NicCalculatorService extends TaxYearFinder {
@@ -13,14 +13,14 @@ trait NicCalculatorService extends TaxYearFinder {
   def calculateNics(
     paymentFrequency: PaymentFrequency,
     furloughPayment: List[FurloughPayment]): NicCalculationResult = {
-    val periodBreakdowns: Seq[PayPeriodBreakdown] =
-      furloughPayment.map(payment => PayPeriodBreakdown(calculateNic(paymentFrequency, payment), payment.payPeriod))
+    val periodBreakdowns: Seq[PaymentDateBreakdown] =
+      furloughPayment.map(payment => PaymentDateBreakdown(calculateNic(paymentFrequency, payment), payment.paymentDate))
 
     NicCalculationResult(periodBreakdowns.map(_.amount).sum, periodBreakdowns)
   }
 
   protected def calculateNic(paymentFrequency: PaymentFrequency, furloughPayment: FurloughPayment): Double = {
-    val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.payPeriod))
+    val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.paymentDate))
 
     FrequencyTaxYearThresholdMapping.mappings.get(frequencyTaxYearKey).fold(0.00) { threshold =>
       val cappedFurloughPayment =

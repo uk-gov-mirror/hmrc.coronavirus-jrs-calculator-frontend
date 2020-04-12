@@ -7,11 +7,11 @@ package utils
 
 import java.time.LocalDate
 
-import models.{PayPeriod, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
+import models.{PaymentDate, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
 
 trait TaxYearFinder {
 
-  def taxYearAt(payPeriod: PayPeriod): TaxYear =
-    if (payPeriod.end.isBefore(LocalDate.of(2020, 4, 5))) TaxYearEnding2020 else TaxYearEnding2021
+  def taxYearAt(paymentDate: PaymentDate): TaxYear =
+    if (paymentDate.value.isBefore(LocalDate.of(2020, 4, 5))) TaxYearEnding2020 else TaxYearEnding2021
 
 }
