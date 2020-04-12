@@ -5,10 +5,22 @@
 
 package services
 
-import models.{FurloughPayment, PaymentFrequency}
+import models.{FurloughPayment, NicCalculationResult, PayPeriodBreakdown, PaymentFrequency}
 import utils.TaxYearFinder
 
+import scala.collection.immutable
+
 trait NicCalculatorService extends TaxYearFinder {
+
+  def calculateNics(
+    paymentFrequency: PaymentFrequency,
+    furloughPayment: List[FurloughPayment]): NicCalculationResult = {
+    val periodBreakdowns: Seq[PayPeriodBreakdown] =
+      furloughPayment.map(payment => PayPeriodBreakdown(calculateNic(paymentFrequency, payment), payment.payPeriod))
+
+    NicCalculationResult(periodBreakdowns.map(_.amount).sum, periodBreakdowns)
+  }
+
   def calculateNic(paymentFrequency: PaymentFrequency, furloughPayment: FurloughPayment): Double = {
     val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.payPeriod))
 

@@ -14,3 +14,6 @@ case object TaxYearEnding2021 extends TaxYear
 case class PayPeriod(start: LocalDate, end: LocalDate)
 
 case class FurloughPayment(amount: Double, payPeriod: PayPeriod)
+
+case class PayPeriodBreakdown(amount: Double, payPeriod: PayPeriod)
+case class NicCalculationResult(total: Double, payPeriodBreakdowns: Seq[PayPeriodBreakdown])

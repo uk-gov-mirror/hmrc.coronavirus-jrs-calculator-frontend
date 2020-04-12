@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{FurloughPayment, PayPeriod, TaxYearEnding2020, TaxYearEnding2021}
+import models.{FurloughPayment, NicCalculationResult, PayPeriod, PayPeriodBreakdown, TaxYearEnding2020, TaxYearEnding2021}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class NicCalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
@@ -18,6 +18,16 @@ class NicCalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
     s"For payment frequency $frequency, payment amount ${payment.amount} in $taxYear should return $expected" in new NicCalculatorService {
       calculateNic(frequency, payment) mustBe expected
     }
+  }
+
+  "calculates NI for multiples payments periods" in new NicCalculatorService {
+    val periodOne: PayPeriod = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))
+    val periodTwo: PayPeriod = PayPeriod(LocalDate.of(2020, 4, 7), LocalDate.of(2020, 4, 14))
+    val payments = List(FurloughPayment(200.00, periodOne), FurloughPayment(600.00, periodTwo))
+
+    val expected: NicCalculationResult =
+      NicCalculationResult(60.86, List(PayPeriodBreakdown(4.69, periodOne), PayPeriodBreakdown(56.17, periodTwo)))
+    calculateNics(Weekly, payments) mustBe expected
   }
 
   private lazy val scenarios = Table(
