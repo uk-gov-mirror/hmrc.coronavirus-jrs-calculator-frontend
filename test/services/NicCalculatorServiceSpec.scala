@@ -21,7 +21,7 @@ class NicCalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
   }
 
   "calculates NI for multiples payments periods" in new NicCalculatorService {
-    val periodOne: PayPeriod = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))
+    val periodOne: PayPeriod = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))
     val periodTwo: PayPeriod = PayPeriod(LocalDate.of(2020, 4, 7), LocalDate.of(2020, 4, 14))
     val payments = List(FurloughPayment(200.00, periodOne), FurloughPayment(600.00, periodTwo))
 
