@@ -23,7 +23,7 @@ object PaymentDate {
 }
 
 case class PayPeriod(start: LocalDate, end: LocalDate, paymentDate: PaymentDate)
-case class RegularPayment(salary: Salary, payPeriod: PayPeriod)
+case class RegularPayment(salary: services.Salary, payPeriod: PayPeriod)
 
 case class FurloughPayment(amount: Double, paymentDate: PaymentDate)
 

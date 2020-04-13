@@ -25,6 +25,9 @@ class Navigator @Inject()() {
     case PaymentFrequencyPage =>
       _ =>
         routes.SalaryQuestionController.onPageLoad(NormalMode)
+    case SalaryQuestionPage =>
+      _ =>
+        routes.PayDateController.onPageLoad(1)
     case PayDatePage =>
       _ =>
         routes.ReviewPayDatesController.onPageLoad(NormalMode)
