@@ -1,12 +1,12 @@
 package controllers
 
-import base.SpecBase
+import base.SpecBaseWithApplication
 import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
 import play.api.test.Helpers._
 import views.html.$className$View
 
-class $className$ControllerSpec extends SpecBase {
+class $className$ControllerSpec extends SpecBaseWithApplication {
 
   "$className$ Controller" must {
 

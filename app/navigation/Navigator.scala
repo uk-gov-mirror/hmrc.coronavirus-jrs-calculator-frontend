@@ -22,6 +22,9 @@ class Navigator @Inject()() {
     case PayQuestionPage =>
       _ =>
         routes.PaymentFrequencyController.onPageLoad(NormalMode)
+    case PayDatePage =>
+      _ =>
+        routes.ReviewPayDatesController.onPageLoad(NormalMode)
     case _ =>
       _ =>
         routes.IndexController.onPageLoad()
@@ -33,9 +36,15 @@ class Navigator @Inject()() {
         routes.CheckYourAnswersController.onPageLoad()
   }
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  private val idxRoutes: Page => (Int, UserAnswers) => Call = {
+    case PayDatePage =>
+      (idx, _) =>
+        routes.PayDateController.onPageLoad(idx)
+  }
+
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, idx: Option[Int] = None): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      idx.fold(normalRoutes(page)(userAnswers))(idx => idxRoutes(page)(idx, userAnswers))
     case CheckMode =>
       checkRouteMap(page)(userAnswers)
   }

@@ -1,0 +1,30 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+    govukLayout: templates.GovukLayoutWrapper,
+    errorSummary: components.errorSummary,
+    inputDate: components.inputDate,
+    formHelper: FormWithCSRF,
+    button: components.button
+)
+
+@(form: Form[_], idx: Int)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(title(form, if(idx == 1){"payDate.title.firstDate"} else {"payDate.title"}))) {
+
+    @formHelper(action = PayDateController.onSubmit(idx), 'autoComplete -> "off") {
+
+        @errorSummary(form.errors, Some("date-value.day"))
+
+        @inputDate(
+            form,
+            if(idx == 1){"payDate.heading.firstDate"} else {"payDate.heading"},
+            hintText = Some("payDate.hint")
+        )
+
+        @button("site.saveAndContinue")
+    }
+}

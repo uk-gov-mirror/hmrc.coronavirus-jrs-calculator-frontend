@@ -2,7 +2,7 @@ package controllers
 
 import java.time.{LocalDate, ZoneOffset}
 
-import base.SpecBase
+import base.SpecBaseWithApplication
 import forms.$className$FormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -20,7 +20,7 @@ import views.html.$className$View
 
 import scala.concurrent.Future
 
-class $className$ControllerSpec extends SpecBase with MockitoSugar {
+class $className$ControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   val formProvider = new $className$FormProvider()
   private def form = formProvider()

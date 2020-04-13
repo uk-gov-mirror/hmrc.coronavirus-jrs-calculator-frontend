@@ -167,7 +167,6 @@ claimPeriod.heading = What will the claim period be?
 claimPeriod.p1 = The start date must be 1 March 2020 or later. For example, you could start your claim from the date the first employee was furloughed.
 claimPeriod.p2 = The end date must be 31 May or earlier. For example, you could align your claim with your payroll run.
 claimPeriod.p3 = You can claim in advance, but the end date of your claim must be no more than 14 days before the employee gets paid.
-
 claimPeriod.checkYourAnswersLabel = Claim Period
 
 claimPeriod.start.legend = Start date
@@ -220,3 +219,20 @@ payFrequency.fourweekly = Every 4 weeks
 payFrequency.monthly = Monthly
 payFrequency.checkYourAnswersLabel = How often do you pay this employee?
 payFrequency.error.required = Select paymentFrequency
+
+payDate.title = What is this employee’s next pay day?
+payDate.heading = What is this employee’s next pay day?
+payDate.title.firstDate = What was this employee’s last pay day before the claim period started?
+payDate.heading.firstDate = What was this employee’s last pay day before the claim period started?
+payDate.checkYourAnswersLabel = PayDate
+payDate.hint = For example, 30 4 2020
+payDate.error.required.all = Enter the pay date
+payDate.error.required.two = The pay date must include {0} and {1}
+payDate.error.required = The pay date must include {0}
+payDate.error.invalid = Enter a real pay date
+
+reviewPayDates.title = Pay dates within the claim period
+reviewPayDates.heading = Pay dates within the claim period
+reviewPayDates.addMore = Do you need to add another pay date for this claim period?
+reviewPayDates.checkYourAnswersLabel = reviewPayDates
+reviewPayDates.error.required = Select yes if reviewPayDates

@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 import pages._
 import play.api.libs.json._
-import queries.{Gettable, Settable}
+import queries.{Gettable, Query, Settable}
 
 import scala.util.{Failure, Success, Try}
 
@@ -19,12 +19,17 @@ final case class UserAnswers(
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
-  def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
-    Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
+  private def path[T <: Query](page: T, idx: Option[Int]): JsPath = idx.fold(page.path)(idx => page.path \ (idx - 1))
 
-  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
+  def get[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): Option[A] =
+    Reads.optionNoError(Reads.at(path(page, idx))).reads(data).getOrElse(None)
 
-    val updatedData = data.setObject(page.path, Json.toJson(value)) match {
+  def getList[A](page: Gettable[A])(implicit rds: Reads[A]): Seq[A] =
+    page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
+
+  def set[A](page: Settable[A], value: A, idx: Option[Int] = None)(implicit writes: Writes[A]): Try[UserAnswers] = {
+
+    val updatedData = data.setObject(path(page, idx), Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
       case JsError(errors) =>
@@ -37,9 +42,9 @@ final case class UserAnswers(
     }
   }
 
-  def remove[A](page: Settable[A]): Try[UserAnswers] = {
+  def remove[A](page: Settable[A], idx: Option[Int] = None): Try[UserAnswers] = {
 
-    val updatedData = data.setObject(page.path, JsNull) match {
+    val updatedData = data.setObject(path(page, idx), JsNull) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
       case JsError(_) =>
