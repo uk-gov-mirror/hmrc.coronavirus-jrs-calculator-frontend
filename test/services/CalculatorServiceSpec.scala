@@ -9,8 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{CalculationResult, FurloughPayment, PaymentDate, PaymentDateBreakdown, PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021, WithName}
-import org.scalatest.prop.TableFor5
+import models.{CalculationResult, FurloughPayment, PaymentDate, PaymentDateBreakdown, TaxYearEnding2020, TaxYearEnding2021}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class CalculatorServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
