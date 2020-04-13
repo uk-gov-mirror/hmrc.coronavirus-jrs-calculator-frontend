@@ -9,10 +9,17 @@ import java.time.{Instant, LocalDate, ZoneOffset}
 
 import models.PaymentFrequency.Weekly
 import models._
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbDouble
+import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
+
+  implicit lazy val arbitrarySalaryQuestion: Arbitrary[Salary] =
+    Arbitrary {
+      for {
+        salary <- Arbitrary.arbitrary[Double]
+      } yield Salary(salary)
+    }
 
   implicit lazy val arbitraryPaymentFrequency: Arbitrary[PaymentFrequency] =
     Arbitrary {

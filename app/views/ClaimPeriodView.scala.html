@@ -19,7 +19,7 @@
 
     @formHelper(action = ClaimPeriodController.onSubmit(mode)) {
 
-        @errorSummary(form.errors, Some("date-value.day"))
+        @errorSummary(form.errors)
 
         @h1("claimPeriod.heading")
 
