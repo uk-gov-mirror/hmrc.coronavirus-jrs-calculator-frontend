@@ -55,7 +55,8 @@ class ReviewPayDatesControllerSpec extends SpecBaseWithApplication with MockitoS
     "return OK and the correct view for a GET when date list is non-empty" in {
       val date = LocalDate.of(2020, 3, 1)
 
-      val userAnswers = UserAnswers("id").set(PayDatePage, date, Some(1))
+      val userAnswers = UserAnswers("id")
+        .set(PayDatePage, date, Some(1))
         .getOrElse(fail("Could not initialise user answers with PayDate data"))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -132,14 +133,14 @@ class ReviewPayDatesControllerSpec extends SpecBaseWithApplication with MockitoS
 
       val date = LocalDate.of(2020, 3, 1)
 
-      val userAnswers = UserAnswers("id").set(PayDatePage, date, Some(1))
+      val userAnswers = UserAnswers("id")
+        .set(PayDatePage, date, Some(1))
         .getOrElse(fail("Could not initialise user answers with PayDate data"))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
-        FakeRequest(POST, reviewPayDatesRoute)
-          .withCSRFToken
+        FakeRequest(POST, reviewPayDatesRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 

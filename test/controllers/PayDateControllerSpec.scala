@@ -39,13 +39,11 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, payDateRoute)
-      .withCSRFToken
+    FakeRequest(GET, payDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, payDateRoute)
-      .withCSRFToken
+    FakeRequest(POST, payDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
         "value.day"   -> validAnswer.getDayOfMonth.toString,
@@ -117,8 +115,7 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, payDateRoute)
-          .withCSRFToken
+        FakeRequest(POST, payDateRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 

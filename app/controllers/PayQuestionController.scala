@@ -8,7 +8,7 @@ package controllers
 import controllers.actions._
 import forms.PayQuestionFormProvider
 import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.Navigator
 import pages.PayQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,8 +34,8 @@ class PayQuestionController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.internalId)).get(PayQuestionPage) match {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.get(PayQuestionPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -43,18 +43,15 @@ class PayQuestionController @Inject()(
     Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(
-                               request.userAnswers
-                                 .getOrElse(UserAnswers(request.internalId))
-                                 .set(PayQuestionPage, value))
-            _ <- sessionRepository.set(updatedAnswers)
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(PayQuestionPage, value))
+            _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(PayQuestionPage, mode, updatedAnswers))
       )
   }

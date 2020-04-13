@@ -43,17 +43,16 @@ class PayDateController @Inject()(
 
   def form = formProvider()
 
-  def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, idx))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(PayDatePage, value, Some(idx)))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(PayDatePage, NormalMode, updatedAnswers))
-        )
+  def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, idx))),
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(PayDatePage, value, Some(idx)))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(PayDatePage, NormalMode, updatedAnswers))
+      )
   }
 }

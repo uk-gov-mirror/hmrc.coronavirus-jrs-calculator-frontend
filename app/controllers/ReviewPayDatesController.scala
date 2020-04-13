@@ -43,19 +43,18 @@ class ReviewPayDatesController @Inject()(
     }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      val payDateList = request.userAnswers.getList(PayDatePage)
-      Future.successful(
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => BadRequest(view(payDateList, formWithErrors, mode)), {
-              case true => {
-                Redirect(routes.PayDateController.onPageLoad(payDateList.size + 1))
-              }
-              case false => Redirect(navigator.nextPage(ReviewPayDatesPage, mode, request.userAnswers))
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val payDateList = request.userAnswers.getList(PayDatePage)
+    Future.successful(
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => BadRequest(view(payDateList, formWithErrors, mode)), {
+            case true => {
+              Redirect(routes.PayDateController.onPageLoad(payDateList.size + 1))
             }
-          ))
+            case false => Redirect(navigator.nextPage(ReviewPayDatesPage, mode, request.userAnswers))
+          }
+        ))
   }
 }
