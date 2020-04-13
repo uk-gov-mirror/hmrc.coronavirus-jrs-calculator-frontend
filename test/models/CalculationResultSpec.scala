@@ -17,7 +17,7 @@ class CalculationResultSpec extends SpecBase {
     val paymentDate = PaymentDate(LocalDate.now)
     val nicCalculationResult = CalculationResult(0.10, Seq(PaymentDateBreakdown(123.00, paymentDate)))
     val expectedJsValue =
-      Json.parse("""{"total":0.1,"paymentDateBreakdowns":[{"amount":123,"paymentDate": "2020-04-12"}]}""")
+      Json.parse(s"""{"total":0.1,"paymentDateBreakdowns":[{"amount":123,"paymentDate": "${paymentDate.value}"}]}""")
 
     Json.toJson(nicCalculationResult) mustBe expectedJsValue
   }

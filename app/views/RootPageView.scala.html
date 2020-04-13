@@ -1,0 +1,45 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        h1: components.h1,
+        h2: components.h2,
+        p: components.p,
+        button: components.button
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(titleNoForm("rootPage.title"))) {
+
+    @h1("rootPage.heading")
+
+    @p(Html(Messages("rootPage.p1")))
+    @p(Html(Messages("rootPage.p2")))
+    @p(Html(Messages("rootPage.p3")))
+
+    @h2("rootPage.howItWorks.header")
+
+    @p(Html(Messages("rootPage.howItWorks.p1")))
+    @p(Html(Messages("rootPage.howItWorks.p2")))
+    @p(Html(Messages("rootPage.howItWorks.p3")))
+
+    <a href="claim-period" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
+        @Messages("site.startNow")
+    </a>
+
+    @h2("rootPage.beforeYouStart.header")
+
+    @p(Html(Messages("rootPage.beforeYouStart.p1")))
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@p(Html(Messages("rootPage.beforeYouStart.l1")))</li>
+        <li>@p(Html(Messages("rootPage.beforeYouStart.l2")))</li>
+        <li>@p(Html(Messages("rootPage.beforeYouStart.l3")))</li>
+        <li>@p(Html(Messages("rootPage.beforeYouStart.l4")))</li>
+    </ul>
+
+}
