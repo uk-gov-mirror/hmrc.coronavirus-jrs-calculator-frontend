@@ -8,7 +8,6 @@ package models
 import java.time.LocalDate
 
 import play.api.libs.json.{Format, Json}
-import services.Salary
 import utils.ValueClassFormat
 
 sealed trait TaxYear
@@ -23,21 +22,26 @@ object PaymentDate {
 }
 
 case class PayPeriod(start: LocalDate, end: LocalDate, paymentDate: PaymentDate)
-case class RegularPayment(salary: services.Salary, payPeriod: PayPeriod)
 
-case class FurloughPayment(amount: Double, paymentDate: PaymentDate)
+object PayPeriod {
+  implicit val defaultFormat: Format[PayPeriod] = Json.format
+}
+
+case class RegularPayment(salary: Salary, payPeriod: PayPeriod)
+
+case class FurloughPayment(amount: Double, payPeriod: PayPeriod)
 
 object FurloughPayment {
   implicit val defaultFormat: Format[FurloughPayment] = Json.format
 }
 
-case class PaymentDateBreakdown(amount: Double, paymentDate: PaymentDate)
+case class PayPeriodBreakdown(amount: Double, payPeriod: PayPeriod)
 
-object PaymentDateBreakdown {
-  implicit val defaultFormat: Format[PaymentDateBreakdown] = Json.format
+object PayPeriodBreakdown {
+  implicit val defaultFormat: Format[PayPeriodBreakdown] = Json.format
 }
 
-case class CalculationResult(total: Double, paymentDateBreakdowns: Seq[PaymentDateBreakdown])
+case class CalculationResult(total: Double, payPeriodBreakdowns: Seq[PayPeriodBreakdown])
 
 object CalculationResult {
   implicit val defaultFormat: Format[CalculationResult] = Json.format[CalculationResult]

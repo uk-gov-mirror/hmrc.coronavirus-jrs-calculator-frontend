@@ -5,30 +5,30 @@
 
 package services
 
-import models.{CalculationResult, FurloughPayment, PaymentDateBreakdown, PaymentFrequency}
+import models.{CalculationResult, FurloughPayment, PayPeriodBreakdown, PaymentFrequency}
 import play.api.Logger
 import utils.TaxYearFinder
 
-trait CalculatorService extends TaxYearFinder {
+trait CalculatorService extends TaxYearFinder with FurloughCapCalculator {
 
   def calculateResult(paymentFrequency: PaymentFrequency, furloughPayment: List[FurloughPayment], rate: Rate): CalculationResult = {
-    val paymentDateBreakdowns: Seq[PaymentDateBreakdown] =
-      furloughPayment.map(payment => PaymentDateBreakdown(calculate(paymentFrequency, payment, rate), payment.paymentDate))
+    val paymentDateBreakdowns: Seq[PayPeriodBreakdown] =
+      furloughPayment.map(payment => PayPeriodBreakdown(calculate(paymentFrequency, payment, rate), payment.payPeriod))
 
     CalculationResult(paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
   }
 
   protected def calculate(paymentFrequency: PaymentFrequency, furloughPayment: FurloughPayment, rate: Rate): Double = {
-    val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.paymentDate), rate)
+    val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.payPeriod.paymentDate), rate)
 
     FrequencyTaxYearThresholdMapping.mappings
       .get(frequencyTaxYearKey)
       .fold {
-        Logger.warn(s"Unable to find a rate for $frequencyTaxYearKey")
+        Logger.warn(s"Unable to find a threshold for $frequencyTaxYearKey")
         0.00
       } { threshold =>
-        val cappedFurloughPayment =
-          if (furloughPayment.amount > threshold.upper) threshold.upper else furloughPayment.amount
+        val cap = furloughCap(paymentFrequency, furloughPayment.payPeriod).floor //Remove the pennies
+        val cappedFurloughPayment = cap.min(furloughPayment.amount)
 
         if (cappedFurloughPayment < threshold.lower) 0.00
         else

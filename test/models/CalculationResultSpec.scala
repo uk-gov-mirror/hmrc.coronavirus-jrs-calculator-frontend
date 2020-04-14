@@ -14,10 +14,24 @@ import play.api.libs.json.Json
 class CalculationResultSpec extends SpecBase {
 
   "serialize/deserialize from/to json" in {
-    val paymentDate = PaymentDate(LocalDate.now)
-    val nicCalculationResult = CalculationResult(0.10, Seq(PaymentDateBreakdown(123.00, paymentDate)))
+    val payPeriod = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31), PaymentDate(LocalDate.of(2020, 3, 20)))
+    val nicCalculationResult = CalculationResult(0.10, Seq(PayPeriodBreakdown(123.00, payPeriod)))
     val expectedJsValue =
-      Json.parse(s"""{"total":0.1,"paymentDateBreakdowns":[{"amount":123,"paymentDate": "${paymentDate.value}"}]}""")
+      Json.parse(s"""
+                    |{
+                    |  "total":0.1,
+                    |  "payPeriodBreakdowns":[
+                    |    {
+                    |      "amount":123,
+                    |      "payPeriod":
+                    |      {
+                    |        "start":"${payPeriod.start}",
+                    |        "end":"${payPeriod.end}",
+                    |        "paymentDate":"${payPeriod.paymentDate.value}"
+                    |      }
+                    |    }
+                    |  ]
+                    |}""".stripMargin)
 
     Json.toJson(nicCalculationResult) mustBe expectedJsValue
   }

@@ -6,27 +6,21 @@
 package services
 
 import models.{FurloughPayment, PaymentFrequency, RegularPayment}
-import play.api.Logger
 
-case class Salary(value: Double)
+import scala.math.BigDecimal.RoundingMode
 
-trait FurloughCalculator {
+trait FurloughCalculator extends FurloughCapCalculator {
 
   def calculateMultiple(paymentFrequency: PaymentFrequency, regularPayments: List[RegularPayment]): List[FurloughPayment] =
-    regularPayments.map(payment => FurloughPayment(calculate(paymentFrequency, payment.salary), payment.payPeriod.paymentDate))
+    regularPayments.map(payment => FurloughPayment(calculate(paymentFrequency, payment), payment.payPeriod))
 
-  protected def calculate(paymentFrequency: PaymentFrequency, salary: Salary): Double = {
-    val eigthy = salary.value * 0.8
-    FurloughCapMapping.mappings
-      .get(paymentFrequency)
-      .fold {
-        Logger.warn(s"Unable to find a rate for $paymentFrequency")
-        0.00
-      } { cap =>
-        calculation(eigthy, cap)
-      }
+  protected def calculate(paymentFrequency: PaymentFrequency, regularPayment: RegularPayment): Double = {
+    val eighty = helper(regularPayment.salary.amount * 0.8, RoundingMode.HALF_UP)
+    val cap = furloughCap(paymentFrequency, regularPayment.payPeriod)
+
+    calculation(eighty, cap)
   }
 
-  private def calculation(eigthy: Double, cap: FurloughCap): Double =
-    if (eigthy > cap.value) cap.value else eigthy
+  private def calculation(eighty: Double, cap: Double): Double =
+    if (eighty > cap) cap else eighty
 }
