@@ -1,0 +1,26 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        yesNoRadio: components.yesNoRadio,
+        button: components.button
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(title(form, "pensionAutoEnrolment.title"))) {
+
+    @formHelper(action = PensionAutoEnrolmentController.onSubmit(mode)) {
+
+        @errorSummary(form.errors)
+
+        @yesNoRadio(form, "pensionAutoEnrolment.heading")
+
+        @button("site.saveAndContinue")
+    }
+}

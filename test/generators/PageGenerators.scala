@@ -9,7 +9,10 @@ import org.scalacheck.Arbitrary
 import pages._
 
 trait PageGenerators {
-
+  
+  implicit lazy val arbitraryPensionAutoEnrolmentPage: Arbitrary[PensionAutoEnrolmentPage.type] =
+    Arbitrary(PensionAutoEnrolmentPage)
+  
   implicit lazy val arbitraryNicCategoryPage: Arbitrary[NicCategoryPage.type] =
     Arbitrary(NicCategoryPage)
 

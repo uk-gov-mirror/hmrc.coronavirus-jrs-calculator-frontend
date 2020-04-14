@@ -53,3 +53,8 @@ GET        /nicCategory                        controllers.NicCategoryController
 POST       /nicCategory                        controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
 GET        /changeNicCategory                  controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeNicCategory                  controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)
+
+GET        /pensionAutoEnrolment                        controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = NormalMode)
+POST       /pensionAutoEnrolment                        controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = NormalMode)
+GET        /changePensionAutoEnrolment                  controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = CheckMode)
+POST       /changePensionAutoEnrolment                  controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = CheckMode)
