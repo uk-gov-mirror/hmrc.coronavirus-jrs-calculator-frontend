@@ -29,6 +29,81 @@
             items = NicCategory.options(form)
         )
 
-        @button("site.saveAndContinue")
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                @messages("nicCategory.details.summary")
+                </span>
+            </summary>
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        @messages("nicCategory.letter.legend")
+                    </dt>
+                    <dt class="govuk-summary-list__key">
+                        @messages("nicCategory.group.legend")
+                    </dt>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.letter.a")
+                    </dd>
+                    <dd class="govuk-summary-list__value">
+                       @messages("nicCategory.details.category.a")
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.letter.b")
+                    </dd>
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.category.b")
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.letter.c")
+                    </dd>
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.category.c")
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.letter.j")
+                    </dd>
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.category.j")
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.letter.h")
+                    </dd>
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.category.h")
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.letter.m")
+                    </dd>
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.category.m")
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.letter.z")
+                    </dd>
+                    <dd class="govuk-summary-list__value">
+                        @messages("nicCategory.details.category.z")
+                    </dd>
+                </div>
+            </dl>
+        </details>
+
+        @button("site.continue")
     }
 }
