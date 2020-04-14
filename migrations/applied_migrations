@@ -1,20 +1,52 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration Confirmation"
+echo "Applying migration ClaimPeriodEnd"
 
 echo "Adding routes to conf/app.routes"
+
 echo "" >> ../conf/app.routes
-echo "GET        /confirmation                       controllers.ConfirmationController.onPageLoad()" >> ../conf/app.routes
+echo "GET        /claimPeriodEnd                  controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /claimPeriodEnd                  controllers.ClaimPeriodEndController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+
+echo "GET        /changeClaimPeriodEnd                        controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeClaimPeriodEnd                        controllers.ClaimPeriodEndController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "confirmation.title = confirmation" >> ../conf/messages.en
-echo "confirmation.heading = confirmation" >> ../conf/messages.en
+echo "claimPeriodEnd.title = ClaimPeriodEnd" >> ../conf/messages.en
+echo "claimPeriodEnd.heading = ClaimPeriodEnd" >> ../conf/messages.en
+echo "claimPeriodEnd.checkYourAnswersLabel = ClaimPeriodEnd" >> ../conf/messages.en
+echo "claimPeriodEnd.error.required.all = Enter the claimPeriodEnd" >> ../conf/messages.en
+echo "claimPeriodEnd.error.required.two = The claimPeriodEnd" must include {0} and {1} >> ../conf/messages.en
+echo "claimPeriodEnd.error.required = The claimPeriodEnd must include {0}" >> ../conf/messages.en
+echo "claimPeriodEnd.error.invalid = Enter a real ClaimPeriodEnd" >> ../conf/messages.en
 
-echo "Migration Confirmation completed"
-echo "GET        /pensionAutoEnrolment                        controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /pensionAutoEnrolment                        controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "Adding to UserAnswersEntryGenerators"
+awk '/trait UserAnswersEntryGenerators/ {\
+    print;\
+    print "";\
+    print "  implicit lazy val arbitraryClaimPeriodEndUserAnswersEntry: Arbitrary[(ClaimPeriodEndPage.type, JsValue)] =";\
+    print "    Arbitrary {";\
+    print "      for {";\
+    print "        page  <- arbitrary[ClaimPeriodEndPage.type]";\
+    print "        value <- arbitrary[Int].map(Json.toJson(_))";\
+    print "      } yield (page, value)";\
+    print "    }";\
+    next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
 
-echo "GET        /changePensionAutoEnrolment                  controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changePensionAutoEnrolment                  controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "Adding to PageGenerators"
+awk '/trait PageGenerators/ {\
+    print;\
+    print "";\
+    print "  implicit lazy val arbitraryClaimPeriodEndPage: Arbitrary[ClaimPeriodEndPage.type] =";\
+    print "    Arbitrary(ClaimPeriodEndPage)";\
+    next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
+
+echo "Adding to UserAnswersGenerator"
+awk '/val generators/ {\
+    print;\
+    print "    arbitrary[(ClaimPeriodEndPage.type, JsValue)] ::";\
+    next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
+
+echo "Migration ClaimPeriodEnd completed"

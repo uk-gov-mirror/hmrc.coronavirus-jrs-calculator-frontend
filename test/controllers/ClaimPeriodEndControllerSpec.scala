@@ -8,54 +8,50 @@ package controllers
 import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBaseWithApplication
-import forms.ClaimPeriodFormProvider
-import models.{ClaimPeriodModel, NormalMode, UserAnswers}
+import forms.ClaimPeriodEndFormProvider
+import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ClaimPeriodPage
+import pages.ClaimPeriodEndPage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.ClaimPeriodView
+import views.html.ClaimPeriodEndView
 
 import scala.concurrent.Future
 
-class ClaimPeriodControllerSpecWithApplication extends SpecBaseWithApplication with MockitoSugar {
+class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
-  val formProvider = new ClaimPeriodFormProvider(frontendAppConfig)
+  val formProvider = new ClaimPeriodEndFormProvider(frontendAppConfig)
   private def form = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = ClaimPeriodModel(LocalDate.now(ZoneOffset.UTC), LocalDate.now(ZoneOffset.UTC))
+  val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
-  lazy val claimPeriodRoute = routes.ClaimPeriodController.onPageLoad(NormalMode).url
-  lazy val claimPeriodRoutePost = routes.ClaimPeriodController.onSubmit(NormalMode).url
+  lazy val claimPeriodEndRoute = routes.ClaimPeriodEndController.onPageLoad(NormalMode).url
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, claimPeriodRoute).withCSRFToken
+    FakeRequest(GET, claimPeriodEndRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, claimPeriodRoutePost).withCSRFToken
+    FakeRequest(POST, claimPeriodEndRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
-        "startDateValue.day"   -> validAnswer.startDate.getDayOfMonth.toString,
-        "startDateValue.month" -> validAnswer.startDate.getMonthValue.toString,
-        "startDateValue.year"  -> validAnswer.startDate.getYear.toString,
-        "endDateValue.day"     -> validAnswer.endDate.getDayOfMonth.toString,
-        "endDateValue.month"   -> validAnswer.endDate.getMonthValue.toString,
-        "endDateValue.year"    -> validAnswer.endDate.getYear.toString
+        "endDate.day"   -> validAnswer.getDayOfMonth.toString,
+        "endDate.month" -> validAnswer.getMonthValue.toString,
+        "endDate.year"  -> validAnswer.getYear.toString
       )
 
-  "ClaimPeriod Controller" must {
+  "ClaimPeriodEnd Controller" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -63,23 +59,7 @@ class ClaimPeriodControllerSpecWithApplication extends SpecBaseWithApplication w
 
       val result = route(application, getRequest).value
 
-      val view = application.injector.instanceOf[ClaimPeriodView]
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
-
-      application.stop()
-    }
-
-    "return OK and the correct view for a GET when user answers is not present" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      val result = route(application, getRequest).value
-
-      val view = application.injector.instanceOf[ClaimPeriodView]
+      val view = application.injector.instanceOf[ClaimPeriodEndView]
 
       status(result) mustEqual OK
 
@@ -91,11 +71,11 @@ class ClaimPeriodControllerSpecWithApplication extends SpecBaseWithApplication w
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ClaimPeriodPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ClaimPeriodEndPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val view = application.injector.instanceOf[ClaimPeriodView]
+      val view = application.injector.instanceOf[ClaimPeriodEndView]
 
       val result = route(application, getRequest).value
 
@@ -130,41 +110,18 @@ class ClaimPeriodControllerSpecWithApplication extends SpecBaseWithApplication w
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted and user answer is not present" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = None)
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      val result = route(application, postRequest).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
-    }
-
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, claimPeriodRoute).withCSRFToken
+        FakeRequest(POST, claimPeriodEndRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[ClaimPeriodView]
+      val view = application.injector.instanceOf[ClaimPeriodEndView]
 
       val result = route(application, request).value
 

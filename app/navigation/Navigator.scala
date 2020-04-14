@@ -16,9 +16,9 @@ import models._
 class Navigator @Inject()() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ClaimPeriodPage =>
+    case ClaimPeriodStartPage =>
       _ =>
-        routes.PayQuestionController.onPageLoad(NormalMode)
+        routes.ClaimPeriodEndController.onPageLoad(NormalMode)
     case PayQuestionPage =>
       _ =>
         routes.PaymentFrequencyController.onPageLoad(NormalMode)

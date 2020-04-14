@@ -1,0 +1,41 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        errorSummary: components.errorSummary,
+        inputDate: components.inputDate,
+        formHelper: FormWithCSRF,
+        button: components.button,
+        h1: components.h1,
+        p: components.p
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+    @govukLayout(pageTitle = Some(title(form, "claimPeriodStart.title"))) {
+
+        @formHelper(action = ClaimPeriodStartController.onSubmit(mode), 'autoComplete -> "off") {
+
+            @errorSummary(form.errors)
+
+            @h1("claimPeriodStart.heading")
+
+            @p(Html(Messages("claimPeriodStart.p1")))
+
+            @p(Html(Messages("claimPeriodStart.p2")))
+
+            @inputDate(
+                form = form,
+                legendContent = "claimPeriodStart.legend",
+                id = "startDate",
+                hintText = Some("claimPeriodStart.hint"),
+                legendAsPageHeading = false,
+                legendClasses = "govuk-label--m"
+            )
+
+            @button("site.continue")
+        }
+    }

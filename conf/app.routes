@@ -14,10 +14,15 @@ GET         /unauthorised                        controllers.UnauthorisedControl
 
 GET         /accessibility                       controllers.AccessibilityStatementController.onPageLoad
 
-GET         /claim-period                        controllers.ClaimPeriodController.onPageLoad(mode: Mode = NormalMode)
-POST        /claim-period                        controllers.ClaimPeriodController.onSubmit(mode: Mode = NormalMode)
-GET         /change-claim-period                 controllers.ClaimPeriodController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-claim-period                 controllers.ClaimPeriodController.onSubmit(mode: Mode = CheckMode)
+GET         /claim-period-start                  controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = NormalMode)
+POST        /claim-period-start                  controllers.ClaimPeriodStartController.onSubmit(mode: Mode = NormalMode)
+GET         /change-claim-period-start           controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-claim-period-start           controllers.ClaimPeriodStartController.onSubmit(mode: Mode = CheckMode)
+
+GET         /claim-period-end                    controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = NormalMode)
+POST        /claim-period-end                    controllers.ClaimPeriodEndController.onSubmit(mode: Mode = NormalMode)
+GET         /change-claim-period-end             controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-claim-period-end             controllers.ClaimPeriodEndController.onSubmit(mode: Mode = CheckMode)
 
 GET         /test-only/nic-grant                 controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = NormalMode)
 POST        /test-only/nic-grant                 controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)
@@ -49,14 +54,14 @@ POST        /salary                              controllers.SalaryQuestionContr
 GET         /change-salary                       controllers.SalaryQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-salary                       controllers.SalaryQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /nicCategory                        controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)
-POST       /nicCategory                        controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
-GET        /changeNicCategory                  controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeNicCategory                  controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)
+GET         /nicCategory                         controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)
+POST        /nicCategory                         controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
+GET         /changeNicCategory                   controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
+POST        /changeNicCategory                   controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)
 
-GET        /pensionAutoEnrolment                        controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = NormalMode)
-POST       /pensionAutoEnrolment                        controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = NormalMode)
-GET        /changePensionAutoEnrolment                  controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = CheckMode)
-POST       /changePensionAutoEnrolment                  controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = CheckMode)
+GET         /pensionAutoEnrolment                controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = NormalMode)
+POST        /pensionAutoEnrolment                controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = NormalMode)
+GET         /changePensionAutoEnrolment          controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = CheckMode)
+POST        /changePensionAutoEnrolment          controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = CheckMode)
 
-GET        /confirmation                       controllers.ConfirmationController.onPageLoad()
+GET         /confirmation                        controllers.ConfirmationController.onPageLoad()

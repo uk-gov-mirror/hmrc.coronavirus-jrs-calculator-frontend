@@ -30,7 +30,4 @@ trait PageGenerators {
 
   implicit lazy val arbitraryTestOnlyNICGrantCalculatorPage: Arbitrary[TestOnlyNICGrantCalculatorPage.type] =
     Arbitrary(TestOnlyNICGrantCalculatorPage)
-
-  implicit lazy val arbitraryClaimPeriodPage: Arbitrary[ClaimPeriodPage.type] =
-    Arbitrary(ClaimPeriodPage)
 }

@@ -36,12 +36,11 @@ trait ModelGenerators {
       Gen.oneOf(PayQuestion.values.toSeq)
     }
 
-  val claimPeriodModelGen = for {
-    startDate <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
-    endDate   <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
-  } yield ClaimPeriodModel(startDate, endDate)
+  val claimPeriodDatesGen = for {
+    date <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 5, 31))
+  } yield date
 
-  implicit lazy val arbitraryClaimPeriodModel: Arbitrary[ClaimPeriodModel] = Arbitrary(claimPeriodModelGen)
+  implicit lazy val arbitraryClaimPeriod: Arbitrary[LocalDate] = Arbitrary(claimPeriodDatesGen)
 
   private def periodDatesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
 

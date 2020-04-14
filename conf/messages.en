@@ -163,29 +163,6 @@ session_expired.guidance = The details you have given have been deleted because 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-claimPeriod.title = What will the claim period be?
-claimPeriod.heading = What will the claim period be?
-claimPeriod.p1 = The start date must be 1 March 2020 or later. For example, you could start your claim from the date the first employee was furloughed.
-claimPeriod.p2 = The end date must be 31 May or earlier. For example, you could align your claim with your payroll run.
-claimPeriod.p3 = You can claim in advance, but the end date of your claim must be no more than 14 days before the employee gets paid.
-claimPeriod.checkYourAnswersLabel = Claim Period
-
-claimPeriod.start.legend = Start date
-claimPeriod.start.hint = For example, 1 3 2020
-claimPeriod.start.error.required.all = Enter the start date
-claimPeriod.start.error.required.two = The start date must include {0} and {1}
-claimPeriod.start.error.required = The start date must include {0}
-claimPeriod.start.error.invalid = Enter a real start date
-claimPeriod.start.error.outofrange = The claim period start should be between {0} and {1}
-
-claimPeriod.end.legend = End date
-claimPeriod.end.hint = For example, 31 3 2020
-claimPeriod.end.error.required.all = Enter the end date
-claimPeriod.end.error.required.two = The end date must include {0} and {1}
-claimPeriod.end.error.required = The end date must include {0}
-claimPeriod.end.error.invalid = Enter a real end date
-claimPeriod.end.error.outofrange = The claim period end should be between {0} and {1}
-
 testOnlyNICGrantCalculator.title = Test only form for NIC Calculations 
 testOnlyNICGrantCalculator.heading = Test only form for NIC Calculations
 testOnlyNICGrantCalculator.checkYourAnswersLabel = TestOnlyNICGrantCalculator
@@ -297,3 +274,29 @@ confirmation.breakdown.details = Breakdown of the figures for each pay date
 confirmation.nextSteps.heading = Next steps
 confirmation.nextSteps.p1 = These figures are for a single employee. To fill in your Job Retention Scheme claim you will need a total for all of the employees you are claiming for.
 confirmation.startAgain = Start calculation again
+
+claimPeriodStart.title = What’s the start date of this claim?
+claimPeriodStart.heading = What’s the start date of this claim?
+claimPeriodStart.p1 = The first claim under the Job Retention Scheme normally starts from the date the first employee started furlough.
+claimPeriodStart.p2 = You can backdate your first claim to 1 March 2020, which is the date the scheme started.
+claimPeriodStart.checkYourAnswersLabel = What’s the start date of this claim?
+claimPeriodStart.error.required.all = Enter the start date of this claim
+claimPeriodStart.error.required.two = The start date must include {0} and {1}
+claimPeriodStart.error.required = The start date must include {0}
+claimPeriodStart.error.invalid = Enter a real start date
+claimPeriodStart.error.outofrange = The claim period start should be between {0} and {1}
+claimPeriodStart.legend = Start date
+claimPeriodStart.hint = For example, 1 3 2020
+
+claimPeriodEnd.title = What’s the end date of this claim?
+claimPeriodEnd.heading = What’s the end date of this claim?
+claimPeriodEnd.p1 = This must be 30 May 2020 or earlier, which is the date the scheme is currently scheduled to end. You may want to choose an earlier date, for example one that aligns your claim with your payroll run.
+claimPeriodEnd.p2 = The end date cannot be more than 14 days before the employee gets paid.
+claimPeriodEnd.checkYourAnswersLabel = What’s the end date of this claim?
+claimPeriodEnd.error.required.all = Enter the end date
+claimPeriodEnd.error.required.two = The end date must include {0} and {1}
+claimPeriodEnd.error.required = The end date must include {0}
+claimPeriodEnd.error.invalid = Enter a real end date
+claimPeriodEnd.error.outofrange = The claim period end should be between {0} and {1}
+claimPeriodEnd.legend = End date
+claimPeriodEnd.hint = For example, 31 3 2020

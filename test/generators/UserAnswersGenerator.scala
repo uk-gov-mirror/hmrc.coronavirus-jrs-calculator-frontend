@@ -16,14 +16,15 @@ trait UserAnswersGenerator extends TryValues {
   self: Generators =>
 
   val generators: Seq[Gen[(QuestionPage[_], JsValue)]] =
-    arbitrary[(PensionAutoEnrolmentPage.type, JsValue)] ::
+    arbitrary[(ClaimPeriodEndPage.type, JsValue)] ::
+      arbitrary[(ClaimPeriodStartPage.type, JsValue)] ::
+      arbitrary[(PensionAutoEnrolmentPage.type, JsValue)] ::
       arbitrary[(NicCategoryPage.type, JsValue)] ::
       arbitrary[(SalaryQuestionPage.type, JsValue)] ::
       arbitrary[(PaymentFrequencyPage.type, JsValue)] ::
       arbitrary[(PayDatePage.type, JsValue)] ::
       arbitrary[(PayQuestionPage.type, JsValue)] ::
       arbitrary[(TestOnlyNICGrantCalculatorPage.type, JsValue)] ::
-      arbitrary[(ClaimPeriodPage.type, JsValue)] ::
       Nil
 
   implicit lazy val arbitraryUserData: Arbitrary[UserAnswers] = {
