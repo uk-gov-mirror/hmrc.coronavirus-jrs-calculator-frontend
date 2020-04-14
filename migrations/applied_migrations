@@ -1,36 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration ClaimPeriodEnd"
+echo "Applying migration FurloughQuestion"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /claimPeriodEnd                  controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /claimPeriodEnd                  controllers.ClaimPeriodEndController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /furloughQuestion                        controllers.FurloughQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /furloughQuestion                        controllers.FurloughQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeClaimPeriodEnd                        controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeClaimPeriodEnd                        controllers.ClaimPeriodEndController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeFurloughQuestion                  controllers.FurloughQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeFurloughQuestion                  controllers.FurloughQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "claimPeriodEnd.title = ClaimPeriodEnd" >> ../conf/messages.en
-echo "claimPeriodEnd.heading = ClaimPeriodEnd" >> ../conf/messages.en
-echo "claimPeriodEnd.checkYourAnswersLabel = ClaimPeriodEnd" >> ../conf/messages.en
-echo "claimPeriodEnd.error.required.all = Enter the claimPeriodEnd" >> ../conf/messages.en
-echo "claimPeriodEnd.error.required.two = The claimPeriodEnd" must include {0} and {1} >> ../conf/messages.en
-echo "claimPeriodEnd.error.required = The claimPeriodEnd must include {0}" >> ../conf/messages.en
-echo "claimPeriodEnd.error.invalid = Enter a real ClaimPeriodEnd" >> ../conf/messages.en
+echo "furloughQuestion.title = Was the employee furloughed for the whole of this time?" >> ../conf/messages.en
+echo "furloughQuestion.heading = Was the employee furloughed for the whole of this time?" >> ../conf/messages.en
+echo "furloughQuestion.yes = Yes" >> ../conf/messages.en
+echo "furloughQuestion.no = No" >> ../conf/messages.en
+echo "furloughQuestion.checkYourAnswersLabel = Was the employee furloughed for the whole of this time?" >> ../conf/messages.en
+echo "furloughQuestion.error.required = Select furloughQuestion" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryClaimPeriodEndUserAnswersEntry: Arbitrary[(ClaimPeriodEndPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryFurloughQuestionUserAnswersEntry: Arbitrary[(FurloughQuestionPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[ClaimPeriodEndPage.type]";\
-    print "        value <- arbitrary[Int].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[FurloughQuestionPage.type]";\
+    print "        value <- arbitrary[FurloughQuestion].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -39,14 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryClaimPeriodEndPage: Arbitrary[ClaimPeriodEndPage.type] =";\
-    print "    Arbitrary(ClaimPeriodEndPage)";\
+    print "  implicit lazy val arbitraryFurloughQuestionPage: Arbitrary[FurloughQuestionPage.type] =";\
+    print "    Arbitrary(FurloughQuestionPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
+
+echo "Adding to ModelGenerators"
+awk '/trait ModelGenerators/ {\
+    print;\
+    print "";\
+    print "  implicit lazy val arbitraryFurloughQuestion: Arbitrary[FurloughQuestion] =";\
+    print "    Arbitrary {";\
+    print "      Gen.oneOf(FurloughQuestion.values.toSeq)";\
+    print "    }";\
+    next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(ClaimPeriodEndPage.type, JsValue)] ::";\
+    print "    arbitrary[(FurloughQuestionPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration ClaimPeriodEnd completed"
+echo "Migration FurloughQuestion completed"

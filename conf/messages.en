@@ -300,3 +300,11 @@ claimPeriodEnd.error.invalid = Enter a real end date
 claimPeriodEnd.error.outofrange = The claim period end should be between {0} and {1}
 claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
+
+furloughQuestion.title = Was the employee furloughed for the whole of this time?
+furloughQuestion.heading = Was the employee furloughed for the whole of this time?
+furloughQuestion.yes = Yes
+furloughQuestion.no = No
+furloughQuestion.checkYourAnswersLabel = Was the employee furloughed for the whole of this time?
+furloughQuestion.error.required = Select one of the options below
+furloughQuestion.hint = From {0} to {1}

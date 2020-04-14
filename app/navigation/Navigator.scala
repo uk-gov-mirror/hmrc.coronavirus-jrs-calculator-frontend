@@ -19,6 +19,18 @@ class Navigator @Inject()() {
     case ClaimPeriodStartPage =>
       _ =>
         routes.ClaimPeriodEndController.onPageLoad(NormalMode)
+
+    case ClaimPeriodEndPage =>
+      _ =>
+        routes.FurloughQuestionController.onPageLoad(NormalMode)
+    case FurloughQuestionPage =>
+      userAnswers =>
+        {
+          val fq = Option((userAnswers.data \ "furloughQuestion").as[String]).getOrElse("no")
+          if (fq == "yes")
+            routes.PayQuestionController.onPageLoad(NormalMode)
+          else routes.RootPageController.onPageLoad()
+        }
     case PayQuestionPage =>
       _ =>
         routes.PaymentFrequencyController.onPageLoad(NormalMode)

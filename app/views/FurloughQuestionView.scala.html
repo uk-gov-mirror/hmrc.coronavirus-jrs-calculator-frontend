@@ -1,0 +1,35 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@import controllers.routes._
+@import models.{Mode, FurloughQuestion}
+@import java.time.LocalDate
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        inputRadio: components.inputRadio,
+        button: components.button
+)
+
+@(form: Form[_], startDate: LocalDate, endDate: LocalDate, mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(title(form, "furloughQuestion.title"))) {
+
+    @formHelper(action = FurloughQuestionController.onSubmit(mode), 'autoComplete -> "off") {
+
+        @errorSummary(form.errors)
+
+        @inputRadio(
+            form = form,
+            hintKey = Some(messages("furloughQuestion.hint", startDate, endDate)),
+            legend = messages("furloughQuestion.heading"),
+            items = FurloughQuestion.options(form)
+        )
+
+        @button("site.continue")
+    }
+}
