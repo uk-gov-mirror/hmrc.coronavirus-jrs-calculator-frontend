@@ -1,38 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration SalaryQuestion"
+echo "Applying migration NicCategory"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /salaryQuestion                        controllers.SalaryQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /salaryQuestion                        controllers.SalaryQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /nicCategory                        controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /nicCategory                        controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeSalaryQuestion                  controllers.SalaryQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeSalaryQuestion                  controllers.SalaryQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeNicCategory                  controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeNicCategory                  controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "salaryQuestion.title = salaryQuestion" >> ../conf/messages.en
-echo "salaryQuestion.heading = salaryQuestion" >> ../conf/messages.en
-echo "salaryQuestion.salary = salary" >> ../conf/messages.en
-echo "salaryQuestion.field2 = field2" >> ../conf/messages.en
-echo "salaryQuestion.checkYourAnswersLabel = salaryQuestion" >> ../conf/messages.en
-echo "salaryQuestion.error.salary.required = Enter salary" >> ../conf/messages.en
-echo "salaryQuestion.error.field2.required = Enter field2" >> ../conf/messages.en
-echo "salaryQuestion.error.salary.length = salary must be 5 characters or less" >> ../conf/messages.en
-echo "salaryQuestion.error.field2.length = field2 must be 100 characters or less" >> ../conf/messages.en
+echo "nicCategory.title = What is the employee's National Insurance category letter?" >> ../conf/messages.en
+echo "nicCategory.heading = What is the employee's National Insurance category letter?" >> ../conf/messages.en
+echo "nicCategory.payable = A, B, C, J" >> ../conf/messages.en
+echo "nicCategory.nonPayable = H, M, Z" >> ../conf/messages.en
+echo "nicCategory.checkYourAnswersLabel = What is the employee's National Insurance category letter?" >> ../conf/messages.en
+echo "nicCategory.error.required = Select nicCategory" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitrarySalaryQuestionUserAnswersEntry: Arbitrary[(SalaryQuestionPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryNicCategoryUserAnswersEntry: Arbitrary[(NicCategoryPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[SalaryQuestionPage.type]";\
-    print "        value <- arbitrary[SalaryQuestion].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[NicCategoryPage.type]";\
+    print "        value <- arbitrary[NicCategory].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -41,27 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitrarySalaryQuestionPage: Arbitrary[SalaryQuestionPage.type] =";\
-    print "    Arbitrary(SalaryQuestionPage)";\
+    print "  implicit lazy val arbitraryNicCategoryPage: Arbitrary[NicCategoryPage.type] =";\
+    print "    Arbitrary(NicCategoryPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to ModelGenerators"
 awk '/trait ModelGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitrarySalaryQuestion: Arbitrary[SalaryQuestion] =";\
+    print "  implicit lazy val arbitraryNicCategory: Arbitrary[NicCategory] =";\
     print "    Arbitrary {";\
-    print "      for {";\
-    print "        salary <- arbitrary[String]";\
-    print "        field2 <- arbitrary[String]";\
-    print "      } yield SalaryQuestion(salary, field2)";\
+    print "      Gen.oneOf(NicCategory.values.toSeq)";\
     print "    }";\
     next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(SalaryQuestionPage.type, JsValue)] ::";\
+    print "    arbitrary[(NicCategoryPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration SalaryQuestion completed"
+echo "Migration NicCategory completed"

@@ -1,0 +1,33 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@import controllers.routes._
+@import models.{Mode, NicCategory}
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        inputRadio: components.inputRadio,
+        button: components.button
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(title(form, "nicCategory.title"))) {
+
+    @formHelper(action = NicCategoryController.onSubmit(mode), 'autoComplete -> "off") {
+
+        @errorSummary(form.errors)
+
+        @inputRadio(
+            form = form,
+            legend = messages("nicCategory.heading"),
+            items = NicCategory.options(form)
+        )
+
+        @button("site.saveAndContinue")
+    }
+}

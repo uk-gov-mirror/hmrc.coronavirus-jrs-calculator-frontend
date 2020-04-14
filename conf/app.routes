@@ -48,3 +48,8 @@ GET         /salary                              controllers.SalaryQuestionContr
 POST        /salary                              controllers.SalaryQuestionController.onSubmit(mode: Mode = NormalMode)
 GET         /change-salary                       controllers.SalaryQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-salary                       controllers.SalaryQuestionController.onSubmit(mode: Mode = CheckMode)
+
+GET        /nicCategory                        controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)
+POST       /nicCategory                        controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
+GET        /changeNicCategory                  controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeNicCategory                  controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)

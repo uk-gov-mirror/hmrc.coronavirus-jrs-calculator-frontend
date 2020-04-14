@@ -14,6 +14,11 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryNicCategory: Arbitrary[NicCategory] =
+    Arbitrary {
+      Gen.oneOf(NicCategory.values.toSeq)
+    }
+
   implicit lazy val arbitrarySalaryQuestion: Arbitrary[Salary] =
     Arbitrary {
       for {

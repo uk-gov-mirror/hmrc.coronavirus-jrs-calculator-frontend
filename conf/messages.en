@@ -266,3 +266,10 @@ salaryQuestion.salary.hint= This is the gross amount before deductions.
 salaryQuestion.salary.error.required = Enter a valid amount
 salaryQuestion.salary.error.invalid = Enter a valid amount
 salaryQuestion.salary.error.negative = Salary can’t be negative
+
+nicCategory.title = What is the employee’s National Insurance category letter?
+nicCategory.heading = What is the employee’s National Insurance category letter?
+nicCategory.payable = A, B, C, J
+nicCategory.nonPayable = H, M, Z
+nicCategory.checkYourAnswersLabel = What is the employee's National Insurance category letter?
+nicCategory.error.required = Select nicCategory
