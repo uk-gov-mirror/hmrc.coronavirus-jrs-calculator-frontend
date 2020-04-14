@@ -27,7 +27,7 @@ trait CalculatorService extends TaxYearFinder with FurloughCapCalculator {
         Logger.warn(s"Unable to find a threshold for $frequencyTaxYearKey")
         0.00
       } { threshold =>
-        val cap = furloughCap(paymentFrequency, furloughPayment.payPeriod).floor //Remove the pennies
+        val cap = furloughCap(paymentFrequency, furloughPayment.payPeriod.payPeriod).floor //Remove the pennies
         val cappedFurloughPayment = cap.min(furloughPayment.amount)
 
         if (cappedFurloughPayment < threshold.lower) 0.00

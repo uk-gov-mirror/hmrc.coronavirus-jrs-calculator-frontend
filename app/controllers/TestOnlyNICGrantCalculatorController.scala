@@ -9,7 +9,7 @@ import controllers.actions._
 import forms.TestOnlyNICGrantCalculatorFormProvider
 import handlers.GrantCalculatorControllerRequestHandler
 import javax.inject.Inject
-import models.{FurloughPayment, Mode, PayPeriod, PaymentDate, UserAnswers}
+import models.{FurloughPayment, Mode, PayPeriod, PayPeriodWithPayDay, PaymentDate, UserAnswers}
 import navigation.Navigator
 import pages.TestOnlyNICGrantCalculatorPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -64,8 +64,12 @@ class TestOnlyNICGrantCalculatorController @Inject()(
             _ <- {
               val nic = handler.handleCalculation(
                 value.frequency,
-                List(FurloughPayment(value.furloughedAmount, PayPeriod(value.startDate, value.endDate, PaymentDate(value.payDate)))),
-                NiRate()) //TODO change form to accept multiple
+                List(
+                  FurloughPayment(
+                    value.furloughedAmount,
+                    PayPeriodWithPayDay(PayPeriod(value.startDate, value.endDate), PaymentDate(value.payDate)))),
+                NiRate()
+              ) //TODO change form to accept multiple
               sessionRepository.set(updatedAnswers.copy(data = updatedAnswers.data + ("nic", Json.toJson(nic))))
             }
           } yield {

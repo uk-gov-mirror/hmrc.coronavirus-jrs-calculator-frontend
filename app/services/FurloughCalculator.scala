@@ -5,14 +5,15 @@
 
 package services
 
-import models.{FurloughPayment, PaymentFrequency, RegularPayment}
+import models.{FurloughPayment, PayPeriodWithPayDay, PaymentDate, PaymentFrequency, RegularPayment}
 
 import scala.math.BigDecimal.RoundingMode
 
 trait FurloughCalculator extends FurloughCapCalculator {
 
   def calculateMultiple(paymentFrequency: PaymentFrequency, regularPayments: List[RegularPayment]): List[FurloughPayment] =
-    regularPayments.map(payment => FurloughPayment(calculate(paymentFrequency, payment), payment.payPeriod))
+    regularPayments.map(payment =>
+      FurloughPayment(calculate(paymentFrequency, payment), PayPeriodWithPayDay(payment.payPeriod, PaymentDate(payment.payPeriod.end))))
 
   protected def calculate(paymentFrequency: PaymentFrequency, regularPayment: RegularPayment): Double = {
     val eighty = helper(regularPayment.salary.amount * 0.8, RoundingMode.HALF_UP)
