@@ -250,6 +250,7 @@ nicCategory.payable = A, B, C, J
 nicCategory.nonPayable = H, M, Z
 nicCategory.checkYourAnswersLabel = What is the employee's National Insurance category letter?
 nicCategory.error.required = Select nicCategory
+nicCategory.hint = Most employees have category letter A.
 
 pensionAutoEnrolment.title = Has this employee opted out of pension auto-enrolment?
 pensionAutoEnrolment.heading = Has this employee opted out of pension auto-enrolment?

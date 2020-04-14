@@ -43,6 +43,15 @@ class Navigator @Inject()() {
     case PayDatePage =>
       _ =>
         routes.ReviewPayDatesController.onPageLoad(NormalMode)
+    case ReviewPayDatesPage =>
+      _ =>
+        routes.NicCategoryController.onPageLoad(NormalMode)
+    case NicCategoryPage =>
+      _ =>
+        routes.PensionAutoEnrolmentController.onPageLoad(NormalMode)
+    case PensionAutoEnrolmentPage =>
+      _ =>
+        routes.ConfirmationController.onPageLoad()
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
