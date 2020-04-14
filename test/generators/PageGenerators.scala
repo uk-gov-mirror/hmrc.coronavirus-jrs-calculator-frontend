@@ -10,6 +10,9 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryTaxYearPayDatePage: Arbitrary[TaxYearPayDatePage.type] =
+    Arbitrary(TaxYearPayDatePage)
+
   implicit lazy val arbitraryClaimPeriodStartPage: Arbitrary[ClaimPeriodStartPage.type] =
     Arbitrary(ClaimPeriodStartPage)
 

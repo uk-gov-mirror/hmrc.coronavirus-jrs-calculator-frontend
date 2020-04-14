@@ -70,3 +70,7 @@ GET         /changePensionAutoEnrolment          controllers.PensionAutoEnrolmen
 POST        /changePensionAutoEnrolment          controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = CheckMode)
 
 GET         /confirmation                        controllers.ConfirmationController.onPageLoad()
+GET         /tax-year-pay-date                   controllers.TaxYearPayDateController.onPageLoad(mode: Mode = NormalMode)
+POST        /tax-year-pay-date                   controllers.TaxYearPayDateController.onSubmit(mode: Mode = NormalMode)
+GET         /change-tax-year-pay-date            controllers.TaxYearPayDateController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-tax-year-pay-date            controllers.TaxYearPayDateController.onSubmit(mode: Mode = CheckMode)

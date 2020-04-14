@@ -51,6 +51,9 @@ class Navigator @Inject()() {
         routes.PensionAutoEnrolmentController.onPageLoad(NormalMode)
     case PensionAutoEnrolmentPage =>
       _ =>
+        routes.TaxYearPayDateController.onPageLoad(NormalMode)
+    case TaxYearPayDatePage =>
+      _ =>
         routes.ConfirmationController.onPageLoad()
     case _ =>
       _ =>

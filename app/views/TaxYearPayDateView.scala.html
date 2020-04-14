@@ -15,23 +15,21 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, "claimPeriodEnd.title"))) {
+    @govukLayout(pageTitle = Some(title(form, "taxYearPayDate.title"))) {
 
-        @formHelper(action = ClaimPeriodEndController.onSubmit(mode)) {
+        @formHelper(action = TaxYearPayDateController.onSubmit(mode), 'autoComplete -> "off") {
 
             @errorSummary(form.errors)
 
-            @h1("claimPeriodEnd.heading")
+            @h1("taxYearPayDate.heading")
 
-            @p(Html(Messages("claimPeriodEnd.p1")))
-
-            @p(Html(Messages("claimPeriodEnd.p2")))
+            @p(Html(Messages("taxYearPayDate.p1")))
 
             @inputDate(
                 form = form,
-                legendContent = "claimPeriodEnd.legend",
-                id = "endDate",
-                hintText = Some("claimPeriodEnd.hint"),
+                legendContent = "taxYearPayDate.legend",
+                id = "payDate",
+                hintText = Some("taxYearPayDate.hint"),
                 legendAsPageHeading = false,
                 legendClasses = "govuk-label--m"
             )

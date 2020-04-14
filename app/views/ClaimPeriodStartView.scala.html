@@ -17,7 +17,7 @@
 
     @govukLayout(pageTitle = Some(title(form, "claimPeriodStart.title"))) {
 
-        @formHelper(action = ClaimPeriodStartController.onSubmit(mode), 'autoComplete -> "off") {
+        @formHelper(action = ClaimPeriodStartController.onSubmit(mode)) {
 
             @errorSummary(form.errors)
 

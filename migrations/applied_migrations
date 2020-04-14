@@ -1,35 +1,36 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration FurloughQuestion"
+echo "Applying migration TaxYearPayDate"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /furloughQuestion                        controllers.FurloughQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /furloughQuestion                        controllers.FurloughQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /taxYearPayDate                  controllers.TaxYearPayDateController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /taxYearPayDate                  controllers.TaxYearPayDateController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeFurloughQuestion                  controllers.FurloughQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeFurloughQuestion                  controllers.FurloughQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeTaxYearPayDate                        controllers.TaxYearPayDateController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeTaxYearPayDate                        controllers.TaxYearPayDateController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "furloughQuestion.title = Was the employee furloughed for the whole of this time?" >> ../conf/messages.en
-echo "furloughQuestion.heading = Was the employee furloughed for the whole of this time?" >> ../conf/messages.en
-echo "furloughQuestion.yes = Yes" >> ../conf/messages.en
-echo "furloughQuestion.no = No" >> ../conf/messages.en
-echo "furloughQuestion.checkYourAnswersLabel = Was the employee furloughed for the whole of this time?" >> ../conf/messages.en
-echo "furloughQuestion.error.required = Select furloughQuestion" >> ../conf/messages.en
+echo "taxYearPayDate.title = TaxYearPayDate" >> ../conf/messages.en
+echo "taxYearPayDate.heading = TaxYearPayDate" >> ../conf/messages.en
+echo "taxYearPayDate.checkYourAnswersLabel = TaxYearPayDate" >> ../conf/messages.en
+echo "taxYearPayDate.error.required.all = Enter the taxYearPayDate" >> ../conf/messages.en
+echo "taxYearPayDate.error.required.two = The taxYearPayDate" must include {0} and {1} >> ../conf/messages.en
+echo "taxYearPayDate.error.required = The taxYearPayDate must include {0}" >> ../conf/messages.en
+echo "taxYearPayDate.error.invalid = Enter a real TaxYearPayDate" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughQuestionUserAnswersEntry: Arbitrary[(FurloughQuestionPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryTaxYearPayDateUserAnswersEntry: Arbitrary[(TaxYearPayDatePage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[FurloughQuestionPage.type]";\
-    print "        value <- arbitrary[FurloughQuestion].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[TaxYearPayDatePage.type]";\
+    print "        value <- arbitrary[Int].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -38,24 +39,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughQuestionPage: Arbitrary[FurloughQuestionPage.type] =";\
-    print "    Arbitrary(FurloughQuestionPage)";\
+    print "  implicit lazy val arbitraryTaxYearPayDatePage: Arbitrary[TaxYearPayDatePage.type] =";\
+    print "    Arbitrary(TaxYearPayDatePage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
-
-echo "Adding to ModelGenerators"
-awk '/trait ModelGenerators/ {\
-    print;\
-    print "";\
-    print "  implicit lazy val arbitraryFurloughQuestion: Arbitrary[FurloughQuestion] =";\
-    print "    Arbitrary {";\
-    print "      Gen.oneOf(FurloughQuestion.values.toSeq)";\
-    print "    }";\
-    next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(FurloughQuestionPage.type, JsValue)] ::";\
+    print "    arbitrary[(TaxYearPayDatePage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration FurloughQuestion completed"
+echo "Migration TaxYearPayDate completed"
