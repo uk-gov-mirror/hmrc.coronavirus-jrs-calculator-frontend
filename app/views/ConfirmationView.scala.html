@@ -1,0 +1,78 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+    govukLayout: templates.GovukLayoutWrapper,
+    h1: components.h1,
+    h2: components.h2,
+    p: components.p,
+    confirmation: components.confirmation,
+    button: components.button
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(titleNoForm("confirmation.title"))) {
+
+    @confirmation{
+
+        @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-font-size-24"))
+
+        <span class="govuk-!-font-weight-bold">&pound;300.00</span> - Furloughed pay <br/>
+        <span class="govuk-!-font-weight-bold">&pound;50.00</span> - Employer NIC <br/>
+        <span class="govuk-!-font-weight-bold">&pound;25.00</span> - Pension contribution <br/>
+    }
+
+    @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
+
+    @p(Html(messages("confirmation.explanation.p1")))
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("confirmation.claimPeriod", "claimStartDate", "claimEndDate")</li>
+        <li>@messages("confirmation.furlough.wholePeriod")</li>
+        <li>@messages("confirmation.paid.fourWeekly")</li>
+        <li>@messages("confirmation.nic.payable")</li>
+        <li>@messages("confirmation.pension.in")</li>
+    </ul>
+
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+          @messages("confirmation.breakdown.details")
+        </span>
+        </summary>
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Breakdown by pay date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    Up to (date)<br><br>
+                    &pound;100.00 <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
+                    &pound;100.00 <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
+                    &pound;100.00 <span class="govuk-!-font-weight-regular">- Pension contribution</span>
+                </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Breakdown by pay date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    Up to (date)<br><br>
+                    &pound;100.00 <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
+                    &pound;100.00 <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
+                    &pound;100.00 <span class="govuk-!-font-weight-regular">- Pension contribution</span>
+                </dd>
+            </div>
+        </dl>
+    </details>
+
+    @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
+
+    @p(Html(messages("confirmation.nextSteps.p1")))
+
+    @button(messages("confirmation.startAgain"), href = Some("#"), classes = Some("govuk-button--secondary"))
+}

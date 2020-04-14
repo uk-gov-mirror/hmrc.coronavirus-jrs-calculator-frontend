@@ -58,3 +58,5 @@ GET        /pensionAutoEnrolment                        controllers.PensionAutoE
 POST       /pensionAutoEnrolment                        controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = NormalMode)
 GET        /changePensionAutoEnrolment                  controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = CheckMode)
 POST       /changePensionAutoEnrolment                  controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = CheckMode)
+
+GET        /confirmation                       controllers.ConfirmationController.onPageLoad()
