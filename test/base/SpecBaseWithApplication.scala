@@ -44,4 +44,33 @@ trait SpecBaseWithApplication extends PlaySpec with GuiceOneAppPerSuite with Try
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
+
+  def dummyUserAnswers = Json.parse(userAnswersJson).as[UserAnswers]
+  private val userAnswersJson: String =
+    """
+      |{
+      |    "_id" : "session-3fdd2682-dad1-48e1-80d6-8c1480696811",
+      |    "data" : {
+      |        "taxYearPayDate" : "2020-04-20",
+      |        "furloughQuestion" : "yes",
+      |        "payQuestion" : "regularly",
+      |        "pensionAutoEnrolment" : false,
+      |        "claimPeriodEnd" : "2020-04-30",
+      |        "paymentFrequency" : "monthly",
+      |        "salary" : {
+      |            "amount" : 2000.0
+      |        },
+      |        "nicCategory" : "payable",
+      |        "claimPeriodStart" : "2020-03-01",
+      |        "payDate" : [
+      |            "2020-02-29",
+      |            "2020-03-31",
+      |            "2020-04-30"
+      |        ]
+      |    },
+      |    "lastUpdated" : {
+      |        "$date": 1586873457650
+      |    }
+      |}
+      |""".stripMargin
 }
