@@ -50,12 +50,6 @@
 @beforeContentBlock = {
 
     @phaseBanner("alpha")
-
-    @govukBackLink(BackLink(href = "#", content = Text("Back"), attributes = Map("id" -> "back-link")))
-
-    @if(appConfig.languageTranslationEnabled) {
-        @languageSelection()
-    }
 }
 
 @govukLayout(
