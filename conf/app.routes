@@ -14,6 +14,8 @@ GET         /unauthorised                        controllers.UnauthorisedControl
 
 GET         /service-unavailable                 controllers.ErrorController.internalServerError
 
+GET         /restart-service                     controllers.StartAgainController.startAgain
+
 GET         /accessibility                       controllers.AccessibilityStatementController.onPageLoad
 
 GET         /claim-period-start                  controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = NormalMode)

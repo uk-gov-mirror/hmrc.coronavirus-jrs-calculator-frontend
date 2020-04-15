@@ -66,5 +66,5 @@
 
     @p(Html(messages("confirmation.nextSteps.p1")))
 
-    @button(messages("confirmation.startAgain"), href = Some("#"), classes = Some("govuk-button--secondary"))
+    @button(messages("confirmation.startAgain"), href = Some(routes.StartAgainController.startAgain()), classes = Some("govuk-button--secondary"))
 }
