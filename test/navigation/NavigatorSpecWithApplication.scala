@@ -5,6 +5,8 @@
 
 package navigation
 
+import java.time.LocalDate
+
 import base.SpecBaseWithApplication
 import controllers.routes
 import pages._
@@ -22,6 +24,26 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.RootPageController.onPageLoad()
+      }
+
+      "loop around pay date if last pay date isn't after claim end date" in {
+        val userAnswers = UserAnswers("id")
+          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 30))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 5, 29), Some(1))
+          .get
+
+        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.PayDateController.onPageLoad(2)
+      }
+
+      "stop loop around pay date if last pay date is after claim end date" in {
+        val userAnswers = UserAnswers("id")
+          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 30))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 5, 31), Some(1))
+          .get
+
+        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
       }
     }
 

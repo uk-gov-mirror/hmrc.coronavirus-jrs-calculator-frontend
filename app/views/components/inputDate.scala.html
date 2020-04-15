@@ -8,6 +8,7 @@
 @(
   form: Form[_],
   legendContent: String,
+  legendContentArgs: Seq[String] = Seq.empty,
   legendClasses: String = "govuk-fieldset__legend--xl",
   id: String = "value",
   hintText: Option[String] = None,
@@ -17,7 +18,7 @@
     fieldset = Some(Fieldset(
         legend = Some(
             Legend(
-                content = Text(messages(legendContent)),
+                content = Text(messages(legendContent, legendContentArgs:_*)),
                 isPageHeading = legendAsPageHeading,
                 classes = legendClasses
             )

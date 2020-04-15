@@ -5,6 +5,9 @@
 
 package views
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import play.api.data.Form
 import play.api.i18n.Messages
 
@@ -20,4 +23,7 @@ object ViewUtils {
 
   def errorPrefix(form: Form[_])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
+
+  private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  def dateToString(date: LocalDate): String = dateFormatter.format(date)
 }

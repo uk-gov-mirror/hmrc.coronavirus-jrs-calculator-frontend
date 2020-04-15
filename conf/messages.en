@@ -159,6 +159,9 @@ session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
 
+errorPage.title = Sorry, there is a problem with the service
+errorPage.heading = Sorry, there is a problem with the service
+errorPage.p1 = Try again later.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
@@ -214,16 +217,18 @@ rootPage.beforeYouStart.l2 = period of furlough
 rootPage.beforeYouStart.l3 = National Insurance category number
 rootPage.beforeYouStart.l4 = pension auto-enrolment status (whether or not they opted out)
 
-payDate.title = What is this employee’s next pay day?
-payDate.heading = What is this employee’s next pay day?
-payDate.title.firstDate = What was this employee’s last pay day before the claim period started?
-payDate.heading.firstDate = What was this employee’s last pay day before the claim period started?
+payDate.title = When was the end of the next pay period?
+payDate.heading = When was the end of the next pay period after {0}?
+payDate.title.firstDate = When was the end of this employee’s last pay period the claim period?
+payDate.heading.firstDate = When was the end of this employee’s last pay period before {0}?
 payDate.checkYourAnswersLabel = PayDate
 payDate.hint = For example, 30 4 2020
-payDate.error.required.all = Enter the pay date
-payDate.error.required.two = The pay date must include {0} and {1}
-payDate.error.required = The pay date must include {0}
-payDate.error.invalid = Enter a real pay date
+payDate.error.required.all = Enter the date
+payDate.error.required.two = The date must include {0} and {1}
+payDate.error.required = The date must include {0}
+payDate.error.invalid = Enter a real date
+payDate.error.mustBeBefore = The date must be before {0}
+payDate.error.mustBeAfter = The date must be after {0}
 
 reviewPayDates.title = Pay dates within the claim period
 reviewPayDates.heading = Pay dates within the claim period

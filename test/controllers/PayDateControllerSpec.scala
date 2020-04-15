@@ -9,12 +9,12 @@ import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBaseWithApplication
 import forms.PayDateFormProvider
-import models.UserAnswers
+import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.PayDatePage
+import pages.{ClaimPeriodStartPage, PayDatePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
@@ -32,17 +32,19 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.of(2020, 3, 3)
+  val schemeStartDate = LocalDate.of(2020, 3, 1)
+  val claimStartDate = LocalDate.of(2020, 3, 5)
 
   lazy val payDateRoute = routes.PayDateController.onPageLoad(1).url
 
-  override val emptyUserAnswers = UserAnswers(userAnswersId)
+  val userAnswersWithStartDate = UserAnswers(userAnswersId).set(ClaimPeriodStartPage, claimStartDate).success.value
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, payDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
+  lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, payDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
@@ -54,8 +56,7 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
   "PayDate Controller" must {
 
     "return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
 
       val result = route(application, getRequest).value
 
@@ -64,14 +65,14 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, 1)(getRequest, messages).toString
+        view(form, 1, claimStartDate)(getRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(PayDatePage, validAnswer).success.value
+      val userAnswers = userAnswersWithStartDate.set(PayDatePage, validAnswer, Some(1)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -82,7 +83,7 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), 1)(getRequest, messages).toString
+        view(form.fill(validAnswer), 1, claimStartDate)(getRequest, messages).toString
 
       application.stop()
     }
@@ -94,7 +95,7 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithStartDate))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -112,7 +113,7 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
 
       val request =
         FakeRequest(POST, payDateRoute).withCSRFToken
@@ -128,7 +129,7 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, 1)(request, messages).toString
+        view(boundForm, 1, claimStartDate)(request, messages).toString
 
       application.stop()
     }

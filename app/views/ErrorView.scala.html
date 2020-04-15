@@ -1,0 +1,19 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+        main_template: templates.GovukLayoutWrapper,
+        h1: components.h1,
+        p: components.p
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@main_template(Some(titleNoForm("errorPage.title")), timeout = false) {
+
+    @h1(messages("errorPage.heading"))
+
+    @p(Html(messages("errorPage.p1")))
+}
