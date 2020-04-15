@@ -41,7 +41,18 @@ object PayPeriodBreakdown {
   implicit val defaultFormat: Format[PayPeriodBreakdown] = Json.format
 }
 
-case class CalculationResult(total: Double, payPeriodBreakdowns: Seq[PayPeriodBreakdown])
+sealed trait Calculation
+case object Calculation extends Enumerable.Implicits {
+  case object FurloughCalculationResult extends WithName("furlough") with Calculation
+  case object NicCalculationResult extends WithName("nic") with Calculation
+  case object PensionCalculationResult extends WithName("pension") with Calculation
+
+  val values: Seq[Calculation] = Seq(FurloughCalculationResult, NicCalculationResult, PensionCalculationResult)
+
+  implicit val enumerable: Enumerable[Calculation] = Enumerable(values.map(v => v.toString -> v): _*)
+}
+
+case class CalculationResult(calculation: Calculation, total: Double, payPeriodBreakdowns: Seq[PayPeriodBreakdown])
 
 object CalculationResult {
   implicit val defaultFormat: Format[CalculationResult] = Json.format[CalculationResult]

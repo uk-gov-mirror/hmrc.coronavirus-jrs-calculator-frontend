@@ -5,37 +5,53 @@
 
 package handlers
 
-import models.NicCategory.Payable
+import models.Calculation.{NicCalculationResult, PensionCalculationResult}
+import models.NicCategory.{Nonpayable, Payable}
 import models.{CalculationResult, RegularPayment, UserAnswers}
-import pages.{NicCategoryPage, PayDatePage, PaymentFrequencyPage, PensionAutoEnrolmentPage, SalaryQuestionPage, TaxYearPayDatePage}
-import services.{FurloughCalculator, NiRate, NicPensionCalculator, PayPeriodGenerator, PensionRate}
+import pages._
+import services._
 import viewmodels.ConfirmationViewBreakdown
 
 trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPeriodGenerator with NicPensionCalculator {
 
-  def breakdown(userAnswers: UserAnswers) =
+  def breakdown(userAnswers: UserAnswers): Option[ConfirmationViewBreakdown] =
     for {
-      frequency     <- userAnswers.get(PaymentFrequencyPage)
-      salary        <- userAnswers.get(SalaryQuestionPage)
-      nicCategory   <- userAnswers.get(NicCategoryPage)
-      pensionOptOut <- userAnswers.get(PensionAutoEnrolmentPage)
-      taxYearPayDay <- userAnswers.get(TaxYearPayDatePage)
-      endDates = userAnswers.getList(PayDatePage)
-      payPeriods = generatePayPeriods(endDates)
-      regularPayments = payPeriods.map(p => RegularPayment(salary, p))
-      furlough = calculateFurlough(frequency, regularPayments, taxYearPayDay)
-    } yield {
-      val nic = nicCategory match {
-        case Payable => calculateGrant(frequency, furlough.payPeriodBreakdowns, NiRate())
-        case _       => CalculationResult(0.00, furlough.payPeriodBreakdowns.map(p => p.copy(amount = 0.00)))
-      }
+      furlough <- handleCalculation(userAnswers)
+      ni       <- handleCalculationNi(userAnswers, furlough)
+      pension  <- handleCalculationPension(userAnswers, furlough)
+    } yield ConfirmationViewBreakdown(furlough, ni, pension)
 
-      val pension = pensionOptOut match {
-        case false => calculateGrant(frequency, furlough.payPeriodBreakdowns, PensionRate())
-        case _     => CalculationResult(0.00, furlough.payPeriodBreakdowns.map(p => p.copy(amount = 0)))
-      }
+  def handleCalculation(userAnswers: UserAnswers): Option[CalculationResult] =
+    for {
+      frequency  <- userAnswers.get(PaymentFrequencyPage)
+      taxPayYear <- userAnswers.get(TaxYearPayDatePage)
+      payDate = userAnswers.getList(PayDatePage)
+      periods = generatePayPeriods(payDate.toList)
+      salary = userAnswers.get(SalaryQuestionPage)
+      regulars = periods.map(p => RegularPayment(salary.get, p))
+    } yield calculateFurlough(frequency, regulars, taxPayYear)
 
-      ConfirmationViewBreakdown(furlough, nic, pension)
+  protected def handleCalculationNi(userAnswers: UserAnswers, furloughResult: CalculationResult): Option[CalculationResult] =
+    userAnswers.get(NicCategoryPage) match {
+      case Some(Payable) => calculateNi(userAnswers, furloughResult)
+      case Some(Nonpayable) =>
+        Option(CalculationResult(NicCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(amount = 0.0)))) // TODO cleanup
     }
 
+  protected def handleCalculationPension(userAnswers: UserAnswers, furloughResult: CalculationResult): Option[CalculationResult] =
+    userAnswers.get(PensionAutoEnrolmentPage) match {
+      case Some(false) => calculatePension(userAnswers, furloughResult)
+      case Some(true) =>
+        Option(CalculationResult(PensionCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(amount = 0.0)))) // TODO cleanup
+    }
+
+  private def calculateNi(userAnswers: UserAnswers, furloughResult: CalculationResult): Option[CalculationResult] =
+    for {
+      frequency <- userAnswers.get(PaymentFrequencyPage)
+    } yield calculateGrant(frequency, furloughResult.payPeriodBreakdowns.toList, NiRate())
+
+  private def calculatePension(userAnswers: UserAnswers, furloughResult: CalculationResult): Option[CalculationResult] =
+    for {
+      frequency <- userAnswers.get(PaymentFrequencyPage)
+    } yield calculateGrant(frequency, furloughResult.payPeriodBreakdowns.toList, PensionRate())
 }

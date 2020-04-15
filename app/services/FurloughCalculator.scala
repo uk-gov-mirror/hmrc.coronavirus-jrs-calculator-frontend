@@ -7,6 +7,7 @@ package services
 
 import java.time.LocalDate
 
+import models.Calculation.FurloughCalculationResult
 import models.{CalculationResult, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, PaymentFrequency, RegularPayment}
 import utils.TaxYearFinder
 
@@ -27,7 +28,7 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder {
       PayPeriodBreakdown(calculate(paymentFrequency, payment), PayPeriodWithPayDay(payment.payPeriod, paymentDate))
     }
 
-    CalculationResult(paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
+    CalculationResult(FurloughCalculationResult, paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
   }
 
   protected def calculate(paymentFrequency: PaymentFrequency, regularPayment: RegularPayment): Double = {

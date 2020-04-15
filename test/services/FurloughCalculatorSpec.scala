@@ -8,6 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
+import models.Calculation.FurloughCalculationResult
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{CalculationResult, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, RegularPayment, Salary}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -33,7 +34,10 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     val periodTwoWithNewPaymentDate = periodTwo.copy(paymentDate = PaymentDate(taxYearDate))
 
     val expected =
-      CalculationResult(3200.00, List(PayPeriodBreakdown(1600.0, periodOne), PayPeriodBreakdown(1600.0, periodTwoWithNewPaymentDate)))
+      CalculationResult(
+        FurloughCalculationResult,
+        3200.00,
+        List(PayPeriodBreakdown(1600.0, periodOne), PayPeriodBreakdown(1600.0, periodTwoWithNewPaymentDate)))
 
     calculateFurlough(Monthly, payments, taxYearDate) mustBe expected
   }

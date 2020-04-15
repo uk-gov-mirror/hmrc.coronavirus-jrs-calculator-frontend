@@ -8,6 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
+import models.Calculation.NicCalculationResult
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{CalculationResult, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, TaxYearEnding2020, TaxYearEnding2021}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -44,7 +45,10 @@ class NicPensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     val payments = List(PayPeriodBreakdown(200.00, weeklyPayPeriodOne), PayPeriodBreakdown(600.00, weeklyPayPeriodTwo))
 
     val expected: CalculationResult =
-      CalculationResult(60.86, List(PayPeriodBreakdown(4.69, weeklyPayPeriodOne), PayPeriodBreakdown(56.17, weeklyPayPeriodTwo)))
+      CalculationResult(
+        NicCalculationResult,
+        60.86,
+        List(PayPeriodBreakdown(4.69, weeklyPayPeriodOne), PayPeriodBreakdown(56.17, weeklyPayPeriodTwo)))
     calculateGrant(Weekly, payments, NiRate()) mustBe expected
   }
 

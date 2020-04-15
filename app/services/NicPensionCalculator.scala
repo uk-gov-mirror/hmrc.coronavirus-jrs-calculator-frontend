@@ -5,6 +5,7 @@
 
 package services
 
+import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.{CalculationResult, PayPeriodBreakdown, PaymentFrequency}
 import play.api.Logger
 import utils.TaxYearFinder
@@ -15,7 +16,10 @@ trait NicPensionCalculator extends TaxYearFinder with FurloughCapCalculator {
     val paymentDateBreakdowns: Seq[PayPeriodBreakdown] =
       furloughPayment.map(payment => PayPeriodBreakdown(calculate(paymentFrequency, payment, rate), payment.payPeriodWithPayDay))
 
-    CalculationResult(paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
+    rate match {
+      case NiRate(_)      => CalculationResult(NicCalculationResult, paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
+      case PensionRate(_) => CalculationResult(PensionCalculationResult, paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
+    }
   }
 
   protected def calculate(paymentFrequency: PaymentFrequency, furloughPayment: PayPeriodBreakdown, rate: Rate): Double = {
