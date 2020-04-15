@@ -5,21 +5,21 @@
 
 package services
 
-import models.{CalculationResult, FurloughPayment, PayPeriodBreakdown, PaymentFrequency}
+import models.{CalculationResult, PayPeriodBreakdown, PaymentFrequency}
 import play.api.Logger
 import utils.TaxYearFinder
 
-trait CalculatorService extends TaxYearFinder with FurloughCapCalculator {
+trait NicPensionCalculator extends TaxYearFinder with FurloughCapCalculator {
 
-  def calculateResult(paymentFrequency: PaymentFrequency, furloughPayment: List[FurloughPayment], rate: Rate): CalculationResult = {
+  def calculateGrant(paymentFrequency: PaymentFrequency, furloughPayment: Seq[PayPeriodBreakdown], rate: Rate): CalculationResult = {
     val paymentDateBreakdowns: Seq[PayPeriodBreakdown] =
-      furloughPayment.map(payment => PayPeriodBreakdown(calculate(paymentFrequency, payment, rate), payment.payPeriod))
+      furloughPayment.map(payment => PayPeriodBreakdown(calculate(paymentFrequency, payment, rate), payment.payPeriodWithPayDay))
 
     CalculationResult(paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
   }
 
-  protected def calculate(paymentFrequency: PaymentFrequency, furloughPayment: FurloughPayment, rate: Rate): Double = {
-    val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.payPeriod.paymentDate), rate)
+  protected def calculate(paymentFrequency: PaymentFrequency, furloughPayment: PayPeriodBreakdown, rate: Rate): Double = {
+    val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.payPeriodWithPayDay.paymentDate), rate)
 
     FrequencyTaxYearThresholdMapping.mappings
       .get(frequencyTaxYearKey)
@@ -27,7 +27,7 @@ trait CalculatorService extends TaxYearFinder with FurloughCapCalculator {
         Logger.warn(s"Unable to find a threshold for $frequencyTaxYearKey")
         0.00
       } { threshold =>
-        val cap = furloughCap(paymentFrequency, furloughPayment.payPeriod.payPeriod).floor //Remove the pennies
+        val cap = furloughCap(paymentFrequency, furloughPayment.payPeriodWithPayDay.payPeriod).floor //Remove the pennies
         val cappedFurloughPayment = cap.min(furloughPayment.amount)
 
         if (cappedFurloughPayment < threshold.lower) 0.00

@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{FurloughPayment, PayPeriod, PayPeriodWithPayDay, PaymentDate, RegularPayment, Salary}
+import models.{CalculationResult, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, RegularPayment, Salary}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
@@ -20,7 +20,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     }
   }
 
-  "return a list of furlough payments for a list regular payment" in new FurloughCalculator {
+  "return a CalculationResult with a total and a list of furlough payments for a given list regular payment" in new FurloughCalculator {
     val periodOne =
       PayPeriodWithPayDay(PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)), PaymentDate(LocalDate.of(2020, 3, 31)))
     val periodTwo =
@@ -28,10 +28,14 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     val paymentOne: RegularPayment = RegularPayment(Salary(2000.00), periodOne.payPeriod)
     val paymentTwo: RegularPayment = RegularPayment(Salary(2000.00), periodTwo.payPeriod)
     val payments: List[RegularPayment] = List(paymentOne, paymentTwo)
-    val expected =
-      List(FurloughPayment(1600.0, periodOne), FurloughPayment(1600.0, periodTwo))
 
-    calculateMultiple(Monthly, payments) mustBe expected
+    val taxYearDate = LocalDate.of(2020, 4, 20)
+    val periodTwoWithNewPaymentDate = periodTwo.copy(paymentDate = PaymentDate(taxYearDate))
+
+    val expected =
+      CalculationResult(3200.00, List(PayPeriodBreakdown(1600.0, periodOne), PayPeriodBreakdown(1600.0, periodTwoWithNewPaymentDate)))
+
+    calculateFurlough(Monthly, payments, taxYearDate) mustBe expected
   }
 
   private lazy val scenarios = Table(

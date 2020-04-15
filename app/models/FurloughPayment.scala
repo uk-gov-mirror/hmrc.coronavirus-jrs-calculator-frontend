@@ -35,12 +35,6 @@ object PayPeriodWithPayDay {
 
 case class RegularPayment(salary: Salary, payPeriod: PayPeriod)
 
-case class FurloughPayment(amount: Double, payPeriod: PayPeriodWithPayDay)
-
-object FurloughPayment {
-  implicit val defaultFormat: Format[FurloughPayment] = Json.format
-}
-
 case class PayPeriodBreakdown(amount: Double, payPeriodWithPayDay: PayPeriodWithPayDay)
 
 object PayPeriodBreakdown {

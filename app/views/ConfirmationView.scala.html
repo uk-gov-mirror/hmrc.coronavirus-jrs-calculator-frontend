@@ -3,6 +3,8 @@
  *
  *@
 
+@import viewmodels.ConfirmationViewBreakdown
+
 @this(
     govukLayout: templates.GovukLayoutWrapper,
     h1: components.h1,
@@ -12,7 +14,7 @@
     button: components.button
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(cvb: ConfirmationViewBreakdown)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title"))) {
 
@@ -20,9 +22,9 @@
 
         @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-font-size-24"))
 
-        <span class="govuk-!-font-weight-bold">&pound;300.00</span> - Furloughed pay <br/>
-        <span class="govuk-!-font-weight-bold">&pound;50.00</span> - Employer NIC <br/>
-        <span class="govuk-!-font-weight-bold">&pound;25.00</span> - Pension contribution <br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.furlough.total</span> - Furloughed pay <br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.nic.total</span> - Employer NIC <br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.pension.total</span> - Pension contribution <br/>
     }
 
     @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
@@ -44,29 +46,19 @@
         </span>
         </summary>
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Breakdown by pay date
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    Up to (date)<br><br>
-                    &pound;100.00 <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
-                    &pound;100.00 <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
-                    &pound;100.00 <span class="govuk-!-font-weight-regular">- Pension contribution</span>
-                </dd>
-            </div>
-
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Breakdown by pay date
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    Up to (date)<br><br>
-                    &pound;100.00 <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
-                    &pound;100.00 <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
-                    &pound;100.00 <span class="govuk-!-font-weight-regular">- Pension contribution</span>
-                </dd>
-            </div>
+            @for((furlough, nic, pension) <- (cvb.furlough.payPeriodBreakdowns, cvb.nic.payPeriodBreakdowns, cvb.pension.payPeriodBreakdowns).zipped.toList) {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Breakdown by pay date
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        Up to @furlough.payPeriodWithPayDay.payPeriod.end<br><br>
+                        &pound;@furlough.amount <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
+                        &pound;@nic.amount <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
+                        &pound;@pension.amount <span class="govuk-!-font-weight-regular">- Pension contribution</span>
+                    </dd>
+                </div>
+            }
         </dl>
     </details>
 

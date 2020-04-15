@@ -5,11 +5,11 @@
 
 package handlers
 
-import models.{CalculationResult, FurloughPayment, PaymentFrequency}
-import services.{CalculatorService, Rate}
+import models.{CalculationResult, PayPeriodBreakdown, PaymentFrequency}
+import services.{NicPensionCalculator, Rate}
 
-class GrantCalculatorControllerRequestHandler extends CalculatorService {
+class GrantCalculatorControllerRequestHandler extends NicPensionCalculator {
 
-  def handleCalculation(paymentFrequency: PaymentFrequency, furloughPayments: List[FurloughPayment], rate: Rate): CalculationResult =
-    calculateResult(paymentFrequency, furloughPayments, rate)
+  def handleCalculation(paymentFrequency: PaymentFrequency, payPeriodBreakdowns: List[PayPeriodBreakdown], rate: Rate): CalculationResult =
+    calculateGrant(paymentFrequency, payPeriodBreakdowns, rate)
 }

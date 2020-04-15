@@ -5,23 +5,36 @@
 
 package services
 
-import models.{FurloughPayment, PayPeriodWithPayDay, PaymentDate, PaymentFrequency, RegularPayment}
+import java.time.LocalDate
+
+import models.{CalculationResult, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, PaymentFrequency, RegularPayment}
+import utils.TaxYearFinder
 
 import scala.math.BigDecimal.RoundingMode
 
-trait FurloughCalculator extends FurloughCapCalculator {
+trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder {
 
-  def calculateMultiple(paymentFrequency: PaymentFrequency, regularPayments: List[RegularPayment]): List[FurloughPayment] =
-    regularPayments.map(payment =>
-      FurloughPayment(calculate(paymentFrequency, payment), PayPeriodWithPayDay(payment.payPeriod, PaymentDate(payment.payPeriod.end))))
+  def calculateFurlough(
+    paymentFrequency: PaymentFrequency,
+    regularPayments: Seq[RegularPayment],
+    taxYearPayDate: LocalDate): CalculationResult = {
+    val paymentDateBreakdowns = regularPayments.map { payment =>
+      val paymentDate = containsNewTaxYear(payment.payPeriod) match {
+        case true  => PaymentDate(taxYearPayDate)
+        case false => PaymentDate(payment.payPeriod.end)
+      }
+
+      PayPeriodBreakdown(calculate(paymentFrequency, payment), PayPeriodWithPayDay(payment.payPeriod, paymentDate))
+    }
+
+    CalculationResult(paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
+  }
 
   protected def calculate(paymentFrequency: PaymentFrequency, regularPayment: RegularPayment): Double = {
     val eighty = helper(regularPayment.salary.amount * 0.8, RoundingMode.HALF_UP)
     val cap = furloughCap(paymentFrequency, regularPayment.payPeriod)
 
-    calculation(eighty, cap)
+    if (eighty > cap) cap else eighty
   }
 
-  private def calculation(eighty: Double, cap: Double): Double =
-    if (eighty > cap) cap else eighty
 }
