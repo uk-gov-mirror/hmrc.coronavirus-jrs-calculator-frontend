@@ -7,7 +7,7 @@
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
-        yesNoRadio: components.yesNoRadio,
+        inputRadio: components.inputRadio,
         button: components.button
 )
 
@@ -19,7 +19,11 @@
 
         @errorSummary(form.errors)
 
-        @yesNoRadio(form, "pensionAutoEnrolment.heading")
+        @inputRadio(
+          form = form,
+            legend = messages("pensionAutoEnrolment.heading"),
+            items = PensionStatus.options(form)
+        )
 
         @button("site.continue")
     }

@@ -4,6 +4,8 @@
  *@
 
 @import viewmodels.ConfirmationViewBreakdown
+@import viewmodels.ConfirmationMetadata
+@import models.FurloughQuestion.Yes
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -14,7 +16,7 @@
     button: components.button
 )
 
-@(cvb: ConfirmationViewBreakdown)(implicit request: Request[_], messages: Messages)
+@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title"))) {
 
@@ -32,11 +34,15 @@
     @p(Html(messages("confirmation.explanation.p1")))
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("confirmation.claimPeriod", "claimStartDate", "claimEndDate")</li>
-        <li>@messages("confirmation.furlough.wholePeriod")</li>
-        <li>@messages("confirmation.paid.fourWeekly")</li>
-        <li>@messages("confirmation.nic.payable")</li>
-        <li>@messages("confirmation.pension.in")</li>
+        <li>@messages("confirmation.claimPeriod", cm.claimPeriod.startDate, cm.claimPeriod.endDate)</li>
+        @if(cm.furloughQuestion == Yes) {
+            <li>@messages("confirmation.furlough.wholePeriod")</li>
+        } else {
+          <li>@messages("confirmation.furlough.partPeriod")</li>
+        }
+        <li>@messages(s"confirmation.paid.${cm.frequency}")</li>
+        <li>@messages(s"confirmation.nic.${cm.nic}")</li>
+        <li>@messages(s"confirmation.pension.${cm.pension}")</li>
     </ul>
 
     <details class="govuk-details" data-module="govuk-details">

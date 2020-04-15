@@ -5,9 +5,10 @@
 
 package pages
 
+import models.PensionStatus
 import play.api.libs.json.JsPath
 
-case object PensionAutoEnrolmentPage extends QuestionPage[Boolean] {
+case object PensionAutoEnrolmentPage extends QuestionPage[PensionStatus] {
 
   override def path: JsPath = JsPath \ toString
 

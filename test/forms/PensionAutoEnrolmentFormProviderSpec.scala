@@ -5,24 +5,24 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.OptionFieldBehaviours
+import models.PensionStatus
 import play.api.data.FormError
 
-class PensionAutoEnrolmentFormProviderSpec extends BooleanFieldBehaviours {
-
-  val requiredKey = "pensionAutoEnrolment.error.required"
-  val invalidKey = "error.boolean"
+class PensionAutoEnrolmentFormProviderSpec extends OptionFieldBehaviours {
 
   val form = new PensionAutoEnrolmentFormProvider()()
 
   ".value" must {
 
     val fieldName = "value"
+    val requiredKey = "pensionAutoEnrolment.error.required"
 
-    behave like booleanField(
+    behave like optionsField[PensionStatus](
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      validValues = PensionStatus.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(

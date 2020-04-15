@@ -5,16 +5,17 @@
 
 package pages
 
+import models.PensionStatus
 import pages.behaviours.PageBehaviours
 
 class PensionAutoEnrolmentPageSpec extends PageBehaviours {
 
   "PensionAutoEnrolmentPage" must {
 
-    beRetrievable[Boolean](PensionAutoEnrolmentPage)
+    beRetrievable[PensionStatus](PensionAutoEnrolmentPage)
 
-    beSettable[Boolean](PensionAutoEnrolmentPage)
+    beSettable[PensionStatus](PensionAutoEnrolmentPage)
 
-    beRemovable[Boolean](PensionAutoEnrolmentPage)
+    beRemovable[PensionStatus](PensionAutoEnrolmentPage)
   }
 }

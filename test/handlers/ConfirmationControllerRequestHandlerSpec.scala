@@ -62,7 +62,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase {
       |        "taxYearPayDate" : "2020-04-20",
       |        "furloughQuestion" : "yes",
       |        "payQuestion" : "regularly",
-      |        "pensionAutoEnrolment" : false,
+      |        "pensionAutoEnrolment" : "optedIn",
       |        "claimPeriodEnd" : "2020-04-30",
       |        "paymentFrequency" : "monthly",
       |        "salary" : {
@@ -89,7 +89,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase {
       |    "taxYearPayDate" : "2020-04-20",
       |    "furloughQuestion": "yes",
       |    "payQuestion": "regularly",
-      |    "pensionAutoEnrolment": true,
+      |    "pensionAutoEnrolment": "optedOut",
       |    "claimPeriodEnd": "2020-04-30",
       |    "paymentFrequency": "monthly",
       |    "salary": {

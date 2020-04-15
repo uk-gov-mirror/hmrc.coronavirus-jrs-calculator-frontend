@@ -30,7 +30,7 @@ class FurloughQuestionController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: FurloughQuestionView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+    extends BaseController {
 
   val form = formProvider()
 

@@ -27,6 +27,12 @@ object PayPeriod {
   implicit val defaultFormat: Format[PayPeriod] = Json.format
 }
 
+case class FurloughPeriod(start: LocalDate, end: LocalDate)
+
+object FurloughPeriod {
+  implicit val defaultFormat: Format[FurloughPeriod] = Json.format
+}
+
 case class PayPeriodWithPayDay(payPeriod: PayPeriod, paymentDate: PaymentDate)
 
 object PayPeriodWithPayDay {

@@ -9,10 +9,14 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
-import models.{CalculationResult, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate}
+import models.FurloughQuestion.Yes
+import models.NicCategory.Payable
+import models.PaymentFrequency.Monthly
+import models.PensionStatus.OptedIn
+import models.{CalculationResult, ClaimPeriodModel, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import viewmodels.ConfirmationViewBreakdown
+import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
 import views.html.ConfirmationView
 
 class ConfirmationControllerSpec extends SpecBaseWithApplication {
@@ -30,7 +34,7 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(expected)(request, messages).toString
+      contentAsString(result) mustEqual view(meta, breakdown)(request, messages).toString
 
       application.stop()
     }
@@ -48,5 +52,7 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
   val nic = CalculationResult(NicCalculationResult, 241.36, List(periodBreakdownOne(121.58), periodBreakdownTwo(119.78)))
   val pension = CalculationResult(PensionCalculationResult, 65.07, List(periodBreakdownOne(32.67), periodBreakdownTwo(32.40)))
 
-  val expected = ConfirmationViewBreakdown(furlough, nic, pension)
+  val breakdown = ConfirmationViewBreakdown(furlough, nic, pension)
+
+  val meta = ConfirmationMetadata(ClaimPeriodModel(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30)), Yes, Monthly, Payable, OptedIn)
 }

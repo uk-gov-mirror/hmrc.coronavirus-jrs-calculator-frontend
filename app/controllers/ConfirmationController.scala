@@ -26,8 +26,13 @@ class ConfirmationController @Inject()(
     extends FrontendBaseController with I18nSupport with ConfirmationControllerRequestHandler {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    breakdown(request.userAnswers) match {
-      case Some(b) => Ok(view(b))
+    val maybeResult = for {
+      breakdown <- breakdown(request.userAnswers)
+      metadata  <- meta(request.userAnswers)
+    } yield Ok(view(metadata, breakdown))
+
+    maybeResult match {
+      case Some(r) => r
       case _       => InternalServerError("Something went horribly wrong")
     }
   }
