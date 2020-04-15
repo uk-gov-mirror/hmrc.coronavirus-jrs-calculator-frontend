@@ -27,31 +27,28 @@ import scala.concurrent.Future
 
 class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
-  val formProvider = new PayDateFormProvider()
-  private def form = formProvider()
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val validAnswer = LocalDate.of(2020, 3, 3)
-  val schemeStartDate = LocalDate.of(2020, 3, 1)
-  val claimStartDate = LocalDate.of(2020, 3, 5)
-
   lazy val payDateRoute = routes.PayDateController.onPageLoad(1).url
-
-  val userAnswersWithStartDate = UserAnswers(userAnswersId).set(ClaimPeriodStartPage, claimStartDate).success.value
-
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, payDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, payDateRoute).withCSRFToken
+  val formProvider = new PayDateFormProvider()
+  val claimStartDate = LocalDate.of(2020, 3, 5)
+  val userAnswersWithStartDate = UserAnswers(userAnswersId).set(ClaimPeriodStartPage, claimStartDate).success.value
+  val validAnswer = LocalDate.of(2020, 3, 3)
+
+  def onwardRoute = Call("GET", "/foo")
+
+  def postRequest(date: LocalDate, route: String = payDateRoute): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest(POST, route).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
-        "value.day"   -> validAnswer.getDayOfMonth.toString,
-        "value.month" -> validAnswer.getMonthValue.toString,
-        "value.year"  -> validAnswer.getYear.toString
+        "value.day"   -> date.getDayOfMonth.toString,
+        "value.month" -> date.getMonthValue.toString,
+        "value.year"  -> date.getYear.toString
       )
+
+  private def form = formProvider()
 
   "PayDate Controller" must {
 
@@ -71,7 +68,6 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-
       val userAnswers = userAnswersWithStartDate.set(PayDatePage, validAnswer, Some(1)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -102,7 +98,7 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
           )
           .build()
 
-      val result = route(application, postRequest).value
+      val result = route(application, postRequest(validAnswer)).value
 
       status(result) mustEqual SEE_OTHER
 
@@ -111,27 +107,63 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       application.stop()
     }
 
-    "return a Bad Request and errors when invalid data is submitted" in {
+    "return a Bad Request and errors when invalid data is submitted" when {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
+      "data does not bind" in {
+        val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
 
-      val request =
-        FakeRequest(POST, payDateRoute).withCSRFToken
-          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-          .withFormUrlEncodedBody(("value", "invalid value"))
+        val request =
+          FakeRequest(POST, payDateRoute).withCSRFToken
+            .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+            .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[PayDateView]
+        val view = application.injector.instanceOf[PayDateView]
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual BAD_REQUEST
 
-      contentAsString(result) mustEqual
-        view(boundForm, 1, claimStartDate)(request, messages).toString
+        contentAsString(result) mustEqual
+          view(boundForm, 1, claimStartDate)(request, messages).toString
 
-      application.stop()
+        application.stop()
+      }
+
+      "first date is not before start date" in {
+        val dateBeforeStart = claimStartDate.plusDays(1)
+
+        val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
+
+        val request = postRequest(dateBeforeStart)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        application.stop()
+      }
+
+      "second date is not in claim period" in {
+        val dateBeforePrevious = LocalDate.of(2020, 3, 2)
+
+        val userAnswers = userAnswersWithStartDate
+          .set(PayDatePage, LocalDate.of(2020, 3, 3), Some(1))
+          .success
+          .value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = postRequest(dateBeforePrevious, routes.PayDateController.onPageLoad(2).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        application.stop()
+      }
+
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
@@ -150,7 +182,7 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val result = route(application, postRequest).value
+      val result = route(application, postRequest(validAnswer)).value
 
       status(result) mustEqual SEE_OTHER
 

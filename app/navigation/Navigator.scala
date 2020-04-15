@@ -64,7 +64,7 @@ class Navigator @Inject()() {
       claimEndDate <- userAnswers.get(ClaimPeriodEndPage)
       lastPayDate  <- userAnswers.getList(PayDatePage).lastOption
     } yield {
-      if (lastPayDate.isAfter(claimEndDate)) {
+      if (lastPayDate.isAfter(claimEndDate.minusDays(1))) {
         routes.NicCategoryController.onPageLoad(NormalMode)
       } else {
         routes.PayDateController.onPageLoad(previousIdx + 1)

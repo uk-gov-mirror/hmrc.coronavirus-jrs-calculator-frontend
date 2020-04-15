@@ -26,7 +26,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.RootPageController.onPageLoad()
       }
 
-      "loop around pay date if last pay date isn't after claim end date" in {
+      "loop around pay date if last pay date isn't claim end date or after" in {
         val userAnswers = UserAnswers("id")
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 30))
           .get
@@ -34,6 +34,16 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .get
 
         navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.PayDateController.onPageLoad(2)
+      }
+
+      "stop loop around pay date if last pay date is claim end date" in {
+        val userAnswers = UserAnswers("id")
+          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 30))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 5, 30), Some(1))
+          .get
+
+        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
       }
 
       "stop loop around pay date if last pay date is after claim end date" in {
