@@ -30,20 +30,6 @@
     <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
     <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
     <script>window.GOVUKFrontend.initAll();</script>
-    <script>
-        if (@timeout) {
-            timeoutDialog({
-                title: '@messages("timeout.title")',
-                message: '@messages("timeout.message")',
-                keepAliveButtonText: '@messages("timeout.keepAlive")',
-                signOutButtonText: '@messages("timeout.signOut")',
-                timeout: @{appConfig.timeout},
-                countdown: @{appConfig.countdown},
-                keepAliveUrl: '@{request.uri}',
-                signOutUrl: '' // TODO: Put in signout URL
-            });
-        };
-    </script>
     @js.map(x => x)
 }
 
