@@ -74,3 +74,18 @@ GET         /tax-year-pay-date                   controllers.TaxYearPayDateContr
 POST        /tax-year-pay-date                   controllers.TaxYearPayDateController.onSubmit(mode: Mode = NormalMode)
 GET         /change-tax-year-pay-date            controllers.TaxYearPayDateController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-tax-year-pay-date            controllers.TaxYearPayDateController.onSubmit(mode: Mode = CheckMode)
+
+GET        /furlough-dates                       controllers.FurloughDatesController.onPageLoad(mode: Mode = NormalMode)
+POST       /furlough-dates                       controllers.FurloughDatesController.onSubmit(mode: Mode = NormalMode)
+GET        /change-furlough-dates                controllers.FurloughDatesController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-furlough-dates                controllers.FurloughDatesController.onSubmit(mode: Mode = CheckMode)
+
+GET        /furlough-end-date                    controllers.FurloughEndDateController.onPageLoad(mode: Mode = NormalMode)
+POST       /furlough-end-date                    controllers.FurloughEndDateController.onSubmit(mode: Mode = NormalMode)
+GET        /change-furlough-end-date             controllers.FurloughEndDateController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-furlough-end-date             controllers.FurloughEndDateController.onSubmit(mode: Mode = CheckMode)
+
+GET        /furlough-start-date                  controllers.FurloughStartDateController.onPageLoad(mode: Mode = NormalMode)
+POST       /furlough-start-date                  controllers.FurloughStartDateController.onSubmit(mode: Mode = NormalMode)
+GET        /change-furlough-start-date           controllers.FurloughStartDateController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-furlough-start-date           controllers.FurloughStartDateController.onSubmit(mode: Mode = CheckMode)

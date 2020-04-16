@@ -334,6 +334,7 @@ furloughQuestion.no = No
 furloughQuestion.checkYourAnswersLabel = Was the employee furloughed for the whole of this time?
 furloughQuestion.error.required = Select one of the options below
 furloughQuestion.hint = From {0} to {1}
+
 taxYearPayDate.title = What was the first payday after 6 April?
 taxYearPayDate.heading = What was the first payday after 6 April?
 taxYearPayDate.p1 = This is the actual day this employee was paid. It may not be the same as the pay period end date.
@@ -345,3 +346,27 @@ taxYearPayDate.error.required.two = The payday must include {0} and {1}
 taxYearPayDate.error.required = The payday must include {0}
 taxYearPayDate.error.invalid = Enter a real date
 taxYearPayDate.error.outofrange = The pay date should be between {0} and {1}
+
+furloughDates.title = What is the furlough period for this employee?
+furloughDates.heading = What is the furlough period for this employee?
+furloughDates.startedInClaim = It started after STARTDATE
+furloughDates.endedInClaim = It ended before ENDDATE
+furloughDates.startedAndEndedInClaim = It starts and ends between STARTDATE and ENDDATE
+furloughDates.checkYourAnswersLabel = What is the furlough period for this employee?
+furloughDates.error.required = Select furloughDates
+
+furloughEndDate.title = When did their furlough end?
+furloughEndDate.heading = When did their furlough end?
+furloughEndDate.checkYourAnswersLabel = FurloughEndDate
+furloughEndDate.error.required.all = Enter the furlough end date
+furloughEndDate.error.required.two = The furlough end date must include {0} and {1}
+furloughEndDate.error.required = The furlough end date must include {0}
+furloughEndDate.error.invalid = Enter a real FurloughEndDate
+
+furloughStartDate.title = When did their furlough start?
+furloughStartDate.heading = When did their furlough start?
+furloughStartDate.checkYourAnswersLabel = FurloughStartDate
+furloughStartDate.error.required.all = Enter the furlough start date
+furloughStartDate.error.required.two = The furlough start date must include {0} and {1}
+furloughStartDate.error.required = The furlough start date must include {0}
+furloughStartDate.error.invalid = Enter a real furlough start date

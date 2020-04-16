@@ -10,6 +10,15 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryFurloughStartDatePage: Arbitrary[FurloughStartDatePage.type] =
+    Arbitrary(FurloughStartDatePage)
+
+  implicit lazy val arbitraryFurloughEndDatePage: Arbitrary[FurloughEndDatePage.type] =
+    Arbitrary(FurloughEndDatePage)
+
+  implicit lazy val arbitraryFurloughDatesPage: Arbitrary[FurloughDatesPage.type] =
+    Arbitrary(FurloughDatesPage)
+
   implicit lazy val arbitraryTaxYearPayDatePage: Arbitrary[TaxYearPayDatePage.type] =
     Arbitrary(TaxYearPayDatePage)
 

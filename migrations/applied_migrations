@@ -1,35 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration TaxYearPayDate"
+echo "Applying migration FurloughStartDate"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /taxYearPayDate                  controllers.TaxYearPayDateController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /taxYearPayDate                  controllers.TaxYearPayDateController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /furloughStartDate                  controllers.FurloughStartDateController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /furloughStartDate                  controllers.FurloughStartDateController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeTaxYearPayDate                        controllers.TaxYearPayDateController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeTaxYearPayDate                        controllers.TaxYearPayDateController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeFurloughStartDate                        controllers.FurloughStartDateController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeFurloughStartDate                        controllers.FurloughStartDateController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "taxYearPayDate.title = TaxYearPayDate" >> ../conf/messages.en
-echo "taxYearPayDate.heading = TaxYearPayDate" >> ../conf/messages.en
-echo "taxYearPayDate.checkYourAnswersLabel = TaxYearPayDate" >> ../conf/messages.en
-echo "taxYearPayDate.error.required.all = Enter the taxYearPayDate" >> ../conf/messages.en
-echo "taxYearPayDate.error.required.two = The taxYearPayDate" must include {0} and {1} >> ../conf/messages.en
-echo "taxYearPayDate.error.required = The taxYearPayDate must include {0}" >> ../conf/messages.en
-echo "taxYearPayDate.error.invalid = Enter a real TaxYearPayDate" >> ../conf/messages.en
+echo "furloughStartDate.title = FurloughStartDate" >> ../conf/messages.en
+echo "furloughStartDate.heading = FurloughStartDate" >> ../conf/messages.en
+echo "furloughStartDate.checkYourAnswersLabel = FurloughStartDate" >> ../conf/messages.en
+echo "furloughStartDate.error.required.all = Enter the furloughStartDate" >> ../conf/messages.en
+echo "furloughStartDate.error.required.two = The furloughStartDate" must include {0} and {1} >> ../conf/messages.en
+echo "furloughStartDate.error.required = The furloughStartDate must include {0}" >> ../conf/messages.en
+echo "furloughStartDate.error.invalid = Enter a real FurloughStartDate" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTaxYearPayDateUserAnswersEntry: Arbitrary[(TaxYearPayDatePage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryFurloughStartDateUserAnswersEntry: Arbitrary[(FurloughStartDatePage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[TaxYearPayDatePage.type]";\
+    print "        page  <- arbitrary[FurloughStartDatePage.type]";\
     print "        value <- arbitrary[Int].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
@@ -39,14 +39,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTaxYearPayDatePage: Arbitrary[TaxYearPayDatePage.type] =";\
-    print "    Arbitrary(TaxYearPayDatePage)";\
+    print "  implicit lazy val arbitraryFurloughStartDatePage: Arbitrary[FurloughStartDatePage.type] =";\
+    print "    Arbitrary(FurloughStartDatePage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(TaxYearPayDatePage.type, JsValue)] ::";\
+    print "    arbitrary[(FurloughStartDatePage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration TaxYearPayDate completed"
+echo "Migration FurloughStartDate completed"
