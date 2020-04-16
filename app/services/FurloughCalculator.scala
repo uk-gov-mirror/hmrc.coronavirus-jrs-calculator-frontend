@@ -10,6 +10,7 @@ import java.time.LocalDate
 import models.Calculation.FurloughCalculationResult
 import models.{CalculationResult, FurloughPeriod, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, PaymentFrequency, RegularPayment, Salary}
 import utils.TaxYearFinder
+import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
 

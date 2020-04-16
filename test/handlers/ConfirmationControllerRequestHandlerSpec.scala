@@ -11,9 +11,10 @@ import base.SpecBase
 import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
 import models.{CalculationResult, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, UserAnswers}
 import play.api.libs.json.Json
+import utils.CoreTestData
 import viewmodels.ConfirmationViewBreakdown
 
-class ConfirmationControllerRequestHandlerSpec extends SpecBase {
+class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData {
 
   "do all calculations given a set of userAnswers" in new ConfirmationControllerRequestHandler {
     val userAnswers = Json.parse(userAnswersJson).as[UserAnswers]
@@ -52,59 +53,5 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase {
       CalculationResult(PensionCalculationResult, 0.0, pensionPayPeriodBreakdowns)
     ) //TODO metadata to be tested
   }
-
-  private val userAnswersJson: String =
-    """
-      |{
-      |    "_id" : "session-3fdd2682-dad1-48e1-80d6-8c1480696811",
-      |    "data" : {
-      |        "taxYearPayDate" : "2020-04-20",
-      |        "furloughQuestion" : "yes",
-      |        "payQuestion" : "regularly",
-      |        "pensionAutoEnrolment" : "optedIn",
-      |        "claimPeriodEnd" : "2020-04-30",
-      |        "paymentFrequency" : "monthly",
-      |        "salary" : {
-      |            "amount" : 2000.0
-      |        },
-      |        "nicCategory" : "payable",
-      |        "claimPeriodStart" : "2020-03-01",
-      |        "payDate" : [
-      |            "2020-02-29",
-      |            "2020-03-31",
-      |            "2020-04-30"
-      |        ]
-      |    },
-      |    "lastUpdated" : {
-      |        "$date": 1586873457650
-      |    }
-      |}
-      |""".stripMargin
-
-  private val jsStringWithNoNiNoPension: String =
-    """{
-      |  "_id": "session-9dee1ca2-1378-479b-92f8-748de7f363d5",
-      |  "data": {
-      |    "taxYearPayDate" : "2020-04-20",
-      |    "furloughQuestion": "yes",
-      |    "payQuestion": "regularly",
-      |    "pensionAutoEnrolment": "optedOut",
-      |    "claimPeriodEnd": "2020-04-30",
-      |    "paymentFrequency": "monthly",
-      |    "salary": {
-      |      "amount": 2000
-      |    },
-      |    "nicCategory": "nonPayable",
-      |    "claimPeriodStart": "2020-03-01",
-      |    "payDate": [
-      |      "2020-02-29",
-      |      "2020-03-31",
-      |      "2020-04-30"
-      |    ]
-      |  },
-      |  "lastUpdated": {
-      |    "$date": 1586873457650
-      |  }
-      |}""".stripMargin
 
 }

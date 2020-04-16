@@ -7,6 +7,9 @@ package models
 
 import play.api.libs.json._
 
+case class Amount(value: BigDecimal)
+
+//TODO use Amount Vs BigDecimal
 case class Salary(amount: BigDecimal)
 
 object Salary {

@@ -11,8 +11,9 @@ import java.time.temporal.ChronoUnit
 import models.PaymentFrequency.Monthly
 import models.{PayPeriod, PaymentFrequency}
 import play.api.Logger
+import utils.AmountRounding._
 
-import scala.math.BigDecimal.RoundingMode.{RoundingMode, _}
+import scala.math.BigDecimal.RoundingMode._
 
 trait FurloughCapCalculator {
 
@@ -46,7 +47,4 @@ trait FurloughCapCalculator {
 
     roundWithMode((startMonthDays * startMonthDailyMax) + (endMonthDays * endMonthDailyMax), HALF_UP)
   }
-
-  val roundWithMode: (BigDecimal, RoundingMode) => BigDecimal = (value, mode) => value.setScale(2, mode)
-
 }

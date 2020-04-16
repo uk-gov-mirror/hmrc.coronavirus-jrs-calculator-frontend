@@ -9,6 +9,7 @@ import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.{CalculationResult, PayPeriodBreakdown, PaymentFrequency}
 import play.api.Logger
 import utils.TaxYearFinder
+import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
 
