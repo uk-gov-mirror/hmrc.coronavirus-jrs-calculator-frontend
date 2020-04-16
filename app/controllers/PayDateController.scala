@@ -48,7 +48,9 @@ class PayDateController @Inject()(
   }
 
   private def messageDateFrom(claimStartDate: LocalDate, userAnswers: UserAnswers, idx: Int): LocalDate =
-    userAnswers.getList(PayDatePage).+:(claimStartDate).apply(idx - 1)
+    latestOf(userAnswers.getList(PayDatePage).+:(claimStartDate).apply(idx - 1), claimStartDate.minusDays(1))
+
+  private def latestOf(a: LocalDate, b: LocalDate): LocalDate = if (a.isAfter(b)) a else b
 
   def form = formProvider()
 
@@ -60,7 +62,7 @@ class PayDateController @Inject()(
         .getList(PayDatePage)
         .lift(idx - 2)
         .map(
-          lastDate => if (lastDate.isAfter(dayBeforeClaimStart)) lastDate else dayBeforeClaimStart
+          lastDate => latestOf(lastDate, dayBeforeClaimStart)
         )
         .getOrElse(dayBeforeClaimStart)
 
