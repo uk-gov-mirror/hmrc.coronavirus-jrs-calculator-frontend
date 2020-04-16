@@ -13,7 +13,6 @@
     phaseBanner: components.phaseBanner,
     languageSelection: components.languageSelection,
     link: components.link,
-    gtmSnippet: GtmSnippet,
     appConfig: config.FrontendAppConfig,
     footerLinks: FooterLinks
 )
@@ -21,7 +20,7 @@
 @(pageTitle: Option[String] = None, timeout: Boolean = true, js: Option[Html] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
-    @gtmSnippet()
+    <script src='@controllers.routes.Assets.versioned("javascripts/gtm.js")'></script>
     <!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
 }
@@ -30,6 +29,13 @@
     <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
     <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
     <script>window.GOVUKFrontend.initAll();</script>
+
+    @appConfig.gtmContainer.map { containerId =>
+        <!-- Google Tag Manager (noscript) -->
+                <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=@containerId" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    }
+
     @js.map(x => x)
 }
 
