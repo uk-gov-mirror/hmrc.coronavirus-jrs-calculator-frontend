@@ -25,5 +25,7 @@ object ViewUtils {
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
 
   private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  private val dateFormatterWithoutYear = DateTimeFormatter.ofPattern("d MMMM")
   def dateToString(date: LocalDate): String = dateFormatter.format(date)
+  def dateToStringWithoutYear(date: LocalDate): String = dateFormatterWithoutYear.format(date)
 }

@@ -4,6 +4,7 @@
  *@
 
 @import controllers.routes._
+@import java.time.LocalDate
 @import models.{Mode, FurloughDates}
 
 @this(
@@ -14,7 +15,7 @@
         button: components.button
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, claimStartDate: LocalDate, claimEndDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughDates.title"))) {
 
@@ -25,7 +26,7 @@
         @inputRadio(
             form = form,
             legend = messages("furloughDates.heading"),
-            items = FurloughDates.options(form)
+            items = FurloughDates.options(form, dateToStringWithoutYear(claimStartDate), dateToStringWithoutYear(claimEndDate))
         )
 
         @button("site.saveAndContinue")

@@ -14,7 +14,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.FurloughEndDatePage
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
@@ -28,7 +28,9 @@ import scala.concurrent.Future
 class FurloughEndDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   val formProvider = new FurloughEndDateFormProvider()
-  private def form = formProvider()
+  private val claimPeriodStart = LocalDate.of(2020, 3, 1)
+  private val claimPeriodEnd = LocalDate.of(2020, 5, 1)
+  private def form = formProvider(claimPeriodStart, claimPeriodEnd, None)
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -36,13 +38,19 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
 
   lazy val furloughEndDateRoute = routes.FurloughEndDateController.onPageLoad(NormalMode).url
 
-  override val emptyUserAnswers = UserAnswers(userAnswersId)
+  val userAnswersWithClaimStartAndEnd = emptyUserAnswers
+    .set(ClaimPeriodStartPage, claimPeriodStart)
+    .success
+    .value
+    .set(ClaimPeriodEndPage, claimPeriodEnd)
+    .success
+    .value
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, furloughEndDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
+  lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, furloughEndDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
@@ -55,7 +63,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithClaimStartAndEnd)).build()
 
       val result = route(application, getRequest).value
 
@@ -71,7 +79,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(FurloughEndDatePage, validAnswer).success.value
+      val userAnswers = userAnswersWithClaimStartAndEnd.set(FurloughEndDatePage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -94,7 +102,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithClaimStartAndEnd))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -112,7 +120,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithClaimStartAndEnd)).build()
 
       val request =
         FakeRequest(POST, furloughEndDateRoute).withCSRFToken
