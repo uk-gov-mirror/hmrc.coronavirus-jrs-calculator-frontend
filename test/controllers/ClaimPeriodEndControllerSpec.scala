@@ -14,8 +14,9 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ClaimPeriodEndPage
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, PaymentFrequencyPage, SalaryQuestionPage}
 import play.api.inject.bind
+import play.api.libs.json.{JsNumber, JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
@@ -38,6 +39,13 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
+  val userAnswers = UserAnswers(
+    userAnswersId,
+    Json.obj(
+      ClaimPeriodStartPage.toString -> JsString("2020-03-10")
+    )
+  )
+
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, claimPeriodEndRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -55,7 +63,7 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val result = route(application, getRequest).value
 
@@ -71,7 +79,13 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ClaimPeriodEndPage, validAnswer).success.value
+      val userAnswers = UserAnswers(
+        userAnswersId,
+        Json.obj(
+          ClaimPeriodStartPage.toString -> JsString("2020-03-10"),
+          ClaimPeriodEndPage.toString   -> JsString(validAnswer.toString)
+        )
+      )
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -94,7 +108,7 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)

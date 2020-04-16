@@ -305,7 +305,7 @@ confirmation.startAgain = Start calculation again
 claimPeriodStart.title = What’s the start date of this claim?
 claimPeriodStart.heading = What’s the start date of this claim?
 claimPeriodStart.p1 = The first claim under the Job Retention Scheme normally starts from the date the first employee started furlough.
-claimPeriodStart.p2 = You can backdate your first claim to 1 March 2020, which is the date the scheme started.
+claimPeriodStart.p2 = You can claim from 1 March 2020, which is the date the scheme started.
 claimPeriodStart.checkYourAnswersLabel = What’s the start date of this claim?
 claimPeriodStart.error.required.all = Enter the start date of this claim
 claimPeriodStart.error.required.two = The start date must include {0} and {1}
@@ -317,14 +317,16 @@ claimPeriodStart.hint = For example, 1 3 2020
 
 claimPeriodEnd.title = What’s the end date of this claim?
 claimPeriodEnd.heading = What’s the end date of this claim?
-claimPeriodEnd.p1 = This must be 30 May 2020 or earlier, which is the date the scheme is currently scheduled to end. You may want to choose an earlier date, for example one that aligns your claim with your payroll run.
-claimPeriodEnd.p2 = The end date cannot be more than 14 days before the employee gets paid.
+claimPeriodEnd.p1 = Choose a suitable date, for example one that aligns with your payroll run.
+claimPeriodEnd.p2 = The employee you’re claiming for must be paid within 14 days of the end date of this claim.
+claimPeriodEnd.p3 = You can make subsequent claims if the employee remains on furlough after the end date of this claim.
 claimPeriodEnd.checkYourAnswersLabel = What’s the end date of this claim?
 claimPeriodEnd.error.required.all = Enter the end date
 claimPeriodEnd.error.required.two = The end date must include {0} and {1}
 claimPeriodEnd.error.required = The end date must include {0}
 claimPeriodEnd.error.invalid = Enter a real end date
 claimPeriodEnd.error.outofrange = The claim period end should be between {0} and {1}
+claimPeriodEnd.error.before.start = The claim period end can’t be before {0}
 claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
