@@ -8,6 +8,7 @@ package navigation
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import controllers.routes
+import models.PayQuestion.Regularly
 import pages.{PayDatePage, _}
 import models._
 
@@ -35,8 +36,7 @@ class Navigator @Inject()() {
       _ =>
         routes.PayQuestionController.onPageLoad(NormalMode)
     case PayQuestionPage =>
-      _ =>
-        routes.SalaryQuestionController.onPageLoad(NormalMode)
+      payQuestionRoutes
     case SalaryQuestionPage =>
       _ =>
         routes.PayDateController.onPageLoad(1)
@@ -105,4 +105,12 @@ class Navigator @Inject()() {
       case _                                          => routes.PayQuestionController.onPageLoad(NormalMode)
     }
   }
+
+  private def payQuestionRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(PayQuestionPage) match {
+      case Some(Regularly) => routes.SalaryQuestionController.onPageLoad(NormalMode)
+      case _               => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
+    }
+  }
+
 }

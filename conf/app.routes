@@ -1,91 +1,96 @@
 # microservice specific routes
 
-GET         /                                    controllers.RootPageController.onPageLoad
+GET         /                                       controllers.RootPageController.onPageLoad
 
-GET         /assets/*file                        controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /language/:lang                      controllers.LanguageSwitchController.switchToLanguage(lang: Language)
+GET         /language/:lang                         controllers.LanguageSwitchController.switchToLanguage(lang: Language)
 
-GET         /this-service-has-been-reset         controllers.SessionExpiredController.onPageLoad
+GET         /this-service-has-been-reset            controllers.SessionExpiredController.onPageLoad
 
-GET         /check-your-answers                  controllers.CheckYourAnswersController.onPageLoad
+GET         /check-your-answers                     controllers.CheckYourAnswersController.onPageLoad
 
-GET         /unauthorised                        controllers.UnauthorisedController.onPageLoad
+GET         /unauthorised                           controllers.UnauthorisedController.onPageLoad
 
-GET         /service-unavailable                 controllers.ErrorController.internalServerError
+GET         /service-unavailable                    controllers.ErrorController.internalServerError
 
-GET         /restart-service                     controllers.StartAgainController.startAgain
+GET         /restart-service                        controllers.StartAgainController.startAgain
 
-GET         /accessibility                       controllers.AccessibilityStatementController.onPageLoad
+GET         /accessibility                          controllers.AccessibilityStatementController.onPageLoad
 
-GET         /claim-period-start                  controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = NormalMode)
-POST        /claim-period-start                  controllers.ClaimPeriodStartController.onSubmit(mode: Mode = NormalMode)
-GET         /change-claim-period-start           controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-claim-period-start           controllers.ClaimPeriodStartController.onSubmit(mode: Mode = CheckMode)
+GET         /claim-period-start                     controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = NormalMode)
+POST        /claim-period-start                     controllers.ClaimPeriodStartController.onSubmit(mode: Mode = NormalMode)
+GET         /change-claim-period-start              controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-claim-period-start              controllers.ClaimPeriodStartController.onSubmit(mode: Mode = CheckMode)
 
-GET         /claim-period-end                    controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = NormalMode)
-POST        /claim-period-end                    controllers.ClaimPeriodEndController.onSubmit(mode: Mode = NormalMode)
-GET         /change-claim-period-end             controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-claim-period-end             controllers.ClaimPeriodEndController.onSubmit(mode: Mode = CheckMode)
+GET         /claim-period-end                       controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = NormalMode)
+POST        /claim-period-end                       controllers.ClaimPeriodEndController.onSubmit(mode: Mode = NormalMode)
+GET         /change-claim-period-end                controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-claim-period-end                controllers.ClaimPeriodEndController.onSubmit(mode: Mode = CheckMode)
 
-GET         /furlough-question                   controllers.FurloughQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-question                   controllers.FurloughQuestionController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-question            controllers.FurloughQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-question            controllers.FurloughQuestionController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-question                      controllers.FurloughQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST        /furlough-question                      controllers.FurloughQuestionController.onSubmit(mode: Mode = NormalMode)
+GET         /change-furlough-question               controllers.FurloughQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-furlough-question               controllers.FurloughQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET         /test-only/nic-grant                 controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = NormalMode)
-POST        /test-only/nic-grant                 controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)
-GET         /test-only/change-nic-grant          controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = CheckMode)
-POST        /test-only/change-nic-grant          controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = CheckMode)
+GET         /test-only/nic-grant                    controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = NormalMode)
+POST        /test-only/nic-grant                    controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)
+GET         /test-only/change-nic-grant             controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = CheckMode)
+POST        /test-only/change-nic-grant             controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = CheckMode)
 
-GET         /test-only/nic-grant-response        controllers.TestOnlyNICGrantCalculatorController.showResult()
+GET         /test-only/nic-grant-response           controllers.TestOnlyNICGrantCalculatorController.showResult()
 
-GET         /pay-question                        controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST        /pay-question                        controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)
-GET         /change-pay-question                 controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-pay-question                 controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)
+GET         /pay-question                           controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST        /pay-question                           controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)
+GET         /change-pay-question                    controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-pay-question                    controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET         /pay-frequency                       controllers.PaymentFrequencyController.onPageLoad(mode: Mode = NormalMode)
-POST        /pay-frequency                       controllers.PaymentFrequencyController.onSubmit(mode: Mode = NormalMode)
-GET         /change-pay-frequency                controllers.PaymentFrequencyController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-pay-frequency                controllers.PaymentFrequencyController.onSubmit(mode: Mode = CheckMode)
+GET         /pay-frequency                          controllers.PaymentFrequencyController.onPageLoad(mode: Mode = NormalMode)
+POST        /pay-frequency                          controllers.PaymentFrequencyController.onSubmit(mode: Mode = NormalMode)
+GET         /change-pay-frequency                   controllers.PaymentFrequencyController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-pay-frequency                   controllers.PaymentFrequencyController.onSubmit(mode: Mode = CheckMode)
 
-GET         /pay-date/:idx                       controllers.PayDateController.onPageLoad(idx: Int)
-POST        /pay-date/:idx                       controllers.PayDateController.onSubmit(idx: Int)
+GET         /pay-date/:idx                          controllers.PayDateController.onPageLoad(idx: Int)
+POST        /pay-date/:idx                          controllers.PayDateController.onSubmit(idx: Int)
 
-GET         /salary                              controllers.SalaryQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST        /salary                              controllers.SalaryQuestionController.onSubmit(mode: Mode = NormalMode)
-GET         /change-salary                       controllers.SalaryQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-salary                       controllers.SalaryQuestionController.onSubmit(mode: Mode = CheckMode)
+GET         /salary                                 controllers.SalaryQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST        /salary                                 controllers.SalaryQuestionController.onSubmit(mode: Mode = NormalMode)
+GET         /change-salary                          controllers.SalaryQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-salary                          controllers.SalaryQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET         /nic-category                        controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)
-POST        /nic-category                        controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
-GET         /change-nic-category                 controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-nic-category                 controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)
+GET         /nic-category                           controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)
+POST        /nic-category                           controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
+GET         /change-nic-category                    controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-nic-category                    controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)
 
-GET         /pension-auto-enrolment              controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = NormalMode)
-POST        /pension-auto-enrolment              controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = NormalMode)
-GET         /change-pension-auto-enrolment       controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-pension-auto-enrolment       controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = CheckMode)
+GET         /pension-auto-enrolment                 controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = NormalMode)
+POST        /pension-auto-enrolment                 controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = NormalMode)
+GET         /change-pension-auto-enrolment          controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-pension-auto-enrolment          controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = CheckMode)
 
-GET         /confirmation                        controllers.ConfirmationController.onPageLoad()
+GET         /confirmation                           controllers.ConfirmationController.onPageLoad()
 
-GET         /tax-year-pay-date                   controllers.TaxYearPayDateController.onPageLoad(mode: Mode = NormalMode)
-POST        /tax-year-pay-date                   controllers.TaxYearPayDateController.onSubmit(mode: Mode = NormalMode)
-GET         /change-tax-year-pay-date            controllers.TaxYearPayDateController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-tax-year-pay-date            controllers.TaxYearPayDateController.onSubmit(mode: Mode = CheckMode)
+GET         /tax-year-pay-date                      controllers.TaxYearPayDateController.onPageLoad(mode: Mode = NormalMode)
+POST        /tax-year-pay-date                      controllers.TaxYearPayDateController.onSubmit(mode: Mode = NormalMode)
+GET         /change-tax-year-pay-date               controllers.TaxYearPayDateController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-tax-year-pay-date               controllers.TaxYearPayDateController.onSubmit(mode: Mode = CheckMode)
 
-GET        /furlough-dates                       controllers.FurloughDatesController.onPageLoad(mode: Mode = NormalMode)
-POST       /furlough-dates                       controllers.FurloughDatesController.onSubmit(mode: Mode = NormalMode)
-GET        /change-furlough-dates                controllers.FurloughDatesController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-furlough-dates                controllers.FurloughDatesController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-dates                         controllers.FurloughDatesController.onPageLoad(mode: Mode = NormalMode)
+POST        /furlough-dates                         controllers.FurloughDatesController.onSubmit(mode: Mode = NormalMode)
+GET         /change-furlough-dates                  controllers.FurloughDatesController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-furlough-dates                  controllers.FurloughDatesController.onSubmit(mode: Mode = CheckMode)
 
-GET        /furlough-end-date                    controllers.FurloughEndDateController.onPageLoad(mode: Mode = NormalMode)
-POST       /furlough-end-date                    controllers.FurloughEndDateController.onSubmit(mode: Mode = NormalMode)
-GET        /change-furlough-end-date             controllers.FurloughEndDateController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-furlough-end-date             controllers.FurloughEndDateController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-end-date                      controllers.FurloughEndDateController.onPageLoad(mode: Mode = NormalMode)
+POST        /furlough-end-date                      controllers.FurloughEndDateController.onSubmit(mode: Mode = NormalMode)
+GET         /change-furlough-end-date               controllers.FurloughEndDateController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-furlough-end-date               controllers.FurloughEndDateController.onSubmit(mode: Mode = CheckMode)
 
-GET        /furlough-start-date                  controllers.FurloughStartDateController.onPageLoad(mode: Mode = NormalMode)
-POST       /furlough-start-date                  controllers.FurloughStartDateController.onSubmit(mode: Mode = NormalMode)
-GET        /change-furlough-start-date           controllers.FurloughStartDateController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-furlough-start-date           controllers.FurloughStartDateController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-start-date                    controllers.FurloughStartDateController.onPageLoad(mode: Mode = NormalMode)
+POST        /furlough-start-date                    controllers.FurloughStartDateController.onSubmit(mode: Mode = NormalMode)
+GET         /change-furlough-start-date             controllers.FurloughStartDateController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-furlough-start-date             controllers.FurloughStartDateController.onSubmit(mode: Mode = CheckMode)
+
+GET         /variable-length-employed               controllers.VariableLengthEmployedController.onPageLoad(mode: Mode = NormalMode)
+POST        /variable-length-employed               controllers.VariableLengthEmployedController.onSubmit(mode: Mode = NormalMode)
+GET         /change-variable-length-employed        controllers.VariableLengthEmployedController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-variable-length-employed        controllers.VariableLengthEmployedController.onSubmit(mode: Mode = CheckMode)

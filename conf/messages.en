@@ -372,3 +372,10 @@ furloughStartDate.error.required.all = Enter the furlough start date
 furloughStartDate.error.required.two = The furlough start date must include {0} and {1}
 furloughStartDate.error.required = The furlough start date must include {0}
 furloughStartDate.error.invalid = Enter a real furlough start date
+
+variableLengthEmployed.title = How long has this employee been working for the business?
+variableLengthEmployed.heading = How long has this employee been working for the business?
+variableLengthEmployed.lessThan12Months = Less than 12 months
+variableLengthEmployed.morethan12Months = 12 months or more
+variableLengthEmployed.checkYourAnswersLabel = How long has this employee been working for the business?
+variableLengthEmployed.error.required = Select one of the options below

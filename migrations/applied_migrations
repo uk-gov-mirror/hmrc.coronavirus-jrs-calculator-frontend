@@ -1,36 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration FurloughStartDate"
+echo "Applying migration VariableLengthEmployed"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /furloughStartDate                  controllers.FurloughStartDateController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /furloughStartDate                  controllers.FurloughStartDateController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /variableLengthEmployed                        controllers.VariableLengthEmployedController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /variableLengthEmployed                        controllers.VariableLengthEmployedController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeFurloughStartDate                        controllers.FurloughStartDateController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeFurloughStartDate                        controllers.FurloughStartDateController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeVariableLengthEmployed                  controllers.VariableLengthEmployedController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeVariableLengthEmployed                  controllers.VariableLengthEmployedController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "furloughStartDate.title = FurloughStartDate" >> ../conf/messages.en
-echo "furloughStartDate.heading = FurloughStartDate" >> ../conf/messages.en
-echo "furloughStartDate.checkYourAnswersLabel = FurloughStartDate" >> ../conf/messages.en
-echo "furloughStartDate.error.required.all = Enter the furloughStartDate" >> ../conf/messages.en
-echo "furloughStartDate.error.required.two = The furloughStartDate" must include {0} and {1} >> ../conf/messages.en
-echo "furloughStartDate.error.required = The furloughStartDate must include {0}" >> ../conf/messages.en
-echo "furloughStartDate.error.invalid = Enter a real FurloughStartDate" >> ../conf/messages.en
+echo "variableLengthEmployed.title = How long has this employee been working for the business?" >> ../conf/messages.en
+echo "variableLengthEmployed.heading = How long has this employee been working for the business?" >> ../conf/messages.en
+echo "variableLengthEmployed.lessThan12Months = Less than 12 months" >> ../conf/messages.en
+echo "variableLengthEmployed.morethan12Months = 12 months or more" >> ../conf/messages.en
+echo "variableLengthEmployed.checkYourAnswersLabel = How long has this employee been working for the business?" >> ../conf/messages.en
+echo "variableLengthEmployed.error.required = Select variableLengthEmployed" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughStartDateUserAnswersEntry: Arbitrary[(FurloughStartDatePage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryVariableLengthEmployedUserAnswersEntry: Arbitrary[(VariableLengthEmployedPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[FurloughStartDatePage.type]";\
-    print "        value <- arbitrary[Int].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[VariableLengthEmployedPage.type]";\
+    print "        value <- arbitrary[VariableLengthEmployed].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -39,14 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughStartDatePage: Arbitrary[FurloughStartDatePage.type] =";\
-    print "    Arbitrary(FurloughStartDatePage)";\
+    print "  implicit lazy val arbitraryVariableLengthEmployedPage: Arbitrary[VariableLengthEmployedPage.type] =";\
+    print "    Arbitrary(VariableLengthEmployedPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
+
+echo "Adding to ModelGenerators"
+awk '/trait ModelGenerators/ {\
+    print;\
+    print "";\
+    print "  implicit lazy val arbitraryVariableLengthEmployed: Arbitrary[VariableLengthEmployed] =";\
+    print "    Arbitrary {";\
+    print "      Gen.oneOf(VariableLengthEmployed.values.toSeq)";\
+    print "    }";\
+    next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(FurloughStartDatePage.type, JsValue)] ::";\
+    print "    arbitrary[(VariableLengthEmployedPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration FurloughStartDate completed"
+echo "Migration VariableLengthEmployed completed"
