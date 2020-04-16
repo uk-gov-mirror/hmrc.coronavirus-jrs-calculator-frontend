@@ -60,7 +60,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
         "to pay question when employee has been furloughed the whole period" in {
           val answers = emptyUserAnswers.set(FurloughQuestionPage, FurloughQuestion.Yes).success.value
-          navigator.nextPage(FurloughQuestionPage, NormalMode, answers) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
+          navigator.nextPage(FurloughQuestionPage, NormalMode, answers) mustBe routes.PaymentFrequencyController.onPageLoad(NormalMode)
         }
 
         "to furlough dates when employee has not been furloughed the whole period" in {
