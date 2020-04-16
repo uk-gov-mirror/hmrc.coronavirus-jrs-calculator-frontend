@@ -10,6 +10,9 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryEmployeeStartDatePage: Arbitrary[EmployeeStartDatePage.type] =
+    Arbitrary(EmployeeStartDatePage)
+
   implicit lazy val arbitraryVariableLengthEmployedPage: Arbitrary[VariableLengthEmployedPage.type] =
     Arbitrary(VariableLengthEmployedPage)
 

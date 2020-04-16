@@ -379,3 +379,13 @@ variableLengthEmployed.lessThan12Months = Less than 12 months
 variableLengthEmployed.morethan12Months = 12 months or more
 variableLengthEmployed.checkYourAnswersLabel = How long has this employee been working for the business?
 variableLengthEmployed.error.required = Select one of the options below
+
+employeeStartDate.title = When did this employee start working for the business?
+employeeStartDate.heading = When did this employee start working for the business?
+employeeStartDate.checkYourAnswersLabel = EmployeeStartDate
+employeeStartDate.error.required.all = Enter the employee start date
+employeeStartDate.error.required.two = The employee start date must include {0} and {1}
+employeeStartDate.error.required = The employee start date must include {0}
+employeeStartDate.error.invalid = Enter a real date
+employeeStartDate.hint = For example, 28 11 2019
+employeeStartDate.error.outofrange = The start date should be between {0} and {1}
