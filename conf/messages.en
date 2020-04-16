@@ -199,7 +199,7 @@ payFrequency.fortnightly = Every 2 weeks
 payFrequency.fourweekly = Every 4 weeks
 payFrequency.monthly = Monthly
 payFrequency.checkYourAnswersLabel = How often do you pay this employee?
-payFrequency.error.required = Select paymentFrequency
+payFrequency.error.required = Select one of the options below
 
 rootPage.title = Coronavirus Job Retention Scheme calculator
 rootPage.heading = Coronavirus Job Retention Scheme calculator

@@ -15,6 +15,6 @@ class PaymentFrequencyFormProvider @Inject() extends Mappings {
 
   def apply(): Form[PaymentFrequency] =
     Form(
-      "value" -> enumerable[PaymentFrequency]("paymentFrequency.error.required")
+      "value" -> enumerable[PaymentFrequency]("payFrequency.error.required")
     )
 }

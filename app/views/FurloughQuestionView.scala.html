@@ -25,7 +25,7 @@
 
         @inputRadio(
             form = form,
-            hintKey = Some(messages("furloughQuestion.hint", startDate, endDate)),
+            hintKey = Some(messages("furloughQuestion.hint", dateToString(startDate), dateToString(endDate))),
             legend = messages("furloughQuestion.heading"),
             items = FurloughQuestion.options(form)
         )
