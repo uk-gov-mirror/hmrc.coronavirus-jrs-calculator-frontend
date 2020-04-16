@@ -99,3 +99,8 @@ GET         /employee-start-date                    controllers.EmployeeStartDat
 POST        /employee-start-date                    controllers.EmployeeStartDateController.onSubmit(mode: Mode = NormalMode)
 GET         /change-employee-start-date             controllers.EmployeeStartDateController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-employee-start-date             controllers.EmployeeStartDateController.onSubmit(mode: Mode = CheckMode)
+
+GET        /variable-gross-pay                        controllers.VariableGrossPayController.onPageLoad(mode: Mode = NormalMode)
+POST       /variable-gross-pay                        controllers.VariableGrossPayController.onSubmit(mode: Mode = NormalMode)
+GET        /change-variable-gross-pay                  controllers.VariableGrossPayController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-variable-gross-pay                  controllers.VariableGrossPayController.onSubmit(mode: Mode = CheckMode)

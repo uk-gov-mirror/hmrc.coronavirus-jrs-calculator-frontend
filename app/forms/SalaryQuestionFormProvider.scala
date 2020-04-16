@@ -19,11 +19,11 @@ class SalaryQuestionFormProvider @Inject() extends Mappings {
       "salary" -> bigDecimal(
         requiredKey = "salaryQuestion.salary.error.required",
         nonNumericKey = "salaryQuestion.salary.error.invalid"
-      ).verifying(validDouble)
+      ).verifying(validSalary)
     )(Salary.apply)(Salary.unapply)
   )
 
-  private def validDouble: Constraint[BigDecimal] = Constraint { value =>
+  private def validSalary: Constraint[BigDecimal] = Constraint { value =>
     if (value >= 0) Valid else Invalid("salaryQuestion.salary.error.negative")
   }
 }

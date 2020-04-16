@@ -389,3 +389,11 @@ employeeStartDate.error.required = The employee start date must include {0}
 employeeStartDate.error.invalid = Enter a real date
 employeeStartDate.hint = For example, 28 11 2019
 employeeStartDate.error.outofrange = The start date should be between {0} and {1}
+
+variableGrossPay.title = What is the total gross pay since they started?
+variableGrossPay.heading = What is the total gross pay since they started?
+variableGrossPay.checkYourAnswersLabel = variableGrossPay
+variableGrossPay.error.required = Enter a valid amount
+variableGrossPay.label = This is the gross amount before deductions.
+variableGrossPay.error.invalid = Enter a valid amount
+variableGrossPay.error.negative = Salary can’t be negative

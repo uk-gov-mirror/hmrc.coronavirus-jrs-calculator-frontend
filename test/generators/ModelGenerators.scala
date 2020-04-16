@@ -46,6 +46,13 @@ trait ModelGenerators {
       } yield Salary(salary)
     }
 
+  implicit lazy val arbitraryVariableGrossPayQuestion: Arbitrary[VariableGrossPay] =
+    Arbitrary {
+      for {
+        value <- Arbitrary.arbitrary[BigDecimal]
+      } yield VariableGrossPay(value)
+    }
+
   implicit lazy val arbitraryPaymentFrequency: Arbitrary[PaymentFrequency] =
     Arbitrary {
       Gen.oneOf(PaymentFrequency.values.toSeq)

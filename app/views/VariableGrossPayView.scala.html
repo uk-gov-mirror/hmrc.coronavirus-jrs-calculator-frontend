@@ -1,0 +1,38 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        button: components.button,
+        inputText: components.inputText,
+        fieldset: components.fieldset,
+        h1: components.h1
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(title(form, "variableGrossPay.title"))) {
+
+
+    @formHelper(action = VariableGrossPayController.onSubmit(mode)) {
+
+        @errorSummary(form.errors)
+
+        @fieldset(s"variableGrossPay.heading") {
+            @inputText(
+                form,
+                id = "value",
+                name = "value",
+                label = "variableGrossPay.label",
+                isPageHeading = false,
+                classes = Some("govuk-input--width-10")
+            )
+        }
+
+        @button("site.continue")
+    }
+}

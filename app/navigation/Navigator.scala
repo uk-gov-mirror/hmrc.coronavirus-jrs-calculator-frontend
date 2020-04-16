@@ -43,6 +43,12 @@ class Navigator @Inject()() {
     case VariableLengthEmployedPage =>
       _ =>
         routes.EmployeeStartDateController.onPageLoad(NormalMode)
+    case EmployeeStartDatePage =>
+      _ =>
+        routes.VariableGrossPayController.onPageLoad(NormalMode)
+    case VariableGrossPayPage =>
+      _ =>
+        routes.PayDateController.onPageLoad(1)
     case NicCategoryPage =>
       _ =>
         routes.PensionAutoEnrolmentController.onPageLoad(NormalMode)
