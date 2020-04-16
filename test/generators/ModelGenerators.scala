@@ -14,6 +14,11 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryFurloughDates: Arbitrary[FurloughDates] =
+    Arbitrary {
+      Gen.oneOf(FurloughDates.values.toSeq)
+    }
+
   implicit lazy val arbitraryFurloughQuestion: Arbitrary[FurloughQuestion] =
     Arbitrary {
       Gen.oneOf(FurloughQuestion.values.toSeq)

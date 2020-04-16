@@ -23,13 +23,14 @@ class Navigator @Inject()() {
       _ =>
         routes.FurloughQuestionController.onPageLoad(NormalMode)
     case FurloughQuestionPage =>
-      userAnswers =>
-        {
-          val fq = Option((userAnswers.data \ "furloughQuestion").as[String]).getOrElse("no")
-          if (fq == "yes")
-            routes.PayQuestionController.onPageLoad(NormalMode)
-          else routes.RootPageController.onPageLoad()
-        }
+      furloughQuestionRoutes
+    case FurloughDatesPage =>
+      furloughDatesRoutes
+    case FurloughStartDatePage =>
+      furloughStartDateRoutes
+    case FurloughEndDatePage =>
+      _ =>
+        routes.PayQuestionController.onPageLoad(NormalMode)
     case PayQuestionPage =>
       _ =>
         routes.PaymentFrequencyController.onPageLoad(NormalMode)
@@ -58,7 +59,6 @@ class Navigator @Inject()() {
       _ =>
         routes.CheckYourAnswersController.onPageLoad()
   }
-
   private val payDateRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     (for {
       claimEndDate <- userAnswers.get(ClaimPeriodEndPage)
@@ -71,7 +71,6 @@ class Navigator @Inject()() {
       }
     }).getOrElse(routes.ErrorController.internalServerError())
   }
-
   private val idxRoutes: Page => (Int, UserAnswers) => Call = {
     case PayDatePage => payDateRoutes
   }
@@ -81,5 +80,29 @@ class Navigator @Inject()() {
       idx.fold(normalRoutes(page)(userAnswers))(idx => idxRoutes(page)(idx, userAnswers))
     case CheckMode =>
       checkRouteMap(page)(userAnswers)
+  }
+
+  private def furloughQuestionRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(FurloughQuestionPage) match {
+      case Some(FurloughQuestion.Yes) => routes.PayQuestionController.onPageLoad(NormalMode)
+      case Some(FurloughQuestion.No)  => routes.FurloughDatesController.onPageLoad(NormalMode)
+      case None                       => routes.FurloughQuestionController.onPageLoad(NormalMode)
+    }
+  }
+
+  private def furloughDatesRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(FurloughDatesPage) match {
+      case Some(FurloughDates.StartedInClaim)         => routes.FurloughStartDateController.onPageLoad(NormalMode)
+      case Some(FurloughDates.EndedInClaim)           => routes.FurloughEndDateController.onPageLoad(NormalMode)
+      case Some(FurloughDates.StartedAndEndedInClaim) => routes.FurloughStartDateController.onPageLoad(NormalMode)
+      case None                                       => routes.FurloughDatesController.onPageLoad(NormalMode)
+    }
+  }
+
+  private def furloughStartDateRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(FurloughDatesPage) match {
+      case Some(FurloughDates.StartedAndEndedInClaim) => routes.FurloughEndDateController.onPageLoad(NormalMode)
+      case _                                          => routes.PayQuestionController.onPageLoad(NormalMode)
+    }
   }
 }
