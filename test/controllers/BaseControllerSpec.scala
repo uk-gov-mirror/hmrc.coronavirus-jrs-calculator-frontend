@@ -104,7 +104,7 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     "answer is found" must {
 
       "execute provided function" in {
-        val userAnswers = emptyUserAnswers.set(SalaryQuestionPage, Salary(100))(implicitly).success.value
+        val userAnswers = emptyUserAnswers.set(SalaryQuestionPage, Salary(123.45))(implicitly).success.value
 
         val result = BaseController.getRequiredAnswer(SalaryQuestionPage)(futureResult)(
           DataRequest(fakeRequest, "id", userAnswers),
@@ -112,7 +112,7 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
           errorHandler)
 
         status(result) mustBe OK
-        contentAsString(result) mustBe "Answer: Salary(100.0)"
+        contentAsString(result) mustBe "Answer: Salary(123.45)"
       }
 
     }

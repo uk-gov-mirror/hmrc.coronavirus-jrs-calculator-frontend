@@ -32,7 +32,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase {
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
-    breakdown(userAnswers) mustBe Option(expected)
+    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected //TODO metadata to be tested
   }
 
   "for a given user answer calculate furlough and empty results for ni and pension if do not apply" in new ConfirmationControllerRequestHandler {
@@ -46,12 +46,11 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase {
     val nicPayPeriodBreakdowns = List(PayPeriodBreakdown(0.0, withPayDay), PayPeriodBreakdown(0.0, withPayDayTwo))
     val pensionPayPeriodBreakdowns = List(PayPeriodBreakdown(0.0, withPayDay), PayPeriodBreakdown(0.0, withPayDayTwo))
 
-    breakdown(userAnswers) mustBe Some(
-      ConfirmationViewBreakdown(
-        CalculationResult(FurloughCalculationResult, 3200.0, payPeriodBreakdowns),
-        CalculationResult(NicCalculationResult, 0.0, nicPayPeriodBreakdowns),
-        CalculationResult(PensionCalculationResult, 0.0, pensionPayPeriodBreakdowns)
-      ))
+    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe ConfirmationViewBreakdown(
+      CalculationResult(FurloughCalculationResult, 3200.0, payPeriodBreakdowns),
+      CalculationResult(NicCalculationResult, 0.0, nicPayPeriodBreakdowns),
+      CalculationResult(PensionCalculationResult, 0.0, pensionPayPeriodBreakdowns)
+    ) //TODO metadata to be tested
   }
 
   private val userAnswersJson: String =

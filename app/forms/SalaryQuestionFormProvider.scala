@@ -16,14 +16,14 @@ class SalaryQuestionFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Salary] = Form(
     mapping(
-      "salary" -> double(
+      "salary" -> bigDecimal(
         requiredKey = "salaryQuestion.salary.error.required",
         nonNumericKey = "salaryQuestion.salary.error.invalid"
       ).verifying(validDouble)
     )(Salary.apply)(Salary.unapply)
   )
 
-  private def validDouble: Constraint[Double] = Constraint { value =>
+  private def validDouble: Constraint[BigDecimal] = Constraint { value =>
     if (value >= 0) Valid else Invalid("salaryQuestion.salary.error.negative")
   }
 }

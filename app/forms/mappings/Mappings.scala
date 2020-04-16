@@ -25,6 +25,9 @@ trait Mappings extends Formatters with Constraints {
   protected def double(requiredKey: String = "error.required", nonNumericKey: String = "error.nonNumeric"): FieldMapping[Double] =
     of(doubleFormatter(requiredKey, nonNumericKey))
 
+  protected def bigDecimal(requiredKey: String = "error.required", nonNumericKey: String = "error.nonNumeric"): FieldMapping[BigDecimal] =
+    of(bigDecimalFormatter(requiredKey, nonNumericKey))
+
   protected def boolean(requiredKey: String = "error.required", invalidKey: String = "error.boolean"): FieldMapping[Boolean] =
     of(booleanFormatter(requiredKey, invalidKey))
 

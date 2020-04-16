@@ -11,18 +11,24 @@ import models.PensionStatus.{OptedIn, OptedOut}
 import models.{CalculationResult, ClaimPeriodModel, FurloughPeriod, RegularPayment, UserAnswers}
 import pages._
 import services._
-import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
+import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
 
 trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPeriodGenerator with NicPensionCalculator {
 
-  def breakdown(userAnswers: UserAnswers): Option[ConfirmationViewBreakdown] =
+  def loadResultData(userAnswers: UserAnswers): Option[ConfirmationDataResult] =
+    for {
+      breakdown <- breakdown(userAnswers)
+      metadata  <- meta(userAnswers)
+    } yield ConfirmationDataResult(metadata, breakdown)
+
+  private def breakdown(userAnswers: UserAnswers): Option[ConfirmationViewBreakdown] =
     for {
       furlough <- handleCalculation(userAnswers)
       ni       <- handleCalculationNi(userAnswers, furlough)
       pension  <- handleCalculationPension(userAnswers, furlough)
     } yield ConfirmationViewBreakdown(furlough, ni, pension)
 
-  def meta(userAnswers: UserAnswers): Option[ConfirmationMetadata] =
+  private def meta(userAnswers: UserAnswers): Option[ConfirmationMetadata] =
     for {
       claimStart <- userAnswers.get(ClaimPeriodStartPage)
       claimEnd   <- userAnswers.get(ClaimPeriodEndPage)
@@ -31,26 +37,29 @@ trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPe
       nic        <- userAnswers.get(NicCategoryPage)
       pension    <- userAnswers.get(PensionAutoEnrolmentPage)
       claimPeriod = ClaimPeriodModel(claimStart, claimEnd)
-    } yield ConfirmationMetadata(claimPeriod, furlough, frequency, nic, pension) //TODO gather actual FurloughPeriod
+    } yield ConfirmationMetadata(claimPeriod, furlough, frequency, nic, pension) //TODO get actual furloughPeriod from userAnswers
 
-  def handleCalculation(userAnswers: UserAnswers): Option[CalculationResult] =
+  private def handleCalculation(userAnswers: UserAnswers): Option[CalculationResult] =
     for {
+      claimStart <- userAnswers.get(ClaimPeriodStartPage)
+      claimEnd   <- userAnswers.get(ClaimPeriodEndPage)
       frequency  <- userAnswers.get(PaymentFrequencyPage)
       taxPayYear <- userAnswers.get(TaxYearPayDatePage)
       payDate = userAnswers.getList(PayDatePage)
       periods = generatePayPeriods(payDate.toList)
       salary = userAnswers.get(SalaryQuestionPage)
       regulars = periods.map(p => RegularPayment(salary.get, p))
-    } yield calculateFurlough(frequency, regulars, taxPayYear)
+      furloughPeriod = FurloughPeriod(claimStart, claimEnd)
+    } yield calculateFurlough(frequency, regulars, furloughPeriod, taxPayYear) //TODO get actual furloughPeriod from userAnswers
 
-  protected def handleCalculationNi(userAnswers: UserAnswers, furloughResult: CalculationResult): Option[CalculationResult] =
+  private def handleCalculationNi(userAnswers: UserAnswers, furloughResult: CalculationResult): Option[CalculationResult] =
     userAnswers.get(NicCategoryPage) match {
       case Some(Payable) => calculateNi(userAnswers, furloughResult)
       case Some(Nonpayable) =>
         Option(CalculationResult(NicCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(amount = 0.0))))
     }
 
-  protected def handleCalculationPension(userAnswers: UserAnswers, furloughResult: CalculationResult): Option[CalculationResult] =
+  private def handleCalculationPension(userAnswers: UserAnswers, furloughResult: CalculationResult): Option[CalculationResult] =
     userAnswers.get(PensionAutoEnrolmentPage) match {
       case Some(OptedIn) => calculatePension(userAnswers, furloughResult)
       case Some(OptedOut) =>

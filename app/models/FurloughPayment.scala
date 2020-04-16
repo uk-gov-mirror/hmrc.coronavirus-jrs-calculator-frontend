@@ -41,7 +41,7 @@ object PayPeriodWithPayDay {
 
 case class RegularPayment(salary: Salary, payPeriod: PayPeriod)
 
-case class PayPeriodBreakdown(amount: Double, payPeriodWithPayDay: PayPeriodWithPayDay)
+case class PayPeriodBreakdown(amount: BigDecimal, payPeriodWithPayDay: PayPeriodWithPayDay)
 
 object PayPeriodBreakdown {
   implicit val defaultFormat: Format[PayPeriodBreakdown] = Json.format
@@ -58,7 +58,7 @@ case object Calculation extends Enumerable.Implicits {
   implicit val enumerable: Enumerable[Calculation] = Enumerable(values.map(v => v.toString -> v): _*)
 }
 
-case class CalculationResult(calculation: Calculation, total: Double, payPeriodBreakdowns: Seq[PayPeriodBreakdown])
+case class CalculationResult(calculation: Calculation, total: BigDecimal, payPeriodBreakdowns: Seq[PayPeriodBreakdown])
 
 object CalculationResult {
   implicit val defaultFormat: Format[CalculationResult] = Json.format[CalculationResult]

@@ -5,10 +5,10 @@
 
 package forms
 
-import forms.behaviours.DoubleFieldBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
-class SalaryQuestionFormProviderSpec extends DoubleFieldBehaviours {
+class SalaryQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new SalaryQuestionFormProvider()()
 
@@ -18,7 +18,7 @@ class SalaryQuestionFormProviderSpec extends DoubleFieldBehaviours {
     val requiredKey = "salaryQuestion.salary.error.required"
     val invalidKey = "salaryQuestion.salary.error.invalid"
 
-    behave like doubleField(
+    behave like bigDecimalField(
       form,
       fieldName,
       error = FormError(fieldName, invalidKey)

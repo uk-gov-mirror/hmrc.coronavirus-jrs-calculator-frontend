@@ -24,9 +24,9 @@
 
         @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-font-size-24"))
 
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.furlough.total</span> - Furloughed pay <br/>
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.nic.total</span> - Employer NIC <br/>
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.pension.total</span> - Pension contribution <br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.furlough.total.setScale(2)</span> - Furloughed pay <br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.nic.total.setScale(2)</span> - Employer NIC <br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.pension.total.setScale(2)</span> - Pension contribution <br/>
     }
 
     @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
@@ -59,9 +59,9 @@
                     </dt>
                     <dd class="govuk-summary-list__value">
                         Up to @furlough.payPeriodWithPayDay.payPeriod.end<br><br>
-                        &pound;@furlough.amount <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
-                        &pound;@nic.amount <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
-                        &pound;@pension.amount <span class="govuk-!-font-weight-regular">- Pension contribution</span>
+                        &pound;@furlough.amount.setScale(2) <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
+                        &pound;@nic.amount.setScale(2) <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
+                        &pound;@pension.amount.setScale(2) <span class="govuk-!-font-weight-regular">- Pension contribution</span>
                     </dd>
                 </div>
             }

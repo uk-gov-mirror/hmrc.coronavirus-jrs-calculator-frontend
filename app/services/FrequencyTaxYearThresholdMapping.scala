@@ -9,13 +9,13 @@ import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
 
 case class FrequencyTaxYearKey(paymentFrequency: PaymentFrequency, taxYear: TaxYear, rate: Rate)
-case class Threshold(lower: Double)
+case class Threshold(lower: BigDecimal)
 
 sealed trait Rate {
-  val value: Double
+  val value: BigDecimal
 }
-case class NiRate(value: Double = 13.8 / 100) extends Rate
-case class PensionRate(value: Double = 3.0 / 100) extends Rate
+case class NiRate(value: BigDecimal = 13.8 / 100) extends Rate
+case class PensionRate(value: BigDecimal = 3.0 / 100) extends Rate
 
 object FrequencyTaxYearThresholdMapping {
   //TODO: This map could be loaded from application.conf
@@ -38,7 +38,7 @@ object FrequencyTaxYearThresholdMapping {
     FrequencyTaxYearKey(Weekly, TaxYearEnding2021, PensionRate())      -> Threshold(120.00)
   )
 }
-case class FurloughCap(value: Double)
+case class FurloughCap(value: BigDecimal)
 
 object FurloughCapMapping {
   val mappings = Map[PaymentFrequency, FurloughCap](

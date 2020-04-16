@@ -27,10 +27,6 @@ class PayPeriodGeneratorSpec extends SpecBase {
   }
 
   "Returns a sorted List[PayPeriod] for a given List[LocalDate] that represents PayPeriod.end LocalDates" in new PayPeriodGenerator {
-    // (0, 1) => PayPeriod(0.plusDays(1), 1)
-    // (1, 2) => PayPeriod(1.plusDays(1), 2)
-    // (2, 3) => PayPeriod(2.plusDays(1), 3)
-
     val endDates: List[LocalDate] = List(LocalDate.of(2020, 4, 20), LocalDate.of(2020, 3, 20), LocalDate.of(2020, 2, 20))
     val endDatesTwo: List[LocalDate] = List(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 2, 20))
 
@@ -43,6 +39,31 @@ class PayPeriodGeneratorSpec extends SpecBase {
 
     generatePayPeriods(endDates) mustBe expected
     generatePayPeriods(endDatesTwo) mustBe expectedTwo
+  }
+
+  "determine if a period contains the start of a new tax year" in new PayPeriodGenerator {
+    periodContainsNewTaxYear(PayPeriod(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 4, 20))) mustBe true
+    periodContainsNewTaxYear(PayPeriod(LocalDate.of(2020, 3, 6), LocalDate.of(2020, 4, 6))) mustBe true
+    periodContainsNewTaxYear(PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))) mustBe false
+  }
+
+  "determine whether a given date falls in a certain period" in new PayPeriodGenerator {
+    val period = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+
+    dateExistsInPayPeriod(LocalDate.of(2020, 3, 15), period) mustBe true
+    dateExistsInPayPeriod(LocalDate.of(2020, 4, 15), period) mustBe false
+    dateExistsInPayPeriod(LocalDate.of(2020, 3, 31), period) mustBe true
+    dateExistsInPayPeriod(LocalDate.of(2020, 3, 1), period) mustBe true
+  }
+
+  "counts days in a given period" in new PayPeriodGenerator {
+    val periodOne = PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))
+    val periodTwo = PayPeriod(LocalDate.of(2020, 4, 15), LocalDate.of(2020, 4, 30))
+    val periodThree = PayPeriod(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 20))
+
+    periodDaysCount(periodOne) mustBe 30
+    periodDaysCount(periodTwo) mustBe 15
+    periodDaysCount(periodThree) mustBe 20
   }
 
 }

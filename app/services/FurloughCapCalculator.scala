@@ -5,6 +5,7 @@
 
 package services
 
+import java.time.Month
 import java.time.temporal.ChronoUnit
 
 import models.PaymentFrequency.Monthly
@@ -15,12 +16,12 @@ import scala.math.BigDecimal.RoundingMode.{RoundingMode, _}
 
 trait FurloughCapCalculator {
 
-  def furloughCap(paymentFrequency: PaymentFrequency, payPeriod: PayPeriod): Double = {
+  def furloughCap(paymentFrequency: PaymentFrequency, payPeriod: PayPeriod): BigDecimal = {
     val furloughCap = FurloughCapMapping.mappings
       .get(paymentFrequency)
       .fold {
         Logger.warn(s"Unable to find a Furlough Cap for $paymentFrequency")
-        0.00
+        BigDecimal(0).setScale(2)
       } { cap =>
         cap.value
       }
@@ -32,15 +33,20 @@ trait FurloughCapCalculator {
     }
   }
 
-  private def calculateFurloughCapNonSimplified(payPeriod: PayPeriod): Double = {
+  def partialFurloughCap(payPeriod: PayPeriod): BigDecimal = calculateFurloughCapNonSimplified(payPeriod)
+
+  protected def dailyMax(month: Month): BigDecimal =
+    roundWithMode(2500.00 / month.maxLength, UP)
+
+  private def calculateFurloughCapNonSimplified(payPeriod: PayPeriod): BigDecimal = {
     val startMonthDays: Long = ChronoUnit.DAYS.between(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength))
     val endMonthDays: Long = ChronoUnit.DAYS.between(payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength), payPeriod.end)
-    val startMonthDailyMax: Double = helper(2500.0 / payPeriod.start.getMonth.maxLength, UP)
-    val endMonthDailyMax: Double = helper(2500.0 / payPeriod.end.getMonth.maxLength, UP)
+    val startMonthDailyMax: BigDecimal = dailyMax(payPeriod.start.getMonth)
+    val endMonthDailyMax: BigDecimal = dailyMax(payPeriod.end.getMonth)
 
-    helper((startMonthDays * startMonthDailyMax) + (endMonthDays * endMonthDailyMax), HALF_UP)
+    roundWithMode((startMonthDays * startMonthDailyMax) + (endMonthDays * endMonthDailyMax), HALF_UP)
   }
 
-  val helper: (Double, RoundingMode) => Double = (value, mode) => BigDecimal(value).setScale(2, mode).toDouble
+  val roundWithMode: (BigDecimal, RoundingMode) => BigDecimal = (value, mode) => value.setScale(2, mode)
 
 }

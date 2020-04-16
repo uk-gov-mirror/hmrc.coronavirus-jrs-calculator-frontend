@@ -7,7 +7,7 @@ package models
 
 import play.api.libs.json._
 
-case class Salary(amount: Double)
+case class Salary(amount: BigDecimal)
 
 object Salary {
   implicit val format = Json.format[Salary]

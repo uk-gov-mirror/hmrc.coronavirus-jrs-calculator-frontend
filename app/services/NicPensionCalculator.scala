@@ -10,6 +10,8 @@ import models.{CalculationResult, PayPeriodBreakdown, PaymentFrequency}
 import play.api.Logger
 import utils.TaxYearFinder
 
+import scala.math.BigDecimal.RoundingMode
+
 trait NicPensionCalculator extends TaxYearFinder with FurloughCapCalculator {
 
   def calculateGrant(paymentFrequency: PaymentFrequency, furloughPayment: Seq[PayPeriodBreakdown], rate: Rate): CalculationResult = {
@@ -22,23 +24,23 @@ trait NicPensionCalculator extends TaxYearFinder with FurloughCapCalculator {
     }
   }
 
-  protected def calculate(paymentFrequency: PaymentFrequency, furloughPayment: PayPeriodBreakdown, rate: Rate): Double = {
+  protected def calculate(paymentFrequency: PaymentFrequency, furloughPayment: PayPeriodBreakdown, rate: Rate): BigDecimal = {
     val frequencyTaxYearKey = FrequencyTaxYearKey(paymentFrequency, taxYearAt(furloughPayment.payPeriodWithPayDay.paymentDate), rate)
 
     FrequencyTaxYearThresholdMapping.mappings
       .get(frequencyTaxYearKey)
       .fold {
         Logger.warn(s"Unable to find a threshold for $frequencyTaxYearKey")
-        0.00
+        BigDecimal(0).setScale(2)
       } { threshold =>
-        val cap = furloughCap(paymentFrequency, furloughPayment.payPeriodWithPayDay.payPeriod).floor //Remove the pennies
+        val cap = furloughCap(paymentFrequency, furloughPayment.payPeriodWithPayDay.payPeriod).setScale(0, RoundingMode.DOWN) //Remove the pennies
         val cappedFurloughPayment = cap.min(furloughPayment.amount)
 
-        if (cappedFurloughPayment < threshold.lower) 0.00
-        else
-          BigDecimal(((cappedFurloughPayment - threshold.lower) * frequencyTaxYearKey.rate.value))
-            .setScale(2, BigDecimal.RoundingMode.HALF_UP)
-            .toDouble
+        if (cappedFurloughPayment < threshold.lower) {
+          BigDecimal(0).setScale(2)
+        } else {
+          roundWithMode((cappedFurloughPayment - threshold.lower) * frequencyTaxYearKey.rate.value, RoundingMode.HALF_UP)
+        }
       }
   }
 }

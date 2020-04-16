@@ -10,14 +10,21 @@ import java.time.LocalDate
 import base.SpecBase
 import models.Calculation.FurloughCalculationResult
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{CalculationResult, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, RegularPayment, Salary}
+import models.{CalculationResult, FurloughPeriod, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, RegularPayment, Salary}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  forAll(scenarios) { (frequency, salary, expected) =>
-    s"For payment frequency $frequency and salary $salary should return $expected" in new FurloughCalculator {
-      calculate(frequency, salary) mustBe expected
+  forAll(fullPeriodScenarios) { (frequency, regularPayment, expected) =>
+    s"Full Period: For payment frequency $frequency and salary ${regularPayment.salary.amount} should return $expected" in new FurloughCalculator {
+      calculateFullPeriod(frequency, regularPayment) mustBe expected
+    }
+  }
+
+  forAll(partialPeriodScenarios) { (regularPayment, expected) =>
+    s"Partial Period: For payment with a salary ${regularPayment.salary.amount} which has been adjusted for a partial period " +
+      s"should return $expected" in new FurloughCalculator {
+      calculatePartialPeriod(regularPayment) mustBe expected
     }
   }
 
@@ -30,6 +37,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     val paymentTwo: RegularPayment = RegularPayment(Salary(2000.00), periodTwo.payPeriod)
     val payments: List[RegularPayment] = List(paymentOne, paymentTwo)
 
+    val furloughPeriod = FurloughPeriod(periodOne.payPeriod.start, periodTwo.payPeriod.end)
+
     val taxYearDate = LocalDate.of(2020, 4, 20)
     val periodTwoWithNewPaymentDate = periodTwo.copy(paymentDate = PaymentDate(taxYearDate))
 
@@ -39,11 +48,27 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         3200.00,
         List(PayPeriodBreakdown(1600.0, periodOne), PayPeriodBreakdown(1600.0, periodTwoWithNewPaymentDate)))
 
-    calculateFurlough(Monthly, payments, taxYearDate) mustBe expected
+    calculateFurlough(Monthly, payments, furloughPeriod, taxYearDate) mustBe expected
   }
 
-  private lazy val scenarios = Table(
-    ("paymentFrequency", "RegularPayment", "expected"),
+  "return a pay period with new start/end dates if a given furlough period begins/ends in the pay period" in new FurloughCalculator {
+    val furloughPeriodOne = FurloughPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 5, 30))
+    val payPeriodOne = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val expectedOne = PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))
+    val furloughPeriodTwo = FurloughPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 25))
+    val payPeriodTwo = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val expectedTwo = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 25))
+    val furloughPeriodThr = FurloughPeriod(LocalDate.of(2020, 3, 5), LocalDate.of(2020, 3, 28))
+    val payPeriodThr = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val expectedThr = PayPeriod(LocalDate.of(2020, 3, 5), LocalDate.of(2020, 3, 28))
+
+    payPeriodFromFurloughPeriod(furloughPeriodOne, payPeriodOne) mustBe expectedOne
+    payPeriodFromFurloughPeriod(furloughPeriodTwo, payPeriodTwo) mustBe expectedTwo
+    payPeriodFromFurloughPeriod(furloughPeriodThr, payPeriodThr) mustBe expectedThr
+  }
+
+  private lazy val fullPeriodScenarios = Table(
+    ("paymentFrequency", "regularPayment", "expected"),
     (Monthly, RegularPayment(Salary(2000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), 1600.00),
     (Monthly, RegularPayment(Salary(5000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), 2500.00),
     (Monthly, RegularPayment(Salary(5000.00), PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))), 2540.50),
@@ -53,5 +78,12 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     (FortNightly, RegularPayment(Salary(1000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))), 800.00),
     (FourWeekly, RegularPayment(Salary(5000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))), 2307.68),
     (FourWeekly, RegularPayment(Salary(2000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))), 1600.00)
+  )
+
+  private lazy val partialPeriodScenarios = Table(
+    ("regularPayment", "expected"),
+    (RegularPayment(Salary(1032.32), PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 825.86),
+    (RegularPayment(Salary(3000.00), PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 1290.40),
+    (RegularPayment(Salary(3000.00), PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28))), 1048.45)
   )
 }
