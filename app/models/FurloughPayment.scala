@@ -35,10 +35,10 @@ object PeriodWithPayDay {
 
 case class RegularPayment(salary: Salary, payPeriod: Period)
 
-case class PayPeriodBreakdown(amount: BigDecimal, payPeriodWithPayDay: PeriodWithPayDay)
+case class PayPeriodBreakdown(amount: BigDecimal, payPeriodWithPayDay: PeriodWithPayDay, furloughCap: Amount)
 
 object PayPeriodBreakdown {
-  implicit val defaultFormat: Format[PayPeriodBreakdown] = Json.format
+  implicit val defaultFormat: Format[PayPeriodBreakdown] = Json.format[PayPeriodBreakdown]
 }
 
 sealed trait Calculation

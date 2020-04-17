@@ -17,7 +17,7 @@ trait NicPensionCalculator extends TaxYearFinder with FurloughCapCalculator {
 
   def calculateGrant(paymentFrequency: PaymentFrequency, furloughPayment: Seq[PayPeriodBreakdown], rate: Rate): CalculationResult = {
     val paymentDateBreakdowns: Seq[PayPeriodBreakdown] =
-      furloughPayment.map(payment => PayPeriodBreakdown(calculate(paymentFrequency, payment, rate), payment.payPeriodWithPayDay))
+      furloughPayment.map(payment => payment.copy(amount = calculate(paymentFrequency, payment, rate)))
 
     rate match {
       case NiRate(_)      => CalculationResult(NicCalculationResult, paymentDateBreakdowns.map(_.amount).sum, paymentDateBreakdowns)
@@ -34,7 +34,7 @@ trait NicPensionCalculator extends TaxYearFinder with FurloughCapCalculator {
         Logger.warn(s"Unable to find a threshold for $frequencyTaxYearKey")
         BigDecimal(0).setScale(2)
       } { threshold =>
-        val cap = furloughCap(paymentFrequency, furloughPayment.payPeriodWithPayDay.payPeriod).setScale(0, RoundingMode.DOWN) //Remove the pennies
+        val cap = furloughPayment.furloughCap.value.setScale(0, RoundingMode.DOWN) //Remove the pennies
         val cappedFurloughPayment = cap.min(furloughPayment.amount)
 
         if (cappedFurloughPayment < threshold.lower) {

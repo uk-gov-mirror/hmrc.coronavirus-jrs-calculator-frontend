@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import models.Calculation.FurloughCalculationResult
-import models.{CalculationResult, PayPeriodBreakdown, PaymentDate, PaymentFrequency, Period, PeriodWithPayDay, RegularPayment, Salary}
+import models.{Amount, CalculationResult, PayPeriodBreakdown, PaymentDate, PaymentFrequency, Period, PeriodWithPayDay, RegularPayment, Salary}
 import utils.AmountRounding._
 import utils.TaxYearFinder
 
@@ -42,9 +42,9 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
 
       if (isPartialPeriod) {
         val partialPayment = regularPaymentForFurloughPeriod(furloughPeriod, payment)
-        PayPeriodBreakdown(calculatePartialPeriod(partialPayment), PeriodWithPayDay(partialPayment.payPeriod, paymentDate))
+        calculatePartialPeriod(partialPayment, PeriodWithPayDay(partialPayment.payPeriod, paymentDate))
       } else {
-        PayPeriodBreakdown(calculateFullPeriod(paymentFrequency, payment), PeriodWithPayDay(payment.payPeriod, paymentDate))
+        calculateFullPeriod(paymentFrequency, payment, PeriodWithPayDay(payment.payPeriod, paymentDate))
       }
     }
 
@@ -80,18 +80,27 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
     Period(start, end)
   }
 
-  protected def calculateFullPeriod(paymentFrequency: PaymentFrequency, regularPayment: RegularPayment): BigDecimal = {
+  protected def calculateFullPeriod(
+    paymentFrequency: PaymentFrequency,
+    regularPayment: RegularPayment,
+    periodWithPayDay: PeriodWithPayDay): PayPeriodBreakdown = {
     val eighty = roundWithMode(regularPayment.salary.amount * 0.8, RoundingMode.HALF_UP)
     val cap = furloughCap(paymentFrequency, regularPayment.payPeriod)
 
-    if (eighty > cap) cap else eighty
+    val amount: BigDecimal = if (eighty > cap) cap else eighty
+
+    PayPeriodBreakdown(amount, periodWithPayDay, Amount(cap))
   }
 
-  protected def calculatePartialPeriod(regularPayment: RegularPayment): BigDecimal = {
+  protected def calculatePartialPeriod(regularPayment: RegularPayment, periodWithPayDay: PeriodWithPayDay): PayPeriodBreakdown = {
     val eighty = roundWithMode(regularPayment.salary.amount * 0.8, RoundingMode.HALF_UP)
     val cap = partialFurloughCap(regularPayment.payPeriod)
 
     if (eighty > cap) cap else eighty
+
+    val amount: BigDecimal = if (eighty > cap) cap else eighty
+
+    PayPeriodBreakdown(amount, periodWithPayDay, Amount(cap))
   }
 
 }
