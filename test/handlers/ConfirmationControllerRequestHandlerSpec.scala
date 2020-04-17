@@ -17,7 +17,7 @@ import viewmodels.ConfirmationViewBreakdown
 class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData {
 
   "do all calculations given a set of userAnswers" in new ConfirmationControllerRequestHandler {
-    val userAnswers = Json.parse(userAnswersJson).as[UserAnswers]
+    val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
 
     def periodBreakdownOne(amount: Double) =
       PayPeriodBreakdown(

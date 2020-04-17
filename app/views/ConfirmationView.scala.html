@@ -35,11 +35,7 @@
 
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("confirmation.claimPeriod", cm.claimPeriod.startDate, cm.claimPeriod.endDate)</li>
-        @if(cm.furloughQuestion == Yes) {
-            <li>@messages("confirmation.furlough.wholePeriod")</li>
-        } else {
-          <li>@messages("confirmation.furlough.partPeriod")</li>
-        }
+        <li>@messages("confirmation.furloughPeriod", cm.furloughPeriod.start, cm.furloughPeriod.end)</li>
         <li>@messages(s"confirmation.paid.${cm.frequency}")</li>
         <li>@messages(s"confirmation.nic.${cm.nic}")</li>
         <li>@messages(s"confirmation.pension.${cm.pension}")</li>

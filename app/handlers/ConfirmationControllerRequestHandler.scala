@@ -8,7 +8,7 @@ package handlers
 import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.NicCategory.{Nonpayable, Payable}
 import models.PensionStatus.{OptedIn, OptedOut}
-import models.{CalculationResult, ClaimPeriodModel, FurloughPeriod, NicCategory, PaymentFrequency, PensionStatus, RegularPayment, UserAnswers}
+import models.{CalculationResult, ClaimPeriodModel, NicCategory, PaymentFrequency, PensionStatus, UserAnswers}
 import pages._
 import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
@@ -23,28 +23,30 @@ trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPe
 
   private def breakdown(userAnswers: UserAnswers): Option[ConfirmationViewBreakdown] =
     for {
-      furlough <- handleCalculation(userAnswers)
+      furlough <- handleCalculationFurlough(userAnswers)
       ni       <- handleCalculationNi(extract(userAnswers), furlough)
       pension  <- handleCalculationPension(extract(userAnswers), furlough)
     } yield ConfirmationViewBreakdown(furlough, ni, pension)
 
   private def meta(userAnswers: UserAnswers): Option[ConfirmationMetadata] =
-    extract(userAnswers).map { extractedData =>
-      import extractedData._
-      import extractedData.claimPeriod._
-      ConfirmationMetadata(ClaimPeriodModel(start, end), furloughQuestion, paymentFrequency, nicCategory, pensionStatus)
-    } //TODO get actual furloughPeriod from userAnswers
-
-  private def handleCalculation(userAnswers: UserAnswers): Option[CalculationResult] =
     for {
-      extractedData <- extract(userAnswers)
-      taxPayYear    <- userAnswers.get(TaxYearPayDatePage)
-      periods = generatePayPeriods(extractedData.payDates.toList)
-      salary = userAnswers.get(SalaryQuestionPage)
-      regulars = periods.map(p => RegularPayment(salary.get, p))
-      furloughPeriod = FurloughPeriod(extractedData.claimPeriod.start, extractedData.claimPeriod.end)
+      data           <- extract(userAnswers)
+      furloughPeriod <- extractFurloughPeriod(userAnswers)
     } yield
-      calculateFurlough(extractedData.paymentFrequency, regulars, furloughPeriod, taxPayYear) //TODO get actual furloughPeriod from userAnswers
+      ConfirmationMetadata(
+        ClaimPeriodModel(data.claimPeriod.start, data.claimPeriod.end),
+        furloughPeriod,
+        data.paymentFrequency,
+        data.nicCategory,
+        data.pensionStatus)
+
+  private def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
+    for {
+      data           <- extract(userAnswers)
+      taxPayYear     <- userAnswers.get(TaxYearPayDatePage)
+      furloughPeriod <- extractFurloughPeriod(userAnswers)
+      regulars       <- extractRegularPayments(userAnswers)
+    } yield calculateFurlough(data.paymentFrequency, regulars, furloughPeriod, taxPayYear)
 
   private def handleCalculationNi(data: Option[MandatoryData], furloughResult: CalculationResult): Option[CalculationResult] =
     for {

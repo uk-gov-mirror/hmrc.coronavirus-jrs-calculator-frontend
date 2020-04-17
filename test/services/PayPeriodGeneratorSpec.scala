@@ -56,6 +56,17 @@ class PayPeriodGeneratorSpec extends SpecBase {
     dateExistsInPayPeriod(LocalDate.of(2020, 3, 1), period) mustBe true
   }
 
+  "return pay period with tax year end as the end date if tax year end is earlier than given end date" in new PayPeriodGenerator {
+    val periodOne = PayPeriod(LocalDate.of(2019, 12, 1), LocalDate.of(2020, 2, 29))
+    val periodTwo = PayPeriod(LocalDate.of(2019, 12, 1), LocalDate.of(2020, 4, 29))
+
+    val expectedOne = periodOne
+    val expectedTwo = PayPeriod(LocalDate.of(2019, 12, 1), LocalDate.of(2020, 4, 5))
+
+    endDateOrTaxYearEnd(periodOne) mustBe expectedOne
+    endDateOrTaxYearEnd(periodTwo) mustBe expectedTwo
+  }
+
   "counts days in a given period" in new PayPeriodGenerator {
     val periodOne = PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))
     val periodTwo = PayPeriod(LocalDate.of(2020, 4, 15), LocalDate.of(2020, 4, 30))

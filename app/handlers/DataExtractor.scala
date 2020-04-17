@@ -7,8 +7,12 @@ package handlers
 
 import java.time.LocalDate
 
-import models.{FurloughQuestion, NicCategory, PayPeriod, PayQuestion, PaymentFrequency, PensionStatus, UserAnswers}
+import models.FurloughDates.{EndedInClaim, StartedAndEndedInClaim, StartedInClaim}
+import models.FurloughQuestion.{No, Yes}
+import models.PayQuestion.{Regularly, Varies}
+import models.{Amount, FurloughPeriod, FurloughQuestion, NicCategory, PayPeriod, PayQuestion, PaymentFrequency, PensionStatus, RegularPayment, Salary, UserAnswers}
 import pages._
+import services.ReferencePayCalculator
 
 case class MandatoryData(
   claimPeriod: PayPeriod,
@@ -19,7 +23,7 @@ case class MandatoryData(
   furloughQuestion: FurloughQuestion,
   payDates: Seq[LocalDate]) //TODO make it a NonEmptyList
 
-trait DataExtractor {
+trait DataExtractor extends ReferencePayCalculator {
 
   def extract(userAnswers: UserAnswers): Option[MandatoryData] =
     for {
@@ -33,4 +37,77 @@ trait DataExtractor {
       payDate = userAnswers.getList(PayDatePage)
     } yield MandatoryData(PayPeriod(claimStart, claimEnd), frequency, nic, pension, payQuestion, furlough, payDate)
 
+  def extractFurloughPeriod(userAnswers: UserAnswers): Option[FurloughPeriod] =
+    extract(userAnswers).flatMap { data =>
+      data.furloughQuestion match {
+        case Yes => Some(FurloughPeriod(data.claimPeriod.start, data.claimPeriod.end))
+        case No  => processFurloughDates(userAnswers)
+      }
+    }
+
+  def extractRegularPayments(userAnswers: UserAnswers): Option[Seq[RegularPayment]] =
+    for {
+      data     <- extract(userAnswers)
+      grossPay <- extractGrossPay(userAnswers)
+      periods = generatePayPeriods(data.payDates)
+    } yield {
+      data.payQuestion match {
+        case Regularly => periods.map(p => RegularPayment(grossPay, p))
+        case Varies =>
+          extractVariableRegularPayments(userAnswers) match {
+            case Some(payments) => payments
+            case None           => Seq()
+          } //TODO fix this horrible mess
+      }
+    }
+
+  protected def extractGrossPay(userAnswers: UserAnswers): Option[Salary] =
+    extract(userAnswers).flatMap { data =>
+      data.payQuestion match {
+        case Regularly => userAnswers.get(SalaryQuestionPage)
+        case Varies =>
+          userAnswers.get(VariableGrossPayPage).map(v => Salary(v.amount)) //TODO Should merge Salary and VariableGrossPay models
+      }
+    }
+
+  protected def extractPriorFurloughPeriod(userAnswers: UserAnswers): Option[PayPeriod] =
+    for {
+      data              <- extract(userAnswers)
+      employeeStartDate <- userAnswers.get(EmployeeStartDatePage)
+    } yield endDateOrTaxYearEnd(PayPeriod(employeeStartDate, data.claimPeriod.start.minusDays(1)))
+
+  private def extractVariableRegularPayments(userAnswers: UserAnswers): Option[Seq[RegularPayment]] =
+    for {
+      data                <- extract(userAnswers)
+      grossPay            <- extractGrossPay(userAnswers)
+      priorFurloughPeriod <- extractPriorFurloughPeriod(userAnswers)
+      periods = generatePayPeriods(data.payDates)
+    } yield calculateVariablePay(priorFurloughPeriod, periods, Amount(grossPay.amount))
+
+  private def processFurloughDates(userAnswers: UserAnswers): Option[FurloughPeriod] =
+    userAnswers.get(FurloughDatesPage).flatMap { furloughDates =>
+      furloughDates match {
+        case StartedInClaim         => patchStartDate(userAnswers)
+        case EndedInClaim           => patchEndDate(userAnswers)
+        case StartedAndEndedInClaim => patchStartAndEndDate(userAnswers)
+      }
+    }
+
+  private def patchStartDate(userAnswers: UserAnswers): Option[FurloughPeriod] =
+    for {
+      data  <- extract(userAnswers)
+      start <- userAnswers.get(FurloughStartDatePage)
+    } yield FurloughPeriod(start, data.claimPeriod.end)
+
+  private def patchEndDate(userAnswers: UserAnswers): Option[FurloughPeriod] =
+    for {
+      data <- extract(userAnswers)
+      end  <- userAnswers.get(FurloughEndDatePage)
+    } yield FurloughPeriod(data.claimPeriod.start, end)
+
+  private def patchStartAndEndDate(userAnswers: UserAnswers): Option[FurloughPeriod] =
+    for {
+      start <- userAnswers.get(FurloughStartDatePage)
+      end   <- userAnswers.get(FurloughEndDatePage)
+    } yield FurloughPeriod(start, end)
 }

@@ -36,6 +36,13 @@ trait PayPeriodGenerator {
     count.toInt
   }
 
+  def endDateOrTaxYearEnd(payPeriod: PayPeriod): PayPeriod = {
+    val taxYearEnd = payPeriod.end.withMonth(4).withDayOfMonth(5)
+    val newEnd = if (taxYearEnd.isBefore(payPeriod.end)) taxYearEnd else payPeriod.end
+
+    payPeriod.copy(end = newEnd)
+  }
+
   def periodContainsNewTaxYear(period: PayPeriod): Boolean =
     dateExistsInPayPeriod(LocalDate.of(period.start.getYear, 4, 6), period)
 
