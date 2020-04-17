@@ -8,7 +8,7 @@ package handlers
 import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.NicCategory.{Nonpayable, Payable}
 import models.PensionStatus.{OptedIn, OptedOut}
-import models.{CalculationResult, ClaimPeriodModel, NicCategory, PaymentFrequency, PensionStatus, UserAnswers}
+import models.{CalculationResult, NicCategory, PaymentFrequency, PensionStatus, Period, UserAnswers}
 import pages._
 import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
@@ -34,7 +34,7 @@ trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPe
       furloughPeriod <- extractFurloughPeriod(userAnswers)
     } yield
       ConfirmationMetadata(
-        ClaimPeriodModel(data.claimPeriod.start, data.claimPeriod.end),
+        Period(data.claimPeriod.start, data.claimPeriod.end),
         furloughPeriod,
         data.paymentFrequency,
         data.nicCategory,

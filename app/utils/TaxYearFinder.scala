@@ -7,7 +7,7 @@ package utils
 
 import java.time.LocalDate
 
-import models.{PayPeriod, PaymentDate, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
+import models.{PaymentDate, Period, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
 
 trait TaxYearFinder {
 

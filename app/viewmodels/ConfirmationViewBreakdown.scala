@@ -5,15 +5,15 @@
 
 package viewmodels
 
-import models.{CalculationResult, ClaimPeriodModel, FurloughPeriod, NicCategory, PaymentFrequency, PensionStatus}
+import models.{CalculationResult, NicCategory, PaymentFrequency, PensionStatus, Period}
 
 case class ConfirmationDataResult(confirmationMetadata: ConfirmationMetadata, confirmationViewBreakdown: ConfirmationViewBreakdown)
 
 case class ConfirmationViewBreakdown(furlough: CalculationResult, nic: CalculationResult, pension: CalculationResult)
 
 case class ConfirmationMetadata(
-  claimPeriod: ClaimPeriodModel,
-  furloughPeriod: FurloughPeriod,
+  claimPeriod: Period,
+  furloughPeriod: Period,
   frequency: PaymentFrequency,
   nic: NicCategory,
   pension: PensionStatus)

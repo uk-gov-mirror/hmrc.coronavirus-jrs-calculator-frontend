@@ -16,7 +16,7 @@ class CalculationResultSpec extends SpecBase {
 
   "serialize/deserialize from/to json" in {
     val payPeriod =
-      PayPeriodWithPayDay(PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)), PaymentDate(LocalDate.of(2020, 3, 20)))
+      PeriodWithPayDay(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)), PaymentDate(LocalDate.of(2020, 3, 20)))
     val nicCalculationResult = CalculationResult(NicCalculationResult, 0.10, Seq(PayPeriodBreakdown(123.00, payPeriod)))
     val expectedJsValue =
       Json.parse(s"""

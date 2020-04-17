@@ -34,7 +34,7 @@
     @p(Html(messages("confirmation.explanation.p1")))
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("confirmation.claimPeriod", cm.claimPeriod.startDate, cm.claimPeriod.endDate)</li>
+        <li>@messages("confirmation.claimPeriod", cm.claimPeriod.start, cm.claimPeriod.end)</li>
         <li>@messages("confirmation.furloughPeriod", cm.furloughPeriod.start, cm.furloughPeriod.end)</li>
         <li>@messages(s"confirmation.paid.${cm.frequency}")</li>
         <li>@messages(s"confirmation.nic.${cm.nic}")</li>

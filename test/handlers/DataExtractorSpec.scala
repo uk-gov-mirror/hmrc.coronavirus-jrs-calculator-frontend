@@ -8,7 +8,7 @@ package handlers
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{FurloughPeriod, PayPeriod, RegularPayment, Salary, UserAnswers}
+import models.{Period, RegularPayment, Salary, UserAnswers}
 import play.api.libs.json.Json
 import utils.CoreTestData
 
@@ -24,32 +24,32 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
 
   "Extract furlough period matching claim period if furlough question entered is yes" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson("yes")).as[UserAnswers]
-    val claimPeriod = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
-    val expected = FurloughPeriod(claimPeriod.start, claimPeriod.end)
+    val claimPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
+    val expected = Period(claimPeriod.start, claimPeriod.end)
 
     extractFurloughPeriod(userAnswers) mustBe Some(expected)
   }
 
   "Extract furlough period with end date matching the claim end date with user submitted start date" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson("no", "startedInClaim", "2020-03-15")).as[UserAnswers]
-    val claimPeriod = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
-    val expected = FurloughPeriod(LocalDate.of(2020, 3, 15), claimPeriod.end)
+    val claimPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
+    val expected = Period(LocalDate.of(2020, 3, 15), claimPeriod.end)
 
     extractFurloughPeriod(userAnswers) mustBe Some(expected)
   }
 
   "Extract furlough period with start date matching the claim start date with user submitted end date" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson("no", "endedInClaim", furloughEndDate = "2020-04-15")).as[UserAnswers]
-    val claimPeriod = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
-    val expected = FurloughPeriod(claimPeriod.start, LocalDate.of(2020, 4, 15))
+    val claimPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
+    val expected = Period(claimPeriod.start, LocalDate.of(2020, 4, 15))
 
     extractFurloughPeriod(userAnswers) mustBe Some(expected)
   }
 
   "Extract furlough period with user submitted start and end date" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson("no", "startedAndEndedInClaim", "2020-03-15", "2020-04-15")).as[UserAnswers]
-    val claimPeriod = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
-    val expected = FurloughPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))
+    val claimPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
+    val expected = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))
 
     extractFurloughPeriod(userAnswers) mustBe Some(expected)
   }
@@ -63,7 +63,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
 
   "Extract prior furlough period from user answers" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson(employeeStartDate = "2020-12-1")).as[UserAnswers]
-    val expected = PayPeriod(LocalDate.of(2020, 12, 1), LocalDate.of(2020, 2, 29))
+    val expected = Period(LocalDate.of(2020, 12, 1), LocalDate.of(2020, 2, 29))
   }
 
   "Extract variable gross pay when payQuestion answer is Varies" in new DataExtractor {
@@ -76,8 +76,8 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
   "Extract regular payments for employees that are paid a regular amount each time" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
     val expected = Seq(
-      RegularPayment(Salary(2000.0), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-      RegularPayment(Salary(2000.0), PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))
+      RegularPayment(Salary(2000.0), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+      RegularPayment(Salary(2000.0), Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))
     )
 
     extractRegularPayments(userAnswers) mustBe Some(expected)
@@ -87,8 +87,8 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
     val userAnswers =
       Json.parse(userAnswersJson(payQuestion = "varies", variableGrossPay = "2400.00", employeeStartDate = "2019-12-01")).as[UserAnswers]
     val expected = Seq(
-      RegularPayment(Salary(817.47), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-      RegularPayment(Salary(791.10), PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))
+      RegularPayment(Salary(817.47), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+      RegularPayment(Salary(791.10), Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))
     )
 
     extractRegularPayments(userAnswers) mustBe Some(expected)

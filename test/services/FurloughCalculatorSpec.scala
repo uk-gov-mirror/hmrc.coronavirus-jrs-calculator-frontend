@@ -10,7 +10,7 @@ import java.time.LocalDate
 import base.SpecBase
 import models.Calculation.FurloughCalculationResult
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{CalculationResult, FurloughPeriod, PayPeriod, PayPeriodBreakdown, PayPeriodWithPayDay, PaymentDate, RegularPayment, Salary}
+import models.{CalculationResult, PayPeriodBreakdown, PaymentDate, Period, PeriodWithPayDay, RegularPayment, Salary}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
@@ -30,14 +30,14 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   "return a CalculationResult with a total and a list of furlough payments for a given list regular payment" in new FurloughCalculator {
     val periodOne =
-      PayPeriodWithPayDay(PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)), PaymentDate(LocalDate.of(2020, 3, 31)))
+      PeriodWithPayDay(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)), PaymentDate(LocalDate.of(2020, 3, 31)))
     val periodTwo =
-      PayPeriodWithPayDay(PayPeriod(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)), PaymentDate(LocalDate.of(2020, 4, 30)))
+      PeriodWithPayDay(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)), PaymentDate(LocalDate.of(2020, 4, 30)))
     val paymentOne: RegularPayment = RegularPayment(Salary(2000.00), periodOne.payPeriod)
     val paymentTwo: RegularPayment = RegularPayment(Salary(2000.00), periodTwo.payPeriod)
     val payments: List[RegularPayment] = List(paymentOne, paymentTwo)
 
-    val furloughPeriod = FurloughPeriod(periodOne.payPeriod.start, periodTwo.payPeriod.end)
+    val furloughPeriod = Period(periodOne.payPeriod.start, periodTwo.payPeriod.end)
 
     val taxYearDate = LocalDate.of(2020, 4, 20)
     val periodTwoWithNewPaymentDate = periodTwo.copy(paymentDate = PaymentDate(taxYearDate))
@@ -52,15 +52,15 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
   }
 
   "return a pay period with new start/end dates if a given furlough period begins/ends in the pay period" in new FurloughCalculator {
-    val furloughPeriodOne = FurloughPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 5, 30))
-    val payPeriodOne = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
-    val expectedOne = PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))
-    val furloughPeriodTwo = FurloughPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 25))
-    val payPeriodTwo = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
-    val expectedTwo = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 25))
-    val furloughPeriodThr = FurloughPeriod(LocalDate.of(2020, 3, 5), LocalDate.of(2020, 3, 28))
-    val payPeriodThr = PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
-    val expectedThr = PayPeriod(LocalDate.of(2020, 3, 5), LocalDate.of(2020, 3, 28))
+    val furloughPeriodOne = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 5, 30))
+    val payPeriodOne = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val expectedOne = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))
+    val furloughPeriodTwo = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 25))
+    val payPeriodTwo = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val expectedTwo = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 25))
+    val furloughPeriodThr = Period(LocalDate.of(2020, 3, 5), LocalDate.of(2020, 3, 28))
+    val payPeriodThr = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val expectedThr = Period(LocalDate.of(2020, 3, 5), LocalDate.of(2020, 3, 28))
 
     payPeriodFromFurloughPeriod(furloughPeriodOne, payPeriodOne) mustBe expectedOne
     payPeriodFromFurloughPeriod(furloughPeriodTwo, payPeriodTwo) mustBe expectedTwo
@@ -69,21 +69,21 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   private lazy val fullPeriodScenarios = Table(
     ("paymentFrequency", "regularPayment", "expected"),
-    (Monthly, RegularPayment(Salary(2000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), 1600.00),
-    (Monthly, RegularPayment(Salary(5000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), 2500.00),
-    (Monthly, RegularPayment(Salary(5000.00), PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))), 2540.50),
-    (Weekly, RegularPayment(Salary(500.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))), 400.00),
-    (Weekly, RegularPayment(Salary(1000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))), 576.92),
-    (FortNightly, RegularPayment(Salary(2000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))), 1153.84),
-    (FortNightly, RegularPayment(Salary(1000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))), 800.00),
-    (FourWeekly, RegularPayment(Salary(5000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))), 2307.68),
-    (FourWeekly, RegularPayment(Salary(2000.00), PayPeriod(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))), 1600.00)
+    (Monthly, RegularPayment(Salary(2000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), 1600.00),
+    (Monthly, RegularPayment(Salary(5000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), 2500.00),
+    (Monthly, RegularPayment(Salary(5000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))), 2540.50),
+    (Weekly, RegularPayment(Salary(500.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))), 400.00),
+    (Weekly, RegularPayment(Salary(1000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))), 576.92),
+    (FortNightly, RegularPayment(Salary(2000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))), 1153.84),
+    (FortNightly, RegularPayment(Salary(1000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))), 800.00),
+    (FourWeekly, RegularPayment(Salary(5000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))), 2307.68),
+    (FourWeekly, RegularPayment(Salary(2000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))), 1600.00)
   )
 
   private lazy val partialPeriodScenarios = Table(
     ("regularPayment", "expected"),
-    (RegularPayment(Salary(1032.32), PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 825.86),
-    (RegularPayment(Salary(3000.00), PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 1290.40),
-    (RegularPayment(Salary(3000.00), PayPeriod(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28))), 1048.45)
+    (RegularPayment(Salary(1032.32), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 825.86),
+    (RegularPayment(Salary(3000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 1290.40),
+    (RegularPayment(Salary(3000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28))), 1048.45)
   )
 }

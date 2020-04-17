@@ -9,7 +9,7 @@ import java.time.Month
 import java.time.temporal.ChronoUnit
 
 import models.PaymentFrequency.Monthly
-import models.{PayPeriod, PaymentFrequency}
+import models.{PaymentFrequency, Period}
 import play.api.Logger
 import utils.AmountRounding._
 
@@ -17,7 +17,7 @@ import scala.math.BigDecimal.RoundingMode._
 
 trait FurloughCapCalculator {
 
-  def furloughCap(paymentFrequency: PaymentFrequency, payPeriod: PayPeriod): BigDecimal = {
+  def furloughCap(paymentFrequency: PaymentFrequency, payPeriod: Period): BigDecimal = {
     val furloughCap = FurloughCapMapping.mappings
       .get(paymentFrequency)
       .fold {
@@ -34,12 +34,12 @@ trait FurloughCapCalculator {
     }
   }
 
-  def partialFurloughCap(payPeriod: PayPeriod): BigDecimal = calculateFurloughCapNonSimplified(payPeriod)
+  def partialFurloughCap(payPeriod: Period): BigDecimal = calculateFurloughCapNonSimplified(payPeriod)
 
   protected def dailyMax(month: Month): BigDecimal =
     roundWithMode(2500.00 / month.maxLength, UP)
 
-  private def calculateFurloughCapNonSimplified(payPeriod: PayPeriod): BigDecimal = {
+  private def calculateFurloughCapNonSimplified(payPeriod: Period): BigDecimal = {
     val startMonthDays: Long = ChronoUnit.DAYS.between(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength))
     val endMonthDays: Long = ChronoUnit.DAYS.between(payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength), payPeriod.end)
     val startMonthDailyMax: BigDecimal = dailyMax(payPeriod.start.getMonth)
