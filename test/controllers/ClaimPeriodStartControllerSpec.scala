@@ -11,7 +11,8 @@ import base.SpecBaseWithApplication
 import forms.ClaimPeriodStartFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Mockito.when
+import org.mockito.Matchers._
+import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage}
 import play.api.inject.bind
@@ -93,9 +94,7 @@ class ClaimPeriodStartControllerSpec extends SpecBaseWithApplication with Mockit
 
       val existingUserAnswers = emptyUserAnswers.copy(data = Json.obj(ClaimPeriodEndPage.toString -> JsString(validAnswer.toString)))
 
-      val updatedUserAnswers = emptyUserAnswers.copy(data = Json.obj(ClaimPeriodStartPage.toString -> JsString(validAnswer.toString)))
-
-      when(mockSessionRepository.set(updatedUserAnswers)) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(existingUserAnswers))

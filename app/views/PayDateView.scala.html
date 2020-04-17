@@ -19,7 +19,7 @@
 
     @formHelper(action = PayDateController.onSubmit(idx), 'autoComplete -> "off") {
 
-        @errorSummary(form.errors, Some("date-value.day"))
+        @errorSummary(form.errors)
 
         @inputDate(
             form,
