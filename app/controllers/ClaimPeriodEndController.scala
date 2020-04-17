@@ -16,7 +16,6 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.ViewUtils._
 import views.html.ClaimPeriodEndView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -58,7 +57,7 @@ class ClaimPeriodEndController @Inject()(
             case Some(claimStart) if value.isBefore(claimStart) =>
               val errorForm = form
                 .fill(value)
-                .withError(FormError("value", "claimPeriodEnd.error.before.start", dateToString(claimStart)))
+                .withError(FormError("value", "claimPeriodEnd.error.before.start"))
               Future.successful(BadRequest(view(errorForm, mode)))
             case Some(_) =>
               for {

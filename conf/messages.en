@@ -325,7 +325,7 @@ claimPeriodEnd.error.required.two = The end date must include {0} and {1}
 claimPeriodEnd.error.required = The end date must include {0}
 claimPeriodEnd.error.invalid = Enter a real end date
 claimPeriodEnd.error.outofrange = The claim period end should be between {0} and {1}
-claimPeriodEnd.error.before.start = The claim period end can’t be before {0}
+claimPeriodEnd.error.before.start = The end date can’t be before start date
 claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
