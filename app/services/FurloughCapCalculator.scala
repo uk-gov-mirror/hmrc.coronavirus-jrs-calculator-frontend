@@ -6,7 +6,6 @@
 package services
 
 import java.time.Month
-import java.time.temporal.ChronoUnit
 
 import models.PaymentFrequency.Monthly
 import models.{PaymentFrequency, Period}
@@ -15,7 +14,7 @@ import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode._
 
-trait FurloughCapCalculator {
+trait FurloughCapCalculator extends PayPeriodGenerator {
 
   def furloughCap(paymentFrequency: PaymentFrequency, payPeriod: Period): BigDecimal = {
     val furloughCap = FurloughCapMapping.mappings
@@ -28,20 +27,29 @@ trait FurloughCapCalculator {
       }
 
     paymentFrequency match {
-      case Monthly if (payPeriod.start.getMonth != payPeriod.end.getMonth) =>
+      case Monthly if (periodSpansMonth(payPeriod)) =>
         calculateFurloughCapNonSimplified(payPeriod)
       case _ => furloughCap
     }
   }
 
-  def partialFurloughCap(payPeriod: Period): BigDecimal = calculateFurloughCapNonSimplified(payPeriod)
+  def partialFurloughCap(payPeriod: Period): BigDecimal =
+    if (periodSpansMonth(payPeriod)) {
+      calculateFurloughCapNonSimplified(payPeriod)
+    } else {
+      val max = dailyMax(payPeriod.start.getMonth)
+      val periodDays = periodDaysCount(payPeriod)
+      roundWithMode(periodDays * max, HALF_UP)
+    }
 
   protected def dailyMax(month: Month): BigDecimal =
     roundWithMode(2500.00 / month.maxLength, UP)
 
-  private def calculateFurloughCapNonSimplified(payPeriod: Period): BigDecimal = {
-    val startMonthDays: Long = ChronoUnit.DAYS.between(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength))
-    val endMonthDays: Long = ChronoUnit.DAYS.between(payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength), payPeriod.end)
+  protected def calculateFurloughCapNonSimplified(payPeriod: Period): BigDecimal = {
+    val startMonthPeriod = Period(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength()))
+    val startMonthDays: Long = periodDaysCount(startMonthPeriod)
+    val endMonthPeriod = Period(payPeriod.end.withDayOfMonth(1), payPeriod.end)
+    val endMonthDays: Long = periodDaysCount(endMonthPeriod)
     val startMonthDailyMax: BigDecimal = dailyMax(payPeriod.start.getMonth)
     val endMonthDailyMax: BigDecimal = dailyMax(payPeriod.end.getMonth)
 

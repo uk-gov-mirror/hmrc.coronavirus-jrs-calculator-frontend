@@ -71,7 +71,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     ("paymentFrequency", "regularPayment", "expected"),
     (Monthly, RegularPayment(Salary(2000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), 1600.00),
     (Monthly, RegularPayment(Salary(5000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), 2500.00),
-    (Monthly, RegularPayment(Salary(5000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))), 2540.50),
+    (Monthly, RegularPayment(Salary(5000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))), 2621.15),
     (Weekly, RegularPayment(Salary(500.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))), 400.00),
     (Weekly, RegularPayment(Salary(1000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))), 576.92),
     (FortNightly, RegularPayment(Salary(2000.00), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))), 1153.84),
@@ -83,7 +83,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
   private lazy val partialPeriodScenarios = Table(
     ("regularPayment", "expected"),
     (RegularPayment(Salary(1032.32), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 825.86),
-    (RegularPayment(Salary(3000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 1290.40),
-    (RegularPayment(Salary(3000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28))), 1048.45)
+    (RegularPayment(Salary(3000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))), 1371.05),
+    (RegularPayment(Salary(3000.00), Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28))), 1129.10)
   )
 }

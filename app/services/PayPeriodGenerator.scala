@@ -45,4 +45,6 @@ trait PayPeriodGenerator {
 
   protected def sortedEndDates(in: Seq[LocalDate]): Seq[LocalDate] = in.sortWith((x, y) => x.isBefore(y))
 
+  protected def periodSpansMonth(period: Period): Boolean = period.start.getMonth != period.end.getMonth
+
 }

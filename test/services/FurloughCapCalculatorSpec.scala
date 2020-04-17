@@ -22,19 +22,19 @@ class FurloughCapCalculatorSpec extends SpecBase {
   }
 
   "Calculates partial furlough cap" in new FurloughCapCalculator {
-    val periodOne = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))
+    val periodOne = Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))
     val periodTwo = Period(LocalDate.of(2020, 3, 21), LocalDate.of(2020, 4, 10))
 
-    partialFurloughCap(periodOne) mustBe 1290.40
-    partialFurloughCap(periodTwo) mustBe 1639.90
+    partialFurloughCap(periodOne) mustBe 1774.30
+    partialFurloughCap(periodTwo) mustBe 1720.55
   }
 
   "Calculates monthly max where pay period spans two calendar months" in new FurloughCapCalculator {
     val payPeriod = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))
     val payPeriodTwo = Period(LocalDate.of(2020, 4, 20), LocalDate.of(2020, 5, 20))
 
-    furloughCap(Monthly, payPeriod) mustBe 2540.50
-    furloughCap(Monthly, payPeriodTwo) mustBe 2446.40
+    furloughCap(Monthly, payPeriod) mustBe 2621.15
+    furloughCap(Monthly, payPeriodTwo) mustBe 2529.74
   }
 
   "returns daily max for a given month" in new FurloughCapCalculator {

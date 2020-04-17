@@ -71,10 +71,20 @@ class PeriodGeneratorSpec extends SpecBase {
     val periodOne = Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))
     val periodTwo = Period(LocalDate.of(2020, 4, 15), LocalDate.of(2020, 4, 30))
     val periodThree = Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 20))
+    val periodFour = Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))
 
     periodDaysCount(periodOne) mustBe 30
     periodDaysCount(periodTwo) mustBe 16
     periodDaysCount(periodThree) mustBe 20
+    periodDaysCount(periodFour) mustBe 22
+  }
+
+  "determine if pay period spans two months" in new PayPeriodGenerator {
+    val periodOne = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val periodTwo = Period(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 4, 20))
+
+    periodSpansMonth(periodOne) mustBe false
+    periodSpansMonth(periodTwo) mustBe true
   }
 
 }
