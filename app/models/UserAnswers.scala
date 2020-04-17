@@ -27,6 +27,21 @@ final case class UserAnswers(
   def getList[A](page: Gettable[A])(implicit rds: Reads[A]): Seq[A] =
     page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
 
+  def init[A](page: Settable[A], value: A, idx: Option[Int] = None)(implicit writes: Writes[A]): Try[UserAnswers] = {
+
+    val freshData = Json.obj().setObject(path(page, idx), Json.toJson(value)) match {
+      case JsSuccess(jsValue, _) =>
+        Success(jsValue)
+      case JsError(errors) =>
+        Failure(JsResultException(errors))
+    }
+
+    freshData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      page.cleanup(Some(value), updatedAnswers)
+    }
+  }
+
   def set[A](page: Settable[A], value: A, idx: Option[Int] = None)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
     val updatedData = data.setObject(path(page, idx), Json.toJson(value)) match {

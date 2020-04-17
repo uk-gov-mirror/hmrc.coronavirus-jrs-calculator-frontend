@@ -51,7 +51,7 @@ class ClaimPeriodStartController @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(
-                               request.userAnswers.getOrElse(UserAnswers(request.internalId)).set(ClaimPeriodStartPage, value))
+                               request.userAnswers.getOrElse(UserAnswers(request.internalId)).init(ClaimPeriodStartPage, value))
             _ <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(ClaimPeriodStartPage, mode, updatedAnswers))
       )
