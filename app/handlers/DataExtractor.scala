@@ -54,10 +54,7 @@ trait DataExtractor extends ReferencePayCalculator {
       data.payQuestion match {
         case Regularly => periods.map(p => RegularPayment(grossPay, p))
         case Varies =>
-          extractVariableRegularPayments(userAnswers) match {
-            case Some(payments) => payments
-            case None           => Seq()
-          } //TODO fix this horrible mess
+          extractVariableRegularPayments(userAnswers).fold(Seq[RegularPayment]())(payments => payments)
       }
     }
 

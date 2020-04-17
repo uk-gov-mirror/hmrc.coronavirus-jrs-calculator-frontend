@@ -73,7 +73,7 @@ class PayPeriodGeneratorSpec extends SpecBase {
     val periodThree = PayPeriod(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 20))
 
     periodDaysCount(periodOne) mustBe 30
-    periodDaysCount(periodTwo) mustBe 15
+    periodDaysCount(periodTwo) mustBe 16
     periodDaysCount(periodThree) mustBe 20
   }
 

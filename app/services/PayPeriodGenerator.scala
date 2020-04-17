@@ -26,15 +26,8 @@ trait PayPeriodGenerator {
     }
   }
 
-  def periodDaysCount(payPeriod: PayPeriod): Int = {
-    val count = if (payPeriod.start.getDayOfMonth != 1) {
-      ChronoUnit.DAYS.between(payPeriod.start, payPeriod.end)
-    } else {
-      ChronoUnit.DAYS.between(payPeriod.start, payPeriod.end) + 1
-    }
-
-    count.toInt
-  }
+  def periodDaysCount(payPeriod: PayPeriod): Int =
+    (ChronoUnit.DAYS.between(payPeriod.start, payPeriod.end) + 1).toInt
 
   def endDateOrTaxYearEnd(payPeriod: PayPeriod): PayPeriod = {
     val taxYearEnd = payPeriod.end.withMonth(4).withDayOfMonth(5)
