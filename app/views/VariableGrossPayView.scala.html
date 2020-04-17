@@ -10,7 +10,9 @@
         button: components.button,
         inputText: components.inputText,
         fieldset: components.fieldset,
-        h1: components.h1
+        h1: components.h1,
+        p: components.p,
+        inputCurrency: components.inputCurrency
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -22,16 +24,21 @@
 
         @errorSummary(form.errors)
 
-        @fieldset(s"variableGrossPay.heading") {
-            @inputText(
-                form,
-                id = "value",
-                name = "value",
-                label = "variableGrossPay.label",
-                isPageHeading = false,
-                classes = Some("govuk-input--width-10")
-            )
-        }
+        @h1(messages("variableGrossPay.heading"))
+        @p(Html(messages("variableGrossPay.p")))
+        <ul>
+            <li>@p(Html(messages("variableGrossPay.l1")))</li>
+            <li>@p(Html(messages("variableGrossPay.l2")))</li>
+        </ul>
+
+        @inputCurrency(
+            form,
+            id = "value",
+            name = "value",
+            label = "",
+            isPageHeading = false,
+            classes = Some("govuk-input--width-10")
+        )
 
         @button("site.continue")
     }

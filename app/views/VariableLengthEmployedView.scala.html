@@ -25,7 +25,8 @@
         @inputRadio(
             form = form,
             legend = messages("variableLengthEmployed.heading"),
-            items = VariableLengthEmployed.options(form)
+            items = VariableLengthEmployed.options(form),
+            hintKey = Some("variableLengthEmployed.hint")
         )
 
         @button("site.continue")

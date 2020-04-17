@@ -22,33 +22,30 @@ class Navigator @Inject()() {
 
     case ClaimPeriodEndPage =>
       _ =>
-        routes.FurloughQuestionController.onPageLoad(NormalMode)
+        routes.FurloughStartDateController.onPageLoad(NormalMode)
     case FurloughQuestionPage =>
       furloughQuestionRoutes
-    case FurloughDatesPage =>
-      furloughDatesRoutes
     case FurloughStartDatePage =>
-      furloughStartDateRoutes
+      furloughQuestionRoutes
     case FurloughEndDatePage =>
+      _ =>
+        routes.PaymentFrequencyController.onPageLoad(NormalMode)
+    case PaymentFrequencyPage =>
       _ =>
         routes.PayQuestionController.onPageLoad(NormalMode)
     case PayQuestionPage =>
       payQuestionRoutes
-    case PaymentFrequencyPage =>
-      _ =>
-        routes.PayQuestionController.onPageLoad(NormalMode)
     case SalaryQuestionPage =>
       _ =>
         routes.PayDateController.onPageLoad(1)
     case VariableLengthEmployedPage =>
-      _ =>
-        routes.EmployeeStartDateController.onPageLoad(NormalMode)
+      variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
       _ =>
         routes.VariableGrossPayController.onPageLoad(NormalMode)
     case VariableGrossPayPage =>
       _ =>
-        routes.PayDateController.onPageLoad(1)
+        routes.NicCategoryController.onPageLoad(NormalMode)
     case NicCategoryPage =>
       _ =>
         routes.PensionAutoEnrolmentController.onPageLoad(NormalMode)
@@ -93,25 +90,9 @@ class Navigator @Inject()() {
 
   private def furloughQuestionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(FurloughQuestionPage) match {
-      case Some(FurloughQuestion.Yes) => routes.PaymentFrequencyController.onPageLoad(NormalMode)
-      case Some(FurloughQuestion.No)  => routes.FurloughDatesController.onPageLoad(NormalMode)
+      case Some(FurloughQuestion.Yes) => routes.FurloughEndDateController.onPageLoad(NormalMode)
+      case Some(FurloughQuestion.No)  => routes.PaymentFrequencyController.onPageLoad(NormalMode)
       case None                       => routes.FurloughQuestionController.onPageLoad(NormalMode)
-    }
-  }
-
-  private def furloughDatesRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(FurloughDatesPage) match {
-      case Some(FurloughDates.StartedInClaim)         => routes.FurloughStartDateController.onPageLoad(NormalMode)
-      case Some(FurloughDates.EndedInClaim)           => routes.FurloughEndDateController.onPageLoad(NormalMode)
-      case Some(FurloughDates.StartedAndEndedInClaim) => routes.FurloughStartDateController.onPageLoad(NormalMode)
-      case None                                       => routes.FurloughDatesController.onPageLoad(NormalMode)
-    }
-  }
-
-  private def furloughStartDateRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(FurloughDatesPage) match {
-      case Some(FurloughDates.StartedAndEndedInClaim) => routes.FurloughEndDateController.onPageLoad(NormalMode)
-      case _                                          => routes.PayQuestionController.onPageLoad(NormalMode)
     }
   }
 
@@ -119,6 +100,14 @@ class Navigator @Inject()() {
     userAnswers.get(PayQuestionPage) match {
       case Some(Regularly) => routes.SalaryQuestionController.onPageLoad(NormalMode)
       case _               => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
+    }
+  }
+
+  private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(VariableLengthEmployedPage) match {
+      case Some(VariableLengthEmployed.Yes) => routes.PayDateController.onPageLoad(1)
+      case Some(VariableLengthEmployed.No)  => routes.EmployeeStartDateController.onPageLoad(NormalMode)
+      case _                                => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
     }
   }
 

@@ -17,13 +17,14 @@
 
     @formHelper(action = FurloughStartDateController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @errorSummary(form.errors, Some("date-value.day"))
+        @errorSummary(form.errors)
 
         @inputDate(
             form,
-            "furloughStartDate.heading"
+            "furloughStartDate.heading",
+            hintText = Some("furloughStartDate.hint")
         )
 
-        @button("site.saveAndContinue")
+        @button("site.continue")
     }
 }

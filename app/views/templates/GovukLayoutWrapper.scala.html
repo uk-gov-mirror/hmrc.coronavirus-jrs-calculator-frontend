@@ -42,6 +42,8 @@
 @beforeContentBlock = {
 
     @phaseBanner("beta")
+
+    @govukBackLink(BackLink(href = "#", content = Text("Back"), attributes = Map("id" -> "back-link")))
 }
 
 @govukLayout(

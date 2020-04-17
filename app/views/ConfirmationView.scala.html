@@ -24,9 +24,12 @@
 
         @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-font-size-24"))
 
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.furlough.total.setScale(2)</span> - Furloughed pay <br/>
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.nic.total.setScale(2)</span> - Employer NIC <br/>
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.pension.total.setScale(2)</span> - Pension contribution <br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.furlough.total.setScale(2)</span><br/>
+                <span class="govuk-!-font-weight-bold">Amount paid to this furloughed employee</span><br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.nic.total.setScale(2)</span><br/>
+                <span class="govuk-!-font-weight-bold">Employer National Insurance contributions</span> <br/>
+        <span class="govuk-!-font-weight-bold">&pound;@cvb.pension.total.setScale(2)</span><br/>
+                <span class="govuk-!-font-weight-bold">Employer minimum pension contributions</span><br/>
     }
 
     @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))

@@ -34,13 +34,13 @@ class FurloughStartDateController @Inject()(
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with I18nSupport {
 
-  def form(claimStartDate: LocalDate, claimEndDate: LocalDate) = formProvider(claimStartDate, claimEndDate)
+  def form(claimEndDate: LocalDate) = formProvider(claimEndDate)
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
+    getRequiredAnswer(ClaimPeriodEndPage) { claimEndDate =>
       val preparedForm = request.userAnswers.get(FurloughStartDatePage) match {
-        case None        => form(claimStartDate, claimEndDate)
-        case Some(value) => form(claimStartDate, claimEndDate).fill(value)
+        case None        => form(claimEndDate)
+        case Some(value) => form(claimEndDate).fill(value)
       }
 
       Future.successful(Ok(view(preparedForm, mode)))
@@ -48,8 +48,8 @@ class FurloughStartDateController @Inject()(
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
-      form(claimStartDate, claimEndDate)
+    getRequiredAnswer(ClaimPeriodEndPage) { claimEndDate =>
+      form(claimEndDate)
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),

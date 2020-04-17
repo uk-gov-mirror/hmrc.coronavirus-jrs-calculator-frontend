@@ -14,12 +14,12 @@ sealed trait VariableLengthEmployed
 
 object VariableLengthEmployed extends Enumerable.Implicits {
 
-  case object Lessthan12months extends WithName("lessThan12Months") with VariableLengthEmployed
-  case object Morethan12months extends WithName("morethan12Months") with VariableLengthEmployed
+  case object Yes extends WithName("yes") with VariableLengthEmployed
+  case object No extends WithName("no") with VariableLengthEmployed
 
   val values: Seq[VariableLengthEmployed] = Seq(
-    Lessthan12months,
-    Morethan12months
+    Yes,
+    No
   )
 
   def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = values.map { value =>

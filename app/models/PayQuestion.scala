@@ -18,8 +18,8 @@ object PayQuestion extends Enumerable.Implicits {
   case object Varies extends WithName("varies") with PayQuestion
 
   val values: Seq[PayQuestion] = Seq(
-    Regularly,
-    Varies
+    Varies,
+    Regularly
   )
 
   def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = values.map { value =>

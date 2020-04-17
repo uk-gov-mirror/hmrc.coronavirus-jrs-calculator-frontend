@@ -10,7 +10,9 @@
     errorSummary: components.errorSummary,
     inputDate: components.inputDate,
     formHelper: FormWithCSRF,
-    button: components.button
+    button: components.button,
+        h1: components.h1,
+        p: components.p
 )
 
 @(form: Form[_], idx: Int, messageDate: LocalDate)(implicit request: Request[_], messages: Messages)
@@ -21,10 +23,12 @@
 
         @errorSummary(form.errors)
 
+        @h1(messages(if(idx == 1){"payDate.heading.firstDate"} else {"payDate.heading"}, dateToString(messageDate)))
+
+        @p(Html(messages("payDate.p")))
         @inputDate(
             form,
-            if(idx == 1){"payDate.heading.firstDate"} else {"payDate.heading"},
-            legendContentArgs = Seq(dateToString(messageDate)),
+            "",
             hintText = Some("payDate.hint")
         )
 

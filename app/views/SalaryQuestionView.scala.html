@@ -8,9 +8,11 @@
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
         button: components.button,
-        inputText: components.inputText,
+        inputCurrency: components.inputCurrency,
         fieldset: components.fieldset,
-        h1: components.h1
+        h1: components.h1,
+        p: components.p,
+        panel: components.panelIndent
 )
 
 @(form: Form[_], paymentFrequency: PaymentFrequency, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -22,17 +24,20 @@
 
         @errorSummary(form.errors)
 
-        @fieldset(s"salaryQuestion.heading.${paymentFrequency}") {
-            @inputText(
-                form,
-                id = "salary",
-                name = "salary",
-                label = s"salaryQuestion.salary.label",
-                 hint = Some("salaryQuestion.salary.hint"),
-                isPageHeading = false,
-                classes = Some("govuk-input--width-10")
-            )
-        }
+        @h1(messages(s"salaryQuestion.heading.$paymentFrequency"))
+
+        @p(Html(messages("salaryQuestion.salary.hint")))
+
+        @panel(Html(messages("salaryQuestion.inset.info")))
+
+        @inputCurrency(
+            form,
+            id = "salary",
+            name = "salary",
+            label = "",
+            isPageHeading = false,
+            classes = Some("govuk-input--width-10")
+        )
 
         @button("site.continue")
     }

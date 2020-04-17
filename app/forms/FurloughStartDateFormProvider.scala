@@ -14,14 +14,13 @@ import views.ViewUtils._
 
 class FurloughStartDateFormProvider @Inject() extends Mappings {
 
-  def apply(claimPeriodStart: LocalDate, claimPeriodEnd: LocalDate): Form[LocalDate] =
+  def apply(claimPeriodEnd: LocalDate): Form[LocalDate] =
     Form(
       "value" -> localDate(
         invalidKey = "furloughStartDate.error.invalid",
         allRequiredKey = "furloughStartDate.error.required.all",
         twoRequiredKey = "furloughStartDate.error.required.two",
         requiredKey = "furloughStartDate.error.required"
-      ).verifying(minDate(claimPeriodStart.plusDays(1), "furloughStartDate.error.minimum", dateToString(claimPeriodStart)))
-        .verifying(maxDate(claimPeriodEnd.minusDays(1), "furloughStartDate.error.maximum", dateToString(claimPeriodEnd)))
+      ).verifying(maxDate(claimPeriodEnd.minusDays(1), "furloughStartDate.error.maximum", dateToString(claimPeriodEnd)))
     )
 }

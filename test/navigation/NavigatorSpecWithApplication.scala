@@ -32,7 +32,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
       }
 
       "go to FurloughQuestionPage after ClaimPeriodEndPage" in {
-        navigator.nextPage(ClaimPeriodEndPage, NormalMode, UserAnswers("id")) mustBe routes.FurloughQuestionController
+        navigator.nextPage(ClaimPeriodEndPage, NormalMode, UserAnswers("id")) mustBe routes.FurloughStartDateController
           .onPageLoad(NormalMode)
       }
 
@@ -41,44 +41,20 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           FurloughQuestionPage,
           NormalMode,
           UserAnswers("id")
-            .set(FurloughQuestionPage, FurloughQuestion.Yes)
+            .set(FurloughQuestionPage, FurloughQuestion.No)
             .success
             .value) mustBe routes.PaymentFrequencyController.onPageLoad(NormalMode)
         navigator.nextPage(
           FurloughQuestionPage,
           NormalMode,
           UserAnswers("id")
-            .set(FurloughQuestionPage, FurloughQuestion.No)
-            .success
-            .value) mustBe routes.FurloughDatesController.onPageLoad(NormalMode)
-      }
-
-      "go to correct page after FurloughDatesPage" in {
-        navigator.nextPage(
-          FurloughDatesPage,
-          NormalMode,
-          UserAnswers("id")
-            .set(FurloughDatesPage, FurloughDates.StartedInClaim)
-            .success
-            .value) mustBe routes.FurloughStartDateController.onPageLoad(NormalMode)
-        navigator.nextPage(
-          FurloughDatesPage,
-          NormalMode,
-          UserAnswers("id")
-            .set(FurloughDatesPage, FurloughDates.EndedInClaim)
+            .set(FurloughQuestionPage, FurloughQuestion.Yes)
             .success
             .value) mustBe routes.FurloughEndDateController.onPageLoad(NormalMode)
-        navigator.nextPage(
-          FurloughDatesPage,
-          NormalMode,
-          UserAnswers("id")
-            .set(FurloughDatesPage, FurloughDates.StartedAndEndedInClaim)
-            .success
-            .value) mustBe routes.FurloughStartDateController.onPageLoad(NormalMode)
       }
 
-      "go to PayQuestionPage after FurloughEndDatePage" in {
-        navigator.nextPage(FurloughEndDatePage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController
+      "go to PaymentFrequencyPage after FurloughEndDatePage" in {
+        navigator.nextPage(FurloughEndDatePage, NormalMode, UserAnswers("id")) mustBe routes.PaymentFrequencyController
           .onPageLoad(NormalMode)
       }
 
@@ -141,70 +117,15 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .onPageLoad(NormalMode)
       }
 
-      "go from furlough question" must {
-
-        "to pay question when employee has been furloughed the whole period" in {
-          val answers = emptyUserAnswers.set(FurloughQuestionPage, FurloughQuestion.Yes).success.value
-          navigator.nextPage(FurloughQuestionPage, NormalMode, answers) mustBe routes.PaymentFrequencyController
-            .onPageLoad(NormalMode)
-        }
-
-        "to furlough dates when employee has not been furloughed the whole period" in {
-          val answers = emptyUserAnswers.set(FurloughQuestionPage, FurloughQuestion.No).success.value
-          navigator.nextPage(FurloughQuestionPage, NormalMode, answers) mustBe routes.FurloughDatesController
-            .onPageLoad(NormalMode)
-        }
-
-        "to furlough question when unanswered" in {
-          val answers = emptyUserAnswers
-          navigator.nextPage(FurloughQuestionPage, NormalMode, answers) mustBe routes.FurloughQuestionController
-            .onPageLoad(NormalMode)
-        }
-      }
-
-      "go from furlough dates" must {
-
-        "to start date when started in claim" in {
-          val answers = emptyUserAnswers.set(FurloughDatesPage, FurloughDates.StartedInClaim).success.value
-          navigator.nextPage(FurloughDatesPage, NormalMode, answers) mustBe routes.FurloughStartDateController
-            .onPageLoad(NormalMode)
-        }
-
-        "to end date when ended in claim" in {
-          val answers = emptyUserAnswers.set(FurloughDatesPage, FurloughDates.EndedInClaim).success.value
-          navigator.nextPage(FurloughDatesPage, NormalMode, answers) mustBe routes.FurloughEndDateController.onPageLoad(NormalMode)
-        }
-
-        "to start date when started and ended in claim" in {
-          val answers = emptyUserAnswers.set(FurloughDatesPage, FurloughDates.StartedAndEndedInClaim).success.value
-          navigator.nextPage(FurloughDatesPage, NormalMode, answers) mustBe routes.FurloughStartDateController
-            .onPageLoad(NormalMode)
-        }
-
-        "to furlough question when unanswered" in {
-          val answers = emptyUserAnswers
-          navigator.nextPage(FurloughDatesPage, NormalMode, answers) mustBe routes.FurloughDatesController.onPageLoad(NormalMode)
-        }
-      }
-
-      "go from furlough start date" must {
-
-        "to end date when started and ended in claim" in {
-          val answers = emptyUserAnswers.set(FurloughDatesPage, FurloughDates.StartedAndEndedInClaim).success.value
-          navigator.nextPage(FurloughStartDatePage, NormalMode, answers) mustBe routes.FurloughEndDateController
-            .onPageLoad(NormalMode)
-        }
-
-        "to pay question when started in claim" in {
-          val answers = emptyUserAnswers.set(FurloughDatesPage, FurloughDates.StartedInClaim).success.value
-          navigator.nextPage(FurloughStartDatePage, NormalMode, answers) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
-        }
+      "go from furlough start date to furlough question" in {
+        val answers = emptyUserAnswers
+        navigator.nextPage(FurloughStartDatePage, NormalMode, answers) mustBe routes.FurloughQuestionController.onPageLoad(NormalMode)
       }
 
       "go from furlough end date" must {
 
         "to pay question" in {
-          navigator.nextPage(FurloughEndDatePage, NormalMode, emptyUserAnswers) mustBe routes.PayQuestionController
+          navigator.nextPage(FurloughEndDatePage, NormalMode, emptyUserAnswers) mustBe routes.PaymentFrequencyController
             .onPageLoad(NormalMode)
         }
       }
