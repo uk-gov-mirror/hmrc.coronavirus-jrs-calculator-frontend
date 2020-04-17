@@ -82,14 +82,14 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .onPageLoad(NormalMode)
       }
 
-      "go to correct page after PayQuestionPage" in {
+      "go to correct page after SalaryQuestionPage" in {
         navigator.nextPage(
           PayQuestionPage,
           NormalMode,
           UserAnswers("id")
             .set(PayQuestionPage, PayQuestion.Regularly)
             .success
-            .value) mustBe routes.PaymentFrequencyController.onPageLoad(NormalMode)
+            .value) mustBe routes.SalaryQuestionController.onPageLoad(NormalMode)
         navigator.nextPage(
           PayQuestionPage,
           NormalMode,
@@ -99,8 +99,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .value) mustBe routes.VariableLengthEmployedController.onPageLoad(NormalMode)
       }
 
-      "go to SalaryQuestionPage after PaymentFrequencyPage" in {
-        navigator.nextPage(PaymentFrequencyPage, NormalMode, UserAnswers("id")) mustBe routes.SalaryQuestionController
+      "go to SalaryQuestionPage after PaymentQuestionPage" in {
+        navigator.nextPage(PaymentFrequencyPage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController
           .onPageLoad(NormalMode)
       }
 
