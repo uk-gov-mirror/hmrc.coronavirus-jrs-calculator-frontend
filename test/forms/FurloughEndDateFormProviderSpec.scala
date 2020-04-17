@@ -9,6 +9,7 @@ import java.time.{LocalDate, ZoneOffset}
 
 import forms.behaviours.DateBehaviours
 import play.api.data.FormError
+import views.ViewUtils
 
 class FurloughEndDateFormProviderSpec extends DateBehaviours {
 
@@ -28,7 +29,11 @@ class FurloughEndDateFormProviderSpec extends DateBehaviours {
 
       behave like dateField(form, "value", validData)
 
-      behave like dateFieldWithMax(form, "value", endDate, FormError("value", "furloughEndDate.error.maximum", Array("1 May 2020")))
+      behave like dateFieldWithMax(
+        form,
+        "value",
+        LocalDate.now,
+        FormError("value", "furloughEndDate.error.maximum", Array(ViewUtils.dateToString(LocalDate.now))))
 
       behave like dateFieldWithMin(form, "value", startDate, FormError("value", "furloughEndDate.error.minimum", Array("1 March 2020")))
 
@@ -46,7 +51,11 @@ class FurloughEndDateFormProviderSpec extends DateBehaviours {
 
       behave like dateField(form, "value", validData)
 
-      behave like dateFieldWithMax(form, "value", endDate, FormError("value", "furloughEndDate.error.maximum", Array("1 May 2020")))
+      behave like dateFieldWithMax(
+        form,
+        "value",
+        LocalDate.now,
+        FormError("value", "furloughEndDate.error.maximum", Array(ViewUtils.dateToString(LocalDate.now))))
 
       behave like dateFieldWithMin(
         form,

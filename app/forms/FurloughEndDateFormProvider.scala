@@ -16,6 +16,7 @@ class FurloughEndDateFormProvider @Inject() extends Mappings {
 
   def apply(claimPeriodStart: LocalDate, claimPeriodEnd: LocalDate, furloughStartDate: LocalDate): Form[LocalDate] = {
     val minimumDate = if (furloughStartDate.isAfter(claimPeriodStart)) furloughStartDate else claimPeriodStart
+    val maximumDate = LocalDate.now()
 
     Form(
       "value" -> localDate(
@@ -24,7 +25,7 @@ class FurloughEndDateFormProvider @Inject() extends Mappings {
         twoRequiredKey = "furloughEndDate.error.required.two",
         requiredKey = "furloughEndDate.error.required"
       ).verifying(minDate(minimumDate.plusDays(1), "furloughEndDate.error.minimum", dateToString(minimumDate)))
-        .verifying(maxDate(LocalDate.now(), "furloughEndDate.error.maximum", dateToString(claimPeriodEnd)))
+        .verifying(maxDate(maximumDate.plusDays(1), "furloughEndDate.error.maximum", dateToString(maximumDate)))
     )
   }
 }
