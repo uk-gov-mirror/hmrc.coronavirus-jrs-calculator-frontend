@@ -20,7 +20,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       val period = payment.period.asInstanceOf[FullPeriod]
       val expected =
         PeriodBreakdown(payment.amount, expectedFurlough, PeriodWithPaymentDate(payment.period, PaymentDate(period.period.end)))
-      calculatePeriodBreakdown(frequency, payment.amount, PeriodWithPaymentDate(payment.period, PaymentDate(period.period.end))) mustBe expected
+      calculatePeriodBreakdown(frequency, payment, PeriodWithPaymentDate(payment.period, PaymentDate(period.period.end))) mustBe expected
     }
   }
 
@@ -30,7 +30,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       val period = payment.period.asInstanceOf[PartialPeriod]
       val expected =
         PeriodBreakdown(payment.amount, expectedFurlough, PeriodWithPaymentDate(payment.period, PaymentDate(period.original.end)))
-      calculatePeriodBreakdown(frequency, payment.amount, PeriodWithPaymentDate(payment.period, PaymentDate(period.original.end))) mustBe expected
+      calculatePeriodBreakdown(frequency, payment, PeriodWithPaymentDate(payment.period, PaymentDate(period.original.end))) mustBe expected
     }
   }
 
