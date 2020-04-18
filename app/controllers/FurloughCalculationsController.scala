@@ -40,14 +40,14 @@ class FurloughCalculationsController @Inject()(
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, 0, 0, 0))
+    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, 0, 0, 0))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughCalculationsPage, value))

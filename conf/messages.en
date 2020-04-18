@@ -411,6 +411,4 @@ furloughCalculations.checkYourAnswersLabel = Gross furlough amount breakdown
 furloughCalculations.error.required = Select one of the options below
 furloughCalculations.payperiodending.label = Pay period ending
 furloughCalculations.grossfurloughamount.label = Gross furlough amount
-furloughCalculations.month1 = 30 March 2020
-furloughCalculations.month2 = 30 April 2020
 furloughCalculations.total.label = Total

@@ -49,7 +49,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode, 0, 0, 0)(getRequest, messages).toString
+        view(form, NormalMode)(getRequest, messages).toString
 
       application.stop()
     }
@@ -67,7 +67,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(FurloughCalculations.values.head), NormalMode, 0, 0, 0)(getRequest, messages).toString
+        view(form.fill(FurloughCalculations.values.head), NormalMode)(getRequest, messages).toString
 
       application.stop()
     }
@@ -117,7 +117,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode, 0, 0, 0)(request, messages).toString
+        view(boundForm, NormalMode)(request, messages).toString
 
       application.stop()
     }
