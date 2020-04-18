@@ -48,7 +48,7 @@ class Navigator @Inject()() {
         routes.VariableGrossPayController.onPageLoad(NormalMode)
     case VariableGrossPayPage =>
       _ =>
-        routes.NicCategoryController.onPageLoad(NormalMode)
+        routes.PayDateController.onPageLoad(1)
     case NicCategoryPage =>
       _ =>
         routes.PensionAutoEnrolmentController.onPageLoad(NormalMode)
