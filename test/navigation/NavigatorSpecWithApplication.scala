@@ -160,6 +160,25 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .value
         ) mustBe routes.VariableLengthPartialPayController.onPageLoadBeforeFurlough
       }
+
+      "go to correct page after FurloughCalculationsPage" in {
+        navigator.nextPage(
+          FurloughCalculationsPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(FurloughCalculationsPage, FurloughCalculations.Yes)
+            .success
+            .value
+        ) mustBe routes.ComingSoonController.onPageLoad(true)
+        navigator.nextPage(
+          FurloughCalculationsPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(FurloughCalculationsPage, FurloughCalculations.No)
+            .success
+            .value
+        ) mustBe routes.ConfirmationController.onPageLoad()
+      }
     }
 
     "in Check mode" must {

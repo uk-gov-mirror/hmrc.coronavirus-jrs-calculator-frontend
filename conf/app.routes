@@ -100,9 +100,14 @@ POST        /variable-gross-pay                     controllers.VariableGrossPay
 GET         /change-variable-gross-pay              controllers.VariableGrossPayController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-variable-gross-pay              controllers.VariableGrossPayController.onSubmit(mode: Mode = CheckMode)
 
-GET         /coming-soon                            controllers.ComingSoonController.onPageLoad()
+GET         /coming-soon                            controllers.ComingSoonController.onPageLoad(showCalculateTopupsLink: Boolean ?= false)
 
 GET        /variable-length-partial-pay/before-furlough                       controllers.VariableLengthPartialPayController.onPageLoadBeforeFurlough
 POST       /variable-length-partial-pay/before-furlough                       controllers.VariableLengthPartialPayController.onSubmitBeforeFurlough
 GET        /variable-length-partial-pay/after-furlough                        controllers.VariableLengthPartialPayController.onPageLoadAfterFurlough
 POST       /variable-length-partial-pay/after-furlough                        controllers.VariableLengthPartialPayController.onSubmitAfterFurlough
+
+GET        /furlough-calculations                        controllers.FurloughCalculationsController.onPageLoad(mode: Mode = NormalMode)
+POST       /furlough-calculations                        controllers.FurloughCalculationsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-furlough-calculations                  controllers.FurloughCalculationsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-furlough-calculations                  controllers.FurloughCalculationsController.onSubmit(mode: Mode = CheckMode)

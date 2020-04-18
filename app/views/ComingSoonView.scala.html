@@ -8,18 +8,25 @@
         h1: components.h1,
         p: components.p,
         button: components.button,
-        formHelper: FormWithCSRF
+        formHelper: FormWithCSRF,
+        link: components.link
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(showCalculateTopupsLink: Boolean = false)(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(titleNoForm("comingSoon.title"))) {
+@govukLayout(pageTitle = Some(titleNoForm("comingSoon.title"))) {
 
-        @formHelper(action = ClaimPeriodStartController.onPageLoad(NormalMode)) {
+    @formHelper(action = ClaimPeriodStartController.onPageLoad(NormalMode)) {
 
-            @h1("comingSoon.heading")
-            @p(Html(messages("comingSoon.p")))
+        @h1("comingSoon.heading")
+        @p(Html(messages("comingSoon.p")))
 
-            @button("comingSoon.start.another")
+        @if(showCalculateTopupsLink) {
+            @p{
+                @link(routes.ConfirmationController.onPageLoad().url, "comingSoon.showCalculateTopupsLink.label")
+            }
         }
+
+        @button("comingSoon.start.another")
     }
+}
