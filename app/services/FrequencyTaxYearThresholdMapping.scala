@@ -6,7 +6,8 @@
 package services
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
+import models.{PaymentDate, PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
+import play.api.Logger
 
 case class FrequencyTaxYearKey(paymentFrequency: PaymentFrequency, taxYear: TaxYear, rate: Rate)
 case class Threshold(lower: BigDecimal)
@@ -37,6 +38,18 @@ object FrequencyTaxYearThresholdMapping {
     FrequencyTaxYearKey(Weekly, TaxYearEnding2020, PensionRate())      -> Threshold(118.00),
     FrequencyTaxYearKey(Weekly, TaxYearEnding2021, PensionRate())      -> Threshold(120.00)
   )
+
+  def findThreshold(frequency: PaymentFrequency, taxYear: TaxYear, rate: Rate): BigDecimal = {
+    val frequencyTaxYearKey = FrequencyTaxYearKey(frequency, taxYear, rate)
+    FrequencyTaxYearThresholdMapping.mappings
+      .get(frequencyTaxYearKey)
+      .fold {
+        Logger.warn(s"Unable to find a threshold for $frequencyTaxYearKey")
+        BigDecimal(0).setScale(2)
+      } { threshold =>
+        threshold.lower
+      }
+  }
 }
 case class FurloughCap(value: BigDecimal)
 

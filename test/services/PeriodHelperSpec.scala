@@ -8,25 +8,25 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.Period
+import models.{PartialPeriod, Period}
 
-class PeriodGeneratorSpec extends SpecBase {
+class PeriodHelperSpec extends SpecBase {
 
-  "For a given list of pay period end dates, should return a List[LocalDate] in ascending order" in new PayPeriodGenerator {
+  "For a given list of pay period end dates, should return a List[LocalDate] in ascending order" in new PeriodHelper {
     val unsortedEndDates: List[LocalDate] = List(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 3, 18), LocalDate.of(2020, 3, 19))
     sortedEndDates(unsortedEndDates) mustBe List(LocalDate.of(2020, 3, 18), LocalDate.of(2020, 3, 19), LocalDate.of(2020, 3, 20))
   }
 
-  "Returns a Pay Period with the same start and end date if only one date is supplied" in new PayPeriodGenerator {
+  "Returns a Pay Period with the same start and end date if only one date is supplied" in new PeriodHelper {
     //This is not a valid scenario, just testing for safety
     val endDates: List[LocalDate] = List(LocalDate.of(2020, 2, 20))
 
     val expected: List[Period] = List(Period(LocalDate.of(2020, 2, 20), LocalDate.of(2020, 2, 20)))
 
-    generatePayPeriods(endDates) mustBe expected
+    generatePeriodsFromEndDates(endDates) mustBe expected
   }
 
-  "Returns a sorted List[PayPeriod] for a given List[LocalDate] that represents PayPeriod.end LocalDates" in new PayPeriodGenerator {
+  "Returns a sorted List[PayPeriod] for a given List[LocalDate] that represents PayPeriod.end LocalDates" in new PeriodHelper {
     val endDates: List[LocalDate] = List(LocalDate.of(2020, 4, 20), LocalDate.of(2020, 3, 20), LocalDate.of(2020, 2, 20))
     val endDatesTwo: List[LocalDate] = List(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 2, 20))
 
@@ -37,17 +37,17 @@ class PeriodGeneratorSpec extends SpecBase {
       Period(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 3, 20))
     )
 
-    generatePayPeriods(endDates) mustBe expected
-    generatePayPeriods(endDatesTwo) mustBe expectedTwo
+    generatePeriodsFromEndDates(endDates) mustBe expected
+    generatePeriodsFromEndDates(endDatesTwo) mustBe expectedTwo
   }
 
-  "determine if a period contains the start of a new tax year" in new PayPeriodGenerator {
+  "determine if a period contains the start of a new tax year" in new PeriodHelper {
     periodContainsNewTaxYear(Period(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 4, 20))) mustBe true
     periodContainsNewTaxYear(Period(LocalDate.of(2020, 3, 6), LocalDate.of(2020, 4, 6))) mustBe true
     periodContainsNewTaxYear(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))) mustBe false
   }
 
-  "determine whether a given date falls in a certain period" in new PayPeriodGenerator {
+  "determine whether a given date falls in a certain period" in new PeriodHelper {
     val period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
 
     dateExistsInPayPeriod(LocalDate.of(2020, 3, 15), period) mustBe true
@@ -56,7 +56,7 @@ class PeriodGeneratorSpec extends SpecBase {
     dateExistsInPayPeriod(LocalDate.of(2020, 3, 1), period) mustBe true
   }
 
-  "return pay period with tax year end as the end date if tax year end is earlier than given end date" in new PayPeriodGenerator {
+  "return pay period with tax year end as the end date if tax year end is earlier than given end date" in new PeriodHelper {
     val periodOne = Period(LocalDate.of(2019, 12, 1), LocalDate.of(2020, 2, 29))
     val periodTwo = Period(LocalDate.of(2019, 12, 1), LocalDate.of(2020, 4, 29))
 
@@ -67,7 +67,7 @@ class PeriodGeneratorSpec extends SpecBase {
     endDateOrTaxYearEnd(periodTwo) mustBe expectedTwo
   }
 
-  "counts days in a given period" in new PayPeriodGenerator {
+  "counts days in a given period" in new PeriodHelper {
     val periodOne = Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))
     val periodTwo = Period(LocalDate.of(2020, 4, 15), LocalDate.of(2020, 4, 30))
     val periodThree = Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 20))
@@ -79,12 +79,21 @@ class PeriodGeneratorSpec extends SpecBase {
     periodDaysCount(periodFour) mustBe 22
   }
 
-  "determine if pay period spans two months" in new PayPeriodGenerator {
+  "determine if pay period spans two months" in new PeriodHelper {
     val periodOne = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
     val periodTwo = Period(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 4, 20))
 
     periodSpansMonth(periodOne) mustBe false
     periodSpansMonth(periodTwo) mustBe true
+  }
+
+  "determine if a period is a partial period given a furlough period" in new PeriodHelper {
+    val periodOne = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val furloughOne = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 30))
+    val furloughTwo = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
+
+    val expectedOne = Left(PartialPeriod(periodOne, Period(furloughOne.start, periodOne.end)))
+    val expectedTwo = Right(periodOne)
   }
 
 }

@@ -8,12 +8,12 @@ package handlers
 import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.NicCategory.{Nonpayable, Payable}
 import models.PensionStatus.{OptedIn, OptedOut}
-import models.{CalculationResult, NicCategory, PaymentFrequency, PensionStatus, Period, UserAnswers}
+import models.{Amount, CalculationResult, NicCategory, PaymentFrequency, PensionStatus, Period, UserAnswers}
 import pages._
 import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
 
-trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPeriodGenerator with NicPensionCalculator with DataExtractor {
+trait ConfirmationControllerRequestHandler extends FurloughCalculator with PeriodHelper with NicPensionCalculator with DataExtractor {
 
   def loadResultData(userAnswers: UserAnswers): Option[ConfirmationDataResult] =
     for {
@@ -45,7 +45,7 @@ trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPe
       data           <- extract(userAnswers)
       taxPayYear     <- userAnswers.get(TaxYearPayDatePage)
       furloughPeriod <- extractFurloughPeriod(userAnswers)
-      regulars       <- extractRegularPayments(userAnswers)
+      regulars       <- extractPayments(userAnswers)
     } yield calculateFurlough(data.paymentFrequency, regulars, furloughPeriod, taxPayYear)
 
   private def handleCalculationNi(data: Option[MandatoryData], furloughResult: CalculationResult): Option[CalculationResult] =
@@ -56,8 +56,9 @@ trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPe
 
   private def calculateNi(furloughResult: CalculationResult, nic: NicCategory, frequency: PaymentFrequency): CalculationResult =
     nic match {
-      case Payable    => calculateGrant(frequency, furloughResult.payPeriodBreakdowns.toList, NiRate())
-      case Nonpayable => CalculationResult(NicCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(amount = 0.0)))
+      case Payable => calculateGrant(frequency, furloughResult.payPeriodBreakdowns.toList, NiRate())
+      case Nonpayable =>
+        CalculationResult(NicCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(payment = Amount(0.0))))
     }
 
   private def handleCalculationPension(data: Option[MandatoryData], furloughResult: CalculationResult): Option[CalculationResult] =
@@ -71,7 +72,8 @@ trait ConfirmationControllerRequestHandler extends FurloughCalculator with PayPe
     pensionStatus: PensionStatus,
     frequency: PaymentFrequency): CalculationResult =
     pensionStatus match {
-      case OptedIn  => calculateGrant(frequency, furloughResult.payPeriodBreakdowns.toList, PensionRate())
-      case OptedOut => CalculationResult(PensionCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(amount = 0.0)))
+      case OptedIn => calculateGrant(frequency, furloughResult.payPeriodBreakdowns.toList, PensionRate())
+      case OptedOut =>
+        CalculationResult(PensionCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(payment = Amount(0.0))))
     }
 }

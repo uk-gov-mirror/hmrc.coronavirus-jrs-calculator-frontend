@@ -35,13 +35,6 @@ POST        /furlough-question                      controllers.FurloughQuestion
 GET         /change-furlough-question               controllers.FurloughQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-furlough-question               controllers.FurloughQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET         /test-only/nic-grant                    controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = NormalMode)
-POST        /test-only/nic-grant                    controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = NormalMode)
-GET         /test-only/change-nic-grant             controllers.TestOnlyNICGrantCalculatorController.onPageLoad(mode: Mode = CheckMode)
-POST        /test-only/change-nic-grant             controllers.TestOnlyNICGrantCalculatorController.onSubmit(mode: Mode = CheckMode)
-
-GET         /test-only/nic-grant-response           controllers.TestOnlyNICGrantCalculatorController.showResult()
-
 GET         /pay-question                           controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST        /pay-question                           controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)
 GET         /change-pay-question                    controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)

@@ -14,7 +14,7 @@ import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode._
 
-trait FurloughCapCalculator extends PayPeriodGenerator {
+trait FurloughCapCalculator extends PeriodHelper {
 
   def furloughCap(paymentFrequency: PaymentFrequency, payPeriod: Period): BigDecimal = {
     val furloughCap = FurloughCapMapping.mappings

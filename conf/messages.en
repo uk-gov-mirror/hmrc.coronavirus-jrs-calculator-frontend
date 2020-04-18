@@ -166,25 +166,6 @@ errorPage.p1 = Try again later.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-testOnlyNICGrantCalculator.title = Test only form for NIC Calculations 
-testOnlyNICGrantCalculator.heading = Test only form for NIC Calculations
-testOnlyNICGrantCalculator.checkYourAnswersLabel = TestOnlyNICGrantCalculator
-testOnlyNICGrantCalculator.error.required.all = Enter the testOnlyNICGrantCalculator
-testOnlyNICGrantCalculator.error.required.two = The testOnlyNICGrantCalculator must include {0} and {1}
-testOnlyNICGrantCalculator.error.required = The testOnlyNICGrantCalculator must include {0}
-testOnlyNICGrantCalculator.error.invalid = Enter a real TestOnlyNICGrantCalculator
-
-testOnlyNICGrantCalculator.startDate.legend=Start date
-testOnlyNICGrantCalculator.endDate.legend=End date
-testOnlyNICGrantCalculator.amount.legend=Furloughed Amount
-testOnlyNICGrantCalculator.startDate.error.required.all=Enter the start date
-testOnlyNICGrantCalculator.endDate.error.required.all=Enter the end date
-testOnlyNICGrantCalculator.furloughedAmount.error.required=Enter the furloughed amount
-testOnlyNICGrantCalculator.frequency.required=Enter Pay frequency
-testOnlyNICGrantCalculator.frequency.invalid=Invalid Pay frequency
-testOnlyNICGrantCalculator.payDate.legend=Pay date
-testOnlyNICGrantCalculator.payDate.error.required.all=Enter the pay date
-
 payQuestion.title = How is this employee paid?
 payQuestion.heading = How is this employee paid?
 payQuestion.regularly= a regular amount each time

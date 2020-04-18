@@ -8,11 +8,11 @@ package services
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-import models.Period
+import models.{PartialPeriod, Period}
 
-trait PayPeriodGenerator {
+trait PeriodHelper {
 
-  def generatePayPeriods(endDates: Seq[LocalDate]): Seq[Period] = {
+  def generatePeriodsFromEndDates(endDates: Seq[LocalDate]): Seq[Period] = {
     def generate(acc: Seq[Period], list: Seq[LocalDate]): Seq[Period] = list match {
       case Nil      => acc
       case h :: Nil => acc
@@ -34,6 +34,17 @@ trait PayPeriodGenerator {
     val newEnd = if (taxYearEnd.isBefore(payPeriod.end)) taxYearEnd else payPeriod.end
 
     payPeriod.copy(end = newEnd)
+  }
+
+  def fullOrPartialPeriod(period: Period, furloughPeriod: Period): Either[PartialPeriod, Period] = {
+    val start =
+      if (furloughPeriod.start.isAfter(period.start) && furloughPeriod.start.isBefore(period.end)) furloughPeriod.start else period.start
+    val end =
+      if (furloughPeriod.end.isAfter(period.start) && furloughPeriod.end.isBefore(period.end)) furloughPeriod.end else period.end
+
+    val partial = Period(start, end)
+
+    if (periodDaysCount(period) != periodDaysCount(partial)) Left(PartialPeriod(period, partial)) else Right(period)
   }
 
   def periodContainsNewTaxYear(period: Period): Boolean =

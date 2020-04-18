@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{Amount, Period, RegularPayment, Salary}
+import models.{Amount, PaymentWithPeriod, Period, Salary}
 
 class ReferencePayCalculatorSpec extends SpecBase {
 
@@ -23,9 +23,9 @@ class ReferencePayCalculatorSpec extends SpecBase {
     val payPeriods = Seq(afterFurloughPeriod, afterFurloughPeriodTwo, afterFurloughPartial)
 
     val expected = Seq(
-      RegularPayment(Salary(817.47), afterFurloughPeriod),
-      RegularPayment(Salary(791.10), afterFurloughPeriodTwo),
-      RegularPayment(Salary(395.55), afterFurloughPartial),
+      PaymentWithPeriod(Amount(817.47), afterFurloughPeriod),
+      PaymentWithPeriod(Amount(791.10), afterFurloughPeriodTwo),
+      PaymentWithPeriod(Amount(395.55), afterFurloughPartial),
     )
 
     calculateVariablePay(priorFurloughPeriod, payPeriods, grossSalary) mustBe expected
@@ -36,6 +36,6 @@ class ReferencePayCalculatorSpec extends SpecBase {
     val furloughStartDate = LocalDate.of(2020, 3, 1)
     val periodBeforeFurlough = Period(employeeStartDate, furloughStartDate.minusDays(1))
 
-    averageDailyCalculator(periodBeforeFurlough, Amount(2400.0)) mustBe Amount(26.37)
+    averageDailyCalculator(periodBeforeFurlough, Amount(2400.0)) mustBe 26.37
   }
 }

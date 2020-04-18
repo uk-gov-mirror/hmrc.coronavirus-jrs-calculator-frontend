@@ -15,9 +15,8 @@ trait CoreTestData {
   def emptyUserAnswers = UserAnswers(userAnswersId, Json.obj())
 
   def userAnswersJson(
-    furloughQuestion: String = "yes",
-    furloughDates: String = "",
-    furloughStartDate: String = "",
+    furloughQuestion: String = "no",
+    furloughStartDate: String = "2020-03-01",
     furloughEndDate: String = "",
     payQuestion: String = "regularly",
     variableGrossPay: String = "",
@@ -28,7 +27,6 @@ trait CoreTestData {
        |    "data" : {
        |        "taxYearPayDate" : "2020-04-20",
        |        "furloughQuestion" : "$furloughQuestion",
-       |        "furloughDates" : "$furloughDates",
        |        "furloughStartDate" : "$furloughStartDate",
        |        "furloughEndDate" : "$furloughEndDate",
        |        "payQuestion" : "$payQuestion",
@@ -61,7 +59,8 @@ trait CoreTestData {
       |  "_id": "session-9dee1ca2-1378-479b-92f8-748de7f363d5",
       |  "data": {
       |    "taxYearPayDate" : "2020-04-20",
-      |    "furloughQuestion": "yes",
+      |    "furloughQuestion": "no",
+      |    "furloughStartDate" : "2020-03-01",
       |    "payQuestion": "regularly",
       |    "pensionAutoEnrolment": "optedOut",
       |    "claimPeriodEnd": "2020-04-30",

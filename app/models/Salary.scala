@@ -6,11 +6,12 @@
 package models
 
 import play.api.libs.json._
+import utils.ValueClassFormat
 
 case class Amount(value: BigDecimal)
 
 object Amount {
-  implicit val format: Format[Amount] = Json.format[Amount]
+  implicit val format: Format[Amount] = ValueClassFormat.format(value => Amount.apply(BigDecimal(value)))(_.value)
 }
 
 //TODO use Amount Vs BigDecimal

@@ -33,11 +33,11 @@ class PaymentFrequencyControllerSpec extends SpecBaseWithApplication with Mockit
   val formProvider = new PaymentFrequencyFormProvider()
   val form = formProvider()
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, paymentFrequencyRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
+  lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, paymentFrequencyRoutePost).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(

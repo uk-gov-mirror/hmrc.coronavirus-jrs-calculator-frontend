@@ -5,22 +5,22 @@
 
 package services
 
-import models.{Amount, Period, RegularPayment, Salary}
+import models.{Amount, PaymentWithPeriod, Period, Salary}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode._
 
-trait ReferencePayCalculator extends PayPeriodGenerator {
+trait ReferencePayCalculator extends PeriodHelper {
 
-  def calculateVariablePay(priorFurloughPeriod: Period, afterFurloughPayPeriod: Seq[Period], amount: Amount): Seq[RegularPayment] =
+  def calculateVariablePay(priorFurloughPeriod: Period, afterFurloughPayPeriod: Seq[Period], amount: Amount): Seq[PaymentWithPeriod] =
     afterFurloughPayPeriod.map(period => calculateReferencePay(priorFurloughPeriod, period, amount))
 
-  private def calculateReferencePay(priorFurloughPeriod: Period, afterFurloughPayPeriod: Period, amount: Amount): RegularPayment = {
-    val daily = periodDaysCount(afterFurloughPayPeriod) * averageDailyCalculator(priorFurloughPeriod, amount).value
+  private def calculateReferencePay(priorFurloughPeriod: Period, afterFurloughPayPeriod: Period, amount: Amount): PaymentWithPeriod = {
+    val daily = periodDaysCount(afterFurloughPayPeriod) * averageDailyCalculator(priorFurloughPeriod, amount)
 
-    RegularPayment(Salary(daily), afterFurloughPayPeriod)
+    PaymentWithPeriod(Amount(daily), afterFurloughPayPeriod)
   }
 
-  protected def averageDailyCalculator(payPeriod: Period, amount: Amount): Amount =
-    roundAmountWithMode(Amount(amount.value / periodDaysCount(payPeriod)), HALF_UP)
+  protected def averageDailyCalculator(payPeriod: Period, amount: Amount): BigDecimal =
+    roundWithMode(amount.value / periodDaysCount(payPeriod), HALF_UP)
 }
