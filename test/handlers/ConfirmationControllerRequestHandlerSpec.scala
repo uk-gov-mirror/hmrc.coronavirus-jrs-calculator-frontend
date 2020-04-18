@@ -42,7 +42,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
     val nic =
       CalculationResult(NicCalculationResult, 241.36, List(periodBreakdownOne(2000.00, 121.58), periodBreakdownTwo(2000.00, 119.78)))
     val pension =
-      CalculationResult(PensionCalculationResult, 65.07, List(periodBreakdownOne(2000.00, 32.67), periodBreakdownTwo(2000.00, 32.40)))
+      CalculationResult(PensionCalculationResult, 65.04, List(periodBreakdownOne(2000.00, 32.64), periodBreakdownTwo(2000.00, 32.40)))
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
