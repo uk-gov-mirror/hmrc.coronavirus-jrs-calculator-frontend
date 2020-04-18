@@ -158,18 +158,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .set(FurloughStartDatePage, LocalDate.now())
             .success
             .value
-        ) mustBe routes.VariableLengthPartialPayController.onPageLoad(NormalMode)
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          NormalMode,
-          UserAnswers("id")
-            .set(ClaimPeriodStartPage, LocalDate.now())
-            .success
-            .value
-            .set(FurloughStartDatePage, LocalDate.now())
-            .success
-            .value
-        ) mustBe routes.VariableGrossPayController.onPageLoad(NormalMode)
+        ) mustBe routes.VariableLengthPartialPayController.onPageLoadBeforeFurlough
       }
     }
 

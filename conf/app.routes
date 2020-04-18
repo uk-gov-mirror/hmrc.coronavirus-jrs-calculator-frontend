@@ -102,7 +102,7 @@ POST        /change-variable-gross-pay              controllers.VariableGrossPay
 
 GET         /coming-soon                            controllers.ComingSoonController.onPageLoad()
 
-GET        /variable-length-partial-pay                        controllers.VariableLengthPartialPayController.onPageLoad(mode: Mode = NormalMode)
-POST       /variable-length-partial-pay                        controllers.VariableLengthPartialPayController.onSubmit(mode: Mode = NormalMode)
-GET        /change-variable-length-partial-pay                  controllers.VariableLengthPartialPayController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-variable-length-partial-pay                  controllers.VariableLengthPartialPayController.onSubmit(mode: Mode = CheckMode)
+GET        /variable-length-partial-pay/before-furlough                       controllers.VariableLengthPartialPayController.onPageLoadBeforeFurlough
+POST       /variable-length-partial-pay/before-furlough                       controllers.VariableLengthPartialPayController.onSubmitBeforeFurlough
+GET        /variable-length-partial-pay/after-furlough                        controllers.VariableLengthPartialPayController.onPageLoadAfterFurlough
+POST       /variable-length-partial-pay/after-furlough                        controllers.VariableLengthPartialPayController.onSubmitAfterFurlough

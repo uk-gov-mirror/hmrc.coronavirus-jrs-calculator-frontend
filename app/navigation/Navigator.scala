@@ -41,7 +41,8 @@ class Navigator @Inject()() {
     case VariableLengthEmployedPage =>
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
-      employeeStartDateRoutes
+      _ =>
+        routes.VariableLengthPartialPayController.onPageLoadBeforeFurlough
     case VariableLengthPartialPayPage =>
       _ =>
         routes.VariableGrossPayController.onPageLoad(NormalMode)
@@ -112,18 +113,4 @@ class Navigator @Inject()() {
       case _                                => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
     }
   }
-
-  private def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
-    (for {
-      claimStartDate <- userAnswers.get(ClaimPeriodStartPage)
-      furloughStart  <- userAnswers.get(FurloughStartDatePage)
-    } yield {
-      if (furloughStart.isAfter(claimStartDate.plusDays(1))) {
-        routes.VariableLengthPartialPayController.onPageLoad(NormalMode)
-      } else {
-        routes.VariableGrossPayController.onPageLoad(NormalMode)
-      }
-    }).getOrElse(routes.ErrorController.internalServerError())
-  }
-
 }

@@ -9,16 +9,17 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.VariableLengthPartialPayFormProvider
-import models.{NormalMode, UserAnswers, VariableLengthPartialPay}
+import models.PaymentFrequency.Weekly
+import models.{UserAnswers, VariableLengthPartialPay}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodStartPage, FurloughStartDatePage, VariableLengthPartialPayPage}
+import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PaymentFrequencyPage, VariableLengthPartialPayPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
-import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.VariableLengthPartialPayView
@@ -32,25 +33,32 @@ class VariableLengthPartialPayControllerSpec extends SpecBaseWithApplication wit
   val formProvider = new VariableLengthPartialPayFormProvider()
   val form = formProvider()
 
-  lazy val variableLengthPartialPayRoute = routes.VariableLengthPartialPayController.onPageLoad(NormalMode).url
+  lazy val pageLoadBeforeFurloughRoute = routes.VariableLengthPartialPayController.onPageLoadBeforeFurlough.url
+  lazy val pageLoadAfterFurloughRoute = routes.VariableLengthPartialPayController.onPageLoadAfterFurlough().url
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, variableLengthPartialPayRoute).withCSRFToken
+  lazy val submitBeforeFurloughRoute = routes.VariableLengthPartialPayController.onSubmitBeforeFurlough().url
+  lazy val submitAfterFurloughRoute = routes.VariableLengthPartialPayController.onSubmitAfterFurlough().url
+
+  def getRequest(url: String): FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(GET, url).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, variableLengthPartialPayRoute).withCSRFToken
+  def postRequest(url: String): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest(POST, url).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(("value", "123"))
 
-  val claimStartDate = LocalDate.now().minusDays(2)
-  val furloughStartDate = LocalDate.now()
+  val claimStartDate = LocalDate.of(2020, 3, 1)
+  val furloughStartDate = LocalDate.of(2020, 3, 10)
 
   val userAnswers = UserAnswers(userAnswersId)
     .set(ClaimPeriodStartPage, claimStartDate)
     .success
     .value
     .set(FurloughStartDatePage, furloughStartDate)
+    .success
+    .value
+    .set(PaymentFrequencyPage, Weekly)
     .success
     .value
 
@@ -60,32 +68,45 @@ class VariableLengthPartialPayControllerSpec extends SpecBaseWithApplication wit
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val result = route(application, getRequest).value
+      val r = getRequest(pageLoadBeforeFurloughRoute)
+
+      val result = route(application, r).value
 
       val view = application.injector.instanceOf[VariableLengthPartialPayView]
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode, claimStartDate, furloughStartDate.minusDays(1))(getRequest, messages).toString
+        view(
+          form,
+          furloughStartDate.minusDays(7),
+          furloughStartDate.minusDays(1),
+          routes.VariableLengthPartialPayController.onSubmitBeforeFurlough())(r, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers1 = userAnswers.set(VariableLengthPartialPayPage, VariableLengthPartialPay(111)).success.value
+      val userAnswers1 = userAnswers.set(VariableLengthPartialPayPage, VariableLengthPartialPay(111), Some(1)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers1)).build()
 
       val view = application.injector.instanceOf[VariableLengthPartialPayView]
 
-      val result = route(application, getRequest).value
+      val r = getRequest(pageLoadBeforeFurloughRoute)
+
+      val result = route(application, r).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(VariableLengthPartialPay(111)), NormalMode, claimStartDate, furloughStartDate.minusDays(1))(getRequest, messages).toString
+        view(
+          form.fill(VariableLengthPartialPay(111)),
+          furloughStartDate.minusDays(7),
+          furloughStartDate.minusDays(1),
+          routes.VariableLengthPartialPayController.onSubmitBeforeFurlough()
+        )(r, messages).toString
 
       application.stop()
     }
@@ -104,10 +125,10 @@ class VariableLengthPartialPayControllerSpec extends SpecBaseWithApplication wit
           )
           .build()
 
-      val result = route(application, postRequest).value
+      val result = route(application, postRequest(submitBeforeFurloughRoute)).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual pageLoadAfterFurloughRoute
 
       application.stop()
     }
@@ -117,7 +138,7 @@ class VariableLengthPartialPayControllerSpec extends SpecBaseWithApplication wit
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
-        FakeRequest(POST, variableLengthPartialPayRoute).withCSRFToken
+        FakeRequest(POST, submitBeforeFurloughRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 
@@ -130,7 +151,9 @@ class VariableLengthPartialPayControllerSpec extends SpecBaseWithApplication wit
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode, claimStartDate, furloughStartDate.minusDays(1))(request, messages).toString
+        view(boundForm, claimStartDate, furloughStartDate.minusDays(1), routes.VariableLengthPartialPayController.onSubmitBeforeFurlough())(
+          request,
+          messages).toString
 
       application.stop()
     }
@@ -139,7 +162,7 @@ class VariableLengthPartialPayControllerSpec extends SpecBaseWithApplication wit
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, variableLengthPartialPayRoute)
+      val request = FakeRequest(GET, pageLoadBeforeFurloughRoute)
 
       val result = route(application, request).value
 
@@ -155,7 +178,7 @@ class VariableLengthPartialPayControllerSpec extends SpecBaseWithApplication wit
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, variableLengthPartialPayRoute)
+        FakeRequest(POST, submitBeforeFurloughRoute)
           .withFormUrlEncodedBody(("value", "answer"))
 
       val result = route(application, request).value

@@ -17,12 +17,12 @@
         inputCurrency: components.inputCurrency
 )
 
-@(form: Form[_], mode: Mode, date1: LocalDate, date2: LocalDate)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], date1: LocalDate, date2: LocalDate, submitUrl: Call)(implicit request: Request[_], messages: Messages)
 
     @govukLayout(pageTitle = Some(title(form, "variableLengthPartialPay.title"))) {
 
 
-        @formHelper(action = VariableLengthPartialPayController.onSubmit(mode)) {
+        @formHelper(action = submitUrl) {
 
             @errorSummary(form.errors)
 
