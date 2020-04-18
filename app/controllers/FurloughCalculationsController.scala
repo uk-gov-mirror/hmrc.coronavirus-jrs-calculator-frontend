@@ -47,11 +47,11 @@ class FurloughCalculationsController @Inject()(
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    loadResultData(request.userAnswers).fold(Future.successful(InternalServerError("Something went horribly wrong"))) { data =>
+    handleCalculationFurlough(request.userAnswers).fold(Future.successful(InternalServerError("Something went horribly wrong"))) { data =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, data.confirmationViewBreakdown.furlough))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, data))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughCalculationsPage, value))
