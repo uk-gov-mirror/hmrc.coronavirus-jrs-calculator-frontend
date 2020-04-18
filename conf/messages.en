@@ -230,6 +230,8 @@ payDate.error.invalid = Enter a real date
 payDate.error.mustBeBefore = The date must be before {0}
 payDate.error.mustBeAfter = The date must be after {0}
 payDate.p = This is the end of the last pay period before the claim started.
+payDate.details.title = What is a pay period?
+payDate.details.content =  A ''pay period'' is the period of time that the employee is paid for, such as weekly or monthly. When we ask for the end date of a pay period, it's the last day they were paid for. It's different from the ''pay date'', which is the date the employee actually gets their pay.
 
 reviewPayDates.title = Pay dates within the claim period
 reviewPayDates.heading = Pay dates within the claim period

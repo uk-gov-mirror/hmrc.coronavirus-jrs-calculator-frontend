@@ -11,7 +11,9 @@
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
         inputRadio: components.inputRadio,
-        button: components.button
+        button: components.button,
+        h1: components.h1,
+        p: components.p
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -22,12 +24,8 @@
 
         @errorSummary(form.errors)
 
-        @inputRadio(
-            form = form,
-            hintKey = Some(messages("nicCategory.hint")),
-            legend = messages("nicCategory.heading"),
-            items = NicCategory.options(form)
-        )
+      @h1(messages("nicCategory.heading"))
+      @p(Html(messages("nicCategory.hint")))
 
         <details class="govuk-details" data-module="govuk-details">
             <summary class="govuk-details__summary">
@@ -103,6 +101,12 @@
                 </div>
             </dl>
         </details>
+
+        @inputRadio(
+            form = form,
+            legend = "",
+            items = NicCategory.options(form)
+        )
 
         @button("site.continue")
     }
