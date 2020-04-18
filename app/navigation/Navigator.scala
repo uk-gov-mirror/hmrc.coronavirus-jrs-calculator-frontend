@@ -105,7 +105,7 @@ class Navigator @Inject()() {
 
   private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(VariableLengthEmployedPage) match {
-      case Some(VariableLengthEmployed.Yes) => routes.PayDateController.onPageLoad(1)
+      case Some(VariableLengthEmployed.Yes) => routes.ComingSoonController.onPageLoad
       case Some(VariableLengthEmployed.No)  => routes.EmployeeStartDateController.onPageLoad(NormalMode)
       case _                                => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
     }
