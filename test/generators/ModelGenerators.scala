@@ -53,6 +53,13 @@ trait ModelGenerators {
       } yield VariableGrossPay(value)
     }
 
+  implicit lazy val arbitraryVariableLengthPartialPayQuestion: Arbitrary[VariableLengthPartialPay] =
+    Arbitrary {
+      for {
+        value <- Arbitrary.arbitrary[BigDecimal]
+      } yield VariableLengthPartialPay(value)
+    }
+
   implicit lazy val arbitraryPaymentFrequency: Arbitrary[PaymentFrequency] =
     Arbitrary {
       Gen.oneOf(PaymentFrequency.values.toSeq)

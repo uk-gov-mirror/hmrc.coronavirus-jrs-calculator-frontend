@@ -129,6 +129,48 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .onPageLoad(NormalMode)
         }
       }
+
+      "go to correct page after VariableLengthEmployedPage" in {
+        navigator.nextPage(
+          VariableLengthEmployedPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(VariableLengthEmployedPage, VariableLengthEmployed.Yes)
+            .success
+            .value) mustBe routes.ComingSoonController.onPageLoad()
+        navigator.nextPage(
+          VariableLengthEmployedPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
+            .success
+            .value) mustBe routes.EmployeeStartDateController.onPageLoad(NormalMode)
+      }
+
+      "go to correct page after EmployeeStartDatePage" in {
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ClaimPeriodStartPage, LocalDate.now().minusDays(2))
+            .success
+            .value
+            .set(FurloughStartDatePage, LocalDate.now())
+            .success
+            .value
+        ) mustBe routes.VariableLengthPartialPayController.onPageLoad(NormalMode)
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ClaimPeriodStartPage, LocalDate.now())
+            .success
+            .value
+            .set(FurloughStartDatePage, LocalDate.now())
+            .success
+            .value
+        ) mustBe routes.VariableGrossPayController.onPageLoad(NormalMode)
+      }
     }
 
     "in Check mode" must {

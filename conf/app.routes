@@ -101,3 +101,8 @@ GET         /change-variable-gross-pay              controllers.VariableGrossPay
 POST        /change-variable-gross-pay              controllers.VariableGrossPayController.onSubmit(mode: Mode = CheckMode)
 
 GET         /coming-soon                            controllers.ComingSoonController.onPageLoad()
+
+GET        /variable-length-partial-pay                        controllers.VariableLengthPartialPayController.onPageLoad(mode: Mode = NormalMode)
+POST       /variable-length-partial-pay                        controllers.VariableLengthPartialPayController.onSubmit(mode: Mode = NormalMode)
+GET        /change-variable-length-partial-pay                  controllers.VariableLengthPartialPayController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-variable-length-partial-pay                  controllers.VariableLengthPartialPayController.onSubmit(mode: Mode = CheckMode)

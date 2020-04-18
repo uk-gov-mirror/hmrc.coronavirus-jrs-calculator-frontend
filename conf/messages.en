@@ -390,3 +390,12 @@ comingSoon.title = We are unable to do this calculation at the moment
 comingSoon.heading = We are unable to do this calculation at the moment
 comingSoon.p = This will be available in a future version.
 comingSoon.start.another = Start another calculation
+
+variableLengthPartialPay.title = What did the employee get paid between {0} and {1}?
+variableLengthPartialPay.heading = What did the employee get paid between {0} and {1}?
+variableLengthPartialPay.label = This is for the time that employee was paid when they were not furloughed.
+variableLengthPartialPay.checkYourAnswersLabel = variableLengthPartialPay
+variableLengthPartialPay.error.required = Enter a valid amount
+variableLengthPartialPay.error.invalid = Enter a valid amount
+variableLengthPartialPay.error.negative = Salary can’t be negative
+variableLengthPartialPay.p = This is for the time that employee was paid when they were not furloughed.

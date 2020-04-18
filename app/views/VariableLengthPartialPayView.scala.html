@@ -1,0 +1,43 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@import java.time.LocalDate
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        button: components.button,
+        inputText: components.inputText,
+        fieldset: components.fieldset,
+        h1: components.h1,
+        p: components.p,
+        inputCurrency: components.inputCurrency
+)
+
+@(form: Form[_], mode: Mode, date1: LocalDate, date2: LocalDate)(implicit request: Request[_], messages: Messages)
+
+    @govukLayout(pageTitle = Some(title(form, "variableLengthPartialPay.title"))) {
+
+
+        @formHelper(action = VariableLengthPartialPayController.onSubmit(mode)) {
+
+            @errorSummary(form.errors)
+
+            @h1(messages("variableLengthPartialPay.heading", dateToString(date1), dateToString(date2)))
+            @p(Html(messages("variableLengthPartialPay.p")))
+
+            @inputCurrency(
+                form,
+                id = "value",
+                name = "value",
+                label = "",
+                isPageHeading = false,
+                classes = Some("govuk-input--width-10")
+            )
+
+            @button("site.continue")
+        }
+    }

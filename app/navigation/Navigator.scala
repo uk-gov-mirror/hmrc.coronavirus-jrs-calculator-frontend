@@ -10,7 +10,7 @@ import play.api.mvc.Call
 import controllers.routes
 import models.PayQuestion.Regularly
 import pages.{PayDatePage, _}
-import models._
+import models.{UserAnswers, _}
 
 @Singleton
 class Navigator @Inject()() {
@@ -41,6 +41,8 @@ class Navigator @Inject()() {
     case VariableLengthEmployedPage =>
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
+      employeeStartDateRoutes
+    case VariableLengthPartialPayPage =>
       _ =>
         routes.VariableGrossPayController.onPageLoad(NormalMode)
     case VariableGrossPayPage =>
@@ -109,6 +111,19 @@ class Navigator @Inject()() {
       case Some(VariableLengthEmployed.No)  => routes.EmployeeStartDateController.onPageLoad(NormalMode)
       case _                                => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
     }
+  }
+
+  private def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
+    (for {
+      claimStartDate <- userAnswers.get(ClaimPeriodStartPage)
+      furloughStart  <- userAnswers.get(FurloughStartDatePage)
+    } yield {
+      if (furloughStart.isAfter(claimStartDate.plusDays(1))) {
+        routes.VariableLengthPartialPayController.onPageLoad(NormalMode)
+      } else {
+        routes.VariableGrossPayController.onPageLoad(NormalMode)
+      }
+    }).getOrElse(routes.ErrorController.internalServerError())
   }
 
 }
