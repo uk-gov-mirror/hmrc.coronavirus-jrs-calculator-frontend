@@ -19,13 +19,25 @@
 
 @govukLayout(pageTitle = Some(title(form, if(idx == 1){"payDate.title.firstDate"} else {"payDate.title"}))) {
 
-    @formHelper(action = PayDateController.onSubmit(idx), 'autoComplete -> "off") {
+    @formHelper(action = PayDateController.onSubmit(idx)) {
 
         @errorSummary(form.errors)
 
         @h1(messages(if(idx == 1){"payDate.heading.firstDate"} else {"payDate.heading"}, dateToString(messageDate)))
 
         @p(Html(messages("payDate.p")))
+
+        <div class="form-group">
+            <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="summary govuk-details__summary-text">@Messages("payDate.details.title")</span>
+                </summary>
+                <div class="panel panel-border-narro govuk-details__text">
+                    <p>@Messages("payDate.details.content")</p>
+                </div>
+            </details>
+        </div>
+
         @inputDate(
             form,
             "",
