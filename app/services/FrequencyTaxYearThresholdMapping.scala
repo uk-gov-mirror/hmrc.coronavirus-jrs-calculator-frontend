@@ -29,7 +29,7 @@ object FrequencyTaxYearThresholdMapping {
     FrequencyTaxYearKey(FortNightly, TaxYearEnding2021, NiRate())      -> Threshold(338.00),
     FrequencyTaxYearKey(Weekly, TaxYearEnding2020, NiRate())           -> Threshold(166.00),
     FrequencyTaxYearKey(Weekly, TaxYearEnding2021, NiRate())           -> Threshold(169.00),
-    FrequencyTaxYearKey(Monthly, TaxYearEnding2020, PensionRate())     -> Threshold(511.00),
+    FrequencyTaxYearKey(Monthly, TaxYearEnding2020, PensionRate())     -> Threshold(512.00),
     FrequencyTaxYearKey(Monthly, TaxYearEnding2021, PensionRate())     -> Threshold(520.00),
     FrequencyTaxYearKey(FourWeekly, TaxYearEnding2020, PensionRate())  -> Threshold(472.00),
     FrequencyTaxYearKey(FourWeekly, TaxYearEnding2021, PensionRate())  -> Threshold(480.00),
