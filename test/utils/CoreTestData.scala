@@ -81,7 +81,6 @@ trait CoreTestData {
       |  }
       |}""".stripMargin
 
-
   val tempTest: String =
     """{
       |    "_id" : "session-4f8fa4d9-b46c-466f-ae9b-424cfffd841f",

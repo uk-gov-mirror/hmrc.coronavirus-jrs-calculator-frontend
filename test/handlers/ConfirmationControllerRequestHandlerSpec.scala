@@ -78,13 +78,13 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
         Amount(grossPay),
         Amount(grant),
         PeriodWithPaymentDate(
-          PartialPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)), Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))),
-          PaymentDate(LocalDate.of(2020, 3, 31)))
+          PartialPeriod(
+            Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
+            Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))),
+          PaymentDate(LocalDate.of(2020, 3, 31))
+        )
       )
-    val furlough = CalculationResult(
-      FurloughCalculationResult,
-      1774.30,
-      List(periodBreakdownOne(3500.00, 1774.30)))
+    val furlough = CalculationResult(FurloughCalculationResult, 1774.30, List(periodBreakdownOne(3500.00, 1774.30)))
     val nic =
       CalculationResult(NicCalculationResult, 202.83, List(periodBreakdownOne(3500.00, 202.83)))
     val pension =

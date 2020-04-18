@@ -25,7 +25,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
   }
 
   forAll(partialPeriodScenarios) { (frequency, payment, expectedFurlough) =>
-    s"Partial Period: For payment with a payment ${payment.amount.value} which has been adjusted for a partial period " +
+    s"Partial Period: For gross payment: ${payment.amount.value} " +
       s"should return $expectedFurlough" in new FurloughCalculator {
       val period = payment.period.asInstanceOf[PartialPeriod]
       val expected =
@@ -94,15 +94,15 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     (
       Monthly,
       PaymentWithPeriod(
-        Amount(1032.32),
+        Amount(1500.00),
         PartialPeriod(
           Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
           Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31)))),
-      Amount(825.86)),
+      Amount(658.06)),
     (
       Monthly,
       PaymentWithPeriod(
-        Amount(3000.00),
+        Amount(3500.00),
         PartialPeriod(
           Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
           Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31)))),
@@ -110,10 +110,10 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     (
       Monthly,
       PaymentWithPeriod(
-        Amount(3000.00),
+        Amount(2000.00),
         PartialPeriod(
           Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
           Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28)))),
-      Amount(1129.10))
+      Amount(722.58))
   )
 }
