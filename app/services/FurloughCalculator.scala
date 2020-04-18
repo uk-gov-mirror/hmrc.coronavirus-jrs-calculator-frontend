@@ -33,13 +33,13 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
     paymentsWithPeriod.map { payment =>
       payment.period match {
         case fp @ FullPeriod(p) if periodContainsNewTaxYear(p) =>
-          calculatePeriodBreakdown(paymentFrequency, payment.amount, PeriodWithPaymentDate(fp, PaymentDate(taxYearPayDate)))
+          calculatePeriodBreakdown(paymentFrequency, payment, PeriodWithPaymentDate(fp, PaymentDate(taxYearPayDate)))
         case pp @ PartialPeriod(o, _) if periodContainsNewTaxYear(o) =>
-          calculatePeriodBreakdown(paymentFrequency, proRatePay(payment), PeriodWithPaymentDate(pp, PaymentDate(taxYearPayDate)))
+          calculatePeriodBreakdown(paymentFrequency, payment, PeriodWithPaymentDate(pp, PaymentDate(taxYearPayDate)))
         case fp @ FullPeriod(p) =>
-          calculatePeriodBreakdown(paymentFrequency, payment.amount, PeriodWithPaymentDate(fp, PaymentDate(p.end)))
+          calculatePeriodBreakdown(paymentFrequency, payment, PeriodWithPaymentDate(fp, PaymentDate(p.end)))
         case pp @ PartialPeriod(o, _) =>
-          calculatePeriodBreakdown(paymentFrequency, proRatePay(payment), PeriodWithPaymentDate(pp, PaymentDate(o.end)))
+          calculatePeriodBreakdown(paymentFrequency, payment, PeriodWithPaymentDate(pp, PaymentDate(o.end)))
       }
     }
 
@@ -54,9 +54,10 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
 
   protected def calculatePeriodBreakdown(
     paymentFrequency: PaymentFrequency,
-    payment: Amount,
+    payment: PaymentWithPeriod,
     periodWithPaymentDate: PeriodWithPaymentDate): PeriodBreakdown = {
-    val eighty = roundWithMode(payment.value * 0.8, RoundingMode.HALF_UP)
+    val payForPeriod = proRatePay(payment)
+    val eighty = roundWithMode(payForPeriod.value * 0.8, RoundingMode.HALF_UP)
     val cap = periodWithPaymentDate.period match {
       case FullPeriod(p)       => furloughCap(paymentFrequency, p)
       case PartialPeriod(_, p) => partialFurloughCap(p)
@@ -64,7 +65,7 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
 
     val amount: BigDecimal = if (eighty > cap) cap else eighty
 
-    PeriodBreakdown(payment, Amount(amount), periodWithPaymentDate)
+    PeriodBreakdown(payment.amount, Amount(amount), periodWithPaymentDate)
   }
 
 }

@@ -81,4 +81,29 @@ trait CoreTestData {
       |  }
       |}""".stripMargin
 
+  val tempTest: String =
+    """{
+      |    "_id" : "session-4f8fa4d9-b46c-466f-ae9b-424cfffd841f",
+      |    "data" : {
+      |        "taxYearPayDate" : "2020-04-07",
+      |        "furloughQuestion" : "no",
+      |        "furloughStartDate" : "2020-03-10",
+      |        "payQuestion" : "regularly",
+      |        "pensionAutoEnrolment" : "optedIn",
+      |        "claimPeriodEnd" : "2020-03-31",
+      |        "paymentFrequency" : "monthly",
+      |        "salary" : {
+      |            "amount" : 3500
+      |        },
+      |        "nicCategory" : "payable",
+      |        "claimPeriodStart" : "2020-03-01",
+      |        "payDate" : [
+      |            "2020-02-29",
+      |            "2020-03-31"
+      |        ]
+      |    },
+      |  "lastUpdated": {
+      |    "$date": 1586873457650
+      |  }
+      |}""".stripMargin
 }

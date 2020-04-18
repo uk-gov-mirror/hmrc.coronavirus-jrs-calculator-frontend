@@ -83,6 +83,6 @@ trait DataExtractor extends ReferencePayCalculator {
     for {
       data <- extract(userAnswers)
       end  <- userAnswers.get(FurloughEndDatePage)
-    } yield Period(data.claimPeriod.start, end)
+    } yield Period(data.furloughStart, end)
 
 }

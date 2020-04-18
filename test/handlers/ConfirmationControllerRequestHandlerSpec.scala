@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
-import models.{Amount, CalculationResult, FullPeriod, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate, UserAnswers}
+import models.{Amount, CalculationResult, FullPeriod, PartialPeriod, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate, UserAnswers}
 import play.api.libs.json.Json
 import utils.CoreTestData
 import viewmodels.ConfirmationViewBreakdown
@@ -68,6 +68,31 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
       CalculationResult(NicCalculationResult, 0.0, nicPayPeriodBreakdowns),
       CalculationResult(PensionCalculationResult, 0.0, pensionPayPeriodBreakdowns)
     ) //TODO metadata to be tested
+  }
+
+  "temp test" in new ConfirmationControllerRequestHandler {
+    val userAnswers = Json.parse(tempTest).as[UserAnswers]
+
+    def periodBreakdownOne(grossPay: BigDecimal, grant: BigDecimal) =
+      PeriodBreakdown(
+        Amount(grossPay),
+        Amount(grant),
+        PeriodWithPaymentDate(
+          PartialPeriod(
+            Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
+            Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))),
+          PaymentDate(LocalDate.of(2020, 3, 31))
+        )
+      )
+    val furlough = CalculationResult(FurloughCalculationResult, 1774.30, List(periodBreakdownOne(3500.00, 1774.30)))
+    val nic =
+      CalculationResult(NicCalculationResult, 202.83, List(periodBreakdownOne(3500.00, 202.83)))
+    val pension =
+      CalculationResult(PensionCalculationResult, 42.32, List(periodBreakdownOne(3500.00, 42.32)))
+
+    val expected = ConfirmationViewBreakdown(furlough, nic, pension)
+
+    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected //TODO metadata to be tested
   }
 
 }

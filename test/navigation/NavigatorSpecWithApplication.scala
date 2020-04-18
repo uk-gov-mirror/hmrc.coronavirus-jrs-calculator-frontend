@@ -179,6 +179,14 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .value
         ) mustBe routes.ConfirmationController.onPageLoad()
       }
+
+      "go to start of pay date loop after variable gross pay page" in {
+        navigator.nextPage(
+          VariableGrossPayPage,
+          NormalMode,
+          emptyUserAnswers
+        ) mustBe routes.PayDateController.onPageLoad(1)
+      }
     }
 
     "in Check mode" must {
