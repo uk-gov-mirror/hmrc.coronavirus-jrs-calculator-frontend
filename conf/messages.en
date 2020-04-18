@@ -385,3 +385,8 @@ variableGrossPay.error.negative = Salary can’t be negative
 variableGrossPay.p = This is the total gross amount before deductions the employee has been paid up to the earlier of:
 variableGrossPay.l1 = 5th April 2020 or
 variableGrossPay.l2 = the day before they were furloughed
+
+comingSoon.title = We are unable to do this calculation at the moment
+comingSoon.heading = We are unable to do this calculation at the moment
+comingSoon.p = This will be available in a future version.
+comingSoon.start.another = Start another calculation
