@@ -59,7 +59,7 @@ class Navigator @Inject()() {
       _ =>
         routes.FurloughCalculationsController.onPageLoad(NormalMode)
     case FurloughCalculationsPage =>
-      furloughCalculationsRoues
+      furloughCalculationsRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -116,7 +116,7 @@ class Navigator @Inject()() {
     }
   }
 
-  private def furloughCalculationsRoues: UserAnswers => Call = { userAnswers =>
+  private def furloughCalculationsRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(FurloughCalculationsPage) match {
       case Some(FurloughCalculations.Yes) => routes.ComingSoonController.onPageLoad(true)
       case Some(FurloughCalculations.No)  => routes.ConfirmationController.onPageLoad()

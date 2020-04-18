@@ -12,6 +12,7 @@ import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
 import pages.FurloughCalculationsPage
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -36,7 +37,10 @@ class FurloughCalculationsController @Inject()(
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    handleCalculationFurlough(request.userAnswers).fold(InternalServerError("Something went horribly wrong")) { data =>
+    handleCalculationFurlough(request.userAnswers).fold {
+      Logger.warn("couldn't calculate Furlough out of UserAnswers, restarting the journey")
+      Redirect(routes.ClaimPeriodStartController.onPageLoad(mode))
+    } { data =>
       val preparedForm = request.userAnswers.get(FurloughCalculationsPage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -47,18 +51,22 @@ class FurloughCalculationsController @Inject()(
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    handleCalculationFurlough(request.userAnswers).fold(Future.successful(InternalServerError("Something went horribly wrong"))) { data =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, data))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughCalculationsPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(FurloughCalculationsPage, mode, updatedAnswers))
-        )
-    }
+    handleCalculationFurlough(request.userAnswers)
+      .fold {
+        Logger.warn("couldn't calculate Furlough out of UserAnswers, restarting the journey")
+        Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad(mode)))
+      } { data =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, data))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughCalculationsPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(FurloughCalculationsPage, mode, updatedAnswers))
+          )
+      }
 
   }
 }
