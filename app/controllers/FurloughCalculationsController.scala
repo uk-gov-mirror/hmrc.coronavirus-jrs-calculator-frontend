@@ -36,13 +36,13 @@ class FurloughCalculationsController @Inject()(
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    loadResultData(request.userAnswers).fold(InternalServerError("Something went horribly wrong")) { data =>
+    handleCalculationFurlough(request.userAnswers).fold(InternalServerError("Something went horribly wrong")) { data =>
       val preparedForm = request.userAnswers.get(FurloughCalculationsPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, data.confirmationViewBreakdown.furlough))
+      Ok(view(preparedForm, mode, data))
     }
   }
 
