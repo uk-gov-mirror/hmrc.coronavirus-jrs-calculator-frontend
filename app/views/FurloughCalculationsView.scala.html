@@ -17,7 +17,7 @@
         p: components.p
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, calculationResult: CalculationResult)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughCalculations.title"))) {
 
@@ -39,22 +39,20 @@
                     </th>
 
                 </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">Pay period 1</td>
-                    <td class="govuk-table__cell">
-                        0
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">Pay period 2</td>
-                    <td class="govuk-table__cell">
-                        0
-                    </td>
-                </tr>
+
+                @calculationResult.payPeriodBreakdowns.map { periodBreakdown =>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@periodBreakdown.periodWithPaymentDate.paymentDate.value</td>
+                        <td class="govuk-table__cell">
+                        @periodBreakdown.grant.value.setScale(2)
+                        </td>
+                    </tr>
+                }
+
                 <tr class="govuk-table__row" style="border-top: 5px solid #b1b4b6">
                     <td class="govuk-table__cell" style="border-bottom:0"><span class="govuk-!-font-weight-bold">@messages("furloughCalculations.total.label")</span></td>
                     <td class="govuk-table__cell" style="border-bottom:0">
-                        <span class="govuk-!-font-weight-bold"> 0 </span>
+                        <span class="govuk-!-font-weight-bold"> @calculationResult.total.setScale(2) </span>
                     </td>
                 </tr>
             </tbody>

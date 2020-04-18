@@ -5,9 +5,12 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBaseWithApplication
 import forms.FurloughCalculationsFormProvider
-import models.{FurloughCalculations, NormalMode, UserAnswers}
+import models.Calculation.FurloughCalculationResult
+import models.{Amount, CalculationResult, FullPeriod, FurloughCalculations, NormalMode, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -27,20 +30,35 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val furloughCalculationsRoute = routes.FurloughCalculationsController.onPageLoad(NormalMode).url
+  val furloughCalculationsRoute = routes.FurloughCalculationsController.onPageLoad(NormalMode).url
 
   val formProvider = new FurloughCalculationsFormProvider()
   val form = formProvider()
 
-  "FurloughCalculations Controller" must {
+  val furlough =
+    CalculationResult(FurloughCalculationResult, 3200.00, List(periodBreakdownOne(2000.00, 1600.00), periodBreakdownTwo(2000.00, 1600.00)))
+  def periodBreakdownOne(grossPay: BigDecimal, grant: BigDecimal) =
+    PeriodBreakdown(
+      Amount(grossPay.setScale(2)),
+      Amount(grant.setScale(2)),
+      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 31)))
+    )
+  def periodBreakdownTwo(grossPay: BigDecimal, grant: BigDecimal) =
+    PeriodBreakdown(
+      Amount(grossPay.setScale(2)),
+      Amount(grant.setScale(2)),
+      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))), PaymentDate(LocalDate.of(2020, 4, 20)))
+    )
 
-    val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-      FakeRequest(GET, furloughCalculationsRoute).withCSRFToken
-        .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(GET, furloughCalculationsRoute).withCSRFToken
+      .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+  "FurloughCalculations Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(dummyUserAnswers)).build()
 
       val result = route(application, getRequest).value
 
@@ -49,14 +67,14 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
+        view(form, NormalMode, furlough)(getRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(FurloughCalculationsPage, FurloughCalculations.values.head).success.value
+      val userAnswers = dummyUserAnswers.set(FurloughCalculationsPage, FurloughCalculations.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -67,7 +85,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(FurloughCalculations.values.head), NormalMode)(getRequest, messages).toString
+        view(form.fill(FurloughCalculations.values.head), NormalMode, furlough)(getRequest, messages).toString
 
       application.stop()
     }
@@ -79,7 +97,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(dummyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -101,7 +119,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(dummyUserAnswers)).build()
 
       val request =
         FakeRequest(POST, furloughCalculationsRoute).withCSRFToken
@@ -117,7 +135,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm, NormalMode, furlough)(request, messages).toString
 
       application.stop()
     }

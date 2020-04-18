@@ -7,6 +7,7 @@ package controllers
 
 import controllers.actions._
 import forms.FurloughCalculationsFormProvider
+import handlers.ConfirmationControllerRequestHandler
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
@@ -30,29 +31,34 @@ class FurloughCalculationsController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: FurloughCalculationsView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+    extends FrontendBaseController with I18nSupport with ConfirmationControllerRequestHandler {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(FurloughCalculationsPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+    loadResultData(request.userAnswers).fold(InternalServerError("Something went horribly wrong")) { data =>
+      val preparedForm = request.userAnswers.get(FurloughCalculationsPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode, data.confirmationViewBreakdown.furlough))
+    }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughCalculationsPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(FurloughCalculationsPage, mode, updatedAnswers))
-      )
+    loadResultData(request.userAnswers).fold(Future.successful(InternalServerError("Something went horribly wrong"))) { data =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, data.confirmationViewBreakdown.furlough))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughCalculationsPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(FurloughCalculationsPage, mode, updatedAnswers))
+        )
+    }
+
   }
 }
