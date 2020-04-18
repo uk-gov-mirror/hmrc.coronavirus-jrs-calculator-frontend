@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{PartialPeriod, Period}
+import models.{FullPeriod, PartialPeriod, Period, Periods}
 
 class PeriodHelperSpec extends SpecBase {
 
@@ -39,6 +39,25 @@ class PeriodHelperSpec extends SpecBase {
 
     generatePeriodsFromEndDates(endDates) mustBe expected
     generatePeriodsFromEndDates(endDatesTwo) mustBe expectedTwo
+  }
+
+  "Return periods for a given List[LocalDate] and a furloughPeriod" in new PeriodHelper {
+    val endDates: List[LocalDate] = List(LocalDate.of(2020, 4, 30), LocalDate.of(2020, 3, 31), LocalDate.of(2020, 2, 29))
+    val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 30))
+
+    val originalPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+
+    val expected: Seq[Periods] = Seq(
+      PartialPeriod(
+        originalPeriod,
+        Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))
+      ),
+      FullPeriod(
+        Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))
+      )
+    )
+
+    generatePeriods(endDates, furloughPeriod) mustBe expected
   }
 
   "determine if a period contains the start of a new tax year" in new PeriodHelper {

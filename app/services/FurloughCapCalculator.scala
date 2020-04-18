@@ -33,12 +33,12 @@ trait FurloughCapCalculator extends PeriodHelper {
     }
   }
 
-  def partialFurloughCap(payPeriod: Period): BigDecimal =
-    if (periodSpansMonth(payPeriod)) {
-      calculateFurloughCapNonSimplified(payPeriod)
+  def partialFurloughCap(period: Period): BigDecimal =
+    if (periodSpansMonth(period)) {
+      calculateFurloughCapNonSimplified(period)
     } else {
-      val max = dailyMax(payPeriod.start.getMonth)
-      val periodDays = periodDaysCount(payPeriod)
+      val max = dailyMax(period.start.getMonth)
+      val periodDays = periodDaysCount(period)
       roundWithMode(periodDays * max, HALF_UP)
     }
 

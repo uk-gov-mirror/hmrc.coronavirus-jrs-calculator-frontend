@@ -12,7 +12,7 @@ import models.Calculation.{FurloughCalculationResult, NicCalculationResult, Pens
 import models.NicCategory.Payable
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.OptedIn
-import models.{Amount, CalculationResult, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, CalculationResult, FullPeriod, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
@@ -39,19 +39,23 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
     }
   }
 
-  def periodBreakdownOne(amount: BigDecimal) =
+  def periodBreakdownOne(grossPay: BigDecimal, grant: BigDecimal) =
     PeriodBreakdown(
-      Amount(amount.setScale(2)),
-      PeriodWithPaymentDate(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)), PaymentDate(LocalDate.of(2020, 3, 31)))
+      Amount(grossPay.setScale(2)),
+      Amount(grant.setScale(2)),
+      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 31)))
     )
-  def periodBreakdownTwo(amount: BigDecimal) =
+  def periodBreakdownTwo(grossPay: BigDecimal, grant: BigDecimal) =
     PeriodBreakdown(
-      Amount(amount.setScale(2)),
-      PeriodWithPaymentDate(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)), PaymentDate(LocalDate.of(2020, 4, 20)))
+      Amount(grossPay.setScale(2)),
+      Amount(grant.setScale(2)),
+      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))), PaymentDate(LocalDate.of(2020, 4, 20)))
     )
-  val furlough = CalculationResult(FurloughCalculationResult, 3200.00, List(periodBreakdownOne(1600.00), periodBreakdownTwo(1600.00)))
-  val nic = CalculationResult(NicCalculationResult, 241.36, List(periodBreakdownOne(121.58), periodBreakdownTwo(119.78)))
-  val pension = CalculationResult(PensionCalculationResult, 65.07, List(periodBreakdownOne(32.67), periodBreakdownTwo(32.40)))
+  val furlough =
+    CalculationResult(FurloughCalculationResult, 3200.00, List(periodBreakdownOne(2000.00, 1600.00), periodBreakdownTwo(2000.00, 1600.00)))
+  val nic = CalculationResult(NicCalculationResult, 241.36, List(periodBreakdownOne(2000.00, 121.58), periodBreakdownTwo(2000.00, 119.78)))
+  val pension =
+    CalculationResult(PensionCalculationResult, 65.07, List(periodBreakdownOne(2000.00, 32.67), periodBreakdownTwo(2000.00, 32.40)))
   val furloughPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
 
   val breakdown = ConfirmationViewBreakdown(furlough, nic, pension)

@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{Amount, PaymentWithPeriod, Period, Salary}
+import models.{Amount, FullPeriod, PartialPeriod, PaymentWithPeriod, Period}
 
 class ReferencePayCalculatorSpec extends SpecBase {
 
@@ -17,9 +17,11 @@ class ReferencePayCalculatorSpec extends SpecBase {
     val furloughStartDate = LocalDate.of(2020, 3, 1)
     val grossSalary = Amount(2400.0)
     val priorFurloughPeriod = Period(employeeStartDate, furloughStartDate.minusDays(1))
-    val afterFurloughPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
-    val afterFurloughPeriodTwo = Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))
-    val afterFurloughPartial = Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 15))
+    val afterFurloughPeriod = FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)))
+    val afterFurloughPeriodTwo = FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))
+    val afterFurloughPartial = PartialPeriod(
+      Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31)),
+      Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 15)))
     val payPeriods = Seq(afterFurloughPeriod, afterFurloughPeriodTwo, afterFurloughPartial)
 
     val expected = Seq(

@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import models.Calculation.FurloughCalculationResult
-import models.{Amount, CalculationResult, PaymentDate, PaymentFrequency, PaymentWithPeriod, Period, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, CalculationResult, FullPeriod, PartialPeriod, PaymentDate, PaymentFrequency, PaymentWithPeriod, Period, PeriodBreakdown, PeriodWithPaymentDate}
 import utils.AmountRounding._
 import utils.TaxYearFinder
 
@@ -16,13 +16,13 @@ import scala.math.BigDecimal.RoundingMode
 
 trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with PeriodHelper {
 
-  def calculateFurlough(
+  def calculateFurloughGrant(
     paymentFrequency: PaymentFrequency,
     regularPayments: Seq[PaymentWithPeriod],
-    Period: Period,
+    furloughPeriod: Period,
     taxYearPayDate: LocalDate): CalculationResult = {
-    val paymentDateBreakdowns = payPeriodBreakdownFromRegularPayment(paymentFrequency, regularPayments, Period, taxYearPayDate)
-    CalculationResult(FurloughCalculationResult, paymentDateBreakdowns.map(_.payment.value).sum, paymentDateBreakdowns)
+    val paymentDateBreakdowns = payPeriodBreakdownFromRegularPayment(paymentFrequency, regularPayments, furloughPeriod, taxYearPayDate)
+    CalculationResult(FurloughCalculationResult, paymentDateBreakdowns.map(_.grant.value).sum, paymentDateBreakdowns)
   }
 
   protected def payPeriodBreakdownFromRegularPayment(
@@ -31,77 +31,40 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
     furloughPeriod: Period,
     taxYearPayDate: LocalDate): Seq[PeriodBreakdown] =
     paymentsWithPeriod.map { payment =>
-      val paymentDate = periodContainsNewTaxYear(payment.period) match {
-        case true  => PaymentDate(taxYearPayDate)
-        case false => PaymentDate(payment.period.end)
-      }
-
-      val furloughPayPeriod = payPeriodFromFurloughPeriod(furloughPeriod, payment.period)
-
-      val isPartialPeriod = periodDaysCount(furloughPayPeriod) != periodDaysCount(payment.period)
-
-      if (isPartialPeriod) {
-        val partialPayment = regularPaymentForFurloughPeriod(furloughPeriod, payment)
-        calculatePartialPeriod(partialPayment, PeriodWithPaymentDate(partialPayment.period, paymentDate))
-      } else {
-        calculateFullPeriod(paymentFrequency, payment, PeriodWithPaymentDate(payment.period, paymentDate))
+      payment.period match {
+        case fp @ FullPeriod(p) if periodContainsNewTaxYear(p) =>
+          calculatePeriodBreakdown(paymentFrequency, payment.amount, PeriodWithPaymentDate(fp, PaymentDate(taxYearPayDate)))
+        case pp @ PartialPeriod(o, _) if periodContainsNewTaxYear(o) =>
+          calculatePeriodBreakdown(paymentFrequency, proRatePay(payment), PeriodWithPaymentDate(pp, PaymentDate(taxYearPayDate)))
+        case fp @ FullPeriod(p) =>
+          calculatePeriodBreakdown(paymentFrequency, payment.amount, PeriodWithPaymentDate(fp, PaymentDate(p.end)))
+        case pp @ PartialPeriod(o, _) =>
+          calculatePeriodBreakdown(paymentFrequency, proRatePay(payment), PeriodWithPaymentDate(pp, PaymentDate(o.end)))
       }
     }
 
-  protected def regularPaymentForFurloughPeriod(furloughPeriod: Period, payment: PaymentWithPeriod): PaymentWithPeriod = {
-    val furloughPayPeriod: Period = payPeriodFromFurloughPeriod(furloughPeriod, payment.period)
-    val daysInPayPeriod = periodDaysCount(payment.period)
-    val daysInFurloughDayPeriod = periodDaysCount(furloughPayPeriod)
-    val daily = roundWithMode(payment.amount.value / daysInPayPeriod, RoundingMode.HALF_UP)
-
-    val amount = if (daysInPayPeriod != daysInFurloughDayPeriod) {
-      Amount(roundWithMode(daily * daysInFurloughDayPeriod, RoundingMode.HALF_UP))
-    } else {
-      payment.amount
+  protected def proRatePay(paymentWithPeriod: PaymentWithPeriod): Amount =
+    paymentWithPeriod.period match {
+      case FullPeriod(_) => paymentWithPeriod.amount
+      case PartialPeriod(o, p) => {
+        val proRatedPay = roundWithMode((paymentWithPeriod.amount.value / periodDaysCount(o)) * periodDaysCount(p), RoundingMode.HALF_UP)
+        Amount(proRatedPay)
+      }
     }
 
-    PaymentWithPeriod(amount, Period(furloughPayPeriod.start, furloughPayPeriod.end))
-  }
-
-  protected def payPeriodFromFurloughPeriod(furloughPeriod: Period, payPeriod: Period) = {
-    val start =
-      if (furloughPeriod.start.isAfter(payPeriod.start) && furloughPeriod.start.isBefore(payPeriod.end)) {
-        furloughPeriod.start
-      } else {
-        payPeriod.start
-      }
-
-    val end =
-      if (furloughPeriod.end.isAfter(payPeriod.start) && furloughPeriod.end.isBefore(payPeriod.end)) {
-        furloughPeriod.end
-      } else {
-        payPeriod.end
-      }
-
-    Period(start, end)
-  }
-
-  protected def calculateFullPeriod(
+  protected def calculatePeriodBreakdown(
     paymentFrequency: PaymentFrequency,
-    payment: PaymentWithPeriod,
+    payment: Amount,
     periodWithPaymentDate: PeriodWithPaymentDate): PeriodBreakdown = {
-    val eighty = roundWithMode(payment.amount.value * 0.8, RoundingMode.HALF_UP)
-    val cap = furloughCap(paymentFrequency, payment.period)
+    val eighty = roundWithMode(payment.value * 0.8, RoundingMode.HALF_UP)
+    val cap = periodWithPaymentDate.period match {
+      case FullPeriod(p)       => furloughCap(paymentFrequency, p)
+      case PartialPeriod(_, p) => partialFurloughCap(p)
+    }
 
     val amount: BigDecimal = if (eighty > cap) cap else eighty
 
-    PeriodBreakdown(Amount(amount), periodWithPaymentDate)
-  }
-
-  protected def calculatePartialPeriod(payment: PaymentWithPeriod, periodWithPaymentDate: PeriodWithPaymentDate): PeriodBreakdown = {
-    val eighty = roundWithMode(payment.amount.value * 0.8, RoundingMode.HALF_UP)
-    val cap = partialFurloughCap(payment.period)
-
-    if (eighty > cap) cap else eighty
-
-    val amount: BigDecimal = if (eighty > cap) cap else eighty
-
-    PeriodBreakdown(Amount(amount), periodWithPaymentDate)
+    PeriodBreakdown(payment, Amount(amount), periodWithPaymentDate)
   }
 
 }

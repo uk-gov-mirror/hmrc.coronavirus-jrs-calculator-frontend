@@ -8,7 +8,7 @@ package handlers
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{Amount, PaymentWithPeriod, Period, Salary, UserAnswers}
+import models.{Amount, FullPeriod, PaymentWithPeriod, Period, Salary, UserAnswers}
 import pages.FurloughStartDatePage
 import play.api.libs.json.Json
 import utils.CoreTestData
@@ -61,22 +61,26 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
   "Extract payments for employees that are paid a regular amount each time" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
     val expected = Seq(
-      PaymentWithPeriod(Amount(2000.0), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-      PaymentWithPeriod(Amount(2000.0), Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))
+      PaymentWithPeriod(Amount(2000.0), FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)))),
+      PaymentWithPeriod(Amount(2000.0), FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))))
     )
 
-    extractPayments(userAnswers) mustBe Some(expected)
+    val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
+
+    extractPayments(userAnswers, furloughPeriod) mustBe Some(expected)
   }
 
   "Extract payments for employees that are paid a variable amount each time" in new DataExtractor {
     val userAnswers =
       Json.parse(userAnswersJson(payQuestion = "varies", variableGrossPay = "2400.00", employeeStartDate = "2019-12-01")).as[UserAnswers]
     val expected = Seq(
-      PaymentWithPeriod(Amount(817.47), Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-      PaymentWithPeriod(Amount(791.10), Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))
+      PaymentWithPeriod(Amount(817.47), FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)))),
+      PaymentWithPeriod(Amount(791.10), FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))))
     )
 
-    extractPayments(userAnswers) mustBe Some(expected)
+    val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
+
+    extractPayments(userAnswers, furloughPeriod) mustBe Some(expected)
   }
 
 }

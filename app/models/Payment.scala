@@ -17,16 +17,10 @@ object PaymentDate {
     ValueClassFormat.format(dateString => PaymentDate.apply(LocalDate.parse(dateString)))(_.value)
 }
 
-case class PaymentWithPeriod(amount: Amount, period: Period)
+case class PaymentWithPeriod(amount: Amount, period: Periods)
 
-case class PeriodBreakdown(payment: Amount, periodWithPaymentDate: PeriodWithPaymentDate)
+case class PeriodBreakdown(grossPay: Amount, grant: Amount, periodWithPaymentDate: PeriodWithPaymentDate)
 
 object PeriodBreakdown {
   implicit val defaultFormat: Format[PeriodBreakdown] = Json.format[PeriodBreakdown]
-}
-
-case class PartialPeriodBreakdown(payment: Amount, partialPeriodWithPaymentDate: PartialPeriodWithPaymentDate)
-
-object PartialPeriodBreakdown {
-  implicit val defaultFormat: Format[PartialPeriodBreakdown] = Json.format[PartialPeriodBreakdown]
 }

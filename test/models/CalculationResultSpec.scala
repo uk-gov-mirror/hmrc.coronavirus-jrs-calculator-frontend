@@ -16,20 +16,24 @@ class CalculationResultSpec extends SpecBase {
 
   "serialize/deserialize from/to json" in {
     val payPeriod =
-      PeriodWithPaymentDate(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)), PaymentDate(LocalDate.of(2020, 3, 20)))
+      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 20)))
     val nicCalculationResult =
-      CalculationResult(NicCalculationResult, 0.10, Seq(PeriodBreakdown(Amount(123.00), payPeriod)))
+      CalculationResult(NicCalculationResult, 0.10, Seq(PeriodBreakdown(Amount(567.00), Amount(123.00), payPeriod)))
     val expectedJsValue =
       Json.parse(s"""{
                     |   "calculation":"nic",
                     |   "total":0.1,
                     |   "payPeriodBreakdowns":[
                     |      {
-                    |         "payment":"123.0",
+                    |         "grossPay":"567.0",
+                    |         "grant":"123.0",
                     |         "periodWithPaymentDate":{
                     |            "period":{
-                    |               "start":"2020-03-01",
-                    |               "end":"2020-03-31"
+                    |               "period":{
+                    |                  "start":"2020-03-01",
+                    |                  "end":"2020-03-31"
+                    |               },
+                    |               "_type":"models.FullPeriod"
                     |            },
                     |            "paymentDate":"2020-03-20"
                     |         }

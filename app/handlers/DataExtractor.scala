@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import models.FurloughQuestion.{No, Yes}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FurloughQuestion, NicCategory, PayQuestion, PaymentFrequency, PaymentWithPeriod, PensionStatus, Period, UserAnswers}
+import models.{Amount, FurloughQuestion, NicCategory, PayQuestion, PaymentFrequency, PaymentWithPeriod, PensionStatus, Period, Periods, UserAnswers}
 import pages._
 import services.ReferencePayCalculator
 
@@ -46,16 +46,16 @@ trait DataExtractor extends ReferencePayCalculator {
       }
     }
 
-  def extractPayments(userAnswers: UserAnswers): Option[Seq[PaymentWithPeriod]] =
+  def extractPayments(userAnswers: UserAnswers, furloughPeriod: Period): Option[Seq[PaymentWithPeriod]] =
     for {
       data     <- extract(userAnswers)
       grossPay <- extractGrossPay(userAnswers)
-      periods = generatePeriodsFromEndDates(data.payDates)
+      periods: Seq[Periods] = generatePeriods(data.payDates, furloughPeriod)
     } yield {
       data.payQuestion match {
         case Regularly => periods.map(p => PaymentWithPeriod(grossPay, p))
         case Varies =>
-          extractVariableRegularPayments(userAnswers).fold(Seq[PaymentWithPeriod]())(payments => payments)
+          extractVariableRegularPayments(userAnswers, periods).fold(Seq[PaymentWithPeriod]())(payments => payments)
       }
     }
 
@@ -73,12 +73,10 @@ trait DataExtractor extends ReferencePayCalculator {
       employeeStartDate <- userAnswers.get(EmployeeStartDatePage)
     } yield endDateOrTaxYearEnd(Period(employeeStartDate, data.claimPeriod.start.minusDays(1)))
 
-  private def extractVariableRegularPayments(userAnswers: UserAnswers): Option[Seq[PaymentWithPeriod]] =
+  private def extractVariableRegularPayments(userAnswers: UserAnswers, periods: Seq[Periods]): Option[Seq[PaymentWithPeriod]] =
     for {
-      data                <- extract(userAnswers)
       grossPay            <- extractGrossPay(userAnswers)
       priorFurloughPeriod <- extractPriorFurloughPeriod(userAnswers)
-      periods = generatePeriodsFromEndDates(data.payDates)
     } yield calculateVariablePay(priorFurloughPeriod, periods, grossPay)
 
   private def patchEndDate(userAnswers: UserAnswers): Option[Period] =
