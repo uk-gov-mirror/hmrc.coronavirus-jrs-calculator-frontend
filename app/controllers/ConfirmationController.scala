@@ -5,25 +5,31 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import controllers.actions._
-import handlers.ConfirmationControllerRequestHandler
+import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
-import play.api.i18n.{I18nSupport, MessagesApi}
+import pages.FurloughQuestionPage
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.ConfirmationView
+
+import scala.concurrent.Future
 
 class ConfirmationController @Inject()(
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  config: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
   view: ConfirmationView
-) extends FrontendBaseController with I18nSupport with ConfirmationControllerRequestHandler {
+)(implicit val errorHandler: ErrorHandler) extends BaseController with ConfirmationControllerRequestHandler {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    loadResultData(request.userAnswers).fold(InternalServerError("Something went horribly wrong"))(data =>
-      Ok(view(data.confirmationMetadata, data.confirmationViewBreakdown)))
+    getRequiredAnswer(FurloughQuestionPage) { furlough =>
+      loadResultData(request.userAnswers).fold(Future.successful(Redirect(routes.ErrorController.internalServerError())))(data =>
+        Future.successful(Ok(view(data.confirmationMetadata, data.confirmationViewBreakdown, config.calculatorVersion, furlough))))
+    }
   }
 }

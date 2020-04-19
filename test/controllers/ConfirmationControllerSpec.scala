@@ -33,7 +33,7 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(meta, breakdown)(request, messages).toString
+      contentAsString(result) mustEqual view(meta, breakdown, frontendAppConfig.calculatorVersion)(request, messages).toString
 
       application.stop()
     }

@@ -51,6 +51,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val schemeStartDate = LocalDate.parse(configuration.get[String]("scheme.startDate"))
   lazy val schemeEndDate = LocalDate.parse(configuration.get[String]("scheme.endDate"))
 
+  lazy val calculatorVersion = configuration.get[String]("calculator.version")
+
   val variableJourneyEnabled = configuration.get[Boolean]("variable.journey.enabled")
 
 }

@@ -5,6 +5,7 @@
 
 @import viewmodels.ConfirmationViewBreakdown
 @import viewmodels.ConfirmationMetadata
+@import java.time.LocalDate
 @import models.FurloughQuestion.Yes
 
 @this(
@@ -16,29 +17,31 @@
     button: components.button
 )
 
-@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown)(implicit request: Request[_], messages: Messages)
+@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String, furlough: FurloughQuestion)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false) {
 
     @confirmation{
 
-        @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-font-size-24"))
+        @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-margin-bottom-4 govuk-!-margin-top-0 govuk-!-font-size-27"))
 
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.furlough.total.setScale(2)</span><br/>
-                <span class="govuk-!-font-weight-bold">Amount paid to this furloughed employee</span><br/>
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.nic.total.setScale(2)</span><br/>
-                <span class="govuk-!-font-weight-bold">Employer National Insurance contributions</span> <br/>
-        <span class="govuk-!-font-weight-bold">&pound;@cvb.pension.total.setScale(2)</span><br/>
-                <span class="govuk-!-font-weight-bold">Employer minimum pension contributions</span><br/>
+        <span class="govuk-panel__title">&pound;@cvb.furlough.total.setScale(2)</span>
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4" style="color: white">@messages("confirmation.confirmation.p1")</p>
+        <span class="govuk-panel__title">&pound;@cvb.nic.total.setScale(2)</span>
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4" style="color: white">@messages("confirmation.confirmation.p2")</p>
+        <span class="govuk-panel__title">&pound;@cvb.pension.total.setScale(2)</span>
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4" style="color: white">@messages("confirmation.confirmation.p3")</p>
     }
 
     @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
 
-    @p(Html(messages("confirmation.explanation.p1")))
+    @p(Html(messages("confirmation.date.version", dateToString(LocalDate.now()), version)))
+
+    @p(Html(messages("confirmation.disclaimer")))
 
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("confirmation.claimPeriod", dateToString(cm.claimPeriod.start), dateToString(cm.claimPeriod.end))</li>
-        <li>@messages("confirmation.furloughPeriod", dateToString(cm.furloughPeriod.start), dateToString(cm.furloughPeriod.end))</li>
+        <li>@messages("confirmation.furloughPeriod", dateToString(cm.furloughPeriod.start)) @if(furlough == Yes) @messages("confirmation.furloughPeriod.ended", dateToString(cm.furloughPeriod.end))</li>
         <li>@messages(s"confirmation.paid.${cm.frequency}")</li>
         <li>@messages(s"confirmation.nic.${cm.nic}")</li>
         <li>@messages(s"confirmation.pension.${cm.pension}")</li>
@@ -53,14 +56,14 @@
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
             @for((furlough, nic, pension) <- (cvb.furlough.payPeriodBreakdowns, cvb.nic.payPeriodBreakdowns, cvb.pension.payPeriodBreakdowns).zipped.toList) {
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Breakdown by pay date
+                    <dt class="govuk-summary-list__key" style="width: 15%">
+                        @messages("confirmation.breakdown.dt")
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        Up to @dateToString(furlough.periodWithPaymentDate.period.period.end)<br><br>
-                        &pound;@furlough.grant.value.setScale(2) <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
-                        &pound;@nic.grant.value.setScale(2) <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
-                        &pound;@pension.grant.value.setScale(2) <span class="govuk-!-font-weight-regular">- Pension contribution</span>
+                        @messages("confirmation.breakdown.ending", dateToString(furlough.periodWithPaymentDate.period.period.end))<br>
+                        @Html(messages("confirmation.breakdown.furlough", furlough.grant.value.setScale(2)))<br>
+                        @Html(messages("confirmation.breakdown.nic", nic.grant.value.setScale(2)))<br>
+                        @Html(messages("confirmation.breakdown.pension", pension.grant.value.setScale(2)))
                     </dd>
                 </div>
             }
@@ -69,7 +72,19 @@
 
     @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
 
-    @p(Html(messages("confirmation.nextSteps.p1")))
+    <ul class="govuk-list govuk-list--number">
 
-    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode)), classes = Some("govuk-button--secondary"))
+        <li>@Html(messages("confirmation.nextSteps.li.1"))
+        </li>
+        <li>@messages("confirmation.nextSteps.li.2")<br>
+            <ul class="govuk-list--list">
+                <li>@messages("confirmation.nextSteps.li.2.1")</li>
+                <li>@messages("confirmation.nextSteps.li.2.2")</li>
+                <li>@messages("confirmation.nextSteps.li.2.3")</li>
+            </ul></li>
+        <li>@Html(messages("confirmation.nextSteps.li.3"))</li>
+        <li>@Html(messages("confirmation.nextSteps.li.4"))</li>
+    </ul>
+
+    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode)), classes = Some("govuk-button"))
 }
