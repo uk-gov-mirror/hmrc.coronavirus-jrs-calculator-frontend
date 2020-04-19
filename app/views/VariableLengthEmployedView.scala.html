@@ -11,7 +11,9 @@
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
         inputRadio: components.inputRadio,
-        button: components.button
+        button: components.button,
+        h1: components.h1,
+        p: components.p
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -22,11 +24,14 @@
 
         @errorSummary(form.errors)
 
+        @h1("variableLengthEmployed.heading")
+
+        @p(Html(messages("variableLengthEmployed.hint")))
+
         @inputRadio(
             form = form,
-            legend = messages("variableLengthEmployed.heading"),
-            items = VariableLengthEmployed.options(form),
-            hintKey = Some("variableLengthEmployed.hint")
+            legend = "",
+            items = VariableLengthEmployed.options(form)
         )
 
         @button("site.continue")
