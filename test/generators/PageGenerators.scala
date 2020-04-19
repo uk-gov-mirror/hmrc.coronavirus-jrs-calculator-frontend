@@ -10,6 +10,9 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryFurloughCalculationsPage: Arbitrary[FurloughCalculationsPage.type] =
+    Arbitrary(FurloughCalculationsPage)
+
   implicit lazy val arbitraryVariableLengthPartialPayPage: Arbitrary[VariableLengthPartialPayPage.type] =
     Arbitrary(VariableLengthPartialPayPage)
 

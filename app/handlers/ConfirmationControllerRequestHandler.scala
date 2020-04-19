@@ -41,7 +41,7 @@ trait ConfirmationControllerRequestHandler
         data.nicCategory,
         data.pensionStatus)
 
-  private def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
+  protected def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
     for {
       data           <- extract(userAnswers)
       taxPayYear     <- userAnswers.get(TaxYearPayDatePage)

@@ -57,7 +57,9 @@ class Navigator @Inject()() {
         routes.TaxYearPayDateController.onPageLoad(NormalMode)
     case TaxYearPayDatePage =>
       _ =>
-        routes.ConfirmationController.onPageLoad()
+        routes.FurloughCalculationsController.onPageLoad(NormalMode)
+    case FurloughCalculationsPage =>
+      furloughCalculationsRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -108,9 +110,17 @@ class Navigator @Inject()() {
 
   private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(VariableLengthEmployedPage) match {
-      case Some(VariableLengthEmployed.Yes) => routes.ComingSoonController.onPageLoad
+      case Some(VariableLengthEmployed.Yes) => routes.ComingSoonController.onPageLoad(false)
       case Some(VariableLengthEmployed.No)  => routes.EmployeeStartDateController.onPageLoad(NormalMode)
       case _                                => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
+    }
+  }
+
+  private def furloughCalculationsRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(FurloughCalculationsPage) match {
+      case Some(FurloughCalculations.Yes) => routes.ComingSoonController.onPageLoad(true)
+      case Some(FurloughCalculations.No)  => routes.ConfirmationController.onPageLoad()
+      case _                              => routes.FurloughCalculationsController.onPageLoad(NormalMode)
     }
   }
 }
