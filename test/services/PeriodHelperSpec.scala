@@ -8,9 +8,11 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{FullPeriod, PartialPeriod, Period, Periods}
+import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
+import models.{FullPeriod, PartialPeriod, PaymentDate, Period, PeriodWithPaymentDate, Periods}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class PeriodHelperSpec extends SpecBase {
+class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   "For a given list of pay period end dates, should return a List[LocalDate] in ascending order" in new PeriodHelper {
     val unsortedEndDates: List[LocalDate] = List(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 3, 18), LocalDate.of(2020, 3, 19))
@@ -20,25 +22,36 @@ class PeriodHelperSpec extends SpecBase {
   "Returns a Pay Period with the same start and end date if only one date is supplied" in new PeriodHelper {
     //This is not a valid scenario, just testing for safety
     val endDates: List[LocalDate] = List(LocalDate.of(2020, 2, 20))
+    val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
 
-    val expected: List[Period] = List(Period(LocalDate.of(2020, 2, 20), LocalDate.of(2020, 2, 20)))
+    val expected: List[Periods] = List(FullPeriod(Period(LocalDate.of(2020, 2, 20), LocalDate.of(2020, 2, 20))))
 
-    generatePeriodsFromEndDates(endDates) mustBe expected
+    generatePeriods(endDates, furloughPeriod) mustBe expected
   }
 
   "Returns a sorted List[PayPeriod] for a given List[LocalDate] that represents PayPeriod.end LocalDates" in new PeriodHelper {
     val endDates: List[LocalDate] = List(LocalDate.of(2020, 4, 20), LocalDate.of(2020, 3, 20), LocalDate.of(2020, 2, 20))
-    val endDatesTwo: List[LocalDate] = List(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 2, 20))
+    val endDatesTwo: List[LocalDate] = List(LocalDate.of(2020, 3, 31), LocalDate.of(2020, 2, 29))
 
-    val expected: List[Period] =
-      List(Period(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 3, 20)), Period(LocalDate.of(2020, 3, 21), LocalDate.of(2020, 4, 20)))
+    val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 10))
+    val furloughPeriodTwo: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
 
-    val expectedTwo: List[Period] = List(
-      Period(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 3, 20))
+    val expected: List[Periods] =
+      List(
+        PartialPeriod(
+          Period(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 3, 20)),
+          Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 20))),
+        PartialPeriod(
+          Period(LocalDate.of(2020, 3, 21), LocalDate.of(2020, 4, 20)),
+          Period(LocalDate.of(2020, 3, 21), LocalDate.of(2020, 4, 10)))
+      )
+
+    val expectedTwo: List[Periods] = List(
+      FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)))
     )
 
-    generatePeriodsFromEndDates(endDates) mustBe expected
-    generatePeriodsFromEndDates(endDatesTwo) mustBe expectedTwo
+    generatePeriods(endDates, furloughPeriod) mustBe expected
+    generatePeriods(endDatesTwo, furloughPeriodTwo) mustBe expectedTwo
   }
 
   "Return periods for a given List[LocalDate] and a furloughPeriod" in new PeriodHelper {
@@ -114,5 +127,86 @@ class PeriodHelperSpec extends SpecBase {
     val expectedOne = Left(PartialPeriod(periodOne, Period(furloughOne.start, periodOne.end)))
     val expectedTwo = Right(periodOne)
   }
+
+  forAll(payDateScenarios) { (frequency, periods, lastPeriodPayDate, expected) =>
+    s"For a given list of SORTED periods: $periods, the payment frequency: $frequency and the " +
+      s"last period's pay date: $lastPeriodPayDate assign a pay date to each period: $expected" in new PeriodHelper {
+
+      assignPayDates(frequency, periods, lastPeriodPayDate) map (_.paymentDate) mustBe expected
+    }
+  }
+
+  private lazy val payDateScenarios = Table(
+    ("frequency", "periods", "lastPeriodPayDate", "expected"),
+    (
+      Monthly,
+      Seq(
+        FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+        FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))),
+      LocalDate.of(2020, 4, 20),
+      Seq(
+        PaymentDate(LocalDate.of(2020, 3, 20)),
+        PaymentDate(LocalDate.of(2020, 4, 20))
+      )
+    ),
+    (
+      Monthly,
+      Seq(
+        FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+        FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))),
+      LocalDate.of(2020, 5, 20),
+      Seq(
+        PaymentDate(LocalDate.of(2020, 4, 20)),
+        PaymentDate(LocalDate.of(2020, 5, 20))
+      )
+    ),
+    (
+      FourWeekly,
+      Seq(
+        FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
+        FullPeriod(Period(LocalDate.of(2020, 3, 29), LocalDate.of(2020, 4, 25)))),
+      LocalDate.of(2020, 4, 25),
+      Seq(
+        PaymentDate(LocalDate.of(2020, 3, 28)),
+        PaymentDate(LocalDate.of(2020, 4, 25))
+      )
+    ),
+    (
+      FortNightly,
+      Seq(
+        FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
+        FullPeriod(Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28)))),
+      LocalDate.of(2020, 4, 4),
+      Seq(
+        PaymentDate(LocalDate.of(2020, 3, 21)),
+        PaymentDate(LocalDate.of(2020, 4, 4))
+      )
+    ),
+    (
+      Weekly,
+      Seq(
+        FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
+        FullPeriod(Period(LocalDate.of(2020, 3, 8), LocalDate.of(2020, 3, 14)))),
+      LocalDate.of(2020, 3, 28),
+      Seq(
+        PaymentDate(LocalDate.of(2020, 3, 21)),
+        PaymentDate(LocalDate.of(2020, 3, 28))
+      )
+    ),
+    (
+      Weekly,
+      Seq(
+        PartialPeriod(
+          Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7)),
+          Period(LocalDate.of(2020, 3, 4), LocalDate.of(2020, 3, 7))),
+        FullPeriod(Period(LocalDate.of(2020, 3, 8), LocalDate.of(2020, 3, 14)))
+      ),
+      LocalDate.of(2020, 3, 28),
+      Seq(
+        PaymentDate(LocalDate.of(2020, 3, 21)),
+        PaymentDate(LocalDate.of(2020, 3, 28))
+      )
+    )
+  )
 
 }
