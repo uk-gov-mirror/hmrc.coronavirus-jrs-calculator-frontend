@@ -19,7 +19,7 @@
 
 @govukLayout(pageTitle = Some(title(form, "furloughEndDate.title"))) {
 
-    @formHelper(action = FurloughEndDateController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = FurloughEndDateController.onSubmit(mode)) {
 
         @errorSummary(form.errors)
 
