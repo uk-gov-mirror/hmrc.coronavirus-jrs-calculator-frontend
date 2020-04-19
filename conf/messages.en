@@ -412,3 +412,17 @@ FurloughPartialPay.error.required = Enter a valid amount
 FurloughPartialPay.error.invalid = Enter a valid amount
 FurloughPartialPay.error.negative = Salary can’t be negative
 FurloughPartialPay.p = This is for the time that employee was paid when they were not furloughed.
+
+lastPayDate.title = What’s this employee’s pay date for the pay period ending {0}?
+lastPayDate.heading = What’s this employee’s pay date for the pay period ending {0}?
+lastPayDate.checkYourAnswersLabel = LastPayDate
+lastPayDate.error.required.all = Enter the pay date
+lastPayDate.error.required.two = The pay date must include {0} and {1}
+lastPayDate.error.required = The pay date must include {0}
+lastPayDate.error.invalid = Enter a real date
+lastPayDate.error.minimum = The pay date must be on or after {0}
+lastPayDate.p1 = This is the date this employee got paid. We are asking this because it may not be the same as the pay period end date.
+lastPayDate.p2 = This is needed to calculate National Insurance and pension contributions.
+lastPayDate.details.title = What’s the difference between a pay date and a pay period?
+lastPayDate.details.p1 = A ''pay date'' is the date the employee actually gets their pay. It may not be the same as the end of the ''pay period''. For example, the pay period might be 1 February to 28 February, but the employee gets paid on 27 February.
+lastPayDate.details.p2 = A ''pay period'' is the period of time that the employee is paid for, such as weekly or monthly.

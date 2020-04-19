@@ -1,0 +1,51 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@import java.time.LocalDate
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        errorSummary: components.errorSummary,
+        inputDate: components.inputDate,
+        formHelper: FormWithCSRF,
+        button: components.button,
+        h1: components.h1,
+        p: components.p
+)
+
+@(form: Form[_], mode: Mode, date: LocalDate)(implicit request: Request[_], messages: Messages)
+
+    @govukLayout(pageTitle = Some(title(form, "lastPayDate.title", titleMessageArgs = Seq(dateToString(date))))) {
+
+        @formHelper(action = LastPayDateController.onSubmit(mode), 'autoComplete -> "off") {
+
+            @errorSummary(form.errors)
+
+            @h1(messages("lastPayDate.heading", dateToString(date)))
+
+            @p(Html(messages("lastPayDate.p1")))
+
+            @p(Html(messages("lastPayDate.p1")))
+
+            <div class="form-group">
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="summary govuk-details__summary-text">@Messages("lastPayDate.details.title")</span>
+                    </summary>
+                    <div class="panel panel-border-narro govuk-details__text">
+                        <p>@Messages("lastPayDate.details.p1")</p>
+                        <p>@Messages("lastPayDate.details.p2")</p>
+                    </div>
+                </details>
+            </div>
+
+
+            @inputDate(
+                form,
+                ""
+            )
+
+            @button("site.saveAndContinue")
+        }
+    }

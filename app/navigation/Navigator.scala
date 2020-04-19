@@ -55,13 +55,13 @@ class Navigator @Inject()() {
     case VariableGrossPayPage =>
       _ =>
         routes.PayDateController.onPageLoad(1)
+    case LastPayDatePage =>
+      _ =>
+        routes.NicCategoryController.onPageLoad(NormalMode)
     case NicCategoryPage =>
       _ =>
         routes.PensionAutoEnrolmentController.onPageLoad(NormalMode)
     case PensionAutoEnrolmentPage =>
-      _ =>
-        routes.TaxYearPayDateController.onPageLoad(NormalMode)
-    case TaxYearPayDatePage =>
       _ =>
         routes.FurloughCalculationsController.onPageLoad(NormalMode)
     case FurloughCalculationsPage =>
@@ -76,18 +76,20 @@ class Navigator @Inject()() {
       _ =>
         routes.CheckYourAnswersController.onPageLoad()
   }
+
   private val payDateRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     (for {
       claimEndDate <- userAnswers.get(ClaimPeriodEndPage)
       lastPayDate  <- userAnswers.getList(PayDatePage).lastOption
     } yield {
       if (lastPayDate.isAfter(claimEndDate.minusDays(1))) {
-        routes.NicCategoryController.onPageLoad(NormalMode)
+        routes.LastPayDateController.onPageLoad(NormalMode)
       } else {
         routes.PayDateController.onPageLoad(previousIdx + 1)
       }
     }).getOrElse(routes.ErrorController.internalServerError())
   }
+
   private val idxRoutes: Page => (Int, UserAnswers) => Call = {
     case PayDatePage => payDateRoutes
   }

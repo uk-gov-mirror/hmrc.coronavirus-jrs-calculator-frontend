@@ -102,7 +102,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(PayDatePage, LocalDate.of(2020, 5, 30), Some(1))
           .get
 
-        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.NicCategoryController
+        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.LastPayDateController
           .onPageLoad(NormalMode)
       }
 
@@ -113,8 +113,17 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(PayDatePage, LocalDate.of(2020, 5, 31), Some(1))
           .get
 
-        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.NicCategoryController
+        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.LastPayDateController
           .onPageLoad(NormalMode)
+      }
+
+      "go from LastPayDatePage to NicCategoryPage" in {
+        navigator.nextPage(LastPayDatePage, NormalMode, emptyUserAnswers) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+      }
+
+      "go from PensionAutoEnrolmentPage to FurloughCalculationsPage" in {
+        navigator.nextPage(PensionAutoEnrolmentPage, NormalMode, emptyUserAnswers) mustBe routes.FurloughCalculationsController.onPageLoad(
+          NormalMode)
       }
 
       "go from furlough start date to furlough question" in {

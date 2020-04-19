@@ -112,3 +112,8 @@ POST       /variable-length-partial-pay/before-furlough                         
 
 GET        /variable-length-partial-pay/after-furlough                        controllers.PartialPayAfterFurloughController.onPageLoad
 POST       /variable-length-partial-pay/after-furlough                        controllers.PartialPayAfterFurloughController.onSubmit
+
+GET        /last-pay-date                  controllers.LastPayDateController.onPageLoad(mode: Mode = NormalMode)
+POST       /last-pay-date                  controllers.LastPayDateController.onSubmit(mode: Mode = NormalMode)
+GET        /change-last-pay-date                   controllers.LastPayDateController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-last-pay-date                      controllers.LastPayDateController.onSubmit(mode: Mode = CheckMode)
