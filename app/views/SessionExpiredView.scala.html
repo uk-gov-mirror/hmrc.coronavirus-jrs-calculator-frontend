@@ -4,8 +4,10 @@
  *@
 
 @this(
-    main_template: templates.GovukLayoutWrapper,
-    h1: components.h1
+        main_template: templates.GovukLayoutWrapper,
+        h1: components.h1,
+        p: components.p,
+        button: components.button
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -14,5 +16,7 @@
 
     @h1(messages("session_expired.heading"))
 
-    <p class="govuk-body">@messages("session_expired.guidance")</p>
+    @p(Html(messages("session_expired.guidance")))
+
+    @button("session_expired.restart", href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode).url))
 }
