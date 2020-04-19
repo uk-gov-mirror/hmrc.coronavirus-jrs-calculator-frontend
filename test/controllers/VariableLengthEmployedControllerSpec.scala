@@ -40,7 +40,9 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .configure("variable.journey.enabled" -> true)
+        .build()
 
       val result = route(application, getRequest).value
 
@@ -58,7 +60,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       val userAnswers = UserAnswers(userAnswersId).set(VariableLengthEmployedPage, VariableLengthEmployed.values.head).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).configure("variable.journey.enabled" -> true).build()
 
       val view = application.injector.instanceOf[VariableLengthEmployedView]
 
@@ -68,6 +70,21 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       contentAsString(result) mustEqual
         view(form.fill(VariableLengthEmployed.values.head), NormalMode)(getRequest, messages).toString
+
+      application.stop()
+    }
+
+    "return Not_Found if the feature is disabled" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .configure("variable.journey.enabled" -> false)
+        .build()
+
+      val result = route(application, getRequest).value
+
+      val view = application.injector.instanceOf[VariableLengthEmployedView]
+
+      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }
@@ -84,6 +101,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
+          .configure("variable.journey.enabled" -> true)
           .build()
 
       val request =
@@ -99,9 +117,35 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       application.stop()
     }
 
+    "return Not_Found when valid data is submitted but feature is disabled" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .configure("variable.journey.enabled" -> false)
+          .build()
+
+      val request =
+        FakeRequest(POST, variableLengthEmployedRoute)
+          .withFormUrlEncodedBody(("value", VariableLengthEmployed.values.head.toString))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).configure("variable.journey.enabled" -> true).build()
 
       val request =
         FakeRequest(POST, variableLengthEmployedRoute).withCSRFToken
@@ -124,7 +168,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "redirect to Session Expired for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = None).configure("variable.journey.enabled" -> true).build()
 
       val request = FakeRequest(GET, variableLengthEmployedRoute)
 
@@ -138,7 +182,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "redirect to Session Expired for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = None).configure("variable.journey.enabled" -> true).build()
 
       val request =
         FakeRequest(POST, variableLengthEmployedRoute)

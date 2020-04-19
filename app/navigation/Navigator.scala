@@ -112,10 +112,10 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) {
 
   private def payQuestionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayQuestionPage) match {
-      case Some(Regularly)                              => routes.SalaryQuestionController.onPageLoad(NormalMode)
-      case Some(Varies) if appConfig.variablePayEnabled => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
-      case Some(Varies)                                 => routes.ComingSoonController.onPageLoad()
-      case None                                         => routes.PayQuestionController.onPageLoad(NormalMode)
+      case Some(Regularly)                                  => routes.SalaryQuestionController.onPageLoad(NormalMode)
+      case Some(Varies) if appConfig.variableJourneyEnabled => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
+      case Some(Varies)                                     => routes.ComingSoonController.onPageLoad()
+      case None                                             => routes.PayQuestionController.onPageLoad(NormalMode)
     }
   }
 

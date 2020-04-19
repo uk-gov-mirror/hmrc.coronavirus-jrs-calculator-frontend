@@ -80,7 +80,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(PayQuestionPage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
 
         val navigator2 =
-          new Navigator(new FrontendAppConfig(frontendAppConfig.configuration.++(Configuration("pay-method.variable.enabled" -> "true"))))
+          new Navigator(new FrontendAppConfig(frontendAppConfig.configuration.++(Configuration("variable.journey.enabled" -> "true"))))
 
         navigator2.nextPage(
           PayQuestionPage,
