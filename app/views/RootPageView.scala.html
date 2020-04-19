@@ -25,7 +25,14 @@
 
     @p(Html(Messages("rootPage.howItWorks.p1")))
     @p(Html(Messages("rootPage.howItWorks.p2")))
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("rootPage.howItWorks.p2.l1")</li>
+        <li>@messages("rootPage.howItWorks.p2.l2")</li>
+        <li>@messages("rootPage.howItWorks.p2.l3")</li>
+    </ul>
+
     @p(Html(Messages("rootPage.howItWorks.p3")))
+    @p(Html(Messages("rootPage.howItWorks.p4")))
 
     <a href="/job-retention-scheme-calculator/claim-period-start" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
         @Messages("site.startNow")
@@ -39,10 +46,13 @@
     @p(Html(Messages("rootPage.beforeYouStart.p1")))
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@p(Html(Messages("rootPage.beforeYouStart.l1")))</li>
-        <li>@p(Html(Messages("rootPage.beforeYouStart.l2")))</li>
-        <li>@p(Html(Messages("rootPage.beforeYouStart.l3")))</li>
-        <li>@p(Html(Messages("rootPage.beforeYouStart.l4")))</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l1")</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l2")</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l3")</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l4")</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l5")</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l6")</li>
+        <li>@Html(messages("rootPage.beforeYouStart.p1.l7"))</li>
     </ul>
 
 }

@@ -21,7 +21,7 @@ class FurloughEndDateFormProviderSpec extends DateBehaviours {
     val form = new FurloughEndDateFormProvider()(endDate, furloughStart)
 
     val validData = datesBetween(
-      min = startDate.plusDays(21),
+      min = startDate.plusDays(20),
       max = startDate.plusDays(31)
     )
 

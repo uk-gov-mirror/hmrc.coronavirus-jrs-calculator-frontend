@@ -21,7 +21,7 @@ class FurloughEndDateFormProvider @Inject() extends Mappings {
         allRequiredKey = "furloughEndDate.error.required.all",
         twoRequiredKey = "furloughEndDate.error.required.two",
         requiredKey = "furloughEndDate.error.required"
-      ).verifying(minDate(furloughStartDate.plusDays(21), "furloughEndDate.error.min.max"))
+      ).verifying(minDate(furloughStartDate.plusDays(20), "furloughEndDate.error.min.max"))
         .verifying(maxDate(claimPeriodEnd, "furloughEndDate.error.min.max"))
     )
 }
