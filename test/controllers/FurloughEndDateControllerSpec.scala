@@ -76,7 +76,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode, claimPeriodEnd)(getRequest, messages).toString
+        view(form, NormalMode)(getRequest, messages).toString
 
       application.stop()
     }
@@ -94,7 +94,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), NormalMode, claimPeriodEnd)(getRequest, messages).toString
+        view(form.fill(validAnswer), NormalMode)(getRequest, messages).toString
 
       application.stop()
     }
@@ -140,7 +140,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode, claimPeriodEnd)(request, messages).toString
+        view(boundForm, NormalMode)(request, messages).toString
 
       application.stop()
     }
