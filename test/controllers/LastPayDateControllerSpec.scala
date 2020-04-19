@@ -33,7 +33,7 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.now()
 
   lazy val lastPayDateRoute = routes.LastPayDateController.onPageLoad(NormalMode).url
 
