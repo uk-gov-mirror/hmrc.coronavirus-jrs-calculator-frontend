@@ -238,10 +238,10 @@ salaryQuestion.inset.info = If this employee started work between 1 and 18 March
 
 nicCategory.title = What is the employee’s National Insurance category letter?
 nicCategory.heading = What is the employee’s National Insurance category letter?
-nicCategory.payable = A, B, C, J
-nicCategory.nonPayable = H, M, Z
+nicCategory.payable = A, B, C or J
+nicCategory.nonPayable = H, M, or Z
 nicCategory.checkYourAnswersLabel = What is the employee’s National Insurance category letter?
-nicCategory.error.required = Select one of the options below
+nicCategory.error.required = Select the employee’s National Insurance category letter
 nicCategory.hint = Most employees have category letter A.
 nicCategory.details.summary = What is a National Insurance category letter?
 nicCategory.letter.legend = Category letter
@@ -375,16 +375,16 @@ employeeStartDate.error.invalid = Enter a real date
 employeeStartDate.hint = For example, 28 11 2019
 employeeStartDate.error.outofrange = The start date should be between {0} and {1}
 
-variableGrossPay.title = What is the employee's total pay since 6 April 2019?
-variableGrossPay.heading = What is the employee's total pay since 6 April 2019?
+variableGrossPay.title = What is this employee’s total pay since they started?
+variableGrossPay.heading = What is this employee’s total pay since they started?
 variableGrossPay.checkYourAnswersLabel = variableGrossPay
 variableGrossPay.error.required = Enter a valid amount
 variableGrossPay.label = This is the gross amount before deductions.
 variableGrossPay.error.invalid = Enter a valid amount
 variableGrossPay.error.negative = Salary can’t be negative
-variableGrossPay.p = This is the total gross amount before deductions the employee has been paid up to the earlier of:
+variableGrossPay.p = This is the total gross amount before deductions the employee has been paid from {0} up to the earlier of:
 variableGrossPay.l1 = 5th April 2020 or
-variableGrossPay.l2 = the day before they were furloughed
+variableGrossPay.l2 = the day before they were furloughed ({0})
 
 comingSoon.title = We are unable to do this calculation at the moment
 comingSoon.heading = We are unable to do this calculation at the moment
