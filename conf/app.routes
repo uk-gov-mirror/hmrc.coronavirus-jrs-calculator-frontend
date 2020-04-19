@@ -30,15 +30,15 @@ POST        /claim-period-end                       controllers.ClaimPeriodEndCo
 GET         /change-claim-period-end                controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-claim-period-end                controllers.ClaimPeriodEndController.onSubmit(mode: Mode = CheckMode)
 
-GET         /furlough-question                      controllers.FurloughQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-question                      controllers.FurloughQuestionController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-question               controllers.FurloughQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-question               controllers.FurloughQuestionController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-ongoing                       controllers.FurloughQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST        /furlough-ongoing                       controllers.FurloughQuestionController.onSubmit(mode: Mode = NormalMode)
+GET         /change-furlough-ongoing                controllers.FurloughQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-furlough-ongoing                controllers.FurloughQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET         /pay-question                           controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST        /pay-question                           controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)
-GET         /change-pay-question                    controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-pay-question                    controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)
+GET         /pay-method                             controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST        /pay-method                             controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)
+GET         /change-pay-method                      controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-pay-method                      controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET         /pay-frequency                          controllers.PaymentFrequencyController.onPageLoad(mode: Mode = NormalMode)
 POST        /pay-frequency                          controllers.PaymentFrequencyController.onSubmit(mode: Mode = NormalMode)
@@ -53,10 +53,10 @@ POST        /salary                                 controllers.SalaryQuestionCo
 GET         /change-salary                          controllers.SalaryQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-salary                          controllers.SalaryQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET         /nic-category                           controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)
-POST        /nic-category                           controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
-GET         /change-nic-category                    controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-nic-category                    controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)
+GET         /ni-category-letter                     controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)
+POST        /ni-category-letter                     controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
+GET         /change-ni-category-letter              controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-ni-category-letter              controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)
 
 GET         /pension-auto-enrolment                 controllers.PensionAutoEnrolmentController.onPageLoad(mode: Mode = NormalMode)
 POST        /pension-auto-enrolment                 controllers.PensionAutoEnrolmentController.onSubmit(mode: Mode = NormalMode)
@@ -70,15 +70,15 @@ POST        /furlough-dates                         controllers.FurloughDatesCon
 GET         /change-furlough-dates                  controllers.FurloughDatesController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-furlough-dates                  controllers.FurloughDatesController.onSubmit(mode: Mode = CheckMode)
 
-GET         /furlough-end-date                      controllers.FurloughEndDateController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-end-date                      controllers.FurloughEndDateController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-end-date               controllers.FurloughEndDateController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-end-date               controllers.FurloughEndDateController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-end                           controllers.FurloughEndDateController.onPageLoad(mode: Mode = NormalMode)
+POST        /furlough-end                           controllers.FurloughEndDateController.onSubmit(mode: Mode = NormalMode)
+GET         /change-furlough-end                    controllers.FurloughEndDateController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-furlough-end                    controllers.FurloughEndDateController.onSubmit(mode: Mode = CheckMode)
 
-GET         /furlough-start-date                    controllers.FurloughStartDateController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-start-date                    controllers.FurloughStartDateController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-start-date             controllers.FurloughStartDateController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-start-date             controllers.FurloughStartDateController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-start                         controllers.FurloughStartDateController.onPageLoad(mode: Mode = NormalMode)
+POST        /furlough-start                         controllers.FurloughStartDateController.onSubmit(mode: Mode = NormalMode)
+GET         /change-furlough-start                  controllers.FurloughStartDateController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-furlough-start                  controllers.FurloughStartDateController.onSubmit(mode: Mode = CheckMode)
 
 GET         /variable-length-employed               controllers.VariableLengthEmployedController.onPageLoad(mode: Mode = NormalMode)
 POST        /variable-length-employed               controllers.VariableLengthEmployedController.onSubmit(mode: Mode = NormalMode)
@@ -97,16 +97,16 @@ POST        /change-variable-gross-pay              controllers.VariableGrossPay
 
 GET         /coming-soon                            controllers.ComingSoonController.onPageLoad(showCalculateTopupsLink: Boolean ?= false)
 
-GET        /furlough-calculations                        controllers.FurloughCalculationsController.onPageLoad(mode: Mode = NormalMode)
-POST       /furlough-calculations                        controllers.FurloughCalculationsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-furlough-calculations                  controllers.FurloughCalculationsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-furlough-calculations                  controllers.FurloughCalculationsController.onSubmit(mode: Mode = CheckMode)
+GET        /furlough-pay-topup                      controllers.FurloughCalculationsController.onPageLoad(mode: Mode = NormalMode)
+POST       /furlough-pay-topup                      controllers.FurloughCalculationsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-furlough-pay-topup               controllers.FurloughCalculationsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-furlough-pay-topup               controllers.FurloughCalculationsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /variable-length-partial-pay/before-furlough                         controllers.PartialPayBeforeFurloughController.onPageLoad
-POST       /variable-length-partial-pay/before-furlough                         controllers.PartialPayBeforeFurloughController.onSubmit
+GET        /variable-pay-partial-pay-before-furlough                         controllers.PartialPayBeforeFurloughController.onPageLoad
+POST       /variable-pay-partial-pay-before-furlough                        controllers.PartialPayBeforeFurloughController.onSubmit
 
-GET        /variable-length-partial-pay/after-furlough                        controllers.PartialPayAfterFurloughController.onPageLoad
-POST       /variable-length-partial-pay/after-furlough                        controllers.PartialPayAfterFurloughController.onSubmit
+GET        /variable-pay-partial-pay-after-furlough                       controllers.PartialPayAfterFurloughController.onPageLoad
+POST       /variable-pay-partial-pay-after-furlough                       controllers.PartialPayAfterFurloughController.onSubmit
 
 GET        /last-pay-date                  controllers.LastPayDateController.onPageLoad(mode: Mode = NormalMode)
 POST       /last-pay-date                  controllers.LastPayDateController.onSubmit(mode: Mode = NormalMode)
