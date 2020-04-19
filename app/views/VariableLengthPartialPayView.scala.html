@@ -17,7 +17,7 @@
 
 @(form: Form[_], date1: LocalDate, date2: LocalDate, submitUrl: Call)(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, "FurloughPartialPay.title"))) {
+    @govukLayout(pageTitle = Some(title(form, "FurloughPartialPay.title", titleMessageArgs = Seq(dateToString(date1), dateToString(date2))))) {
 
 
         @formHelper(action = submitUrl) {
