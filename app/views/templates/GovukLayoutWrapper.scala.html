@@ -46,6 +46,16 @@
     @govukBackLink(BackLink(href = "#", content = Text("Back"), attributes = Map("id" -> "back-link")))
 }
 
+@content = {
+<div class="govuk-!-margin-bottom-6">
+    @contentBlock
+</div>
+
+<div class="govuk-body">
+    @link(appConfig.contactStandaloneForm, messages("site.getHelpWithThisPage"))
+</div>
+}
+
 @govukLayout(
   pageTitle = pageTitle,
   headBlock = Some(head),
@@ -54,4 +64,4 @@
   scriptsBlock = Some(scripts),
   headerBlock = Some(siteHeader(timeout)),
   footerItems = footerLinks.items
-)(contentBlock)
+)(content)
