@@ -5,6 +5,8 @@
 
 package navigation
 
+import java.time.LocalDate
+
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import controllers.routes
@@ -14,6 +16,8 @@ import models.{UserAnswers, _}
 
 @Singleton
 class Navigator @Inject()() {
+
+  val apr7th2019 = LocalDate.of(2019, 4, 7)
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case ClaimPeriodStartPage =>
@@ -41,8 +45,7 @@ class Navigator @Inject()() {
     case VariableLengthEmployedPage =>
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
-      _ =>
-        routes.PartialPayBeforeFurloughController.onPageLoad()
+      employeeStartDateRoutes
     case PartialPayBeforeFurloughPage =>
       _ =>
         routes.PartialPayAfterFurloughController.onPageLoad()
@@ -124,6 +127,14 @@ class Navigator @Inject()() {
       case Some(FurloughCalculations.Yes) => routes.ComingSoonController.onPageLoad(true)
       case Some(FurloughCalculations.No)  => routes.ConfirmationController.onPageLoad()
       case _                              => routes.FurloughCalculationsController.onPageLoad(NormalMode)
+    }
+  }
+
+  private def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(EmployeeStartDatePage) match {
+      case Some(date) if date.isBefore(apr7th2019) => routes.ComingSoonController.onPageLoad(false)
+      case Some(_)                                 => routes.PartialPayBeforeFurloughController.onPageLoad()
+      case _                                       => routes.EmployeeStartDateController.onPageLoad(NormalMode)
     }
   }
 }

@@ -152,13 +152,18 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           EmployeeStartDatePage,
           NormalMode,
           UserAnswers("id")
-            .set(ClaimPeriodStartPage, LocalDate.now().minusDays(2))
-            .success
-            .value
-            .set(FurloughStartDatePage, LocalDate.now())
+            .set(EmployeeStartDatePage, LocalDate.now().minusDays(2))
             .success
             .value
         ) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 6))
+            .success
+            .value
+        ) mustBe routes.ComingSoonController.onPageLoad()
       }
 
       "go to correct page after FurloughCalculationsPage" in {
