@@ -7,15 +7,16 @@ package navigation
 
 import java.time.LocalDate
 
+import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import controllers.routes
-import models.PayQuestion.Regularly
+import models.PayQuestion.{Regularly, Varies}
 import pages.{PayDatePage, _}
 import models.{UserAnswers, _}
 
 @Singleton
-class Navigator @Inject()() {
+class Navigator @Inject()(appConfig: FrontendAppConfig) {
 
   val apr7th2019 = LocalDate.of(2019, 4, 7)
 
@@ -111,8 +112,10 @@ class Navigator @Inject()() {
 
   private def payQuestionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayQuestionPage) match {
-      case Some(Regularly) => routes.SalaryQuestionController.onPageLoad(NormalMode)
-      case _               => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
+      case Some(Regularly)                                  => routes.SalaryQuestionController.onPageLoad(NormalMode)
+      case Some(Varies) if appConfig.variableJourneyEnabled => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
+      case Some(Varies)                                     => routes.ComingSoonController.onPageLoad()
+      case None                                             => routes.PayQuestionController.onPageLoad(NormalMode)
     }
   }
 

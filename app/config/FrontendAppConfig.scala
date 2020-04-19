@@ -13,7 +13,7 @@ import play.api.Configuration
 import scala.util.Try
 
 @Singleton
-class FrontendAppConfig @Inject()(configuration: Configuration) {
+class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   lazy val host: String = configuration.get[String]("host")
 
@@ -50,5 +50,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   lazy val schemeStartDate = LocalDate.parse(configuration.get[String]("scheme.startDate"))
   lazy val schemeEndDate = LocalDate.parse(configuration.get[String]("scheme.endDate"))
+
+  val variableJourneyEnabled = configuration.get[Boolean]("variable.journey.enabled")
 
 }

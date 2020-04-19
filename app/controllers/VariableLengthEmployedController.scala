@@ -5,6 +5,7 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
 import javax.inject.Inject
@@ -29,30 +30,38 @@ class VariableLengthEmployedController @Inject()(
   formProvider: VariableLengthEmployedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: VariableLengthEmployedView
-)(implicit ec: ExecutionContext)
+)(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
     extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(VariableLengthEmployedPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+    if (appConfig.variableJourneyEnabled) {
+      val preparedForm = request.userAnswers.get(VariableLengthEmployedPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
+    } else {
+      NotFound
+    }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableLengthEmployedPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(VariableLengthEmployedPage, mode, updatedAnswers))
-      )
+    if (appConfig.variableJourneyEnabled) {
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableLengthEmployedPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(VariableLengthEmployedPage, mode, updatedAnswers))
+        )
+    } else {
+      Future.successful(NotFound)
+    }
   }
 }

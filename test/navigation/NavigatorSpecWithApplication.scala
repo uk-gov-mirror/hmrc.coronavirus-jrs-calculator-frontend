@@ -8,13 +8,15 @@ package navigation
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
+import config.FrontendAppConfig
 import controllers.routes
 import models._
 import pages._
+import play.api.Configuration
 
 class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
-  val navigator = new Navigator
+  val navigator = new Navigator(frontendAppConfig)
 
   "Navigator" when {
 
@@ -58,7 +60,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .onPageLoad(NormalMode)
       }
 
-      "go to correct page after SalaryQuestionPage" in {
+      "go to correct page after PayQuestionPage" in {
         navigator.nextPage(
           PayQuestionPage,
           NormalMode,
@@ -66,7 +68,23 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .set(PayQuestionPage, PayQuestion.Regularly)
             .success
             .value) mustBe routes.SalaryQuestionController.onPageLoad(NormalMode)
+
         navigator.nextPage(
+          PayQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(PayQuestionPage, PayQuestion.Varies)
+            .success
+            .value) mustBe routes.ComingSoonController.onPageLoad()
+
+        navigator.nextPage(PayQuestionPage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
+      }
+
+      "go to VariableLengthEmployedPage after PayQuestionPage for variable journeys" in {
+        val navigatorWithVariableJourney =
+          new Navigator(new FrontendAppConfig(frontendAppConfig.configuration.++(Configuration("variable.journey.enabled" -> "true"))))
+
+        navigatorWithVariableJourney.nextPage(
           PayQuestionPage,
           NormalMode,
           UserAnswers("id")
