@@ -8,9 +8,15 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
+<<<<<<< HEAD
 import forms.FurloughPartialPayFormProvider
 import models.PaymentFrequency.Weekly
 import models.{FurloughPartialPay, UserAnswers}
+=======
+import forms.VariableLengthPartialPayFormProvider
+import models.PaymentFrequency.Weekly
+import models.{UserAnswers, VariableLengthPartialPay}
+>>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -30,7 +36,11 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
   def onwardRoute = Call("GET", "/foo")
 
+<<<<<<< HEAD
   val formProvider = new FurloughPartialPayFormProvider()
+=======
+  val formProvider = new VariableLengthPartialPayFormProvider()
+>>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
   val form = formProvider()
 
   lazy val pageLoadAfterFurloughRoute = routes.PartialPayAfterFurloughController.onPageLoad().url
@@ -83,7 +93,11 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
+<<<<<<< HEAD
       val userAnswers1 = userAnswers.set(PartialPayAfterFurloughPage, FurloughPartialPay(111)).success.value
+=======
+      val userAnswers1 = userAnswers.set(PartialPayAfterFurloughPage, VariableLengthPartialPay(111)).success.value
+>>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
 
       val application = applicationBuilder(userAnswers = Some(userAnswers1)).build()
 
@@ -97,7 +111,11 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
       contentAsString(result) mustEqual
         view(
+<<<<<<< HEAD
           form.fill(FurloughPartialPay(111)),
+=======
+          form.fill(VariableLengthPartialPay(111)),
+>>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
           furloughEndDate.plusDays(1),
           furloughEndDate.plusDays(7),
           routes.PartialPayAfterFurloughController.onSubmit()

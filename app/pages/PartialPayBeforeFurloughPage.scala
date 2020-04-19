@@ -5,10 +5,10 @@
 
 package pages
 
-import models.FurloughPartialPay
+import models.VariableLengthPartialPay
 import play.api.libs.json.JsPath
 
-case object PartialPayBeforeFurloughPage extends QuestionPage[FurloughPartialPay] {
+case object PartialPayBeforeFurloughPage extends QuestionPage[VariableLengthPartialPay] {
 
   override def path: JsPath = JsPath \ toString
 

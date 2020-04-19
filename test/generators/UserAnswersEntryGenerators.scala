@@ -13,6 +13,7 @@ import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+<<<<<<< HEAD
   implicit lazy val arbitraryFurloughCalculationsUserAnswersEntry: Arbitrary[(FurloughCalculationsPage.type, JsValue)] =
     Arbitrary {
       for {
@@ -26,6 +27,13 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       for {
         page  <- arbitrary[PartialPayBeforeFurloughPage.type]
         value <- arbitrary[FurloughPartialPay].map(Json.toJson(_))
+=======
+  implicit lazy val arbitraryPartialPayBeforeFurloughUserAnswersEntry: Arbitrary[(PartialPayBeforeFurloughPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartialPayBeforeFurloughPage.type]
+        value <- arbitrary[VariableLengthPartialPay].map(Json.toJson(_))
+>>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
       } yield (page, value)
     }
 
@@ -33,7 +41,11 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     Arbitrary {
       for {
         page  <- arbitrary[PartialPayAfterFurloughPage.type]
+<<<<<<< HEAD
         value <- arbitrary[FurloughPartialPay].map(Json.toJson(_))
+=======
+        value <- arbitrary[VariableLengthPartialPay].map(Json.toJson(_))
+>>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
       } yield (page, value)
     }
 
