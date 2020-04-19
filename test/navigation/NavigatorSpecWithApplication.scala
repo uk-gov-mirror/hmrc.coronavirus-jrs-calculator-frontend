@@ -159,7 +159,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .success
             .value
         ) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
-<<<<<<< HEAD
       }
 
       "go to correct page after FurloughCalculationsPage" in {
@@ -179,8 +178,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .success
             .value
         ) mustBe routes.ConfirmationController.onPageLoad()
-=======
->>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
       }
 
       "go to start of pay date loop after variable gross pay page" in {

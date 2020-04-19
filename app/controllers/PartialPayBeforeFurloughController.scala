@@ -8,11 +8,7 @@ package controllers
 import java.time.LocalDate
 
 import controllers.actions._
-<<<<<<< HEAD
 import forms.FurloughPartialPayFormProvider
-=======
-import forms.VariableLengthPartialPayFormProvider
->>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
 import handlers.ErrorHandler
 import javax.inject.Inject
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
@@ -33,11 +29,7 @@ class PartialPayBeforeFurloughController @Inject()(
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-<<<<<<< HEAD
   formProvider: FurloughPartialPayFormProvider,
-=======
-  formProvider: VariableLengthPartialPayFormProvider,
->>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b
   val controllerComponents: MessagesControllerComponents,
   view: VariableLengthPartialPayView
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)

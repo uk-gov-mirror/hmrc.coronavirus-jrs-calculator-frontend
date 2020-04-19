@@ -84,11 +84,7 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-<<<<<<< HEAD:test/controllers/PartialPayBeforeFurloughControllerSpec.scala
       val userAnswers1 = userAnswers.set(PartialPayBeforeFurloughPage, FurloughPartialPay(111)).success.value
-=======
-      val userAnswers1 = userAnswers.set(PartialPayBeforeFurloughPage, VariableLengthPartialPay(111)).success.value
->>>>>>> 99695f13f65c4f3be36cb188c073ce349bf0618b:test/controllers/VariableLengthPartialPayControllerSpec.scala
 
       val application = applicationBuilder(userAnswers = Some(userAnswers1)).build()
 
