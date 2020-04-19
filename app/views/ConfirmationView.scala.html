@@ -71,5 +71,5 @@
 
     @p(Html(messages("confirmation.nextSteps.p1")))
 
-    @button(messages("confirmation.startAgain"), href = Some(routes.StartAgainController.startAgain()), classes = Some("govuk-button--secondary"))
+    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode)), classes = Some("govuk-button--secondary"))
 }
