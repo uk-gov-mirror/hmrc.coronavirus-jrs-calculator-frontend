@@ -3,6 +3,8 @@
  *
  *@
 
+@import java.time.LocalDate
+
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
@@ -15,7 +17,7 @@
         inputCurrency: components.inputCurrency
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, furloughStart: LocalDate, empStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "variableGrossPay.title"))) {
 
@@ -25,10 +27,10 @@
         @errorSummary(form.errors)
 
         @h1(messages("variableGrossPay.heading"))
-        @p(Html(messages("variableGrossPay.p")))
+        @p(Html(messages("variableGrossPay.p", dateToString(empStartDate))))
         <ul class="govuk-list govuk-list--bullet">
             <li>@messages("variableGrossPay.l1")</li>
-            <li>@messages("variableGrossPay.l2")</li>
+            <li>@messages("variableGrossPay.l2", dateToString(furloughStart))</li>
         </ul>
 
         @inputCurrency(

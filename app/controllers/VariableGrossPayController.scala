@@ -7,10 +7,11 @@ package controllers
 
 import controllers.actions._
 import forms.VariableGrossPayFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.VariableGrossPayPage
+import pages.{EmployeeStartDatePage, FurloughStartDatePage, VariableGrossPayPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -29,30 +30,34 @@ class VariableGrossPayController @Inject()(
   formProvider: VariableGrossPayFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: VariableGrossPayView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+    extends BaseController with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(VariableGrossPayPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswers(FurloughStartDatePage, EmployeeStartDatePage) { (furloughStart, empStart) =>
+      val preparedForm = request.userAnswers.get(VariableGrossPayPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Future.successful(Ok(view(preparedForm, mode, furloughStart, empStart)))
+    }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableGrossPayPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(VariableGrossPayPage, mode, updatedAnswers))
-      )
+    getRequiredAnswers(FurloughStartDatePage, EmployeeStartDatePage) { (furloughStart, empStart) =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, furloughStart, empStart))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableGrossPayPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(VariableGrossPayPage, mode, updatedAnswers))
+        )
+    }
   }
 }
