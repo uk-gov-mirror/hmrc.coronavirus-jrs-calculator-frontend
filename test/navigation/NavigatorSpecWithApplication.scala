@@ -78,11 +78,13 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .value) mustBe routes.ComingSoonController.onPageLoad()
 
         navigator.nextPage(PayQuestionPage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
+      }
 
-        val navigator2 =
+      "go to VariableLengthEmployedPage after PayQuestionPage for variable journeys" in {
+        val navigatorWithVariableJourney =
           new Navigator(new FrontendAppConfig(frontendAppConfig.configuration.++(Configuration("variable.journey.enabled" -> "true"))))
 
-        navigator2.nextPage(
+        navigatorWithVariableJourney.nextPage(
           PayQuestionPage,
           NormalMode,
           UserAnswers("id")
