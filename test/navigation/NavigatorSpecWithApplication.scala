@@ -158,7 +158,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .set(FurloughStartDatePage, LocalDate.now())
             .success
             .value
-        ) mustBe routes.VariableLengthPartialPayController.onPageLoadBeforeFurlough
+        ) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
       }
 
       "go to start of pay date loop after variable gross pay page" in {
