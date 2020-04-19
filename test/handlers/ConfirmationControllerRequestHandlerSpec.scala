@@ -25,7 +25,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
         Amount(grant),
         PeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-          PaymentDate(LocalDate.of(2020, 3, 31)))
+          PaymentDate(LocalDate.of(2020, 3, 20)))
       )
 
     def periodBreakdownTwo(nonFurloughPay: BigDecimal, grant: BigDecimal) =
@@ -52,7 +52,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
   "for a given user answer calculate furlough and empty results for ni and pension if do not apply" in new ConfirmationControllerRequestHandler {
     val userAnswers = Json.parse(jsStringWithNoNiNoPension).as[UserAnswers]
     val withPayDay: PeriodWithPaymentDate =
-      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 31)))
+      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 20)))
     val withPayDayTwo: PeriodWithPaymentDate =
       PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))), PaymentDate(LocalDate.of(2020, 4, 20)))
 

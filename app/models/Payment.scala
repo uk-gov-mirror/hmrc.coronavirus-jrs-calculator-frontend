@@ -23,7 +23,7 @@ object NonFurloughPay {
   implicit val defaultFormat: Format[NonFurloughPay] = Json.format[NonFurloughPay]
 }
 
-case class PaymentWithPeriod(nonFurloughPay: Amount, furloughPayment: Amount, period: Periods, payQuestion: PayQuestion)
+case class PaymentWithPeriod(nonFurloughPay: Amount, furloughPayment: Amount, period: PeriodWithPaymentDate, payQuestion: PayQuestion)
 
 case class PeriodBreakdown(nonFurloughPay: Amount, grant: Amount, periodWithPaymentDate: PeriodWithPaymentDate)
 

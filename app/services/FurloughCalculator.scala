@@ -18,33 +18,27 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
 
   def calculateFurloughGrant(
     paymentFrequency: PaymentFrequency,
-    regularPayments: Seq[PaymentWithPeriod],
-    furloughPeriod: Period,
-    taxYearPayDate: LocalDate): CalculationResult = {
-    val paymentDateBreakdowns = payPeriodBreakdownFromRegularPayment(paymentFrequency, regularPayments, furloughPeriod, taxYearPayDate)
+    payments: Seq[PaymentWithPeriod],
+    furloughPeriod: Period): CalculationResult = {
+    val paymentDateBreakdowns = payPeriodBreakdownFromRegularPayment(paymentFrequency, payments, furloughPeriod)
     CalculationResult(FurloughCalculationResult, paymentDateBreakdowns.map(_.grant.value).sum, paymentDateBreakdowns)
   }
 
   protected def payPeriodBreakdownFromRegularPayment(
     paymentFrequency: PaymentFrequency,
     paymentsWithPeriod: Seq[PaymentWithPeriod],
-    furloughPeriod: Period,
-    taxYearPayDate: LocalDate): Seq[PeriodBreakdown] =
+    furloughPeriod: Period): Seq[PeriodBreakdown] =
     paymentsWithPeriod.map { payment =>
-      payment.period match {
-        case fp @ FullPeriod(p) if periodContainsNewTaxYear(p) =>
-          calculateFullPeriod(paymentFrequency, payment, fp, PaymentDate(taxYearPayDate))
-        case pp @ PartialPeriod(o, _) if periodContainsNewTaxYear(o) =>
-          calculatePartialPeriod(paymentFrequency, payment, pp, PaymentDate(taxYearPayDate))
+      payment.period.period match {
         case fp @ FullPeriod(p) =>
-          calculateFullPeriod(paymentFrequency, payment, fp, PaymentDate(p.end))
+          calculateFullPeriod(paymentFrequency, payment, fp, payment.period.paymentDate)
         case pp @ PartialPeriod(o, _) =>
-          calculatePartialPeriod(paymentFrequency, payment, pp, PaymentDate(o.end))
+          calculatePartialPeriod(paymentFrequency, payment, pp, payment.period.paymentDate)
       }
     }
 
   protected def proRatePay(paymentWithPeriod: PaymentWithPeriod): Amount =
-    paymentWithPeriod.period match {
+    paymentWithPeriod.period.period match {
       case FullPeriod(_) => paymentWithPeriod.furloughPayment
       case PartialPeriod(o, p) => {
         val proRatedPay =

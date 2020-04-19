@@ -43,7 +43,7 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
     PeriodBreakdown(
       Amount(grossPay.setScale(2)),
       Amount(grant.setScale(2)),
-      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 31)))
+      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 20)))
     )
   def periodBreakdownTwo(grossPay: BigDecimal, grant: BigDecimal) =
     PeriodBreakdown(

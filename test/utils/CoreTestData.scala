@@ -25,7 +25,7 @@ trait CoreTestData {
        |{
        |    "_id" : "session-3fdd2682-dad1-48e1-80d6-8c1480696811",
        |    "data" : {
-       |        "taxYearPayDate" : "2020-04-20",
+       |        "lastPayDate" : "2020-04-20",
        |        "furloughQuestion" : "$furloughQuestion",
        |        "furloughStartDate" : "$furloughStartDate",
        |        "furloughEndDate" : "$furloughEndDate",
@@ -58,7 +58,7 @@ trait CoreTestData {
     """{
       |  "_id": "session-9dee1ca2-1378-479b-92f8-748de7f363d5",
       |  "data": {
-      |    "taxYearPayDate" : "2020-04-20",
+      |    "lastPayDate" : "2020-04-20",
       |    "furloughQuestion": "no",
       |    "furloughStartDate" : "2020-03-01",
       |    "payQuestion": "regularly",
@@ -85,7 +85,7 @@ trait CoreTestData {
     """{
       |    "_id" : "session-4f8fa4d9-b46c-466f-ae9b-424cfffd841f",
       |    "data" : {
-      |        "taxYearPayDate" : "2020-04-07",
+      |        "lastPayDate" : "2020-03-31",
       |        "furloughQuestion" : "no",
       |        "furloughStartDate" : "2020-03-10",
       |        "payQuestion" : "regularly",
@@ -125,7 +125,7 @@ trait CoreTestData {
       |        "PartialPayAfterFurlough" : {
       |            "value" : 800
       |        },
-      |        "taxYearPayDate" : "2020-04-20",
+      |        "lastPayDate" : "2020-04-20",
       |        "PartialPayBeforeFurlough" : {
       |            "value" : 1000
       |        },

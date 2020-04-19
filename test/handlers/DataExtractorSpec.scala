@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FullPeriod, PaymentWithPeriod, Period, Salary, UserAnswers}
+import models.{Amount, FullPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, Salary, UserAnswers}
 import pages.FurloughStartDatePage
 import play.api.libs.json.Json
 import utils.CoreTestData
@@ -20,7 +20,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
 
     extract(userAnswers) must matchPattern {
-      case Some(MandatoryData(_, _, _, _, _, _, _, _)) =>
+      case Some(MandatoryData(_, _, _, _, _, _, _, _, _)) =>
     }
   }
 
@@ -62,8 +62,22 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
   "Extract payments for employees that are paid a regular amount each time" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
     val expected = Seq(
-      PaymentWithPeriod(Amount(0.0), Amount(2000.0), FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), Regularly),
-      PaymentWithPeriod(Amount(0.0), Amount(2000.0), FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))), Regularly)
+      PaymentWithPeriod(
+        Amount(0.0),
+        Amount(2000.0),
+        PeriodWithPaymentDate(
+          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+          PaymentDate(LocalDate.of(2020, 3, 20))),
+        Regularly
+      ),
+      PaymentWithPeriod(
+        Amount(0.0),
+        Amount(2000.0),
+        PeriodWithPaymentDate(
+          FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+          PaymentDate(LocalDate.of(2020, 4, 20))),
+        Regularly
+      )
     )
 
     val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
@@ -75,8 +89,22 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
     val userAnswers =
       Json.parse(userAnswersJson(payQuestion = "varies", variableGrossPay = "2400.00", employeeStartDate = "2019-12-01")).as[UserAnswers]
     val expected = Seq(
-      PaymentWithPeriod(Amount(0.00), Amount(817.47), FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), Varies),
-      PaymentWithPeriod(Amount(0.00), Amount(791.10), FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))), Varies)
+      PaymentWithPeriod(
+        Amount(0.00),
+        Amount(817.47),
+        PeriodWithPaymentDate(
+          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+          PaymentDate(LocalDate.of(2020, 3, 20))),
+        Varies
+      ),
+      PaymentWithPeriod(
+        Amount(0.00),
+        Amount(791.10),
+        PeriodWithPaymentDate(
+          FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+          PaymentDate(LocalDate.of(2020, 4, 20))),
+        Varies
+      )
     )
 
     val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))

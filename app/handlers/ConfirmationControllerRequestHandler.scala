@@ -44,10 +44,9 @@ trait ConfirmationControllerRequestHandler
   protected def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
     for {
       data           <- extract(userAnswers)
-      taxPayYear     <- userAnswers.get(TaxYearPayDatePage)
       furloughPeriod <- extractFurloughPeriod(userAnswers)
       regulars       <- extractPayments(userAnswers, furloughPeriod)
-    } yield calculateFurloughGrant(data.paymentFrequency, regulars, furloughPeriod, taxPayYear)
+    } yield calculateFurloughGrant(data.paymentFrequency, regulars, furloughPeriod)
 
   private def handleCalculationNi(data: Option[MandatoryData], furloughResult: CalculationResult): Option[CalculationResult] =
     for {

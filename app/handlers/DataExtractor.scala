@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import models.FurloughQuestion.{No, Yes}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FurloughQuestion, NicCategory, NonFurloughPay, PayQuestion, PaymentFrequency, PaymentWithPeriod, PensionStatus, Period, Periods, UserAnswers}
+import models.{Amount, FurloughQuestion, NicCategory, NonFurloughPay, PayQuestion, PaymentFrequency, PaymentWithPeriod, PensionStatus, Period, PeriodWithPaymentDate, Periods, UserAnswers}
 import pages._
 import services.ReferencePayCalculator
 
@@ -21,7 +21,8 @@ case class MandatoryData(
   payQuestion: PayQuestion,
   furloughQuestion: FurloughQuestion,
   payDates: Seq[LocalDate],
-  furloughStart: LocalDate)
+  furloughStart: LocalDate,
+  lastPayDay: LocalDate)
 
 trait DataExtractor extends ReferencePayCalculator {
 
@@ -35,8 +36,9 @@ trait DataExtractor extends ReferencePayCalculator {
       payQuestion   <- userAnswers.get(PayQuestionPage)
       furlough      <- userAnswers.get(FurloughQuestionPage)
       furloughStart <- userAnswers.get(FurloughStartDatePage)
+      lastPayDay    <- userAnswers.get(LastPayDatePage)
       payDate = userAnswers.getList(PayDatePage)
-    } yield MandatoryData(Period(claimStart, claimEnd), frequency, nic, pension, payQuestion, furlough, payDate, furloughStart)
+    } yield MandatoryData(Period(claimStart, claimEnd), frequency, nic, pension, payQuestion, furlough, payDate, furloughStart, lastPayDay)
 
   def extractFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
     extract(userAnswers).flatMap { data =>
@@ -51,11 +53,12 @@ trait DataExtractor extends ReferencePayCalculator {
       data     <- extract(userAnswers)
       grossPay <- extractGrossPay(userAnswers)
       periods: Seq[Periods] = generatePeriods(data.payDates, furloughPeriod)
+      periodsWithPayDay = assignPayDates(data.paymentFrequency, periods, data.lastPayDay)
     } yield {
       data.payQuestion match {
-        case Regularly => periods.map(p => PaymentWithPeriod(Amount(0.0), grossPay, p, Regularly))
+        case Regularly => periodsWithPayDay.map(p => PaymentWithPeriod(Amount(0.0), grossPay, p, Regularly))
         case Varies =>
-          extractVariablePayments(userAnswers, periods).fold(Seq[PaymentWithPeriod]())(payments => payments)
+          extractVariablePayments(userAnswers, periodsWithPayDay).fold(Seq[PaymentWithPeriod]())(payments => payments)
       }
     }
 
@@ -73,7 +76,7 @@ trait DataExtractor extends ReferencePayCalculator {
       employeeStartDate <- userAnswers.get(EmployeeStartDatePage)
     } yield endDateOrTaxYearEnd(Period(employeeStartDate, data.claimPeriod.start.minusDays(1)))
 
-  private def extractVariablePayments(userAnswers: UserAnswers, periods: Seq[Periods]): Option[Seq[PaymentWithPeriod]] =
+  private def extractVariablePayments(userAnswers: UserAnswers, periods: Seq[PeriodWithPaymentDate]): Option[Seq[PaymentWithPeriod]] =
     for {
       grossPay            <- extractGrossPay(userAnswers)
       priorFurloughPeriod <- extractPriorFurloughPeriod(userAnswers)
