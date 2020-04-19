@@ -25,7 +25,7 @@ class CalculationResultSpec extends SpecBase {
                     |   "total":0.1,
                     |   "payPeriodBreakdowns":[
                     |      {
-                    |         "grossPay":"567.0",
+                    |         "nonFurloughPay":"567.0",
                     |         "grant":"123.0",
                     |         "periodWithPaymentDate":{
                     |            "period":{

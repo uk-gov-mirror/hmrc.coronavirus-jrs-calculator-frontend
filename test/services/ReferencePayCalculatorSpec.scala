@@ -8,14 +8,16 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{Amount, FullPeriod, PartialPeriod, PaymentWithPeriod, Period}
+import models.PayQuestion.Varies
+import models.{Amount, FullPeriod, NonFurloughPay, PartialPeriod, PaymentWithPeriod, Period}
 
 class ReferencePayCalculatorSpec extends SpecBase {
 
   "calculates reference gross pay for an employee on variable pays" in new ReferencePayCalculator {
     val employeeStartDate = LocalDate.of(2019, 12, 1)
     val furloughStartDate = LocalDate.of(2020, 3, 1)
-    val grossSalary = Amount(2400.0)
+    val nonFurloughPay = NonFurloughPay(None, Some(Amount(1000.00)))
+    val grossPay = Amount(2400.00)
     val priorFurloughPeriod = Period(employeeStartDate, furloughStartDate.minusDays(1))
     val afterFurloughPeriod = FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)))
     val afterFurloughPeriodTwo = FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)))
@@ -25,12 +27,12 @@ class ReferencePayCalculatorSpec extends SpecBase {
     val payPeriods = Seq(afterFurloughPeriod, afterFurloughPeriodTwo, afterFurloughPartial)
 
     val expected = Seq(
-      PaymentWithPeriod(Amount(817.47), afterFurloughPeriod),
-      PaymentWithPeriod(Amount(791.10), afterFurloughPeriodTwo),
-      PaymentWithPeriod(Amount(395.55), afterFurloughPartial),
+      PaymentWithPeriod(Amount(0.0), Amount(817.47), afterFurloughPeriod, Varies),
+      PaymentWithPeriod(Amount(0.0), Amount(791.10), afterFurloughPeriodTwo, Varies),
+      PaymentWithPeriod(Amount(1000.0), Amount(395.55), afterFurloughPartial, Varies),
     )
 
-    calculateVariablePay(priorFurloughPeriod, payPeriods, grossSalary) mustBe expected
+    calculateVariablePay(nonFurloughPay, priorFurloughPeriod, payPeriods, grossPay) mustBe expected
   }
 
   "calculate daily average gross earning for a given pay period" in new ReferencePayCalculator {

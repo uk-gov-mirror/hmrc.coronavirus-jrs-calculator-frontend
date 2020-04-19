@@ -18,9 +18,14 @@ trait PensionCalculator extends TaxYearFinder with FurloughCapCalculator {
     val pensionBreakdowns = furloughBreakdown.map { breakdown =>
       breakdown.periodWithPaymentDate.period match {
         case fp @ FullPeriod(_) =>
-          calculateFullPeriodPension(frequency, breakdown.grossPay, breakdown.grant, fp, breakdown.periodWithPaymentDate.paymentDate)
+          calculateFullPeriodPension(frequency, breakdown.nonFurloughPay, breakdown.grant, fp, breakdown.periodWithPaymentDate.paymentDate)
         case pp @ PartialPeriod(_, _) =>
-          calculatePartialPeriodPension(frequency, breakdown.grossPay, breakdown.grant, pp, breakdown.periodWithPaymentDate.paymentDate)
+          calculatePartialPeriodPension(
+            frequency,
+            breakdown.nonFurloughPay,
+            breakdown.grant,
+            pp,
+            breakdown.periodWithPaymentDate.paymentDate)
       }
     }
 

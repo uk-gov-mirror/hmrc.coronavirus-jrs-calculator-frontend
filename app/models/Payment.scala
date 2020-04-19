@@ -17,9 +17,15 @@ object PaymentDate {
     ValueClassFormat.format(dateString => PaymentDate.apply(LocalDate.parse(dateString)))(_.value)
 }
 
-case class PaymentWithPeriod(amount: Amount, period: Periods)
+case class NonFurloughPay(pre: Option[Amount], post: Option[Amount])
 
-case class PeriodBreakdown(grossPay: Amount, grant: Amount, periodWithPaymentDate: PeriodWithPaymentDate)
+object NonFurloughPay {
+  implicit val defaultFormat: Format[NonFurloughPay] = Json.format[NonFurloughPay]
+}
+
+case class PaymentWithPeriod(nonFurloughPay: Amount, furloughPayment: Amount, period: Periods, payQuestion: PayQuestion)
+
+case class PeriodBreakdown(nonFurloughPay: Amount, grant: Amount, periodWithPaymentDate: PeriodWithPaymentDate)
 
 object PeriodBreakdown {
   implicit val defaultFormat: Format[PeriodBreakdown] = Json.format[PeriodBreakdown]
