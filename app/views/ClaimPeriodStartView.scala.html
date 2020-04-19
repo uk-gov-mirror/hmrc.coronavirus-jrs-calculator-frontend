@@ -15,7 +15,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, "claimPeriodStart.title"))) {
+    @govukLayout(pageTitle = Some(title(form, "claimPeriodStart.title")), showBackButton = false) {
 
         @formHelper(action = ClaimPeriodStartController.onSubmit(mode)) {
 
