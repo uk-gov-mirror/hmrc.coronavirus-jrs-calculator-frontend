@@ -21,8 +21,8 @@ class LastPayDateFormProviderSpec extends DateBehaviours {
     behave like dateFieldWithMin(
       form,
       "value",
-      minimiumDate,
-      FormError("value", "lastPayDate.error.minimum", Array(ViewUtils.dateToString(minimiumDate))))
+      minimiumDate.minusDays(90),
+      FormError("value", "lastPayDate.error.minimum", Array(ViewUtils.dateToString(minimiumDate.minusDays(90)))))
 
     behave like mandatoryDateField(form, "value", "lastPayDate.error.required.all")
   }
