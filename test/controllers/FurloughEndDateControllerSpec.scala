@@ -31,11 +31,11 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
   private val claimPeriodStart = LocalDate.of(2020, 3, 1)
   private val claimPeriodEnd = LocalDate.of(2020, 5, 1)
   private val furloughStart = LocalDate.of(2020, 4, 1)
-  private def form = formProvider(claimPeriodStart, claimPeriodEnd, furloughStart)
+  private def form = formProvider(claimPeriodEnd, furloughStart)
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = furloughStart.plusDays(21)
 
   lazy val furloughEndDateRoute = routes.FurloughEndDateController.onPageLoad(NormalMode).url
 
