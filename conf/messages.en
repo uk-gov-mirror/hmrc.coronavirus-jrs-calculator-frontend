@@ -392,15 +392,6 @@ comingSoon.p = This will be available in a future version.
 comingSoon.start.another = Start another calculation
 comingSoon.showCalculateTopupsLink.label = Calculate without topups
 
-variableLengthPartialPay.title = What did the employee get paid between {0} and {1}?
-variableLengthPartialPay.heading = What did the employee get paid between {0} and {1}?
-variableLengthPartialPay.label = This is for the time that employee was paid when they were not furloughed.
-variableLengthPartialPay.checkYourAnswersLabel = variableLengthPartialPay
-variableLengthPartialPay.error.required = Enter a valid amount
-variableLengthPartialPay.error.invalid = Enter a valid amount
-variableLengthPartialPay.error.negative = Salary can’t be negative
-variableLengthPartialPay.p = This is for the time that employee was paid when they were not furloughed.
-
 furloughCalculations.heading = Gross furlough amount breakdown
 furloughCalculations.title = Gross furlough amount breakdown
 furloughCalculations.p1 = Has this employee been paid more than these amounts or do you intend to top up pay in any of the pay periods?
@@ -412,3 +403,12 @@ furloughCalculations.error.required = Select one of the options below
 furloughCalculations.payperiodending.label = Pay period ending
 furloughCalculations.grossfurloughamount.label = Gross furlough amount
 furloughCalculations.total.label = Total
+
+FurloughPartialPay.title = What did the employee get paid between {0} and {1}?
+FurloughPartialPay.heading = What did the employee get paid between {0} and {1}?
+FurloughPartialPay.label = This is for the time that employee was paid when they were not furloughed.
+FurloughPartialPay.checkYourAnswersLabel = variableLengthPartialPay
+FurloughPartialPay.error.required = Enter a valid amount
+FurloughPartialPay.error.invalid = Enter a valid amount
+FurloughPartialPay.error.negative = Salary can’t be negative
+FurloughPartialPay.p = This is for the time that employee was paid when they were not furloughed.

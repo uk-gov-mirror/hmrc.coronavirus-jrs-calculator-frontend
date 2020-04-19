@@ -8,19 +8,19 @@ package forms
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
-class VariableLengthPartialPayFormProviderSpec extends BigDecimalFieldBehaviours {
+class FurloughPartialPayFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val requiredKey = "variableLengthPartialPay.error.required"
-  val lengthKey = "variableLengthPartialPay.error.length"
+  val requiredKey = "FurloughPartialPay.error.required"
+  val lengthKey = "FurloughPartialPay.error.length"
   val maxLength = 100
 
-  val form = new VariableLengthPartialPayFormProvider()()
+  val form = new FurloughPartialPayFormProvider()()
 
   ".value" must {
 
     val fieldName = "value"
-    val requiredKey = "variableLengthPartialPay.error.required"
-    val invalidKey = "variableLengthPartialPay.error.invalid"
+    val requiredKey = "FurloughPartialPay.error.required"
+    val invalidKey = "FurloughPartialPay.error.invalid"
 
     behave like bigDecimalField(
       form,

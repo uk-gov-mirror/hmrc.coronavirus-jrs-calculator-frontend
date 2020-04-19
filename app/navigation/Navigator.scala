@@ -42,8 +42,11 @@ class Navigator @Inject()() {
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
       _ =>
-        routes.VariableLengthPartialPayController.onPageLoadBeforeFurlough
-    case VariableLengthPartialPayPage =>
+        routes.PartialPayBeforeFurloughController.onPageLoad()
+    case PartialPayBeforeFurloughPage =>
+      _ =>
+        routes.PartialPayAfterFurloughController.onPageLoad()
+    case PartialPayAfterFurloughPage =>
       _ =>
         routes.VariableGrossPayController.onPageLoad(NormalMode)
     case VariableGrossPayPage =>
