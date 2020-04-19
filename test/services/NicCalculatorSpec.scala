@@ -81,6 +81,16 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))),
       PaymentDate(LocalDate.of(2020, 3, 31)),
       Amount(202.83)
+    ),
+    (
+      Monthly,
+      Amount(630.00),
+      Amount(440.00),
+      PartialPeriod(
+        Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
+        Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))),
+      PaymentDate(LocalDate.of(2020, 3, 31)),
+      Amount(0.00)
     )
   )
 
