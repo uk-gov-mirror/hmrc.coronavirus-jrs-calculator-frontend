@@ -55,12 +55,12 @@ class PartialPayAfterFurloughController @Inject()(
           ))
 
       case (Some(_), None) =>
-        Redirect((routes.VariableGrossPayController.onPageLoad(NormalMode)))
+        Redirect(routes.VariableGrossPayController.onPageLoad(NormalMode))
 
-      case (None, _) => Redirect((routes.ClaimPeriodEndController.onPageLoad(NormalMode)))
+      case (None, _) => Redirect(routes.ClaimPeriodEndController.onPageLoad(NormalMode))
 
       case _ =>
-        Redirect((routes.VariableGrossPayController.onPageLoad(NormalMode)))
+        Redirect(routes.VariableGrossPayController.onPageLoad(NormalMode))
     }
   }
 
