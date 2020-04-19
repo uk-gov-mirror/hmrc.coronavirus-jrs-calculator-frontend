@@ -58,11 +58,11 @@ trait ModelGenerators {
       } yield VariableGrossPay(value)
     }
 
-  implicit lazy val arbitraryVariableLengthPartialPayQuestion: Arbitrary[VariableLengthPartialPay] =
+  implicit lazy val arbitraryVariableLengthPartialPayQuestion: Arbitrary[FurloughPartialPay] =
     Arbitrary {
       for {
         value <- Arbitrary.arbitrary[BigDecimal]
-      } yield VariableLengthPartialPay(value)
+      } yield FurloughPartialPay(value)
     }
 
   implicit lazy val arbitraryPaymentFrequency: Arbitrary[PaymentFrequency] =

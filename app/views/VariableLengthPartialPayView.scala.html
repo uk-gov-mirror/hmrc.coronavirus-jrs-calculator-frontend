@@ -10,8 +10,6 @@
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
         button: components.button,
-        inputText: components.inputText,
-        fieldset: components.fieldset,
         h1: components.h1,
         p: components.p,
         inputCurrency: components.inputCurrency
@@ -19,15 +17,15 @@
 
 @(form: Form[_], date1: LocalDate, date2: LocalDate, submitUrl: Call)(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, "variableLengthPartialPay.title"))) {
+    @govukLayout(pageTitle = Some(title(form, "FurloughPartialPay.title"))) {
 
 
         @formHelper(action = submitUrl) {
 
             @errorSummary(form.errors)
 
-            @h1(messages("variableLengthPartialPay.heading", dateToString(date1), dateToString(date2)))
-            @p(Html(messages("variableLengthPartialPay.p")))
+            @h1(messages("FurloughPartialPay.heading", dateToString(date1), dateToString(date2)))
+            @p(Html(messages("FurloughPartialPay.p")))
 
             @inputCurrency(
                 form,

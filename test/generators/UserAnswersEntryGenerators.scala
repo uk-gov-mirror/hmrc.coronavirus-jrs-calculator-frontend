@@ -21,11 +21,19 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryVariableLengthPartialPayUserAnswersEntry: Arbitrary[(VariableLengthPartialPayPage.type, JsValue)] =
+  implicit lazy val arbitraryPartialPayBeforeFurloughUserAnswersEntry: Arbitrary[(PartialPayBeforeFurloughPage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[VariableLengthPartialPayPage.type]
-        value <- arbitrary[VariableLengthPartialPay].map(Json.toJson(_))
+        page  <- arbitrary[PartialPayBeforeFurloughPage.type]
+        value <- arbitrary[FurloughPartialPay].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartialPayAfterFurloughUserAnswersEntry: Arbitrary[(PartialPayAfterFurloughPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartialPayAfterFurloughPage.type]
+        value <- arbitrary[FurloughPartialPay].map(Json.toJson(_))
       } yield (page, value)
     }
 

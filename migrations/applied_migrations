@@ -1,25 +1,28 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration FurloughCalculations"
+echo "Applying migration PartialPayBeforeFurlough"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /furloughCalculations                        controllers.FurloughCalculationsController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /furloughCalculations                        controllers.FurloughCalculationsController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /PartialPayBeforeFurlough                        controllers.PartialPayBeforeFurloughController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /PartialPayBeforeFurlough                        controllers.PartialPayBeforeFurloughController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeFurloughCalculations                  controllers.FurloughCalculationsController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeFurloughCalculations                  controllers.FurloughCalculationsController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changePartialPayBeforeFurlough                  controllers.PartialPayBeforeFurloughController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changePartialPayBeforeFurlough                  controllers.PartialPayBeforeFurloughController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "furloughCalculations.title = Gross furlough amount breakdown" >> ../conf/messages.en
-echo "furloughCalculations.heading = Gross furlough amount breakdown" >> ../conf/messages.en
-echo "furloughCalculations.yes = Yes" >> ../conf/messages.en
-echo "furloughCalculations.no = No" >> ../conf/messages.en
-echo "furloughCalculations.checkYourAnswersLabel = Gross furlough amount breakdown" >> ../conf/messages.en
-echo "furloughCalculations.error.required = Select furloughCalculations" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.title = PartialPayBeforeFurlough" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.heading = PartialPayBeforeFurlough" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.xxxxx = xxxxx" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.xxxxxxx = xxxxxxx" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.checkYourAnswersLabel = PartialPayBeforeFurlough" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.error.xxxxx.required = Enter xxxxx" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.error.xxxxxxx.required = Enter xxxxxxx" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.error.xxxxx.length = xxxxx must be xxx characters or less" >> ../conf/messages.en
+echo "PartialPayBeforeFurlough.error.xxxxxxx.length = xxxxxxx must be xxxx characters or less" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
@@ -30,6 +33,11 @@ awk '/trait UserAnswersEntryGenerators/ {\
     print "      for {";\
     print "        page  <- arbitrary[FurloughCalculationsPage.type]";\
     print "        value <- arbitrary[FurloughCalculations].map(Json.toJson(_))";\
+    print "  implicit lazy val arbitraryPartialPayBeforeFurloughUserAnswersEntry: Arbitrary[(PartialPayBeforeFurloughPage.type, JsValue)] =";\
+    print "    Arbitrary {";\
+    print "      for {";\
+    print "        page  <- arbitrary[PartialPayBeforeFurloughPage.type]";\
+    print "        value <- arbitrary[PartialPayBeforeFurlough].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -40,6 +48,8 @@ awk '/trait PageGenerators/ {\
     print "";\
     print "  implicit lazy val arbitraryFurloughCalculationsPage: Arbitrary[FurloughCalculationsPage.type] =";\
     print "    Arbitrary(FurloughCalculationsPage)";\
+    print "  implicit lazy val arbitraryPartialPayBeforeFurloughPage: Arbitrary[PartialPayBeforeFurloughPage.type] =";\
+    print "    Arbitrary(PartialPayBeforeFurloughPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to ModelGenerators"
@@ -49,6 +59,12 @@ awk '/trait ModelGenerators/ {\
     print "  implicit lazy val arbitraryFurloughCalculations: Arbitrary[FurloughCalculations] =";\
     print "    Arbitrary {";\
     print "      Gen.oneOf(FurloughCalculations.values.toSeq)";\
+    print "  implicit lazy val arbitraryPartialPayBeforeFurlough: Arbitrary[PartialPayBeforeFurlough] =";\
+    print "    Arbitrary {";\
+    print "      for {";\
+    print "        xxxxx <- arbitrary[String]";\
+    print "        xxxxxxx <- arbitrary[String]";\
+    print "      } yield PartialPayBeforeFurlough(xxxxx, xxxxxxx)";\
     print "    }";\
     next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
@@ -59,3 +75,7 @@ awk '/val generators/ {\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
 echo "Migration FurloughCalculations completed"
+    print "    arbitrary[(PartialPayBeforeFurloughPage.type, JsValue)] ::";\
+    next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
+
+echo "Migration PartialPayBeforeFurlough completed"
