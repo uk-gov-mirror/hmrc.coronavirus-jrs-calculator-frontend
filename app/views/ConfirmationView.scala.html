@@ -37,8 +37,8 @@
     @p(Html(messages("confirmation.explanation.p1")))
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("confirmation.claimPeriod", cm.claimPeriod.start, cm.claimPeriod.end)</li>
-        <li>@messages("confirmation.furloughPeriod", cm.furloughPeriod.start, cm.furloughPeriod.end)</li>
+        <li>@messages("confirmation.claimPeriod", dateToString(cm.claimPeriod.start), dateToString(cm.claimPeriod.end))</li>
+        <li>@messages("confirmation.furloughPeriod", dateToString(cm.furloughPeriod.start), dateToString(cm.furloughPeriod.end))</li>
         <li>@messages(s"confirmation.paid.${cm.frequency}")</li>
         <li>@messages(s"confirmation.nic.${cm.nic}")</li>
         <li>@messages(s"confirmation.pension.${cm.pension}")</li>
@@ -57,7 +57,7 @@
                         Breakdown by pay date
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        Up to @furlough.periodWithPaymentDate.period.period.end<br><br>
+                        Up to @dateToString(furlough.periodWithPaymentDate.period.period.end)<br><br>
                         &pound;@furlough.grant.value.setScale(2) <span class="govuk-!-font-weight-regular"> - Furloughed pay</span> <br>
                         &pound;@nic.grant.value.setScale(2) <span class="govuk-!-font-weight-regular">- Employer NIC</span> <br>
                         &pound;@pension.grant.value.setScale(2) <span class="govuk-!-font-weight-regular">- Pension contribution</span>
