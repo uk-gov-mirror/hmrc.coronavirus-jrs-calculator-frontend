@@ -322,19 +322,6 @@ furloughQuestion.no = No, it is ongoing
 furloughQuestion.checkYourAnswersLabel = Has the employee’s furlough ended?
 furloughQuestion.error.required = Select one of the options below
 
-taxYearPayDate.title = What’s the first pay date in the current tax year (starting 6 April 2020)?
-taxYearPayDate.heading = What’s the first pay date in the current tax year (starting 6 April 2020)?
-taxYearPayDate.p1 = This is the date this employee got paid. It may not be the same as the pay period end date.
-taxYearPayDate.p2 = We need this date because there are different National Insurance and pension calculations for different tax years.
-taxYearPayDate.checkYourAnswersLabel = TaxYearPayDate
-taxYearPayDate.legend =
-taxYearPayDate.hint = For example, 30 4 2020
-taxYearPayDate.error.required.all = Enter the first payday after 6 April
-taxYearPayDate.error.required.two = The payday must include {0} and {1}
-taxYearPayDate.error.required = The payday must include {0}
-taxYearPayDate.error.invalid = Enter a real date
-taxYearPayDate.error.outofrange = The pay date should be between {0} and {1}
-
 furloughEndDate.title = When did their furlough end?
 furloughEndDate.heading = When did their furlough end?
 furloughEndDate.checkYourAnswersLabel = FurloughEndDate
