@@ -21,6 +21,7 @@ class LastPayDateFormProvider @Inject() extends Mappings {
         allRequiredKey = "lastPayDate.error.required.all",
         twoRequiredKey = "lastPayDate.error.required.two",
         requiredKey = "lastPayDate.error.required"
-      ).verifying(minDate(latestPeriodEnd, "lastPayDate.error.minimum", ViewUtils.dateToString(latestPeriodEnd)))
+      ).verifying(
+        minDate(latestPeriodEnd.minusDays(90), "lastPayDate.error.minimum", ViewUtils.dateToString(latestPeriodEnd.minusDays(90))))
     )
 }

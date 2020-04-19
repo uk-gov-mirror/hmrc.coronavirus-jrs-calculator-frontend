@@ -34,7 +34,6 @@ class LastPayDateController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  // TODO: This needs to be the latest date value from pay-dates loop
   def form(latestPayDate: LocalDate) = formProvider(latestPayDate)
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
