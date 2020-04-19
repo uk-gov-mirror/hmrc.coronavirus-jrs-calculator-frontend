@@ -25,7 +25,7 @@
 
         @h1(messages(if(idx == 1){"payDate.heading.firstDate"} else {"payDate.heading"}, dateToString(messageDate)))
 
-        @p(Html(messages("payDate.p")))
+        @p(Html(messages(if(idx == 1){"payDate.firstP"} else {"payDate.p"})))
 
         <div class="form-group">
             <details class="govuk-details">
@@ -40,8 +40,7 @@
 
         @inputDate(
             form,
-            "",
-            hintText = Some("payDate.hint")
+            ""
         )
 
         @button("site.continue")

@@ -48,7 +48,11 @@ class PayDateController @Inject()(
   }
 
   private def messageDateFrom(claimStartDate: LocalDate, userAnswers: UserAnswers, idx: Int): LocalDate =
-    latestOf(userAnswers.getList(PayDatePage).+:(claimStartDate).apply(idx - 1), claimStartDate.minusDays(1))
+    if (idx == 1) {
+      claimStartDate
+    } else {
+      userAnswers.getList(PayDatePage).apply(idx - 2)
+    }
 
   private def latestOf(a: LocalDate, b: LocalDate): LocalDate = if (a.isAfter(b)) a else b
 
