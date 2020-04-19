@@ -13,7 +13,7 @@ import handlers.ErrorHandler
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
+import pages.{ClaimPeriodEndPage, FurloughEndDatePage, FurloughStartDatePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -35,40 +35,31 @@ class FurloughEndDateController @Inject()(
     extends BaseController with I18nSupport {
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    request.userAnswers.get(FurloughStartDatePage) match {
-      case Some(start) =>
-        getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
-          val preparedForm = request.userAnswers.get(FurloughEndDatePage) match {
-            case None        => form(claimStartDate, claimEndDate, start)
-            case Some(value) => form(claimStartDate, claimEndDate, start).fill(value)
-          }
+    getRequiredAnswers(ClaimPeriodEndPage, FurloughStartDatePage) { (claimEndDate, furloughStart) =>
+      val preparedForm = request.userAnswers.get(FurloughEndDatePage) match {
+        case None        => form(claimEndDate, furloughStart)
+        case Some(value) => form(claimEndDate, furloughStart).fill(value)
+      }
 
-          Future.successful(Ok(view(preparedForm, mode, claimEndDate)))
-        }
-
-      case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad(mode)))
+      Future.successful(Ok(view(preparedForm, mode, claimEndDate)))
     }
   }
 
-  def form(claimStartDate: LocalDate, claimEndDate: LocalDate, furloughStartDate: LocalDate) =
-    formProvider(claimStartDate, claimEndDate, furloughStartDate)
+  def form(claimEndDate: LocalDate, furloughStartDate: LocalDate) =
+    formProvider(claimEndDate, furloughStartDate)
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    request.userAnswers.get(FurloughStartDatePage) match {
-      case Some(start) =>
-        getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
-          form(claimStartDate, claimEndDate, start)
-            .bindFromRequest()
-            .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, claimEndDate))),
-              value =>
-                for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughEndDatePage, value))
-                  _              <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(FurloughEndDatePage, mode, updatedAnswers))
-            )
-        }
-      case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad(mode)))
+    getRequiredAnswers(ClaimPeriodEndPage, FurloughStartDatePage) { (claimEndDate, furloughStart) =>
+      form(claimEndDate, furloughStart)
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, claimEndDate))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughEndDatePage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(FurloughEndDatePage, mode, updatedAnswers))
+        )
     }
   }
 }

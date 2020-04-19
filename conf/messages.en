@@ -343,8 +343,7 @@ furloughEndDate.error.required.all = Enter the furlough end date
 furloughEndDate.error.required.two = The furlough end date must include {0} and {1}
 furloughEndDate.error.required = The furlough end date must include {0}
 furloughEndDate.error.invalid = Enter a real furlough end date
-furloughEndDate.error.minimum = The furlough end date must be after {0}
-furloughEndDate.error.maximum = The furlough end date must be before {0}
+furloughEndDate.error.min.max = The furlough end date must be at least 3 weeks after furlough started and before the end of the claim
 
 furloughStartDate.title = When was this employee furloughed?
 furloughStartDate.heading = When was this employee furloughed?

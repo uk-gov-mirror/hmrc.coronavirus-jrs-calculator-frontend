@@ -10,7 +10,7 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import forms.FurloughPartialPayFormProvider
 import models.PaymentFrequency.Weekly
-import models.{FurloughPartialPay, UserAnswers}
+import models.{FurloughPartialPay, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -125,6 +125,93 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual onwardRoute.url
+
+      application.stop()
+    }
+
+    "redirect to the /variable-gross-pay straightaway if there is No furlough end stored in UserAnswers" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val userAnswersUpdated = UserAnswers(userAnswersId)
+        .set(ClaimPeriodEndPage, claimEndDate)
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersUpdated))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest(submitAfterFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.VariableGrossPayController.onPageLoad(NormalMode).url
+
+      application.stop()
+    }
+
+    "redirect to the /claim-period-end if there is no stored claim-period-end date in UserAnswers" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val userAnswersUpdated = UserAnswers(userAnswersId)
+        .set(FurloughEndDatePage, claimEndDate.minusDays(1))
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersUpdated))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest(submitAfterFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.ClaimPeriodEndController.onPageLoad(NormalMode).url
+
+      application.stop()
+    }
+
+    "redirect to the /variable-gross-pay if there is not enough partial to show for furlough end" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val userAnswersUpdated = UserAnswers(userAnswersId)
+        .set(ClaimPeriodEndPage, claimEndDate)
+        .success
+        .value
+        .set(FurloughEndDatePage, claimEndDate.minusDays(1))
+        .success
+        .value
+        .set(PaymentFrequencyPage, Weekly)
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersUpdated))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest(submitAfterFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.VariableGrossPayController.onPageLoad(NormalMode).url
 
       application.stop()
     }

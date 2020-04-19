@@ -14,18 +14,14 @@ import views.ViewUtils.dateToString
 
 class FurloughEndDateFormProvider @Inject() extends Mappings {
 
-  def apply(claimPeriodStart: LocalDate, claimPeriodEnd: LocalDate, furloughStartDate: LocalDate): Form[LocalDate] = {
-    val minimumDate = if (furloughStartDate.isAfter(claimPeriodStart)) furloughStartDate else claimPeriodStart
-    val maximumDate = LocalDate.now()
-
+  def apply(claimPeriodEnd: LocalDate, furloughStartDate: LocalDate): Form[LocalDate] =
     Form(
       "value" -> localDate(
         invalidKey = "furloughEndDate.error.invalid",
         allRequiredKey = "furloughEndDate.error.required.all",
         twoRequiredKey = "furloughEndDate.error.required.two",
         requiredKey = "furloughEndDate.error.required"
-      ).verifying(minDate(minimumDate.plusDays(1), "furloughEndDate.error.minimum", dateToString(minimumDate)))
-        .verifying(maxDate(maximumDate.plusDays(1), "furloughEndDate.error.maximum", dateToString(maximumDate)))
+      ).verifying(minDate(furloughStartDate.plusDays(21), "furloughEndDate.error.min.max"))
+        .verifying(maxDate(claimPeriodEnd, "furloughEndDate.error.min.max"))
     )
-  }
 }
