@@ -55,7 +55,7 @@
 
 @inputSnippet(describedBy: String) = {
 @defining {
-    id="@id" name="@name" type="number"@form("value").value.map { value => value="@value" }@if(describedBy.nonEmpty) { aria-describedby="@describedBy"}
+    id="@id" name="@name" type="decimal"@form("value").value.map { value => value="@value" }@if(describedBy.nonEmpty) { aria-describedby="@describedBy"}
 } { attrs =>
         <div class="govuk-currency-input govuk-body">
             <div class="govuk-currency-input__inner">

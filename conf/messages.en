@@ -169,7 +169,7 @@ unauthorised.heading = You can’t access this service with this account
 
 payQuestion.title = How is this employee paid?
 payQuestion.heading = How is this employee paid?
-payQuestion.regularly= a regular amount each time
+payQuestion.regularly= A regular amount each time
 payQuestion.varies = A variable amount each time
 payQuestion.checkYourAnswersLabel = How is this employee paid?
 payQuestion.error.required = Select one of the options below
@@ -365,8 +365,8 @@ variableLengthEmployed.checkYourAnswersLabel = How long has this employee been w
 variableLengthEmployed.error.required = Select one of the options below
 variableLengthEmployed.hint = This is needed to calculate average pay based on when the employee started work.
 
-employeeStartDate.title = When did this employee start working for the business?
-employeeStartDate.heading = When did this employee start working for the business?
+employeeStartDate.title = When did this employee start working for you?
+employeeStartDate.heading = When did this employee start working for you?
 employeeStartDate.checkYourAnswersLabel = EmployeeStartDate
 employeeStartDate.error.required.all = Enter the employee start date
 employeeStartDate.error.required.two = The employee start date must include {0} and {1}
