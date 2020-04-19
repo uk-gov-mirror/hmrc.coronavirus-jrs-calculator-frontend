@@ -14,19 +14,21 @@
 
 @(showCalculateTopupsLink: Boolean = false)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(titleNoForm("comingSoon.title"))) {
+    @govukLayout(pageTitle = Some(titleNoForm("comingSoon.title"))) {
 
-    @formHelper(action = ClaimPeriodStartController.onPageLoad(NormalMode)) {
-
-        @h1("comingSoon.heading")
-        @p(Html(messages("comingSoon.p")))
-
-        @if(showCalculateTopupsLink) {
-            @p{
-                @link(routes.ConfirmationController.onPageLoad().url, "comingSoon.showCalculateTopupsLink.label")
+        @formHelper(action = ClaimPeriodStartController.onPageLoad(NormalMode)) {
+          
+            @if(showCalculateTopupsLink) {
+                @h1("comingSoon.topup.heading")
+                @p(Html(messages("comingSoon.topup.p")))
+                @p {
+                    @link(routes.ConfirmationController.onPageLoad().url, "comingSoon.showCalculateTopupsLink.label")
+                }
+            } else {
+                @h1("comingSoon.heading")
+                @p(Html(messages("comingSoon.p")))
             }
-        }
 
-        @button("comingSoon.start.another")
+            @button("comingSoon.start.another")
+        }
     }
-}

@@ -378,17 +378,20 @@ comingSoon.heading = We are unable to do this calculation at the moment
 comingSoon.p = This will be available in a future version.
 comingSoon.start.another = Start another calculation
 comingSoon.showCalculateTopupsLink.label = Calculate with out topups
+comingSoon.topup.heading = We’re unable to calculate claims when pay is topped up
+comingSoon.topup.p = This will be available in a future version.
 
-furloughCalculations.heading = Gross furlough amount breakdown
-furloughCalculations.title = Gross furlough amount breakdown
-furloughCalculations.p1 = Has this employee been paid more than these amounts or do you intend to top up pay in any of the pay periods?
-furloughCalculations.p2 = If you choose to top up the employee’s pay to 100% during the period of furlough, the employer National Insurance contributions will be apportioned between the pay funded by the grant and the pay funded by the you.
+furloughCalculations.heading = Furlough amount calculated so far
+furloughCalculations.title = Furlough amount calculated so far
+furloughCalculations.p1 = Are you paying the employee more than this?
+furloughCalculations.p2 = You can top up your employees’ pay to 100% while they’re furloughed.
+furloughCalculations.p3 = If you do, the employer National Insurance contributions will be divided between the 80% you’re claiming and the amount you funded.
 furloughCalculations.yes = Yes
 furloughCalculations.no = No
-furloughCalculations.checkYourAnswersLabel = Gross furlough amount breakdown
+furloughCalculations.checkYourAnswersLabel = Furlough amount calculated so far
 furloughCalculations.error.required = Select one of the options below
-furloughCalculations.payperiodending.label = Pay period ending
-furloughCalculations.grossfurloughamount.label = Gross furlough amount
+furloughCalculations.payperiodending.label = Pay period end date
+furloughCalculations.grossfurloughamount.label = Furlough amount (80% of pay)
 furloughCalculations.total.label = Total
 
 FurloughPartialPay.title = What did the employee get paid between {0} and {1}?
