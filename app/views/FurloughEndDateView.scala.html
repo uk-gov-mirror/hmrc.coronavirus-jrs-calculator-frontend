@@ -12,10 +12,10 @@
     formHelper: FormWithCSRF,
     button: components.button,
         h1: components.h1,
-        panel: components.panelIndent
+        p: components.p
 )
 
-@(form: Form[_], mode: Mode, claimPeriodEnd: LocalDate)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughEndDate.title"))) {
 
@@ -24,7 +24,7 @@
         @errorSummary(form.errors)
 
         @h1(messages("furloughEndDate.heading"))
-        @panel(Html(messages("furloughEndDate.inset.info", dateToString(claimPeriodEnd))))
+        @p(Html(messages("furloughEndDate.p")))
 
         @inputDate(
             form,
