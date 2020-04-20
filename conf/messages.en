@@ -178,7 +178,8 @@ rootPage.p4.l3 = get director’s payments have been transferred under TUPE
 rootPage.p4.l4 = have been employed at separate times throughout the year
 rootPage.p4.l5 = receive employer pension contributions outside of an auto-enrolment pension scheme
 rootPage.p5 = We’re working to enhance the calculator to include these scenarios as soon as possible.
-rootPage.p6 = If you cannot use this calculator, work out what you can claim manually using the <a href="https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme">calculation guidance</a> or seek professional advice.
+rootPage.p6 = If you cannot use this calculator, work out what you can claim manually using the {0} or seek professional advice.
+rootPage.p6.link = calculation guidance
 rootPage.p7 = It’s your responsibility to check that the amount you’re claiming for is correct.
 rootPage.howItWorks.header = How it works
 rootPage.howItWorks.p1 = The calculator will work out the amounts you need to enter in the claim form.
@@ -196,7 +197,8 @@ rootPage.beforeYouStart.p1.l3 = employee’s pay dates (when they get their pay)
 rootPage.beforeYouStart.p1.l4 = end dates of the periods of time (for example monthly) that they are paid for
 rootPage.beforeYouStart.p1.l5 = how much they are paid (before deductions)
 rootPage.beforeYouStart.p1.l6 = when their furlough started (and ended, if not ongoing)
-rootPage.beforeYouStart.p1.l7 = their <a href="https://www.gov.uk/national-insurance-rates-letters/category-letters">National Insurance category letter<a/>
+rootPage.beforeYouStart.p1.l7 = their {0}
+rootPage.beforeYouStart.p1.l7.link = National Insurance category letter
 
 payDate.title = When was the end of the next pay period?
 payDate.heading = What’s the end of the next pay period after {0}?
