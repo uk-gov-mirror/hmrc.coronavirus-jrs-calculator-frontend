@@ -301,7 +301,8 @@ confirmation.nextSteps.li.2.2 = employer National Insurance
 confirmation.nextSteps.li.2.3 = employer minimum pension contributions
 confirmation.nextSteps.li.3 = Adjust the total amount of employer National Insurance contributions by subtracting any Employment Allowance used in each pay period.<br> <a href="https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme#work-out-how-much-you-can-claim-for-employer-national-insurance-contributions" target="_blank">Work out how much you can claim in total for employer National Insurance contributions (opens in new window or tab)</a>
 confirmation.nextSteps.li.4 = Make a claim using <a href="https://www.gov.uk/guidance/claim-for-wage-costs-through-the-coronavirus-job-retention-scheme" target="_blank">Job Retention Scheme online claim service</a>.
-confirmation.startAgain = Start calculation again
+confirmation.startAgain = Start another calculation
+confirmation.webchat = <a href="https://www.tax.service.gov.uk/ask-hmrc/webchat/job-retention-scheme" target="_blank">Webchat help (opens in a new tab or window)</a>
 
 claimPeriodStart.title = What’s the start date of this claim?
 claimPeriodStart.heading = What’s the start date of this claim?
