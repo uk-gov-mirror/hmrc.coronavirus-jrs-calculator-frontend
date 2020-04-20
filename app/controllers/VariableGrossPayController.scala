@@ -5,6 +5,7 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.VariableGrossPayFormProvider
 import handlers.ErrorHandler
@@ -30,34 +31,48 @@ class VariableGrossPayController @Inject()(
   formProvider: VariableGrossPayFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: VariableGrossPayView
-)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler, appConfig: FrontendAppConfig)
     extends BaseController with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(FurloughStartDatePage, EmployeeStartDatePage) { (furloughStart, empStart) =>
-      val preparedForm = request.userAnswers.get(VariableGrossPayPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+    if (appConfig.variableJourneyEnabled) {
+      request.userAnswers.get(FurloughStartDatePage) match {
+        case Some(furloughStart) =>
+          val preparedForm = request.userAnswers.get(VariableGrossPayPage) match {
+            case None        => form
+            case Some(value) => form.fill(value)
+          }
 
-      Future.successful(Ok(view(preparedForm, mode, furloughStart, empStart)))
+          Future.successful(Ok(view(preparedForm, mode, furloughStart)))
+
+        case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad(mode)))
+      }
+    } else {
+      Future.successful(NotFound)
     }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(FurloughStartDatePage, EmployeeStartDatePage) { (furloughStart, empStart) =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, furloughStart, empStart))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableGrossPayPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(VariableGrossPayPage, mode, updatedAnswers))
-        )
+    if (appConfig.variableJourneyEnabled) {
+      request.userAnswers.get(FurloughStartDatePage) match {
+        case Some(furloughStart) =>
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, furloughStart))),
+              value =>
+                for {
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableGrossPayPage, value))
+                  _              <- sessionRepository.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(VariableGrossPayPage, mode, updatedAnswers))
+            )
+
+        case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad(mode)))
+      }
+    } else {
+      Future.successful(NotFound)
     }
   }
 }

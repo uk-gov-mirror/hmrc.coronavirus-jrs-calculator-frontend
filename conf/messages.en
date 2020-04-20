@@ -386,14 +386,14 @@ employeeStartDate.error.invalid = Enter a real date
 employeeStartDate.hint = For example, 28 11 2019
 employeeStartDate.error.outofrange = The start date should be between {0} and {1}
 
-variableGrossPay.title = What is this employee’s total pay since they started?
-variableGrossPay.heading = What is this employee’s total pay since they started?
+variableGrossPay.title = What’s the employee’s total pay since 6 April 2019?
+variableGrossPay.heading = What’s the employee’s total pay since 6 April 2019?
 variableGrossPay.checkYourAnswersLabel = variableGrossPay
 variableGrossPay.error.required = Enter a valid amount
 variableGrossPay.label = This is the gross amount before deductions.
 variableGrossPay.error.invalid = Enter a valid amount
 variableGrossPay.error.negative = Salary can’t be negative
-variableGrossPay.p = This is the total gross amount before deductions the employee has been paid from {0} up to the earlier of:
+variableGrossPay.p = This is the total gross amount before deductions the employee has been paid up to the earlier of:
 variableGrossPay.l1 = 5th April 2020 or
 variableGrossPay.l2 = the day before they were furloughed ({0})
 

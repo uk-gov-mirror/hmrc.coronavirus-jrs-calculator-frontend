@@ -151,7 +151,7 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       val result = route(application, postRequest(submitAfterFurloughRoute)).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.VariableGrossPayController.onPageLoad(NormalMode).url
+      redirectLocation(result).value mustEqual routes.NicCategoryController.onPageLoad(NormalMode).url
 
       application.stop()
     }
@@ -211,7 +211,7 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       val result = route(application, postRequest(submitAfterFurloughRoute)).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.VariableGrossPayController.onPageLoad(NormalMode).url
+      redirectLocation(result).value mustEqual routes.NicCategoryController.onPageLoad(NormalMode).url
 
       application.stop()
     }

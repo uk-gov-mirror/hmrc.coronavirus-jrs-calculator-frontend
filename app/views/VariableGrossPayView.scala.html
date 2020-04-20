@@ -17,17 +17,16 @@
         inputCurrency: components.inputCurrency
 )
 
-@(form: Form[_], mode: Mode, furloughStart: LocalDate, empStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, furloughStart: LocalDate)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "variableGrossPay.title"))) {
-
 
     @formHelper(action = VariableGrossPayController.onSubmit(mode)) {
 
         @errorSummary(form.errors)
 
         @h1(messages("variableGrossPay.heading"))
-        @p(Html(messages("variableGrossPay.p", dateToString(empStartDate))))
+        @p(Html(messages("variableGrossPay.p")))
         <ul class="govuk-list govuk-list--bullet">
             <li>@messages("variableGrossPay.l1")</li>
             <li>@messages("variableGrossPay.l2", dateToString(furloughStart))</li>
