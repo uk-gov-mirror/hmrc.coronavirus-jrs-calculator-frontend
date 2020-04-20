@@ -83,7 +83,7 @@
 
     <ul class="govuk-list govuk-list--number">
 
-        <li>@Html(messages("confirmation.nextSteps.li.1"))
+        <li>@Html(messages("confirmation.nextSteps.li.1", dateToStringWithoutYear(cm.claimPeriod.start), dateToStringWithoutYear(cm.claimPeriod.end)))
         </li>
         <li>@messages("confirmation.nextSteps.li.2")<br>
             <ul class="govuk-list--list">
