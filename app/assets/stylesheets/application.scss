@@ -3,3 +3,16 @@ $govuk-assets-path: "/job-retention-scheme-calculator/assets/lib/govuk-frontend/
 
 @import "timeout-dialog";
 @import "language-selection";
+
+.furlough-heading {
+  clear: both;
+  display: table;
+  margin-top: 0.275em;
+  padding-top: 8px;
+  table-layout: fixed;
+  width: 100%;
+
+  .govuk-panel__title {
+    display: table-header-group;
+  }
+}

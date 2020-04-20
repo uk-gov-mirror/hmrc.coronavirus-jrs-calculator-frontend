@@ -14,7 +14,9 @@
     h2: components.h2,
     p: components.p,
     confirmation: components.confirmation,
-    button: components.button
+    button: components.button,
+    link: components.link,
+    appConfig: config.FrontendAppConfig
 )
 
 @(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String, furlough: FurloughQuestion)(implicit request: Request[_], messages: Messages)
@@ -25,17 +27,30 @@
 
         @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-margin-bottom-4 govuk-!-margin-top-0 govuk-!-font-size-27"))
 
-        <span class="govuk-panel__title">&pound;@cvb.furlough.total.setScale(2)</span>
-        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0" style="color: white">@messages("confirmation.confirmation.p1")</p>
-        <span class="govuk-panel__title">&pound;@cvb.nic.total.setScale(2)</span>
-        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0" style="color: white">@messages("confirmation.confirmation.p2")</p>
-        <span class="govuk-panel__title">&pound;@cvb.pension.total.setScale(2)</span>
-        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0" style="color: white">@messages("confirmation.confirmation.p3")</p>
+        <div class="furlough-heading">
+          <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p1")</p>
+          <p class="govuk-panel__title">&pound;@cvb.furlough.total.setScale(2)</p>
+        </div>
+
+        <div class="furlough-heading">
+          <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p2")</p>
+          <p class="govuk-panel__title">&pound;@cvb.nic.total.setScale(2)</p>
+        </div>
+
+        <div class="furlough-heading">
+          <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p3")</p>
+          <p class="govuk-panel__title">&pound;@cvb.pension.total.setScale(2)</p>
+        </div>
+
     }
 
     @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
 
-    @p(Html(messages("confirmation.date.version", dateToString(LocalDate.now()), version)))
+    @p{
+      <span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
+      @dateToString(LocalDate.now())
+      @Html(messages("confirmation.date.version", version))
+    }
 
     @p(Html(messages("confirmation.disclaimer")))
 
@@ -83,7 +98,9 @@
 
     <ul class="govuk-list govuk-list--number">
 
-        <li>@Html(messages("confirmation.nextSteps.li.1"))
+        <li>
+          @messages("confirmation.nextSteps.li.1")
+          <span class="govuk-!-font-weight-bold">@messages("confirmation.nextSteps.li.1.2")</span>
         </li>
         <li>@messages("confirmation.nextSteps.li.2")<br>
             <ul class="govuk-list--list">
@@ -91,11 +108,13 @@
                 <li>@messages("confirmation.nextSteps.li.2.2")</li>
                 <li>@messages("confirmation.nextSteps.li.2.3")</li>
             </ul></li>
-        <li>@Html(messages("confirmation.nextSteps.li.3"))</li>
-        <li>@Html(messages("confirmation.nextSteps.li.4"))</li>
+        <li>@messages("confirmation.nextSteps.li.3.1") @link(appConfig.workOutHowMuch,"confirmation.nextSteps.li.3.2", true)</li>
+        <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,"confirmation.nextSteps.li.4.2")))
+        </li>
     </ul>
 
     @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode)), classes = Some("govuk-button"))
 
     @p(Html(messages("confirmation.webchat")))
 }
+
