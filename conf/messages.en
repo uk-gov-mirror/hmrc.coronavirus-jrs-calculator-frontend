@@ -287,6 +287,7 @@ confirmation.nic.nonPayable = Their National Insurance category is H, M or Z
 confirmation.pension.optedIn = They receive employer pension contributions
 confirmation.pension.optedOut = They do not receive employer pension contributions
 confirmation.breakdown.h2 = Breakdown by pay period
+confirmation.breakdown.p = You can view a table showing the furlough amounts, employer National Insurance and pension contributions for each pay period in your claim.
 confirmation.breakdown.details = Figures for each pay period during the claim
 confirmation.breakdown.dt = Pay period
 confirmation.breakdown.ending = Ending {0}

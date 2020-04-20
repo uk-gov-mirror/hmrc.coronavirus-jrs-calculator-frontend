@@ -26,11 +26,11 @@
         @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-margin-bottom-4 govuk-!-margin-top-0 govuk-!-font-size-27"))
 
         <span class="govuk-panel__title">&pound;@cvb.furlough.total.setScale(2)</span>
-        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4" style="color: white">@messages("confirmation.confirmation.p1")</p>
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0" style="color: white">@messages("confirmation.confirmation.p1")</p>
         <span class="govuk-panel__title">&pound;@cvb.nic.total.setScale(2)</span>
-        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4" style="color: white">@messages("confirmation.confirmation.p2")</p>
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0" style="color: white">@messages("confirmation.confirmation.p2")</p>
         <span class="govuk-panel__title">&pound;@cvb.pension.total.setScale(2)</span>
-        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4" style="color: white">@messages("confirmation.confirmation.p3")</p>
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0" style="color: white">@messages("confirmation.confirmation.p3")</p>
     }
 
     @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
@@ -51,6 +51,10 @@
         <li>@messages(s"confirmation.nic.${cm.nic}")</li>
         <li>@messages(s"confirmation.pension.${cm.pension}")</li>
     </ul>
+
+    @h2(Html(messages("confirmation.breakdown.h2")), classes = Some("govuk-heading-m"))
+
+    @p(Html(messages("confirmation.breakdown.p")))
 
     <details class="govuk-details" data-module="govuk-details">
         <summary class="govuk-details__summary">
@@ -93,5 +97,5 @@
 
     @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode)), classes = Some("govuk-button"))
 
-    @Html(messages("confirmation.webchat"))
+    @p(Html(messages("confirmation.webchat")))
 }
