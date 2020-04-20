@@ -6,14 +6,19 @@
 @this(
         main_template: templates.GovukLayoutWrapper,
         h1: components.h1,
-        p: components.p
+        p: components.p,
+        button: components.button
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(startAgain: Boolean = false)(implicit request: Request[_], messages: Messages)
 
 @main_template(Some(titleNoForm("errorPage.title")), timeout = false) {
 
     @h1(messages("errorPage.heading"))
 
     @p(Html(messages("errorPage.p1")))
+
+    @if(startAgain) {
+        @button("somethingWentWrong.button", href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode).url))
+    }
 }

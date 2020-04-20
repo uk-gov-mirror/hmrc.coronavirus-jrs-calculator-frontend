@@ -24,11 +24,12 @@ class ConfirmationController @Inject()(
   config: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
   view: ConfirmationView
-)(implicit val errorHandler: ErrorHandler) extends BaseController with ConfirmationControllerRequestHandler {
+)(implicit val errorHandler: ErrorHandler)
+    extends BaseController with ConfirmationControllerRequestHandler {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswer(FurloughQuestionPage) { furlough =>
-      loadResultData(request.userAnswers).fold(Future.successful(Redirect(routes.ErrorController.internalServerError())))(data =>
+      loadResultData(request.userAnswers).fold(Future.successful(Redirect(routes.ErrorController.somethingWentWrong())))(data =>
         Future.successful(Ok(view(data.confirmationMetadata, data.confirmationViewBreakdown, config.calculatorVersion, furlough))))
     }
   }

@@ -276,11 +276,11 @@ confirmation.explanation.heading = How these figures were calculated
 confirmation.date.version = <span class="govuk-!-font-weight-bold">Calculated on:</span> {0} (Calculator Version v{1})
 confirmation.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. These calculations were based on:
 confirmation.claimPeriod = Claim period: {0} to {1}
-confirmation.furloughPeriod = Furlough period: {0}
-confirmation.furloughPeriod.ended = to {0}
+confirmation.furloughPeriod.started = Furlough period: Started {0}
+confirmation.furloughPeriod.startedAndEnded = Furlough period: {0} to {1}
 confirmation.paid.weekly = They are paid every week
 confirmation.paid.fortnightly = They are paid every 2 weeks
-confirmation.paid.fourWeekly = They are paid every 4 weeks
+confirmation.paid.fourweekly = They are paid every 4 weeks
 confirmation.paid.monthly = They are paid every month
 confirmation.nic.payable = Their National Insurance category is A, B, C or J
 confirmation.nic.nonPayable = Their National Insurance category is H, M or Z
@@ -433,3 +433,5 @@ lastPayDate.p2 = This is needed to calculate National Insurance and pension cont
 lastPayDate.details.title = What’s the difference between a pay date and a pay period?
 lastPayDate.details.p1 = A ''pay date'' is the date the employee actually gets their pay. It may not be the same as the end of the ''pay period''. For example, the pay period might be 1 February to 28 February, but the employee gets paid on 27 February.
 lastPayDate.details.p2 = A ''pay period'' is the period of time that the employee is paid for, such as weekly or monthly.
+
+somethingWentWrong.button = Start again

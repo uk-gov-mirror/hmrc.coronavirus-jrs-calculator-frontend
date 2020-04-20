@@ -19,4 +19,8 @@ class ErrorController @Inject()(
   def internalServerError: Action[AnyContent] = Action { implicit request =>
     InternalServerError(view())
   }
+
+  def somethingWentWrong: Action[AnyContent] = Action { implicit request =>
+    InternalServerError(view(true))
+  }
 }

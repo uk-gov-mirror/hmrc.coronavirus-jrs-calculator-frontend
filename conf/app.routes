@@ -16,6 +16,8 @@ GET         /unauthorised                           controllers.UnauthorisedCont
 
 GET         /service-unavailable                    controllers.ErrorController.internalServerError
 
+GET         /error                                  controllers.ErrorController.somethingWentWrong
+
 GET         /restart-service                        controllers.StartAgainController.startAgain
 
 GET         /accessibility                          controllers.AccessibilityStatementController.onPageLoad
