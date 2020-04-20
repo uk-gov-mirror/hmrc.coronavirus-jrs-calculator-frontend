@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.VariableGrossPayFormProvider
-import models.{NormalMode, UserAnswers, VariableGrossPay}
+import models.{NormalMode, UserAnswers, VariableGrossPay, VariableLengthEmployed}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.VariableGrossPayView
+import views.html.{VariableGrossPayView, VariableLengthEmployedView}
 
 import scala.concurrent.Future
 
@@ -68,7 +68,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode, furloughStart, empStart)(getRequest, messages).toString
+        view(form, NormalMode, furloughStart)(getRequest, messages).toString
 
       application.stop()
     }
@@ -86,7 +86,19 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(VariableGrossPay(111)), NormalMode, furloughStart, empStart)(getRequest, messages).toString
+        view(form.fill(VariableGrossPay(111)), NormalMode, furloughStart)(getRequest, messages).toString
+
+      application.stop()
+    }
+
+    "return Not_Found if the feature is disabled" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), false)
+        .build()
+
+      val result = route(application, getRequest).value
+
+      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }
@@ -113,6 +125,27 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       application.stop()
     }
 
+    "return Not_Found when valid data is submitted but feature is disabled" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers), false)
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest).value
+
+      status(result) mustEqual NOT_FOUND
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -131,7 +164,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode, furloughStart, empStart)(request, messages).toString
+        view(boundForm, NormalMode, furloughStart)(request, messages).toString
 
       application.stop()
     }

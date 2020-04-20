@@ -41,7 +41,6 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .configure("variable.journey.enabled" -> true)
         .build()
 
       val result = route(application, getRequest).value
@@ -60,7 +59,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       val userAnswers = UserAnswers(userAnswersId).set(VariableLengthEmployedPage, VariableLengthEmployed.values.head).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).configure("variable.journey.enabled" -> true).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val view = application.injector.instanceOf[VariableLengthEmployedView]
 
@@ -76,8 +75,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "return Not_Found if the feature is disabled" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .configure("variable.journey.enabled" -> false)
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), false)
         .build()
 
       val result = route(application, getRequest).value
@@ -101,7 +99,6 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
-          .configure("variable.journey.enabled" -> true)
           .build()
 
       val request =
@@ -124,12 +121,11 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers), false)
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
-          .configure("variable.journey.enabled" -> false)
           .build()
 
       val request =
@@ -145,7 +141,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).configure("variable.journey.enabled" -> true).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
         FakeRequest(POST, variableLengthEmployedRoute).withCSRFToken
@@ -168,7 +164,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "redirect to Session Expired for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).configure("variable.journey.enabled" -> true).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       val request = FakeRequest(GET, variableLengthEmployedRoute)
 
@@ -182,7 +178,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "redirect to Session Expired for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).configure("variable.journey.enabled" -> true).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       val request =
         FakeRequest(POST, variableLengthEmployedRoute)
