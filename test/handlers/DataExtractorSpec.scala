@@ -29,7 +29,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
     val claimPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
     val expected = Period(userAnswers.get(FurloughStartDatePage).get, claimPeriod.end)
 
-    extractFurloughPeriod(userAnswers) mustBe Some(expected)
+    extractFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
   }
 
   "Extract furlough period with end date matching the claim end date with user submitted start date" in new DataExtractor {
@@ -37,7 +37,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
     val claimPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
     val expected = Period(LocalDate.of(2020, 3, 15), claimPeriod.end)
 
-    extractFurloughPeriod(userAnswers) mustBe Some(expected)
+    extractFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
   }
 
   "Extract Salary as an Amount() when payQuestion answer is Regularly" in new DataExtractor {

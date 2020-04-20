@@ -14,15 +14,6 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  forAll(fullPeriodScenarios) { (frequency, grossPay, furloughPayment, period, paymentDate, expectedGrant) =>
-    s"Calculate grant for a full period with Payment Frequency: $frequency, " +
-      s"a Payment Date: $paymentDate and a Furlough Grant: ${furloughPayment.value}" in new NicCalculator {
-      val expected = PeriodBreakdown(grossPay, expectedGrant, PeriodWithPaymentDate(period, paymentDate))
-
-      calculateFullPeriodNic(frequency, grossPay, furloughPayment, period, paymentDate) mustBe expected
-    }
-  }
-
   forAll(partialPeriodScenarios) { (frequency, grossPay, furloughPayment, period, paymentDate, expectedGrant) =>
     s"Calculate grant for a partial period with Payment Frequency: $frequency," +
       s"a PaymentDate: $paymentDate and a Gross Pay: ${grossPay.value}" in new NicCalculator {
@@ -52,24 +43,6 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 //      calculatePartialPeriodWithTopUp(frequency, totalPay, furloughPayment, partialPeriodWithPaymentDate) mustBe expected
 //    }
 //  }
-
-  private lazy val fullPeriodScenarios = Table(
-    ("frequency", "grossPay", "furloughPayment", "period", "paymentDate", "expectedGrant"),
-    (
-      Monthly,
-      Amount(2000.00),
-      Amount(1600.00),
-      FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-      PaymentDate(LocalDate.of(2020, 3, 31)),
-      Amount(121.58)),
-    (
-      Monthly,
-      Amount(750.00),
-      Amount(600.00),
-      FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-      PaymentDate(LocalDate.of(2020, 3, 31)),
-      Amount(0.00))
-  )
 
   private lazy val partialPeriodScenarios = Table(
     ("frequency", "grossPay", "furloughPayment", "period", "paymentDate", "expectedGrant"),

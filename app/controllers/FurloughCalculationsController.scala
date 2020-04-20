@@ -7,7 +7,7 @@ package controllers
 
 import controllers.actions._
 import forms.FurloughCalculationsFormProvider
-import handlers.ConfirmationControllerRequestHandler
+import handlers.FurloughCalculationControllerRequestHandler
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
@@ -32,7 +32,7 @@ class FurloughCalculationsController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: FurloughCalculationsView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with ConfirmationControllerRequestHandler {
+    extends FrontendBaseController with I18nSupport with FurloughCalculationControllerRequestHandler {
 
   val form = formProvider()
 

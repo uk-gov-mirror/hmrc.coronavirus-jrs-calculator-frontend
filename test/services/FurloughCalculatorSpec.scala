@@ -25,13 +25,13 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     }
   }
 
-  forAll(partialPeriodScenarios) { (frequency, payment, expectedFurlough) =>
+  forAll(partialPeriodScenarios) { (payment, expectedFurlough) =>
     s"Partial Period: For gross payment: ${payment.furloughPayment.value} " +
       s"should return $expectedFurlough" in new FurloughCalculator {
       val period = payment.period.period.asInstanceOf[PartialPeriod]
       val expected =
         PeriodBreakdown(payment.nonFurloughPay, expectedFurlough, payment.period)
-      calculatePartialPeriod(frequency, payment, period, payment.period.paymentDate) mustBe expected
+      calculatePartialPeriod(payment, period, payment.period.paymentDate) mustBe expected
     }
   }
 
@@ -44,8 +44,6 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     val paymentTwo: PaymentWithPeriod = PaymentWithPeriod(Amount(0.0), Amount(2000.00), periodTwo, Regularly)
     val payments: List[PaymentWithPeriod] = List(paymentOne, paymentTwo)
 
-    val furloughPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
-
     val expected =
       CalculationResult(
         FurloughCalculationResult,
@@ -56,7 +54,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         )
       )
 
-    calculateFurloughGrant(Monthly, payments, furloughPeriod) mustBe expected
+    calculateFurloughGrant(Monthly, payments) mustBe expected
   }
 
   private lazy val fullPeriodScenarios = Table(
@@ -163,9 +161,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
   )
 
   private lazy val partialPeriodScenarios = Table(
-    ("frequency", "payment", "expectedFurlough"),
+    ("payment", "expectedFurlough"),
     (
-      Monthly,
       PaymentWithPeriod(
         Amount(677.42),
         Amount(1500.00),
@@ -179,7 +176,6 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       ),
       Amount(658.06)),
     (
-      Monthly,
       PaymentWithPeriod(
         Amount(1580.65),
         Amount(3500.00),
@@ -193,7 +189,6 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       ),
       Amount(1371.05)),
     (
-      Monthly,
       PaymentWithPeriod(
         Amount(1096.77),
         Amount(2000.00),

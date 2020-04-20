@@ -40,12 +40,10 @@ trait DataExtractor extends ReferencePayCalculator {
       payDate = userAnswers.getList(PayDatePage)
     } yield MandatoryData(Period(claimStart, claimEnd), frequency, nic, pension, payQuestion, furlough, payDate, furloughStart, lastPayDay)
 
-  def extractFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
-    extract(userAnswers).flatMap { data =>
-      data.furloughQuestion match {
-        case Yes => patchEndDate(userAnswers)
-        case No  => Some(Period(data.furloughStart, data.claimPeriod.end))
-      }
+  def extractFurloughPeriod(data: MandatoryData, userAnswers: UserAnswers): Option[Period] =
+    data.furloughQuestion match {
+      case Yes => patchEndDate(userAnswers, data)
+      case No  => Some(Period(data.furloughStart, data.claimPeriod.end))
     }
 
   def extractPayments(userAnswers: UserAnswers, furloughPeriod: Period): Option[Seq[PaymentWithPeriod]] =
@@ -54,13 +52,7 @@ trait DataExtractor extends ReferencePayCalculator {
       grossPay <- extractGrossPay(userAnswers)
       periods: Seq[Periods] = generatePeriods(data.payDates, furloughPeriod)
       periodsWithPayDay = assignPayDates(data.paymentFrequency, periods, data.lastPayDay)
-    } yield {
-      data.payQuestion match {
-        case Regularly => periodsWithPayDay.map(p => PaymentWithPeriod(Amount(0.0), grossPay, p, Regularly))
-        case Varies =>
-          extractVariablePayments(userAnswers, periodsWithPayDay).fold(Seq[PaymentWithPeriod]())(payments => payments)
-      }
-    }
+    } yield processPayAnswer(userAnswers, data, grossPay, periodsWithPayDay)
 
   protected def extractGrossPay(userAnswers: UserAnswers): Option[Amount] =
     extract(userAnswers).flatMap { data =>
@@ -83,14 +75,19 @@ trait DataExtractor extends ReferencePayCalculator {
       preFurloughPay = userAnswers.get(PartialPayBeforeFurloughPage)
       postFurloughPay = userAnswers.get(PartialPayAfterFurloughPage)
       nonFurloughPay = NonFurloughPay(preFurloughPay.map(v => Amount(v.value)), postFurloughPay.map(v => Amount(v.value)))
-    } yield {
-      calculateVariablePay(nonFurloughPay, priorFurloughPeriod, periods, grossPay)
+    } yield calculateVariablePay(nonFurloughPay, priorFurloughPeriod, periods, grossPay)
+
+  private def patchEndDate(userAnswers: UserAnswers, data: MandatoryData): Option[Period] =
+    userAnswers.get(FurloughEndDatePage).map(end => Period(data.furloughStart, end))
+
+  private def processPayAnswer(
+    userAnswers: UserAnswers,
+    data: MandatoryData,
+    grossPay: Amount,
+    periodsWithPayDay: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
+    data.payQuestion match {
+      case Regularly => periodsWithPayDay.map(p => PaymentWithPeriod(Amount(0.0), grossPay, p, Regularly))
+      case Varies =>
+        extractVariablePayments(userAnswers, periodsWithPayDay).fold(Seq[PaymentWithPeriod]())(payments => payments)
     }
-
-  private def patchEndDate(userAnswers: UserAnswers): Option[Period] =
-    for {
-      data <- extract(userAnswers)
-      end  <- userAnswers.get(FurloughEndDatePage)
-    } yield Period(data.furloughStart, end)
-
 }
