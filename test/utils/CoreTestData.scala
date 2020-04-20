@@ -5,7 +5,7 @@
 
 package utils
 
-import models.{FurloughDates, UserAnswers}
+import models.UserAnswers
 import play.api.libs.json.Json
 
 trait CoreTestData {

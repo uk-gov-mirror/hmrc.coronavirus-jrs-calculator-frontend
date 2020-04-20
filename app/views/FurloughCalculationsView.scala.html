@@ -42,9 +42,9 @@
 
                 @calculationResult.payPeriodBreakdowns.map { periodBreakdown =>
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">@periodBreakdown.periodWithPaymentDate.paymentDate.value</td>
+                        <td class="govuk-table__cell">@dateToString(periodBreakdown.periodWithPaymentDate.period.period.end)</td>
                         <td class="govuk-table__cell">
-                        @periodBreakdown.grant.value.setScale(2)
+                        £@periodBreakdown.grant.value.setScale(2)
                         </td>
                     </tr>
                 }
@@ -52,7 +52,7 @@
                 <tr class="govuk-table__row" style="border-top: 5px solid #b1b4b6">
                     <td class="govuk-table__cell" style="border-bottom:0"><span class="govuk-!-font-weight-bold">@messages("furloughCalculations.total.label")</span></td>
                     <td class="govuk-table__cell" style="border-bottom:0">
-                        <span class="govuk-!-font-weight-bold"> @calculationResult.total.setScale(2) </span>
+                        <span class="govuk-!-font-weight-bold"> £@calculationResult.total.setScale(2) </span>
                     </td>
                 </tr>
             </tbody>

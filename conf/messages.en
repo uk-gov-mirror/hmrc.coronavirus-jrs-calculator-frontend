@@ -269,21 +269,38 @@ pensionAutoEnrolment.error.required = Select yes if this employee opted out of p
 
 confirmation.title = Calculation result
 confirmation.heading = What you can claim for this employee
-confirmation.explanation.heading = How these figures are calculated
-confirmation.explanation.p1 = These calculations we made on the employees information you entered below:
-confirmation.claimPeriod = Claim period from {0} to {1}
-confirmation.furloughPeriod = Furlough period from {0} to {1}
+confirmation.confirmation.p1 = Amount paid to this furloughed employee
+confirmation.confirmation.p2 = Employer National Insurance contributions
+confirmation.confirmation.p3 = Employer minimum pension contributions
+confirmation.explanation.heading = How these figures were calculated
+confirmation.date.version = <span class="govuk-!-font-weight-bold">Calculated on:</span> {0} (Calculator Version v{1})
+confirmation.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. These calculations were based on:
+confirmation.claimPeriod = Claim period: {0} to {1}
+confirmation.furloughPeriod.started = Furlough period: Started {0}
+confirmation.furloughPeriod.startedAndEnded = Furlough period: {0} to {1}
 confirmation.paid.weekly = They are paid every week
 confirmation.paid.fortnightly = They are paid every 2 weeks
-confirmation.paid.fourWeekly = They are paid every 4 weeks
+confirmation.paid.fourweekly = They are paid every 4 weeks
 confirmation.paid.monthly = They are paid every month
-confirmation.nic.payable = Their NIC category is A, B, C or J
-confirmation.nic.nonPayable = Their NIC category is H, M or Z
-confirmation.pension.optedIn = They have opted into pension auto-enrolment
-confirmation.pension.optedOut = They have opted out of pension auto-enrolment
-confirmation.breakdown.details = Breakdown of the figures for each pay date
+confirmation.nic.payable = Their National Insurance category is A, B, C or J
+confirmation.nic.nonPayable = Their National Insurance category is H, M or Z
+confirmation.pension.optedIn = They receive employer pension contributions
+confirmation.pension.optedOut = They do not receive employer pension contributions
+confirmation.breakdown.h2 = Breakdown by pay period
+confirmation.breakdown.details = Figures for each pay period during the claim
+confirmation.breakdown.dt = Pay period
+confirmation.breakdown.ending = Ending {0}
+confirmation.breakdown.furlough = <span class="govuk-!-font-weight-bold">£{0}</span> - Gross furlough amount
+confirmation.breakdown.nic = <span class="govuk-!-font-weight-bold">£{0}</span> - Employer National Insurance contributions
+confirmation.breakdown.pension = <span class="govuk-!-font-weight-bold">£{0}</span> - Employer minimum pension contributions
 confirmation.nextSteps.heading = Next steps
-confirmation.nextSteps.p1 = These figures are for a single employee. To fill in your Job Retention Scheme claim you will need a total for all of the employees you are claiming for.
+confirmation.nextSteps.li.1 = Make a calculation for any other employee furloughed for all or part of this claim period (9 March to 17 April). <span class="govuk-!-font-weight-bold">Make a note of each set of figures.</span>
+confirmation.nextSteps.li.2 = Work out the total amounts to claim for:
+confirmation.nextSteps.li.2.1 = furlough amount
+confirmation.nextSteps.li.2.2 = employer National Insurance
+confirmation.nextSteps.li.2.3 = employer minimum pension contributions
+confirmation.nextSteps.li.3 = Adjust the total amount of employer National Insurance contributions by subtracting any Employment Allowance used in each pay period.<br> <a href="https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme#work-out-how-much-you-can-claim-for-employer-national-insurance-contributions" target="_blank">Work out how much you can claim in total for employer National Insurance contributions (opens in new window or tab)</a>
+confirmation.nextSteps.li.4 = Make a claim using <a href="https://www.gov.uk/guidance/claim-for-wage-costs-through-the-coronavirus-job-retention-scheme" target="_blank">Job Retention Scheme online claim service</a>.
 confirmation.startAgain = Start calculation again
 
 claimPeriodStart.title = What’s the start date of this claim?
@@ -416,3 +433,5 @@ lastPayDate.p2 = This is needed to calculate National Insurance and pension cont
 lastPayDate.details.title = What’s the difference between a pay date and a pay period?
 lastPayDate.details.p1 = A ''pay date'' is the date the employee actually gets their pay. It may not be the same as the end of the ''pay period''. For example, the pay period might be 1 February to 28 February, but the employee gets paid on 27 February.
 lastPayDate.details.p2 = A ''pay period'' is the period of time that the employee is paid for, such as weekly or monthly.
+
+somethingWentWrong.button = Start again

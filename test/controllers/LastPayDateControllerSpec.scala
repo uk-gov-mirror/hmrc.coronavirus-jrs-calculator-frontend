@@ -39,11 +39,11 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
   val userAnswers = UserAnswers(userAnswersId).set(PayDatePage, validAnswer, Some(1)).success.value
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, lastPayDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
+  lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, lastPayDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
