@@ -11,6 +11,7 @@
         id: String,
         name: String,
         label: String,
+        labelClasses: Option[String] = None,
         isPageHeading: Boolean = false,
         isDecimal: Boolean = true,
         hint: Option[Html] = None,
@@ -21,7 +22,7 @@
     @govukLabel(Label(
         forAttr = Some(id),
         isPageHeading = isPageHeading,
-        classes = if(isPageHeading) "govuk-label--xl" else "",
+        classes = if(isPageHeading) "govuk-label--xl" else labelClasses.getOrElse(""),
         content = Text(messages(label))
     ))
     @divSnippet
@@ -57,12 +58,10 @@
 @defining {
     id="@id" name="@name" type="decimal"@form("value").value.map { value => value="@value" }@if(describedBy.nonEmpty) { aria-describedby="@describedBy"}
 } { attrs =>
-        <div class="govuk-currency-input govuk-body">
-            <div class="govuk-currency-input__inner">
-                <span class="govuk-currency-input__inner__unit">&pound;</span>
-                <input class="@govukToClasses("govuk-input", "govuk-currency-input__inner__input", classes.fold("")(x => x), if(form.hasErrors) "govuk-input--error" else "")" @attrs>
-            </div>
-        </div>
+    <div class="hmrc-currency-input__wrapper">
+        <span class="hmrc-currency-input__unit" aria-hidden="true">£</span>
+        <input class="@govukToClasses("govuk-input", "govuk-currency-input__inner__input", classes.fold("")(x => x), if(form.hasErrors) "govuk-input--error" else "")" type="text" inputmode="decimal" @attrs>
+    </div>
     }
 }
 
