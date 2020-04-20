@@ -196,7 +196,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .set(EmployeeStartDatePage, LocalDate.now().minusDays(2))
             .success
             .value
-        ) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
+        ) mustBe routes.VariableGrossPayController.onPageLoad(NormalMode)
         navigator.nextPage(
           EmployeeStartDatePage,
           NormalMode,

@@ -138,11 +138,12 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) {
 
   private def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(EmployeeStartDatePage) match {
-      case Some(date) if date.isBefore(apr7th2019) && appConfig.variableJourneyEnabled =>
-        routes.VariableGrossPayController.onPageLoad(NormalMode)
-      case Some(date) if date.isBefore(apr7th2019) => routes.ComingSoonController.onPageLoad(false)
-      case Some(_)                                 => routes.PartialPayBeforeFurloughController.onPageLoad()
-      case _                                       => routes.EmployeeStartDateController.onPageLoad(NormalMode)
+      case Some(date) if shouldShowVariableGrossPayPage(date) => routes.VariableGrossPayController.onPageLoad(NormalMode)
+      case Some(date) if date.isBefore(apr7th2019)            => routes.ComingSoonController.onPageLoad(false)
+      case _                                                  => routes.EmployeeStartDateController.onPageLoad(NormalMode)
     }
   }
+
+  private def shouldShowVariableGrossPayPage(date: LocalDate) =
+    date.isAfter(apr7th2019) || (date.isBefore(apr7th2019) && appConfig.variableJourneyEnabled)
 }
