@@ -5,9 +5,11 @@
 
 package services
 
+import java.time.LocalDate
+
 import models.PayQuestion.Varies
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{Amount, CylbPayment, FullPeriod, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods}
+import models.{Amount, CylbPayment, FullPeriod, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
 import play.api.Logger
 import utils.AmountRounding._
 
@@ -34,6 +36,9 @@ trait ReferencePayCalculator extends PeriodHelper {
 
     if (cylb.isEmpty) avg else greaterGrossPay(cylb, avg)
   }
+
+  protected def cylbCalculationPredicate(variableLength: VariableLengthEmployed, employeeStartDate: LocalDate): Boolean =
+    variableLength == VariableLengthEmployed.Yes || employeeStartDate.isBefore(LocalDate.of(2019, 4, 6))
 
   private def calculateAveragePay(
     nonFurloughPay: NonFurloughPay,

@@ -8,6 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
+import handlers.DataExtractor
 import models.PayQuestion.Varies
 import models.PaymentFrequency.{FortNightly, FourWeekly, Weekly}
 import models.{Amount, CylbPayment, FullPeriod, NonFurloughPay, PartialPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, VariableLengthEmployed}
@@ -173,5 +174,13 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     )
 
     addCylbToCalculation(nonFurloughPay, FourWeekly, Seq.empty, paymentDates, avg) mustBe avg
+  }
+
+  "defines a variable calculation that requires cylb" in new DataExtractor {
+    import VariableLengthEmployed._
+
+    cylbCalculationPredicate(Yes, LocalDate.now) mustBe true
+    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 5)) mustBe true
+    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 6)) mustBe false
   }
 }
