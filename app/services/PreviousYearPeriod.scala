@@ -7,28 +7,27 @@ package services
 
 import java.time.LocalDate
 
-import models.PaymentFrequency.{FortNightly, FourWeekly, Weekly}
-import models.{FrequencyWithPreviousYearDaysCount, Period}
+import models.PaymentFrequency
+import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 
 trait PreviousYearPeriod {
 
-  def previousYearPayDate(paymentFrequency: FrequencyWithPreviousYearDaysCount, thisYear: LocalDate): Period = {
-    val lastYear = thisYear.minusDays(364)
-    val period = previousYear(paymentFrequency, lastYear)
-
-    if (isBeforeMarch(period)) period.copy(start = period.start.plusDays(1))
-    else period
+  def previousYearPayDate(paymentFrequency: PaymentFrequency, payDateThisYear: LocalDate): Seq[LocalDate] = paymentFrequency match {
+    case Monthly => Seq(payDateThisYear.minusYears(1))
+    case _       => calculateDatesForPreviousYear(paymentFrequency, payDateThisYear)
   }
 
-  def previousYearMonthly(thisYear: LocalDate): LocalDate = thisYear.minusYears(1)
+  private def calculateDatesForPreviousYear(paymentFrequency: PaymentFrequency, payDateThisYear: LocalDate): Seq[LocalDate] = {
+    val dateAfter = payDateThisYear.minusDays(364)
 
-  private def previousYear(paymentFrequency: FrequencyWithPreviousYearDaysCount, lastYear: LocalDate): Period =
-    paymentFrequency match {
-      case Weekly      => Period(lastYear.minusDays(7), lastYear)
-      case FortNightly => Period(lastYear.minusDays(14), lastYear)
-      case FourWeekly  => Period(lastYear.minusDays(28), lastYear)
+    val dateBefore = paymentFrequency match {
+      case Weekly      => dateAfter.minusDays(7)
+      case FortNightly => dateAfter.minusDays(14)
+      case FourWeekly  => dateAfter.minusDays(28)
     }
 
-  private def isBeforeMarch(period: Period) =
-    period.start.isBefore(LocalDate.of(2019, 3, 1))
+    val dateBeforeAdjusted = if (dateBefore.isBefore(LocalDate.of(2019, 3, 1))) dateBefore.plusDays(1) else dateBefore
+
+    Seq(dateBeforeAdjusted, dateAfter)
+  }
 }

@@ -10,6 +10,9 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryLastYearPayPage: Arbitrary[LastYearPayPage.type] =
+    Arbitrary(LastYearPayPage)
+
   implicit lazy val arbitraryLastPayDatePage: Arbitrary[LastPayDatePage.type] =
     Arbitrary(LastPayDatePage)
 

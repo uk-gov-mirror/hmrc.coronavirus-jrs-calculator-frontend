@@ -107,7 +107,7 @@ trait CoreTestData {
       |  }
       |}""".stripMargin
 
-  val variablePartial: String =
+  val variableMonthlyPartial: String =
     """
       |{
       |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
@@ -172,6 +172,106 @@ trait CoreTestData {
       |        "payDate" : [
       |            "2020-02-29",
       |            "2020-03-31"
+      |        ]
+      |    },
+      |  "lastUpdated": {
+      |    "$date": 1586873457650
+      |  }
+      |}
+      |""".stripMargin
+
+  def variableWeekly(lastPayDate: String = "2020-03-21"): String =
+    s"""
+       |{
+       |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
+       |    "data" : {
+       |        "furloughQuestion" : "yes",
+       |        "variableGrossPay" : {
+       |            "amount" : 10000
+       |        },
+       |        "variableLengthEmployed" : "no",
+       |        "employeeStartDate" : "2019-12-01",
+       |        "furloughEndDate" : "2020-03-21",
+       |        "paymentFrequency" : "weekly",
+       |        "claimPeriodStart" : "2020-03-01",
+       |        "furloughCalculations" : "no",
+       |        "lastPayDate" : "$lastPayDate",
+       |        "furloughStartDate" : "2020-03-10",
+       |        "payQuestion" : "varies",
+       |        "pensionAutoEnrolment" : "optedIn",
+       |        "claimPeriodEnd" : "2020-03-21",
+       |        "nicCategory" : "payable",
+       |        "payDate" : [
+       |            "2020-02-29",
+       |            "2020-03-07",
+       |            "2020-03-14",
+       |            "2020-03-21"
+       |        ]
+       |    },
+       |  "lastUpdated": {
+       |    "$$date": 1586873457650
+       |  }
+       |}
+       |""".stripMargin
+
+  val variableFortnightly: String =
+    """
+      |{
+      |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
+      |    "data" : {
+      |        "furloughQuestion" : "yes",
+      |        "variableGrossPay" : {
+      |            "amount" : 10000
+      |        },
+      |        "variableLengthEmployed" : "no",
+      |        "employeeStartDate" : "2019-12-01",
+      |        "furloughEndDate" : "2020-03-21",
+      |        "paymentFrequency" : "fortnightly",
+      |        "claimPeriodStart" : "2020-03-01",
+      |        "furloughCalculations" : "no",
+      |        "lastPayDate" : "2020-03-28",
+      |        "furloughStartDate" : "2020-03-10",
+      |        "payQuestion" : "varies",
+      |        "pensionAutoEnrolment" : "optedIn",
+      |        "claimPeriodEnd" : "2020-03-21",
+      |        "nicCategory" : "payable",
+      |        "payDate" : [
+      |            "2020-02-29",
+      |            "2020-03-14",
+      |            "2020-03-28"
+      |        ]
+      |    },
+      |  "lastUpdated": {
+      |    "$date": 1586873457650
+      |  }
+      |}
+      |""".stripMargin
+
+  val variableFourweekly: String =
+    """
+      |{
+      |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
+      |    "data" : {
+      |        "furloughQuestion" : "yes",
+      |        "variableGrossPay" : {
+      |            "amount" : 10000
+      |        },
+      |        "variableLengthEmployed" : "no",
+      |        "employeeStartDate" : "2019-12-01",
+      |        "furloughEndDate" : "2020-04-26",
+      |        "paymentFrequency" : "fourweekly",
+      |        "claimPeriodStart" : "2020-03-01",
+      |        "furloughCalculations" : "no",
+      |        "lastPayDate" : "2020-04-25",
+      |        "furloughStartDate" : "2020-03-10",
+      |        "payQuestion" : "varies",
+      |        "pensionAutoEnrolment" : "optedIn",
+      |        "claimPeriodEnd" : "2020-03-21",
+      |        "nicCategory" : "payable",
+      |        "payDate" : [
+      |            "2020-02-29",
+      |            "2020-03-28",
+      |            "2020-04-25"
       |        ]
       |    },
       |  "lastUpdated": {

@@ -443,3 +443,10 @@ lastPayDate.details.p1 = A ‘pay date’ is the date the employee actually gets
 lastPayDate.details.p2 = A ‘pay period’ is the period of time that the employee is paid for, such as weekly or monthly.
 
 somethingWentWrong.button = Start again
+
+lastYearPay.title = LastYearPay
+lastYearPay.heading = LastYearPay
+lastYearPay.checkYourAnswersLabel = LastYearPay
+lastYearPay.error.nonNumeric = Enter the salary using numbers
+lastYearPay.error.required = Enter the salary
+lastYearPay.error.negative = Salary can’t be negative

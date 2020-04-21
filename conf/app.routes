@@ -114,3 +114,6 @@ GET        /last-pay-date                  controllers.LastPayDateController.onP
 POST       /last-pay-date                  controllers.LastPayDateController.onSubmit(mode: Mode = NormalMode)
 GET        /change-last-pay-date                   controllers.LastPayDateController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-last-pay-date                      controllers.LastPayDateController.onSubmit(mode: Mode = CheckMode)
+
+GET        /last-year-pay/:idx                  controllers.LastYearPayController.onPageLoad(idx: Int)
+POST       /last-year-pay/:idx                  controllers.LastYearPayController.onSubmit(idx: Int)

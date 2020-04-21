@@ -1,35 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration LastPayDate"
+echo "Applying migration LastYearPay"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /lastPayDate                  controllers.LastPayDateController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /lastPayDate                  controllers.LastPayDateController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /lastYearPay                  controllers.LastYearPayController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /lastYearPay                  controllers.LastYearPayController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeLastPayDate                        controllers.LastPayDateController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeLastPayDate                        controllers.LastPayDateController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeLastYearPay                        controllers.LastYearPayController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeLastYearPay                        controllers.LastYearPayController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "lastPayDate.title = LastPayDate" >> ../conf/messages.en
-echo "lastPayDate.heading = LastPayDate" >> ../conf/messages.en
-echo "lastPayDate.checkYourAnswersLabel = LastPayDate" >> ../conf/messages.en
-echo "lastPayDate.error.required.all = Enter the lastPayDate" >> ../conf/messages.en
-echo "lastPayDate.error.required.two = The lastPayDate" must include {0} and {1} >> ../conf/messages.en
-echo "lastPayDate.error.required = The lastPayDate must include {0}" >> ../conf/messages.en
-echo "lastPayDate.error.invalid = Enter a real LastPayDate" >> ../conf/messages.en
+echo "lastYearPay.title = LastYearPay" >> ../conf/messages.en
+echo "lastYearPay.heading = LastYearPay" >> ../conf/messages.en
+echo "lastYearPay.checkYourAnswersLabel = LastYearPay" >> ../conf/messages.en
+echo "lastYearPay.error.nonNumeric = Enter your lastYearPay using numbers" >> ../conf/messages.en
+echo "lastYearPay.error.required = Enter your lastYearPay" >> ../conf/messages.en
+echo "lastYearPay.error.wholeNumber = Enter your lastYearPay using whole numbers" >> ../conf/messages.en
+echo "lastYearPay.error.outOfRange = LastYearPay must be between {0} and {1}" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryLastPayDateUserAnswersEntry: Arbitrary[(LastPayDatePage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryLastYearPayUserAnswersEntry: Arbitrary[(LastYearPayPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[LastPayDatePage.type]";\
+    print "        page  <- arbitrary[LastYearPayPage.type]";\
     print "        value <- arbitrary[Int].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
@@ -39,14 +39,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryLastPayDatePage: Arbitrary[LastPayDatePage.type] =";\
-    print "    Arbitrary(LastPayDatePage)";\
+    print "  implicit lazy val arbitraryLastYearPayPage: Arbitrary[LastYearPayPage.type] =";\
+    print "    Arbitrary(LastYearPayPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(LastPayDatePage.type, JsValue)] ::";\
+    print "    arbitrary[(LastYearPayPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration LastPayDate completed"
+echo "Migration LastYearPay completed"
