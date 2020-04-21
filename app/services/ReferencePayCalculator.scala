@@ -23,6 +23,18 @@ trait ReferencePayCalculator extends PeriodHelper {
     amount: Amount): Seq[PaymentWithPeriod] =
     afterFurloughPayPeriod.map(period => calculateAveragePay(nonFurloughPay, priorFurloughPeriod, period, amount))
 
+  def addCylbToCalculation(
+    nonFurloughPay: NonFurloughPay,
+    frequency: PaymentFrequency,
+    cylbs: Seq[CylbPayment],
+    periods: Seq[PeriodWithPaymentDate],
+    avg: Seq[PaymentWithPeriod]): Seq[PaymentWithPeriod] = {
+
+    val cylb = calculateCylb(nonFurloughPay, frequency, cylbs, periods)
+
+    if (cylb.isEmpty) avg else greaterGrossPay(cylb, avg)
+  }
+
   private def calculateAveragePay(
     nonFurloughPay: NonFurloughPay,
     priorFurloughPeriod: Period,
@@ -35,6 +47,14 @@ trait ReferencePayCalculator extends PeriodHelper {
 
     PaymentWithPeriod(nfp, Amount(daily), afterFurloughPayPeriod, Varies)
   }
+
+  protected def greaterGrossPay(cylb: Seq[PaymentWithPeriod], avg: Seq[PaymentWithPeriod]): Seq[PaymentWithPeriod] =
+    cylb.zip(avg) map {
+      case (cylbPayment, avgPayment) =>
+        if (cylbPayment.furloughPayment.value > avgPayment.furloughPayment.value)
+          cylbPayment
+        else avgPayment
+    }
 
   protected def calculateCylb(
     nonFurloughPay: NonFurloughPay,
