@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FullPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, Salary, UserAnswers}
+import models.{Amount, FullPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
 import pages.FurloughStartDatePage
 import play.api.libs.json.Json
 import utils.CoreTestData
