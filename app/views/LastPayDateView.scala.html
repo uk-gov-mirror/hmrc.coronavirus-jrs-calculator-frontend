@@ -43,7 +43,9 @@
 
             @inputDate(
                 form,
-                ""
+                legendContent = messages("lastPayDate.heading", dateToString(date)),
+                legendClasses = "govuk-visually-hidden",
+                legendAsPageHeading = false
             )
 
             @button("site.continue")

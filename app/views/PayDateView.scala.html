@@ -40,7 +40,9 @@
 
         @inputDate(
             form,
-            ""
+            legendContent = messages(if(idx == 1){"payDate.heading.firstDate"} else {"payDate.heading"}, dateToString(messageDate)),
+            legendClasses = "govuk-visually-hidden",
+            legendAsPageHeading = false
         )
 
         @button("site.continue")

@@ -104,7 +104,9 @@
 
         @inputRadio(
             form = form,
-            legend = "",
+            legend = messages("nicCategory.heading"),
+            legendAsHeading = false,
+            classes = "govuk-visually-hidden",
             items = NicCategory.options(form)
         )
 
