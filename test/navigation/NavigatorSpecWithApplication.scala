@@ -10,6 +10,7 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import config.FrontendAppConfig
 import controllers.routes
+import models.PayQuestion.{Regularly, Varies}
 import models._
 import pages._
 import play.api.Configuration
@@ -136,8 +137,28 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .onPageLoad(NormalMode)
       }
 
-      "go from LastPayDatePage to NicCategoryPage" in {
-        navigator.nextPage(LastPayDatePage, NormalMode, emptyUserAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
+      "go to NicCategoryPage after LastPayDatePage if the pay-method is Regularly" in {
+        val userAnswers = UserAnswers("id")
+          .set(PayQuestionPage, Regularly)
+          .get
+
+        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+      }
+
+      "go to PartialPayBeforeFurloughPage after LastPayDatePage if the pay-method is Varies" in {
+        val userAnswers = UserAnswers("id")
+          .set(PayQuestionPage, Varies)
+          .get
+
+        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
+      }
+
+      "go to PayQuestionPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
+        val userAnswers = UserAnswers("id")
+          .set(PayQuestionPage, Varies)
+          .get
+
+        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
       }
 
       "go from PensionAutoEnrolmentPage to FurloughCalculationsPage" in {
