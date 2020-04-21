@@ -55,12 +55,12 @@ class PartialPayAfterFurloughController @Inject()(
           ))
 
       case (Some(_), None) =>
-        Redirect(routes.VariableGrossPayController.onPageLoad(NormalMode))
+        Redirect(routes.NicCategoryController.onPageLoad(NormalMode))
 
       case (None, _) => Redirect(routes.ClaimPeriodEndController.onPageLoad(NormalMode))
 
       case _ =>
-        Redirect(routes.VariableGrossPayController.onPageLoad(NormalMode))
+        Redirect(routes.NicCategoryController.onPageLoad(NormalMode))
     }
   }
 
@@ -84,13 +84,13 @@ class PartialPayAfterFurloughController @Inject()(
             }
           )
       case (Some(_), None) =>
-        Future.successful(Redirect((routes.VariableGrossPayController.onPageLoad(NormalMode))))
+        Future.successful(Redirect((routes.NicCategoryController.onPageLoad(NormalMode))))
 
       case (None, _) =>
         Future.successful(Redirect((routes.ClaimPeriodEndController.onPageLoad(NormalMode))))
 
       case _ =>
-        Future.successful(Redirect((routes.VariableGrossPayController.onPageLoad(NormalMode))))
+        Future.successful(Redirect((routes.NicCategoryController.onPageLoad(NormalMode))))
     }
   }
 

@@ -60,4 +60,11 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   val ninoCatLetter = "https://www.gov.uk/national-insurance-rates-letters/category-letters"
 
+  val workOutHowMuch =
+    "https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme#work-out-how-much-you-can-claim-for-employer-national-insurance-contributions"
+
+  val webchatHelpUrl = "https://www.tax.service.gov.uk/ask-hmrc/webchat/job-retention-scheme"
+
+  val jobRetentionScheme = "https://www.gov.uk/guidance/claim-for-wage-costs-through-the-coronavirus-job-retention-scheme"
+
 }
