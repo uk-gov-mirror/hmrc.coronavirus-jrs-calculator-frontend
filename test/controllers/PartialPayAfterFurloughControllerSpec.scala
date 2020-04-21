@@ -15,7 +15,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodEndPage, FurloughEndDatePage, PartialPayAfterFurloughPage, PaymentFrequencyPage}
+import pages.{ClaimPeriodEndPage, FurloughEndDatePage, PartialPayAfterFurloughPage, PayDatePage, PaymentFrequencyPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
@@ -46,11 +46,11 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(("value", "123"))
 
-  val claimEndDate = LocalDate.of(2020, 5, 31)
+  val payPeriod1 = LocalDate.of(2020, 5, 31)
   val furloughEndDate = LocalDate.of(2020, 4, 10)
 
   val userAnswers = UserAnswers(userAnswersId)
-    .set(ClaimPeriodEndPage, claimEndDate)
+    .set(PayDatePage, payPeriod1, Some(1))
     .success
     .value
     .set(FurloughEndDatePage, furloughEndDate)
@@ -129,14 +129,14 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       application.stop()
     }
 
-    "redirect to the /variable-gross-pay straightaway if there is No furlough end stored in UserAnswers" in {
+    "redirect to the /furlough-question if there is No furlough end stored in UserAnswers" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val userAnswersUpdated = UserAnswers(userAnswersId)
-        .set(ClaimPeriodEndPage, claimEndDate)
+        .set(PayDatePage, payPeriod1, Some(1))
         .success
         .value
 
@@ -151,49 +151,22 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       val result = route(application, postRequest(submitAfterFurloughRoute)).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.NicCategoryController.onPageLoad(NormalMode).url
+      redirectLocation(result).value mustEqual routes.FurloughQuestionController.onPageLoad(NormalMode).url
 
       application.stop()
     }
 
-    "redirect to the /claim-period-end if there is no stored claim-period-end date in UserAnswers" in {
+    "redirect to the /NicCategory page if there is not enough partial to show for furlough end" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val userAnswersUpdated = UserAnswers(userAnswersId)
-        .set(FurloughEndDatePage, claimEndDate.minusDays(1))
+        .set(PayDatePage, payPeriod1, Some(1))
         .success
         .value
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersUpdated))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      val result = route(application, postRequest(submitAfterFurloughRoute)).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.ClaimPeriodEndController.onPageLoad(NormalMode).url
-
-      application.stop()
-    }
-
-    "redirect to the /variable-gross-pay if there is not enough partial to show for furlough end" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val userAnswersUpdated = UserAnswers(userAnswersId)
-        .set(ClaimPeriodEndPage, claimEndDate)
-        .success
-        .value
-        .set(FurloughEndDatePage, claimEndDate.minusDays(1))
+        .set(FurloughEndDatePage, payPeriod1)
         .success
         .value
         .set(PaymentFrequencyPage, Weekly)
@@ -216,6 +189,55 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       application.stop()
     }
 
+    "redirect to the /pay-date/1 when there no saved data for PayDatePage in mongo" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(UserAnswers(userAnswersId)))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest(submitAfterFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.PayDateController.onPageLoad(1).url
+
+      application.stop()
+    }
+
+    "redirect to the /furlough-question when there no saved data for FurloughEndDate in mongo" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(PayDatePage, payPeriod1, Some(1))
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest(submitAfterFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.FurloughQuestionController.onPageLoad(NormalMode).url
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -234,8 +256,9 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, furloughEndDate.plusDays(1), claimEndDate, routes.PartialPayAfterFurloughController.onSubmit())(request, messages).toString
-
+        view(boundForm, furloughEndDate.plusDays(1), furloughEndDate.plusDays(7), routes.PartialPayAfterFurloughController.onSubmit())(
+          request,
+          messages).toString
       application.stop()
     }
 

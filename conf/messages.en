@@ -419,8 +419,10 @@ furloughCalculations.payperiodending.label = Pay period end date
 furloughCalculations.grossfurloughamount.label = Furlough amount (80% of pay)
 furloughCalculations.total.label = Total
 
-FurloughPartialPay.title = What did the employee get paid between {0} and {1}?
-FurloughPartialPay.heading = What did the employee get paid between {0} and {1}?
+FurloughPartialPay.title.between = What did the employee get paid between {0} and {1}?
+FurloughPartialPay.title.on = What did the employee get paid on {0}?
+FurloughPartialPay.heading.between = What did the employee get paid between {0} and {1}?
+FurloughPartialPay.heading.on = What did the employee get paid on {0}?
 FurloughPartialPay.label = This is for the time that employee was paid when they were not furloughed.
 FurloughPartialPay.checkYourAnswersLabel = variableLengthPartialPay
 FurloughPartialPay.error.required = Enter a valid amount

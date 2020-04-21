@@ -10,12 +10,12 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import forms.FurloughPartialPayFormProvider
 import models.PaymentFrequency.Weekly
-import models.{FurloughPartialPay, UserAnswers}
+import models.{FurloughPartialPay, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PartialPayBeforeFurloughPage, PaymentFrequencyPage}
+import pages.{FurloughStartDatePage, PartialPayBeforeFurloughPage, PayDatePage, PaymentFrequencyPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
@@ -46,11 +46,11 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(("value", "123"))
 
-  val claimStartDate = LocalDate.of(2020, 3, 1)
+  val payPeriod1 = LocalDate.of(2020, 3, 1)
   val furloughStartDate = LocalDate.of(2020, 3, 10)
 
   val userAnswers = UserAnswers(userAnswersId)
-    .set(ClaimPeriodStartPage, claimStartDate)
+    .set(PayDatePage, payPeriod1, Some(1))
     .success
     .value
     .set(FurloughStartDatePage, furloughStartDate)
@@ -107,6 +107,55 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
       application.stop()
     }
 
+    "redirect to the /pay-date/1 when there no saved data for PayDatePage in mongo for GET" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(UserAnswers(userAnswersId)))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, getRequest(submitBeforeFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.PayDateController.onPageLoad(1).url
+
+      application.stop()
+    }
+
+    "redirect to the /furlough-start-date when there no saved data for FurloughStartDate in mongo for GET" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(PayDatePage, payPeriod1, Some(1))
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, getRequest(submitBeforeFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.FurloughStartDateController.onPageLoad(NormalMode).url
+
+      application.stop()
+    }
+
     "redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
@@ -129,6 +178,55 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
       application.stop()
     }
 
+    "redirect to the /pay-date/1 when there no saved data for PayDatePage in mongo" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(UserAnswers(userAnswersId)))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest(submitBeforeFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.PayDateController.onPageLoad(1).url
+
+      application.stop()
+    }
+
+    "redirect to the /furlough-start-date when there no saved data for FurloughStartDate in mongo" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(PayDatePage, payPeriod1, Some(1))
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest(submitBeforeFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.FurloughStartDateController.onPageLoad(NormalMode).url
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -147,9 +245,11 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, claimStartDate, furloughStartDate.minusDays(1), routes.PartialPayBeforeFurloughController.onSubmit())(
-          request,
-          messages).toString
+        view(
+          boundForm,
+          furloughStartDate.minusDays(7),
+          furloughStartDate.minusDays(1),
+          routes.PartialPayBeforeFurloughController.onSubmit())(request, messages).toString
 
       application.stop()
     }
