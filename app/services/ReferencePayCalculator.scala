@@ -97,7 +97,7 @@ trait ReferencePayCalculator extends PeriodHelper {
     period match {
       case FullPeriod(_) => Amount(0.00)
       case pp @ PartialPeriod(_, _) =>
-        val pre  = if (isFurloughStart(pp)) nonFurloughPay.preAmount else Amount(0.00)
+        val pre = if (isFurloughStart(pp)) nonFurloughPay.preAmount else Amount(0.00)
         val post = if (isFurloughEnd(pp)) nonFurloughPay.postAmount else Amount(0.00)
         Amount(pre.value + post.value)
     }

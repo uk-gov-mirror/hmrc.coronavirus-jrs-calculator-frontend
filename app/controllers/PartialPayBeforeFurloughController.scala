@@ -42,7 +42,7 @@ class PartialPayBeforeFurloughController @Inject()(
       case (Nil, _) => Redirect(routes.PayDateController.onPageLoad(1))
       case (payPeriods, Some(furloughStartDate)) =>
         latestBeforeFurloughStart(payPeriods, furloughStartDate) match {
-          case Some(payPeriod) if payPeriod.isBefore(furloughStartDate) =>
+          case Some(payPeriod) if payPeriod.plusDays(1).isBefore(furloughStartDate) =>
             val preparedForm = request.userAnswers.get(PartialPayBeforeFurloughPage) match {
               case None        => form
               case Some(value) => form.fill(value)
@@ -66,7 +66,7 @@ class PartialPayBeforeFurloughController @Inject()(
       case (Nil, _) => Future.successful(Redirect(routes.PayDateController.onPageLoad(1)))
       case (payPeriods, Some(furloughStartDate)) =>
         latestBeforeFurloughStart(payPeriods, furloughStartDate) match {
-          case Some(payPeriod) if payPeriod.isBefore(furloughStartDate) =>
+          case Some(payPeriod) if payPeriod.plusDays(1).isBefore(furloughStartDate) =>
             form
               .bindFromRequest()
               .fold(
