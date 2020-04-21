@@ -72,26 +72,37 @@
     @p(Html(messages("confirmation.breakdown.p")))
 
     <details class="govuk-details" data-module="govuk-details">
-        <summary class="govuk-details__summary">
+      <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">
           @messages("confirmation.breakdown.details")
         </span>
-        </summary>
-        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-            @for((furlough, nic, pension) <- (cvb.furlough.payPeriodBreakdowns, cvb.nic.payPeriodBreakdowns, cvb.pension.payPeriodBreakdowns).zipped.toList) {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key" style="width: 15%">
-                        @messages("confirmation.breakdown.dt")
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @messages("confirmation.breakdown.ending", dateToString(furlough.periodWithPaymentDate.period.period.end))<br>
-                        @Html(messages("confirmation.breakdown.furlough", furlough.grant.value.setScale(2)))<br>
-                        @Html(messages("confirmation.breakdown.nic", nic.grant.value.setScale(2)))<br>
-                        @Html(messages("confirmation.breakdown.pension", pension.grant.value.setScale(2)))
-                    </dd>
-                </div>
-            }
-        </dl>
+      </summary>
+      <div class="govuk-details__text">
+        @for((furlough, nic, pension) <- (cvb.furlough.payPeriodBreakdowns, cvb.nic.payPeriodBreakdowns,
+          cvb.pension.payPeriodBreakdowns).zipped.toList) { <h3 class="govuk-heading-s">@messages("confirmation.breakdown.dt")
+          @messages("confirmation.breakdown.ending", dateToString(furlough.periodWithPaymentDate.period.period.end))</h3>
+          <dl class="govuk-summary-list">
+            <dt class="govuk-!-margin-bottom-0">
+              @Html(messages("confirmation.breakdown.furlough"))
+            </dt>
+            <dd class="govuk-heading-s govuk-!-margin-left-0">
+              &pound;@furlough.grant.value.setScale(2)
+            </dd>
+            <dt class="govuk-!-margin-bottom-0">
+              @Html(messages("confirmation.breakdown.nic"))
+            </dt>
+            <dd class="govuk-heading-s govuk-!-margin-left-0">
+              &pound;@nic.grant.value.setScale(2)
+            </dd>
+            <dt class="govuk-!-margin-bottom-0">
+              @Html(messages("confirmation.breakdown.pension"))
+            </dt>
+            <dd class="govuk-heading-s govuk-!-margin-left-0">
+              &pound;@pension.grant.value.setScale(2)
+            </dd>
+          </dl>
+          }
+      </div>
     </details>
 
     @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
