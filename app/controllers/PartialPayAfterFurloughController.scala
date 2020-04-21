@@ -91,7 +91,16 @@ class PartialPayAfterFurloughController @Inject()(
           case _ => Future.successful(Redirect(routes.NicCategoryController.onPageLoad(NormalMode)))
         }
 
-      case (_, None) => Future.successful(Redirect(routes.FurloughQuestionController.onPageLoad(NormalMode)))
+      case (_, None) =>
+        request.userAnswers.get(FurloughQuestionPage) match {
+          case Some(_) =>
+            //this must be Furlough ongoing
+            Future.successful(Redirect(routes.NicCategoryController.onPageLoad(NormalMode)))
+          case None =>
+            //User not answered FurloughQuestion page, so redirect them to FurloughQuestion
+            Future.successful(Redirect(routes.FurloughQuestionController.onPageLoad(NormalMode)))
+        }
+
     }
   }
 
