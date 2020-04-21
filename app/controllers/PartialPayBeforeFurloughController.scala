@@ -50,7 +50,7 @@ class PartialPayBeforeFurloughController @Inject()(
             Ok(
               view(
                 preparedForm,
-                messageDate(payPeriod, furloughStartDate, request.userAnswers.get(PaymentFrequencyPage)),
+                messageDate(payPeriod.plusDays(1), furloughStartDate, request.userAnswers.get(PaymentFrequencyPage)),
                 furloughStartDate.minusDays(1),
                 routes.PartialPayBeforeFurloughController.onSubmit()
               ))
@@ -74,7 +74,7 @@ class PartialPayBeforeFurloughController @Inject()(
                   Future.successful(
                     BadRequest(view(
                       formWithErrors,
-                      messageDate(payPeriod, furloughStartDate, request.userAnswers.get(PaymentFrequencyPage)),
+                      messageDate(payPeriod.plusDays(1), furloughStartDate, request.userAnswers.get(PaymentFrequencyPage)),
                       furloughStartDate.minusDays(1),
                       routes.PartialPayBeforeFurloughController.onSubmit()
                     ))),
