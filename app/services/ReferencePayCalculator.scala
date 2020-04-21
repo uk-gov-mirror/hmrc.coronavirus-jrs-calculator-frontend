@@ -85,13 +85,14 @@ trait ReferencePayCalculator extends PeriodHelper {
     head: CylbPayment,
     taildHead: CylbPayment) = {
     val divisor = cylbDivisor(frequency)
+    val multiplier = cylbMultiplier(frequency)
     val amount =
-      roundAmountWithMode(totalFromBothWeeks(head, taildHead, divisor), RoundingMode.HALF_UP)
+      roundAmountWithMode(totalFromBothWeeks(head, taildHead, divisor, multiplier), RoundingMode.HALF_UP)
     PaymentWithPeriod(nfp, amount, period._1, Varies)
   }
 
-  private def totalFromBothWeeks(head: CylbPayment, taildHead: CylbPayment, divisor: Int): Amount =
-    Amount(((head.amount.value / divisor) * 2) + ((taildHead.amount.value / divisor) * 5))
+  private def totalFromBothWeeks(head: CylbPayment, taildHead: CylbPayment, divisor: Int, multiplier: Int): Amount =
+    Amount(((head.amount.value / divisor) * 2) + ((taildHead.amount.value / divisor) * multiplier))
 
   private def monthlyCylb(nonFurloughPay: NonFurloughPay, cylbs: Seq[CylbPayment], periods: Seq[PeriodWithPaymentDate]) =
     for {
@@ -109,6 +110,16 @@ trait ReferencePayCalculator extends PeriodHelper {
     case FourWeekly  => 28
     case _ => {
       Logger.warn(s"Couldn't find divisor for $frequency")
+      0
+    }
+  }
+
+  private def cylbMultiplier(frequency: PaymentFrequency): Int = frequency match {
+    case Weekly      => 5
+    case FortNightly => 12
+    case FourWeekly  => 26
+    case _ => {
+      Logger.warn(s"Couldn't find multiplier for $frequency")
       0
     }
   }
