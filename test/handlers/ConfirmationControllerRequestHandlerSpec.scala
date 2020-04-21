@@ -7,14 +7,14 @@ package handlers
 
 import java.time.LocalDate
 
-import base.SpecBase
+import base.{CoreDataBuilder, SpecBase}
 import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
 import models.{Amount, CalculationResult, FullPeriod, PartialPeriod, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate, UserAnswers}
 import play.api.libs.json.Json
 import utils.CoreTestData
 import viewmodels.ConfirmationViewBreakdown
 
-class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData {
+class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData with CoreDataBuilder {
 
   "do all calculations given a set of userAnswers" in new ConfirmationControllerRequestHandler {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
@@ -93,6 +93,31 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
     loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected //TODO metadata to be tested
+  }
+
+  "variable average partial period scenario" in new ConfirmationControllerRequestHandler {
+    val userAnswers = Json.parse(variableAveragePartial).as[UserAnswers]
+
+    def periodBreakdownOne(grossPay: BigDecimal, grant: BigDecimal) =
+      PeriodBreakdown(
+        Amount(grossPay),
+        Amount(grant),
+        PeriodWithPaymentDate(
+          PartialPeriod(
+            Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
+            Period(LocalDate.of(2020, 3, 5), LocalDate.of(2020, 3, 31))),
+          PaymentDate(LocalDate.of(2020, 3, 31))
+        )
+      )
+
+    val furlough = CalculationResult(FurloughCalculationResult, 1289.95, List(periodBreakdownOne(280.00, 1289.95)))
+    val nic = CalculationResult(NicCalculationResult, 102.16, List(periodBreakdownOne(280.00, 102.16)))
+    val pension = CalculationResult(PensionCalculationResult, 25.29, List(periodBreakdownOne(280.00, 25.29)))
+
+    val expected = ConfirmationViewBreakdown(furlough, nic, pension)
+
+    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected
+
   }
 
 }

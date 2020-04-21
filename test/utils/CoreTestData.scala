@@ -145,4 +145,38 @@ trait CoreTestData {
       |  }
       |}
       |""".stripMargin
+
+  val variableAveragePartial: String =
+    """
+      |{
+      |    "_id" : "session-a33fd288-bafb-475b-9767-84df4315d230",
+      |    "data" : {
+      |        "furloughQuestion" : "no",
+      |        "variableGrossPay" : {
+      |            "amount" : 12960
+      |        },
+      |        "variableLengthEmployed" : "no",
+      |        "employeeStartDate" : "2019-08-01",
+      |        "paymentFrequency" : "monthly",
+      |        "claimPeriodStart" : "2020-03-01",
+      |        "furloughCalculations" : "no",
+      |        "lastPayDate" : "2020-03-31",
+      |        "PartialPayBeforeFurlough" : {
+      |            "value" : 280
+      |        },
+      |        "furloughStartDate" : "2020-03-05",
+      |        "payQuestion" : "varies",
+      |        "pensionAutoEnrolment" : "optedIn",
+      |        "claimPeriodEnd" : "2020-03-31",
+      |        "nicCategory" : "payable",
+      |        "payDate" : [
+      |            "2020-02-29",
+      |            "2020-03-31"
+      |        ]
+      |    },
+      |  "lastUpdated": {
+      |    "$date": 1586873457650
+      |  }
+      |}
+      |""".stripMargin
 }

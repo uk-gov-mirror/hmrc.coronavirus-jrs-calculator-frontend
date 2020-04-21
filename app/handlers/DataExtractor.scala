@@ -66,7 +66,7 @@ trait DataExtractor extends ReferencePayCalculator {
     for {
       data              <- extract(userAnswers)
       employeeStartDate <- userAnswers.get(EmployeeStartDatePage)
-    } yield endDateOrTaxYearEnd(Period(employeeStartDate, data.claimPeriod.start.minusDays(1)))
+    } yield endDateOrTaxYearEnd(Period(employeeStartDate, data.furloughStart.minusDays(1)))
 
   private def extractVariablePayments(userAnswers: UserAnswers, periods: Seq[PeriodWithPaymentDate]): Option[Seq[PaymentWithPeriod]] =
     for {

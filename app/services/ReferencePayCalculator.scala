@@ -29,12 +29,7 @@ trait ReferencePayCalculator extends PeriodHelper {
     afterFurloughPayPeriod: PeriodWithPaymentDate,
     amount: Amount): PaymentWithPeriod = {
 
-    val period = afterFurloughPayPeriod.period match {
-      case FullPeriod(p)       => p
-      case PartialPeriod(_, p) => p
-    }
-
-    val daily = periodDaysCount(period) * averageDailyCalculator(priorFurloughPeriod, amount)
+    val daily = periodDaysCount(afterFurloughPayPeriod.period.period) * averageDailyCalculator(priorFurloughPeriod, amount)
 
     val nfp = determineNonFurloughPay(afterFurloughPayPeriod.period, nonFurloughPay)
 

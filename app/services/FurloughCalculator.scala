@@ -6,6 +6,7 @@
 package services
 
 import models.Calculation.FurloughCalculationResult
+import models.PayQuestion.{Regularly, Varies}
 import models.{Amount, CalculationResult, FullPeriod, PartialPeriod, PaymentDate, PaymentFrequency, PaymentWithPeriod, PeriodBreakdown, PeriodWithPaymentDate}
 import utils.AmountRounding._
 import utils.TaxYearFinder
@@ -65,9 +66,12 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
     val fullPeriodDays = periodDaysCount(period.original)
     val furloughDays = periodDaysCount(period.partial)
     val preFurloughDays = fullPeriodDays - furloughDays
-    val nonFurloughPay = roundWithMode((payment.furloughPayment.value / fullPeriodDays) * preFurloughDays, RoundingMode.HALF_UP)
+    val nonFurloughPay = payment.payQuestion match {
+      case Regularly => roundWithModeReturnAmount((payment.furloughPayment.value / fullPeriodDays) * preFurloughDays, RoundingMode.HALF_UP)
+      case Varies    => payment.nonFurloughPay
+    }
 
-    PeriodBreakdown(Amount(nonFurloughPay), Amount(amount), PeriodWithPaymentDate(period, paymentDate))
+    PeriodBreakdown(nonFurloughPay, Amount(amount), PeriodWithPaymentDate(period, paymentDate))
   }
 
 }
