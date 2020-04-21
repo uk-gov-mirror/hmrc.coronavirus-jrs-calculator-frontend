@@ -7,12 +7,12 @@ package services
 
 import java.time.LocalDate
 
-import base.SpecBase
+import base.{CoreDataBuilder, SpecBase}
 import models.PaymentFrequency.{FourWeekly, Monthly}
-import models.{Amount, FullPeriod, PartialPeriod, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, PartialPeriod, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
+class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreDataBuilder {
 
   forAll(partialPeriodScenarios) { (frequency, grossPay, furloughPayment, period, paymentDate, expectedGrant) =>
     s"Calculate grant for a partial period with Payment Frequency: $frequency," +
@@ -50,9 +50,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Monthly,
       Amount(1200.0),
       Amount(960.00),
-      PartialPeriod(
-        Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)),
-        Period(LocalDate.of(2020, 4, 16), LocalDate.of(2020, 4, 30))),
+      partialPeriod("2020,4,1" -> "2020,4, 30", "2020,4, 16" -> "2020,4,30"),
       PaymentDate(LocalDate.of(2020, 4, 30)),
       Amount(98.53)
     ),
@@ -60,9 +58,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Monthly,
       Amount(1016.13),
       Amount(1774.30),
-      PartialPeriod(
-        Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
-        Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))),
+      partialPeriod("2020, 3, 1" -> "2020, 3, 31", "2020, 3, 10" -> "2020, 3, 31"),
       PaymentDate(LocalDate.of(2020, 3, 31)),
       Amount(202.83)
     ),
@@ -70,9 +66,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Monthly,
       Amount(180.0),
       Amount(496.0),
-      PartialPeriod(
-        Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
-        Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))),
+      partialPeriod("2020, 3, 1" -> "2020, 3, 31", "2020, 3, 10" -> "2020, 3, 31"),
       PaymentDate(LocalDate.of(2020, 3, 31)),
       Amount(0.00)
     )

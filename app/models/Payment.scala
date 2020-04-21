@@ -21,7 +21,17 @@ case class NonFurloughPay(pre: Option[Amount], post: Option[Amount])
 
 object NonFurloughPay {
   implicit val defaultFormat: Format[NonFurloughPay] = Json.format[NonFurloughPay]
+
+  implicit class PrePostFurlough(nonFurloughPay: NonFurloughPay) {
+    def preAmount: Amount = opt(nonFurloughPay.pre)
+    def postAmount: Amount = opt(nonFurloughPay.post)
+
+    private val opt: Option[Amount] => Amount =
+      opt => opt.fold(Amount(0.0))(v => v)
+  }
 }
+
+case class CylbPayment(paymentDate: PaymentDate, amount: Amount)
 
 case class PaymentWithPeriod(nonFurloughPay: Amount, furloughPayment: Amount, period: PeriodWithPaymentDate, payQuestion: PayQuestion)
 
