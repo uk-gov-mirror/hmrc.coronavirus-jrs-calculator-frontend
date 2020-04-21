@@ -10,12 +10,12 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import forms.FurloughPartialPayFormProvider
 import models.PaymentFrequency.Weekly
-import models.{FurloughPartialPay, NormalMode, UserAnswers}
+import models.{FurloughPartialPay, FurloughQuestion, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodEndPage, FurloughEndDatePage, PartialPayAfterFurloughPage, PayDatePage, PaymentFrequencyPage}
+import pages.{ClaimPeriodEndPage, FurloughEndDatePage, FurloughQuestionPage, PartialPayAfterFurloughPage, PayDatePage, PaymentFrequencyPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
@@ -152,6 +152,36 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.FurloughQuestionController.onPageLoad(NormalMode).url
+
+      application.stop()
+    }
+
+    "redirect to the /nic-category for Furlough ongoing in UserAnswers" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val userAnswersUpdated = UserAnswers(userAnswersId)
+        .set(PayDatePage, payPeriod1, Some(1))
+        .success
+        .value
+        .set(FurloughQuestionPage, FurloughQuestion.No)
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersUpdated))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest(submitAfterFurloughRoute)).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.NicCategoryController.onPageLoad(NormalMode).url
 
       application.stop()
     }
