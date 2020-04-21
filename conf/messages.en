@@ -298,7 +298,7 @@ confirmation.breakdown.furlough = <span class="govuk-!-font-weight-bold">£{0}</
 confirmation.breakdown.nic = <span class="govuk-!-font-weight-bold">£{0}</span> - Employer National Insurance contributions
 confirmation.breakdown.pension = <span class="govuk-!-font-weight-bold">£{0}</span> - Employer minimum pension contributions
 confirmation.nextSteps.heading = Next steps
-confirmation.nextSteps.li.1 = Make a calculation for any other employee furloughed for all or part of this claim period (9 March to 17 April).
+confirmation.nextSteps.li.1 = Make a calculation for any other employee furloughed for all or part of this claim period ({0} to {1}).
 confirmation.nextSteps.li.1.2 = Make a note of each set of figures.
 confirmation.nextSteps.li.2 = Work out the total amounts to claim for:
 confirmation.nextSteps.li.2.1 = furlough amount
