@@ -29,6 +29,28 @@
 
             @p(Html(Messages("claimPeriodEnd.p3")))
 
+            <div class="form-group">
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="summary govuk-details__summary-text">@Messages("claimPeriodEnd.details.title")</span>
+                    </summary>
+                    <div class="panel panel-border-narro govuk-details__text">
+                        <p>@Messages("claimPeriodEnd.details.p1")</p>
+                        <p>@Messages("claimPeriodEnd.details.p2")</p>
+                        <p>@Messages("claimPeriodEnd.details.p3")</p>
+
+                        <h2 class="govuk-heading-m">@messages("claimPeriodEnd.heading1")</h2>
+
+                        <p>@Messages("claimPeriodEnd.details.p4")</p>
+                        <p>@Messages("claimPeriodEnd.details.p5")</p>
+
+                        <h2 class="govuk-heading-m">@messages("claimPeriodEnd.heading2")</h2>
+
+                        <p>@Messages("claimPeriodEnd.details.p6")</p>
+                    </div>
+                </details>
+            </div>
+
             @inputDate(
                 form = form,
                 legendContent = "claimPeriodEnd.legend",

@@ -29,7 +29,6 @@ import scala.concurrent.Future
 class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   val formProvider = new ClaimPeriodEndFormProvider(frontendAppConfig)
-  private def form = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -39,12 +38,16 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
+  val claimStart = LocalDate.of(2020, 3, 1)
+
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
-      ClaimPeriodStartPage.toString -> JsString("2020-03-10")
+      ClaimPeriodStartPage.toString -> JsString(claimStart.toString)
     )
   )
+
+  private def form = formProvider(claimStart)
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, claimPeriodEndRoute).withCSRFToken
@@ -124,9 +127,32 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
       application.stop()
     }
 
+    "redirect to the /claim-period-start if there is no claim-start stored in mongo" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(UserAnswers(userAnswersId)))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, getRequest).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.ClaimPeriodStartController.onPageLoad(NormalMode).url
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
         FakeRequest(POST, claimPeriodEndRoute).withCSRFToken

@@ -13,15 +13,18 @@ import play.api.data.FormError
 
 class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
-  val form = new ClaimPeriodEndFormProvider(frontendAppConfig)()
   val dateBehaviours = new DateBehaviours
   import dateBehaviours._
+
+  val claimStart = LocalDate.of(2020, 3, 1)
+
+  val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(claimStart)
 
   ".endDate" should {
 
     val validData = datesBetween(
-      min = LocalDate.of(2000, 1, 1),
-      max = LocalDate.now(ZoneOffset.UTC)
+      min = LocalDate.of(2020, 3, 2),
+      max = LocalDate.now().plusDays(14)
     )
 
     behave like dateField(form, "endDate", validData)
@@ -30,7 +33,11 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
     "bind valid data" in {
 
-      forAll(claimPeriodDatesGen -> "valid date") { date =>
+      val claimPeriodEndDatesGen = for {
+        date <- periodDatesBetween(LocalDate.of(2020, 3, 2), LocalDate.now().plusDays(14))
+      } yield date
+
+      forAll(claimPeriodEndDatesGen -> "valid date") { date =>
         val data = Map(
           "endDate.day"   -> date.getDayOfMonth.toString,
           "endDate.month" -> date.getMonthValue.toString,
@@ -52,7 +59,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
       )
     }
 
-    "fail with invalid dates" in {
+    "fail with invalid dates -  before claim-start" in {
 
       val data = Map(
         "endDate.day"   -> "1",
@@ -62,9 +69,35 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
       val result = form.bind(data)
 
-      result.errors shouldBe List(
-        FormError("endDate", "claimPeriodEnd.error.outofrange", Seq("1 March 2020", "31 May 2020")),
+      result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.before.claimStart"))
+    }
+
+    "fail with invalid dates -  after policy end" in {
+
+      val data = Map(
+        "endDate.day"   -> "1",
+        "endDate.month" -> "8",
+        "endDate.year"  -> "2020",
       )
+
+      val result = form.bind(data)
+
+      result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.after.policyEnd"))
+    }
+
+    "fail with invalid dates -  more than today + 14 days" in {
+
+      val now = LocalDate.now().plusDays(15)
+
+      val data = Map(
+        "endDate.day"   -> now.getDayOfMonth.toString,
+        "endDate.month" -> now.getMonthValue.toString,
+        "endDate.year"  -> now.getYear.toString,
+      )
+
+      val result = form.bind(data)
+
+      result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.after.14days"))
     }
   }
 }

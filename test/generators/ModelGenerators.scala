@@ -81,7 +81,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryClaimPeriod: Arbitrary[LocalDate] = Arbitrary(claimPeriodDatesGen)
 
-  protected def periodDatesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
+  def periodDatesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
 
     def toMillis(date: LocalDate): Long =
       date.atStartOfDay.atZone(ZoneOffset.UTC).toInstant.toEpochMilli

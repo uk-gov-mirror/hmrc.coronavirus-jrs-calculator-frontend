@@ -5,13 +5,13 @@
 
 package controllers
 
+import java.time.LocalDate
 import controllers.actions._
 import forms.ClaimPeriodEndFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage}
-import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -33,41 +33,34 @@ class ClaimPeriodEndController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  def form = formProvider()
+  def form(claimStart: LocalDate) = formProvider(claimStart)
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybeClaimStart = request.userAnswers.get(ClaimPeriodStartPage)
     val maybeClaimEnd = request.userAnswers.get(ClaimPeriodEndPage)
 
     (maybeClaimStart, maybeClaimEnd) match {
-      case (Some(_), Some(end)) => Ok(view(form.fill(end), mode))
-      case (Some(_), None)      => Ok(view(form, mode))
-      case (None, _)            => Redirect(routes.ClaimPeriodStartController.onPageLoad(mode))
+      case (Some(claimStart), Some(end)) => Ok(view(form(claimStart).fill(end), mode))
+      case (Some(claimStart), None)      => Ok(view(form(claimStart), mode))
+      case (None, _)                     => Redirect(routes.ClaimPeriodStartController.onPageLoad(mode))
     }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value => {
-          val maybeClaimStart = request.userAnswers.get(ClaimPeriodStartPage)
-          maybeClaimStart match {
-            case Some(claimStart) if value.isBefore(claimStart) =>
-              val errorForm = form
-                .fill(value)
-                .withError(FormError("value", "claimPeriodEnd.error.before.start"))
-              Future.successful(BadRequest(view(errorForm, mode)))
-            case Some(_) =>
+    request.userAnswers.get(ClaimPeriodStartPage) match {
+      case Some(claimStart) =>
+        form(claimStart)
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value => {
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ClaimPeriodEndPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(ClaimPeriodEndPage, mode, updatedAnswers))
-            case None => Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad(mode)))
-          }
-
-        }
-      )
+            }
+          )
+      case None => Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad(mode)))
+    }
   }
 }
