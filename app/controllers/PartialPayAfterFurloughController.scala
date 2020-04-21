@@ -58,7 +58,15 @@ class PartialPayAfterFurloughController @Inject()(
           case _ => Redirect(routes.NicCategoryController.onPageLoad(NormalMode))
         }
 
-      case (_, None) => Redirect(routes.FurloughQuestionController.onPageLoad(NormalMode))
+      case (_, None) =>
+        request.userAnswers.get(FurloughQuestionPage) match {
+          case Some(_) =>
+            //this must be Furlough ongoing
+            Redirect(routes.NicCategoryController.onPageLoad(NormalMode))
+          case None =>
+            //User not answered FurloughQuestion page, so redirect them to FurloughQuestion
+            Redirect(routes.FurloughQuestionController.onPageLoad(NormalMode))
+        }
     }
   }
 
@@ -100,7 +108,6 @@ class PartialPayAfterFurloughController @Inject()(
             //User not answered FurloughQuestion page, so redirect them to FurloughQuestion
             Future.successful(Redirect(routes.FurloughQuestionController.onPageLoad(NormalMode)))
         }
-
     }
   }
 
