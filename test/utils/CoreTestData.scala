@@ -322,4 +322,46 @@ trait CoreTestData {
       |     }
       |}
       |""".stripMargin
+
+  val jsonCylbWithoutEmployeeStartDate =
+    """
+      |{
+      |    "_id" : "session-559ffcf7-de7b-49e6-bf4d-bbc248698ae1",
+      |    "data" : {
+      |        "furloughQuestion" : "yes",
+      |        "variableGrossPay" : {
+      |            "amount" : 31970
+      |        },
+      |        "variableLengthEmployed" : "yes",
+      |        "furloughEndDate" : "2020-03-28",
+      |        "paymentFrequency" : "fourweekly",
+      |        "claimPeriodStart" : "2020-03-01",
+      |        "furloughCalculations" : "no",
+      |        "lastYearPay" : [
+      |            {
+      |                "amount" : 3200
+      |            },
+      |            {
+      |                "amount" : 3400
+      |            }
+      |        ],
+      |        "lastPayDate" : "2020-03-28",
+      |        "PartialPayBeforeFurlough" : {
+      |            "value" : 100
+      |        },
+      |        "furloughStartDate" : "2020-03-02",
+      |        "payQuestion" : "varies",
+      |        "pensionAutoEnrolment" : "optedIn",
+      |        "claimPeriodEnd" : "2020-03-28",
+      |        "nicCategory" : "payable",
+      |        "payDate" : [
+      |            "2020-02-29",
+      |            "2020-03-28"
+      |        ]
+      |    },
+      |     "lastUpdated": {
+      |       "$date": 1586873457650
+      |     }
+      |}
+      |""".stripMargin
 }

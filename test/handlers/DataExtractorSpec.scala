@@ -127,4 +127,19 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
     extractPayments(userAnswers, extractFurloughPeriod(extract(userAnswers).get, userAnswers).get) mustBe Some(expected)
   }
 
+  "Calculates cylbs when variable length is Yes but the employee start date is None" in new DataExtractor {
+    val userAnswers = Json.parse(jsonCylbWithoutEmployeeStartDate).as[UserAnswers]
+
+    val expected =
+      List(
+        paymentWithPeriod(
+          100.0,
+          3385.71,
+          partialPeriodWithPaymentDate("2020-3-1", "2020-3-28", "2020-3-2", "2020-3-28", "2020-03-28"),
+          Varies)
+      )
+
+    extractPayments(userAnswers, extractFurloughPeriod(extract(userAnswers).get, userAnswers).get) mustBe Some(expected)
+  }
+
 }

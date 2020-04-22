@@ -64,8 +64,8 @@ trait DataExtractor extends ReferencePayCalculator {
 
   protected def extractPriorFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
     for {
-      data              <- extract(userAnswers)
-      employeeStartDate <- userAnswers.get(EmployeeStartDatePage)
+      data <- extract(userAnswers)
+      employeeStartDate = userAnswers.get(EmployeeStartDatePage).fold(LocalDate.of(2019, 4, 6))(v => v)
     } yield endDateOrTaxYearEnd(Period(employeeStartDate, data.furloughStart.minusDays(1)))
 
   private def processPayAnswer(
