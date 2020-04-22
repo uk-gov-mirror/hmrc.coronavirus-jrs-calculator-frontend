@@ -65,6 +65,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   val webchatHelpUrl = "https://www.tax.service.gov.uk/ask-hmrc/webchat/job-retention-scheme"
 
-  val jobRetentionScheme = "https://www.gov.uk/guidance/claim-for-wage-costs-through-the-coronavirus-job-retention-scheme"
+  val jobRetentionScheme = "https://www.gov.uk/guidance/claim-for-wages-through-the-coronavirus-job-retention-scheme"
 
 }

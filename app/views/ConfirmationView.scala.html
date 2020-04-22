@@ -120,12 +120,12 @@
                 <li>@messages("confirmation.nextSteps.li.2.3")</li>
             </ul></li>
         <li>@messages("confirmation.nextSteps.li.3.1") @link(appConfig.workOutHowMuch,"confirmation.nextSteps.li.3.2", true)</li>
-        <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,"confirmation.nextSteps.li.4.2")))
+        <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,"confirmation.nextSteps.li.4.2", true)))
         </li>
     </ul>
 
     @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode)), classes = Some("govuk-button"))
 
-    @p(Html(messages("confirmation.webchat")))
+    @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
 }
 

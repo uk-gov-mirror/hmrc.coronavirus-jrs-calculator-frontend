@@ -308,7 +308,7 @@ confirmation.nextSteps.li.2.3 = employer minimum pension contributions
 confirmation.nextSteps.li.3.1 = Adjust the total amount of employer National Insurance contributions by subtracting any Employment Allowance used in each pay period.
 confirmation.nextSteps.li.3.2 = Work out how much you can claim in total for employer National Insurance contributions (opens in new window or tab)
 confirmation.nextSteps.li.4.1 = Make a claim using {0}.
-confirmation.nextSteps.li.4.2 = Job Retention Scheme online claim service
+confirmation.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens in a new tab or window)
 confirmation.startAgain = Start another calculation
 confirmation.webchat = Webchat help (opens in a new tab or window)
 
