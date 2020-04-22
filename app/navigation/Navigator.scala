@@ -23,6 +23,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayContr
 
   val apr7th2019 = LocalDate.of(2019, 4, 7)
   val apr6th2019 = LocalDate.of(2019, 4, 6)
+  val apr5th2019 = LocalDate.of(2019, 4, 5)
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case ClaimPeriodStartPage =>
@@ -136,7 +137,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayContr
       case Some(VariableLengthEmployed.Yes) => routes.LastYearPayController.onPageLoad(1)
       case Some(VariableLengthEmployed.No) =>
         userAnswers.get(EmployeeStartDatePage) match {
-          case Some(date) if date.isBefore(apr7th2019) => routes.LastYearPayController.onPageLoad(1)
+          case Some(date) if date.isBefore(apr6th2019) => routes.LastYearPayController.onPageLoad(1)
           case _                                       => routes.NicCategoryController.onPageLoad(NormalMode)
         }
       case None => routes.NicCategoryController.onPageLoad(NormalMode)
@@ -189,7 +190,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayContr
   }
 
   private def shouldShowVariableGrossPayPage(date: LocalDate) =
-    date.isAfter(apr7th2019) || (date.isBefore(apr6th2019) && appConfig.variableJourneyEnabled)
+    date.isAfter(apr5th2019) || (date.isBefore(apr6th2019) && appConfig.variableJourneyEnabled)
 
   private def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayQuestionPage) match {
