@@ -33,73 +33,76 @@
                 @messages("nicCategory.details.summary")
                 </span>
             </summary>
-            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        @messages("nicCategory.letter.legend")
-                    </dt>
-                    <dt class="govuk-summary-list__key">
-                        @messages("nicCategory.group.legend")
-                    </dt>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.letter.a")
-                    </dd>
-                    <dd class="govuk-summary-list__value">
-                       @messages("nicCategory.details.category.a")
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.letter.b")
-                    </dd>
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.category.b")
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.letter.c")
-                    </dd>
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.category.c")
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.letter.j")
-                    </dd>
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.category.j")
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.letter.h")
-                    </dd>
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.category.h")
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.letter.m")
-                    </dd>
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.category.m")
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.letter.z")
-                    </dd>
-                    <dd class="govuk-summary-list__value">
-                        @messages("nicCategory.details.category.z")
-                    </dd>
-                </div>
-            </dl>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">
+                            @messages("nicCategory.letter.legend")
+                        </th>
+                        <th class="govuk-table__header">
+                            @messages("nicCategory.group.legend")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.letter.a")
+                        </td>
+                        <td class="govuk-table__cell">
+                        @messages("nicCategory.details.category.a")
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.letter.b")
+                        </td>
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.category.b")
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.letter.c")
+                        </td>
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.category.c")
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.letter.j")
+                        </td>
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.category.j")
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.letter.h")
+                        </td>
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.category.h")
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.letter.m")
+                        </td>
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.category.m")
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.letter.z")
+                        </td>
+                        <td class="govuk-table__cell">
+                            @messages("nicCategory.details.category.z")
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </details>
 
         @inputRadio(
