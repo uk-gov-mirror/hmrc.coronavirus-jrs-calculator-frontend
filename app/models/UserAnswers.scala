@@ -26,6 +26,25 @@ final case class UserAnswers(
   def getList[A](page: Gettable[A])(implicit rds: Reads[A]): Seq[A] =
     page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
 
+  def setListWithInvalidation[A](page: Settable[A] with Gettable[A], value: A, idx: Int)(
+    implicit writes: Writes[A],
+    rds: Reads[A]): Try[UserAnswers] = {
+    val list = page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
+    val amendedList = list.patch(idx - 1, Seq(value), list.size)
+
+    val updatedData = data.setObject(path(page, None), Json.toJson(amendedList)) match {
+      case JsSuccess(jsValue, _) =>
+        Success(jsValue)
+      case JsError(errors) =>
+        Failure(JsResultException(errors))
+    }
+
+    updatedData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      page.cleanup(Some(value), updatedAnswers)
+    }
+  }
+
   def set[A](page: Settable[A], value: A, idx: Option[Int] = None)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
     val updatedData = data.setObject(path(page, idx), Json.toJson(value)) match {

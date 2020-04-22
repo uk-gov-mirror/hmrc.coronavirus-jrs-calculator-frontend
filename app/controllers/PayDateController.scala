@@ -18,6 +18,8 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import views.html.PayDateView
+import play.api.Logger
+import utils.LocalDateHelpers
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,29 +34,24 @@ class PayDateController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: PayDateView
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
-    extends BaseController with I18nSupport {
+    extends BaseController with I18nSupport with LocalDateHelpers {
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswer(ClaimPeriodStartPage) { claimStartDate =>
-      val messageDate = messageDateFrom(claimStartDate, request.userAnswers, idx)
+      messageDateFrom(claimStartDate, request.userAnswers, idx).fold {
+        Logger.warn(s"onPageLoad messageDateFrom returned none for claimStartDate=$claimStartDate, payDates=${request.userAnswers.getList(
+          PayDatePage)}, idx=$idx")
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+      } { messageDate =>
+        val preparedForm = request.userAnswers.get(PayDatePage, Some(idx)) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      val preparedForm = request.userAnswers.get(PayDatePage, Some(idx)) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+        Future.successful(Ok(view(preparedForm, idx, messageDate)))
       }
-
-      Future.successful(Ok(view(preparedForm, idx, messageDate)))
     }
   }
-
-  private def messageDateFrom(claimStartDate: LocalDate, userAnswers: UserAnswers, idx: Int): LocalDate =
-    if (idx == 1) {
-      claimStartDate
-    } else {
-      userAnswers.getList(PayDatePage).apply(idx - 2)
-    }
-
-  private def latestOf(a: LocalDate, b: LocalDate): LocalDate = if (a.isAfter(b)) a else b
 
   def form = formProvider()
 
@@ -75,13 +72,28 @@ class PayDateController @Inject()(
         afterDate = if (idx != 1) Some(latestDate) else None
       ).bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, idx, messageDate))),
+          formWithErrors => {
+            messageDate.fold {
+              Logger.warn(s"onSubmit messageDateFrom returned none for claimStartDate=$claimStartDate, payDates=${request.userAnswers
+                .getList(PayDatePage)}, idx=$idx")
+              Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+            } { messageDate =>
+              Future.successful(BadRequest(view(formWithErrors, idx, messageDate)))
+            }
+          },
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(PayDatePage, value, Some(idx)))
+              updatedAnswers <- Future.fromTry(request.userAnswers.setListWithInvalidation(PayDatePage, value, idx))
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(PayDatePage, NormalMode, updatedAnswers, Some(idx)))
         )
     }
   }
+
+  private def messageDateFrom(claimStartDate: LocalDate, userAnswers: UserAnswers, idx: Int): Option[LocalDate] =
+    if (idx == 1) {
+      Some(claimStartDate)
+    } else {
+      userAnswers.getList(PayDatePage).lift.apply(idx - 2)
+    }
 }

@@ -14,10 +14,12 @@ import javax.inject.{Inject, Singleton}
 import models.PayQuestion.{Regularly, Varies}
 import models.{UserAnswers, _}
 import pages.{PayDatePage, _}
+import models.{UserAnswers, _}
+import utils.LocalDateHelpers
 import play.api.mvc.Call
 
 @Singleton
-class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayControllerRequestHandler {
+class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayControllerRequestHandler with LocalDateHelpers {
 
   val apr7th2019 = LocalDate.of(2019, 4, 7)
 
@@ -81,7 +83,15 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayContr
       claimEndDate <- userAnswers.get(ClaimPeriodEndPage)
       lastPayDate  <- userAnswers.getList(PayDatePage).lastOption
     } yield {
-      if (lastPayDate.isAfter(claimEndDate.minusDays(1))) {
+      val endDate = userAnswers
+        .get(FurloughEndDatePage)
+        .fold(
+          claimEndDate.minusDays(1)
+        ) { furloughEndDate =>
+          earliestOf(claimEndDate.minusDays(1), furloughEndDate)
+        }
+
+      if (lastPayDate.isAfter(endDate)) {
         routes.LastPayDateController.onPageLoad(NormalMode)
       } else {
         routes.PayDateController.onPageLoad(previousIdx + 1)
