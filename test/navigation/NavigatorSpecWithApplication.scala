@@ -324,12 +324,12 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           ) mustBe routes.LastYearPayController.onPageLoad(1)
         }
 
-        "VariableLengthEmployed is No and date is before April 7th" in {
+        "VariableLengthEmployed is No and date is before April 6th" in {
           val userAnswers = emptyUserAnswers
             .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
             .success
             .value
-            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 6))
+            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
             .success
             .value
 
