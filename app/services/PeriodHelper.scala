@@ -73,7 +73,7 @@ trait PeriodHelper {
     frequency: PaymentFrequency,
     sortedPeriods: Seq[Periods],
     lastPayDay: LocalDate): Seq[PeriodWithPaymentDate] =
-    sortedPeriods.reverse.zipWithIndex.map {
+    sortedPeriods.zip(sortedPeriods.length - 1 to 0 by -1).map {
       case (p, idx) => {
         frequency match {
           case Monthly     => PeriodWithPaymentDate(p, PaymentDate(lastPayDay.minusMonths(idx)))
@@ -82,6 +82,6 @@ trait PeriodHelper {
           case Weekly      => PeriodWithPaymentDate(p, PaymentDate(lastPayDay.minusWeeks(idx * 1)))
         }
       }
-    }.reverse
+    }
 
 }

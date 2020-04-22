@@ -119,15 +119,6 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
     periodSpansMonth(periodTwo) mustBe true
   }
 
-  "determine if a period is a partial period given a furlough period" in new PeriodHelper {
-    val periodOne = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
-    val furloughOne = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 30))
-    val furloughTwo = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
-
-    val expectedOne = Left(PartialPeriod(periodOne, Period(furloughOne.start, periodOne.end)))
-    val expectedTwo = Right(periodOne)
-  }
-
   forAll(payDateScenarios) { (frequency, periods, lastPeriodPayDate, expected) =>
     s"For a given list of SORTED periods: $periods, the payment frequency: $frequency and the " +
       s"last period's pay date: $lastPeriodPayDate assign a pay date to each period: $expected" in new PeriodHelper {

@@ -9,15 +9,17 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait FrequencyWithPreviousYearDaysCount extends PaymentFrequency
+sealed trait FrequencyOperator
+case object Multiplier extends FrequencyOperator
+case object Divider extends FrequencyOperator
 
 sealed trait PaymentFrequency
 
 object PaymentFrequency extends Enumerable.Implicits {
 
-  case object Weekly extends WithName("weekly") with FrequencyWithPreviousYearDaysCount
-  case object FortNightly extends WithName("fortnightly") with FrequencyWithPreviousYearDaysCount
-  case object FourWeekly extends WithName("fourweekly") with FrequencyWithPreviousYearDaysCount
+  case object Weekly extends WithName("weekly") with PaymentFrequency
+  case object FortNightly extends WithName("fortnightly") with PaymentFrequency
+  case object FourWeekly extends WithName("fourweekly") with PaymentFrequency
   case object Monthly extends WithName("monthly") with PaymentFrequency
 
   val values: Set[PaymentFrequency] = Set(
@@ -37,4 +39,14 @@ object PaymentFrequency extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[PaymentFrequency] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
+
+  type OperatorKey = (PaymentFrequency, FrequencyOperator)
+  val operators: Map[OperatorKey, Int] = Map(
+    (Weekly, Divider)         -> 7,
+    (Weekly, Multiplier)      -> 5,
+    (FortNightly, Divider)    -> 14,
+    (FortNightly, Multiplier) -> 12,
+    (FourWeekly, Divider)     -> 28,
+    (FourWeekly, Multiplier)  -> 26
+  )
 }

@@ -8,9 +8,8 @@ package services
 import java.time.LocalDate
 
 import models.PayQuestion.Varies
-import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{Amount, CylbPayment, FullPeriod, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
-import play.api.Logger
+import models.PaymentFrequency.{Monthly, OperatorKey, _}
+import models.{Amount, CylbPayment, Divider, FullPeriod, Multiplier, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
@@ -89,8 +88,8 @@ trait ReferencePayCalculator extends PeriodHelper {
     nfp: Amount,
     head: CylbPayment,
     taildHead: CylbPayment) = {
-    val divisor = cylbDivisor(frequency)
-    val multiplier = cylbMultiplier(frequency)
+    val divisor = cylbOperator(frequency    -> Divider)
+    val multiplier = cylbOperator(frequency -> Multiplier)
     val amount =
       roundAmountWithMode(totalFromBothWeeks(head, taildHead, divisor, multiplier), RoundingMode.HALF_UP)
     PaymentWithPeriod(nfp, amount, period._1, Varies)
@@ -109,30 +108,13 @@ trait ReferencePayCalculator extends PeriodHelper {
   protected def averageDailyCalculator(period: Period, amount: Amount): BigDecimal =
     roundWithMode(amount.value / periodDaysCount(period), HALF_UP)
 
-  private def cylbDivisor(frequency: PaymentFrequency): Int = frequency match {
-    case Weekly      => 7
-    case FortNightly => 14
-    case FourWeekly  => 28
-    case _ => {
-      Logger.warn(s"Couldn't find divisor for $frequency")
-      0
-    }
-  }
-
-  private def cylbMultiplier(frequency: PaymentFrequency): Int = frequency match {
-    case Weekly      => 5
-    case FortNightly => 12
-    case FourWeekly  => 26
-    case _ => {
-      Logger.warn(s"Couldn't find multiplier for $frequency")
-      0
-    }
-  }
+  private def cylbOperator(key: OperatorKey): Int =
+    operators(key)
 
   private def determineNonFurloughPay(period: Periods, nonFurloughPay: NonFurloughPay): Amount =
     period match {
-      case FullPeriod(_) => Amount(0.00)
-      case pp @ PartialPeriod(_, _) =>
+      case _: FullPeriod => Amount(0.00)
+      case pp: PartialPeriod =>
         val pre = if (isFurloughStart(pp)) nonFurloughPay.preAmount else Amount(0.00)
         val post = if (isFurloughEnd(pp)) nonFurloughPay.postAmount else Amount(0.00)
         Amount(pre.value + post.value)
