@@ -15,7 +15,7 @@
 
 @govukLayout(pageTitle = Some(title(form, "pensionAutoEnrolment.title"))) {
 
-    @formHelper(action = PensionAutoEnrolmentController.onSubmit(mode)) {
+    @formHelper(action = PensionAutoEnrolmentController.onSubmit(mode), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

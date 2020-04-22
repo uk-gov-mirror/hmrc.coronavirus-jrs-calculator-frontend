@@ -16,8 +16,8 @@
 
     @govukLayout(pageTitle = Some(titleNoForm( if(showCalculateTopupsLink) "comingSoon.topup.title" else "comingSoon.title"))) {
 
-        @formHelper(action = ClaimPeriodStartController.onPageLoad(NormalMode)) {
-          
+        @formHelper(action = ClaimPeriodStartController.onPageLoad(NormalMode), args = 'novalidate -> "novalidate") {
+
             @if(showCalculateTopupsLink) {
                 @h1("comingSoon.topup.heading")
                 @p(Html(messages("comingSoon.topup.p")))

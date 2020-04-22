@@ -19,7 +19,7 @@
 
 @govukLayout(pageTitle = Some(title(form, if(idx == 1){"payDate.title.firstDate"} else {"payDate.title"}))) {
 
-    @formHelper(action = PayDateController.onSubmit(idx)) {
+    @formHelper(action = PayDateController.onSubmit(idx), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

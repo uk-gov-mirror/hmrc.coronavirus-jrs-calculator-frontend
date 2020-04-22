@@ -21,7 +21,7 @@
 
 @govukLayout(pageTitle = Some(title(form, "nicCategory.title"))) {
 
-    @formHelper(action = NicCategoryController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = NicCategoryController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

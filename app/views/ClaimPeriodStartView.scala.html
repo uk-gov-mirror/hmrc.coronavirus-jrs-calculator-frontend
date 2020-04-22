@@ -17,7 +17,7 @@
 
     @govukLayout(pageTitle = Some(title(form, "claimPeriodStart.title")), showBackButton = false) {
 
-        @formHelper(action = ClaimPeriodStartController.onSubmit(mode)) {
+        @formHelper(action = ClaimPeriodStartController.onSubmit(mode), args = 'novalidate -> "novalidate") {
 
             @errorSummary(form.errors)
 

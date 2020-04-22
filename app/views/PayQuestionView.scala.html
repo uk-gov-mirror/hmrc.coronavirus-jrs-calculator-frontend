@@ -18,7 +18,7 @@
 
 @govukLayout(pageTitle = Some(title(form, "payQuestion.title"))) {
 
-    @formHelper(action = PayQuestionController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = PayQuestionController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

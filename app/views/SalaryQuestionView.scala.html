@@ -20,7 +20,7 @@
 @govukLayout(pageTitle = Some(title(form, s"salaryQuestion.title.${paymentFrequency}"))) {
 
 
-    @formHelper(action = SalaryQuestionController.onSubmit(mode)) {
+    @formHelper(action = SalaryQuestionController.onSubmit(mode), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

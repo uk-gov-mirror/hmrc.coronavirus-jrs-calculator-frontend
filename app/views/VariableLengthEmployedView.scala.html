@@ -20,7 +20,7 @@
 
 @govukLayout(pageTitle = Some(title(form, "variableLengthEmployed.title"))) {
 
-    @formHelper(action = VariableLengthEmployedController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = VariableLengthEmployedController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

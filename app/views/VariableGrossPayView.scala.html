@@ -21,7 +21,7 @@
 
 @govukLayout(pageTitle = Some(title(form, "variableGrossPay.title"))) {
 
-    @formHelper(action = VariableGrossPayController.onSubmit(mode)) {
+    @formHelper(action = VariableGrossPayController.onSubmit(mode), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

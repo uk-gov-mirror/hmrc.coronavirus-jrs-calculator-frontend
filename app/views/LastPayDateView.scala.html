@@ -18,7 +18,7 @@
 
     @govukLayout(pageTitle = Some(title(form, "lastPayDate.title", titleMessageArgs = Seq(dateToString(date))))) {
 
-        @formHelper(action = LastPayDateController.onSubmit(mode), 'autoComplete -> "off") {
+        @formHelper(action = LastPayDateController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
             @errorSummary(form.errors)
 

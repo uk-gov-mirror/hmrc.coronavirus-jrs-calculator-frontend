@@ -20,7 +20,7 @@
     @govukLayout(pageTitle = Some(title(form, if(date1.isEqual(date2)) "FurloughPartialPay.title.on" else "FurloughPartialPay.title.between", titleMessageArgs = Seq(dateToString(date1), dateToString(date2))))) {
 
 
-        @formHelper(action = submitUrl) {
+        @formHelper(action = submitUrl, args = 'novalidate -> "novalidate") {
 
             @errorSummary(form.errors)
 

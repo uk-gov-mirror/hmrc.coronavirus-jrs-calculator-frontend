@@ -15,7 +15,7 @@
 
     @govukLayout(pageTitle = Some(title(form, "employeeStartDate.title"))) {
 
-        @formHelper(action = EmployeeStartDateController.onSubmit(mode), 'autoComplete -> "off") {
+        @formHelper(action = EmployeeStartDateController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
             @errorSummary(form.errors)
 

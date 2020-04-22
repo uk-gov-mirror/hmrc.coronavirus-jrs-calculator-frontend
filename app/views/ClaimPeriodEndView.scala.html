@@ -17,7 +17,7 @@
 
     @govukLayout(pageTitle = Some(title(form, "claimPeriodEnd.title"))) {
 
-        @formHelper(action = ClaimPeriodEndController.onSubmit(mode)) {
+        @formHelper(action = ClaimPeriodEndController.onSubmit(mode), args = 'novalidate -> "novalidate") {
 
             @errorSummary(form.errors)
 
