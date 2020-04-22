@@ -15,7 +15,8 @@ import utils.ImplicitDateFormatter
 
 class EmployeeStartDateFormProvider @Inject() extends Mappings with ImplicitDateFormatter {
 
-  val validStart = LocalDate.of(1900, 1, 1)
+  val validStart = LocalDate.of(2019, 2, 2)
+  val validEnd = LocalDate.of(2020, 3, 19)
 
   def apply(): Form[LocalDate] =
     Form(
@@ -29,10 +30,10 @@ class EmployeeStartDateFormProvider @Inject() extends Mappings with ImplicitDate
 
   private def validStartDate: Constraint[LocalDate] = Constraint { date =>
     if (!date.isBefore(validStart) &&
-        !date.isAfter(LocalDate.now)) {
+        !date.isAfter(validEnd)) {
       Valid
     } else {
-      Invalid("employeeStartDate.error.outofrange", dateToString(validStart), dateToString((LocalDate.now)))
+      Invalid("employeeStartDate.error.outofrange", dateToString(validStart), dateToString(validEnd))
     }
   }
 }

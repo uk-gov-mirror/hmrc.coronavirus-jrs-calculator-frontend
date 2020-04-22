@@ -32,17 +32,17 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.of(2020, 2, 1)
 
   lazy val employeeStartDateRoute = routes.EmployeeStartDateController.onPageLoad(NormalMode).url
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, employeeStartDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
+  lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, employeeStartDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
