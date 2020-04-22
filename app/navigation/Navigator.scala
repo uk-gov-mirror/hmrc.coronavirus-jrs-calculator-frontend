@@ -201,9 +201,14 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayContr
         } else if (hasPartialPayAfter(userAnswers)) {
           routes.PartialPayAfterFurloughController.onPageLoad()
         } else {
-          userAnswers.get(EmployeeStartDatePage) match {
-            case Some(date) if date.isBefore(apr6th2019) => routes.LastYearPayController.onPageLoad(1)
-            case _                                       => routes.NicCategoryController.onPageLoad(NormalMode)
+          userAnswers.get(VariableLengthEmployedPage) match {
+            case Some(VariableLengthEmployed.Yes) =>
+              routes.LastYearPayController.onPageLoad(1)
+            case _ =>
+              userAnswers.get(EmployeeStartDatePage) match {
+                case Some(date) if date.isBefore(apr6th2019) => routes.LastYearPayController.onPageLoad(1)
+                case _                                       => routes.NicCategoryController.onPageLoad(NormalMode)
+              }
           }
         }
       case None => routes.PayQuestionController.onPageLoad(NormalMode)

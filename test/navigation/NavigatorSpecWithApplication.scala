@@ -146,6 +146,24 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
       }
 
+      "go to NicCategoryPage after LastPayDatePage if the pay-method is Varies and employee has been employed over 12 months" in {
+        val userAnswers = UserAnswers("id")
+          .set(PayQuestionPage, Varies)
+          .get
+          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 3, 1), Some(1))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
+          .get
+          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 10))
+          .get
+          .set(VariableLengthEmployedPage, VariableLengthEmployed.Yes)
+          .get
+
+        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
+      }
+
       "go to NicCategoryPage after LastPayDatePage if the pay-method is Varies and employee start after 5th April 2019" in {
         val userAnswers = UserAnswers("id")
           .set(PayQuestionPage, Varies)
