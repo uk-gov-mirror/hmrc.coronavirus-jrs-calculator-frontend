@@ -88,12 +88,12 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayContr
       val endDate = userAnswers
         .get(FurloughEndDatePage)
         .fold(
-          claimEndDate.minusDays(1)
+          claimEndDate
         ) { furloughEndDate =>
-          earliestOf(claimEndDate.minusDays(1), furloughEndDate)
+          earliestOf(claimEndDate, furloughEndDate)
         }
 
-      if (lastPayDate.isAfter(endDate)) {
+      if (lastPayDate.isAfter(endDate.minusDays(1))) {
         routes.LastPayDateController.onPageLoad(NormalMode)
       } else {
         routes.PayDateController.onPageLoad(previousIdx + 1)
