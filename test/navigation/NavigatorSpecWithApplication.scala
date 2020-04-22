@@ -14,6 +14,7 @@ import models.PayQuestion.{Regularly, Varies}
 import models._
 import pages._
 import play.api.Configuration
+import play.api.libs.json.Json
 
 class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
@@ -145,20 +146,50 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
       }
 
-      "go to PartialPayBeforeFurloughPage after LastPayDatePage if the pay-method is Varies" in {
+      "go to PartialPayBeforeFurloughPage after LastPayDatePage if the pay-method is Varies and first pay period is partial" in {
         val userAnswers = UserAnswers("id")
           .set(PayQuestionPage, Varies)
+          .get
+          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 15))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 3, 10), Some(1))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 5, 10), Some(3))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 6, 10), Some(4))
+          .get
+          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
           .get
 
         navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
       }
 
-      "go to PayQuestionPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
+      "go to PartialPayAfterFurloughPage after LastPayDatePage if the pay-method is Varies and last pay period is partial" in {
         val userAnswers = UserAnswers("id")
           .set(PayQuestionPage, Varies)
           .get
+          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 10))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 3, 9), Some(1))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 5, 10), Some(3))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 6, 10), Some(4))
+          .get
+          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
+          .get
 
-        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
+        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PartialPayAfterFurloughController.onPageLoad()
+      }
+
+      "go to PayQuestionPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
+        val userAnswers = UserAnswers("id")
+
+        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
       }
 
       "go from PensionAutoEnrolmentPage to FurloughCalculationsPage" in {
@@ -267,6 +298,90 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           NormalMode,
           emptyUserAnswers
         ) mustBe routes.PayDateController.onPageLoad(1)
+      }
+
+      "loop around last year pay if there are more years to ask" in {
+        val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
+
+        navigator.nextPage(LastYearPayPage, NormalMode, userAnswers, Some(1)) mustBe routes.LastYearPayController.onPageLoad(2)
+      }
+
+      "stop loop around last year pay if there are no more years to ask" in {
+        val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
+
+        navigator.nextPage(LastYearPayPage, NormalMode, userAnswers, Some(2)) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+      }
+
+      "go to correct page after PartialPayAfterFurloughPage" when {
+
+        "VariableLengthEmployed is Yes" in {
+          val userAnswers = emptyUserAnswers.set(VariableLengthEmployedPage, VariableLengthEmployed.Yes).success.value
+
+          navigator.nextPage(
+            PartialPayAfterFurloughPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.LastYearPayController.onPageLoad(1)
+        }
+
+        "VariableLengthEmployed is No and date is before April 7th" in {
+          val userAnswers = emptyUserAnswers
+            .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
+            .success
+            .value
+            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 6))
+            .success
+            .value
+
+          navigator.nextPage(
+            PartialPayAfterFurloughPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.LastYearPayController.onPageLoad(1)
+        }
+
+        "VariableLengthEmployed is No and date is April 7th" in {
+          val userAnswers = emptyUserAnswers
+            .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
+            .success
+            .value
+            .set(EmployeeStartDatePage, LocalDate.of(2020, 4, 7))
+            .success
+            .value
+
+          navigator.nextPage(
+            PartialPayAfterFurloughPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+        }
+
+        "VariableLengthEmployed is No and date is after April 7th" in {
+          val userAnswers = emptyUserAnswers
+            .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
+            .success
+            .value
+            .set(EmployeeStartDatePage, LocalDate.of(2020, 4, 8))
+            .success
+            .value
+
+          navigator.nextPage(
+            PartialPayAfterFurloughPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+        }
+
+        "VariableLengthEmployed is missing" in {
+          val userAnswers = emptyUserAnswers
+
+          navigator.nextPage(
+            PartialPayAfterFurloughPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+        }
+
       }
     }
 

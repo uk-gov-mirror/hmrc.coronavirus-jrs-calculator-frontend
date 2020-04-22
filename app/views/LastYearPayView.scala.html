@@ -3,29 +3,33 @@
  *
  *@
 
+@import java.time.LocalDate
+
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
-        inputNumber: components.inputNumber,
+        inputCurrency: components.inputCurrency,
         h1: components.h1,
         button: components.button
 )
 
-@(form: Form[_], idx: Int)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], idx: Int, payDate: LocalDate, isMonthly: Boolean)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "lastYearPay.title"))) {
+@govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToStringWithoutYear(payDate))))) {
 
     @formHelper(action = LastYearPayController.onSubmit(idx), 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 
-        @inputNumber(
+        @h1(if(isMonthly){messages("lastYearPay.heading.monthly", dateToStringOnlyMonth(payDate))} else {messages("lastYearPay.heading", dateToStringWithoutYear(payDate))})
+
+        @inputCurrency(
             form,
             id = "value",
             name = "value",
-            label = "lastYearPay.heading",
-            isPageHeading = true,
+            label = "",
+            isPageHeading = false,
             classes = Some("govuk-input--width-10")
         )
 

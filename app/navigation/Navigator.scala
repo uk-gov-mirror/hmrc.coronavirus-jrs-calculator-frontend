@@ -8,15 +8,16 @@ package navigation
 import java.time.LocalDate
 
 import config.FrontendAppConfig
-import javax.inject.{Inject, Singleton}
-import play.api.mvc.Call
 import controllers.routes
+import handlers.LastYearPayControllerRequestHandler
+import javax.inject.{Inject, Singleton}
 import models.PayQuestion.{Regularly, Varies}
-import pages.{PayDatePage, _}
 import models.{UserAnswers, _}
+import pages.{PayDatePage, _}
+import play.api.mvc.Call
 
 @Singleton
-class Navigator @Inject()(appConfig: FrontendAppConfig) {
+class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayControllerRequestHandler {
 
   val apr7th2019 = LocalDate.of(2019, 4, 7)
 
@@ -48,11 +49,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) {
     case EmployeeStartDatePage =>
       employeeStartDateRoutes
     case PartialPayBeforeFurloughPage =>
-      _ =>
-        routes.PartialPayAfterFurloughController.onPageLoad()
+      partialPayBeforeFurloughRoutes
     case PartialPayAfterFurloughPage =>
-      _ =>
-        routes.NicCategoryController.onPageLoad(NormalMode)
+      partialPayAfterFurloughRoutes
     case VariableGrossPayPage =>
       _ =>
         routes.PayDateController.onPageLoad(1)
@@ -90,8 +89,28 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) {
     }).getOrElse(routes.ErrorController.internalServerError())
   }
 
+  private val lastYearPayRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+    getPayDates(userAnswers).fold(
+      routes.ErrorController.somethingWentWrong()
+    ) { payDates =>
+      payDates.lift.apply(previousIdx) match {
+        case Some(_) => routes.LastYearPayController.onPageLoad(previousIdx + 1)
+        case None    => routes.NicCategoryController.onPageLoad(NormalMode)
+      }
+    }
+  }
+
   private val idxRoutes: Page => (Int, UserAnswers) => Call = {
-    case PayDatePage => payDateRoutes
+    case PayDatePage     => payDateRoutes
+    case LastYearPayPage => lastYearPayRoutes
+  }
+
+  private def partialPayBeforeFurloughRoutes: UserAnswers => Call = { userAnswers =>
+    if (hasPartialPayAfter(userAnswers)) {
+      routes.PartialPayAfterFurloughController.onPageLoad()
+    } else {
+      nextPage(PartialPayAfterFurloughPage, NormalMode, userAnswers)
+    }
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, idx: Option[Int] = None): Call = mode match {
@@ -99,6 +118,18 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) {
       idx.fold(normalRoutes(page)(userAnswers))(idx => idxRoutes(page)(idx, userAnswers))
     case CheckMode =>
       checkRouteMap(page)(userAnswers)
+  }
+
+  private def partialPayAfterFurloughRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(VariableLengthEmployedPage) match {
+      case Some(VariableLengthEmployed.Yes) => routes.LastYearPayController.onPageLoad(1)
+      case Some(VariableLengthEmployed.No) =>
+        userAnswers.get(EmployeeStartDatePage) match {
+          case Some(date) if date.isBefore(apr7th2019) => routes.LastYearPayController.onPageLoad(1)
+          case _                                       => routes.NicCategoryController.onPageLoad(NormalMode)
+        }
+      case None => routes.NicCategoryController.onPageLoad(NormalMode)
+    }
   }
 
   private def furloughQuestionRoutes: UserAnswers => Call = { userAnswers =>
@@ -146,14 +177,45 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) {
     }
   }
 
+  private def shouldShowVariableGrossPayPage(date: LocalDate) =
+    date.isAfter(apr7th2019) || (date.isBefore(apr7th2019) && appConfig.variableJourneyEnabled)
+
   private def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayQuestionPage) match {
       case Some(Regularly) => routes.NicCategoryController.onPageLoad(NormalMode)
-      case Some(Varies)    => routes.PartialPayBeforeFurloughController.onPageLoad()
-      case None            => routes.PayQuestionController.onPageLoad(NormalMode)
+      case Some(Varies) =>
+        if (hasPartialPayBefore(userAnswers)) {
+          routes.PartialPayBeforeFurloughController.onPageLoad()
+        } else if (hasPartialPayAfter(userAnswers)) {
+          routes.PartialPayAfterFurloughController.onPageLoad()
+        } else {
+          routes.LastYearPayController.onPageLoad(1)
+        }
+      case None => routes.PayQuestionController.onPageLoad(NormalMode)
     }
   }
 
-  private def shouldShowVariableGrossPayPage(date: LocalDate) =
-    date.isAfter(apr7th2019) || (date.isBefore(apr7th2019) && appConfig.variableJourneyEnabled)
+  def hasPartialPayBefore(userAnswers: UserAnswers): Boolean =
+    getPartialPeriods(userAnswers).exists(isFurloughStart)
+
+  private def hasPartialPayAfter(userAnswers: UserAnswers): Boolean =
+    getPartialPeriods(userAnswers).exists(isFurloughEnd)
+
+  def getPartialPeriods(userAnswers: UserAnswers): Seq[PartialPeriod] = {
+    for {
+      furloughStart  <- userAnswers.get(FurloughStartDatePage)
+      claimPeriodEnd <- userAnswers.get(ClaimPeriodEndPage)
+    } yield {
+      val furloughPeriod = userAnswers.get(FurloughEndDatePage) match {
+        case Some(furloughEnd) => Period(furloughStart, furloughEnd)
+        case None              => Period(furloughStart, claimPeriodEnd)
+      }
+      val payDates = userAnswers.getList(PayDatePage)
+
+      generatePeriods(payDates, furloughPeriod).collect {
+        case pp: PartialPeriod => pp
+      }
+    }
+  }.getOrElse(Seq.empty)
+
 }

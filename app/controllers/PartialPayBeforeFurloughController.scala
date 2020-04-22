@@ -54,7 +54,7 @@ class PartialPayBeforeFurloughController @Inject()(
                 furloughStartDate.minusDays(1),
                 routes.PartialPayBeforeFurloughController.onSubmit()
               ))
-          case _ => Redirect(routes.PartialPayAfterFurloughController.onPageLoad())
+          case _ => Redirect(navigator.nextPage(PartialPayBeforeFurloughPage, NormalMode, request.userAnswers))
         }
 
       case (_, None) => Redirect(routes.FurloughStartDateController.onPageLoad(NormalMode))

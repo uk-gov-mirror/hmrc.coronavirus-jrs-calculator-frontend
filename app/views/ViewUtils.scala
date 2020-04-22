@@ -26,6 +26,8 @@ object ViewUtils {
 
   private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
   private val dateFormatterWithoutYear = DateTimeFormatter.ofPattern("d MMMM")
+  private val dateFormatterOnlyMonth = DateTimeFormatter.ofPattern("MMMM")
   def dateToString(date: LocalDate): String = dateFormatter.format(date)
   def dateToStringWithoutYear(date: LocalDate): String = dateFormatterWithoutYear.format(date)
+  def dateToStringOnlyMonth(date: LocalDate): String = dateFormatterOnlyMonth.format(date)
 }

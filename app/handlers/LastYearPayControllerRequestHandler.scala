@@ -7,20 +7,34 @@ package handlers
 
 import java.time.LocalDate
 
-import models.{PeriodWithPaymentDate, Periods, UserAnswers}
+import models.{Period, UserAnswers}
+import pages._
 import services.{PeriodHelper, PreviousYearPeriod}
 
 trait LastYearPayControllerRequestHandler extends DataExtractor with PeriodHelper with PreviousYearPeriod {
 
   def getPayDates(userAnswers: UserAnswers): Option[Seq[LocalDate]] =
     for {
-      data                                            <- extract(userAnswers)
-      furloughPeriod                                  <- extractFurloughPeriod(data, userAnswers)
-      periods: Seq[Periods]                           <- Some(generatePeriods(data.payDates, furloughPeriod))
-      periodsWithPayDates: Seq[PeriodWithPaymentDate] <- Some(assignPayDates(data.paymentFrequency, periods, data.lastPayDay))
+      frequency      <- userAnswers.get(PaymentFrequencyPage)
+      lastPayDay     <- userAnswers.get(LastPayDatePage)
+      furloughPeriod <- extractFurloughPeriod(userAnswers)
     } yield {
-      val datesWithDuplicates = periodsWithPayDates.flatMap(p => previousYearPayDate(data.paymentFrequency, p.paymentDate.value))
+      val payDates = userAnswers.getList(PayDatePage)
+      val periods = generatePeriods(payDates, furloughPeriod)
+      val periodsWithPayDates = assignPayDates(frequency, periods, lastPayDay)
+      val datesWithDuplicates = periodsWithPayDates.flatMap(p => previousYearPayDate(frequency, p.paymentDate.value))
       datesWithDuplicates.distinct
+    }
+
+  private def extractFurloughPeriod(userAnswers: UserAnswers) =
+    for {
+      furloughStart  <- userAnswers.get(FurloughStartDatePage)
+      claimPeriodEnd <- userAnswers.get(ClaimPeriodEndPage)
+    } yield {
+      userAnswers.get(FurloughEndDatePage) match {
+        case Some(furloughEnd) => Period(furloughStart, furloughEnd)
+        case None              => Period(furloughStart, claimPeriodEnd)
+      }
     }
 
 }

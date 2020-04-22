@@ -156,7 +156,7 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       application.stop()
     }
 
-    "redirect to the /nic-category for Furlough ongoing in UserAnswers" in {
+    "redirect to the onward route for Furlough ongoing in UserAnswers" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -181,12 +181,12 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       val result = route(application, postRequest(submitAfterFurloughRoute)).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.NicCategoryController.onPageLoad(NormalMode).url
+      redirectLocation(result).value mustEqual onwardRoute.url
 
       application.stop()
     }
 
-    "redirect to the /NicCategory page if there is not enough partial to show for furlough end" in {
+    "redirect to the onward route if there is not enough partial to show for furlough end" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -214,7 +214,7 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       val result = route(application, postRequest(submitAfterFurloughRoute)).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.NicCategoryController.onPageLoad(NormalMode).url
+      redirectLocation(result).value mustEqual onwardRoute.url
 
       application.stop()
     }
