@@ -253,7 +253,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           EmployeeStartDatePage,
           NormalMode,
           UserAnswers("id")
-            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 6))
+            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
             .success
             .value
         ) mustBe routes.VariableGrossPayController.onPageLoad(NormalMode)
@@ -267,7 +267,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           EmployeeStartDatePage,
           NormalMode,
           UserAnswers("id")
-            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 6))
+            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
             .success
             .value
         ) mustBe routes.ComingSoonController.onPageLoad()

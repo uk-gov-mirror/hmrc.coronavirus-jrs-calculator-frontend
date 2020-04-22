@@ -22,6 +22,7 @@ import play.api.mvc.Call
 class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayControllerRequestHandler with LocalDateHelpers {
 
   val apr7th2019 = LocalDate.of(2019, 4, 7)
+  val apr6th2019 = LocalDate.of(2019, 4, 6)
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case ClaimPeriodStartPage =>
@@ -182,13 +183,13 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayContr
     userAnswers.get(EmployeeStartDatePage) match {
       case Some(date) if shouldShowVariableGrossPayPage(date) =>
         routes.VariableGrossPayController.onPageLoad(NormalMode)
-      case Some(date) if date.isBefore(apr7th2019) => routes.ComingSoonController.onPageLoad(false)
+      case Some(date) if date.isBefore(apr6th2019) => routes.ComingSoonController.onPageLoad(false)
       case _                                       => routes.EmployeeStartDateController.onPageLoad(NormalMode)
     }
   }
 
   private def shouldShowVariableGrossPayPage(date: LocalDate) =
-    date.isAfter(apr7th2019) || (date.isBefore(apr7th2019) && appConfig.variableJourneyEnabled)
+    date.isAfter(apr7th2019) || (date.isBefore(apr6th2019) && appConfig.variableJourneyEnabled)
 
   private def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayQuestionPage) match {
