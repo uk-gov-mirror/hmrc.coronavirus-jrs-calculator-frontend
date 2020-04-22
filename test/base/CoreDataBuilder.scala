@@ -27,10 +27,13 @@ trait CoreDataBuilder {
   def fullPeriodWithPaymentDate(start: String, end: String, paymentDate: String): PeriodWithPaymentDate =
     PeriodWithPaymentDate(FullPeriod(period(start, end)), PaymentDate(buildLocalDate(periodBuilder(paymentDate))))
 
+  def partialPeriodWithPaymentDate(start: String, end: String, pstart: String, pend: String, paymentDate: String): PeriodWithPaymentDate =
+    PeriodWithPaymentDate(PartialPeriod(period(start, end), period(pstart, pend)), PaymentDate(buildLocalDate(periodBuilder(paymentDate))))
+
   def paymentDate(date: String): PaymentDate = PaymentDate(buildLocalDate(periodBuilder(date)))
 
   private val periodBuilder: String => Array[Int] =
-    date => date.replace(" ", "").split(",").map(_.toInt)
+    date => date.replace(" ", "").replace("-", ",").split(",").map(_.toInt)
 
   private val buildLocalDate: Array[Int] => LocalDate = array => LocalDate.of(array(0), array(1), array(2))
 }

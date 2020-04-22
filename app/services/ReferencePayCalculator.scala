@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import models.PayQuestion.Varies
 import models.PaymentFrequency.{Monthly, OperatorKey, _}
-import models.{Amount, CylbPayment, Divider, FullPeriod, Multiplier, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
+import models.{Amount, Divider, FullPeriod, Multiplier, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
@@ -21,22 +21,27 @@ trait ReferencePayCalculator extends PeriodHelper {
     nonFurloughPay: NonFurloughPay,
     priorFurloughPeriod: Period,
     afterFurloughPayPeriod: Seq[PeriodWithPaymentDate],
-    amount: Amount): Seq[PaymentWithPeriod] =
-    afterFurloughPayPeriod.map(period => calculateAveragePay(nonFurloughPay, priorFurloughPeriod, period, amount))
+    amount: Amount,
+    cylbs: Seq[Amount],
+    frequency: PaymentFrequency): Seq[PaymentWithPeriod] = {
+    val avg: Seq[PaymentWithPeriod] =
+      afterFurloughPayPeriod.map(period => calculateAveragePay(nonFurloughPay, priorFurloughPeriod, period, amount))
+    addCylbToCalculation(nonFurloughPay, frequency, cylbs, afterFurloughPayPeriod, avg)
+  }
 
   def addCylbToCalculation(
     nonFurloughPay: NonFurloughPay,
     frequency: PaymentFrequency,
-    cylbs: Seq[CylbPayment],
+    cylbs: Seq[Amount],
     periods: Seq[PeriodWithPaymentDate],
     avg: Seq[PaymentWithPeriod]): Seq[PaymentWithPeriod] = {
 
-    val cylb = calculateCylb(nonFurloughPay, frequency, cylbs, periods)
+    val cylb: Seq[PaymentWithPeriod] = calculateCylb(nonFurloughPay, frequency, cylbs, periods)
 
     if (cylb.isEmpty) avg else greaterGrossPay(cylb, avg)
   }
 
-  protected def cylbCalculationPredicate(variableLength: VariableLengthEmployed, employeeStartDate: LocalDate): Boolean =
+  def cylbCalculationPredicate(variableLength: VariableLengthEmployed, employeeStartDate: LocalDate): Boolean =
     variableLength == VariableLengthEmployed.Yes || employeeStartDate.isBefore(LocalDate.of(2019, 4, 6))
 
   private def calculateAveragePay(
@@ -63,7 +68,7 @@ trait ReferencePayCalculator extends PeriodHelper {
   protected def calculateCylb(
     nonFurloughPay: NonFurloughPay,
     frequency: PaymentFrequency,
-    cylbs: Seq[CylbPayment],
+    cylbs: Seq[Amount],
     periods: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
     frequency match {
       case Monthly => monthlyCylb(nonFurloughPay, cylbs, periods)
@@ -73,7 +78,7 @@ trait ReferencePayCalculator extends PeriodHelper {
   private def nonMonthlyCylb(
     nonFurloughPay: NonFurloughPay,
     frequency: PaymentFrequency,
-    cylbs: Seq[CylbPayment],
+    cylbs: Seq[Amount],
     periods: Seq[PeriodWithPaymentDate]) =
     for {
       period        <- periods.zip(cylbs.sliding(2, 1).toList)
@@ -84,10 +89,10 @@ trait ReferencePayCalculator extends PeriodHelper {
 
   private def buildPayWithPeriod(
     frequency: PaymentFrequency,
-    period: (PeriodWithPaymentDate, Seq[CylbPayment]),
+    period: (PeriodWithPaymentDate, Seq[Amount]),
     nfp: Amount,
-    head: CylbPayment,
-    taildHead: CylbPayment) = {
+    head: Amount,
+    taildHead: Amount) = {
     val divisor = cylbOperator(frequency    -> Divider)
     val multiplier = cylbOperator(frequency -> Multiplier)
     val amount =
@@ -95,15 +100,15 @@ trait ReferencePayCalculator extends PeriodHelper {
     PaymentWithPeriod(nfp, amount, period._1, Varies)
   }
 
-  private def totalFromBothWeeks(head: CylbPayment, taildHead: CylbPayment, divisor: Int, multiplier: Int): Amount =
-    Amount(((head.amount.value / divisor) * 2) + ((taildHead.amount.value / divisor) * multiplier))
+  private def totalFromBothWeeks(head: Amount, taildHead: Amount, divisor: Int, multiplier: Int): Amount =
+    Amount(((head.value / divisor) * 2) + ((taildHead.value / divisor) * multiplier))
 
-  private def monthlyCylb(nonFurloughPay: NonFurloughPay, cylbs: Seq[CylbPayment], periods: Seq[PeriodWithPaymentDate]) =
+  private def monthlyCylb(nonFurloughPay: NonFurloughPay, cylbs: Seq[Amount], periods: Seq[PeriodWithPaymentDate]) =
     for {
       period <- periods
-      cylb   <- cylbs
+      amount <- cylbs
       nfp = determineNonFurloughPay(period.period, nonFurloughPay)
-    } yield PaymentWithPeriod(nfp, cylb.amount, period, Varies)
+    } yield PaymentWithPeriod(nfp, amount, period, Varies)
 
   protected def averageDailyCalculator(period: Period, amount: Amount): BigDecimal =
     roundWithMode(amount.value / periodDaysCount(period), HALF_UP)

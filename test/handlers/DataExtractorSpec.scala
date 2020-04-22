@@ -7,14 +7,14 @@ package handlers
 
 import java.time.LocalDate
 
-import base.SpecBase
+import base.{CoreDataBuilder, SpecBase}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FullPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
+import models.{Amount, FullPeriod, PartialPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
 import pages.FurloughStartDatePage
 import play.api.libs.json.Json
 import utils.CoreTestData
 
-class DataExtractorSpec extends SpecBase with CoreTestData {
+class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder {
 
   "Extract mandatory data in order to do the calculation" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
@@ -110,6 +110,21 @@ class DataExtractorSpec extends SpecBase with CoreTestData {
     val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
 
     extractPayments(userAnswers, furloughPeriod) mustBe Some(expected)
+  }
+
+  "Calculates cylbs when variable length is No but the employee start date is before 6/4/2019" in new DataExtractor {
+    val userAnswers = Json.parse(jsonCylb).as[UserAnswers]
+
+    val expected =
+      List(
+        paymentWithPeriod(
+          150,
+          1786.84,
+          partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-15", "2020-03-31", "2020-03-30"),
+          Varies),
+        paymentWithPeriod(0.0, 1729.20, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"), Varies)
+      )
+    extractPayments(userAnswers, extractFurloughPeriod(extract(userAnswers).get, userAnswers).get) mustBe Some(expected)
   }
 
 }
