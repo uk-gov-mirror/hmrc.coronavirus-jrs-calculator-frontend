@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FullPeriod, PartialPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
+import models.{Amount, FullPeriod, MandatoryData, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
 import pages.FurloughStartDatePage
 import play.api.libs.json.Json
 import utils.CoreTestData
@@ -48,8 +48,10 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
   }
 
   "Extract prior furlough period from user answers" in new DataExtractor {
-    val userAnswers = Json.parse(userAnswersJson(employeeStartDate = "2020-12-1")).as[UserAnswers]
-    val expected = Period(LocalDate.of(2020, 12, 1), LocalDate.of(2020, 2, 29))
+    val userAnswers = Json.parse(userAnswersJson(employeeStartDate = "2020-12-01")).as[UserAnswers]
+    val expected = period("2020, 12, 1", "2020, 2, 29")
+
+    extractPriorFurloughPeriod(userAnswers) mustBe Some(expected)
   }
 
   "Extract variable gross pay when payQuestion answer is Varies" in new DataExtractor {

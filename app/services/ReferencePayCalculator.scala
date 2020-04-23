@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import models.PayQuestion.Varies
 import models.PaymentFrequency.{Monthly, OperatorKey, _}
-import models.{Amount, Divider, FullPeriod, Multiplier, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
+import models.{Amount, CylbEligibility, Divider, FullPeriod, Multiplier, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
@@ -26,23 +26,14 @@ trait ReferencePayCalculator extends PeriodHelper {
     frequency: PaymentFrequency): Seq[PaymentWithPeriod] = {
     val avg: Seq[PaymentWithPeriod] =
       afterFurloughPayPeriod.map(period => calculateAveragePay(nonFurloughPay, priorFurloughPeriod, period, amount))
-    addCylbToCalculation(nonFurloughPay, frequency, cylbs, afterFurloughPayPeriod, avg)
+
+    if (cylbs.isEmpty) avg
+    else
+      greaterGrossPay(calculateCylb(nonFurloughPay, frequency, cylbs, afterFurloughPayPeriod), avg)
   }
 
-  def addCylbToCalculation(
-    nonFurloughPay: NonFurloughPay,
-    frequency: PaymentFrequency,
-    cylbs: Seq[Amount],
-    periods: Seq[PeriodWithPaymentDate],
-    avg: Seq[PaymentWithPeriod]): Seq[PaymentWithPeriod] = {
-
-    val cylb: Seq[PaymentWithPeriod] = calculateCylb(nonFurloughPay, frequency, cylbs, periods)
-
-    if (cylb.isEmpty) avg else greaterGrossPay(cylb, avg)
-  }
-
-  def cylbCalculationPredicate(variableLength: VariableLengthEmployed, employeeStartDate: LocalDate): Boolean =
-    variableLength == VariableLengthEmployed.Yes || employeeStartDate.isBefore(LocalDate.of(2019, 4, 6))
+  def cylbCalculationPredicate(variableLength: VariableLengthEmployed, employeeStartDate: LocalDate): CylbEligibility =
+    CylbEligibility(variableLength == VariableLengthEmployed.Yes || employeeStartDate.isBefore(LocalDate.of(2019, 4, 6)))
 
   private def calculateAveragePay(
     nonFurloughPay: NonFurloughPay,

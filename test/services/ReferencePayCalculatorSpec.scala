@@ -11,11 +11,11 @@ import base.{CoreDataBuilder, SpecBase}
 import handlers.DataExtractor
 import models.PayQuestion.Varies
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{Amount, CylbPayment, FullPeriod, NonFurloughPay, PartialPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, VariableLengthEmployed}
+import models.{Amount, CylbEligibility, FullPeriod, NonFurloughPay, PartialPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, VariableLengthEmployed}
 
 class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
 
-  "calculates reference gross pay for an employee on variable pays" in new ReferencePayCalculator {
+  "calculates reference gross pay for an employee on variable pays not including cylb when empty" in new ReferencePayCalculator {
     val employeeStartDate = LocalDate.of(2019, 12, 1)
     val furloughStartDate = LocalDate.of(2020, 3, 1)
     val nonFurloughPay = NonFurloughPay(None, Some(Amount(1000.00)))
@@ -124,45 +124,24 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
 
   "calculate avg and cylb and return the greater" in new ReferencePayCalculator {
     val nonFurloughPay = NonFurloughPay(None, None)
-    val cylbs = Seq(Amount(1400.0), Amount(2800.0), Amount(700.0))
-
-    val paymentDates = Seq(
-      fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"),
-      fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"))
-
-    val avg = Seq(
-      paymentWithPeriod(0.0, 1000.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
-      paymentWithPeriod(0.0, 1000.0, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
-    )
+    val employeeStartDate = LocalDate.of(2019, 12, 1)
+    val furloughStartDate = LocalDate.of(2020, 3, 1)
+    val cylbs = Seq(Amount(900.0))
+    val priorFurloughPeriod = Period(employeeStartDate, furloughStartDate.minusDays(1))
+    val afterFurloughPeriod = fullPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 31")
 
     val expected: Seq[PaymentWithPeriod] = Seq(
-      paymentWithPeriod(0.0, 2700.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
-      paymentWithPeriod(0.0, 1000.0, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
+      paymentWithPeriod(0.0, 900.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,31", "2020, 3, 31"), Varies),
     )
 
-    addCylbToCalculation(nonFurloughPay, FourWeekly, cylbs, paymentDates, avg) mustBe expected
-  }
-
-  "calculates only avg if cylb is empty" in new ReferencePayCalculator {
-    val nonFurloughPay = NonFurloughPay(None, None)
-
-    val paymentDates = Seq(
-      fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"),
-      fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"))
-
-    val avg = Seq(
-      paymentWithPeriod(0.0, 500.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
-      paymentWithPeriod(0.0, 500.0, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
-    )
-
-    addCylbToCalculation(nonFurloughPay, FourWeekly, Seq.empty, paymentDates, avg) mustBe avg
+    calculateVariablePay(nonFurloughPay, priorFurloughPeriod, Seq(afterFurloughPeriod), Amount(2400.0), cylbs, Monthly) mustBe expected
   }
 
   "defines a variable calculation that requires cylb" in new DataExtractor {
     import VariableLengthEmployed._
 
-    cylbCalculationPredicate(Yes, LocalDate.now) mustBe true
-    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 5)) mustBe true
-    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 6)) mustBe false
+    cylbCalculationPredicate(Yes, LocalDate.now) mustBe CylbEligibility(true)
+    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 5)) mustBe CylbEligibility(true)
+    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 6)) mustBe CylbEligibility(false)
   }
 }

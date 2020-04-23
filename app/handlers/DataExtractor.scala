@@ -9,20 +9,9 @@ import java.time.LocalDate
 
 import models.FurloughQuestion.{No, Yes}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FurloughQuestion, NicCategory, NonFurloughPay, PayQuestion, PaymentFrequency, PaymentWithPeriod, PensionStatus, Period, PeriodWithPaymentDate, Periods, Salary, UserAnswers}
+import models.{Amount, CylbEligibility, MandatoryData, NonFurloughPay, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers}
 import pages._
 import services.ReferencePayCalculator
-
-case class MandatoryData(
-  claimPeriod: Period,
-  paymentFrequency: PaymentFrequency,
-  nicCategory: NicCategory,
-  pensionStatus: PensionStatus,
-  payQuestion: PayQuestion,
-  furloughQuestion: FurloughQuestion,
-  payDates: Seq[LocalDate],
-  furloughStart: LocalDate,
-  lastPayDay: LocalDate)
 
 trait DataExtractor extends ReferencePayCalculator {
 
@@ -75,20 +64,27 @@ trait DataExtractor extends ReferencePayCalculator {
     periodsWithPayDay: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
     data.payQuestion match {
       case Regularly => periodsWithPayDay.map(p => PaymentWithPeriod(Amount(0.0), grossPay, p, Regularly))
-      case Varies =>
-        val res: Option[Seq[Amount]] = for {
-          priorFurloughPeriod <- extractPriorFurloughPeriod(userAnswers)
-          variableLength      <- userAnswers.get(VariableLengthEmployedPage)
-          cylbs = userAnswers.getList(LastYearPayPage).map(v => Amount(v.amount))
-          empolyeeStartDate = priorFurloughPeriod.start
-        } yield {
-          if (cylbCalculationPredicate(variableLength, empolyeeStartDate))
-            cylbs
-          else Seq.empty
-        }
-        extractVariablePayments(userAnswers, periodsWithPayDay, res.fold(Seq.empty[Amount])(v => v), data.paymentFrequency)
-          .fold(Seq[PaymentWithPeriod]())(payments => payments)
+      case Varies    => processVaries(userAnswers, data, periodsWithPayDay)
     }
+
+  private def processVaries(
+    userAnswers: UserAnswers,
+    data: MandatoryData,
+    periodsWithPayDay: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] = {
+    val cylbAmounts: Seq[Amount] =
+      if (cylbEligible(userAnswers).fold(CylbEligibility(false))(v => v).eligible)
+        userAnswers.getList(LastYearPayPage).map(v => Amount(v.amount))
+      else Seq.empty
+
+    extractVariablePayments(userAnswers, periodsWithPayDay, cylbAmounts, data.paymentFrequency)
+      .fold(Seq[PaymentWithPeriod]())(payments => payments)
+  }
+
+  private def cylbEligible(userAnswers: UserAnswers): Option[CylbEligibility] =
+    for {
+      priorFurloughPeriod <- extractPriorFurloughPeriod(userAnswers)
+      variableLength      <- userAnswers.get(VariableLengthEmployedPage)
+    } yield cylbCalculationPredicate(variableLength, priorFurloughPeriod.start)
 
   private def extractVariablePayments(
     userAnswers: UserAnswers,
