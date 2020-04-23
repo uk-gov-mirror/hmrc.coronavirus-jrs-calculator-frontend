@@ -24,11 +24,6 @@ trait ModelGenerators {
       Gen.oneOf(VariableLengthEmployed.values.toSeq)
     }
 
-  implicit lazy val arbitraryFurloughDates: Arbitrary[FurloughDates] =
-    Arbitrary {
-      Gen.oneOf(FurloughDates.values.toSeq)
-    }
-
   implicit lazy val arbitraryFurloughQuestion: Arbitrary[FurloughQuestion] =
     Arbitrary {
       Gen.oneOf(FurloughQuestion.values.toSeq)

@@ -67,11 +67,6 @@ POST        /change-pension-auto-enrolment          controllers.PensionAutoEnrol
 
 GET         /confirmation                           controllers.ConfirmationController.onPageLoad()
 
-GET         /furlough-dates                         controllers.FurloughDatesController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-dates                         controllers.FurloughDatesController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-dates                  controllers.FurloughDatesController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-dates                  controllers.FurloughDatesController.onSubmit(mode: Mode = CheckMode)
-
 GET         /furlough-end                           controllers.FurloughEndDateController.onPageLoad(mode: Mode = NormalMode)
 POST        /furlough-end                           controllers.FurloughEndDateController.onSubmit(mode: Mode = NormalMode)
 GET         /change-furlough-end                    controllers.FurloughEndDateController.onPageLoad(mode: Mode = CheckMode)
