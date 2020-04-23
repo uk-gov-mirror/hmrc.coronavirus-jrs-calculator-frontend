@@ -13,7 +13,7 @@ case class MandatoryData(
   nicCategory: NicCategory,
   pensionContribution: PensionContribution,
   payQuestion: PayQuestion,
-  furloughQuestion: FurloughQuestion,
+  furloughOngoing: FurloughOngoing,
   payDates: Seq[LocalDate],
   furloughStart: LocalDate,
   lastPayDay: LocalDate)

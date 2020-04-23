@@ -353,12 +353,12 @@ claimPeriodEnd.cannot.be.before.claimStart = The claim period end date can’t b
 claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
-furloughQuestion.title = Has the employee’s furlough ended?
-furloughQuestion.heading = Has the employee’s furlough ended?
-furloughQuestion.yes = Yes
-furloughQuestion.no = No, it is ongoing
-furloughQuestion.checkYourAnswersLabel = Has the employee’s furlough ended?
-furloughQuestion.error.required = Select one of the options below
+furloughOngoing.title = Has the employee’s furlough ended?
+furloughOngoing.heading = Has the employee’s furlough ended?
+furloughOngoing.yes = Yes
+furloughOngoing.no = No, it is ongoing
+furloughOngoing.checkYourAnswersLabel = Has the employee’s furlough ended?
+furloughOngoing.error.required = Select one of the options below
 
 furloughEndDate.title = When did their furlough end?
 furloughEndDate.heading = When did their furlough end?

@@ -24,9 +24,9 @@ trait ModelGenerators {
       Gen.oneOf(VariableLengthEmployed.values.toSeq)
     }
 
-  implicit lazy val arbitraryFurloughQuestion: Arbitrary[FurloughQuestion] =
+  implicit lazy val arbitraryfurloughOngoing: Arbitrary[FurloughOngoing] =
     Arbitrary {
-      Gen.oneOf(FurloughQuestion.values.toSeq)
+      Gen.oneOf(FurloughOngoing.values.toSeq)
     }
 
   implicit lazy val arbitraryNicCategory: Arbitrary[NicCategory] =

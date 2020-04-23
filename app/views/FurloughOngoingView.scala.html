@@ -4,7 +4,7 @@
  *@
 
 @import controllers.routes._
-@import models.{Mode, FurloughQuestion}
+@import models.{Mode, FurloughOngoing}
 @import java.time.LocalDate
 
 @this(
@@ -17,16 +17,16 @@
 
 @(form: Form[_], startDate: LocalDate, endDate: LocalDate, mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "furloughQuestion.title"))) {
+@govukLayout(pageTitle = Some(title(form, "furloughOngoing.title"))) {
 
-    @formHelper(action = FurloughQuestionController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = FurloughOngoingController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
         @inputRadio(
             form = form,
-            legend = messages("furloughQuestion.heading"),
-            items = FurloughQuestion.options(form)
+            legend = messages("furloughOngoing.heading"),
+            items = FurloughOngoing.options(form)
         )
 
         @button("site.continue")

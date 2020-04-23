@@ -35,24 +35,24 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .onPageLoad(NormalMode)
       }
 
-      "go to FurloughQuestionPage after ClaimPeriodEndPage" in {
+      "go to furloughOngoingPage after ClaimPeriodEndPage" in {
         navigator.nextPage(ClaimPeriodEndPage, NormalMode, UserAnswers("id")) mustBe routes.FurloughStartDateController
           .onPageLoad(NormalMode)
       }
 
-      "go to correct page after FurloughQuestionPage" in {
+      "go to correct page after furloughOngoingPage" in {
         navigator.nextPage(
-          FurloughQuestionPage,
+          FurloughOngoingPage,
           NormalMode,
           UserAnswers("id")
-            .set(FurloughQuestionPage, FurloughQuestion.No)
+            .set(FurloughOngoingPage, FurloughOngoing.No)
             .success
             .value) mustBe routes.PaymentFrequencyController.onPageLoad(NormalMode)
         navigator.nextPage(
-          FurloughQuestionPage,
+          FurloughOngoingPage,
           NormalMode,
           UserAnswers("id")
-            .set(FurloughQuestionPage, FurloughQuestion.Yes)
+            .set(FurloughOngoingPage, FurloughOngoing.Yes)
             .success
             .value) mustBe routes.FurloughEndDateController.onPageLoad(NormalMode)
       }
@@ -243,7 +243,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
       "go from furlough start date to furlough question" in {
         val answers = emptyUserAnswers
-        navigator.nextPage(FurloughStartDatePage, NormalMode, answers) mustBe routes.FurloughQuestionController.onPageLoad(NormalMode)
+        navigator.nextPage(FurloughStartDatePage, NormalMode, answers) mustBe routes.FurloughOngoingController.onPageLoad()
       }
 
       "go from furlough end date" must {

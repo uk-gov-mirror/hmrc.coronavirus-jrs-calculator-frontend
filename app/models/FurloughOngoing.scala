@@ -10,14 +10,14 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait FurloughQuestion
+sealed trait FurloughOngoing
 
-object FurloughQuestion extends Enumerable.Implicits {
+object FurloughOngoing extends Enumerable.Implicits {
 
-  case object Yes extends WithName("yes") with FurloughQuestion
-  case object No extends WithName("no") with FurloughQuestion
+  case object Yes extends WithName("yes") with FurloughOngoing
+  case object No extends WithName("no") with FurloughOngoing
 
-  val values: Seq[FurloughQuestion] = Seq(
+  val values: Seq[FurloughOngoing] = Seq(
     Yes,
     No
   )
@@ -25,11 +25,11 @@ object FurloughQuestion extends Enumerable.Implicits {
   def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
     RadioItem(
       value = Some(value.toString),
-      content = Text(messages(s"furloughQuestion.${value.toString}")),
+      content = Text(messages(s"furloughOngoing.${value.toString}")),
       checked = form("value").value.contains(value.toString)
     )
   }
 
-  implicit val enumerable: Enumerable[FurloughQuestion] =
+  implicit val enumerable: Enumerable[FurloughOngoing] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }
