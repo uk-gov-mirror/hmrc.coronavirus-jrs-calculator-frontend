@@ -109,6 +109,7 @@ trait Formatters {
           .bind(key, data)
           .right
           .map(_.replace(",", ""))
+          .map(_.trim)
           .right
           .flatMap {
             case s =>

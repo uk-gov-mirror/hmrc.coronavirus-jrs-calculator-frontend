@@ -372,13 +372,12 @@ furloughEndDate.error.min.max = The furlough end date must be at least 3 weeks a
 
 furloughStartDate.title = When was this employee furloughed?
 furloughStartDate.heading = When was this employee furloughed?
-furloughStartDate.hint = This is the date that the employee started their furlough. This may be before or after the dates in your current claim.
-furloughStartDate.checkYourAnswersLabel = FurloughStartDate
+furloughStartDate.hint = This is the date that the employee started their furlough. This may be before or after the the start date of your current claim.
 furloughStartDate.error.required.all = Enter the furlough start date
 furloughStartDate.error.required.two = The furlough start date must include {0} and {1}
 furloughStartDate.error.required = The furlough start date must include {0}
 furloughStartDate.error.invalid = Enter a real furlough start date
-furloughStartDate.error.minimum = The furlough start date must be after {0}
+furloughStartDate.error.minimum = The furlough start date must be on or after {0}
 furloughStartDate.error.maximum = The furlough start date must be before {0}
 
 variableLengthEmployed.title = Was this employee working for you on or before 1 February 2019?

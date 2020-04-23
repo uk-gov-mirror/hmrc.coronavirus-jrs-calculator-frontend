@@ -13,7 +13,7 @@ import handlers.ErrorHandler
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughStartDatePage}
+import pages.{ClaimPeriodEndPage, FurloughStartDatePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
