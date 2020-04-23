@@ -1,0 +1,30 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@this(govukDetails: GovukDetails)
+
+@(
+  summaryText: String,
+  id: Option[String] = None,
+  open: Boolean = false,
+  classes: Option[String] = None
+)(content: Html)(implicit messages: Messages)
+
+<div class="form-group">
+  <details
+    @if(open){ open}
+    @if(id){ id="@id"}
+    class="govuk-details @if(classes){@classes}"
+    data-module="govuk-details">
+    <summary class="govuk-details__summary">
+      <span class="govuk-details__summary-text">
+        @summaryText
+      </span>
+    </summary>
+    <div class="govuk-details__text">
+      @content
+    </div>
+  </details>
+</div>
