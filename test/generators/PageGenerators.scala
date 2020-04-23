@@ -40,9 +40,6 @@ trait PageGenerators {
   implicit lazy val arbitraryFurloughEndDatePage: Arbitrary[FurloughEndDatePage.type] =
     Arbitrary(FurloughEndDatePage)
 
-  implicit lazy val arbitraryFurloughDatesPage: Arbitrary[FurloughDatesPage.type] =
-    Arbitrary(FurloughDatesPage)
-
   implicit lazy val arbitraryClaimPeriodStartPage: Arbitrary[ClaimPeriodStartPage.type] =
     Arbitrary(ClaimPeriodStartPage)
 
