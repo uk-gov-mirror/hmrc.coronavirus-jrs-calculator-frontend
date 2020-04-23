@@ -12,6 +12,7 @@
         errorSummary: components.errorSummary,
         inputRadio: components.inputRadio,
         button: components.button,
+        details: components.details,
         h1: components.h1,
         p: components.p,
         link: components.link
@@ -28,86 +29,82 @@
       @h1(messages("nicCategory.heading"))
       @p(Html(messages("nicCategory.hint")))
 
-        <details class="govuk-details" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                @messages("nicCategory.details.summary")
-                </span>
-            </summary>
-            <div class="govuk-details__text">
-                @p(Html(messages("nicCategory.details.summary.p1")))
-                <table class="govuk-table">
-                    <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header">
-                            @messages("nicCategory.letter.legend")
-                            </th>
-                            <th class="govuk-table__header">
-                            @messages("nicCategory.group.legend")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.letter.a")
-                            </td>
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.category.a")
-                            </td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.letter.b")
-                            </td>
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.category.b")
-                            </td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.letter.c")
-                            </td>
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.category.c.1") @link("https://www.gov.uk/state-pension-age", "nicCategory.details.category.c.2", true)
-                            </td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.letter.j")
-                            </td>
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.category.j")
-                            </td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.letter.h")
-                            </td>
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.category.h")
-                            </td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.letter.m")
-                            </td>
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.category.m")
-                            </td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.letter.z")
-                            </td>
-                            <td class="govuk-table__cell">
-                            @messages("nicCategory.details.category.z")
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </details>
+      @details(
+        summaryText = Messages("nicCategory.details.summary")
+      ) {
+        @p(Html(messages("nicCategory.details.summary.p1")))
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header">
+                @messages("nicCategory.letter.legend")
+              </th>
+              <th class="govuk-table__header">
+                @messages("nicCategory.group.legend")
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.letter.a")
+              </td>
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.category.a")
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.letter.b")
+              </td>
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.category.b")
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.letter.c")
+              </td>
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.category.c.1") @link("https://www.gov.uk/state-pension-age",
+                "nicCategory.details.category.c.2", true)
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.letter.j")
+              </td>
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.category.j")
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.letter.h")
+              </td>
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.category.h")
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.letter.m")
+              </td>
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.category.m")
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.letter.z")
+              </td>
+              <td class="govuk-table__cell">
+                @messages("nicCategory.details.category.z")
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      }
 
         @inputRadio(
             form = form,

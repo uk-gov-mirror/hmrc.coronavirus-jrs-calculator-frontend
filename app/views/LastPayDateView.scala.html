@@ -10,6 +10,7 @@
         inputDate: components.inputDate,
         formHelper: FormWithCSRF,
         button: components.button,
+        details: components.details,
         h1: components.h1,
         p: components.p
 )
@@ -28,18 +29,12 @@
 
             @p(Html(messages("lastPayDate.p2")))
 
-            <div class="form-group">
-                <details class="govuk-details">
-                    <summary class="govuk-details__summary">
-                        <span class="summary govuk-details__summary-text">@Messages("lastPayDate.details.title")</span>
-                    </summary>
-                    <div class="panel panel-border-narro govuk-details__text">
-                        <p>@Messages("lastPayDate.details.p1")</p>
-                        <p>@Messages("lastPayDate.details.p2")</p>
-                    </div>
-                </details>
-            </div>
-
+            @details(
+              summaryText = Messages("lastPayDate.details.title")
+            ) {
+              <p>@Messages("lastPayDate.details.p1")</p>
+              <p>@Messages("lastPayDate.details.p2")</p>
+            }
 
             @inputDate(
                 form,

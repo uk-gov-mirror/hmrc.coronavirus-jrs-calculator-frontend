@@ -11,8 +11,9 @@
     inputDate: components.inputDate,
     formHelper: FormWithCSRF,
     button: components.button,
-        h1: components.h1,
-        p: components.p
+    details: components.details,
+    h1: components.h1,
+    p: components.p
 )
 
 @(form: Form[_], idx: Int, messageDate: LocalDate)(implicit request: Request[_], messages: Messages)
@@ -27,16 +28,11 @@
 
         @p(Html(messages(if(idx == 1){"payDate.firstP"} else {"payDate.p"})))
 
-        <div class="form-group">
-            <details class="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="summary govuk-details__summary-text">@Messages("payDate.details.title")</span>
-                </summary>
-                <div class="panel panel-border-narro govuk-details__text">
-                    <p>@Messages("payDate.details.content")</p>
-                </div>
-            </details>
-        </div>
+        @details(
+          summaryText = Messages("payDate.details.title")
+        ) {
+          <p>@Messages("payDate.details.content")</p>
+        }
 
         @inputDate(
             form,

@@ -15,6 +15,7 @@
     p: components.p,
     confirmation: components.confirmation,
     button: components.button,
+    details: components.details,
     link: components.link,
     appConfig: config.FrontendAppConfig
 )
@@ -71,57 +72,51 @@
 
     @p(Html(messages("confirmation.breakdown.p")))
 
-    <details class="govuk-details" data-module="govuk-details">
-      <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">
-          @messages("confirmation.breakdown.details")
-        </span>
-      </summary>
-      <div class="govuk-details__text">
-        @for((furlough, nic, pension) <- (cvb.furlough.payPeriodBreakdowns, cvb.nic.payPeriodBreakdowns,
-          cvb.pension.payPeriodBreakdowns).zipped.toList) { <h3 class="govuk-heading-s">@messages("confirmation.breakdown.dt")
-          @messages("confirmation.breakdown.ending", dateToString(furlough.periodWithPaymentDate.period.period.end))</h3>
-          <dl class="govuk-summary-list">
-            <dt class="govuk-!-margin-bottom-0">
-              @Html(messages("confirmation.breakdown.furlough"))
-            </dt>
-            <dd class="govuk-heading-s govuk-!-margin-left-0">
-              &pound;@furlough.grant.value.setScale(2)
-            </dd>
-            <dt class="govuk-!-margin-bottom-0">
-              @Html(messages("confirmation.breakdown.nic"))
-            </dt>
-            <dd class="govuk-heading-s govuk-!-margin-left-0">
-              &pound;@nic.grant.value.setScale(2)
-            </dd>
-            <dt class="govuk-!-margin-bottom-0">
-              @Html(messages("confirmation.breakdown.pension"))
-            </dt>
-            <dd class="govuk-heading-s govuk-!-margin-left-0">
-              &pound;@pension.grant.value.setScale(2)
-            </dd>
-          </dl>
-          }
-      </div>
-    </details>
+    @details(
+      summaryText = Messages("confirmation.breakdown.details")
+    ) {
+      @for((furlough, nic, pension) <- (cvb.furlough.payPeriodBreakdowns, cvb.nic.payPeriodBreakdowns,
+        cvb.pension.payPeriodBreakdowns).zipped.toList) { <h3 class="govuk-heading-s">@messages("confirmation.breakdown.dt")
+        @messages("confirmation.breakdown.ending", dateToString(furlough.periodWithPaymentDate.period.period.end))</h3>
+        <dl class="govuk-summary-list">
+          <dt class="govuk-!-margin-bottom-0">
+            @Html(messages("confirmation.breakdown.furlough"))
+          </dt>
+          <dd class="govuk-heading-s govuk-!-margin-left-0">
+            &pound;@furlough.grant.value.setScale(2)
+          </dd>
+          <dt class="govuk-!-margin-bottom-0">
+            @Html(messages("confirmation.breakdown.nic"))
+          </dt>
+          <dd class="govuk-heading-s govuk-!-margin-left-0">
+            &pound;@nic.grant.value.setScale(2)
+          </dd>
+          <dt class="govuk-!-margin-bottom-0">
+            @Html(messages("confirmation.breakdown.pension"))
+          </dt>
+          <dd class="govuk-heading-s govuk-!-margin-left-0">
+            &pound;@pension.grant.value.setScale(2)
+          </dd>
+        </dl>
+        }
+    }
 
     @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
 
     <ul class="govuk-list govuk-list--number">
-
-        <li>
-          @messages("confirmation.nextSteps.li.1", dateToStringWithoutYear(cm.claimPeriod.start), dateToStringWithoutYear(cm.claimPeriod.end))
-          <span class="govuk-!-font-weight-bold">@messages("confirmation.nextSteps.li.1.2")</span>
-        </li>
-        <li>@messages("confirmation.nextSteps.li.2")<br>
-            <ul class="govuk-list--list">
-                <li>@messages("confirmation.nextSteps.li.2.1")</li>
-                <li>@messages("confirmation.nextSteps.li.2.2")</li>
-                <li>@messages("confirmation.nextSteps.li.2.3")</li>
-            </ul></li>
-        <li>@messages("confirmation.nextSteps.li.3.1") @link(appConfig.workOutHowMuch,"confirmation.nextSteps.li.3.2", true)</li>
-        <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,"confirmation.nextSteps.li.4.2", true)))
-        </li>
+      <li>
+        @messages("confirmation.nextSteps.li.1", dateToStringWithoutYear(cm.claimPeriod.start), dateToStringWithoutYear(cm.claimPeriod.end))
+        <span class="govuk-!-font-weight-bold">@messages("confirmation.nextSteps.li.1.2")</span>
+      </li>
+      <li>@messages("confirmation.nextSteps.li.2")
+        <ul class="govuk-list--list">
+          <li>@messages("confirmation.nextSteps.li.2.1")</li>
+          <li>@messages("confirmation.nextSteps.li.2.2")</li>
+          <li>@messages("confirmation.nextSteps.li.2.3")</li>
+        </ul>
+      </li>
+      <li>@messages("confirmation.nextSteps.li.3.1") @link(appConfig.workOutHowMuch,"confirmation.nextSteps.li.3.2", true)</li>
+      <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,"confirmation.nextSteps.li.4.2", true)))</li>
     </ul>
 
     @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode)), classes = Some("govuk-button"))
