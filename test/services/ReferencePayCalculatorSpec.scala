@@ -36,7 +36,7 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     val expected = Seq(
       PaymentWithPeriod(Amount(0.0), Amount(817.47), afterFurloughPeriod, Varies),
       PaymentWithPeriod(Amount(0.0), Amount(791.10), afterFurloughPeriodTwo, Varies),
-      PaymentWithPeriod(Amount(1000.0), Amount(817.47), afterFurloughPartial, Varies),
+      PaymentWithPeriod(Amount(1000.0), Amount(395.55), afterFurloughPartial, Varies),
     )
 
     calculateVariablePay(nonFurloughPay, priorFurloughPeriod, payPeriods, grossPay, Seq.empty, Monthly) mustBe expected

@@ -22,7 +22,7 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PeriodHelpe
       val payDates = userAnswers.getList(PayDatePage)
       val periods = generatePeriods(payDates, furloughPeriod)
       val periodsWithPayDates = assignPayDates(frequency, periods, lastPayDay)
-      val datesWithDuplicates = periodsWithPayDates.flatMap(p => previousYearPayDate(frequency, p.paymentDate.value))
+      val datesWithDuplicates = periodsWithPayDates.flatMap(p => previousYearPayDate(frequency, p))
       datesWithDuplicates.distinct
     }
 

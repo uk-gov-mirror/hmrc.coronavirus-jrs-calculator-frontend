@@ -3,6 +3,11 @@
  *
  */
 
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ */
+
 package handlers
 
 import java.time.LocalDate
@@ -121,10 +126,10 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
       List(
         paymentWithPeriod(
           150,
-          1786.84,
+          988.38,
           partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-15", "2020-03-31", "2020-03-30"),
           Varies),
-        paymentWithPeriod(0.0, 1729.20, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"), Varies)
+        paymentWithPeriod(0.0, 1744.20, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"), Varies)
       )
     extractPayments(userAnswers, extractFurloughPeriod(extract(userAnswers).get, userAnswers).get) mustBe Some(expected)
   }
@@ -136,7 +141,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
       List(
         paymentWithPeriod(
           100.0,
-          3385.71,
+          3271.43,
           partialPeriodWithPaymentDate("2020-3-1", "2020-3-28", "2020-3-2", "2020-3-28", "2020-03-28"),
           Varies)
       )

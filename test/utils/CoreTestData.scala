@@ -297,9 +297,6 @@ trait CoreTestData {
       |        "lastYearPay" : [
       |            {
       |                "amount" : 1200
-      |            },
-      |            {
-      |                "amount" : 1700
       |            }
       |        ],
       |        "lastPayDate" : "2020-04-30",

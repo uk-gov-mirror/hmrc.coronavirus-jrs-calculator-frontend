@@ -17,6 +17,8 @@ trait CoreDataBuilder {
   def partialPeriod(original: (String, String), partial: (String, String)) =
     PartialPeriod(period(original._1, original._2), period(partial._1, partial._2))
 
+  def fullPeriod(start: String, end: String) = FullPeriod(period(start, end))
+
   def paymentWithPeriod(
     nonFurloughPay: BigDecimal,
     furloughPayment: BigDecimal,

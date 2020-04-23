@@ -8,14 +8,14 @@ package services
 import java.time.LocalDate
 
 import models.PayQuestion.Varies
-import models.PaymentFrequency.{Monthly, OperatorKey, _}
-import models.{Amount, CylbEligibility, Divider, FullPeriod, Multiplier, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
+import models.PaymentFrequency.Monthly
+import models.{Amount, CylbEligibility, CylbOperators, FullPeriod, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
 import scala.math.BigDecimal.RoundingMode._
 
-trait ReferencePayCalculator extends PeriodHelper {
+trait ReferencePayCalculator extends PreviousYearPeriod {
 
   def calculateVariablePay(
     nonFurloughPay: NonFurloughPay,
@@ -41,7 +41,12 @@ trait ReferencePayCalculator extends PeriodHelper {
     afterFurloughPayPeriod: PeriodWithPaymentDate,
     amount: Amount): PaymentWithPeriod = {
 
-    val daily = periodDaysCount(afterFurloughPayPeriod.period.period) * averageDailyCalculator(priorFurloughPeriod, amount)
+    val period = afterFurloughPayPeriod.period match {
+      case FullPeriod(p)       => p
+      case PartialPeriod(_, p) => p
+    }
+
+    val daily = periodDaysCount(period) * averageDailyCalculator(priorFurloughPeriod, amount)
 
     val nfp = determineNonFurloughPay(afterFurloughPayPeriod.period, nonFurloughPay)
 
@@ -61,51 +66,45 @@ trait ReferencePayCalculator extends PeriodHelper {
     frequency: PaymentFrequency,
     cylbs: Seq[Amount],
     periods: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
-    frequency match {
-      case Monthly => monthlyCylb(nonFurloughPay, cylbs, periods)
-      case _       => nonMonthlyCylb(nonFurloughPay, frequency, cylbs, periods)
+    for {
+      period <- periods.zip(cylbs.sliding(2, 1).toList)
+      payOne <- period._2.headOption
+      payTwo = period._2.tail.headOption.fold(Amount(0.0))(v => v)
+      nfp = determineNonFurloughPay(period._1.period, nonFurloughPay)
+    } yield {
+      val cylbOps = operatorsEnhanced(frequency, period._1.period)
+      val amount: Amount = (period._1.period, frequency, cylbOps) match {
+        case (_: FullPeriod, Monthly, _)                   => totalOneToOne(payOne, payTwo, cylbOps, period._1.period)
+        case (_: FullPeriod, _, _)                         => totalTwoToOne(payOne, payTwo, cylbOps)
+        case (p: PartialPeriod, _, CylbOperators(_, 0, _)) => totalOneToOne(payOne, payTwo, cylbOps, period._1.period)
+        case (p: PartialPeriod, _, CylbOperators(_, _, 0)) => totalOneToOne(payOne, payTwo, cylbOps, period._1.period)
+        case (p: PartialPeriod, _, _)                      => totalTwoToOne(payOne, payTwo, cylbOps)
+      }
+
+      val furlough = roundAmountWithMode(amount, RoundingMode.HALF_UP)
+
+      PaymentWithPeriod(nfp, furlough, period._1, Varies)
     }
 
-  private def nonMonthlyCylb(
-    nonFurloughPay: NonFurloughPay,
-    frequency: PaymentFrequency,
-    cylbs: Seq[Amount],
-    periods: Seq[PeriodWithPaymentDate]) =
-    for {
-      period        <- periods.zip(cylbs.sliding(2, 1).toList)
-      firstPayment  <- period._2.headOption
-      secondPayment <- period._2.tail.headOption
-      nfp = determineNonFurloughPay(period._1.period, nonFurloughPay)
-    } yield buildPayWithPeriod(frequency, period, nfp, firstPayment, secondPayment)
-
-  private def buildPayWithPeriod(
-    frequency: PaymentFrequency,
-    period: (PeriodWithPaymentDate, Seq[Amount]),
-    nfp: Amount,
-    head: Amount,
-    taildHead: Amount) = {
-    val divisor = cylbOperator(frequency    -> Divider)
-    val multiplier = cylbOperator(frequency -> Multiplier)
-    val amount =
-      roundAmountWithMode(totalFromBothWeeks(head, taildHead, divisor, multiplier), RoundingMode.HALF_UP)
-    PaymentWithPeriod(nfp, amount, period._1, Varies)
+  private def totalTwoToOne(payOne: Amount, payTwo: Amount, operator: CylbOperators): Amount = {
+    import operator._
+    Amount(((payOne.value / divider) * daysFromPrevious) + ((payTwo.value / divider) * daysFromCurrent))
   }
 
-  private def totalFromBothWeeks(head: Amount, taildHead: Amount, divisor: Int, multiplier: Int): Amount =
-    Amount(((head.value / divisor) * 2) + ((taildHead.value / divisor) * multiplier))
+  private def totalOneToOne(payOne: Amount, payTwo: Amount, operator: CylbOperators, period: Periods): Amount = {
+    import operator._
+    period match {
+      case _: FullPeriod                          => Amount((payOne.value / divider) * daysFromCurrent)
+      case p: PartialPeriod if isFurloughStart(p) => Amount((payOne.value / divider) * operator.daysFromCurrent)
+      case p: PartialPeriod if isFurloughEnd(p)   => Amount((payTwo.value / divider) * operator.daysFromPrevious)
+    }
+  }
 
-  private def monthlyCylb(nonFurloughPay: NonFurloughPay, cylbs: Seq[Amount], periods: Seq[PeriodWithPaymentDate]) =
-    for {
-      period <- periods
-      amount <- cylbs
-      nfp = determineNonFurloughPay(period.period, nonFurloughPay)
-    } yield PaymentWithPeriod(nfp, amount, period, Varies)
-
-  protected def averageDailyCalculator(period: Period, amount: Amount): BigDecimal =
-    roundWithMode(amount.value / periodDaysCount(period), HALF_UP)
-
-  private def cylbOperator(key: OperatorKey): Int =
-    operators(key)
+  protected def averageDailyCalculator(period: Period, amount: Amount): BigDecimal = {
+    val count = periodDaysCount(period)
+    val res = roundWithMode(amount.value / periodDaysCount(period), HALF_UP)
+    res
+  }
 
   private def determineNonFurloughPay(period: Periods, nonFurloughPay: NonFurloughPay): Amount =
     period match {

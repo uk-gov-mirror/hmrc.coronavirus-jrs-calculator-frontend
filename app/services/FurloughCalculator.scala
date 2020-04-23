@@ -33,13 +33,13 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with P
     }
 
   protected def proRatePay(paymentWithPeriod: PaymentWithPeriod): Amount =
-    paymentWithPeriod.period.period match {
-      case FullPeriod(_) => paymentWithPeriod.furloughPayment
-      case PartialPeriod(o, p) => {
+    (paymentWithPeriod.period.period, paymentWithPeriod.payQuestion) match {
+      case (PartialPeriod(o, p), Regularly) => {
         val proRatedPay =
           roundWithMode((paymentWithPeriod.furloughPayment.value / periodDaysCount(o)) * periodDaysCount(p), RoundingMode.HALF_UP)
         Amount(proRatedPay)
       }
+      case _ => paymentWithPeriod.furloughPayment
     }
 
   protected def calculateFullPeriod(

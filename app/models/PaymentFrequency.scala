@@ -39,14 +39,4 @@ object PaymentFrequency extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[PaymentFrequency] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
-
-  type OperatorKey = (PaymentFrequency, FrequencyOperator)
-  val operators: Map[OperatorKey, Int] = Map(
-    (Weekly, Divider)         -> 7,
-    (Weekly, Multiplier)      -> 5,
-    (FortNightly, Divider)    -> 14,
-    (FortNightly, Multiplier) -> 12,
-    (FourWeekly, Divider)     -> 28,
-    (FourWeekly, Multiplier)  -> 26
-  )
 }
