@@ -4,11 +4,13 @@
  *@
 
 @this(
-    govukLayout: templates.GovukLayoutWrapper,
-    errorSummary: components.errorSummary,
-    inputDate: components.inputDate,
-    formHelper: FormWithCSRF,
-    button: components.button
+        govukLayout: templates.GovukLayoutWrapper,
+        errorSummary: components.errorSummary,
+        inputDate: components.inputDate,
+        formHelper: FormWithCSRF,
+        button: components.button,
+        h1: components.h1,
+        p: components.p
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -19,10 +21,12 @@
 
         @errorSummary(form.errors)
 
+        @h1("furloughStartDate.heading")
+        @p(Html(messages("furloughStartDate.hint")))
+
         @inputDate(
             form,
-            "furloughStartDate.heading",
-            hintText = Some("furloughStartDate.hint")
+            ""
         )
 
         @button("site.continue")
