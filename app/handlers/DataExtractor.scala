@@ -73,7 +73,7 @@ trait DataExtractor extends ReferencePayCalculator {
     periodsWithPayDay: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] = {
     val cylbAmounts: Seq[CylbPayment] =
       if (cylbEligible(userAnswers).fold(CylbEligibility(false))(v => v).eligible)
-        userAnswers.getList(LastYearPayPage)
+        userAnswers.getList(LastYearPayPage).map(_.cylbPayment)
       else
         Seq.empty
 

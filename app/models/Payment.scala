@@ -37,6 +37,12 @@ object CylbPayment {
   implicit val defaultFormat: Format[CylbPayment] = Json.format
 }
 
+case class CylbPaymentWith2020Periods(cylbPayment: CylbPayment, relevantPeriods: Seq[PeriodWithPaymentDate])
+
+object CylbPaymentWith2020Periods {
+  implicit val defaultFormat: Format[CylbPaymentWith2020Periods] = Json.format
+}
+
 case class PaymentWithPeriod(nonFurloughPay: Amount, furloughPayment: Amount, period: PeriodWithPaymentDate, payQuestion: PayQuestion)
 
 case class PeriodBreakdown(nonFurloughPay: Amount, grant: Amount, periodWithPaymentDate: PeriodWithPaymentDate)

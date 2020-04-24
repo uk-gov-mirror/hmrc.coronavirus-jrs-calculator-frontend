@@ -7,14 +7,14 @@ package handlers
 
 import java.time.LocalDate
 
-import models.{Period, UserAnswers}
+import models.{Period, PeriodWithPaymentDate, UserAnswers}
 import pages._
 import services.{PeriodHelper, PreviousYearPeriod}
 import utils.LocalDateHelpers._
 
 trait LastYearPayControllerRequestHandler extends PeriodHelper with PreviousYearPeriod {
 
-  def getPayDates(userAnswers: UserAnswers): Option[Seq[LocalDate]] =
+  def getPayDates(userAnswers: UserAnswers): Option[Seq[(LocalDate, Seq[PeriodWithPaymentDate])]] =
     for {
       frequency      <- userAnswers.get(PaymentFrequencyPage)
       lastPayDay     <- userAnswers.get(LastPayDatePage)
@@ -23,9 +23,15 @@ trait LastYearPayControllerRequestHandler extends PeriodHelper with PreviousYear
       val payDates = userAnswers.getList(PayDatePage)
       val periods = generatePeriods(payDates, furloughPeriod)
       val periodsWithPayDates = assignPayDates(frequency, periods, lastPayDay)
-      val datesWithDuplicates = periodsWithPayDates.flatMap(p => previousYearPayDate(frequency, p))
-      val result = lastYearFilteredByFurlough(datesWithDuplicates.distinct, furloughPeriod)
-      result
+      val furloughLastYearStart = furloughPeriod.start.minusDays(364)
+
+      val periodsAndDates = periodsWithPayDates.flatMap(p => previousYearPayDate(frequency, p).map(p -> _))
+      val previousPayDates = periodsAndDates.map(_._2).distinct
+      val datesToPeriods =
+        previousPayDates.map(previousPayDate => previousPayDate -> periodsAndDates.filter(_._2 == previousPayDate).map(_._1))
+      val withinFurlough = datesToPeriods.filter(_._1.isEqualOrAfter(furloughLastYearStart))
+
+      withinFurlough
     }
 
   def lastYearFilteredByFurlough(previousYearDates: Seq[LocalDate], furloughDates: Period): Seq[LocalDate] = {

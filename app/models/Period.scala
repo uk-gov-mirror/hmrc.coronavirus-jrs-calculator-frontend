@@ -40,3 +40,9 @@ case class PeriodWithPaymentDate(period: Periods, paymentDate: PaymentDate)
 object PeriodWithPaymentDate {
   implicit val defaultFormat: Format[PeriodWithPaymentDate] = Json.format
 }
+
+case class PeriodWithPriorYear(period: Periods, paymentDate: PaymentDate, priorYearPaymentDates: Seq[LocalDate])
+
+object PeriodWithPriorYear {
+  implicit val defaultFormat: Format[PeriodWithPaymentDate] = Json.format
+}

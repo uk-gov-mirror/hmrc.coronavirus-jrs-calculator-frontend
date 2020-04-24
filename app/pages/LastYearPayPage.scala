@@ -5,10 +5,10 @@
 
 package pages
 
-import models.CylbPayment
+import models.CylbPaymentWith2020Periods
 import play.api.libs.json.JsPath
 
-case object LastYearPayPage extends QuestionPage[CylbPayment] {
+case object LastYearPayPage extends QuestionPage[CylbPaymentWith2020Periods] {
 
   override def path: JsPath = JsPath \ toString
 
