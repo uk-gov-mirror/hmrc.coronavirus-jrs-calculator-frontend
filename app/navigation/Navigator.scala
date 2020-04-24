@@ -17,9 +17,11 @@ import pages.{PayDatePage, _}
 import models.{UserAnswers, _}
 import utils.LocalDateHelpers
 import play.api.mvc.Call
+import services.PartialPayHelper
 
 @Singleton
-class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayControllerRequestHandler with LocalDateHelpers {
+class Navigator @Inject()(appConfig: FrontendAppConfig)
+    extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayHelper {
 
   val apr7th2019 = LocalDate.of(2019, 4, 7)
   val apr6th2019 = LocalDate.of(2019, 4, 6)
@@ -214,28 +216,5 @@ class Navigator @Inject()(appConfig: FrontendAppConfig) extends LastYearPayContr
       case None => routes.PayQuestionController.onPageLoad(NormalMode)
     }
   }
-
-  def hasPartialPayBefore(userAnswers: UserAnswers): Boolean =
-    getPartialPeriods(userAnswers).exists(isFurloughStart)
-
-  private def hasPartialPayAfter(userAnswers: UserAnswers): Boolean =
-    getPartialPeriods(userAnswers).exists(isFurloughEnd)
-
-  def getPartialPeriods(userAnswers: UserAnswers): Seq[PartialPeriod] = {
-    for {
-      furloughStart  <- userAnswers.get(FurloughStartDatePage)
-      claimPeriodEnd <- userAnswers.get(ClaimPeriodEndPage)
-    } yield {
-      val furloughPeriod = userAnswers.get(FurloughEndDatePage) match {
-        case Some(furloughEnd) => Period(furloughStart, furloughEnd)
-        case None              => Period(furloughStart, claimPeriodEnd)
-      }
-      val payDates = userAnswers.getList(PayDatePage)
-
-      generatePeriods(payDates, furloughPeriod).collect {
-        case pp: PartialPeriod => pp
-      }
-    }
-  }.getOrElse(Seq.empty)
 
 }

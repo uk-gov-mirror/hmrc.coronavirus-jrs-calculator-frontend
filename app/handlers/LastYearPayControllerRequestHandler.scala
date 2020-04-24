@@ -11,7 +11,7 @@ import models.{Period, UserAnswers}
 import pages._
 import services.{PeriodHelper, PreviousYearPeriod}
 
-trait LastYearPayControllerRequestHandler extends DataExtractor with PeriodHelper with PreviousYearPeriod {
+trait LastYearPayControllerRequestHandler extends PeriodHelper with PreviousYearPeriod {
 
   def getPayDates(userAnswers: UserAnswers): Option[Seq[LocalDate]] =
     for {

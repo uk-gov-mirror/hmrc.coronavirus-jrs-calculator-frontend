@@ -18,6 +18,7 @@ import pages._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.PartialPayHelper
 import views.html.VariableLengthPartialPayView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,79 +32,63 @@ class PartialPayBeforeFurloughController @Inject()(
   requireData: DataRequiredAction,
   formProvider: FurloughPartialPayFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: VariableLengthPartialPayView
+  view: VariableLengthPartialPayView,
+  eh: ErrorHandler
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
-    extends BaseController with I18nSupport {
+    extends BaseController with I18nSupport with PartialPayHelper {
 
   val form = formProvider()
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    (request.userAnswers.getList(PayDatePage), request.userAnswers.get(FurloughStartDatePage)) match {
-      case (Nil, _) => Redirect(routes.PayDateController.onPageLoad(1))
-      case (payPeriods, Some(furloughStartDate)) =>
-        latestBeforeFurloughStart(payPeriods, furloughStartDate) match {
-          case Some(payPeriod) if payPeriod.plusDays(1).isBefore(furloughStartDate) =>
-            val preparedForm = request.userAnswers.get(PartialPayBeforeFurloughPage) match {
-              case None        => form
-              case Some(value) => form.fill(value)
-            }
-            Ok(
-              view(
-                preparedForm,
-                messageDate(payPeriod.plusDays(1), furloughStartDate, request.userAnswers.get(PaymentFrequencyPage)),
-                furloughStartDate.minusDays(1),
-                routes.PartialPayBeforeFurloughController.onSubmit()
-              ))
-          case _ => Redirect(navigator.nextPage(PartialPayBeforeFurloughPage, NormalMode, request.userAnswers))
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getPartialPeriods(request.userAnswers)
+      .find(isFurloughStart)
+      .map(getPeriodRemainder)
+      .fold(
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+      ) { beforeFurlough =>
+        val preparedForm = request.userAnswers.get(PartialPayBeforeFurloughPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
         }
 
-      case (_, None) => Redirect(routes.FurloughStartDateController.onPageLoad(NormalMode))
-    }
+        Future.successful(
+          Ok(
+            view(
+              preparedForm,
+              beforeFurlough.start,
+              beforeFurlough.end,
+              routes.PartialPayBeforeFurloughController.onSubmit()
+            )))
+      }
   }
 
   def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    (request.userAnswers.getList(PayDatePage), request.userAnswers.get(FurloughStartDatePage)) match {
-      case (Nil, _) => Future.successful(Redirect(routes.PayDateController.onPageLoad(1)))
-      case (payPeriods, Some(furloughStartDate)) =>
-        latestBeforeFurloughStart(payPeriods, furloughStartDate) match {
-          case Some(payPeriod) if payPeriod.plusDays(1).isBefore(furloughStartDate) =>
-            form
-              .bindFromRequest()
-              .fold(
-                formWithErrors =>
-                  Future.successful(
-                    BadRequest(view(
-                      formWithErrors,
-                      messageDate(payPeriod.plusDays(1), furloughStartDate, request.userAnswers.get(PaymentFrequencyPage)),
-                      furloughStartDate.minusDays(1),
-                      routes.PartialPayBeforeFurloughController.onSubmit()
-                    ))),
-                value =>
-                  for {
-                    updatedAnswers <- Future.fromTry(request.userAnswers.set(PartialPayBeforeFurloughPage, value))
-                    _              <- sessionRepository.set(updatedAnswers)
-                  } yield {
-                    Redirect(navigator.nextPage(PartialPayBeforeFurloughPage, NormalMode, updatedAnswers))
-                }
-              )
-          case None => Future.successful(Redirect(routes.PartialPayAfterFurloughController.onPageLoad()))
-        }
-      case (_, None) => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad(NormalMode)))
-    }
+    getPartialPeriods(request.userAnswers)
+      .find(isFurloughStart)
+      .map(getPeriodRemainder)
+      .fold(
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+      ) { partialPeriodBefore =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors =>
+              Future.successful(
+                BadRequest(
+                  view(
+                    formWithErrors,
+                    partialPeriodBefore.start,
+                    partialPeriodBefore.end,
+                    routes.PartialPayBeforeFurloughController.onSubmit()
+                  ))), { value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartialPayBeforeFurloughPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield {
+                Redirect(navigator.nextPage(PartialPayBeforeFurloughPage, NormalMode, updatedAnswers))
+              }
+            }
+          )
+      }
   }
-
-  private def messageDate(payPeriod: LocalDate, furloughStart: LocalDate, paymentFrequency: Option[PaymentFrequency]): LocalDate = {
-    def latestOf(a: LocalDate, b: LocalDate): LocalDate = if (a.isAfter(b)) a else b
-    paymentFrequency match {
-      case Some(Weekly)      => latestOf(furloughStart.minusDays(7), payPeriod)
-      case Some(FortNightly) => latestOf(furloughStart.minusDays(14), payPeriod)
-      case Some(FourWeekly)  => latestOf(furloughStart.minusDays(28), payPeriod)
-      case Some(Monthly)     => latestOf(furloughStart.minusMonths(1), payPeriod)
-    }
-  }
-
-  private def latestBeforeFurloughStart(payPeriods: Seq[LocalDate], furloughStart: LocalDate) =
-    payPeriods.reverse.collectFirst {
-      case pp if pp.isBefore(furloughStart) || pp.isEqual(furloughStart) => pp
-    }
 }
