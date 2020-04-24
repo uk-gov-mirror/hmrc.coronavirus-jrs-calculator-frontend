@@ -36,6 +36,22 @@
         <!-- End Google Tag Manager (noscript) -->
     }
 
+    <script>
+        // IF THESE VALUES CHANGE THE SHA256 HASH IN THE CONTENT-SECURITY-POLICY MUST BE UPDATED
+        if (@timeout) {
+            timeoutDialog({
+                title: '@messages("timeout.title")',
+                message: '@messages("timeout.message")',
+                keepAliveButtonText: '@messages("timeout.keepAlive")',
+                signOutButtonText: '@messages("timeout.signOut")',
+                timeout: @{appConfig.timeout},
+                countdown: @{appConfig.countdown},
+                keepAliveUrl: '@{controllers.routes.IndexController.keepalive().url}',
+                signOutUrl: '@{controllers.routes.IndexController.restart().url}'
+            });
+        };
+    </script>
+
     @js.map(x => x)
 }
 
