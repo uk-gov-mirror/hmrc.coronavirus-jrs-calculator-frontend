@@ -6,17 +6,17 @@
 package controllers
 
 import config.FrontendAppConfig
+import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.VariableGrossPayFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.{EmployeeStartDatePage, FurloughStartDatePage, VariableGrossPayPage}
+import pages.{FurloughStartDatePage, VariableGrossPayPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.VariableGrossPayView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -26,6 +26,7 @@ class VariableGrossPayController @Inject()(
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
+  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: VariableGrossPayFormProvider,
@@ -36,8 +37,8 @@ class VariableGrossPayController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    if (appConfig.variableJourneyEnabled) {
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.get(FurloughStartDatePage) match {
         case Some(furloughStart) =>
           val preparedForm = request.userAnswers.get(VariableGrossPayPage) match {
@@ -49,13 +50,10 @@ class VariableGrossPayController @Inject()(
 
         case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad(mode)))
       }
-    } else {
-      Future.successful(NotFound)
     }
-  }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    if (appConfig.variableJourneyEnabled) {
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.get(FurloughStartDatePage) match {
         case Some(furloughStart) =>
           form
@@ -71,8 +69,5 @@ class VariableGrossPayController @Inject()(
 
         case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad(mode)))
       }
-    } else {
-      Future.successful(NotFound)
     }
-  }
 }

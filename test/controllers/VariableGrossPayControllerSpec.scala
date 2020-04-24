@@ -38,11 +38,11 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
   val furloughStart = LocalDate.parse("2020-04-01")
   val empStart = LocalDate.parse("2020-02-01")
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, variableGrossPayRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
+  lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, variableGrossPayRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(("value", "123"))
@@ -91,14 +91,16 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       application.stop()
     }
 
-    "return Not_Found if the feature is disabled" in {
+    "redirect GET to coming soon if variable journey feature is disabled" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), false)
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), Map("variable.journey.enabled" -> false))
         .build()
 
       val result = route(application, getRequest).value
 
-      status(result) mustEqual NOT_FOUND
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
 
       application.stop()
     }
@@ -125,14 +127,14 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       application.stop()
     }
 
-    "return Not_Found when valid data is submitted but feature is disabled" in {
+    "redirect POST to coming soon if variable journey feature is disabled" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers), false)
+        applicationBuilder(userAnswers = Some(userAnswers), Map("variable.journey.enabled" -> false))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -141,7 +143,9 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
 
       val result = route(application, postRequest).value
 
-      status(result) mustEqual NOT_FOUND
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
 
       application.stop()
     }

@@ -3,6 +3,9 @@
  *
  *@
 
+@import controllers.actions.FeatureFlagHelper
+@import controllers.actions.FeatureFlag._
+
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         h1: components.h1,
@@ -10,7 +13,8 @@
         p: components.p,
         button: components.button,
         link: components.link,
-        appConfig: config.FrontendAppConfig
+        appConfig: config.FrontendAppConfig,
+        featureFlag: FeatureFlagHelper
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -21,7 +25,7 @@
 
     @p(Html(Messages("rootPage.p1")))
     @p(Html(Messages("rootPage.p2")))
-    @p(Html(Messages("rootPage.p3")))
+    @p(Html(Messages(if (featureFlag(VariableJourneyFlag)) {"rootPage.p3.variableOn"} else {"rootPage.p3.variableOff"})))
     @p(Html(Messages("rootPage.p4")))
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("rootPage.p4.l1")</li>

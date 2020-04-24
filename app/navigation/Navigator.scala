@@ -53,7 +53,8 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case VariableLengthEmployedPage =>
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
-      employeeStartDateRoutes
+      _ =>
+        routes.VariableGrossPayController.onPageLoad(NormalMode)
     case PartialPayBeforeFurloughPage =>
       partialPayBeforeFurloughRoutes
     case PartialPayAfterFurloughPage =>
@@ -157,18 +158,14 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   private def payQuestionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayQuestionPage) match {
       case Some(Regularly) => routes.SalaryQuestionController.onPageLoad(NormalMode)
-      case Some(Varies) if appConfig.variableJourneyEnabled =>
-        routes.VariableLengthEmployedController.onPageLoad(NormalMode)
-      case Some(Varies) => routes.ComingSoonController.onPageLoad()
-      case None         => routes.PayQuestionController.onPageLoad(NormalMode)
+      case Some(Varies)    => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
+      case None            => routes.PayQuestionController.onPageLoad(NormalMode)
     }
   }
 
   private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(VariableLengthEmployedPage) match {
-      case Some(VariableLengthEmployed.Yes) if appConfig.variableJourneyEnabled =>
-        routes.VariableGrossPayController.onPageLoad(NormalMode)
-      case Some(VariableLengthEmployed.Yes) => routes.ComingSoonController.onPageLoad(false)
+      case Some(VariableLengthEmployed.Yes) => routes.VariableGrossPayController.onPageLoad(NormalMode)
       case Some(VariableLengthEmployed.No)  => routes.EmployeeStartDateController.onPageLoad(NormalMode)
       case _                                => routes.VariableLengthEmployedController.onPageLoad(NormalMode)
     }
@@ -181,18 +178,6 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       case _                              => routes.FurloughCalculationsController.onPageLoad(NormalMode)
     }
   }
-
-  private def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(EmployeeStartDatePage) match {
-      case Some(date) if shouldShowVariableGrossPayPage(date) =>
-        routes.VariableGrossPayController.onPageLoad(NormalMode)
-      case Some(date) if date.isBefore(apr6th2019) => routes.ComingSoonController.onPageLoad(false)
-      case _                                       => routes.EmployeeStartDateController.onPageLoad(NormalMode)
-    }
-  }
-
-  private def shouldShowVariableGrossPayPage(date: LocalDate) =
-    date.isAfter(apr5th2019) || (date.isBefore(apr6th2019) && appConfig.variableJourneyEnabled)
 
   private def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayQuestionPage) match {

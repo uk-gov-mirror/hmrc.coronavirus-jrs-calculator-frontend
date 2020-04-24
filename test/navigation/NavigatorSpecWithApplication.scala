@@ -82,20 +82,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(PayQuestionPage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
       }
 
-      "go to ComingSoonController after PayQuestionPage when variable journeys are disabled" in {
-
-        val navigatorWithDisabledVariableJourney =
-          new Navigator(new FrontendAppConfig(frontendAppConfig.configuration.++(Configuration("variable.journey.enabled" -> "false"))))
-
-        navigatorWithDisabledVariableJourney.nextPage(
-          PayQuestionPage,
-          NormalMode,
-          UserAnswers("id")
-            .set(PayQuestionPage, PayQuestion.Varies)
-            .success
-            .value) mustBe routes.ComingSoonController.onPageLoad(false)
-      }
-
       "go to SalaryQuestionPage after PaymentQuestionPage" in {
         navigator.nextPage(PaymentFrequencyPage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController
           .onPageLoad(NormalMode)
@@ -281,19 +267,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .value) mustBe routes.EmployeeStartDateController.onPageLoad(NormalMode)
       }
 
-      "go to ComingSoonPage after VariableLengthEmployedPage when the variable journeys are disabled" in {
-        val navigatorWithDisabledVariableJourney =
-          new Navigator(new FrontendAppConfig(frontendAppConfig.configuration.++(Configuration("variable.journey.enabled" -> "false"))))
-
-        navigatorWithDisabledVariableJourney.nextPage(
-          VariableLengthEmployedPage,
-          NormalMode,
-          UserAnswers("id")
-            .set(VariableLengthEmployedPage, VariableLengthEmployed.Yes)
-            .success
-            .value) mustBe routes.ComingSoonController.onPageLoad()
-      }
-
       "go to correct page after EmployeeStartDatePage" in {
         navigator.nextPage(
           EmployeeStartDatePage,
@@ -311,20 +284,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
             .success
             .value
         ) mustBe routes.VariableGrossPayController.onPageLoad(NormalMode)
-      }
-
-      "go to ComingSoonPage after EmployeeStartDatePage when the variable journeys are disabled" in {
-        val navigatorWithDisabledVariableJourney =
-          new Navigator(new FrontendAppConfig(frontendAppConfig.configuration.++(Configuration("variable.journey.enabled" -> "false"))))
-
-        navigatorWithDisabledVariableJourney.nextPage(
-          EmployeeStartDatePage,
-          NormalMode,
-          UserAnswers("id")
-            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
-            .success
-            .value
-        ) mustBe routes.ComingSoonController.onPageLoad()
       }
 
       "go to correct page after FurloughCalculationsPage" in {

@@ -37,12 +37,12 @@ trait SpecBaseWithApplication
 
   protected def applicationBuilder(
     userAnswers: Option[UserAnswers] = None,
-    variableJourneyEnabled: Boolean = true): GuiceApplicationBuilder =
+    config: Map[String, Any] = Map("variable.journey.enabled" -> true)): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
-      .configure("variable.journey.enabled" -> variableJourneyEnabled)
+      .configure(config)
 }

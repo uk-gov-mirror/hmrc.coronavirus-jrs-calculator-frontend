@@ -6,6 +6,7 @@
 package controllers
 
 import config.FrontendAppConfig
+import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
 import javax.inject.Inject
@@ -25,6 +26,7 @@ class VariableLengthEmployedController @Inject()(
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
+  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: VariableLengthEmployedFormProvider,
@@ -35,21 +37,18 @@ class VariableLengthEmployedController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    if (appConfig.variableJourneyEnabled) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
+    implicit request =>
       val preparedForm = request.userAnswers.get(VariableLengthEmployedPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, mode))
-    } else {
-      NotFound
-    }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    if (appConfig.variableJourneyEnabled) {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
+    implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -60,8 +59,5 @@ class VariableLengthEmployedController @Inject()(
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(VariableLengthEmployedPage, mode, updatedAnswers))
         )
-    } else {
-      Future.successful(NotFound)
-    }
   }
 }

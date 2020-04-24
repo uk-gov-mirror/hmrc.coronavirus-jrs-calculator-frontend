@@ -5,6 +5,7 @@
 
 package controllers
 
+import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.EmployeeStartDateFormProvider
 import javax.inject.Inject
@@ -24,6 +25,7 @@ class EmployeeStartDateController @Inject()(
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
+  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: EmployeeStartDateFormProvider,
@@ -34,25 +36,27 @@ class EmployeeStartDateController @Inject()(
 
   def form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(EmployeeStartDatePage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(EmployeeStartDatePage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartDatePage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(EmployeeStartDatePage, mode, updatedAnswers))
-      )
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
+    implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartDatePage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(EmployeeStartDatePage, mode, updatedAnswers))
+        )
   }
 }

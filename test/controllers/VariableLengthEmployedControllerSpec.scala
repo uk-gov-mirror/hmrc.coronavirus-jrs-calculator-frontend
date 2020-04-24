@@ -32,7 +32,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
   val formProvider = new VariableLengthEmployedFormProvider()
   val form = formProvider()
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, variableLengthEmployedRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
@@ -73,16 +73,16 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       application.stop()
     }
 
-    "return Not_Found if the feature is disabled" in {
+    "redirect GET to coming soon if variable journey feature is disabled" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), false)
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), Map("variable.journey.enabled" -> false))
         .build()
 
       val result = route(application, getRequest).value
 
-      val view = application.injector.instanceOf[VariableLengthEmployedView]
+      status(result) mustEqual SEE_OTHER
 
-      status(result) mustEqual NOT_FOUND
+      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
 
       application.stop()
     }
@@ -114,14 +114,14 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       application.stop()
     }
 
-    "return Not_Found when valid data is submitted but feature is disabled" in {
+    "redirect POST to coming soon if variable journey feature is disabled" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers), false)
+        applicationBuilder(userAnswers = Some(emptyUserAnswers), Map("variable.journey.enabled" -> false))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -134,7 +134,9 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       val result = route(application, request).value
 
-      status(result) mustEqual NOT_FOUND
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
 
       application.stop()
     }
