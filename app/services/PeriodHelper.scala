@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{FullPeriod, PartialPeriod, PaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
+import utils.LocalDateHelpers._
 
 trait PeriodHelper {
 
@@ -52,9 +53,10 @@ trait PeriodHelper {
 
   def fullOrPartialPeriod(period: Period, furloughPeriod: Period): Periods = {
     val start =
-      if (furloughPeriod.start.isAfter(period.start) && furloughPeriod.start.isBefore(period.end)) furloughPeriod.start else period.start
+      if (furloughPeriod.start.isAfter(period.start) && furloughPeriod.start.isEqualOrBefore(period.end)) furloughPeriod.start
+      else period.start
     val end =
-      if (furloughPeriod.end.isAfter(period.start) && furloughPeriod.end.isBefore(period.end)) furloughPeriod.end else period.end
+      if (furloughPeriod.end.isEqualOrAfter(period.start) && furloughPeriod.end.isBefore(period.end)) furloughPeriod.end else period.end
 
     val partial = Period(start, end)
 

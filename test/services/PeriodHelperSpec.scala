@@ -10,6 +10,10 @@ import java.time.LocalDate
 import base.{CoreDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{FullPeriod, PartialPeriod, PaymentDate, Period, PeriodWithPaymentDate, Periods}
+import org.scalacheck.{Gen, Shrink}
+import org.scalacheck.Prop.propBoolean
+import org.scalacheck.Gen.choose
+import org.scalacheck.Test.Parameters
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreDataBuilder {
@@ -127,14 +131,78 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreD
     }
   }
 
-  "Determine the full or partial period within the furlough period" in new PeriodHelper {
+  "Determine the full or partial period within the furlough period" when {
     val furloughPeriod = period("2020,3,1", "2020,3,31")
-    val periodOne = period("2020,2,20", "2020,3,20")
-    val periodTwo = period("2020,3,20", "2020,4,20")
 
-    fullOrPartialPeriod(periodOne, furloughPeriod) mustBe partialPeriod("2020,2,20" -> "2020,3,20", "2020,3,1"  -> "2020,3,20")
-    fullOrPartialPeriod(periodTwo, furloughPeriod) mustBe partialPeriod("2020,3,20" -> "2020,4,20", "2020,3,20" -> "2020,3,31")
-    fullOrPartialPeriod(furloughPeriod, furloughPeriod) mustBe fullPeriod("2020,3,1", "2020,3,31")
+    implicit val generatorDrivenConfig: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 30)
+    implicit val noShrink: Shrink[Int] = Shrink.shrinkAny
+
+    "furlough and period match" in new PeriodHelper {
+      fullOrPartialPeriod(furloughPeriod, furloughPeriod) mustBe fullPeriod("2020,3,1", "2020,3,31")
+    }
+
+    "period is within furlough" in new PeriodHelper {
+      val gen = for {
+        startDay <- choose[Int](1, 31)
+        endDay   <- choose[Int](1, 31).suchThat(_ <= startDay)
+      } yield period(s"2020,3,$startDay", s"2020,3,$endDay")
+
+      forAll(gen -> "valid values") { period =>
+        fullOrPartialPeriod(period, furloughPeriod) mustBe FullPeriod(period)
+      }
+    }
+
+    "furlough start and period start match and period is within furlough period" in new PeriodHelper {
+      forAll(choose[Int](2, 31) -> "valid values") { endDay =>
+        fullOrPartialPeriod(period("2020,3,1", s"2020,3,$endDay"), furloughPeriod) mustBe fullPeriod("2020,3,1", s"2020,3,$endDay")
+      }
+    }
+
+    "period starts before furlough" in new PeriodHelper {
+      val gen = for {
+        startMonth <- choose[Int](1, 2)
+        startDay <- if (startMonth == 1) {
+                     choose[Int](1, 31)
+                   } else {
+                     choose[Int](1, 29)
+                   }
+        endDay <- choose[Int](1, 31)
+      } yield (startMonth, startDay, endDay)
+
+      forAll(gen -> "valid values") { values =>
+        fullOrPartialPeriod(period(s"2020,${values._1},${values._2}", s"2020,3,${values._3}"), furloughPeriod) mustBe partialPeriod(
+          s"2020,${values._1},${values._2}" -> s"2020,3,${values._3}",
+          "2020,3,1"                        -> s"2020,3,${values._3}")
+      }
+
+      // Specific boundary case
+      fullOrPartialPeriod(period(s"2020,2,29", "2020,3,20"), furloughPeriod) mustBe partialPeriod(
+        s"2020,2,29" -> "2020,3,20",
+        "2020,3,1"   -> "2020,3,20")
+    }
+
+    "period ends after furlough" in new PeriodHelper {
+      val gen = for {
+        endMonth <- choose[Int](4, 5)
+        endDay <- if (endMonth == 4) {
+                   choose[Int](1, 30)
+                 } else {
+                   choose[Int](1, 31)
+                 }
+        startDay <- choose[Int](3, 31)
+      } yield (endMonth, endDay, startDay)
+
+      forAll(gen -> "valid values") { values =>
+        fullOrPartialPeriod(period(s"2020,3,${values._3}", s"2020,${values._1},${values._2}"), furloughPeriod) mustBe partialPeriod(
+          s"2020,3,${values._3}" -> s"2020,${values._1},${values._2}",
+          s"2020,3,${values._3}" -> "2020,3,31")
+      }
+
+      // Specific boundary case
+      fullOrPartialPeriod(period("2020,3,31", "2020,4,1"), furloughPeriod) mustBe partialPeriod(
+        "2020,3,31" -> "2020,4,1",
+        "2020,3,31" -> "2020,3,31")
+    }
   }
 
   private lazy val payDateScenarios = Table(

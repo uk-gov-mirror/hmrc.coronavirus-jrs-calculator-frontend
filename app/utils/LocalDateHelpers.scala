@@ -16,3 +16,12 @@ trait LocalDateHelpers {
     rest.fold(first)((a: LocalDate, b: LocalDate) => if (a.isBefore(b)) a else b)
 
 }
+
+object LocalDateHelpers extends LocalDateHelpers {
+
+  implicit class LocalDateHelper(val value: LocalDate) {
+    def isEqualOrAfter(localDate: LocalDate) = value.compareTo(localDate) >= 0
+    def isEqualOrBefore(localDate: LocalDate) = value.compareTo(localDate) <= 0
+  }
+
+}
