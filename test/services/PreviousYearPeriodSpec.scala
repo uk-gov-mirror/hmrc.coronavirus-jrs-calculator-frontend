@@ -23,9 +23,10 @@ class PreviousYearPeriodSpec extends SpecBase with CoreDataBuilder {
     operators(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,1" -> "2020,3,2")) mustBe CylbOperators(7, 2, 0)
 
     operators(FortNightly, fullPeriod("2020,3,1", "2020,3,14")) mustBe CylbOperators(14, 2, 12)
-    operators(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,3" -> "2020,3,14")) mustBe CylbOperators(14, 0, 12)
-    operators(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,5" -> "2020,3,14")) mustBe CylbOperators(14, 0, 10)
-    operators(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,2" -> "2020,3,14")) mustBe CylbOperators(14, 1, 12)
+    operators(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,3"  -> "2020,3,14")) mustBe CylbOperators(14, 0, 12)
+    operators(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,5"  -> "2020,3,14")) mustBe CylbOperators(14, 0, 10)
+    operators(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,2"  -> "2020,3,14")) mustBe CylbOperators(14, 1, 12)
+    operators(FortNightly, partialPeriod("2020,3,1" -> "2020,4,10", "2020,3,20" -> "2020,4,10")) mustBe CylbOperators(14, 0, 22)
 
     operators(FourWeekly, fullPeriod("2020,3,1", "2020,3,28")) mustBe CylbOperators(28, 2, 26)
     operators(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,3"  -> "2020,3,28")) mustBe CylbOperators(28, 0, 26)

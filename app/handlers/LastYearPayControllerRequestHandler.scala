@@ -23,8 +23,13 @@ trait LastYearPayControllerRequestHandler extends PeriodHelper with PreviousYear
       val periods = generatePeriods(payDates, furloughPeriod)
       val periodsWithPayDates = assignPayDates(frequency, periods, lastPayDay)
       val datesWithDuplicates = periodsWithPayDates.flatMap(p => previousYearPayDate(frequency, p))
-      datesWithDuplicates.distinct
+      lastYearFilteredByFurlough(datesWithDuplicates.distinct, furloughPeriod)
     }
+
+  def lastYearFilteredByFurlough(previousYearDates: Seq[LocalDate], furloughDates: Period): Seq[LocalDate] = {
+    val furloughLastYearStart = furloughDates.start.minusDays(364)
+    previousYearDates.filter(_.isAfter(furloughLastYearStart))
+  }
 
   private def extractFurloughPeriod(userAnswers: UserAnswers) =
     for {
