@@ -20,7 +20,7 @@ GET         /error                                  controllers.ErrorController.
 
 GET         /restart-service                        controllers.StartAgainController.startAgain
 
-GET         /accessibility                          controllers.AccessibilityStatementController.onPageLoad
+GET         /accessibility-statement                controllers.AccessibilityStatementController.onPageLoad
 
 GET         /claim-period-start                     controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = NormalMode)
 POST        /claim-period-start                     controllers.ClaimPeriodStartController.onSubmit(mode: Mode = NormalMode)
