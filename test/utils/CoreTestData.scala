@@ -296,6 +296,11 @@ trait CoreTestData {
       |        "furloughCalculations" : "no",
       |        "lastYearPay" : [
       |            {
+      |                "date" : "2019-03-30",
+      |                "amount" : 1200
+      |            },
+      |            {
+      |                "date" : "2019-04-30",
       |                "amount" : 1200
       |            }
       |        ],
@@ -336,10 +341,12 @@ trait CoreTestData {
       |        "furloughCalculations" : "no",
       |        "lastYearPay" : [
       |            {
-      |                "amount" : 3200
+      |                "date" : "2019-03-02",
+      |                "amount" : "3200"
       |            },
       |            {
-      |                "amount" : 3400
+      |                "date" : "2019-03-30",
+      |                "amount" : "3400"
       |            }
       |        ],
       |        "lastPayDate" : "2020-03-28",
@@ -354,6 +361,66 @@ trait CoreTestData {
       |        "payDate" : [
       |            "2020-02-29",
       |            "2020-03-28"
+      |        ]
+      |    },
+      |     "lastUpdated": {
+      |       "$date": 1586873457650
+      |     }
+      |}
+      |""".stripMargin
+
+  val manyPeriods =
+    """
+      |{
+      |    "_id" : "session-7f38466c-1922-4cf8-9be2-9e9d3de9bdc2",
+      |    "data" : {
+      |        "furloughQuestion" : "yes",
+      |        "variableGrossPay" : {
+      |            "amount" : 31970
+      |        },
+      |        "variableLengthEmployed" : "yes",
+      |        "furloughEndDate" : "2020-03-31",
+      |        "paymentFrequency" : "weekly",
+      |        "claimPeriodStart" : "2020-03-01",
+      |        "furloughCalculations" : "no",
+      |        "lastYearPay" : [
+      |            {
+      |                "date" : "2019-03-05",
+      |                "amount" : "500"
+      |            },
+      |            {
+      |                "date" : "2019-03-12",
+      |                "amount" : "450"
+      |            },
+      |            {
+      |                "date" : "2019-03-19",
+      |                "amount" : "500"
+      |            },
+      |            {
+      |                "date" : "2019-03-26",
+      |                "amount" : "550"
+      |            },
+      |            {
+      |                "date" : "2019-04-02",
+      |                "amount" : "600"
+      |            }
+      |        ],
+      |        "lastPayDate" : "2020-03-31",
+      |        "PartialPayBeforeFurlough" : {
+      |            "value" : 200
+      |        },
+      |        "furloughStartDate" : "2020-03-01",
+      |        "payQuestion" : "varies",
+      |        "pensionAutoEnrolment" : "optedIn",
+      |        "claimPeriodEnd" : "2020-03-31",
+      |        "nicCategory" : "payable",
+      |        "payDate" : [
+      |            "2020-02-25",
+      |            "2020-03-03",
+      |            "2020-03-10",
+      |            "2020-03-17",
+      |            "2020-03-24",
+      |            "2020-03-31"
       |        ]
       |    },
       |     "lastUpdated": {

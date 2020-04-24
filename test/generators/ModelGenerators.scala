@@ -42,8 +42,16 @@ trait ModelGenerators {
   implicit lazy val arbitrarySalaryQuestion: Arbitrary[Salary] =
     Arbitrary {
       for {
-        salary <- Arbitrary.arbitrary[Double]
+        salary <- Arbitrary.arbitrary[BigDecimal]
       } yield Salary(salary)
+    }
+
+  implicit lazy val arbitraryCylbPayQuestion: Arbitrary[CylbPayment] =
+    Arbitrary {
+      for {
+        date  <- Arbitrary.arbitrary[LocalDate]
+        value <- Arbitrary.arbitrary[BigDecimal]
+      } yield CylbPayment(date, Amount(value))
     }
 
   implicit lazy val arbitraryVariableGrossPayQuestion: Arbitrary[VariableGrossPay] =

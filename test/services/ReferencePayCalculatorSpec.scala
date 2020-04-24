@@ -11,7 +11,7 @@ import base.{CoreDataBuilder, SpecBase}
 import handlers.DataExtractor
 import models.PayQuestion.Varies
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{Amount, CylbEligibility, FullPeriod, NonFurloughPay, PartialPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, VariableLengthEmployed}
+import models.{Amount, CylbEligibility, CylbPayment, FullPeriod, NonFurloughPay, PartialPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, VariableLengthEmployed}
 
 class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
 
@@ -51,7 +51,12 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
   }
 
   "calculate cylb amounts for weekly" in new ReferencePayCalculator {
-    val cylbs = Seq(Amount(700.00), Amount(350.00), Amount(140.00))
+    val cylbs = Seq(
+      CylbPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
+      CylbPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
+      CylbPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
+    )
+
     val periods = Seq(
       fullPeriodWithPaymentDate("2020,3,1", "2020,3,7", "2020, 3, 7"),
       fullPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020, 3, 14")
@@ -68,7 +73,11 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
   }
 
   "calculate cylb amounts for fortnightly" in new ReferencePayCalculator {
-    val cylbs = Seq(Amount(1400.00), Amount(700.00), Amount(280.00))
+    val cylbs = Seq(
+      CylbPayment(LocalDate.of(2019, 3, 2), Amount(1400.00)),
+      CylbPayment(LocalDate.of(2019, 3, 16), Amount(700.00)),
+      CylbPayment(LocalDate.of(2019, 3, 30), Amount(280.00))
+    )
 
     val periods = Seq(
       fullPeriodWithPaymentDate("2020,3,1", "2020,3,14", "2020, 3, 14"),
@@ -86,18 +95,22 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
   }
 
   "calculate cylb amounts for fourweekly" in new ReferencePayCalculator {
-    val cylbs = Seq(Amount(2800.00), Amount(1400.00), Amount(560.00))
+    val cylbs = Seq(
+      CylbPayment(LocalDate.of(2019, 3, 2), Amount(2800.00)),
+      CylbPayment(LocalDate.of(2019, 3, 30), Amount(1400.00)),
+      CylbPayment(LocalDate.of(2019, 4, 27), Amount(560.00))
+    )
 
     val periods = Seq(
       fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"),
-      fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26")
+      fullPeriodWithPaymentDate("2020,3,29", "2020,4,25", "2020, 4, 25")
     )
 
     val nonFurloughPay = NonFurloughPay(None, None)
 
     val expected = Seq(
       paymentWithPeriod(0.0, 1500.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
-      paymentWithPeriod(0.0, 620.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
+      paymentWithPeriod(0.0, 620.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,25", "2020, 4, 25"), Varies)
     )
 
     calculateCylb(nonFurloughPay, FourWeekly, cylbs, periods) mustBe expected
@@ -126,7 +139,7 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     val nonFurloughPay = NonFurloughPay(None, None)
     val employeeStartDate = LocalDate.of(2019, 12, 1)
     val furloughStartDate = LocalDate.of(2020, 3, 1)
-    val cylbs = Seq(Amount(900.0))
+    val cylbs = Seq(CylbPayment(LocalDate.of(2019, 3, 31), Amount(900.0)))
     val priorFurloughPeriod = Period(employeeStartDate, furloughStartDate.minusDays(1))
     val afterFurloughPeriod = fullPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 31")
 

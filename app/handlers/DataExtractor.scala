@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import models.FurloughQuestion.{No, Yes}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, CylbEligibility, MandatoryData, NonFurloughPay, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers}
+import models.{Amount, CylbEligibility, CylbPayment, MandatoryData, NonFurloughPay, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers}
 import pages._
 import services.ReferencePayCalculator
 
@@ -71,10 +71,11 @@ trait DataExtractor extends ReferencePayCalculator {
     userAnswers: UserAnswers,
     data: MandatoryData,
     periodsWithPayDay: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] = {
-    val cylbAmounts: Seq[Amount] =
+    val cylbAmounts: Seq[CylbPayment] =
       if (cylbEligible(userAnswers).fold(CylbEligibility(false))(v => v).eligible)
-        userAnswers.getList(LastYearPayPage).map(v => Amount(v.amount))
-      else Seq.empty
+        userAnswers.getList(LastYearPayPage)
+      else
+        Seq.empty
 
     extractVariablePayments(userAnswers, periodsWithPayDay, cylbAmounts, data.paymentFrequency)
       .fold(Seq[PaymentWithPeriod]())(payments => payments)
@@ -89,7 +90,7 @@ trait DataExtractor extends ReferencePayCalculator {
   private def extractVariablePayments(
     userAnswers: UserAnswers,
     periods: Seq[PeriodWithPaymentDate],
-    cylbs: Seq[Amount],
+    cylbs: Seq[CylbPayment],
     frequency: PaymentFrequency): Option[Seq[PaymentWithPeriod]] =
     for {
       grossPay            <- extractGrossPay(userAnswers)

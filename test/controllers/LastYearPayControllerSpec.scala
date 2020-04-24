@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.LastYearPayFormProvider
-import models.{NormalMode, Salary, UserAnswers}
+import models.{Amount, CylbPayment, NormalMode, Salary, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
@@ -36,7 +36,9 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
   val variableMonthlyUserAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
 
-  val validAnswer = Salary(BigDecimal(100))
+  val validAnswer = Amount(BigDecimal(100))
+
+  val validDate = LocalDate.of(2019, 3, 1)
 
   lazy val lastYearPayRoute = routes.LastYearPayController.onPageLoad(1).url
 
@@ -123,7 +125,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = variableMonthlyUserAnswers.set(LastYearPayPage, validAnswer).success.value
+      val userAnswers = variableMonthlyUserAnswers.set(LastYearPayPage, CylbPayment(validDate, validAnswer)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -158,7 +160,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
       val request =
         FakeRequest(POST, lastYearPayRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-          .withFormUrlEncodedBody(("value", validAnswer.amount.toString()))
+          .withFormUrlEncodedBody(("value", validAnswer.value.toString()))
 
       val result = route(application, request).value
 
@@ -187,7 +189,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
         val request =
           FakeRequest(POST, lastYearPayRoute).withCSRFToken
             .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-            .withFormUrlEncodedBody(("value", validAnswer.amount.toString()))
+            .withFormUrlEncodedBody(("value", validAnswer.value.toString()))
 
         val result = route(application, request).value
 
@@ -214,7 +216,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
         val request =
           FakeRequest(POST, lastYearPayRoute).withCSRFToken
             .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-            .withFormUrlEncodedBody(("value", validAnswer.amount.toString()))
+            .withFormUrlEncodedBody(("value", validAnswer.value.toString()))
 
         val result = route(application, request).value
 

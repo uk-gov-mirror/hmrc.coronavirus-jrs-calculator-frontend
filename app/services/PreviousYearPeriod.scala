@@ -13,7 +13,7 @@ import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 trait PreviousYearPeriod extends PeriodHelper {
 
   def previousYearPayDate(paymentFrequency: PaymentFrequency, withPaymentDate: PeriodWithPaymentDate): Seq[LocalDate] = {
-    val cylbOperators = operatorsEnhanced(paymentFrequency, withPaymentDate.period)
+    val cylbOperators = operators(paymentFrequency, withPaymentDate.period)
 
     cylbOperators match {
       case CylbOperators(_, 0, _) => Seq(lastYear(paymentFrequency, withPaymentDate.paymentDate.value))
@@ -28,7 +28,7 @@ trait PreviousYearPeriod extends PeriodHelper {
     FourWeekly  -> 28
   )
 
-  def operatorsEnhanced(paymentFrequency: PaymentFrequency, period: Periods): CylbOperators =
+  def operators(paymentFrequency: PaymentFrequency, period: Periods): CylbOperators =
     (paymentFrequency, period) match {
       case (Monthly, FullPeriod(p))                 => CylbOperators(periodDaysCount(p), 0, periodDaysCount(p))
       case (Monthly, PartialPeriod(o, p))           => CylbOperators(periodDaysCount(o), 0, periodDaysCount(p))

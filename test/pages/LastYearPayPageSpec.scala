@@ -5,17 +5,17 @@
 
 package pages
 
-import models.Salary
+import models.{CylbPayment, Salary}
 import pages.behaviours.PageBehaviours
 
 class LastYearPayPageSpec extends PageBehaviours {
 
   "LastYearPayPage" must {
 
-    beRetrievable[Salary](LastYearPayPage)
+    beRetrievable[CylbPayment](LastYearPayPage)
 
-    beSettable[Salary](LastYearPayPage)
+    beSettable[CylbPayment](LastYearPayPage)
 
-    beRemovable[Salary](LastYearPayPage)
+    beRemovable[CylbPayment](LastYearPayPage)
   }
 }

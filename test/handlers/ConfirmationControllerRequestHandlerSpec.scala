@@ -120,4 +120,13 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
 
   }
 
+  "take into account all cylb payments for weekly frequency with partial period as first period" in new ConfirmationControllerRequestHandler {
+    val userAnswers = Json.parse(manyPeriods).as[UserAnswers]
+
+    val expected = 2402.63
+
+    loadResultData(userAnswers).get.confirmationViewBreakdown.furlough.total mustBe expected
+
+  }
+
 }
