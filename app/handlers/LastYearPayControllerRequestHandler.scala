@@ -10,6 +10,7 @@ import java.time.LocalDate
 import models.{Period, UserAnswers}
 import pages._
 import services.{PeriodHelper, PreviousYearPeriod}
+import utils.LocalDateHelpers._
 
 trait LastYearPayControllerRequestHandler extends PeriodHelper with PreviousYearPeriod {
 
@@ -23,12 +24,13 @@ trait LastYearPayControllerRequestHandler extends PeriodHelper with PreviousYear
       val periods = generatePeriods(payDates, furloughPeriod)
       val periodsWithPayDates = assignPayDates(frequency, periods, lastPayDay)
       val datesWithDuplicates = periodsWithPayDates.flatMap(p => previousYearPayDate(frequency, p))
-      lastYearFilteredByFurlough(datesWithDuplicates.distinct, furloughPeriod)
+      val result = lastYearFilteredByFurlough(datesWithDuplicates.distinct, furloughPeriod)
+      result
     }
 
   def lastYearFilteredByFurlough(previousYearDates: Seq[LocalDate], furloughDates: Period): Seq[LocalDate] = {
     val furloughLastYearStart = furloughDates.start.minusDays(364)
-    previousYearDates.filter(_.isAfter(furloughLastYearStart))
+    previousYearDates.filter(_.isEqualOrAfter(furloughLastYearStart))
   }
 
   private def extractFurloughPeriod(userAnswers: UserAnswers) =

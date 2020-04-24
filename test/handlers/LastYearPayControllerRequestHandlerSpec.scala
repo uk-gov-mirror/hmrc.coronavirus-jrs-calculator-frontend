@@ -9,10 +9,12 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.{Period, UserAnswers}
+import org.scalatest.TryValues
+import pages.FurloughStartDatePage
 import play.api.libs.json.Json
 import utils.CoreTestData
 
-class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData {
+class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData with TryValues {
 
   "get the pay dates in previous year for monthly" in new LastYearPayControllerRequestHandler {
     val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
@@ -25,8 +27,13 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
     )
   }
 
-  "get the pay dates in previous year for weekly" ignore new LastYearPayControllerRequestHandler {
-    val userAnswers = Json.parse(variableWeekly()).as[UserAnswers]
+  "get the pay dates in previous year for weekly" in new LastYearPayControllerRequestHandler {
+    val userAnswers = Json
+      .parse(variableWeekly())
+      .as[UserAnswers]
+      .set(FurloughStartDatePage, LocalDate.of(2020, 2, 29))
+      .success
+      .value
 
     val payDates = getPayDates(userAnswers).get
 
@@ -40,8 +47,13 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
     payDates mustBe expected
   }
 
-  "get the pay dates in previous year for weekly with later pay date" ignore new LastYearPayControllerRequestHandler {
-    val userAnswers = Json.parse(variableWeekly("2020-03-28")).as[UserAnswers]
+  "get the pay dates in previous year for weekly with later pay date" in new LastYearPayControllerRequestHandler {
+    val userAnswers = Json
+      .parse(variableWeekly("2020-03-28"))
+      .as[UserAnswers]
+      .set(FurloughStartDatePage, LocalDate.of(2020, 2, 29))
+      .success
+      .value
 
     val payDates = getPayDates(userAnswers).get
 
@@ -145,7 +157,6 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
     )
 
     val expectedPreviousYearDates = Seq(
-      LocalDate.of(2019, 3, 2),
       LocalDate.of(2019, 3, 9),
       LocalDate.of(2019, 3, 16),
       LocalDate.of(2019, 3, 23),
