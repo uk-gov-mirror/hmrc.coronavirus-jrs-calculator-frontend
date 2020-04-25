@@ -15,7 +15,7 @@ import java.time.LocalDate
 import base.{CoreDataBuilder, SpecBase}
 import models.PayQuestion.{Regularly, Varies}
 import models.{Amount, FullPeriod, MandatoryData, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
-import pages.FurloughStartDatePage
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import play.api.libs.json.Json
 import utils.CoreTestData
 
@@ -29,20 +29,36 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
     }
   }
 
-  "Extract furlough period matching claim period if furlough question entered is no" in new DataExtractor {
-    val userAnswers = Json.parse(userAnswersJson("no")).as[UserAnswers]
-    val claimPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
-    val expected = Period(userAnswers.get(FurloughStartDatePage).get, claimPeriod.end)
+  "extractFurloughPeriod" must {
 
-    extractFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
-  }
+    "use the user submitted furlough end date if furlough question is yes" in new DataExtractor {
+      val userAnswers = Json.parse(userAnswersJson("yes", furloughEndDate = "2020-03-31")).as[UserAnswers]
+      val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(FurloughEndDatePage).get)
 
-  "Extract furlough period with end date matching the claim end date with user submitted start date" in new DataExtractor {
-    val userAnswers = Json.parse(userAnswersJson("no", "2020-03-15")).as[UserAnswers]
-    val claimPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
-    val expected = Period(LocalDate.of(2020, 3, 15), claimPeriod.end)
+      extractFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+    }
 
-    extractFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+    "use the claim period end date if furlough question is no" in new DataExtractor {
+      val userAnswers = Json.parse(userAnswersJson("no")).as[UserAnswers]
+      val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(ClaimPeriodEndPage).get)
+
+      extractFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+    }
+
+    "use the furlough start date if later than claim start date" in new DataExtractor {
+      val userAnswers = Json.parse(userAnswersJson("no", furloughStartDate = "2020-03-02", claimStartDate = "2020-03-01")).as[UserAnswers]
+      val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(ClaimPeriodEndPage).get)
+
+      extractFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+    }
+
+    "use the claim start date if later than furlough start date" in new DataExtractor {
+      val userAnswers = Json.parse(userAnswersJson("no", furloughStartDate = "2020-03-01", claimStartDate = "2020-03-02")).as[UserAnswers]
+      val expected = Period(userAnswers.get(ClaimPeriodStartPage).get, userAnswers.get(ClaimPeriodEndPage).get)
+
+      extractFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+    }
+
   }
 
   "Extract Salary as an Amount() when payQuestion answer is Regularly" in new DataExtractor {

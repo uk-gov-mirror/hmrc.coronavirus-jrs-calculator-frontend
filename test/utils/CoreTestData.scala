@@ -20,7 +20,8 @@ trait CoreTestData {
     furloughEndDate: String = "",
     payQuestion: String = "regularly",
     variableGrossPay: String = "",
-    employeeStartDate: String = ""): String =
+    employeeStartDate: String = "",
+    claimStartDate: String = "2020-03-01"): String =
     s"""
        |{
        |    "_id" : "session-3fdd2682-dad1-48e1-80d6-8c1480696811",
@@ -41,7 +42,7 @@ trait CoreTestData {
        |            "amount" : 2000.0
        |        },
        |        "nicCategory" : "payable",
-       |        "claimPeriodStart" : "2020-03-01",
+       |        "claimPeriodStart" : "$claimStartDate",
        |        "payDate" : [
        |            "2020-02-29",
        |            "2020-03-31",
