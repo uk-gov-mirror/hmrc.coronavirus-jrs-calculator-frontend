@@ -14,7 +14,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodStartPage, PayDatePage}
+import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
@@ -34,7 +34,14 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   val formProvider = new PayDateFormProvider()
   val claimStartDate = LocalDate.of(2020, 3, 5)
-  val userAnswersWithStartDate = UserAnswers(userAnswersId).set(ClaimPeriodStartPage, claimStartDate).success.value
+  val furloughStartDate = LocalDate.of(2020, 3, 5)
+  val userAnswersWithStartDate = UserAnswers(userAnswersId)
+    .set(ClaimPeriodStartPage, claimStartDate)
+    .success
+    .value
+    .set(FurloughStartDatePage, furloughStartDate)
+    .success
+    .value
   val validAnswer = LocalDate.of(2020, 3, 3)
 
   def onwardRoute = Call("GET", "/foo")
@@ -52,19 +59,63 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   "PayDate Controller" must {
 
-    "return OK and the correct view for a GET" in {
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
+    "return OK and the correct view for a GET" when {
 
-      val result = route(application, getRequest).value
+      "furlough start date is the same as claim start date" in {
+        val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
 
-      val view = application.injector.instanceOf[PayDateView]
+        val result = route(application, getRequest).value
 
-      status(result) mustEqual OK
+        val view = application.injector.instanceOf[PayDateView]
 
-      contentAsString(result) mustEqual
-        view(form, 1, claimStartDate)(getRequest, messages).toString
+        status(result) mustEqual OK
 
-      application.stop()
+        contentAsString(result) mustEqual
+          view(form, 1, claimStartDate)(getRequest, messages).toString
+
+        application.stop()
+      }
+
+      "furlough start date is before the claim start date" in {
+        val modifiedUserAnswers = userAnswersWithStartDate
+          .set(FurloughStartDatePage, claimStartDate.minusDays(1))
+          .success
+          .value
+
+        val application = applicationBuilder(userAnswers = Some(modifiedUserAnswers)).build()
+
+        val result = route(application, getRequest).value
+
+        val view = application.injector.instanceOf[PayDateView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form, 1, claimStartDate)(getRequest, messages).toString
+
+        application.stop()
+      }
+
+      "furlough start date is after the claim start date" in {
+        val modifiedUserAnswers = userAnswersWithStartDate
+          .set(FurloughStartDatePage, claimStartDate.plusDays(1))
+          .success
+          .value
+
+        val application = applicationBuilder(userAnswers = Some(modifiedUserAnswers)).build()
+
+        val result = route(application, getRequest).value
+
+        val view = application.injector.instanceOf[PayDateView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form, 1, claimStartDate.plusDays(1))(getRequest, messages).toString
+
+        application.stop()
+      }
+
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
