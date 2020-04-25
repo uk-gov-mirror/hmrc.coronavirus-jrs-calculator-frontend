@@ -296,12 +296,40 @@ trait CoreTestData {
       |        "furloughCalculations" : "no",
       |        "lastYearPay" : [
       |            {
-      |                "date" : "2019-03-30",
-      |                "amount" : 1200
+      |                "cylbPayment" : {
+      |                    "date" : "2019-03-30",
+      |                    "amount" : "1200"
+      |                },
+      |                "relevantPeriods" : [
+      |                    {
+      |                        "period" : {
+      |                            "period" : {
+      |                                "start" : "2020-02-30",
+      |                                "end" : "2020-03-31"
+      |                            },
+      |                            "_type" : "models.FullPeriod"
+      |                        },
+      |                        "paymentDate" : "2020-03-30"
+      |                    }
+      |                ]
       |            },
       |            {
-      |                "date" : "2019-04-30",
-      |                "amount" : 1200
+      |                "cylbPayment" : {
+      |                    "date" : "2019-04-30",
+      |                    "amount" : "1200"
+      |                },
+      |                "relevantPeriods" : [
+      |                    {
+      |                        "period" : {
+      |                            "period" : {
+      |                                "start" : "2020-04-01",
+      |                                "end" : "2020-04-30"
+      |                            },
+      |                            "_type" : "models.FullPeriod"
+      |                        },
+      |                        "paymentDate" : "2020-03-30"
+      |                    }
+      |                ]
       |            }
       |        ],
       |        "lastPayDate" : "2020-04-30",
@@ -341,12 +369,40 @@ trait CoreTestData {
       |        "furloughCalculations" : "no",
       |        "lastYearPay" : [
       |            {
-      |                "date" : "2019-03-02",
-      |                "amount" : "3200"
+      |                "cylbPayment" : {
+      |                    "date" : "2019-03-02",
+      |                    "amount" : "3200"
+      |                },
+      |                "relevantPeriods" : [
+      |                    {
+      |                        "period" : {
+      |                            "period" : {
+      |                                "start" : "2020-03-01",
+      |                                "end" : "2020-03-28"
+      |                            },
+      |                            "_type" : "models.FullPeriod"
+      |                        },
+      |                        "paymentDate" : "2020-03-30"
+      |                    }
+      |                ]
       |            },
       |            {
-      |                "date" : "2019-03-30",
-      |                "amount" : "3400"
+      |                "cylbPayment" : {
+      |                    "date" : "2019-03-30",
+      |                    "amount" : "3400"
+      |                },
+      |                "relevantPeriods" : [
+      |                    {
+      |                        "period" : {
+      |                            "period" : {
+      |                                "start" : "2020-03-01",
+      |                                "end" : "2020-03-28"
+      |                            },
+      |                            "_type" : "models.FullPeriod"
+      |                        },
+      |                        "paymentDate" : "2020-03-30"
+      |                    }
+      |                ]
       |            }
       |        ],
       |        "lastPayDate" : "2020-03-28",

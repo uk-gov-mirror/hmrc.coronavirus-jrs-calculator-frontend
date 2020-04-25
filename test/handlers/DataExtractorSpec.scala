@@ -15,7 +15,7 @@ import java.time.LocalDate
 import base.{CoreDataBuilder, SpecBase}
 import models.PayQuestion.{Regularly, Varies}
 import models.{Amount, FullPeriod, MandatoryData, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
-import pages.FurloughStartDatePage
+import pages.{FurloughStartDatePage, LastYearPayPage}
 import play.api.libs.json.Json
 import utils.CoreTestData
 
@@ -145,7 +145,6 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
           partialPeriodWithPaymentDate("2020-3-1", "2020-3-28", "2020-3-2", "2020-3-28", "2020-03-28"),
           Varies)
       )
-
     extractPayments(userAnswers, extractFurloughPeriod(extract(userAnswers).get, userAnswers).get) mustBe Some(expected)
   }
 

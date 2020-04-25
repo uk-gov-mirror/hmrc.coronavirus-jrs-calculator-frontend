@@ -19,7 +19,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   "get the pay dates in previous year for monthly" in new LastYearPayControllerRequestHandler {
     val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
 
-    val payDates = getPayDates(userAnswers).get
+    val payDates = getPayDates(userAnswers).get.map(_._1)
 
     payDates mustBe Seq(
       LocalDate.of(2019, 3, 20),
@@ -35,7 +35,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
       .success
       .value
 
-    val payDates = getPayDates(userAnswers).get
+    val payDates = getPayDates(userAnswers).get.map(_._1)
 
     val expected = Seq(
       LocalDate.of(2019, 3, 2),
@@ -55,7 +55,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
       .success
       .value
 
-    val payDates = getPayDates(userAnswers).get
+    val payDates = getPayDates(userAnswers).get.map(_._1)
 
     val expected = Seq(
       LocalDate.of(2019, 3, 9),
@@ -69,7 +69,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
 
   "get the pay dates in previous year for fortnightly" in new LastYearPayControllerRequestHandler {
     val userAnswers = Json.parse(variableFortnightly).as[UserAnswers]
-    val payDates = getPayDates(userAnswers).get
+    val payDates = getPayDates(userAnswers).get.map(_._1)
 
     val expected = Seq(
       LocalDate.of(2019, 3, 16),
@@ -82,7 +82,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   "get the pay dates in previous year for fourweekly" in new LastYearPayControllerRequestHandler {
     val userAnswers = Json.parse(variableFourweekly).as[UserAnswers]
 
-    val payDates = getPayDates(userAnswers).get
+    val payDates = getPayDates(userAnswers).get.map(_._1)
 
     val expected = Seq(
       LocalDate.of(2019, 3, 30),
@@ -95,7 +95,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   "get the pay dates in previous year for fortweekly" in new LastYearPayControllerRequestHandler {
     val userAnswers = Json.parse(fortWeekly).as[UserAnswers]
 
-    val payDates = getPayDates(userAnswers).get
+    val payDates = getPayDates(userAnswers).get.map(_._1)
 
     val expected = Seq(
       LocalDate.of(2019, 4, 2),

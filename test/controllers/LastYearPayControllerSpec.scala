@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.LastYearPayFormProvider
-import models.{Amount, CylbPayment, NormalMode, Salary, UserAnswers}
+import models.{Amount, CylbPayment, CylbPaymentWith2020Periods, NormalMode, Salary, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
@@ -29,22 +29,17 @@ import scala.concurrent.Future
 
 class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
-  val formProvider = new LastYearPayFormProvider()
-  val form = formProvider()
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val variableMonthlyUserAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
-
-  val validAnswer = Amount(BigDecimal(100))
-
-  val validDate = LocalDate.of(2019, 3, 1)
-
   lazy val lastYearPayRoute = routes.LastYearPayController.onPageLoad(1).url
-
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, lastYearPayRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+  val formProvider = new LastYearPayFormProvider()
+  val form = formProvider()
+  val variableMonthlyUserAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
+  val validAnswer = Amount(BigDecimal(100))
+  val validDate = LocalDate.of(2019, 3, 1)
+
+  def onwardRoute = Call("GET", "/foo")
 
   def getRequest(idx: Int) =
     FakeRequest(GET, routes.LastYearPayController.onPageLoad(idx).url).withCSRFToken
@@ -125,7 +120,10 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = variableMonthlyUserAnswers.set(LastYearPayPage, CylbPayment(validDate, validAnswer)).success.value
+      val userAnswers = variableMonthlyUserAnswers
+        .set(LastYearPayPage, CylbPaymentWith2020Periods(CylbPayment(validDate, validAnswer), Seq.empty))
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

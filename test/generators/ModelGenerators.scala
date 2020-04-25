@@ -46,12 +46,12 @@ trait ModelGenerators {
       } yield Salary(salary)
     }
 
-  implicit lazy val arbitraryCylbPayQuestion: Arbitrary[CylbPayment] =
+  implicit lazy val arbitraryCylbPayWith2020PeriodsQuestion: Arbitrary[CylbPaymentWith2020Periods] =
     Arbitrary {
       for {
         date  <- Arbitrary.arbitrary[LocalDate]
         value <- Arbitrary.arbitrary[BigDecimal]
-      } yield CylbPayment(date, Amount(value))
+      } yield CylbPaymentWith2020Periods(CylbPayment(date, Amount(value)), Seq.empty)
     }
 
   implicit lazy val arbitraryVariableGrossPayQuestion: Arbitrary[VariableGrossPay] =
