@@ -13,7 +13,7 @@ import handlers.ErrorHandler
 import javax.inject.Inject
 import models.{NormalMode, UserAnswers}
 import navigation.Navigator
-import pages.{ClaimPeriodStartPage, PayDatePage}
+import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -37,8 +37,9 @@ class PayDateController @Inject()(
     extends BaseController with I18nSupport with LocalDateHelpers {
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswer(ClaimPeriodStartPage) { claimStartDate =>
-      messageDateFrom(claimStartDate, request.userAnswers, idx).fold {
+    getRequiredAnswers(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
+      val effectiveStartDate = utils.LocalDateHelpers.latestOf(claimStartDate, furloughStartDate)
+      messageDateFrom(effectiveStartDate, request.userAnswers, idx).fold {
         Logger.warn(s"onPageLoad messageDateFrom returned none for claimStartDate=$claimStartDate, payDates=${request.userAnswers.getList(
           PayDatePage)}, idx=$idx")
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
@@ -56,9 +57,11 @@ class PayDateController @Inject()(
   def form = formProvider()
 
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswer(ClaimPeriodStartPage) { claimStartDate =>
-      val messageDate = messageDateFrom(claimStartDate, request.userAnswers, idx)
-      val dayBeforeClaimStart = claimStartDate.minusDays(1)
+    getRequiredAnswers(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
+      val effectiveStartDate = utils.LocalDateHelpers.latestOf(claimStartDate, furloughStartDate)
+
+      val messageDate = messageDateFrom(effectiveStartDate, request.userAnswers, idx)
+      val dayBeforeClaimStart = effectiveStartDate.minusDays(1)
       val latestDate = request.userAnswers
         .getList(PayDatePage)
         .lift(idx - 2)
@@ -68,7 +71,7 @@ class PayDateController @Inject()(
         .getOrElse(dayBeforeClaimStart)
 
       formProvider(
-        beforeDate = if (idx == 1) Some(claimStartDate) else None,
+        beforeDate = if (idx == 1) Some(effectiveStartDate) else None,
         afterDate = if (idx != 1) Some(latestDate) else None
       ).bindFromRequest()
         .fold(
