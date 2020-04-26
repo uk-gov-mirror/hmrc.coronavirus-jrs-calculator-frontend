@@ -182,10 +182,54 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
         application.stop()
       }
 
-      "first date is not before start date" in {
+      "first date is not before effective start date (claim start date = furlough start date)" in {
         val dateBeforeStart = claimStartDate.plusDays(1)
 
         val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
+
+        val request = postRequest(dateBeforeStart)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        application.stop()
+      }
+
+      "first date is not before effective start date (claim start date is before furlough start date)" in {
+        val dateBeforeStart = LocalDate.of(2020, 3, 2).plusDays(1)
+
+        val modifiedUserAnswers = userAnswersWithStartDate
+          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
+          .success
+          .value
+          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
+          .success
+          .value
+
+        val application = applicationBuilder(userAnswers = Some(modifiedUserAnswers)).build()
+
+        val request = postRequest(dateBeforeStart)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        application.stop()
+      }
+
+      "first date is not before effective start date (claim start date is after furlough start date)" in {
+        val dateBeforeStart = LocalDate.of(2020, 3, 2).plusDays(1)
+
+        val modifiedUserAnswers = userAnswersWithStartDate
+          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 2))
+          .success
+          .value
+          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
+          .success
+          .value
+
+        val application = applicationBuilder(userAnswers = Some(modifiedUserAnswers)).build()
 
         val request = postRequest(dateBeforeStart)
 
