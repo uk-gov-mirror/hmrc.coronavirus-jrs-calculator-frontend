@@ -203,9 +203,9 @@ rootPage.beforeYouStart.p1.l6 = when their furlough started (and ended, if not o
 rootPage.beforeYouStart.p1.l7 = their {0}
 rootPage.beforeYouStart.p1.l7.link = National Insurance category letter
 
-payDate.title = When was the end of the next pay period?
+payDate.title = What’s the end of the next pay period after {0}?
 payDate.heading = What’s the end of the next pay period after {0}?
-payDate.title.firstDate = When was the end of this employee’s last pay period the claim period?
+payDate.title.firstDate = What’s the last day this employee was paid for before {0}?
 payDate.heading.firstDate = What’s the last day this employee was paid for before {0}?
 payDate.checkYourAnswersLabel = PayDate
 payDate.error.required.all = Enter the date
