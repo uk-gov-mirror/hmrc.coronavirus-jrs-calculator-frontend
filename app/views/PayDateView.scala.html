@@ -18,7 +18,7 @@
 
 @(form: Form[_], idx: Int, messageDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, if(idx == 1){"payDate.title.firstDate"} else {"payDate.title"}))) {
+@govukLayout(pageTitle = Some(title(form, if(idx == 1){"payDate.title.firstDate"} else {"payDate.title"}, titleMessageArgs = Seq(dateToString(messageDate))))) {
 
     @formHelper(action = PayDateController.onSubmit(idx), args = 'novalidate -> "novalidate") {
 
