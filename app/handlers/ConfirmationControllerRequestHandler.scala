@@ -24,7 +24,7 @@ trait ConfirmationControllerRequestHandler
 
   private def breakdown(userAnswers: UserAnswers, data: MandatoryData): Option[ConfirmationViewBreakdown] =
     for {
-      furloughPeriod <- extractFurloughPeriod(data, userAnswers)
+      furloughPeriod <- extractRelevantFurloughPeriod(data, userAnswers)
       regulars       <- extractPayments(userAnswers, furloughPeriod)
       furlough = calculateFurloughGrant(data.paymentFrequency, regulars)
       ni = calculateNi(furlough, data.nicCategory, data.paymentFrequency)
@@ -33,7 +33,7 @@ trait ConfirmationControllerRequestHandler
 
   private def meta(userAnswers: UserAnswers, data: MandatoryData): Option[ConfirmationMetadata] =
     for {
-      furloughPeriod <- extractFurloughPeriod(data, userAnswers)
+      furloughPeriod <- extractFurloughPeriod(userAnswers)
     } yield
       ConfirmationMetadata(
         Period(data.claimPeriod.start, data.claimPeriod.end),

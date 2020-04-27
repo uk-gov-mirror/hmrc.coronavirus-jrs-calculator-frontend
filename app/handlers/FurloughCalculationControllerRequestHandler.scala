@@ -13,7 +13,7 @@ trait FurloughCalculationControllerRequestHandler extends FurloughCalculator wit
   def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
     for {
       data           <- extract(userAnswers)
-      furloughPeriod <- extractFurloughPeriod(data, userAnswers)
+      furloughPeriod <- extractRelevantFurloughPeriod(data, userAnswers)
       regulars       <- extractPayments(userAnswers, furloughPeriod)
     } yield calculateFurloughGrant(data.paymentFrequency, regulars)
 

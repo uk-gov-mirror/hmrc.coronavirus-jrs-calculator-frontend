@@ -7,14 +7,13 @@ package handlers
 
 import java.time.LocalDate
 
-import models.FurloughQuestion.{No, Yes}
 import models.PayQuestion.{Regularly, Varies}
 import models.{Amount, CylbEligibility, CylbPayment, MandatoryData, NonFurloughPay, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers}
 import pages._
-import services.ReferencePayCalculator
+import services.{FurloughPeriodHelper, ReferencePayCalculator}
 import utils.LocalDateHelpers
 
-trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers {
+trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers with FurloughPeriodHelper {
 
   def extract(userAnswers: UserAnswers): Option[MandatoryData] =
     for {
@@ -30,13 +29,9 @@ trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers {
       payDate = userAnswers.getList(PayDatePage)
     } yield MandatoryData(Period(claimStart, claimEnd), frequency, nic, pension, payQuestion, furlough, payDate, furloughStart, lastPayDay)
 
-  def extractFurloughPeriod(data: MandatoryData, userAnswers: UserAnswers): Option[Period] = {
-    val effectiveStartDate = latestOf(data.claimPeriod.start, data.furloughStart)
-    data.furloughQuestion match {
-      case Yes => patchEndDate(userAnswers, effectiveStartDate)
-      case No  => Some(Period(effectiveStartDate, data.claimPeriod.end))
-    }
-  }
+  def extractRelevantFurloughPeriod(data: MandatoryData, userAnswers: UserAnswers): Option[Period] =
+    Some(
+      extractRelevantFurloughPeriod(data.furloughStart, userAnswers.get(FurloughEndDatePage), data.claimPeriod.start, data.claimPeriod.end))
 
   def extractPayments(userAnswers: UserAnswers, furloughPeriod: Period): Option[Seq[PaymentWithPeriod]] =
     for {
@@ -103,6 +98,4 @@ trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers {
       nonFurloughPay = NonFurloughPay(preFurloughPay.map(v => Amount(v.value)), postFurloughPay.map(v => Amount(v.value)))
     } yield calculateVariablePay(nonFurloughPay, priorFurloughPeriod, periods, grossPay, cylbs, frequency)
 
-  private def patchEndDate(userAnswers: UserAnswers, startDate: LocalDate): Option[Period] =
-    userAnswers.get(FurloughEndDatePage).map(end => Period(startDate, end))
 }
