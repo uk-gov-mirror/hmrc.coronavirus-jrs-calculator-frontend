@@ -15,7 +15,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodEndPage, FurloughEndDatePage, FurloughQuestionPage, FurloughStartDatePage, PartialPayAfterFurloughPage, PayDatePage, PaymentFrequencyPage}
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughQuestionPage, FurloughStartDatePage, PartialPayAfterFurloughPage, PayDatePage, PaymentFrequencyPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
@@ -38,6 +38,7 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
   val payPeriod4 = LocalDate.of(2020, 4, 12)
   val furloughStartDate = LocalDate.of(2020, 3, 27)
   val furloughEndDate = LocalDate.of(2020, 4, 6)
+  val claimPeriodStart = LocalDate.of(2020, 3, 27)
   val claimPeriodEnd = LocalDate.of(2020, 4, 6)
   val userAnswers = UserAnswers(userAnswersId)
     .set(PayDatePage, payPeriod1, Some(1))
@@ -50,6 +51,9 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
     .success
     .value
     .set(PayDatePage, payPeriod4, Some(4))
+    .success
+    .value
+    .set(ClaimPeriodStartPage, claimPeriodStart)
     .success
     .value
     .set(ClaimPeriodEndPage, claimPeriodEnd)

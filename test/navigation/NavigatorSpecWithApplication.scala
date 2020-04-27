@@ -200,6 +200,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .get
           .set(PayDatePage, LocalDate.of(2020, 6, 10), Some(4))
           .get
+          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 15))
+          .get
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
           .get
 
@@ -219,6 +221,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(PayDatePage, LocalDate.of(2020, 5, 10), Some(3))
           .get
           .set(PayDatePage, LocalDate.of(2020, 6, 10), Some(4))
+          .get
+          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 10))
           .get
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
           .get

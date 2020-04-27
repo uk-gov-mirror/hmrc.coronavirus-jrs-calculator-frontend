@@ -6,9 +6,9 @@
 package services
 
 import models.{PartialPeriod, Period, UserAnswers}
-import pages.{ClaimPeriodEndPage, FurloughEndDatePage, FurloughStartDatePage, PayDatePage}
+import pages.PayDatePage
 
-trait PartialPayHelper extends PeriodHelper {
+trait PartialPayHelper extends PeriodHelper with FurloughPeriodHelper {
 
   def hasPartialPayBefore(userAnswers: UserAnswers): Boolean =
     getPartialPeriods(userAnswers).exists(isFurloughStart)
@@ -16,22 +16,15 @@ trait PartialPayHelper extends PeriodHelper {
   def hasPartialPayAfter(userAnswers: UserAnswers): Boolean =
     getPartialPeriods(userAnswers).exists(isFurloughEnd)
 
-  def getPartialPeriods(userAnswers: UserAnswers): Seq[PartialPeriod] = {
-    for {
-      furloughStart  <- userAnswers.get(FurloughStartDatePage)
-      claimPeriodEnd <- userAnswers.get(ClaimPeriodEndPage)
-    } yield {
-      val furloughPeriod = userAnswers.get(FurloughEndDatePage) match {
-        case Some(furloughEnd) => Period(furloughStart, furloughEnd)
-        case None              => Period(furloughStart, claimPeriodEnd)
-      }
+  def getPartialPeriods(userAnswers: UserAnswers): Seq[PartialPeriod] =
+    extractRelevantFurloughPeriod(userAnswers).fold(
+      Seq.empty[PartialPeriod]
+    ) { furloughPeriod =>
       val payDates = userAnswers.getList(PayDatePage)
-
       generatePeriods(payDates, furloughPeriod).collect {
         case pp: PartialPeriod => pp
       }
     }
-  }.getOrElse(Seq.empty)
 
   def getPeriodRemainder(partialPeriod: PartialPeriod): Period = {
     val original = partialPeriod.original
