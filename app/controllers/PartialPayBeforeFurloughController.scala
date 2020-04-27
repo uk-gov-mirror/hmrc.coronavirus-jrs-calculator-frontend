@@ -5,15 +5,12 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.FurloughPartialPayFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{NormalMode, PaymentFrequency}
+import models.NormalMode
 import navigation.Navigator
 import pages._
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -36,7 +33,7 @@ class PartialPayBeforeFurloughController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: VariableLengthPartialPayView,
   eh: ErrorHandler
-)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+)(implicit ec: ExecutionContext)
     extends BaseController with I18nSupport with PartialPayHelper {
 
   val form = formProvider()
