@@ -16,6 +16,7 @@ import scala.util.Try
 class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   lazy val host: String = configuration.get[String]("host")
+  lazy val appName: String = configuration.get[String]("appName")
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "jrsc"
