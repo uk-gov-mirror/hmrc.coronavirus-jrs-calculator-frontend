@@ -271,8 +271,7 @@ pensionAutoEnrolment.title = Do you pay pension contributions for this employee?
 pensionAutoEnrolment.heading = Do you pay pension contributions for this employee?
 pensionStatus.optedIn = Yes
 pensionStatus.optedOut = No
-pensionAutoEnrolment.checkYourAnswersLabel = pensionAutoEnrolment
-pensionAutoEnrolment.error.required = Select yes if this employee opted out of pension auto-enrolment
+pensionAutoEnrolment.error.required = Select yes if you pay pension contributions for this employee
 
 confirmation.title = What you can claim for this employee
 confirmation.heading = What you can claim for this employee
