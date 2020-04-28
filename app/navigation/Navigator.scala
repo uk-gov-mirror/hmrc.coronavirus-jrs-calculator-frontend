@@ -35,10 +35,10 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case ClaimPeriodEndPage =>
       _ =>
         routes.FurloughStartDateController.onPageLoad(NormalMode)
-    case FurloughQuestionPage =>
-      furloughQuestionRoutes
+    case FurloughOngoingPage =>
+      furloughOngoingRoutes
     case FurloughStartDatePage =>
-      furloughQuestionRoutes
+      furloughOngoingRoutes
     case FurloughEndDatePage =>
       _ =>
         routes.PaymentFrequencyController.onPageLoad(NormalMode)
@@ -147,11 +147,11 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def furloughQuestionRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(FurloughQuestionPage) match {
-      case Some(FurloughQuestion.Yes) => routes.FurloughEndDateController.onPageLoad(NormalMode)
-      case Some(FurloughQuestion.No)  => routes.PaymentFrequencyController.onPageLoad(NormalMode)
-      case None                       => routes.FurloughQuestionController.onPageLoad(NormalMode)
+  private def furloughOngoingRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(FurloughOngoingPage) match {
+      case Some(FurloughOngoing.Yes) => routes.FurloughEndDateController.onPageLoad(NormalMode)
+      case Some(FurloughOngoing.No)  => routes.PaymentFrequencyController.onPageLoad(NormalMode)
+      case None                      => routes.FurloughOngoingController.onPageLoad()
     }
   }
 

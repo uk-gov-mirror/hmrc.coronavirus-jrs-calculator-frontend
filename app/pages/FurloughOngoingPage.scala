@@ -5,20 +5,20 @@
 
 package pages
 
-import models.{FurloughQuestion, UserAnswers}
+import models.{FurloughOngoing, UserAnswers}
 import play.api.libs.json.JsPath
 
 import scala.util.Try
 
-case object FurloughQuestionPage extends QuestionPage[FurloughQuestion] {
+case object FurloughOngoingPage extends QuestionPage[FurloughOngoing] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "furloughQuestion"
+  override def toString: String = "furloughOngoing"
 
-  override def cleanup(value: Option[FurloughQuestion], userAnswers: UserAnswers): Try[UserAnswers] =
+  override def cleanup(value: Option[FurloughOngoing], userAnswers: UserAnswers): Try[UserAnswers] =
     value match {
-      case Some(FurloughQuestion.No) =>
+      case Some(FurloughOngoing.No) =>
         userAnswers
           .remove(FurloughEndDatePage)
       case _ =>

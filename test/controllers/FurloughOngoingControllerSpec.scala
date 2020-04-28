@@ -8,13 +8,13 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
-import forms.FurloughQuestionFormProvider
-import models.{FurloughQuestion, NormalMode, UserAnswers}
+import forms.FurloughOngoingFormProvider
+import models.{FurloughOngoing, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughQuestionPage}
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughOngoingPage}
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Call}
@@ -22,17 +22,17 @@ import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.FurloughQuestionView
+import views.html.FurloughOngoingView
 
 import scala.concurrent.Future
 
-class FurloughQuestionControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+class FurloughOngoingControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val furloughQuestionRoute = routes.FurloughQuestionController.onPageLoad(NormalMode).url
+  lazy val furloughOngoingRoute = routes.FurloughOngoingController.onPageLoad().url
 
-  val formProvider = new FurloughQuestionFormProvider()
+  val formProvider = new FurloughOngoingFormProvider()
   val form = formProvider()
 
   val start = LocalDate.of(2020, 3, 1)
@@ -47,10 +47,10 @@ class FurloughQuestionControllerSpec extends SpecBaseWithApplication with Mockit
   )
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, furloughQuestionRoute).withCSRFToken
+    FakeRequest(GET, furloughOngoingRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  "FurloughQuestion Controller" must {
+  "furloughOngoing Controller" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -58,7 +58,7 @@ class FurloughQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
       val result = route(application, getRequest).value
 
-      val view = application.injector.instanceOf[FurloughQuestionView]
+      val view = application.injector.instanceOf[FurloughOngoingView]
 
       status(result) mustEqual OK
 
@@ -70,18 +70,18 @@ class FurloughQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers1 = userAnswers.set(FurloughQuestionPage, FurloughQuestion.values.head).success.value
+      val userAnswers1 = userAnswers.set(FurloughOngoingPage, FurloughOngoing.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers1)).build()
 
-      val view = application.injector.instanceOf[FurloughQuestionView]
+      val view = application.injector.instanceOf[FurloughOngoingView]
 
       val result = route(application, getRequest).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(FurloughQuestion.values.head), start, end, NormalMode)(getRequest, messages).toString
+        view(form.fill(FurloughOngoing.values.head), start, end, NormalMode)(getRequest, messages).toString
 
       application.stop()
     }
@@ -101,8 +101,8 @@ class FurloughQuestionControllerSpec extends SpecBaseWithApplication with Mockit
           .build()
 
       val request =
-        FakeRequest(POST, furloughQuestionRoute)
-          .withFormUrlEncodedBody(("value", FurloughQuestion.values.head.toString))
+        FakeRequest(POST, furloughOngoingRoute)
+          .withFormUrlEncodedBody(("value", FurloughOngoing.values.head.toString))
 
       val result = route(application, request).value
 
@@ -118,13 +118,13 @@ class FurloughQuestionControllerSpec extends SpecBaseWithApplication with Mockit
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
-        FakeRequest(POST, furloughQuestionRoute).withCSRFToken
+        FakeRequest(POST, furloughOngoingRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[FurloughQuestionView]
+      val view = application.injector.instanceOf[FurloughOngoingView]
 
       val result = route(application, request).value
 
@@ -140,7 +140,7 @@ class FurloughQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, furloughQuestionRoute)
+      val request = FakeRequest(GET, furloughOngoingRoute)
 
       val result = route(application, request).value
 
@@ -155,8 +155,8 @@ class FurloughQuestionControllerSpec extends SpecBaseWithApplication with Mockit
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, furloughQuestionRoute)
-          .withFormUrlEncodedBody(("value", FurloughQuestion.values.head.toString))
+        FakeRequest(POST, furloughOngoingRoute)
+          .withFormUrlEncodedBody(("value", FurloughOngoing.values.head.toString))
 
       val result = route(application, request).value
 

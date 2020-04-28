@@ -32,15 +32,13 @@ POST        /claim-period-start                              controllers.ClaimPe
 GET         /change-claim-period-start                       controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-claim-period-start                       controllers.ClaimPeriodStartController.onSubmit(mode: Mode = CheckMode)
 
+GET         /furlough-ongoing                                controllers.FurloughOngoingController.onPageLoad()
+POST        /furlough-ongoing                                controllers.FurloughOngoingController.onSubmit()
+
 GET         /claim-period-end                                controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = NormalMode)
 POST        /claim-period-end                                controllers.ClaimPeriodEndController.onSubmit(mode: Mode = NormalMode)
 GET         /change-claim-period-end                         controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-claim-period-end                         controllers.ClaimPeriodEndController.onSubmit(mode: Mode = CheckMode)
-
-GET         /furlough-ongoing                                controllers.FurloughQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-ongoing                                controllers.FurloughQuestionController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-ongoing                         controllers.FurloughQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-ongoing                         controllers.FurloughQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET         /pay-method                                      controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST        /pay-method                                      controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)

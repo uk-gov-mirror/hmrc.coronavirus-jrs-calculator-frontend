@@ -6,7 +6,7 @@
 @import viewmodels.ConfirmationViewBreakdown
 @import viewmodels.ConfirmationMetadata
 @import java.time.LocalDate
-@import models.FurloughQuestion.Yes
+@import models.FurloughOngoing.Yes
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -20,7 +20,7 @@
         appConfig: config.FrontendAppConfig
 )
 
-@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String, furlough: FurloughQuestion)(implicit request: Request[_], messages: Messages)
+@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String, furlough: FurloughOngoing)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false) {
 
