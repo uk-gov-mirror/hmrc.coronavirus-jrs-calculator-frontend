@@ -15,5 +15,8 @@ class TaxYearFinderSpec extends SpecBase {
   "Returns TaxYear for a given PayPeriod" in new TaxYearFinder {
     taxYearAt(PaymentDate(LocalDate.of(2020, 3, 31))) mustBe TaxYearEnding2020
     taxYearAt(PaymentDate(LocalDate.of(2020, 4, 30))) mustBe TaxYearEnding2021
+    taxYearAt(PaymentDate(LocalDate.of(2020, 4, 5))) mustBe TaxYearEnding2020
+    taxYearAt(PaymentDate(LocalDate.of(2020, 4, 6))) mustBe TaxYearEnding2021
+    taxYearAt(PaymentDate(LocalDate.of(2020, 4, 7))) mustBe TaxYearEnding2021
   }
 }

@@ -12,6 +12,6 @@ import models.{PaymentDate, Period, TaxYear, TaxYearEnding2020, TaxYearEnding202
 trait TaxYearFinder {
 
   def taxYearAt(paymentDate: PaymentDate): TaxYear =
-    if (paymentDate.value.isBefore(LocalDate.of(2020, 4, 5))) TaxYearEnding2020 else TaxYearEnding2021
+    if (paymentDate.value.isBefore(LocalDate.of(2020, 4, 6))) TaxYearEnding2020 else TaxYearEnding2021
 
 }
