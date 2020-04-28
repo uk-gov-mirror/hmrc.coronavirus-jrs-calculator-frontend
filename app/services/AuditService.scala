@@ -11,7 +11,7 @@ import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import models.UserAnswers
 import pages._
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.{Format, JsString, Json}
 import play.api.mvc.Request
 import services.JobRetentionSchemeCalculatorEvent.JobRetentionSchemeCalculatorEvent
 import uk.gov.hmrc.http.HeaderCarrier
@@ -62,26 +62,28 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       )
     )
 
-  private def userAnswersTransformer(userAnswers: UserAnswers) =
-    Seq(
-      "claimPeriodStartDate"               -> userAnswers.get(ClaimPeriodStartPage).getOrElse(""),
-      "claimPeriodEndDate"                 -> userAnswers.get(ClaimPeriodEndPage).getOrElse(""),
-      "employeeFurloughStartDate"          -> userAnswers.get(FurloughStartDatePage).getOrElse(""),
-      "hasTheEmployeeFurloughEnded"        -> userAnswers.get(FurloughOngoingPage).getOrElse(""),
-      "employeeFurloughEndDate"            -> userAnswers.get(FurloughEndDatePage).getOrElse(""),
-      "employeePayFrequency"               -> userAnswers.get(PaymentFrequencyPage).getOrElse(""),
-      "employeePayMethod"                  -> userAnswers.get(PayQuestionPage).getOrElse(""),
-      "employeeSalary"                     -> userAnswers.get(SalaryQuestionPage).getOrElse(""),
-      "employeeEmployedOnOrBefore1Feb2019" -> userAnswers.get(VariableLengthEmployedPage).getOrElse(""),
-      "employeeStartDate"                  -> userAnswers.get(EmployeeStartDatePage).getOrElse(""),
-      "employeeGrossPayForYear"            -> userAnswers.get(VariableGrossPayPage).getOrElse(""),
-      "employeePayPeriodEndDates"          -> userAnswers.getList(PayDatePage),
-      "employeePayDayForLastPeriod"        -> userAnswers.get(LastPayDatePage).getOrElse(""),
-      "employeeLastYearPay"                -> userAnswers.getList(LastYearPayPage),
-      "employeePartialPayBeforeFurlough"   -> userAnswers.get(PartialPayBeforeFurloughPage).getOrElse(""),
-      "employeePartialPayAfterFurlough"    -> userAnswers.get(PartialPayAfterFurloughPage).getOrElse(""),
-      "employeeNationalInsuranceCategory"  -> userAnswers.get(NicCategoryPage).getOrElse(""),
-      "employerPensionContributions"       -> userAnswers.get(PensionContributionPage).getOrElse("")
+  private def userAnswersTransformer(userAnswers: UserAnswers): String =
+    Json.prettyPrint(
+      Json.obj(
+        "claimPeriodStartDate"               -> JsString(userAnswers.get(ClaimPeriodStartPage).fold("")(_.toString)),
+        "claimPeriodEndDate"                 -> JsString(userAnswers.get(ClaimPeriodEndPage).fold("")(_.toString)),
+        "employeeFurloughStartDate"          -> JsString(userAnswers.get(FurloughStartDatePage).fold("")(_.toString)),
+        "hasTheEmployeeFurloughEnded"        -> JsString(userAnswers.get(FurloughOngoingPage).fold("")(_.toString)),
+        "employeeFurloughEndDate"            -> JsString(userAnswers.get(FurloughEndDatePage).fold("")(_.toString)),
+        "employeePayFrequency"               -> JsString(userAnswers.get(PaymentFrequencyPage).fold("")(_.toString)),
+        "employeePayMethod"                  -> JsString(userAnswers.get(PayQuestionPage).fold("")(_.toString)),
+        "employeeSalary"                     -> JsString(userAnswers.get(SalaryQuestionPage).fold("")(_.toString)),
+        "employeeEmployedOnOrBefore1Feb2019" -> JsString(userAnswers.get(VariableLengthEmployedPage).fold("")(_.toString)),
+        "employeeStartDate"                  -> JsString(userAnswers.get(EmployeeStartDatePage).fold("")(_.toString)),
+        "employeeGrossPayForYear"            -> JsString(userAnswers.get(VariableGrossPayPage).fold("")(_.toString)),
+        "employeePayPeriodEndDates"          -> Json.toJson(userAnswers.getList(PayDatePage)),
+        "employeePayDayForLastPeriod"        -> JsString(userAnswers.get(LastPayDatePage).fold("")(_.toString)),
+        "employeeLastYearPay"                -> Json.toJson(userAnswers.getList(LastYearPayPage)),
+        "employeePartialPayBeforeFurlough"   -> JsString(userAnswers.get(PartialPayBeforeFurloughPage).fold("")(_.toString)),
+        "employeePartialPayAfterFurlough"    -> JsString(userAnswers.get(PartialPayAfterFurloughPage).fold("")(_.toString)),
+        "employeeNationalInsuranceCategory"  -> JsString(userAnswers.get(NicCategoryPage).fold("")(_.toString)),
+        "employerPensionContributions"       -> JsString(userAnswers.get(PensionContributionPage).fold("")(_.toString))
+      )
     )
 
   private def breakdownTransformer(breakdown: ConfirmationViewBreakdown): String = {
