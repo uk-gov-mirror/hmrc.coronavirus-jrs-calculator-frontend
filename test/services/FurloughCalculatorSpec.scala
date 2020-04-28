@@ -17,11 +17,10 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   forAll(fullPeriodScenarios) { (frequency, payment, expectedFurlough) =>
-    s"Full Period: For payment frequency $frequency and payment ${payment.furloughPayment.value} should return $expectedFurlough" in new FurloughCalculator {
-      val period = payment.period.period.asInstanceOf[FullPeriod]
-      val expected =
-        PeriodBreakdown(payment.nonFurloughPay, expectedFurlough, payment.period)
-      calculateFullPeriod(frequency, payment, period, payment.period.paymentDate) mustBe expected
+    val fullPeriod: FullPeriod = payment.period.period.asInstanceOf[FullPeriod]
+
+    s"Full Period: For payment frequency $frequency and payment ${payment.furloughPayment.value} return $expectedFurlough" in new FurloughCalculator {
+      calculateFullPeriod(frequency, payment, fullPeriod) mustBe expectedFurlough
     }
   }
 
