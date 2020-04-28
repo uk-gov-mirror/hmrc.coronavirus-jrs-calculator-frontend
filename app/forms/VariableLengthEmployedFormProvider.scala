@@ -5,11 +5,10 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
-import play.api.data.Form
+import javax.inject.Inject
 import models.VariableLengthEmployed
+import play.api.data.Form
 
 class VariableLengthEmployedFormProvider @Inject() extends Mappings {
 

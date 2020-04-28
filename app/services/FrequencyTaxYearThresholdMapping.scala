@@ -6,7 +6,7 @@
 package services
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{PaymentDate, PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
+import models.{PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
 import play.api.Logger
 
 case class FrequencyTaxYearKey(paymentFrequency: PaymentFrequency, taxYear: TaxYear, rate: Rate)

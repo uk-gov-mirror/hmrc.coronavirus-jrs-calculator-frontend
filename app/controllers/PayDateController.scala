@@ -14,12 +14,12 @@ import javax.inject.Inject
 import models.{NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import views.html.PayDateView
-import play.api.Logger
 import utils.LocalDateHelpers
+import views.html.PayDateView
 
 import scala.concurrent.{ExecutionContext, Future}
 

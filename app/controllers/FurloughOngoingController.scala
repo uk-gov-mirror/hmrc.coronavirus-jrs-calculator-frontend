@@ -8,13 +8,12 @@ package controllers
 import controllers.actions._
 import forms.FurloughOngoingFormProvider
 import javax.inject.Inject
-import models.{Mode, NormalMode}
+import models.NormalMode
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughOngoingPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import views.html.FurloughOngoingView
 
 import scala.concurrent.{ExecutionContext, Future}
 

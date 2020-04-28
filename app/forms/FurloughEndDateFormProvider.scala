@@ -10,7 +10,6 @@ import java.time.LocalDate
 import forms.mappings.Mappings
 import javax.inject.Inject
 import play.api.data.Form
-import views.ViewUtils.dateToString
 
 class FurloughEndDateFormProvider @Inject() extends Mappings {
 

@@ -5,8 +5,8 @@
 
 package forms
 
-import javax.inject.Inject
 import forms.mappings.Mappings
+import javax.inject.Inject
 import models.PensionContribution
 import play.api.data.Form
 

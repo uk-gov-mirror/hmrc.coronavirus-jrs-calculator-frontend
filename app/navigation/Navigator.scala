@@ -14,10 +14,9 @@ import javax.inject.{Inject, Singleton}
 import models.PayQuestion.{Regularly, Varies}
 import models.{UserAnswers, _}
 import pages.{PayDatePage, _}
-import models.{UserAnswers, _}
-import utils.LocalDateHelpers
 import play.api.mvc.Call
 import services.PartialPayHelper
+import utils.LocalDateHelpers
 
 @Singleton
 class Navigator @Inject()(appConfig: FrontendAppConfig)

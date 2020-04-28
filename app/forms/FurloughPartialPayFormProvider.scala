@@ -5,9 +5,9 @@
 
 package forms
 
-import javax.inject.Inject
 import forms.mappings.Mappings
-import models.{FurloughPartialPay, Salary}
+import javax.inject.Inject
+import models.FurloughPartialPay
 import play.api.data.Form
 import play.api.data.Forms.mapping
 import play.api.data.validation.{Constraint, Invalid, Valid}

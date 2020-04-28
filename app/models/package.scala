@@ -4,6 +4,7 @@
  */
 
 import play.api.libs.json._
+
 import scala.language.implicitConversions
 
 package object models {
