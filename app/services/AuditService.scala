@@ -7,6 +7,7 @@ package services
 
 import java.time.LocalDate
 
+import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import models.UserAnswers
 import pages._
@@ -47,7 +48,7 @@ object AuditBreakdown {
 }
 
 @Singleton
-class AuditService @Inject()(auditConnector: AuditConnector) {
+class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendAppConfig) {
 
   def sendCalculationPerformed(
     userAnswers: UserAnswers,
@@ -118,7 +119,7 @@ class AuditService @Inject()(auditConnector: AuditConnector) {
 
     val detail = hc.toAuditDetails(details.map(pair => pair._1 -> pair._2.toString): _*)
     val tags = hc.toAuditTags(transactionName, request.path)
-    DataEvent(auditSource = "agent-client-authorisation", auditType = event.toString, tags = tags, detail = detail)
+    DataEvent(auditSource = config.appName, auditType = event.toString, tags = tags, detail = detail)
   }
 
   private def send(events: DataEvent*)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
