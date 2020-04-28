@@ -67,7 +67,7 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       "claimPeriodStartDate"               -> userAnswers.get(ClaimPeriodStartPage).getOrElse(""),
       "claimPeriodEndDate"                 -> userAnswers.get(ClaimPeriodEndPage).getOrElse(""),
       "employeeFurloughStartDate"          -> userAnswers.get(FurloughStartDatePage).getOrElse(""),
-      "hasTheEmployeeFurloughEnded"        -> userAnswers.get(FurloughQuestionPage).getOrElse(""),
+      "hasTheEmployeeFurloughEnded"        -> userAnswers.get(FurloughOngoingPage).getOrElse(""),
       "employeeFurloughEndDate"            -> userAnswers.get(FurloughEndDatePage).getOrElse(""),
       "employeePayFrequency"               -> userAnswers.get(PaymentFrequencyPage).getOrElse(""),
       "employeePayMethod"                  -> userAnswers.get(PayQuestionPage).getOrElse(""),
