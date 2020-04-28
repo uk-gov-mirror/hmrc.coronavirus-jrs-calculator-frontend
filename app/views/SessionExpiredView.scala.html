@@ -18,5 +18,5 @@
 
     @p(Html(messages("session_expired.guidance")))
 
-    @button("session_expired.restart", href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode).url))
+    @button("session_expired.restart", href = Some(routes.ClaimPeriodStartController.onPageLoad().url))
 }

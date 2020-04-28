@@ -4,7 +4,7 @@
  *@
 
 @import controllers.routes._
-@import models.{Mode, PayQuestion}
+@import models.PayQuestion
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -14,11 +14,11 @@
         button: components.button
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "payQuestion.title"))) {
 
-    @formHelper(action = PayQuestionController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = PayQuestionController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

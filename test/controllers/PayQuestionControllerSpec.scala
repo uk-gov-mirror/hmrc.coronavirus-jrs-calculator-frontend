@@ -7,7 +7,7 @@ package controllers
 
 import base.{SpecBase, SpecBaseWithApplication}
 import forms.PayQuestionFormProvider
-import models.{NormalMode, PayQuestion, UserAnswers}
+import models.{PayQuestion, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -27,9 +27,9 @@ class PayQuestionControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val payQuestionRoute = routes.PayQuestionController.onPageLoad(NormalMode).url
+  lazy val payQuestionRoute = routes.PayQuestionController.onPageLoad().url
 
-  lazy val payQuestionRoutePost = routes.PayQuestionController.onSubmit(NormalMode).url
+  lazy val payQuestionRoutePost = routes.PayQuestionController.onSubmit().url
 
   val formProvider = new PayQuestionFormProvider()
   val form = formProvider()
@@ -58,7 +58,7 @@ class PayQuestionControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
@@ -76,7 +76,7 @@ class PayQuestionControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(PayQuestion.values.head), NormalMode)(getRequest, messages).toString
+        view(form.fill(PayQuestion.values.head))(getRequest, messages).toString
 
       application.stop()
     }
@@ -122,7 +122,7 @@ class PayQuestionControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

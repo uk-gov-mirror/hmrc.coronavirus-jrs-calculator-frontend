@@ -9,7 +9,7 @@ import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBaseWithApplication
 import forms.FurloughStartDateFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -36,7 +36,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
-  lazy val furloughStartDateRoute = routes.FurloughStartDateController.onPageLoad(NormalMode).url
+  lazy val furloughStartDateRoute = routes.FurloughStartDateController.onPageLoad().url
 
   val userAnswersWithClaimStartAndEnd = emptyUserAnswers
     .set(ClaimPeriodStartPage, claimPeriodStart)
@@ -72,7 +72,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
@@ -90,7 +90,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), NormalMode)(getRequest, messages).toString
+        view(form.fill(validAnswer))(getRequest, messages).toString
 
       application.stop()
     }
@@ -136,7 +136,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

@@ -7,7 +7,7 @@ package controllers
 
 import base.SpecBaseWithApplication
 import forms.VariableLengthEmployedFormProvider
-import models.{NormalMode, UserAnswers, VariableLengthEmployed}
+import models.{UserAnswers, VariableLengthEmployed}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -27,7 +27,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val variableLengthEmployedRoute = routes.VariableLengthEmployedController.onPageLoad(NormalMode).url
+  lazy val variableLengthEmployedRoute = routes.VariableLengthEmployedController.onPageLoad().url
 
   val formProvider = new VariableLengthEmployedFormProvider()
   val form = formProvider()
@@ -50,7 +50,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
@@ -68,7 +68,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(VariableLengthEmployed.values.head), NormalMode)(getRequest, messages).toString
+        view(form.fill(VariableLengthEmployed.values.head))(getRequest, messages).toString
 
       application.stop()
     }
@@ -159,7 +159,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

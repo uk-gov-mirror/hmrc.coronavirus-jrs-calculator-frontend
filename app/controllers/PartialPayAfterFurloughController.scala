@@ -9,7 +9,6 @@ import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.FurloughPartialPayFormProvider
 import javax.inject.Inject
-import models.NormalMode
 import navigation.Navigator
 import pages._
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -85,7 +84,7 @@ class PartialPayAfterFurloughController @Inject()(
                   updatedAnswers <- Future.fromTry(request.userAnswers.set(PartialPayAfterFurloughPage, value))
                   _              <- sessionRepository.set(updatedAnswers)
                 } yield {
-                  Redirect(navigator.nextPage(PartialPayAfterFurloughPage, NormalMode, updatedAnswers))
+                  Redirect(navigator.nextPage(PartialPayAfterFurloughPage, updatedAnswers))
                 }
               }
             )

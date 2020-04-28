@@ -27,68 +27,64 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
       "go to Index from a page that doesn't exist in the route map" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.RootPageController.onPageLoad()
+        navigator.nextPage(UnknownPage, UserAnswers("id")) mustBe routes.RootPageController.onPageLoad()
       }
 
       "go to ClaimPeriodEndPage after ClaimPeriodStartPage" in {
-        navigator.nextPage(ClaimPeriodStartPage, NormalMode, UserAnswers("id")) mustBe routes.ClaimPeriodEndController
-          .onPageLoad(NormalMode)
+        navigator.nextPage(ClaimPeriodStartPage, UserAnswers("id")) mustBe routes.ClaimPeriodEndController
+          .onPageLoad()
       }
 
       "go to furloughOngoingPage after ClaimPeriodEndPage" in {
-        navigator.nextPage(ClaimPeriodEndPage, NormalMode, UserAnswers("id")) mustBe routes.FurloughStartDateController
-          .onPageLoad(NormalMode)
+        navigator.nextPage(ClaimPeriodEndPage, UserAnswers("id")) mustBe routes.FurloughStartDateController
+          .onPageLoad()
       }
 
       "go to correct page after furloughOngoingPage" in {
         navigator.nextPage(
           FurloughOngoingPage,
-          NormalMode,
           UserAnswers("id")
             .set(FurloughOngoingPage, FurloughOngoing.No)
             .success
-            .value) mustBe routes.PaymentFrequencyController.onPageLoad(NormalMode)
+            .value) mustBe routes.PaymentFrequencyController.onPageLoad()
         navigator.nextPage(
           FurloughOngoingPage,
-          NormalMode,
           UserAnswers("id")
             .set(FurloughOngoingPage, FurloughOngoing.Yes)
             .success
-            .value) mustBe routes.FurloughEndDateController.onPageLoad(NormalMode)
+            .value) mustBe routes.FurloughEndDateController.onPageLoad()
       }
 
       "go to PaymentFrequencyPage after FurloughEndDatePage" in {
-        navigator.nextPage(FurloughEndDatePage, NormalMode, UserAnswers("id")) mustBe routes.PaymentFrequencyController
-          .onPageLoad(NormalMode)
+        navigator.nextPage(FurloughEndDatePage, UserAnswers("id")) mustBe routes.PaymentFrequencyController
+          .onPageLoad()
       }
 
       "go to correct page after PayQuestionPage" in {
         navigator.nextPage(
           PayQuestionPage,
-          NormalMode,
           UserAnswers("id")
             .set(PayQuestionPage, PayQuestion.Regularly)
             .success
-            .value) mustBe routes.SalaryQuestionController.onPageLoad(NormalMode)
+            .value) mustBe routes.SalaryQuestionController.onPageLoad()
 
         navigator.nextPage(
           PayQuestionPage,
-          NormalMode,
           UserAnswers("id")
             .set(PayQuestionPage, PayQuestion.Varies)
             .success
-            .value) mustBe routes.VariableLengthEmployedController.onPageLoad(NormalMode)
+            .value) mustBe routes.VariableLengthEmployedController.onPageLoad()
 
-        navigator.nextPage(PayQuestionPage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
+        navigator.nextPage(PayQuestionPage, UserAnswers("id")) mustBe routes.PayQuestionController.onPageLoad()
       }
 
       "go to SalaryQuestionPage after PaymentQuestionPage" in {
-        navigator.nextPage(PaymentFrequencyPage, NormalMode, UserAnswers("id")) mustBe routes.PayQuestionController
-          .onPageLoad(NormalMode)
+        navigator.nextPage(PaymentFrequencyPage, UserAnswers("id")) mustBe routes.PayQuestionController
+          .onPageLoad()
       }
 
       "go to PayDatePage after SalaryQuestionPage" in {
-        navigator.nextPage(SalaryQuestionPage, NormalMode, UserAnswers("id")) mustBe routes.PayDateController
+        navigator.nextPage(SalaryQuestionPage, UserAnswers("id")) mustBe routes.PayDateController
           .onPageLoad(1)
       }
 
@@ -99,7 +95,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(PayDatePage, LocalDate.of(2020, 5, 29), Some(1))
           .get
 
-        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.PayDateController.onPageLoad(2)
+        navigator.nextPage(PayDatePage, userAnswers, Some(1)) mustBe routes.PayDateController.onPageLoad(2)
       }
 
       "stop loop around pay date if last pay date is claim end date" in {
@@ -109,8 +105,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(PayDatePage, LocalDate.of(2020, 5, 30), Some(1))
           .get
 
-        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.LastPayDateController
-          .onPageLoad(NormalMode)
+        navigator.nextPage(PayDatePage, userAnswers, Some(1)) mustBe routes.LastPayDateController
+          .onPageLoad()
       }
 
       "stop loop around pay date if last pay date is after claim end date" in {
@@ -120,8 +116,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(PayDatePage, LocalDate.of(2020, 5, 31), Some(1))
           .get
 
-        navigator.nextPage(PayDatePage, NormalMode, userAnswers, Some(1)) mustBe routes.LastPayDateController
-          .onPageLoad(NormalMode)
+        navigator.nextPage(PayDatePage, userAnswers, Some(1)) mustBe routes.LastPayDateController
+          .onPageLoad()
       }
 
       "go to NicCategoryPage after LastPayDatePage if the pay-method is Regularly" in {
@@ -129,7 +125,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(PayQuestionPage, Regularly)
           .get
 
-        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.NicCategoryController.onPageLoad()
       }
 
       "go to NicCategoryPage after LastPayDatePage if the pay-method is Varies and employee has been employed over 12 months" in {
@@ -147,7 +143,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(VariableLengthEmployedPage, VariableLengthEmployed.Yes)
           .get
 
-        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
       "go to NicCategoryPage after LastPayDatePage if the pay-method is Varies and employee start after 5th April 2019" in {
@@ -165,7 +161,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 6))
           .get
 
-        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.NicCategoryController.onPageLoad()
       }
 
       "go to LastYearPay after LastPayDatePage if the pay-method is Varies and employee start before 6th April 2019" in {
@@ -183,7 +179,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
           .get
 
-        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
       "go to PartialPayBeforeFurloughPage after LastPayDatePage if the pay-method is Varies and first pay period is partial" in {
@@ -205,7 +201,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
           .get
 
-        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
       }
 
       "go to PartialPayAfterFurloughPage after LastPayDatePage if the pay-method is Varies and last pay period is partial" in {
@@ -227,73 +223,67 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
           .get
 
-        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PartialPayAfterFurloughController.onPageLoad()
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PartialPayAfterFurloughController.onPageLoad()
       }
 
       "go to PayQuestionPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
         val userAnswers = UserAnswers("id")
 
-        navigator.nextPage(LastPayDatePage, NormalMode, userAnswers) mustBe routes.PayQuestionController.onPageLoad(NormalMode)
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PayQuestionController.onPageLoad()
       }
 
       "go from PensionAutoEnrolmentPage to FurloughCalculationsPage" in {
-        navigator.nextPage(PensionContributionPage, NormalMode, emptyUserAnswers) mustBe routes.FurloughCalculationsController.onPageLoad(
-          NormalMode)
+        navigator.nextPage(PensionContributionPage, emptyUserAnswers) mustBe routes.FurloughCalculationsController.onPageLoad()
       }
 
       "go from furlough start date to furlough question" in {
         val answers = emptyUserAnswers
-        navigator.nextPage(FurloughStartDatePage, NormalMode, answers) mustBe routes.FurloughOngoingController.onPageLoad()
+        navigator.nextPage(FurloughStartDatePage, answers) mustBe routes.FurloughOngoingController.onPageLoad()
       }
 
       "go from furlough end date" must {
 
         "to pay question" in {
-          navigator.nextPage(FurloughEndDatePage, NormalMode, emptyUserAnswers) mustBe routes.PaymentFrequencyController
-            .onPageLoad(NormalMode)
+          navigator.nextPage(FurloughEndDatePage, emptyUserAnswers) mustBe routes.PaymentFrequencyController
+            .onPageLoad()
         }
       }
 
       "go to correct page after VariableLengthEmployedPage" in {
         navigator.nextPage(
           VariableLengthEmployedPage,
-          NormalMode,
           UserAnswers("id")
             .set(VariableLengthEmployedPage, VariableLengthEmployed.Yes)
             .success
-            .value) mustBe routes.VariableGrossPayController.onPageLoad(NormalMode)
+            .value) mustBe routes.VariableGrossPayController.onPageLoad()
         navigator.nextPage(
           VariableLengthEmployedPage,
-          NormalMode,
           UserAnswers("id")
             .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
             .success
-            .value) mustBe routes.EmployeeStartDateController.onPageLoad(NormalMode)
+            .value) mustBe routes.EmployeeStartDateController.onPageLoad()
       }
 
       "go to correct page after EmployeeStartDatePage" in {
         navigator.nextPage(
           EmployeeStartDatePage,
-          NormalMode,
           UserAnswers("id")
             .set(EmployeeStartDatePage, LocalDate.now().minusDays(2))
             .success
             .value
-        ) mustBe routes.VariableGrossPayController.onPageLoad(NormalMode)
+        ) mustBe routes.VariableGrossPayController.onPageLoad()
         navigator.nextPage(
           EmployeeStartDatePage,
-          NormalMode,
           UserAnswers("id")
             .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
             .success
             .value
-        ) mustBe routes.VariableGrossPayController.onPageLoad(NormalMode)
+        ) mustBe routes.VariableGrossPayController.onPageLoad()
       }
 
       "go to correct page after FurloughCalculationsPage" in {
         navigator.nextPage(
           FurloughCalculationsPage,
-          NormalMode,
           UserAnswers("id")
             .set(FurloughCalculationsPage, FurloughCalculations.Yes)
             .success
@@ -301,7 +291,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         ) mustBe routes.ComingSoonController.onPageLoad(true)
         navigator.nextPage(
           FurloughCalculationsPage,
-          NormalMode,
           UserAnswers("id")
             .set(FurloughCalculationsPage, FurloughCalculations.No)
             .success
@@ -312,7 +301,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
       "go to start of pay date loop after variable gross pay page" in {
         navigator.nextPage(
           VariableGrossPayPage,
-          NormalMode,
           emptyUserAnswers
         ) mustBe routes.PayDateController.onPageLoad(1)
       }
@@ -320,13 +308,13 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
       "loop around last year pay if there are more years to ask" in {
         val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
 
-        navigator.nextPage(LastYearPayPage, NormalMode, userAnswers, Some(1)) mustBe routes.LastYearPayController.onPageLoad(2)
+        navigator.nextPage(LastYearPayPage, userAnswers, Some(1)) mustBe routes.LastYearPayController.onPageLoad(2)
       }
 
       "stop loop around last year pay if there are no more years to ask" in {
         val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
 
-        navigator.nextPage(LastYearPayPage, NormalMode, userAnswers, Some(2)) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+        navigator.nextPage(LastYearPayPage, userAnswers, Some(2)) mustBe routes.NicCategoryController.onPageLoad()
       }
 
       "go to correct page after PartialPayAfterFurloughPage" when {
@@ -336,7 +324,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
           navigator.nextPage(
             PartialPayAfterFurloughPage,
-            NormalMode,
             userAnswers
           ) mustBe routes.LastYearPayController.onPageLoad(1)
         }
@@ -352,7 +339,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
           navigator.nextPage(
             PartialPayAfterFurloughPage,
-            NormalMode,
             userAnswers
           ) mustBe routes.LastYearPayController.onPageLoad(1)
         }
@@ -368,9 +354,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
           navigator.nextPage(
             PartialPayAfterFurloughPage,
-            NormalMode,
             userAnswers
-          ) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+          ) mustBe routes.NicCategoryController.onPageLoad()
         }
 
         "VariableLengthEmployed is No and date is after April 7th" in {
@@ -384,9 +369,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
           navigator.nextPage(
             PartialPayAfterFurloughPage,
-            NormalMode,
             userAnswers
-          ) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+          ) mustBe routes.NicCategoryController.onPageLoad()
         }
 
         "VariableLengthEmployed is missing" in {
@@ -394,21 +378,10 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
           navigator.nextPage(
             PartialPayAfterFurloughPage,
-            NormalMode,
             userAnswers
-          ) mustBe routes.NicCategoryController.onPageLoad(NormalMode)
+          ) mustBe routes.NicCategoryController.onPageLoad()
         }
 
-      }
-    }
-
-    "in Check mode" must {
-
-      "go to CheckYourAnswers from a page that doesn't exist in the edit route map" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController
-          .onPageLoad()
       }
     }
   }

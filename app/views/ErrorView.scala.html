@@ -19,6 +19,6 @@
     @p(Html(messages("errorPage.p1")))
 
     @if(startAgain) {
-        @button("somethingWentWrong.button", href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode).url))
+        @button("somethingWentWrong.button", href = Some(routes.ClaimPeriodStartController.onPageLoad().url))
     }
 }

@@ -3,8 +3,6 @@
  *
  *@
 
-@import java.time.LocalDate
-
 @this(
     govukLayout: templates.GovukLayoutWrapper,
     errorSummary: components.errorSummary,
@@ -15,11 +13,11 @@
         p: components.p
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughEndDate.title"))) {
 
-    @formHelper(action = FurloughEndDateController.onSubmit(mode), args = 'novalidate -> "novalidate") {
+    @formHelper(action = FurloughEndDateController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

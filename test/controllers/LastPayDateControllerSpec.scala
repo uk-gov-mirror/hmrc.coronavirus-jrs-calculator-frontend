@@ -9,7 +9,7 @@ import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBaseWithApplication
 import forms.LastPayDateFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -35,7 +35,7 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
   val validAnswer = LocalDate.now()
 
-  lazy val lastPayDateRoute = routes.LastPayDateController.onPageLoad(NormalMode).url
+  lazy val lastPayDateRoute = routes.LastPayDateController.onPageLoad().url
 
   val userAnswers = UserAnswers(userAnswersId).set(PayDatePage, validAnswer, Some(1)).success.value
 
@@ -65,7 +65,7 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode, validAnswer)(getRequest, messages).toString
+        view(form, validAnswer)(getRequest, messages).toString
 
       application.stop()
     }
@@ -83,7 +83,7 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), NormalMode, validAnswer)(getRequest, messages).toString
+        view(form.fill(validAnswer), validAnswer)(getRequest, messages).toString
 
       application.stop()
     }
@@ -152,7 +152,7 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode, validAnswer)(request, messages).toString
+        view(boundForm, validAnswer)(request, messages).toString
 
       application.stop()
     }

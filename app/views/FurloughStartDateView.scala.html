@@ -13,11 +13,11 @@
         p: components.p
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughStartDate.title"))) {
 
-    @formHelper(action = FurloughStartDateController.onSubmit(mode), args = 'novalidate -> "novalidate") {
+    @formHelper(action = FurloughStartDateController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

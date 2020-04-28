@@ -7,7 +7,7 @@ package controllers
 
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import javax.inject.Inject
-import models.{NormalMode, UserAnswers}
+import models.UserAnswers
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -32,6 +32,6 @@ class IndexController @Inject()(
   }
 
   def restart: Action[AnyContent] = Action { _ =>
-    Redirect(routes.ClaimPeriodStartController.onPageLoad(NormalMode)).withNewSession
+    Redirect(routes.ClaimPeriodStartController.onPageLoad()).withNewSession
   }
 }

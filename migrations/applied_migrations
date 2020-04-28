@@ -6,11 +6,11 @@ echo "Applying migration LastYearPay"
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /lastYearPay                  controllers.LastYearPayController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /lastYearPay                  controllers.LastYearPayController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /lastYearPay                  controllers.LastYearPayController.onPageLoad( = NormalMode)" >> ../conf/app.routes
+echo "POST       /lastYearPay                  controllers.LastYearPayController.onSubmit( = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeLastYearPay                        controllers.LastYearPayController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeLastYearPay                        controllers.LastYearPayController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeLastYearPay                        controllers.LastYearPayController.onPageLoad( = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeLastYearPay                        controllers.LastYearPayController.onSubmit( = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en

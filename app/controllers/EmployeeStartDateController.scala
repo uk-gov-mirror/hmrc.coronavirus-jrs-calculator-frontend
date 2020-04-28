@@ -9,7 +9,6 @@ import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.EmployeeStartDateFormProvider
 import javax.inject.Inject
-import models.Mode
 import navigation.Navigator
 import pages.EmployeeStartDatePage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -36,27 +35,27 @@ class EmployeeStartDateController @Inject()(
 
   def form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
     implicit request =>
       val preparedForm = request.userAnswers.get(EmployeeStartDatePage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
+  def onSubmit(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartDatePage, value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(EmployeeStartDatePage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(EmployeeStartDatePage, updatedAnswers))
         )
   }
 }

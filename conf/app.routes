@@ -13,8 +13,6 @@ GET         /language/:lang                                  controllers.Languag
 
 GET         /this-service-has-been-reset                     controllers.SessionExpiredController.onPageLoad
 
-GET         /check-your-answers                              controllers.CheckYourAnswersController.onPageLoad
-
 GET         /unauthorised                                    controllers.UnauthorisedController.onPageLoad
 
 GET         /service-unavailable                             controllers.ErrorController.internalServerError
@@ -27,78 +25,54 @@ GET         /restart-service                                 controllers.StartAg
 
 GET         /accessibility                                   controllers.AccessibilityStatementController.onPageLoad
 
-GET         /claim-period-start                              controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = NormalMode)
-POST        /claim-period-start                              controllers.ClaimPeriodStartController.onSubmit(mode: Mode = NormalMode)
-GET         /change-claim-period-start                       controllers.ClaimPeriodStartController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-claim-period-start                       controllers.ClaimPeriodStartController.onSubmit(mode: Mode = CheckMode)
+GET         /claim-period-start                              controllers.ClaimPeriodStartController.onPageLoad()
+POST        /claim-period-start                              controllers.ClaimPeriodStartController.onSubmit()
 
 GET         /furlough-ongoing                                controllers.FurloughOngoingController.onPageLoad()
 POST        /furlough-ongoing                                controllers.FurloughOngoingController.onSubmit()
 
-GET         /claim-period-end                                controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = NormalMode)
-POST        /claim-period-end                                controllers.ClaimPeriodEndController.onSubmit(mode: Mode = NormalMode)
-GET         /change-claim-period-end                         controllers.ClaimPeriodEndController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-claim-period-end                         controllers.ClaimPeriodEndController.onSubmit(mode: Mode = CheckMode)
+GET         /claim-period-end                                controllers.ClaimPeriodEndController.onPageLoad()
+POST        /claim-period-end                                controllers.ClaimPeriodEndController.onSubmit()
 
-GET         /pay-method                                      controllers.PayQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST        /pay-method                                      controllers.PayQuestionController.onSubmit(mode: Mode = NormalMode)
-GET         /change-pay-method                               controllers.PayQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-pay-method                               controllers.PayQuestionController.onSubmit(mode: Mode = CheckMode)
+GET         /pay-method                                      controllers.PayQuestionController.onPageLoad()
+POST        /pay-method                                      controllers.PayQuestionController.onSubmit()
 
-GET         /pay-frequency                                   controllers.PaymentFrequencyController.onPageLoad(mode: Mode = NormalMode)
-POST        /pay-frequency                                   controllers.PaymentFrequencyController.onSubmit(mode: Mode = NormalMode)
-GET         /change-pay-frequency                            controllers.PaymentFrequencyController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-pay-frequency                            controllers.PaymentFrequencyController.onSubmit(mode: Mode = CheckMode)
+GET         /pay-frequency                                   controllers.PaymentFrequencyController.onPageLoad()
+POST        /pay-frequency                                   controllers.PaymentFrequencyController.onSubmit()
 
 GET         /pay-date/:idx                                   controllers.PayDateController.onPageLoad(idx: Int)
 POST        /pay-date/:idx                                   controllers.PayDateController.onSubmit(idx: Int)
 
-GET         /salary                                          controllers.SalaryQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST        /salary                                          controllers.SalaryQuestionController.onSubmit(mode: Mode = NormalMode)
-GET         /change-salary                                   controllers.SalaryQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-salary                                   controllers.SalaryQuestionController.onSubmit(mode: Mode = CheckMode)
+GET         /salary                                          controllers.SalaryQuestionController.onPageLoad()
+POST        /salary                                          controllers.SalaryQuestionController.onSubmit()
 
-GET         /ni-category-letter                              controllers.NicCategoryController.onPageLoad(mode: Mode = NormalMode)
-POST        /ni-category-letter                              controllers.NicCategoryController.onSubmit(mode: Mode = NormalMode)
-GET         /change-ni-category-letter                       controllers.NicCategoryController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-ni-category-letter                       controllers.NicCategoryController.onSubmit(mode: Mode = CheckMode)
+GET         /ni-category-letter                              controllers.NicCategoryController.onPageLoad()
+POST        /ni-category-letter                              controllers.NicCategoryController.onSubmit()
 
 GET         /pension                                         controllers.PensionContributionController.onPageLoad()
 POST        /pension                                         controllers.PensionContributionController.onSubmit()
 
 GET         /confirmation                                    controllers.ConfirmationController.onPageLoad()
 
-GET         /furlough-end                                    controllers.FurloughEndDateController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-end                                    controllers.FurloughEndDateController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-end                             controllers.FurloughEndDateController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-end                             controllers.FurloughEndDateController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-end                                    controllers.FurloughEndDateController.onPageLoad()
+POST        /furlough-end                                    controllers.FurloughEndDateController.onSubmit()
 
-GET         /furlough-start                                  controllers.FurloughStartDateController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-start                                  controllers.FurloughStartDateController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-start                           controllers.FurloughStartDateController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-start                           controllers.FurloughStartDateController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-start                                  controllers.FurloughStartDateController.onPageLoad()
+POST        /furlough-start                                  controllers.FurloughStartDateController.onSubmit()
 
-GET         /variable-length-employed                        controllers.VariableLengthEmployedController.onPageLoad(mode: Mode = NormalMode)
-POST        /variable-length-employed                        controllers.VariableLengthEmployedController.onSubmit(mode: Mode = NormalMode)
-GET         /change-variable-length-employed                 controllers.VariableLengthEmployedController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-variable-length-employed                 controllers.VariableLengthEmployedController.onSubmit(mode: Mode = CheckMode)
+GET         /variable-length-employed                        controllers.VariableLengthEmployedController.onPageLoad()
+POST        /variable-length-employed                        controllers.VariableLengthEmployedController.onSubmit()
 
-GET         /employee-start-date                             controllers.EmployeeStartDateController.onPageLoad(mode: Mode = NormalMode)
-POST        /employee-start-date                             controllers.EmployeeStartDateController.onSubmit(mode: Mode = NormalMode)
-GET         /change-employee-start-date                      controllers.EmployeeStartDateController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-employee-start-date                      controllers.EmployeeStartDateController.onSubmit(mode: Mode = CheckMode)
+GET         /employee-start-date                             controllers.EmployeeStartDateController.onPageLoad()
+POST        /employee-start-date                             controllers.EmployeeStartDateController.onSubmit()
 
-GET         /variable-gross-pay                              controllers.VariableGrossPayController.onPageLoad(mode: Mode = NormalMode)
-POST        /variable-gross-pay                              controllers.VariableGrossPayController.onSubmit(mode: Mode = NormalMode)
-GET         /change-variable-gross-pay                       controllers.VariableGrossPayController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-variable-gross-pay                       controllers.VariableGrossPayController.onSubmit(mode: Mode = CheckMode)
+GET         /variable-gross-pay                              controllers.VariableGrossPayController.onPageLoad()
+POST        /variable-gross-pay                              controllers.VariableGrossPayController.onSubmit()
 
 GET         /coming-soon                                     controllers.ComingSoonController.onPageLoad(showCalculateTopupsLink: Boolean ?= false)
 
-GET         /furlough-pay-topup                              controllers.FurloughCalculationsController.onPageLoad(mode: Mode = NormalMode)
-POST        /furlough-pay-topup                              controllers.FurloughCalculationsController.onSubmit(mode: Mode = NormalMode)
-GET         /change-furlough-pay-topup                       controllers.FurloughCalculationsController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-furlough-pay-topup                       controllers.FurloughCalculationsController.onSubmit(mode: Mode = CheckMode)
+GET         /furlough-pay-topup                              controllers.FurloughCalculationsController.onPageLoad()
+POST        /furlough-pay-topup                              controllers.FurloughCalculationsController.onSubmit()
 
 GET         /variable-pay-partial-pay-before-furlough        controllers.PartialPayBeforeFurloughController.onPageLoad
 POST        /variable-pay-partial-pay-before-furlough        controllers.PartialPayBeforeFurloughController.onSubmit
@@ -106,10 +80,8 @@ POST        /variable-pay-partial-pay-before-furlough        controllers.Partial
 GET         /variable-pay-partial-pay-after-furlough         controllers.PartialPayAfterFurloughController.onPageLoad
 POST        /variable-pay-partial-pay-after-furlough         controllers.PartialPayAfterFurloughController.onSubmit
 
-GET         /last-pay-date                                   controllers.LastPayDateController.onPageLoad(mode: Mode = NormalMode)
-POST        /last-pay-date                                   controllers.LastPayDateController.onSubmit(mode: Mode = NormalMode)
-GET         /change-last-pay-date                            controllers.LastPayDateController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-last-pay-date                            controllers.LastPayDateController.onSubmit(mode: Mode = CheckMode)
+GET         /last-pay-date                                   controllers.LastPayDateController.onPageLoad()
+POST        /last-pay-date                                   controllers.LastPayDateController.onSubmit()
 
 GET         /last-year-pay/:idx                              controllers.LastYearPayController.onPageLoad(idx: Int)
 POST        /last-year-pay/:idx                              controllers.LastYearPayController.onSubmit(idx: Int)

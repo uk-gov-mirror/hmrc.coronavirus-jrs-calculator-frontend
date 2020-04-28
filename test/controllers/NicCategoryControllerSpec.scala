@@ -7,7 +7,7 @@ package controllers
 
 import base.SpecBaseWithApplication
 import forms.NicCategoryFormProvider
-import models.{NicCategory, NormalMode, UserAnswers}
+import models.{NicCategory, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -27,7 +27,7 @@ class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val nicCategoryRoute = routes.NicCategoryController.onPageLoad(NormalMode).url
+  lazy val nicCategoryRoute = routes.NicCategoryController.onPageLoad().url
 
   val formProvider = new NicCategoryFormProvider()
   val form = formProvider()
@@ -47,7 +47,7 @@ class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(request, messages).toString
+        view(form)(request, messages).toString
 
       application.stop()
     }
@@ -67,7 +67,7 @@ class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(NicCategory.values.head), NormalMode)(request, messages).toString
+        view(form.fill(NicCategory.values.head))(request, messages).toString
 
       application.stop()
     }
@@ -117,7 +117,7 @@ class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

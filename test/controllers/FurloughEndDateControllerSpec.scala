@@ -9,7 +9,7 @@ import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBaseWithApplication
 import forms.FurloughEndDateFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -37,7 +37,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
 
   val validAnswer = furloughStart.plusDays(21)
 
-  lazy val furloughEndDateRoute = routes.FurloughEndDateController.onPageLoad(NormalMode).url
+  lazy val furloughEndDateRoute = routes.FurloughEndDateController.onPageLoad().url
 
   val userAnswersWithClaimStartAndEnd = emptyUserAnswers
     .set(ClaimPeriodStartPage, claimPeriodStart)
@@ -76,7 +76,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
@@ -94,7 +94,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), NormalMode)(getRequest, messages).toString
+        view(form.fill(validAnswer))(getRequest, messages).toString
 
       application.stop()
     }
@@ -140,7 +140,7 @@ class FurloughEndDateControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

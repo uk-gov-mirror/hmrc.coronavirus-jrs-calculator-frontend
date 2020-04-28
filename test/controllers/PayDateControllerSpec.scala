@@ -9,7 +9,7 @@ import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBaseWithApplication
 import forms.PayDateFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when

@@ -12,7 +12,7 @@ import controllers.actions._
 import forms.LastYearPayFormProvider
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.Inject
-import models.{CylbPayment, NormalMode, PaymentFrequency}
+import models.{CylbPayment, PaymentFrequency}
 import navigation.Navigator
 import pages.{LastYearPayPage, PaymentFrequencyPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -78,7 +78,7 @@ class LastYearPayController @Inject()(
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.set(LastYearPayPage, CylbPayment(date, value), Some(idx)))
                   _              <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(LastYearPayPage, NormalMode, updatedAnswers, Some(idx)))
+                } yield Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
             )
         }
       }

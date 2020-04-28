@@ -3,10 +3,10 @@
  *
  *@
 
-@import viewmodels.ConfirmationViewBreakdown
-@import viewmodels.ConfirmationMetadata
 @import java.time.LocalDate
+
 @import models.FurloughOngoing.Yes
+@import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -114,7 +114,7 @@
         <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme, "confirmation.nextSteps.li.4.2", true)))</li>
     </ul>
 
-    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad(NormalMode)), classes = Some("govuk-button"))
+    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad()), classes = Some("govuk-button"))
 
     @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
 }

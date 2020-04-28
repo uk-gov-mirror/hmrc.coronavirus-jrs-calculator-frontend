@@ -8,7 +8,6 @@ package controllers
 import controllers.actions._
 import forms.PensionContributionFormProvider
 import javax.inject.Inject
-import models.NormalMode
 import navigation.Navigator
 import pages.PensionContributionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -52,7 +51,7 @@ class PensionContributionController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(PensionContributionPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(PensionContributionPage, NormalMode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(PensionContributionPage, updatedAnswers))
       )
   }
 }

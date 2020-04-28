@@ -61,7 +61,7 @@ class IndexControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       val result = route(application, getRestartRequest).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.ClaimPeriodStartController.onPageLoad(NormalMode).url
+      redirectLocation(result).value mustEqual routes.ClaimPeriodStartController.onPageLoad().url
 
       application.stop()
     }

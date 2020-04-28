@@ -8,7 +8,6 @@ package controllers
 import controllers.actions._
 import forms.FurloughOngoingFormProvider
 import javax.inject.Inject
-import models.{Mode, NormalMode}
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughOngoingPage}
 import play.api.i18n.MessagesApi
@@ -39,9 +38,9 @@ class FurloughOngoingController @Inject()(
     val maybeFurlough = request.userAnswers.get(FurloughOngoingPage)
 
     (maybeClaimStart, maybeClaimEnd) match {
-      case (Some(start), Some(end)) => Ok(view(maybeFurlough.map(fr => form.fill(fr)).getOrElse(form), start, end, NormalMode))
-      case (None, _)                => Redirect(routes.ClaimPeriodStartController.onPageLoad(NormalMode))
-      case (_, None)                => Redirect(routes.ClaimPeriodEndController.onPageLoad(NormalMode))
+      case (Some(start), Some(end)) => Ok(view(maybeFurlough.map(fr => form.fill(fr)).getOrElse(form), start, end))
+      case (None, _)                => Redirect(routes.ClaimPeriodStartController.onPageLoad())
+      case (_, None)                => Redirect(routes.ClaimPeriodEndController.onPageLoad())
     }
   }
 
@@ -54,9 +53,9 @@ class FurloughOngoingController @Inject()(
           val maybeClaimEnd = request.userAnswers.get(ClaimPeriodEndPage)
 
           val result = (maybeClaimStart, maybeClaimEnd) match {
-            case (Some(start), Some(end)) => BadRequest(view(formWithErrors, start, end, NormalMode))
-            case (None, _)                => Redirect(routes.ClaimPeriodStartController.onPageLoad(NormalMode))
-            case (_, None)                => Redirect(routes.ClaimPeriodEndController.onPageLoad(NormalMode))
+            case (Some(start), Some(end)) => BadRequest(view(formWithErrors, start, end))
+            case (None, _)                => Redirect(routes.ClaimPeriodStartController.onPageLoad())
+            case (_, None)                => Redirect(routes.ClaimPeriodEndController.onPageLoad())
           }
           Future.successful(result)
         },
@@ -66,7 +65,7 @@ class FurloughOngoingController @Inject()(
                                request.userAnswers
                                  .set(FurloughOngoingPage, value))
             _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(FurloughOngoingPage, NormalMode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(FurloughOngoingPage, updatedAnswers))
       )
   }
 }

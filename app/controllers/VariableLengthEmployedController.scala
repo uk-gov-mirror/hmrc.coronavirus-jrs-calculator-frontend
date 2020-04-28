@@ -10,7 +10,6 @@ import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
 import javax.inject.Inject
-import models.Mode
 import navigation.Navigator
 import pages.VariableLengthEmployedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -37,27 +36,27 @@ class VariableLengthEmployedController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
     implicit request =>
       val preparedForm = request.userAnswers.get(VariableLengthEmployedPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
+  def onSubmit(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableLengthEmployedPage, value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(VariableLengthEmployedPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(VariableLengthEmployedPage, updatedAnswers))
         )
   }
 }

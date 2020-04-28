@@ -4,7 +4,7 @@
  *@
 
 @import controllers.routes._
-@import models.{Mode, VariableLengthEmployed}
+@import models.VariableLengthEmployed
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -16,11 +16,11 @@
         p: components.p
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "variableLengthEmployed.title"))) {
 
-    @formHelper(action = VariableLengthEmployedController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = VariableLengthEmployedController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

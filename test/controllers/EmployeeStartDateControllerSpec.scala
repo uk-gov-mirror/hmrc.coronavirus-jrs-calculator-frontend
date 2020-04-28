@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.EmployeeStartDateFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -34,7 +34,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
   val validAnswer = LocalDate.of(2020, 2, 1)
 
-  lazy val employeeStartDateRoute = routes.EmployeeStartDateController.onPageLoad(NormalMode).url
+  lazy val employeeStartDateRoute = routes.EmployeeStartDateController.onPageLoad().url
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
@@ -64,7 +64,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
@@ -96,7 +96,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), NormalMode)(getRequest, messages).toString
+        view(form.fill(validAnswer))(getRequest, messages).toString
 
       application.stop()
     }
@@ -165,7 +165,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

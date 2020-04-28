@@ -8,7 +8,7 @@ package controllers
 import controllers.actions._
 import forms.SalaryQuestionFormProvider
 import javax.inject.Inject
-import models.{Mode, PaymentFrequency}
+import models.PaymentFrequency
 import navigation.Navigator
 import pages.{PaymentFrequencyPage, SalaryQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,18 +34,18 @@ class SalaryQuestionController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybePf = request.userAnswers.get[PaymentFrequency](PaymentFrequencyPage)
     val maybeSalary = request.userAnswers.get(SalaryQuestionPage)
 
     (maybePf, maybeSalary) match {
-      case (Some(pf), Some(sq)) => Ok(view(form.fill(sq), pf, mode))
-      case (Some(pf), None)     => Ok(view(form, pf, mode))
-      case (None, _)            => Redirect(routes.PaymentFrequencyController.onPageLoad(mode))
+      case (Some(pf), Some(sq)) => Ok(view(form.fill(sq), pf))
+      case (Some(pf), None)     => Ok(view(form, pf))
+      case (None, _)            => Redirect(routes.PaymentFrequencyController.onPageLoad())
     }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
@@ -53,8 +53,8 @@ class SalaryQuestionController @Inject()(
           val maybePf = request.userAnswers.get[PaymentFrequency](PaymentFrequencyPage)
 
           val result = maybePf match {
-            case Some(pf) => BadRequest(view(formWithErrors, pf, mode))
-            case None     => Redirect(routes.PaymentFrequencyController.onPageLoad(mode))
+            case Some(pf) => BadRequest(view(formWithErrors, pf))
+            case None     => Redirect(routes.PaymentFrequencyController.onPageLoad())
           }
           Future.successful(result)
         },
@@ -62,7 +62,7 @@ class SalaryQuestionController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(SalaryQuestionPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(SalaryQuestionPage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(SalaryQuestionPage, updatedAnswers))
       )
   }
 }

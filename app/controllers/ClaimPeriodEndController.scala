@@ -6,10 +6,10 @@
 package controllers
 
 import java.time.LocalDate
+
 import controllers.actions._
 import forms.ClaimPeriodEndFormProvider
 import javax.inject.Inject
-import models.Mode
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -35,32 +35,32 @@ class ClaimPeriodEndController @Inject()(
 
   def form(claimStart: LocalDate) = formProvider(claimStart)
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybeClaimStart = request.userAnswers.get(ClaimPeriodStartPage)
     val maybeClaimEnd = request.userAnswers.get(ClaimPeriodEndPage)
 
     (maybeClaimStart, maybeClaimEnd) match {
-      case (Some(claimStart), Some(end)) => Ok(view(form(claimStart).fill(end), mode))
-      case (Some(claimStart), None)      => Ok(view(form(claimStart), mode))
-      case (None, _)                     => Redirect(routes.ClaimPeriodStartController.onPageLoad(mode))
+      case (Some(claimStart), Some(end)) => Ok(view(form(claimStart).fill(end)))
+      case (Some(claimStart), None)      => Ok(view(form(claimStart)))
+      case (None, _)                     => Redirect(routes.ClaimPeriodStartController.onPageLoad())
     }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     request.userAnswers.get(ClaimPeriodStartPage) match {
       case Some(claimStart) =>
         form(claimStart)
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
             value => {
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ClaimPeriodEndPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(ClaimPeriodEndPage, mode, updatedAnswers))
+              } yield Redirect(navigator.nextPage(ClaimPeriodEndPage, updatedAnswers))
             }
           )
-      case None => Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad(mode)))
+      case None => Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad()))
     }
   }
 }

@@ -9,7 +9,7 @@ import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBaseWithApplication
 import forms.ClaimPeriodEndFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -34,7 +34,7 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
 
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
-  lazy val claimPeriodEndRoute = routes.ClaimPeriodEndController.onPageLoad(NormalMode).url
+  lazy val claimPeriodEndRoute = routes.ClaimPeriodEndController.onPageLoad().url
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
@@ -75,7 +75,7 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
@@ -99,7 +99,7 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), NormalMode)(getRequest, messages).toString
+        view(form.fill(validAnswer))(getRequest, messages).toString
 
       application.stop()
     }
@@ -145,7 +145,7 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.ClaimPeriodStartController.onPageLoad(NormalMode).url
+      redirectLocation(result).value mustEqual routes.ClaimPeriodStartController.onPageLoad().url
 
       application.stop()
     }
@@ -168,7 +168,7 @@ class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoS
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

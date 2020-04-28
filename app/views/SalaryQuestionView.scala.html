@@ -15,12 +15,12 @@
         panel: components.panelIndent
 )
 
-@(form: Form[_], paymentFrequency: PaymentFrequency, mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], paymentFrequency: PaymentFrequency)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, s"salaryQuestion.title.${paymentFrequency}"))) {
 
 
-    @formHelper(action = SalaryQuestionController.onSubmit(mode), args = 'novalidate -> "novalidate") {
+    @formHelper(action = SalaryQuestionController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

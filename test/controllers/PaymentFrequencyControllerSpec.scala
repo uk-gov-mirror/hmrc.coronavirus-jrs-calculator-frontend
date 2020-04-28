@@ -7,7 +7,7 @@ package controllers
 
 import base.{SpecBase, SpecBaseWithApplication}
 import forms.PaymentFrequencyFormProvider
-import models.{NormalMode, PaymentFrequency, UserAnswers}
+import models.{PaymentFrequency, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -27,8 +27,8 @@ class PaymentFrequencyControllerSpec extends SpecBaseWithApplication with Mockit
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val paymentFrequencyRoute = routes.PaymentFrequencyController.onPageLoad(NormalMode).url
-  lazy val paymentFrequencyRoutePost = routes.PaymentFrequencyController.onSubmit(NormalMode).url
+  lazy val paymentFrequencyRoute = routes.PaymentFrequencyController.onPageLoad().url
+  lazy val paymentFrequencyRoutePost = routes.PaymentFrequencyController.onSubmit().url
 
   val formProvider = new PaymentFrequencyFormProvider()
   val form = formProvider()
@@ -57,7 +57,7 @@ class PaymentFrequencyControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode)(getRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
@@ -75,7 +75,7 @@ class PaymentFrequencyControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(PaymentFrequency.values.head), NormalMode)(getRequest, messages).toString
+        view(form.fill(PaymentFrequency.values.head))(getRequest, messages).toString
 
       application.stop()
     }
@@ -121,7 +121,7 @@ class PaymentFrequencyControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

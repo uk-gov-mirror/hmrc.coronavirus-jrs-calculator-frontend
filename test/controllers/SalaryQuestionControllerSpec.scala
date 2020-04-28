@@ -8,7 +8,7 @@ package controllers
 import base.SpecBaseWithApplication
 import forms.SalaryQuestionFormProvider
 import models.PaymentFrequency.{FourWeekly, Weekly}
-import models.{NormalMode, Salary, UserAnswers}
+import models.{Salary, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -32,7 +32,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
   val formProvider = new SalaryQuestionFormProvider()
   val form = formProvider()
 
-  lazy val salaryQuestionRoute = routes.SalaryQuestionController.onPageLoad(NormalMode).url
+  lazy val salaryQuestionRoute = routes.SalaryQuestionController.onPageLoad().url
 
   val userAnswers = UserAnswers(
     userAnswersId,
@@ -61,7 +61,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, Weekly, NormalMode)(getRequest, messages).toString
+        view(form, Weekly)(getRequest, messages).toString
 
       application.stop()
     }
@@ -111,7 +111,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, FourWeekly, NormalMode)(request, messages).toString
+        view(boundForm, FourWeekly)(request, messages).toString
 
       application.stop()
     }

@@ -10,7 +10,6 @@ import java.time.LocalDate
 import controllers.actions._
 import forms.LastPayDateFormProvider
 import javax.inject.Inject
-import models.Mode
 import navigation.Navigator
 import pages.{LastPayDatePage, PayDatePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -36,7 +35,7 @@ class LastPayDateController @Inject()(
 
   def form(latestPayDate: LocalDate) = formProvider(latestPayDate)
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.getList(PayDatePage).lastOption match {
       case Some(date) =>
         val preparedForm = request.userAnswers.get(LastPayDatePage) match {
@@ -44,24 +43,24 @@ class LastPayDateController @Inject()(
           case Some(value) => form(date).fill(value)
         }
 
-        Ok(view(preparedForm, mode, date))
+        Ok(view(preparedForm, date))
 
       case None => Redirect(routes.PayDateController.onPageLoad(1))
     }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     request.userAnswers.getList(PayDatePage).lastOption match {
       case Some(date) =>
         form(date)
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, date))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, date))),
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(LastPayDatePage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(LastPayDatePage, mode, updatedAnswers))
+              } yield Redirect(navigator.nextPage(LastPayDatePage, updatedAnswers))
           )
 
       case None => Future.successful(Redirect(routes.PayDateController.onPageLoad(1)))

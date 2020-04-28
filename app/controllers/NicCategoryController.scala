@@ -8,7 +8,6 @@ package controllers
 import controllers.actions._
 import forms.NicCategoryFormProvider
 import javax.inject.Inject
-import models.Mode
 import navigation.Navigator
 import pages.NicCategoryPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,25 +33,25 @@ class NicCategoryController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.get(NicCategoryPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode))
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(NicCategoryPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(NicCategoryPage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(NicCategoryPage, updatedAnswers))
       )
   }
 }

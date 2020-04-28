@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.FurloughOngoingFormProvider
-import models.{FurloughOngoing, NormalMode, UserAnswers}
+import models.{FurloughOngoing, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -63,7 +63,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, start, end, NormalMode)(getRequest, messages).toString
+        view(form, start, end)(getRequest, messages).toString
 
       application.stop()
     }
@@ -81,7 +81,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(FurloughOngoing.values.head), start, end, NormalMode)(getRequest, messages).toString
+        view(form.fill(FurloughOngoing.values.head), start, end)(getRequest, messages).toString
 
       application.stop()
     }
@@ -131,7 +131,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, start, end, NormalMode)(request, messages).toString
+        view(boundForm, start, end)(request, messages).toString
 
       application.stop()
     }

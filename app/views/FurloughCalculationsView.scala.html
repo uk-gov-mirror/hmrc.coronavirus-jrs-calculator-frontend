@@ -4,7 +4,7 @@
  *@
 
 @import controllers.routes._
-@import models.{Mode, FurloughCalculations}
+@import models.FurloughCalculations
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -17,11 +17,11 @@
         p: components.p
 )
 
-@(form: Form[_], mode: Mode, calculationResult: CalculationResult)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], calculationResult: CalculationResult)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughCalculations.title"))) {
 
-    @formHelper(action = FurloughCalculationsController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = FurloughCalculationsController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

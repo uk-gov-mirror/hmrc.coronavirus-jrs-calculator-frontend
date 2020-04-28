@@ -11,7 +11,6 @@ import controllers.actions._
 import forms.FurloughStartDateFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.Mode
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, FurloughStartDatePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -36,28 +35,28 @@ class FurloughStartDateController @Inject()(
 
   def form(claimEndDate: LocalDate) = formProvider(claimEndDate)
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswer(ClaimPeriodEndPage) { claimEndDate =>
       val preparedForm = request.userAnswers.get(FurloughStartDatePage) match {
         case None        => form(claimEndDate)
         case Some(value) => form(claimEndDate).fill(value)
       }
 
-      Future.successful(Ok(view(preparedForm, mode)))
+      Future.successful(Ok(view(preparedForm)))
     }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswer(ClaimPeriodEndPage) { claimEndDate =>
       form(claimEndDate)
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughStartDatePage, value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(FurloughStartDatePage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(FurloughStartDatePage, updatedAnswers))
         )
     }
   }

@@ -11,15 +11,15 @@ import controllers.actions._
 import forms.PayDateFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.{NormalMode, UserAnswers}
+import models.UserAnswers
 import navigation.Navigator
 import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import views.html.PayDateView
-import play.api.Logger
 import utils.LocalDateHelpers
+import views.html.PayDateView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -88,7 +88,7 @@ class PayDateController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.setListWithInvalidation(PayDatePage, value, idx))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(PayDatePage, NormalMode, updatedAnswers, Some(idx)))
+            } yield Redirect(navigator.nextPage(PayDatePage, updatedAnswers, Some(idx)))
         )
     }
   }

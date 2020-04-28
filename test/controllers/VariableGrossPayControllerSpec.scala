@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.VariableGrossPayFormProvider
-import models.{NormalMode, UserAnswers, VariableGrossPay, VariableLengthEmployed}
+import models.{UserAnswers, VariableGrossPay, VariableLengthEmployed}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -33,7 +33,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
   val formProvider = new VariableGrossPayFormProvider()
   val form = formProvider()
 
-  lazy val variableGrossPayRoute = routes.VariableGrossPayController.onPageLoad(NormalMode).url
+  lazy val variableGrossPayRoute = routes.VariableGrossPayController.onPageLoad().url
 
   val furloughStart = LocalDate.parse("2020-04-01")
   val empStart = LocalDate.parse("2020-02-01")
@@ -68,7 +68,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, NormalMode, furloughStart)(getRequest, messages).toString
+        view(form, furloughStart)(getRequest, messages).toString
 
       application.stop()
     }
@@ -86,7 +86,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(VariableGrossPay(111)), NormalMode, furloughStart)(getRequest, messages).toString
+        view(form.fill(VariableGrossPay(111)), furloughStart)(getRequest, messages).toString
 
       application.stop()
     }
@@ -168,7 +168,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, NormalMode, furloughStart)(request, messages).toString
+        view(boundForm, furloughStart)(request, messages).toString
 
       application.stop()
     }

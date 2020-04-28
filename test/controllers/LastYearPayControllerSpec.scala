@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.LastYearPayFormProvider
-import models.{Amount, CylbPayment, NormalMode, Salary, UserAnswers}
+import models.{Amount, CylbPayment, Salary, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._

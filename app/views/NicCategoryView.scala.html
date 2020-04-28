@@ -4,7 +4,7 @@
  *@
 
 @import controllers.routes._
-@import models.{Mode, NicCategory}
+@import models.NicCategory
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -18,11 +18,11 @@
         link: components.link
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "nicCategory.title"))) {
 
-    @formHelper(action = NicCategoryController.onSubmit(mode), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = NicCategoryController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 

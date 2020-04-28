@@ -3,9 +3,10 @@
  *
  *@
 
-@import controllers.routes._
-@import models.{Mode, FurloughOngoing}
 @import java.time.LocalDate
+
+@import controllers.routes._
+@import models.FurloughOngoing
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -15,7 +16,7 @@
         button: components.button
 )
 
-@(form: Form[_], startDate: LocalDate, endDate: LocalDate, mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], startDate: LocalDate, endDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughOngoing.title"))) {
 

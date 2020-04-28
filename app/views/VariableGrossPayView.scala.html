@@ -17,11 +17,11 @@
         inputCurrency: components.inputCurrency
 )
 
-@(form: Form[_], mode: Mode, furloughStart: LocalDate)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], furloughStart: LocalDate)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "variableGrossPay.title"))) {
 
-    @formHelper(action = VariableGrossPayController.onSubmit(mode), args = 'novalidate -> "novalidate") {
+    @formHelper(action = VariableGrossPayController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
