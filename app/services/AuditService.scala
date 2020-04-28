@@ -80,7 +80,7 @@ class AuditService @Inject()(auditConnector: AuditConnector) {
       "employeePartialPayBeforeFurlough"   -> userAnswers.get(PartialPayBeforeFurloughPage).getOrElse(""),
       "employeePartialPayAfterFurlough"    -> userAnswers.get(PartialPayAfterFurloughPage).getOrElse(""),
       "employeeNationalInsuranceCategory"  -> userAnswers.get(NicCategoryPage).getOrElse(""),
-      "employerPensionContributions"       -> userAnswers.get(PensionAutoEnrolmentPage).getOrElse("")
+      "employerPensionContributions"       -> userAnswers.get(PensionContributionPage).getOrElse("")
     )
 
   private def breakdownTransformer(breakdown: ConfirmationViewBreakdown): String = {
