@@ -66,8 +66,8 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       lastPayDateRoutes
     case NicCategoryPage =>
       _ =>
-        routes.PensionAutoEnrolmentController.onPageLoad(NormalMode)
-    case PensionAutoEnrolmentPage =>
+        routes.PensionContributionController.onPageLoad()
+    case PensionContributionPage =>
       _ =>
         routes.FurloughCalculationsController.onPageLoad(NormalMode)
     case FurloughCalculationsPage =>

@@ -11,7 +11,7 @@ import base.SpecBaseWithApplication
 import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
 import models.NicCategory.Payable
 import models.PaymentFrequency.Monthly
-import models.PensionStatus.OptedIn
+import models.PensionContribution.Yes
 import models.{Amount, CalculationResult, FullPeriod, FurloughQuestion, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -61,5 +61,5 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
   val breakdown = ConfirmationViewBreakdown(furlough, nic, pension)
 
   val meta =
-    ConfirmationMetadata(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30)), furloughPeriod, Monthly, Payable, OptedIn)
+    ConfirmationMetadata(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30)), furloughPeriod, Monthly, Payable, Yes)
 }

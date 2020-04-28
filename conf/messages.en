@@ -267,11 +267,11 @@ nicCategory.details.category.h = Apprentice under 25
 nicCategory.details.category.m = Employees under 21
 nicCategory.details.category.z = Employees under 21 who can defer National Insurance because they’re already paying it in another job
 
-pensionAutoEnrolment.title = Do you pay pension contributions for this employee?
-pensionAutoEnrolment.heading = Do you pay pension contributions for this employee?
-pensionStatus.optedIn = Yes
-pensionStatus.optedOut = No
-pensionAutoEnrolment.error.required = Select yes if you pay pension contributions for this employee
+pensionContribution.title = Do you pay pension contributions for this employee?
+pensionContribution.heading = Do you pay pension contributions for this employee?
+pensionContribution.yes = Yes
+pensionContribution.no = No
+pensionContribution.error.required = Select yes if you pay pension contributions for this employee
 
 confirmation.title = What you can claim for this employee
 confirmation.heading = What you can claim for this employee
@@ -291,8 +291,8 @@ confirmation.paid.fourweekly = They are paid every 4 weeks
 confirmation.paid.monthly = They are paid every month
 confirmation.nic.payable = Their National Insurance category is A, B, C or J
 confirmation.nic.nonPayable = Their National Insurance category is H, M or Z
-confirmation.pension.optedIn = They receive employer pension contributions as part of an automatic enrolment pension scheme
-confirmation.pension.optedOut = They do not receive employer pension contributions as part of an automatic enrolment pension scheme
+confirmation.pension.yes = They receive employer pension contributions
+confirmation.pension.no = They do not receive employer pension contributions
 confirmation.breakdown.h2 = Breakdown by pay period
 confirmation.breakdown.p = You can view a table showing the furlough amounts, employer National Insurance and pension contributions for each pay period in your claim.
 confirmation.breakdown.details = Figures for each pay period during the claim

@@ -7,8 +7,8 @@ package handlers
 
 import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.NicCategory.{Nonpayable, Payable}
-import models.PensionStatus.{OptedIn, OptedOut}
-import models.{Amount, CalculationResult, MandatoryData, NicCategory, PaymentFrequency, PensionStatus, Period, UserAnswers}
+import models.PensionContribution.{No, Yes}
+import models.{Amount, CalculationResult, MandatoryData, NicCategory, PaymentFrequency, PensionContribution, Period, UserAnswers}
 import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
 
@@ -28,7 +28,7 @@ trait ConfirmationControllerRequestHandler
       regulars       <- extractPayments(userAnswers, furloughPeriod)
       furlough = calculateFurloughGrant(data.paymentFrequency, regulars)
       ni = calculateNi(furlough, data.nicCategory, data.paymentFrequency)
-      pension = calculatePension(furlough, data.pensionStatus, data.paymentFrequency)
+      pension = calculatePension(furlough, data.pensionContribution, data.paymentFrequency)
     } yield ConfirmationViewBreakdown(furlough, ni, pension)
 
   private def meta(userAnswers: UserAnswers, data: MandatoryData): Option[ConfirmationMetadata] =
@@ -40,7 +40,7 @@ trait ConfirmationControllerRequestHandler
         furloughPeriod,
         data.paymentFrequency,
         data.nicCategory,
-        data.pensionStatus)
+        data.pensionContribution)
 
   private def calculateNi(furloughResult: CalculationResult, nic: NicCategory, frequency: PaymentFrequency): CalculationResult =
     nic match {
@@ -51,11 +51,11 @@ trait ConfirmationControllerRequestHandler
 
   private def calculatePension(
     furloughResult: CalculationResult,
-    pensionStatus: PensionStatus,
+    pensionContribution: PensionContribution,
     frequency: PaymentFrequency): CalculationResult =
-    pensionStatus match {
-      case OptedIn => calculatePensionGrant(frequency, furloughResult.payPeriodBreakdowns)
-      case OptedOut =>
+    pensionContribution match {
+      case Yes => calculatePensionGrant(frequency, furloughResult.payPeriodBreakdowns)
+      case No =>
         CalculationResult(PensionCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(grant = Amount(0.0))))
     }
 }

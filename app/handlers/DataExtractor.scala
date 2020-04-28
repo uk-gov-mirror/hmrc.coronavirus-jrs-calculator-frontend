@@ -21,7 +21,7 @@ trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers with Fu
       claimEnd      <- userAnswers.get(ClaimPeriodEndPage)
       frequency     <- userAnswers.get(PaymentFrequencyPage)
       nic           <- userAnswers.get(NicCategoryPage)
-      pension       <- userAnswers.get(PensionAutoEnrolmentPage)
+      pension       <- userAnswers.get(PensionContributionPage)
       payQuestion   <- userAnswers.get(PayQuestionPage)
       furlough      <- userAnswers.get(FurloughQuestionPage)
       furloughStart <- userAnswers.get(FurloughStartDatePage)
