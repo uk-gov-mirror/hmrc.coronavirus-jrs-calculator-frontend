@@ -9,7 +9,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{FullPeriod, PartialPeriod, PaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
+import models.{FullPeriod, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
 import utils.LocalDateHelpers._
 
 trait PeriodHelper {
@@ -80,11 +80,15 @@ trait PeriodHelper {
     lastPayDay: LocalDate): Seq[PeriodWithPaymentDate] =
     sortedPeriods.zip(sortedPeriods.length - 1 to 0 by -1).map {
       case (p, idx) => {
-        frequency match {
-          case Monthly     => PeriodWithPaymentDate(p, PaymentDate(lastPayDay.minusMonths(idx)))
-          case FourWeekly  => PeriodWithPaymentDate(p, PaymentDate(lastPayDay.minusWeeks(idx * 4)))
-          case FortNightly => PeriodWithPaymentDate(p, PaymentDate(lastPayDay.minusWeeks(idx * 2)))
-          case Weekly      => PeriodWithPaymentDate(p, PaymentDate(lastPayDay.minusWeeks(idx * 1)))
+        (p, frequency) match {
+          case (fp: FullPeriod, Monthly)        => FullPeriodWithPaymentDate(fp, PaymentDate(lastPayDay.minusMonths(idx)))
+          case (pp: PartialPeriod, Monthly)     => PartialPeriodWithPaymentDate(pp, PaymentDate(lastPayDay.minusMonths(idx)))
+          case (fp: FullPeriod, FourWeekly)     => FullPeriodWithPaymentDate(fp, PaymentDate(lastPayDay.minusWeeks(idx * 4)))
+          case (pp: PartialPeriod, FourWeekly)  => PartialPeriodWithPaymentDate(pp, PaymentDate(lastPayDay.minusWeeks(idx * 4)))
+          case (fp: FullPeriod, FortNightly)    => FullPeriodWithPaymentDate(fp, PaymentDate(lastPayDay.minusWeeks(idx * 2)))
+          case (pp: PartialPeriod, FortNightly) => PartialPeriodWithPaymentDate(pp, PaymentDate(lastPayDay.minusWeeks(idx * 2)))
+          case (fp: FullPeriod, Weekly)         => FullPeriodWithPaymentDate(fp, PaymentDate(lastPayDay.minusWeeks(idx * 1)))
+          case (pp: PartialPeriod, Weekly)      => PartialPeriodWithPaymentDate(pp, PaymentDate(lastPayDay.minusWeeks(idx * 1)))
         }
       }
     }

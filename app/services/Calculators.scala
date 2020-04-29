@@ -5,7 +5,7 @@
 
 package services
 
-import models.{Amount, Period}
+import models.{Amount, PartialPeriod}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
@@ -15,8 +15,8 @@ trait Calculators extends PeriodHelper {
   def claimableAmount(amount: Amount, cap: BigDecimal): Amount =
     capCalulation(cap, eightyPercent(amount).value)
 
-  def partialPeriodDailyCalculation(payment: Amount, o: Period, p: Period): Amount =
-    dailyCalculation(payment, periodDaysCount(o), periodDaysCount(p))
+  def partialPeriodDailyCalculation(payment: Amount, partialPeriod: PartialPeriod): Amount =
+    dailyCalculation(payment, periodDaysCount(partialPeriod.original), periodDaysCount(partialPeriod.partial))
 
   def dailyCalculation(payment: Amount, wholePeriodCount: Int, partialPeriodCount: Int): Amount =
     Amount((payment.value / wholePeriodCount) * partialPeriodCount).halfUp

@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriod, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PaymentDate, Period, PeriodWithPaymentDate}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class CommonCalculationServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
@@ -17,9 +17,9 @@ class CommonCalculationServiceSpec extends SpecBase with ScalaCheckPropertyCheck
   forAll(fullPeriodScenarios) { (frequency, grossPay, furloughPayment, period, paymentDate, rate, expectedGrant) =>
     s"Calculate grant for a full period with Payment Frequency: $frequency, " +
       s"a Payment Date: $paymentDate, rate $rate and a Furlough Grant: ${furloughPayment.value}" in new CommonCalculationService {
-      val expected = PeriodBreakdown(grossPay, expectedGrant, PeriodWithPaymentDate(period, paymentDate))
+      val expected = FullPeriodBreakdown(expectedGrant, FullPeriodWithPaymentDate(period, paymentDate))
 
-      fullPeriodCalculation(frequency, grossPay, furloughPayment, period, paymentDate, rate) mustBe expected
+      fullPeriodCalculation(frequency, furloughPayment, period, paymentDate, rate) mustBe expected
     }
   }
 

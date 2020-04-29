@@ -5,7 +5,7 @@
 
 package services
 
-import models.{Amount, FullPeriod, PaymentDate, PaymentFrequency, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodWithPaymentDate}
 import utils.AmountRounding.roundWithMode
 import utils.TaxYearFinder
 
@@ -15,17 +15,16 @@ trait CommonCalculationService extends TaxYearFinder {
 
   def fullPeriodCalculation(
     frequency: PaymentFrequency,
-    grossPay: Amount,
     furloughPayment: Amount,
     period: FullPeriod,
     paymentDate: PaymentDate,
-    rate: Rate): PeriodBreakdown = {
+    rate: Rate): FullPeriodBreakdown = {
 
     val threshold = thresholdFinder(frequency, paymentDate, rate)
     val roundedFurloughPayment = furloughPayment.value.setScale(0, RoundingMode.DOWN)
     val grant = greaterThanAllowance(roundedFurloughPayment, threshold, rate)
 
-    PeriodBreakdown(grossPay, Amount(grant), PeriodWithPaymentDate(period, paymentDate))
+    FullPeriodBreakdown(Amount(grant), FullPeriodWithPaymentDate(period, paymentDate))
   }
 
   protected def greaterThanAllowance(amount: BigDecimal, threshold: BigDecimal, rate: Rate): BigDecimal =

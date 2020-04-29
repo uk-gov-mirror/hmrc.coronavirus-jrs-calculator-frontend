@@ -7,8 +7,8 @@ package services
 
 import java.time.LocalDate
 
-import models.{CylbOperators, FullPeriod, PartialPeriod, PaymentFrequency, PeriodWithPaymentDate, Periods}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
+import models.{CylbOperators, FullPeriod, PartialPeriod, PaymentFrequency, PeriodWithPaymentDate, Periods}
 
 trait PreviousYearPeriod extends PeriodHelper {
 

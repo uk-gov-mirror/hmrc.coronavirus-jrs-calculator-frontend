@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
 import models.PaymentFrequency.{FourWeekly, Monthly}
-import models.{Amount, PartialPeriod, PaymentDate, Period, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, Period}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreDataBuilder {
@@ -17,7 +17,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
   forAll(partialPeriodScenarios) { (frequency, grossPay, furloughPayment, period, paymentDate, expectedGrant) =>
     s"Calculate grant for a partial period with Payment Frequency: $frequency," +
       s"a PaymentDate: $paymentDate and a Gross Pay: ${grossPay.value}" in new NicCalculator {
-      val expected = PeriodBreakdown(grossPay, expectedGrant, PeriodWithPaymentDate(period, paymentDate))
+      val expected = PartialPeriodBreakdown(grossPay, expectedGrant, PartialPeriodWithPaymentDate(period, paymentDate))
 
       calculatePartialPeriodNic(frequency, grossPay, furloughPayment, period, paymentDate) mustBe expected
     }
@@ -29,7 +29,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
       Period(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 3, 28)))
     val paymentDate: PaymentDate = PaymentDate(LocalDate.of(2020, 3, 28))
 
-    val expected = PeriodBreakdown(Amount(1124.23), Amount(39.30), PeriodWithPaymentDate(period, paymentDate))
+    val expected = PartialPeriodBreakdown(Amount(1124.23), Amount(39.30), PartialPeriodWithPaymentDate(period, paymentDate))
 
     calculatePartialPeriodNic(FourWeekly, Amount(1124.23), Amount(426.02), period, paymentDate) mustBe expected
   }

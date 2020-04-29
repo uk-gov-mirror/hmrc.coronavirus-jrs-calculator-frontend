@@ -14,7 +14,7 @@ import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FullPeriod, MandatoryData, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
+import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, MandatoryData, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import play.api.libs.json.Json
 import utils.CoreTestData
@@ -88,7 +88,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
       PaymentWithPeriod(
         Amount(0.0),
         Amount(2000.0),
-        PeriodWithPaymentDate(
+        FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 20))),
         Regularly
@@ -96,7 +96,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
       PaymentWithPeriod(
         Amount(0.0),
         Amount(2000.0),
-        PeriodWithPaymentDate(
+        FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
           PaymentDate(LocalDate.of(2020, 4, 20))),
         Regularly
@@ -115,7 +115,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
       PaymentWithPeriod(
         Amount(0.00),
         Amount(817.47),
-        PeriodWithPaymentDate(
+        FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 20))),
         Varies
@@ -123,7 +123,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
       PaymentWithPeriod(
         Amount(0.00),
         Amount(791.10),
-        PeriodWithPaymentDate(
+        FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
           PaymentDate(LocalDate.of(2020, 4, 20))),
         Varies

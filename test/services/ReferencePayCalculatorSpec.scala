@@ -11,7 +11,7 @@ import base.{CoreDataBuilder, SpecBase}
 import handlers.DataExtractor
 import models.PayQuestion.Varies
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{Amount, CylbEligibility, CylbPayment, FullPeriod, NonFurloughPay, PartialPeriod, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, VariableLengthEmployed}
+import models.{Amount, CylbEligibility, CylbPayment, FullPeriod, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, VariableLengthEmployed}
 
 class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
 
@@ -22,10 +22,14 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     val grossPay = Amount(2400.00)
     val priorFurloughPeriod = Period(employeeStartDate, furloughStartDate.minusDays(1))
     val afterFurloughPeriod =
-      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 31)))
+      FullPeriodWithPaymentDate(
+        FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+        PaymentDate(LocalDate.of(2020, 3, 31)))
     val afterFurloughPeriodTwo =
-      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))), PaymentDate(LocalDate.of(2020, 4, 30)))
-    val afterFurloughPartial = PeriodWithPaymentDate(
+      FullPeriodWithPaymentDate(
+        FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
+        PaymentDate(LocalDate.of(2020, 4, 30)))
+    val afterFurloughPartial = PartialPeriodWithPaymentDate(
       PartialPeriod(
         Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31)),
         Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 15))),

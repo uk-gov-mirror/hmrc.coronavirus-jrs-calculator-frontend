@@ -9,11 +9,9 @@ import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{FullPeriod, PartialPeriod, PaymentDate, Period, PeriodWithPaymentDate, Periods}
-import org.scalacheck.{Gen, Shrink}
-import org.scalacheck.Prop.propBoolean
+import models.{FullPeriod, PartialPeriod, PaymentDate, Period, Periods}
 import org.scalacheck.Gen.choose
-import org.scalacheck.Test.Parameters
+import org.scalacheck.Shrink
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreDataBuilder {

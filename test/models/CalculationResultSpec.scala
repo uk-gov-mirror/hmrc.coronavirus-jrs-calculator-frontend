@@ -15,31 +15,66 @@ import play.api.libs.json.Json
 class CalculationResultSpec extends SpecBase {
 
   "serialize/deserialize from/to json" in {
-    val payPeriod =
-      PeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))), PaymentDate(LocalDate.of(2020, 3, 20)))
+    val fullPeriodWithPaymentDate =
+      FullPeriodWithPaymentDate(
+        FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+        PaymentDate(LocalDate.of(2020, 3, 20)))
+
+    val partialPeriodWithPaymentDate =
+      PartialPeriodWithPaymentDate(
+        PartialPeriod(
+          Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
+          Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+        PaymentDate(LocalDate.of(2020, 3, 20))
+      )
+
     val nicCalculationResult =
-      CalculationResult(NicCalculationResult, 0.10, Seq(PeriodBreakdown(Amount(567.00), Amount(123.00), payPeriod)))
+      CalculationResult(
+        NicCalculationResult,
+        0.10,
+        Seq(
+          FullPeriodBreakdown(Amount(123.00), fullPeriodWithPaymentDate),
+          PartialPeriodBreakdown(Amount(456.00), Amount(789.00), partialPeriodWithPaymentDate)
+        )
+      )
+
     val expectedJsValue =
       Json.parse(s"""{
-                    |   "calculation":"nic",
-                    |   "total":0.1,
-                    |   "payPeriodBreakdowns":[
-                    |      {
-                    |         "nonFurloughPay":"567.0",
-                    |         "grant":"123.0",
-                    |         "periodWithPaymentDate":{
-                    |            "period":{
-                    |               "period":{
-                    |                  "start":"2020-03-01",
-                    |                  "end":"2020-03-31"
-                    |               },
-                    |               "_type":"models.FullPeriod"
-                    |            },
-                    |            "paymentDate":"2020-03-20"
-                    |         }
+                    |  "calculation": "nic",
+                    |  "total": 0.1,
+                    |  "payPeriodBreakdowns": [
+                    |    {
+                    |      "grant": "123.0",
+                    |      "periodWithPaymentDate": {
+                    |        "period": {
+                    |          "period": {
+                    |            "start": "2020-03-01",
+                    |            "end": "2020-03-31"
+                    |          }
+                    |        },
+                    |        "paymentDate": "2020-03-20"
                     |      }
-                    |   ]
-                    |}""".stripMargin)
+                    |    },
+                    |    {
+                    |      "nonFurloughPay": "456.0",
+                    |      "grant": "789.0",
+                    |      "periodWithPaymentDate": {
+                    |        "period": {
+                    |          "original": {
+                    |            "start": "2020-03-01",
+                    |            "end": "2020-03-31"
+                    |          },
+                    |          "partial": {
+                    |            "start": "2020-03-01",
+                    |            "end": "2020-03-31"
+                    |          }
+                    |        },
+                    |        "paymentDate": "2020-03-20"
+                    |      }
+                    |    }
+                    |  ]
+                    |}
+                    |""".stripMargin)
 
     Json.toJson(nicCalculationResult) mustBe expectedJsValue
   }

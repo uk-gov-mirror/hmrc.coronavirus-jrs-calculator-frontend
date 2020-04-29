@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
-import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
+import models.PaymentFrequency.{FortNightly, Monthly, Weekly}
 
 class PreviousYearCoreDataSpec extends SpecBase with CoreDataBuilder {
 

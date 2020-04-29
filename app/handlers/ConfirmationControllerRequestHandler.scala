@@ -8,7 +8,7 @@ package handlers
 import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.NicCategory.{Nonpayable, Payable}
 import models.PensionContribution.{No, Yes}
-import models.{Amount, CalculationResult, MandatoryData, NicCategory, PaymentFrequency, PensionContribution, Period, UserAnswers}
+import models.{Amount, CalculationResult, FullPeriodBreakdown, MandatoryData, NicCategory, PartialPeriodBreakdown, PaymentFrequency, PensionContribution, Period, UserAnswers}
 import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
 
@@ -46,7 +46,14 @@ trait ConfirmationControllerRequestHandler
     nic match {
       case Payable => calculateNicGrant(frequency, furloughResult.payPeriodBreakdowns)
       case Nonpayable =>
-        CalculationResult(NicCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(grant = Amount(0.0))))
+        CalculationResult(
+          NicCalculationResult,
+          0.0,
+          furloughResult.payPeriodBreakdowns.map {
+            case FullPeriodBreakdown(_, withPaymentDate)       => FullPeriodBreakdown(Amount(0.0), withPaymentDate)
+            case PartialPeriodBreakdown(_, _, withPaymentDate) => PartialPeriodBreakdown(Amount(0.0), Amount(0.0), withPaymentDate)
+          }
+        )
     }
 
   private def calculatePension(
@@ -56,6 +63,13 @@ trait ConfirmationControllerRequestHandler
     pensionContribution match {
       case Yes => calculatePensionGrant(frequency, furloughResult.payPeriodBreakdowns)
       case No =>
-        CalculationResult(PensionCalculationResult, 0.0, furloughResult.payPeriodBreakdowns.map(_.copy(grant = Amount(0.0))))
+        CalculationResult(
+          PensionCalculationResult,
+          0.0,
+          furloughResult.payPeriodBreakdowns.map {
+            case FullPeriodBreakdown(_, withPaymentDate)       => FullPeriodBreakdown(Amount(0.0), withPaymentDate)
+            case PartialPeriodBreakdown(_, _, withPaymentDate) => PartialPeriodBreakdown(Amount(0.0), Amount(0.0), withPaymentDate)
+          }
+        )
     }
 }

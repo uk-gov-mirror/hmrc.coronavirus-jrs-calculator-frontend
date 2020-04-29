@@ -6,7 +6,7 @@
 package services
 
 import models.Calculation.PensionCalculationResult
-import models.{Amount, CalculationResult, FullPeriod, PartialPeriod, PaymentDate, PaymentFrequency, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodBreakdown, PeriodWithPaymentDate}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
@@ -14,19 +14,11 @@ import scala.math.BigDecimal.RoundingMode
 trait PensionCalculator extends FurloughCapCalculator with CommonCalculationService {
 
   def calculatePensionGrant(frequency: PaymentFrequency, furloughBreakdown: Seq[PeriodBreakdown]): CalculationResult = {
-    val pensionBreakdowns = furloughBreakdown.map { breakdown =>
-      import breakdown._
-      breakdown.periodWithPaymentDate.period match {
-        case fp @ FullPeriod(_) =>
-          fullPeriodCalculation(frequency, nonFurloughPay, grant, fp, periodWithPaymentDate.paymentDate, PensionRate())
-        case pp @ PartialPeriod(_, _) =>
-          calculatePartialPeriodPension(
-            frequency,
-            breakdown.nonFurloughPay,
-            breakdown.grant,
-            pp,
-            breakdown.periodWithPaymentDate.paymentDate)
-      }
+    val pensionBreakdowns = furloughBreakdown.map {
+      case FullPeriodBreakdown(grant, period) =>
+        fullPeriodCalculation(frequency, grant, period.period, period.paymentDate, PensionRate())
+      case PartialPeriodBreakdown(nonFurlough, grant, periodWithPaymentDate) =>
+        calculatePartialPeriodPension(frequency, nonFurlough, grant, periodWithPaymentDate)
     }
 
     CalculationResult(PensionCalculationResult, pensionBreakdowns.map(_.grant.value).sum, pensionBreakdowns)
@@ -36,17 +28,16 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
     frequency: PaymentFrequency,
     grossPay: Amount,
     furloughPayment: Amount,
-    period: PartialPeriod,
-    paymentDate: PaymentDate): PeriodBreakdown = {
-    val fullPeriodDays = periodDaysCount(period.original)
-    val furloughDays = periodDaysCount(period.partial)
-    val threshold = FrequencyTaxYearThresholdMapping.findThreshold(frequency, taxYearAt(paymentDate), PensionRate())
+    period: PartialPeriodWithPaymentDate): PartialPeriodBreakdown = {
+    val fullPeriodDays = periodDaysCount(period.period.original)
+    val furloughDays = periodDaysCount(period.period.partial)
+    val threshold = FrequencyTaxYearThresholdMapping.findThreshold(frequency, taxYearAt(period.paymentDate), PensionRate())
 
     val allowance = roundWithMode((threshold / fullPeriodDays) * furloughDays, RoundingMode.HALF_UP)
     val roundedFurloughPayment = furloughPayment.value.setScale(0, RoundingMode.DOWN)
     val grant = greaterThanAllowance(roundedFurloughPayment, allowance, PensionRate())
 
-    PeriodBreakdown(grossPay, Amount(grant), PeriodWithPaymentDate(period, paymentDate))
+    PartialPeriodBreakdown(grossPay, Amount(grant), PartialPeriodWithPaymentDate(period.period, period.paymentDate))
   }
 
 }
