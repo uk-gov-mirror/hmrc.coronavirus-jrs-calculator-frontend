@@ -62,31 +62,29 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       )
     )
 
-  private def userAnswersTransformer(userAnswers: UserAnswers): String =
-    Json.stringify(
-      Json.obj(
-        "claimPeriodStartDate"               -> JsString(userAnswers.get(ClaimPeriodStartPage).fold("")(_.toString)),
-        "claimPeriodEndDate"                 -> JsString(userAnswers.get(ClaimPeriodEndPage).fold("")(_.toString)),
-        "employeeFurloughStartDate"          -> JsString(userAnswers.get(FurloughStartDatePage).fold("")(_.toString)),
-        "hasTheEmployeeFurloughEnded"        -> JsString(userAnswers.get(FurloughOngoingPage).fold("")(_.toString)),
-        "employeeFurloughEndDate"            -> JsString(userAnswers.get(FurloughEndDatePage).fold("")(_.toString)),
-        "employeePayFrequency"               -> JsString(userAnswers.get(PaymentFrequencyPage).fold("")(_.toString)),
-        "employeePayMethod"                  -> JsString(userAnswers.get(PayQuestionPage).fold("")(_.toString)),
-        "employeeSalary"                     -> JsString(userAnswers.get(SalaryQuestionPage).fold("")(_.amount.toString)),
-        "employeeEmployedOnOrBefore1Feb2019" -> JsString(userAnswers.get(VariableLengthEmployedPage).fold("")(_.toString)),
-        "employeeStartDate"                  -> JsString(userAnswers.get(EmployeeStartDatePage).fold("")(_.toString)),
-        "employeeGrossPayForYear"            -> JsString(userAnswers.get(VariableGrossPayPage).fold("")(_.amount.toString)),
-        "employeePayPeriodEndDates"          -> Json.toJson(userAnswers.getList(PayDatePage)),
-        "employeePayDayForLastPeriod"        -> JsString(userAnswers.get(LastPayDatePage).fold("")(_.toString)),
-        "employeeLastYearPay"                -> Json.toJson(userAnswers.getList(LastYearPayPage)),
-        "employeePartialPayBeforeFurlough"   -> JsString(userAnswers.get(PartialPayBeforeFurloughPage).fold("")(_.value.toString)),
-        "employeePartialPayAfterFurlough"    -> JsString(userAnswers.get(PartialPayAfterFurloughPage).fold("")(_.value.toString)),
-        "employeeNationalInsuranceCategory"  -> JsString(userAnswers.get(NicCategoryPage).fold("")(_.toString)),
-        "employerPensionContributions"       -> JsString(userAnswers.get(PensionContributionPage).fold("")(_.toString))
-      )
+  private def userAnswersTransformer(userAnswers: UserAnswers) =
+    Json.obj(
+      "claimPeriodStartDate"               -> JsString(userAnswers.get(ClaimPeriodStartPage).fold("")(_.toString)),
+      "claimPeriodEndDate"                 -> JsString(userAnswers.get(ClaimPeriodEndPage).fold("")(_.toString)),
+      "employeeFurloughStartDate"          -> JsString(userAnswers.get(FurloughStartDatePage).fold("")(_.toString)),
+      "hasTheEmployeeFurloughEnded"        -> JsString(userAnswers.get(FurloughOngoingPage).fold("")(_.toString)),
+      "employeeFurloughEndDate"            -> JsString(userAnswers.get(FurloughEndDatePage).fold("")(_.toString)),
+      "employeePayFrequency"               -> JsString(userAnswers.get(PaymentFrequencyPage).fold("")(_.toString)),
+      "employeePayMethod"                  -> JsString(userAnswers.get(PayQuestionPage).fold("")(_.toString)),
+      "employeeSalary"                     -> JsString(userAnswers.get(SalaryQuestionPage).fold("")(_.amount.toString)),
+      "employeeEmployedOnOrBefore1Feb2019" -> JsString(userAnswers.get(VariableLengthEmployedPage).fold("")(_.toString)),
+      "employeeStartDate"                  -> JsString(userAnswers.get(EmployeeStartDatePage).fold("")(_.toString)),
+      "employeeGrossPayForYear"            -> JsString(userAnswers.get(VariableGrossPayPage).fold("")(_.amount.toString)),
+      "employeePayPeriodEndDates"          -> Json.toJson(userAnswers.getList(PayDatePage)),
+      "employeePayDayForLastPeriod"        -> JsString(userAnswers.get(LastPayDatePage).fold("")(_.toString)),
+      "employeeLastYearPay"                -> Json.toJson(userAnswers.getList(LastYearPayPage)),
+      "employeePartialPayBeforeFurlough"   -> JsString(userAnswers.get(PartialPayBeforeFurloughPage).fold("")(_.value.toString)),
+      "employeePartialPayAfterFurlough"    -> JsString(userAnswers.get(PartialPayAfterFurloughPage).fold("")(_.value.toString)),
+      "employeeNationalInsuranceCategory"  -> JsString(userAnswers.get(NicCategoryPage).fold("")(_.toString)),
+      "employerPensionContributions"       -> JsString(userAnswers.get(PensionContributionPage).fold("")(_.toString))
     )
 
-  private def breakdownTransformer(breakdown: ConfirmationViewBreakdown): String = {
+  private def breakdownTransformer(breakdown: ConfirmationViewBreakdown) = {
     val furlough = AuditCalculationResult(
       breakdown.furlough.total,
       breakdown.furlough.payPeriodBreakdowns
@@ -106,10 +104,10 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
 
     val result = AuditBreakdown(furlough, nic, pension)
 
-    Json.stringify(Json.toJson(result))
+    Json.toJson(result)
   }
 
-  private def auditEvent(event: JobRetentionSchemeCalculatorEvent, transactionName: String, details: Seq[(String, Any)] = Seq.empty)(
+  private def auditEvent(event: JobRetentionSchemeCalculatorEvent, transactionName: String, details: Seq[(String, Any)])(
     implicit hc: HeaderCarrier,
     request: Request[Any],
     ec: ExecutionContext): Future[Unit] =
