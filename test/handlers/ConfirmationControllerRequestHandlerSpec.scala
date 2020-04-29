@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
 import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, Period, PeriodWithPaymentDate, UserAnswers}
+import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, Period, UserAnswers}
 import play.api.libs.json.Json
 import utils.CoreTestData
 import viewmodels.ConfirmationViewBreakdown

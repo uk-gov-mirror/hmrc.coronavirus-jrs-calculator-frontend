@@ -7,7 +7,7 @@ package base
 
 import java.time.LocalDate
 
-import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodWithPaymentDate, PayQuestion, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate}
+import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodWithPaymentDate, PayQuestion, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, Period}
 
 trait CoreDataBuilder {
 
@@ -19,17 +19,28 @@ trait CoreDataBuilder {
 
   def fullPeriod(start: String, end: String) = FullPeriod(period(start, end))
 
-  def paymentWithPeriod(
+  def paymentWithFullPeriod(
+    furloughPayment: BigDecimal,
+    period: FullPeriodWithPaymentDate,
+    payQuestion: PayQuestion): PaymentWithFullPeriod =
+    PaymentWithFullPeriod(Amount(furloughPayment), period, payQuestion)
+
+  def paymentWithPartialPeriod(
     nonFurloughPay: BigDecimal,
     furloughPayment: BigDecimal,
-    period: PeriodWithPaymentDate,
-    payQuestion: PayQuestion): PaymentWithPeriod =
-    PaymentWithPeriod(Amount(nonFurloughPay), Amount(furloughPayment), period, payQuestion)
+    period: PartialPeriodWithPaymentDate,
+    payQuestion: PayQuestion): PaymentWithPartialPeriod =
+    PaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(furloughPayment), period, payQuestion)
 
-  def fullPeriodWithPaymentDate(start: String, end: String, paymentDate: String): PeriodWithPaymentDate =
+  def fullPeriodWithPaymentDate(start: String, end: String, paymentDate: String): FullPeriodWithPaymentDate =
     FullPeriodWithPaymentDate(FullPeriod(period(start, end)), PaymentDate(buildLocalDate(periodBuilder(paymentDate))))
 
-  def partialPeriodWithPaymentDate(start: String, end: String, pstart: String, pend: String, paymentDate: String): PeriodWithPaymentDate =
+  def partialPeriodWithPaymentDate(
+    start: String,
+    end: String,
+    pstart: String,
+    pend: String,
+    paymentDate: String): PartialPeriodWithPaymentDate =
     PartialPeriodWithPaymentDate(
       PartialPeriod(period(start, end), period(pstart, pend)),
       PaymentDate(buildLocalDate(periodBuilder(paymentDate))))

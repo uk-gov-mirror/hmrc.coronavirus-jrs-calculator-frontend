@@ -14,7 +14,7 @@ import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, MandatoryData, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate, UserAnswers}
+import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, MandatoryData, PaymentDate, Period, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import play.api.libs.json.Json
 import utils.CoreTestData
@@ -85,17 +85,14 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
   "Extract payments for employees that are paid a regular amount each time" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
     val expected = Seq(
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(2000.0),
+      paymentWithFullPeriod(
+        2000.0,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 20))),
-        Regularly
-      ),
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(2000.0),
+        Regularly),
+      paymentWithFullPeriod(
+        2000.0,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
           PaymentDate(LocalDate.of(2020, 4, 20))),
@@ -112,17 +109,15 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
     val userAnswers =
       Json.parse(userAnswersJson(payQuestion = "varies", variableGrossPay = "2400.00", employeeStartDate = "2019-12-01")).as[UserAnswers]
     val expected = Seq(
-      PaymentWithPeriod(
-        Amount(0.00),
-        Amount(817.47),
+      paymentWithFullPeriod(
+        817.47,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 20))),
         Varies
       ),
-      PaymentWithPeriod(
-        Amount(0.00),
-        Amount(791.10),
+      paymentWithFullPeriod(
+        791.10,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
           PaymentDate(LocalDate.of(2020, 4, 20))),
@@ -140,12 +135,12 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
 
     val expected =
       List(
-        paymentWithPeriod(
+        paymentWithPartialPeriod(
           150,
           988.38,
           partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-15", "2020-03-31", "2020-03-30"),
           Varies),
-        paymentWithPeriod(0.0, 1744.20, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"), Varies)
+        paymentWithFullPeriod(1744.20, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"), Varies)
       )
     extractPayments(userAnswers, extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers).get) mustBe Some(expected)
   }
@@ -155,7 +150,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
 
     val expected =
       List(
-        paymentWithPeriod(
+        paymentWithPartialPeriod(
           100.0,
           3271.43,
           partialPeriodWithPaymentDate("2020-3-1", "2020-3-28", "2020-3-2", "2020-3-28", "2020-03-28"),

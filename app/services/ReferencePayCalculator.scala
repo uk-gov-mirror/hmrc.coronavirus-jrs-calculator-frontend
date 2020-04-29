@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import models.PayQuestion.Varies
-import models.{Amount, CylbEligibility, CylbOperators, CylbPayment, FullPeriod, NonFurloughPay, PartialPeriod, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
+import models.{Amount, CylbEligibility, CylbOperators, CylbPayment, FullPeriod, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriod, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, VariableLengthEmployed}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
@@ -38,19 +38,17 @@ trait ReferencePayCalculator extends PreviousYearPeriod {
     nonFurloughPay: NonFurloughPay,
     priorFurloughPeriod: Period,
     afterFurloughPayPeriod: PeriodWithPaymentDate,
-    amount: Amount): PaymentWithPeriod = {
+    amount: Amount): PaymentWithPeriod =
+    afterFurloughPayPeriod match {
+      case fp: FullPeriodWithPaymentDate =>
+        val daily = periodDaysCount(fp.period.period) * averageDailyCalculator(priorFurloughPeriod, amount)
+        PaymentWithFullPeriod(Amount(daily), fp, Varies)
+      case pp: PartialPeriodWithPaymentDate =>
+        val nfp = determineNonFurloughPay(afterFurloughPayPeriod.period, nonFurloughPay)
+        val daily = periodDaysCount(pp.period.partial) * averageDailyCalculator(priorFurloughPeriod, amount)
 
-    val period = afterFurloughPayPeriod.period match {
-      case FullPeriod(p)       => p
-      case PartialPeriod(_, p) => p
+        PaymentWithPartialPeriod(nfp, Amount(daily), pp, Varies)
     }
-
-    val daily = periodDaysCount(period) * averageDailyCalculator(priorFurloughPeriod, amount)
-
-    val nfp = determineNonFurloughPay(afterFurloughPayPeriod.period, nonFurloughPay)
-
-    PaymentWithPeriod(nfp, Amount(daily), afterFurloughPayPeriod, Varies)
-  }
 
   protected def greaterGrossPay(cylb: Seq[PaymentWithPeriod], avg: Seq[PaymentWithPeriod]): Seq[PaymentWithPeriod] =
     cylb.zip(avg) map {
@@ -66,7 +64,7 @@ trait ReferencePayCalculator extends PreviousYearPeriod {
     cylbs: Seq[CylbPayment],
     periods: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
     for {
-      period <- periods
+      period: PeriodWithPaymentDate <- periods
       datesRequired = previousYearPayDate(frequency, period)
       nfp = determineNonFurloughPay(period.period, nonFurloughPay)
     } yield {
@@ -81,7 +79,10 @@ trait ReferencePayCalculator extends PreviousYearPeriod {
 
       val furlough = roundAmountWithMode(amount, RoundingMode.HALF_UP)
 
-      PaymentWithPeriod(nfp, furlough, period, Varies)
+      period match {
+        case fp: FullPeriodWithPaymentDate    => PaymentWithFullPeriod(furlough, fp, Varies)
+        case pp: PartialPeriodWithPaymentDate => PaymentWithPartialPeriod(nfp, furlough, pp, Varies)
+      }
     }
 
   private def totalTwoToOne(payOne: Amount, payTwo: Amount, operator: CylbOperators): Amount = {

@@ -8,7 +8,7 @@ package handlers
 import java.time.LocalDate
 
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, CylbEligibility, CylbPayment, MandatoryData, NonFurloughPay, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers}
+import models.{Amount, CylbEligibility, CylbPayment, FullPeriodWithPaymentDate, MandatoryData, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers}
 import pages._
 import services.{FurloughPeriodHelper, ReferencePayCalculator}
 import utils.LocalDateHelpers
@@ -61,8 +61,12 @@ trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers with Fu
     grossPay: Amount,
     periodsWithPayDay: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
     data.payQuestion match {
-      case Regularly => periodsWithPayDay.map(p => PaymentWithPeriod(Amount(0.0), grossPay, p, Regularly))
-      case Varies    => processVaries(userAnswers, data, periodsWithPayDay)
+      case Regularly =>
+        periodsWithPayDay.map {
+          case fp: FullPeriodWithPaymentDate    => PaymentWithFullPeriod(grossPay, fp, Regularly)
+          case pp: PartialPeriodWithPaymentDate => PaymentWithPartialPeriod(Amount(0.0), grossPay, pp, Regularly)
+        }
+      case Varies => processVaries(userAnswers, data, periodsWithPayDay)
     }
 
   private def processVaries(

@@ -7,30 +7,26 @@ package services
 
 import java.time.LocalDate
 
-import base.SpecBase
+import base.{CoreDataBuilder, SpecBase}
 import models.Calculation.FurloughCalculationResult
 import models.PayQuestion.Regularly
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithPeriod, Period, PeriodWithPaymentDate}
+import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithPeriod, Period}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
+class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreDataBuilder {
 
   forAll(fullPeriodScenarios) { (frequency, payment, expectedFurlough) =>
-    val fullPeriod: FullPeriod = payment.period.period.asInstanceOf[FullPeriod]
-
     s"Full Period: For payment frequency $frequency and payment ${payment.furloughPayment.value} return $expectedFurlough" in new FurloughCalculator {
-      calculateFullPeriod(frequency, payment, fullPeriod) mustBe expectedFurlough
+      calculateFullPeriod(frequency, payment) mustBe expectedFurlough
     }
   }
 
   forAll(partialPeriodScenarios) { (payment, expectedFurlough) =>
     s"Partial Period: For gross payment: ${payment.furloughPayment.value} " +
       s"should return $expectedFurlough" in new FurloughCalculator {
-      val period = payment.period.period.asInstanceOf[PartialPeriod]
-      val expected =
-        PartialPeriodBreakdown(payment.nonFurloughPay, expectedFurlough, payment.period.asInstanceOf[PartialPeriodWithPaymentDate])
-      calculatePartialPeriod(payment, period, payment.period.paymentDate) mustBe expected
+      val expected = PartialPeriodBreakdown(payment.nonFurloughPay, expectedFurlough, payment.period)
+      calculatePartialPeriod(payment) mustBe expected
     }
   }
 
@@ -43,8 +39,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       FullPeriodWithPaymentDate(
         FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
         PaymentDate(LocalDate.of(2020, 4, 30)))
-    val paymentOne: PaymentWithPeriod = PaymentWithPeriod(Amount(0.0), Amount(2000.00), periodOne, Regularly)
-    val paymentTwo: PaymentWithPeriod = PaymentWithPeriod(Amount(0.0), Amount(2000.00), periodTwo, Regularly)
+    val paymentOne: PaymentWithPeriod = paymentWithFullPeriod(2000.00, periodOne, Regularly)
+    val paymentTwo: PaymentWithPeriod = paymentWithFullPeriod(2000.00, periodTwo, Regularly)
     val payments: List[PaymentWithPeriod] = List(paymentOne, paymentTwo)
 
     val expected =
@@ -64,9 +60,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     ("paymentFrequency", "payment", "expectedFurlough"),
     (
       Monthly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(2000.00),
+      paymentWithFullPeriod(
+        2000,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 31))),
@@ -75,9 +70,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Amount(1600.00)),
     (
       Monthly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(5000.00),
+      paymentWithFullPeriod(
+        5000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 31))),
@@ -86,9 +80,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Amount(2500.00)),
     (
       Monthly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(5000.00),
+      paymentWithFullPeriod(
+        5000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))),
           PaymentDate(LocalDate.of(2020, 4, 30))),
@@ -97,9 +90,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Amount(2621.15)),
     (
       Weekly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(500.00),
+      paymentWithFullPeriod(
+        500.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
           PaymentDate(LocalDate.of(2020, 3, 21))),
@@ -108,9 +100,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Amount(400.00)),
     (
       Weekly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(1000.00),
+      paymentWithFullPeriod(
+        1000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
           PaymentDate(LocalDate.of(2020, 3, 21))),
@@ -119,9 +110,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Amount(576.92)),
     (
       FortNightly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(2000.00),
+      paymentWithFullPeriod(
+        2000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
           PaymentDate(LocalDate.of(2020, 3, 28))),
@@ -130,9 +120,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Amount(1153.84)),
     (
       FortNightly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(1000.00),
+      paymentWithFullPeriod(
+        1000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
           PaymentDate(LocalDate.of(2020, 3, 28))),
@@ -141,9 +130,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Amount(800.00)),
     (
       FourWeekly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(5000.00),
+      paymentWithFullPeriod(
+        5000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
           PaymentDate(LocalDate.of(2020, 4, 15))),
@@ -152,9 +140,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       Amount(2307.68)),
     (
       FourWeekly,
-      PaymentWithPeriod(
-        Amount(0.0),
-        Amount(2000.00),
+      paymentWithFullPeriod(
+        2000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
           PaymentDate(LocalDate.of(2020, 4, 15))),
@@ -166,9 +153,9 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
   private lazy val partialPeriodScenarios = Table(
     ("payment", "expectedFurlough"),
     (
-      PaymentWithPeriod(
-        Amount(677.42),
-        Amount(1500.00),
+      paymentWithPartialPeriod(
+        677.42,
+        1500.00,
         PartialPeriodWithPaymentDate(
           PartialPeriod(
             Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
@@ -179,9 +166,9 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       ),
       Amount(658.06)),
     (
-      PaymentWithPeriod(
-        Amount(1580.65),
-        Amount(3500.00),
+      paymentWithPartialPeriod(
+        1580.65,
+        3500.00,
         PartialPeriodWithPaymentDate(
           PartialPeriod(
             Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
@@ -192,9 +179,9 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       ),
       Amount(1371.05)),
     (
-      PaymentWithPeriod(
-        Amount(1096.77),
-        Amount(2000.00),
+      paymentWithPartialPeriod(
+        1096.77,
+        2000.00,
         PartialPeriodWithPaymentDate(
           PartialPeriod(
             Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),

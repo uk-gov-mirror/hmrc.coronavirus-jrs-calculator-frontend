@@ -37,4 +37,14 @@ object CylbPayment {
   implicit val defaultFormat: Format[CylbPayment] = Json.format
 }
 
-case class PaymentWithPeriod(nonFurloughPay: Amount, furloughPayment: Amount, period: PeriodWithPaymentDate, payQuestion: PayQuestion)
+sealed trait PaymentWithPeriod {
+  val furloughPayment: Amount
+}
+case class PaymentWithFullPeriod(furloughPayment: Amount, period: FullPeriodWithPaymentDate, question: PayQuestion)
+    extends PaymentWithPeriod
+case class PaymentWithPartialPeriod(
+  nonFurloughPay: Amount,
+  furloughPayment: Amount,
+  period: PartialPeriodWithPaymentDate,
+  question: PayQuestion)
+    extends PaymentWithPeriod

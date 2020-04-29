@@ -7,7 +7,7 @@ package services
 
 import models.Calculation.FurloughCalculationResult
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PaymentWithPeriod, PeriodBreakdown}
+import models.{Amount, CalculationResult, FullPeriodBreakdown, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodBreakdown}
 import utils.TaxYearFinder
 
 trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with Calculators {
@@ -20,46 +20,38 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
   protected def payPeriodBreakdownFromRegularPayment(
     paymentFrequency: PaymentFrequency,
     paymentsWithPeriod: Seq[PaymentWithPeriod]): Seq[PeriodBreakdown] =
-    paymentsWithPeriod.map { payment =>
-      payment.period match {
-        case fp: FullPeriodWithPaymentDate =>
-          FullPeriodBreakdown(calculateFullPeriod(paymentFrequency, payment, fp.period), fp)
-        case PartialPeriodWithPaymentDate(period, paymentDate) =>
-          calculatePartialPeriod(payment, period, paymentDate)
-      }
+    paymentsWithPeriod.map {
+      case fp: PaymentWithFullPeriod =>
+        FullPeriodBreakdown(calculateFullPeriod(paymentFrequency, fp), fp.period)
+      case pp: PaymentWithPartialPeriod =>
+        calculatePartialPeriod(pp)
     }
 
-  protected def proRatePay(paymentWithPeriod: PaymentWithPeriod): Amount =
-    (paymentWithPeriod.period, paymentWithPeriod.payQuestion) match {
-      case (PartialPeriodWithPaymentDate(period, _), Regularly) =>
-        partialPeriodDailyCalculation(paymentWithPeriod.furloughPayment, period)
-      case _ => paymentWithPeriod.furloughPayment
-    }
+  protected def proRatePay(paymentWithPeriod: PaymentWithPartialPeriod): Amount = paymentWithPeriod.question match {
+    case Regularly => partialPeriodDailyCalculation(paymentWithPeriod.furloughPayment, paymentWithPeriod.period.period)
+    case Varies    => paymentWithPeriod.furloughPayment
+  }
 
   protected def calculateFullPeriod(
     paymentFrequency: PaymentFrequency,
-    payment: PaymentWithPeriod,
-    period: FullPeriod,
+    payment: PaymentWithFullPeriod,
   ): Amount = {
-    val payForPeriod = proRatePay(payment)
-    val cap = furloughCap(paymentFrequency, period.period)
+    val cap = furloughCap(paymentFrequency, payment.period.period.period) //TODO obvious
 
-    claimableAmount(payForPeriod, cap).halfUp
+    claimableAmount(payment.furloughPayment, cap).halfUp
   }
 
-  protected def calculatePartialPeriod(
-    payment: PaymentWithPeriod,
-    period: PartialPeriod,
-    paymentDate: PaymentDate): PartialPeriodBreakdown = {
-    val payForPeriod = proRatePay(payment)
+  protected def calculatePartialPeriod(paymentWithPeriod: PaymentWithPartialPeriod): PartialPeriodBreakdown = {
+    import paymentWithPeriod.period._
+    val payForPeriod = proRatePay(paymentWithPeriod)
     val cap = partialFurloughCap(period.partial)
 
     val fullPeriodDays = periodDaysCount(period.original)
     val furloughDays = periodDaysCount(period.partial)
     val preFurloughDays = fullPeriodDays - furloughDays
-    val nonFurloughPay = payment.payQuestion match {
-      case Regularly => dailyCalculation(payment.furloughPayment, fullPeriodDays, preFurloughDays)
-      case Varies    => payment.nonFurloughPay
+    val nonFurloughPay = paymentWithPeriod.question match {
+      case Regularly => dailyCalculation(paymentWithPeriod.furloughPayment, fullPeriodDays, preFurloughDays)
+      case Varies    => paymentWithPeriod.nonFurloughPay
     }
 
     PartialPeriodBreakdown(nonFurloughPay, claimableAmount(payForPeriod, cap).halfUp, PartialPeriodWithPaymentDate(period, paymentDate))

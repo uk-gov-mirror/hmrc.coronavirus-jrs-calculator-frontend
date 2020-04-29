@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PaymentDate, Period, PeriodWithPaymentDate}
+import models.{Amount, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PaymentDate, Period}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class CommonCalculationServiceSpec extends SpecBase with ScalaCheckPropertyChecks {

@@ -38,9 +38,9 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     val payPeriods = Seq(afterFurloughPeriod, afterFurloughPeriodTwo, afterFurloughPartial)
 
     val expected = Seq(
-      PaymentWithPeriod(Amount(0.0), Amount(817.47), afterFurloughPeriod, Varies),
-      PaymentWithPeriod(Amount(0.0), Amount(791.10), afterFurloughPeriodTwo, Varies),
-      PaymentWithPeriod(Amount(1000.0), Amount(395.55), afterFurloughPartial, Varies),
+      paymentWithFullPeriod(817.47, afterFurloughPeriod, Varies),
+      paymentWithFullPeriod(791.10, afterFurloughPeriodTwo, Varies),
+      paymentWithPartialPeriod(1000.0, 395.55, afterFurloughPartial, Varies)
     )
 
     calculateVariablePay(nonFurloughPay, priorFurloughPeriod, payPeriods, grossPay, Seq.empty, Monthly) mustBe expected
@@ -69,8 +69,8 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     val nonFurloughPay = NonFurloughPay(None, None)
 
     val expected = Seq(
-      paymentWithPeriod(0.0, 450.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,7", "2020, 3, 7"), Varies),
-      paymentWithPeriod(0.0, 200.00, fullPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020, 3, 14"), Varies)
+      paymentWithFullPeriod(450.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,7", "2020, 3, 7"), Varies),
+      paymentWithFullPeriod(200.00, fullPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020, 3, 14"), Varies)
     )
 
     calculateCylb(nonFurloughPay, Weekly, cylbs, periods) mustBe expected
@@ -91,8 +91,8 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     val nonFurloughPay = NonFurloughPay(None, None)
 
     val expected = Seq(
-      paymentWithPeriod(0.0, 800.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,14", "2020, 3, 14"), Varies),
-      paymentWithPeriod(0.0, 340.00, fullPeriodWithPaymentDate("2020,3,15", "2020,3,28", "2020, 3, 28"), Varies)
+      paymentWithFullPeriod(800.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,14", "2020, 3, 14"), Varies),
+      paymentWithFullPeriod(340.00, fullPeriodWithPaymentDate("2020,3,15", "2020,3,28", "2020, 3, 28"), Varies)
     )
 
     calculateCylb(nonFurloughPay, FortNightly, cylbs, periods) mustBe expected
@@ -113,8 +113,8 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     val nonFurloughPay = NonFurloughPay(None, None)
 
     val expected = Seq(
-      paymentWithPeriod(0.0, 1500.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
-      paymentWithPeriod(0.0, 620.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,25", "2020, 4, 25"), Varies)
+      paymentWithFullPeriod(1500.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
+      paymentWithFullPeriod(620.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,25", "2020, 4, 25"), Varies)
     )
 
     calculateCylb(nonFurloughPay, FourWeekly, cylbs, periods) mustBe expected
@@ -122,18 +122,18 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
 
   "compare cylb and avg gross pay amount taking the greater" in new ReferencePayCalculator {
     val cylb = Seq(
-      paymentWithPeriod(0.0, 500.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
-      paymentWithPeriod(0.0, 200.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
+      paymentWithFullPeriod(500.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
+      paymentWithFullPeriod(200.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
     )
 
     val avg = Seq(
-      paymentWithPeriod(0.0, 450.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
-      paymentWithPeriod(0.0, 450.0, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
+      paymentWithFullPeriod(450.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
+      paymentWithFullPeriod(450.0, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
     )
 
     val expected = Seq(
-      paymentWithPeriod(0.0, 500.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
-      paymentWithPeriod(0.0, 450.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
+      paymentWithFullPeriod(500.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,28", "2020, 3, 28"), Varies),
+      paymentWithFullPeriod(450.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,26", "2020, 4, 26"), Varies)
     )
 
     greaterGrossPay(cylb, avg) mustBe expected
@@ -148,7 +148,7 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     val afterFurloughPeriod = fullPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 31")
 
     val expected: Seq[PaymentWithPeriod] = Seq(
-      paymentWithPeriod(0.0, 900.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,31", "2020, 3, 31"), Varies),
+      paymentWithFullPeriod(900.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,31", "2020, 3, 31"), Varies),
     )
 
     calculateVariablePay(nonFurloughPay, priorFurloughPeriod, Seq(afterFurloughPeriod), Amount(2400.0), cylbs, Monthly) mustBe expected
