@@ -9,6 +9,7 @@ import models.{Amount, PartialPeriod}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
+import Calculators._
 
 trait Calculators extends PeriodHelper {
 
@@ -25,7 +26,9 @@ trait Calculators extends PeriodHelper {
 
   private def capCalulation(cap: BigDecimal, eighty: BigDecimal): Amount =
     Amount(if (eighty > cap) cap else eighty)
+}
 
+object Calculators {
   implicit class AmountRounding(amount: Amount) {
     def halfUp: Amount = roundAmountWithMode(amount, RoundingMode.HALF_UP)
   }

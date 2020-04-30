@@ -8,12 +8,11 @@ package handlers
 import java.time.LocalDate
 
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, CylbEligibility, CylbPayment, FullPeriodWithPaymentDate, MandatoryData, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers}
+import models.{Amount, CylbEligibility, CylbPayment, FullPeriodWithPaymentDate, MandatoryData, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers, VariableLengthEmployed}
 import pages._
-import services.{FurloughPeriodHelper, ReferencePayCalculator}
-import utils.LocalDateHelpers
+import services.{FurloughPeriodExtractor, ReferencePayCalculator}
 
-trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers with FurloughPeriodHelper {
+trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor {
 
   def extract(userAnswers: UserAnswers): Option[MandatoryData] =
     for {
@@ -29,9 +28,8 @@ trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers with Fu
       payDate = userAnswers.getList(PayDatePage)
     } yield MandatoryData(Period(claimStart, claimEnd), frequency, nic, pension, payQuestion, furlough, payDate, furloughStart, lastPayDay)
 
-  def extractRelevantFurloughPeriod(data: MandatoryData, userAnswers: UserAnswers): Option[Period] =
-    Some(
-      extractRelevantFurloughPeriod(data.furloughStart, userAnswers.get(FurloughEndDatePage), data.claimPeriod.start, data.claimPeriod.end))
+  def extractRelevantFurloughPeriod(data: MandatoryData, userAnswers: UserAnswers): Period =
+    extractRelevantFurloughPeriod(data.furloughStart, userAnswers.get(FurloughEndDatePage), data.claimPeriod.start, data.claimPeriod.end)
 
   def extractPayments(userAnswers: UserAnswers, furloughPeriod: Period): Option[Seq[PaymentWithPeriod]] =
     for {
@@ -102,4 +100,6 @@ trait DataExtractor extends ReferencePayCalculator with LocalDateHelpers with Fu
       nonFurloughPay = NonFurloughPay(preFurloughPay.map(v => Amount(v.value)), postFurloughPay.map(v => Amount(v.value)))
     } yield calculateVariablePay(nonFurloughPay, priorFurloughPeriod, periods, grossPay, cylbs, frequency)
 
+  protected def cylbCalculationPredicate(variableLength: VariableLengthEmployed, employeeStartDate: LocalDate): CylbEligibility =
+    CylbEligibility(variableLength == VariableLengthEmployed.Yes || employeeStartDate.isBefore(LocalDate.of(2019, 4, 6)))
 }

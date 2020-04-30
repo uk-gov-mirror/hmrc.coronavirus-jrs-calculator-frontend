@@ -8,7 +8,7 @@ package services
 import models.{PartialPeriod, Period, UserAnswers}
 import pages.PayDatePage
 
-trait PartialPayHelper extends PeriodHelper with FurloughPeriodHelper {
+trait PartialPayExtractor extends PeriodHelper with FurloughPeriodExtractor {
 
   def hasPartialPayBefore(userAnswers: UserAnswers): Boolean =
     getPartialPeriods(userAnswers).exists(isFurloughStart)

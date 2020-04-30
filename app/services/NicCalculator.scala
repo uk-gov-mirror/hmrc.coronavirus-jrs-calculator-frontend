@@ -6,7 +6,7 @@
 package services
 
 import models.Calculation.NicCalculationResult
-import models.{Amount, CalculationResult, FullPeriodBreakdown, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, CalculationResult, FullPeriodBreakdown, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodBreakdown}
 import utils.AmountRounding.roundWithMode
 
 import scala.math.BigDecimal.RoundingMode

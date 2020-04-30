@@ -8,12 +8,10 @@ package navigation
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
-import config.FrontendAppConfig
 import controllers.routes
 import models.PayQuestion.{Regularly, Varies}
 import models._
 import pages._
-import play.api.Configuration
 import play.api.libs.json.Json
 
 class NavigatorSpecWithApplication extends SpecBaseWithApplication {

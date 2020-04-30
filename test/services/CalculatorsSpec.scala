@@ -7,6 +7,7 @@ package services
 
 import base.SpecBase
 import models.Amount
+import Calculators._
 
 class CalculatorsSpec extends SpecBase {
 

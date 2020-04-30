@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.LastYearPayFormProvider
-import models.{Amount, CylbPayment, Salary, UserAnswers}
+import models.{Amount, CylbPayment, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
@@ -18,12 +18,11 @@ import pages.LastYearPayPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Call}
-import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.LastYearPayView
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 
 import scala.concurrent.Future
 

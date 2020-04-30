@@ -41,7 +41,7 @@ trait BaseController extends FrontendBaseController with I18nSupport {
     }
 
   def getRequiredAnswerOrRedirect[A](page: QuestionPage[A], idx: Option[Int] = None)(
-    f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
+    f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A]): Future[Result] =
     getAnswer(page, idx) match {
       case Some(ans) => f(ans)
       case _ =>

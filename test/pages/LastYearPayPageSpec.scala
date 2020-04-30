@@ -5,7 +5,7 @@
 
 package pages
 
-import models.{CylbPayment, Salary}
+import models.CylbPayment
 import pages.behaviours.PageBehaviours
 
 class LastYearPayPageSpec extends PageBehaviours {

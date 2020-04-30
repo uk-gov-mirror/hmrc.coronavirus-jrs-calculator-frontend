@@ -5,7 +5,7 @@
 
 package services
 
-import models.{Amount, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodWithPaymentDate}
+import models.{Amount, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PaymentDate, PaymentFrequency}
 import utils.AmountRounding.roundWithMode
 import utils.TaxYearFinder
 

@@ -14,7 +14,7 @@ import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
 import models.PayQuestion.{Regularly, Varies}
-import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, MandatoryData, PaymentDate, Period, UserAnswers}
+import models.{Amount, CylbEligibility, FullPeriod, FullPeriodWithPaymentDate, MandatoryData, PaymentDate, Period, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import play.api.libs.json.Json
 import utils.CoreTestData
@@ -35,28 +35,28 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
       val userAnswers = Json.parse(userAnswersJson("yes", furloughEndDate = "2020-03-31")).as[UserAnswers]
       val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(FurloughEndDatePage).get)
 
-      extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+      extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe expected
     }
 
     "use the claim period end date if furlough question is no" in new DataExtractor {
       val userAnswers = Json.parse(userAnswersJson("no")).as[UserAnswers]
       val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(ClaimPeriodEndPage).get)
 
-      extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+      extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe expected
     }
 
     "use the furlough start date if later than claim start date" in new DataExtractor {
       val userAnswers = Json.parse(userAnswersJson("no", furloughStartDate = "2020-03-02", claimStartDate = "2020-03-01")).as[UserAnswers]
       val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(ClaimPeriodEndPage).get)
 
-      extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+      extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe expected
     }
 
     "use the claim start date if later than furlough start date" in new DataExtractor {
       val userAnswers = Json.parse(userAnswersJson("no", furloughStartDate = "2020-03-01", claimStartDate = "2020-03-02")).as[UserAnswers]
       val expected = Period(userAnswers.get(ClaimPeriodStartPage).get, userAnswers.get(ClaimPeriodEndPage).get)
 
-      extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe Some(expected)
+      extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe expected
     }
 
   }
@@ -142,7 +142,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
           Varies),
         paymentWithFullPeriod(1744.20, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"), Varies)
       )
-    extractPayments(userAnswers, extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers).get) mustBe Some(expected)
+    extractPayments(userAnswers, extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers)) mustBe Some(expected)
   }
 
   "Calculates cylbs when variable length is Yes but the employee start date is None" in new DataExtractor {
@@ -157,7 +157,15 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
           Varies)
       )
 
-    extractPayments(userAnswers, extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers).get) mustBe Some(expected)
+    extractPayments(userAnswers, extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers)) mustBe Some(expected)
+  }
+
+  "defines a variable calculation that requires cylb" in new DataExtractor {
+    import models.VariableLengthEmployed._
+
+    cylbCalculationPredicate(Yes, LocalDate.now) mustBe CylbEligibility(true)
+    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 5)) mustBe CylbEligibility(true)
+    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 6)) mustBe CylbEligibility(false)
   }
 
 }

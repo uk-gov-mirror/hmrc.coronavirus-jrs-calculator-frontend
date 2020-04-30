@@ -16,12 +16,12 @@ import models.{UserAnswers, _}
 import pages.{PayDatePage, _}
 import play.api.Logger
 import play.api.mvc.Call
-import services.PartialPayHelper
+import services.PartialPayExtractor
 import utils.LocalDateHelpers
 
 @Singleton
 class Navigator @Inject()(appConfig: FrontendAppConfig)
-    extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayHelper {
+    extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor {
 
   val apr7th2019 = LocalDate.of(2019, 4, 7)
   val apr6th2019 = LocalDate.of(2019, 4, 6)

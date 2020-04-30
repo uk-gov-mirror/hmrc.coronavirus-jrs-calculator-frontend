@@ -9,6 +9,7 @@ import models.Calculation.FurloughCalculationResult
 import models.PayQuestion.{Regularly, Varies}
 import models.{Amount, CalculationResult, FullPeriodBreakdown, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodBreakdown}
 import utils.TaxYearFinder
+import Calculators._
 
 trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with Calculators {
 

@@ -5,11 +5,11 @@
 
 package controllers
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.PayDateFormProvider
-import models.{UserAnswers}
+import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when

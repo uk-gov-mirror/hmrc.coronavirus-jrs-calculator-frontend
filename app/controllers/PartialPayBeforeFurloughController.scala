@@ -15,7 +15,7 @@ import pages._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import services.PartialPayHelper
+import services.PartialPayExtractor
 import views.html.VariableLengthPartialPayView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,7 +33,7 @@ class PartialPayBeforeFurloughController @Inject()(
   view: VariableLengthPartialPayView,
   eh: ErrorHandler
 )(implicit ec: ExecutionContext)
-    extends BaseController with I18nSupport with PartialPayHelper {
+    extends BaseController with I18nSupport with PartialPayExtractor {
 
   val form = formProvider()
 

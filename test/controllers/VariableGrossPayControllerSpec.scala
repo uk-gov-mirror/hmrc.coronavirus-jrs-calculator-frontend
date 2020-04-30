@@ -9,20 +9,20 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.VariableGrossPayFormProvider
-import models.{UserAnswers, VariableGrossPay, VariableLengthEmployed}
+import models.{UserAnswers, VariableGrossPay}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmployeeStartDatePage, FurloughStartDatePage, PaymentFrequencyPage, SalaryQuestionPage, VariableGrossPayPage}
+import pages.{EmployeeStartDatePage, FurloughStartDatePage, VariableGrossPayPage}
 import play.api.inject.bind
-import play.api.libs.json.{JsNumber, JsString, Json}
+import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
-import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.{VariableGrossPayView, VariableLengthEmployedView}
+import views.html.VariableGrossPayView
 
 import scala.concurrent.Future
 

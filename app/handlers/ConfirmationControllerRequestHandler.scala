@@ -24,8 +24,7 @@ trait ConfirmationControllerRequestHandler
 
   private def breakdown(userAnswers: UserAnswers, data: MandatoryData): Option[ConfirmationViewBreakdown] =
     for {
-      furloughPeriod <- extractRelevantFurloughPeriod(data, userAnswers)
-      regulars       <- extractPayments(userAnswers, furloughPeriod)
+      regulars <- extractPayments(userAnswers, extractRelevantFurloughPeriod(data, userAnswers))
       furlough = calculateFurloughGrant(data.paymentFrequency, regulars)
       ni = calculateNi(furlough, data.nicCategory, data.paymentFrequency)
       pension = calculatePension(furlough, data.pensionContribution, data.paymentFrequency)

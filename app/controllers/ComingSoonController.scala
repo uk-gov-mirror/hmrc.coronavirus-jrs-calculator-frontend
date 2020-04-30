@@ -12,8 +12,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.ComingSoonView
 
-import scala.concurrent.ExecutionContext
-
 class ComingSoonController @Inject()(
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
@@ -21,8 +19,7 @@ class ComingSoonController @Inject()(
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: ComingSoonView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(showCalculateTopupsLink: Boolean = false): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>

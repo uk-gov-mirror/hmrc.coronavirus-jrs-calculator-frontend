@@ -14,7 +14,7 @@ class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with C
 
     "getPeriodRemainder" must {
 
-      "return remainders with multiple days before the partial" in new PartialPayHelper {
+      "return remainders with multiple days before the partial" in new PartialPayExtractor {
 
         val partial = partialPeriod(
           "2020,4,5"  -> "2020,4,25",
@@ -28,7 +28,7 @@ class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with C
         getPeriodRemainder(partial) mustBe expected
       }
 
-      "return remainders with multiple days after the partial" in new PartialPayHelper {
+      "return remainders with multiple days after the partial" in new PartialPayExtractor {
 
         val partial = partialPeriod(
           "2020,4,5" -> "2020,4,25",
@@ -42,7 +42,7 @@ class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with C
         getPeriodRemainder(partial) mustBe expected
       }
 
-      "return remainders with a single day before the partial" in new PartialPayHelper {
+      "return remainders with a single day before the partial" in new PartialPayExtractor {
 
         val partial = partialPeriod(
           "2020,4,5" -> "2020,4,25",
@@ -56,7 +56,7 @@ class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with C
         getPeriodRemainder(partial) mustBe expected
       }
 
-      "return remainders with a single day after the partial" in new PartialPayHelper {
+      "return remainders with a single day after the partial" in new PartialPayExtractor {
 
         val partial = partialPeriod(
           "2020,4,5" -> "2020,4,25",

@@ -9,11 +9,7 @@ import java.time.{LocalDate, ZoneOffset}
 
 import forms.behaviours.DateBehaviours
 import org.scalacheck.Gen
-import play.api.data.FormError
-import reactivemongo.play.json.ValidationError
 import views.ViewUtils
-
-import scala.collection.mutable
 
 class PayDateFormProviderSpec extends DateBehaviours {
 

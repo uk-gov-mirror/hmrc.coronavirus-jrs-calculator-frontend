@@ -11,27 +11,23 @@ import models.{Period, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import utils.LocalDateHelpers
 
-trait FurloughPeriodHelper extends LocalDateHelpers {
+trait FurloughPeriodExtractor extends LocalDateHelpers {
 
   def extractFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
     for {
       furloughStart  <- userAnswers.get(FurloughStartDatePage)
       claimPeriodEnd <- userAnswers.get(ClaimPeriodEndPage)
-    } yield {
-      userAnswers.get(FurloughEndDatePage) match {
-        case Some(furloughEnd) => Period(furloughStart, furloughEnd)
-        case None              => Period(furloughStart, claimPeriodEnd)
-      }
-    }
+    } yield
+      userAnswers
+        .get(FurloughEndDatePage)
+        .fold(Period(furloughStart, claimPeriodEnd))(furloughEnd => Period(furloughStart, furloughEnd))
 
   def extractRelevantFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
     for {
       furloughStart    <- userAnswers.get(FurloughStartDatePage)
       claimPeriodStart <- userAnswers.get(ClaimPeriodStartPage)
       claimPeriodEnd   <- userAnswers.get(ClaimPeriodEndPage)
-    } yield {
-      extractRelevantFurloughPeriod(furloughStart, userAnswers.get(FurloughEndDatePage), claimPeriodStart, claimPeriodEnd)
-    }
+    } yield extractRelevantFurloughPeriod(furloughStart, userAnswers.get(FurloughEndDatePage), claimPeriodStart, claimPeriodEnd)
 
   def extractRelevantFurloughPeriod(
     furloughStart: LocalDate,
@@ -39,10 +35,6 @@ trait FurloughPeriodHelper extends LocalDateHelpers {
     claimPeriodStart: LocalDate,
     claimPeriodEnd: LocalDate): Period = {
     val effectiveStartDate = latestOf(claimPeriodStart, furloughStart)
-    furloughEnd match {
-      case Some(furloughEnd) => Period(effectiveStartDate, furloughEnd)
-      case None              => Period(effectiveStartDate, claimPeriodEnd)
-    }
+    furloughEnd.fold(Period(effectiveStartDate, claimPeriodEnd))(furloughEnd => Period(effectiveStartDate, furloughEnd))
   }
-
 }

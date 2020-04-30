@@ -8,11 +8,9 @@ package forms
 import java.time.LocalDate
 
 import forms.mappings.Mappings
-import javax.inject.Inject
 import play.api.data.Form
-import views.ViewUtils.dateToString
 
-class FurloughEndDateFormProvider @Inject() extends Mappings {
+class FurloughEndDateFormProvider extends Mappings {
 
   def apply(claimPeriodEnd: LocalDate, furloughStartDate: LocalDate): Form[LocalDate] =
     Form(

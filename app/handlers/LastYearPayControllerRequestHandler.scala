@@ -9,9 +9,8 @@ import java.time.LocalDate
 
 import models.UserAnswers
 import pages._
-import services.{FurloughPeriodHelper, PeriodHelper, PreviousYearPeriod}
 
-trait LastYearPayControllerRequestHandler extends PeriodHelper with PreviousYearPeriod with FurloughPeriodHelper {
+trait LastYearPayControllerRequestHandler extends DataExtractor {
 
   def getPayDates(userAnswers: UserAnswers): Option[Seq[LocalDate]] =
     for {

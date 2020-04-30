@@ -6,7 +6,7 @@
 package services
 
 import models.Calculation.PensionCalculationResult
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodBreakdown, PeriodWithPaymentDate}
+import models.{Amount, CalculationResult, FullPeriodBreakdown, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PeriodBreakdown}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode

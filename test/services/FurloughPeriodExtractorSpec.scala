@@ -11,11 +11,11 @@ import base.{CoreDataBuilder, SpecBase}
 import models.{Period, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 
-class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
+class FurloughPeriodExtractorSpec extends SpecBase with CoreDataBuilder {
 
   "extractFurloughPeriod" must {
 
-    "span furlough start to claim period end if furlough end is not set" in new FurloughPeriodHelper {
+    "span furlough start to claim period end if furlough end is not set" in new FurloughPeriodExtractor {
       val userAnswers = UserAnswers("id")
         .setValue(FurloughStartDatePage, LocalDate.of(2020, 4, 1))
         .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 5, 1))
@@ -26,7 +26,7 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
     "span furlough start to furlough end if furlough end is set" when {
 
       "claim period end is before furlough end" in {
-        new FurloughPeriodHelper {
+        new FurloughPeriodExtractor {
           val userAnswers = UserAnswers("id")
             .setValue(FurloughStartDatePage, LocalDate.of(2020, 4, 1))
             .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 5, 1))
@@ -37,7 +37,7 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
       }
 
       "claim period end is after furlough end" in {
-        new FurloughPeriodHelper {
+        new FurloughPeriodExtractor {
           val userAnswers = UserAnswers("id")
             .setValue(FurloughStartDatePage, LocalDate.of(2020, 4, 1))
             .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 5, 2))
@@ -49,14 +49,14 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
 
     }
 
-    "return none if furlough start is not set" in new FurloughPeriodHelper {
+    "return none if furlough start is not set" in new FurloughPeriodExtractor {
       val userAnswers = UserAnswers("id")
         .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 5, 1))
 
       extractFurloughPeriod(userAnswers) mustBe None
     }
 
-    "return none if claim end is not set" in new FurloughPeriodHelper {
+    "return none if claim end is not set" in new FurloughPeriodExtractor {
       val userAnswers = UserAnswers("id")
         .setValue(FurloughStartDatePage, LocalDate.of(2020, 5, 1))
 
@@ -67,7 +67,7 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
 
   "extractRelevantFurloughPeriod" must {
 
-    "use furlough start as start date when it is later than claim start" in new FurloughPeriodHelper {
+    "use furlough start as start date when it is later than claim start" in new FurloughPeriodExtractor {
       val furloughStart = LocalDate.of(2020, 4, 2)
       val furloughEnd = None
       val claimStart = LocalDate.of(2020, 4, 1)
@@ -76,7 +76,7 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
       extractRelevantFurloughPeriod(furloughStart, furloughEnd, claimStart, claimEnd) mustBe Period(furloughStart, claimEnd)
     }
 
-    "use claim start as start date when it is later than furlough start" in new FurloughPeriodHelper {
+    "use claim start as start date when it is later than furlough start" in new FurloughPeriodExtractor {
       val furloughStart = LocalDate.of(2020, 4, 1)
       val furloughEnd = None
       val claimStart = LocalDate.of(2020, 4, 2)
@@ -85,7 +85,7 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
       extractRelevantFurloughPeriod(furloughStart, furloughEnd, claimStart, claimEnd) mustBe Period(claimStart, claimEnd)
     }
 
-    "use claim end as end date when furlough end is not set" in new FurloughPeriodHelper {
+    "use claim end as end date when furlough end is not set" in new FurloughPeriodExtractor {
       val furloughStart = LocalDate.of(2020, 4, 2)
       val furloughEnd = None
       val claimStart = LocalDate.of(2020, 4, 1)
@@ -94,7 +94,7 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
       extractRelevantFurloughPeriod(furloughStart, furloughEnd, claimStart, claimEnd) mustBe Period(furloughStart, claimEnd)
     }
 
-    "use furlough end as end date when furlough end is set" in new FurloughPeriodHelper {
+    "use furlough end as end date when furlough end is set" in new FurloughPeriodExtractor {
       val furloughStart = LocalDate.of(2020, 4, 2)
       val furloughEnd = LocalDate.of(2020, 5, 2)
       val claimStart = LocalDate.of(2020, 4, 1)
@@ -105,7 +105,7 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
 
     "pull values from user answers" when {
 
-      "furlough end is not set" in new FurloughPeriodHelper {
+      "furlough end is not set" in new FurloughPeriodExtractor {
         val userAnswers = UserAnswers("id")
           .setValue(FurloughStartDatePage, LocalDate.of(2020, 4, 2))
           .setValue(ClaimPeriodStartPage, LocalDate.of(2020, 4, 1))
@@ -114,7 +114,7 @@ class FurloughPeriodHelperSpec extends SpecBase with CoreDataBuilder {
         extractFurloughPeriod(userAnswers).value mustBe Period(LocalDate.of(2020, 4, 2), LocalDate.of(2020, 5, 1))
       }
 
-      "furlough end is set" in new FurloughPeriodHelper {
+      "furlough end is set" in new FurloughPeriodExtractor {
         val userAnswers = UserAnswers("id")
           .setValue(FurloughStartDatePage, LocalDate.of(2020, 4, 2))
           .setValue(FurloughEndDatePage, LocalDate.of(2020, 4, 25))

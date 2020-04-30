@@ -7,9 +7,7 @@ package generators
 
 import java.time.{Instant, LocalDate, ZoneOffset}
 
-import models.PaymentFrequency.Weekly
 import models._
-import org.scalacheck.Arbitrary.arbDouble
 import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
