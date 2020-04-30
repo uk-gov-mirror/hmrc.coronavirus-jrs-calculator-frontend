@@ -230,7 +230,6 @@ salaryQuestion.salary.label= If this employee started work in February, enter th
 salaryQuestion.salary.hint = This is the gross amount before deductions.
 salaryQuestion.salary.error.required = Enter a valid amount
 salaryQuestion.salary.error.invalid = Enter a valid amount
-salaryQuestion.salary.error.negative = Salary can’t be negative
 salaryQuestion.inset.info = If this employee started work between 1 and 18 March 2020, enter the amount they’ll get paid from now on.
 
 nicCategory.title = What’s the employee’s National Insurance category letter?
@@ -391,7 +390,6 @@ variableGrossPay.heading = What’s the employee’s total pay since 6 April 201
 variableGrossPay.error.required = Enter a valid amount
 variableGrossPay.label = This is the gross amount before deductions.
 variableGrossPay.error.invalid = Enter a valid amount
-variableGrossPay.error.negative = Salary can’t be negative
 variableGrossPay.p = This is the total gross amount before deductions the employee has been paid up to the earlier of:
 variableGrossPay.l1 = 5th April 2020 or
 variableGrossPay.l2 = the day before they were furloughed ({0})
@@ -424,7 +422,6 @@ FurloughPartialPay.heading.on = What did the employee get paid on {0}?
 FurloughPartialPay.label = This is for the time that employee was paid when they were not furloughed.
 FurloughPartialPay.error.required = Enter a valid amount
 FurloughPartialPay.error.invalid = Enter a valid amount
-FurloughPartialPay.error.negative = Salary can’t be negative
 FurloughPartialPay.p = This is for the time that employee was paid when they were not furloughed.
 
 lastPayDate.title = What’s this employee’s pay date for the pay period ending {0}?
@@ -448,4 +445,6 @@ lastYearPay.title.monthly = In 2019, what did this employee get paid in {0}?
 lastYearPay.heading.monthly = In 2019, what did this employee get paid in {0}?
 lastYearPay.error.nonNumeric = Enter the salary using numbers
 lastYearPay.error.required = Enter the salary
-lastYearPay.error.negative = Salary can’t be negative
+
+amount.error.max.2.decimals = The amount can’t have more than two decimal places
+amount.error.negative = The amount can’t be negative

@@ -10,9 +10,6 @@ import play.api.data.FormError
 
 class VariableGrossPayFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val requiredKey = "variableGrossPay.error.required"
-  val lengthKey = "variableGrossPay.error.length"
-
   val form = new VariableGrossPayFormProvider()()
 
   ".value" must {

@@ -10,7 +10,6 @@ import javax.inject.Inject
 import models.Amount
 import play.api.data.Form
 import play.api.data.Forms.mapping
-import play.api.data.validation.{Constraint, Invalid, Valid}
 
 class LastYearPayFormProvider @Inject() extends Mappings {
 
@@ -19,11 +18,8 @@ class LastYearPayFormProvider @Inject() extends Mappings {
       "value" -> bigDecimal(
         requiredKey = "lastYearPay.error.required",
         nonNumericKey = "lastYearPay.error.nonNumeric"
-      ).verifying(validAmount)
+      ).verifying(positiveValue())
+        .verifying(maxTwoDecimals())
     )(Amount.apply)(Amount.unapply)
   )
-
-  private def validAmount: Constraint[BigDecimal] = Constraint { value =>
-    if (value >= 0) Valid else Invalid("lastYearPay.error.negative")
-  }
 }

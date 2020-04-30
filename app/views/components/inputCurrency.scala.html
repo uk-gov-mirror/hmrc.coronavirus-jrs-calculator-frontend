@@ -56,7 +56,7 @@
 
 @inputSnippet(describedBy: String) = {
 @defining {
-    id="@id" name="@name" type="decimal"@form("value").value.map { value => value="@value" }@if(describedBy.nonEmpty) { aria-describedby="@describedBy"}
+    id="@id" name="@name" @form("value").value.map { value => value="@value" }@if(describedBy.nonEmpty) { aria-describedby="@describedBy"}
 } { attrs =>
     <div class="hmrc-currency-input__wrapper">
         <span class="hmrc-currency-input__unit" aria-hidden="true">£</span>

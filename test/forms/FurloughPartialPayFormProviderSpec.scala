@@ -10,10 +10,6 @@ import play.api.data.FormError
 
 class FurloughPartialPayFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val requiredKey = "FurloughPartialPay.error.required"
-  val lengthKey = "FurloughPartialPay.error.length"
-  val maxLength = 100
-
   val form = new FurloughPartialPayFormProvider()()
 
   ".value" must {

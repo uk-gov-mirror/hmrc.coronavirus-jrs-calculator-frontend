@@ -10,20 +10,16 @@ import javax.inject.Inject
 import models.Salary
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid}
 
 class SalaryQuestionFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Salary] = Form(
     mapping(
-      "salary" -> bigDecimal(
+      "value" -> bigDecimal(
         requiredKey = "salaryQuestion.salary.error.required",
         nonNumericKey = "salaryQuestion.salary.error.invalid"
-      ).verifying(validSalary)
+      ).verifying(positiveValue())
+        .verifying(maxTwoDecimals())
     )(Salary.apply)(Salary.unapply)
   )
-
-  private def validSalary: Constraint[BigDecimal] = Constraint { value =>
-    if (value >= 0) Valid else Invalid("salaryQuestion.salary.error.negative")
-  }
 }

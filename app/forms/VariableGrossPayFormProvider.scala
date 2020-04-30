@@ -10,7 +10,6 @@ import javax.inject.Inject
 import models.VariableGrossPay
 import play.api.data.Form
 import play.api.data.Forms.mapping
-import play.api.data.validation.{Constraint, Invalid, Valid}
 
 class VariableGrossPayFormProvider @Inject() extends Mappings {
 
@@ -20,11 +19,8 @@ class VariableGrossPayFormProvider @Inject() extends Mappings {
         "value" -> bigDecimal(
           requiredKey = "variableGrossPay.error.required",
           nonNumericKey = "variableGrossPay.error.invalid"
-        ).verifying(validSalary)
+        ).verifying(positiveValue())
+          .verifying(maxTwoDecimals())
       )(VariableGrossPay.apply)(VariableGrossPay.unapply)
     )
-
-  private def validSalary: Constraint[BigDecimal] = Constraint { value =>
-    if (value >= 0) Valid else Invalid("variableGrossPay.error.negative")
-  }
 }

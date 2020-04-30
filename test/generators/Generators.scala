@@ -50,6 +50,10 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
 
   def positiveBigDecimals: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (_ >= 0)
 
+  def positiveBigDecimalsWith2dp: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (bd => bd >= 0 && bd.scale <= 2)
+
+  def positiveBigDecimalsWithMoreThan2dp: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (bd => bd >= 0 && bd.scale > 2)
+
   def decimals: Gen[String] =
     arbitrary[BigDecimal]
       .suchThat(_.abs < Int.MaxValue)

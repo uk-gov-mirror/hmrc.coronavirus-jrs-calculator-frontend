@@ -82,7 +82,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
 
       val request =
         FakeRequest(POST, salaryQuestionRoute)
-          .withFormUrlEncodedBody(("salary", "111"))
+          .withFormUrlEncodedBody(("value", "111"))
 
       val result = route(application, request).value
 
@@ -100,9 +100,9 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
       val request =
         FakeRequest(POST, salaryQuestionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-          .withFormUrlEncodedBody(("salary", "invalid value"))
+          .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("salary" -> "invalid value"))
+      val boundForm = form.bind(Map("value" -> "invalid value"))
 
       val view = application.injector.instanceOf[SalaryQuestionView]
 
@@ -136,7 +136,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
 
       val request =
         FakeRequest(POST, salaryQuestionRoute)
-          .withFormUrlEncodedBody(("salary", "111"))
+          .withFormUrlEncodedBody(("value", "111"))
 
       val result = route(application, request).value
 

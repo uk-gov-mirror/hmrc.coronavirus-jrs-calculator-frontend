@@ -12,9 +12,9 @@ class SalaryQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new SalaryQuestionFormProvider()()
 
-  ".salary" must {
+  ".value" must {
 
-    val fieldName = "salary"
+    val fieldName = "value"
     val requiredKey = "salaryQuestion.salary.error.required"
     val invalidKey = "salaryQuestion.salary.error.invalid"
 
