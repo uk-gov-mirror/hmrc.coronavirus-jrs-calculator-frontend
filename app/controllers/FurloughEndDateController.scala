@@ -23,7 +23,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class FurloughEndDateController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
-  navigator: Navigator,
+  val navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,

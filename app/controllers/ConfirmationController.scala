@@ -9,6 +9,7 @@ import config.FrontendAppConfig
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
+import navigation.Navigator
 import pages.FurloughOngoingPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -25,7 +26,8 @@ class ConfirmationController @Inject()(
   config: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
   view: ConfirmationView,
-  auditService: AuditService
+  auditService: AuditService,
+  val navigator: Navigator
 )(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
     extends BaseController with ConfirmationControllerRequestHandler {
 

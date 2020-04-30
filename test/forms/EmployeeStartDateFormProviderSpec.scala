@@ -13,32 +13,30 @@ import views.ViewUtils._
 
 class EmployeeStartDateFormProviderSpec extends DateBehaviours {
 
-  val validStart = LocalDate.of(2019, 2, 2)
-  val validEnd = LocalDate.of(2020, 3, 19)
+  val furloughStart = LocalDate.of(2020, 3, 10)
 
-  val form = new EmployeeStartDateFormProvider()()
+  val formProvider = new EmployeeStartDateFormProvider()
+
+  val form = formProvider(furloughStart)
 
   ".value" should {
 
     val validData = datesBetween(
-      min = validStart,
-      max = validEnd
+      min = formProvider.feb2nd2019,
+      max = furloughStart
     )
 
     behave like dateField(form, "value", validData)
 
-    behave like dateFieldWithMax(
-      form,
-      "value",
-      validEnd,
-      FormError("value", "employeeStartDate.error.outofrange", Array(dateToString(validStart), dateToString(validEnd))))
+    behave like dateFieldWithMax(form, "value", furloughStart.minusDays(1), FormError("value", "employeeStartDate.error.max"))
 
     behave like dateFieldWithMin(
       form,
       "value",
-      validStart,
-      FormError("value", "employeeStartDate.error.outofrange", Array(dateToString(validStart), dateToString(validEnd))))
+      formProvider.feb2nd2019,
+      FormError("value", "employeeStartDate.error.min", Array(dateToString(formProvider.feb2nd2019))))
 
     behave like mandatoryDateField(form, "value", "employeeStartDate.error.required.all")
+
   }
 }

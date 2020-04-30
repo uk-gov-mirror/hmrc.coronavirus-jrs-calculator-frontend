@@ -5,16 +5,19 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.EmployeeStartDateFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import navigation.Navigator
-import pages.EmployeeStartDatePage
+import pages.{EmployeeStartDatePage, FurloughStartDatePage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.EmployeeStartDateView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -22,7 +25,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class EmployeeStartDateController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
-  navigator: Navigator,
+  val navigator: Navigator,
   identify: IdentifierAction,
   feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
@@ -30,32 +33,35 @@ class EmployeeStartDateController @Inject()(
   formProvider: EmployeeStartDateFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: EmployeeStartDateView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+    extends BaseController with I18nSupport {
 
-  def form = formProvider()
+  def form: LocalDate => Form[LocalDate] = formProvider(_)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      val preparedForm = request.userAnswers.get(EmployeeStartDatePage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+      getRequiredAnswerOrRedirect(FurloughStartDatePage) { furloughStart =>
+        val preparedForm = request.userAnswers.get(EmployeeStartDatePage) match {
+          case None        => form(furloughStart)
+          case Some(value) => form(furloughStart).fill(value)
+        }
+        Future.successful(Ok(view(preparedForm)))
       }
-
-      Ok(view(preparedForm))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartDatePage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(EmployeeStartDatePage, updatedAnswers))
-        )
+      getRequiredAnswerOrRedirect(FurloughStartDatePage) { furloughStart =>
+        form(furloughStart)
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartDatePage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(EmployeeStartDatePage, updatedAnswers))
+          )
+      }
   }
 }

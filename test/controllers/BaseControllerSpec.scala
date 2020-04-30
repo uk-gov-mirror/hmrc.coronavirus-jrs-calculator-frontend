@@ -12,6 +12,7 @@ import base.SpecBaseWithApplication
 import handlers.ErrorHandler
 import models.Salary
 import models.requests.DataRequest
+import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{PayDatePage, SalaryQuestionPage}
 import play.api.http.Status._
@@ -31,7 +32,9 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   object BaseController extends BaseController {
     override protected def controllerComponents: MessagesControllerComponents = injector.instanceOf[MessagesControllerComponents]
+    override val navigator: Navigator = injector.instanceOf[Navigator]
   }
+
   implicit val duration: Timeout = 5 seconds
 
   "getAnswer without index" when {

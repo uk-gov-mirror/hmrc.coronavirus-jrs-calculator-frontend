@@ -384,5 +384,15 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
       }
     }
+
+    "routeFor() is called" should {
+      "return correct url for FurloughStartDatePage" in {
+        navigator.routeFor(FurloughStartDatePage) mustBe routes.FurloughStartDateController.onPageLoad()
+      }
+      "return internalServerError url for any page other than FurloughStartDatePage" in {
+        case object UnknownPage extends Page
+        navigator.routeFor(UnknownPage) mustBe routes.ErrorController.internalServerError()
+      }
+    }
   }
 }

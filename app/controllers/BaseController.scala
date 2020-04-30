@@ -7,6 +7,7 @@ package controllers
 
 import handlers.ErrorHandler
 import models.requests.DataRequest
+import navigation.Navigator
 import pages.QuestionPage
 import play.api.Logger
 import play.api.i18n.I18nSupport
@@ -17,6 +18,8 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import scala.concurrent.Future
 
 trait BaseController extends FrontendBaseController with I18nSupport {
+
+  val navigator: Navigator
 
   def getAnswer[A](page: QuestionPage[A], idx: Int)(implicit request: DataRequest[_], reads: Reads[A]): Option[A] =
     getAnswer(page, Some(idx))
@@ -35,6 +38,16 @@ trait BaseController extends FrontendBaseController with I18nSupport {
       case _ =>
         Logger.error(s"[BaseController][getRequiredAnswer] Failed to retrieve expected data for page: $page")
         Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+    }
+
+  def getRequiredAnswerOrRedirect[A](page: QuestionPage[A], idx: Option[Int] = None)(
+    f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
+    getAnswer(page, idx) match {
+      case Some(ans) => f(ans)
+      case _ =>
+        val requiredPage = navigator.routeFor(page)
+        Logger.error(s"Failed to retrieve expected data for page: $page, redirecting to $requiredPage")
+        Future.successful(Redirect(requiredPage))
     }
 
   def getRequiredAnswers[A, B](pageA: QuestionPage[A], pageB: QuestionPage[B], idxA: Option[Int] = None, idxB: Option[Int] = None)(

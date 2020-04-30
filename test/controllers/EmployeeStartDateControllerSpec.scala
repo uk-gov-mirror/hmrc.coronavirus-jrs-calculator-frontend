@@ -9,12 +9,12 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.EmployeeStartDateFormProvider
-import models.{UserAnswers}
+import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.EmployeeStartDatePage
+import pages.{EmployeeStartDatePage, FurloughStartDatePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
@@ -27,16 +27,21 @@ import scala.concurrent.Future
 
 class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
-  val formProvider = new EmployeeStartDateFormProvider()
-  private def form = formProvider()
-
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = LocalDate.of(2020, 2, 1)
+  val furloughStart = LocalDate.of(2020, 3, 18)
+
+  val formProvider = new EmployeeStartDateFormProvider()
+  private def form = formProvider(furloughStart)
 
   lazy val employeeStartDateRoute = routes.EmployeeStartDateController.onPageLoad().url
 
-  override val emptyUserAnswers = UserAnswers(userAnswersId)
+  val userAnswers =
+    UserAnswers(userAnswersId)
+      .set(FurloughStartDatePage, furloughStart)
+      .success
+      .value
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, employeeStartDateRoute).withCSRFToken
@@ -55,7 +60,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val result = route(application, getRequest).value
 
@@ -71,7 +76,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
     "redirect GET to coming soon if variable journey feature is disabled" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), Map("variable.journey.enabled" -> false))
+      val application = applicationBuilder(userAnswers = Some(userAnswers), Map("variable.journey.enabled" -> false))
         .build()
 
       val result = route(application, getRequest).value
@@ -83,11 +88,24 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       application.stop()
     }
 
+    "redirect to /furlough-start if its already not found in userAnswers" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val result = route(application, getRequest).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.FurloughStartDateController.onPageLoad().url
+
+      application.stop()
+    }
+
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(EmployeeStartDatePage, validAnswer).success.value
+      val userAnswers1 = userAnswers.set(EmployeeStartDatePage, validAnswer).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers1)).build()
 
       val view = application.injector.instanceOf[EmployeeStartDateView]
 
@@ -108,7 +126,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -131,7 +149,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers), Map("variable.journey.enabled" -> false))
+        applicationBuilder(userAnswers = Some(userAnswers), Map("variable.journey.enabled" -> false))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -147,9 +165,32 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       application.stop()
     }
 
+    "redirect POST to /furlough-start if its already not found in userAnswers" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, postRequest).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.FurloughStartDateController.onPageLoad().url
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
         FakeRequest(POST, employeeStartDateRoute).withCSRFToken
