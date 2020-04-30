@@ -24,15 +24,13 @@
 
             @errorSummary(form.errors)
 
-            @h1(messages(if(date1.isEqual(date2)) "FurloughPartialPay.heading.on" else "FurloughPartialPay.heading.between", dateToString(date1), dateToString(date2)))
-            @p(Html(messages("FurloughPartialPay.p")))
-
             @inputCurrency(
                 form,
                 id = "value",
                 name = "value",
-                label = "",
-                isPageHeading = false,
+                label = messages(if(date1.isEqual(date2)) "FurloughPartialPay.heading.on" else "FurloughPartialPay.heading.between", dateToString(date1), dateToString(date2)),
+                isPageHeading = true,
+                hint = Some(Html(messages("FurloughPartialPay.p"))),
                 classes = Some("govuk-input--width-10")
             )
 

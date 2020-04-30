@@ -22,14 +22,12 @@
 
         @errorSummary(form.errors)
 
-        @h1(if(isMonthly){messages("lastYearPay.heading.monthly", dateToStringOnlyMonth(payDate))} else {messages("lastYearPay.heading", dateToStringWithoutYear(payDate))})
-
         @inputCurrency(
             form,
             id = "value",
             name = "value",
-            label = "",
-            isPageHeading = false,
+            label = if(isMonthly){messages("lastYearPay.heading.monthly", dateToStringOnlyMonth(payDate))} else {messages("lastYearPay.heading", dateToStringWithoutYear(payDate))},
+            isPageHeading = true,
             classes = Some("govuk-input--width-10")
         )
 
