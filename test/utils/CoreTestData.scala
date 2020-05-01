@@ -15,7 +15,7 @@ trait CoreTestData {
   def emptyUserAnswers = UserAnswers(userAnswersId, Json.obj())
 
   def userAnswersJson(
-    furloughOngoing: String = "no",
+    furloughOngoing: String = "ongoing",
     furloughStartDate: String = "2020-03-01",
     furloughEndDate: String = "",
     payQuestion: String = "regularly",
@@ -27,7 +27,7 @@ trait CoreTestData {
        |    "_id" : "session-3fdd2682-dad1-48e1-80d6-8c1480696811",
        |    "data" : {
        |        "lastPayDate" : "2020-04-20",
-       |        "furloughOngoing" : "$furloughOngoing",
+       |        "furloughStatus" : "$furloughOngoing",
        |        "furloughStartDate" : "$furloughStartDate",
        |        "furloughEndDate" : "$furloughEndDate",
        |        "payQuestion" : "$payQuestion",
@@ -60,7 +60,7 @@ trait CoreTestData {
       |  "_id": "session-9dee1ca2-1378-479b-92f8-748de7f363d5",
       |  "data": {
       |    "lastPayDate" : "2020-04-20",
-      |    "furloughOngoing": "no",
+      |    "furloughStatus": "ongoing",
       |    "furloughStartDate" : "2020-03-01",
       |    "payQuestion": "regularly",
       |    "pensionContribution": "no",
@@ -87,7 +87,7 @@ trait CoreTestData {
       |    "_id" : "session-4f8fa4d9-b46c-466f-ae9b-424cfffd841f",
       |    "data" : {
       |        "lastPayDate" : "2020-03-31",
-      |        "furloughOngoing" : "no",
+      |        "furloughStatus" : "ongoing",
       |        "furloughStartDate" : "2020-03-10",
       |        "payQuestion" : "regularly",
       |        "pensionContribution" : "yes",
@@ -113,7 +113,7 @@ trait CoreTestData {
       |{
       |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
       |    "data" : {
-      |        "furloughOngoing" : "yes",
+      |        "furloughStatus" : "ended",
       |        "variableGrossPay" : {
       |            "amount" : 10000
       |        },
@@ -152,7 +152,7 @@ trait CoreTestData {
       |{
       |    "_id" : "session-a33fd288-bafb-475b-9767-84df4315d230",
       |    "data" : {
-      |        "furloughOngoing" : "no",
+      |        "furloughStatus" : "ongoing",
       |        "variableGrossPay" : {
       |            "amount" : 12960
       |        },
@@ -186,7 +186,7 @@ trait CoreTestData {
        |{
        |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
        |    "data" : {
-       |        "furloughOngoing" : "yes",
+       |        "furloughStatus" : "ended",
        |        "variableGrossPay" : {
        |            "amount" : 10000
        |        },
@@ -220,7 +220,7 @@ trait CoreTestData {
       |{
       |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
       |    "data" : {
-      |        "furloughOngoing" : "yes",
+      |        "furloughStatus" : "ended",
       |        "variableGrossPay" : {
       |            "amount" : 10000
       |        },
@@ -253,7 +253,7 @@ trait CoreTestData {
       |{
       |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
       |    "data" : {
-      |        "furloughOngoing" : "yes",
+      |        "furloughStatus" : "ended",
       |        "variableGrossPay" : {
       |            "amount" : 10000
       |        },
@@ -286,7 +286,7 @@ trait CoreTestData {
       |{
       |    "_id" : "session-559ffcf7-de7b-49e6-bf4d-bbc248698ae1",
       |    "data" : {
-      |        "furloughOngoing" : "no",
+      |        "furloughStatus" : "ongoing",
       |        "variableGrossPay" : {
       |            "amount" : 20000.0
       |        },
@@ -331,7 +331,7 @@ trait CoreTestData {
       |{
       |    "_id" : "session-559ffcf7-de7b-49e6-bf4d-bbc248698ae1",
       |    "data" : {
-      |        "furloughOngoing" : "yes",
+      |        "furloughStatus" : "ended",
       |        "variableGrossPay" : {
       |            "amount" : 31970
       |        },
@@ -375,7 +375,7 @@ trait CoreTestData {
       |{
       |    "_id" : "session-7f38466c-1922-4cf8-9be2-9e9d3de9bdc2",
       |    "data" : {
-      |        "furloughOngoing" : "yes",
+      |        "furloughStatus" : "ended",
       |        "variableGrossPay" : {
       |            "amount" : 31970
       |        },

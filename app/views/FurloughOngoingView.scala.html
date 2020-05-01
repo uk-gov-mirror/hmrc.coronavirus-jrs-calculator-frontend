@@ -6,7 +6,7 @@
 @import java.time.LocalDate
 
 @import controllers.routes._
-@import models.FurloughOngoing
+@import models.FurloughStatus
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -27,7 +27,7 @@
         @inputRadio(
             form = form,
             legend = messages("furloughOngoing.heading"),
-            items = FurloughOngoing.options(form)
+            items = FurloughStatus.options(form)
         )
 
         @button("site.continue")

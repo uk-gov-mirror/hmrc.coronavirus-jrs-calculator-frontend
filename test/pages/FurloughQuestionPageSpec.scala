@@ -7,29 +7,29 @@ package pages
 
 import java.time.LocalDate
 
-import models.{FurloughOngoing, UserAnswers}
+import models.{FurloughStatus, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class FurloughOngoingSpec extends PageBehaviours {
 
   "furloughOngoingPage" must {
 
-    beRetrievable[FurloughOngoing](FurloughOngoingPage)
+    beRetrievable[FurloughStatus](FurloughStatusPage)
 
-    beSettable[FurloughOngoing](FurloughOngoingPage)
+    beSettable[FurloughStatus](FurloughStatusPage)
 
-    beRemovable[FurloughOngoing](FurloughOngoingPage)
+    beRemovable[FurloughStatus](FurloughStatusPage)
 
     "remove furlough end date when answered 'No'" in {
       val initialAnswers = UserAnswers("id")
-        .set(FurloughOngoingPage, FurloughOngoing.Yes)
+        .set(FurloughStatusPage, FurloughStatus.FurloughEnded)
         .success
         .get
         .set(FurloughEndDatePage, LocalDate.of(2020, 3, 1))
         .success
         .get
 
-      val updatedAnswers = initialAnswers.set(FurloughOngoingPage, FurloughOngoing.No).success.value
+      val updatedAnswers = initialAnswers.set(FurloughStatusPage, FurloughStatus.FurloughOngoing).success.value
 
       updatedAnswers.get(FurloughEndDatePage) must not be defined
     }

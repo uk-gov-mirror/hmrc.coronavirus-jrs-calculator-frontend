@@ -32,28 +32,30 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
   "extractFurloughPeriod" must {
 
     "use the user submitted furlough end date if furlough question is yes" in new DataExtractor {
-      val userAnswers = Json.parse(userAnswersJson("yes", furloughEndDate = "2020-03-31")).as[UserAnswers]
+      val userAnswers = Json.parse(userAnswersJson("ended", furloughEndDate = "2020-03-31")).as[UserAnswers]
       val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(FurloughEndDatePage).get)
 
       extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe expected
     }
 
     "use the claim period end date if furlough question is no" in new DataExtractor {
-      val userAnswers = Json.parse(userAnswersJson("no")).as[UserAnswers]
+      val userAnswers = Json.parse(userAnswersJson("ended")).as[UserAnswers]
       val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(ClaimPeriodEndPage).get)
 
       extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe expected
     }
 
     "use the furlough start date if later than claim start date" in new DataExtractor {
-      val userAnswers = Json.parse(userAnswersJson("no", furloughStartDate = "2020-03-02", claimStartDate = "2020-03-01")).as[UserAnswers]
+      val userAnswers =
+        Json.parse(userAnswersJson("ongoing", furloughStartDate = "2020-03-02", claimStartDate = "2020-03-01")).as[UserAnswers]
       val expected = Period(userAnswers.get(FurloughStartDatePage).get, userAnswers.get(ClaimPeriodEndPage).get)
 
       extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe expected
     }
 
     "use the claim start date if later than furlough start date" in new DataExtractor {
-      val userAnswers = Json.parse(userAnswersJson("no", furloughStartDate = "2020-03-01", claimStartDate = "2020-03-02")).as[UserAnswers]
+      val userAnswers =
+        Json.parse(userAnswersJson("ongoing", furloughStartDate = "2020-03-01", claimStartDate = "2020-03-02")).as[UserAnswers]
       val expected = Period(userAnswers.get(ClaimPeriodStartPage).get, userAnswers.get(ClaimPeriodEndPage).get)
 
       extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers) mustBe expected

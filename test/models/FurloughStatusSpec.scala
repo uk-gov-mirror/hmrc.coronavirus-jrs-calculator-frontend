@@ -11,31 +11,31 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatest.{MustMatchers, OptionValues, WordSpec}
 import play.api.libs.json.{JsError, JsString, Json}
 
-class FurloughOngoingSpec extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with OptionValues {
+class FurloughStatusSpec extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with OptionValues {
 
-  "furloughOngoing" must {
+  "furloughStatus" must {
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(FurloughOngoing.values.toSeq)
+      val gen = Gen.oneOf(FurloughStatus.values.toSeq)
 
       forAll(gen) { furloughOngoing =>
-        JsString(furloughOngoing.toString).validate[FurloughOngoing].asOpt.value mustEqual furloughOngoing
+        JsString(furloughOngoing.toString).validate[FurloughStatus].asOpt.value mustEqual furloughOngoing
       }
     }
 
     "fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!FurloughOngoing.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!FurloughStatus.values.map(_.toString).contains(_))
 
       forAll(gen) { invalidValue =>
-        JsString(invalidValue).validate[FurloughOngoing] mustEqual JsError("error.invalid")
+        JsString(invalidValue).validate[FurloughStatus] mustEqual JsError("error.invalid")
       }
     }
 
     "serialise" in {
 
-      val gen = Gen.oneOf(FurloughOngoing.values.toSeq)
+      val gen = Gen.oneOf(FurloughStatus.values.toSeq)
 
       forAll(gen) { furloughOngoing =>
         Json.toJson(furloughOngoing) mustEqual JsString(furloughOngoing.toString)

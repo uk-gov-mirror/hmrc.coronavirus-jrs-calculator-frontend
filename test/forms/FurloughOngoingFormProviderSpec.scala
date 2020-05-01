@@ -6,7 +6,7 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.FurloughOngoing
+import models.FurloughStatus
 import play.api.data.FormError
 
 class FurloughOngoingFormProviderSpec extends OptionFieldBehaviours {
@@ -18,10 +18,10 @@ class FurloughOngoingFormProviderSpec extends OptionFieldBehaviours {
     val fieldName = "value"
     val requiredKey = "furloughOngoing.error.required"
 
-    behave like optionsField[FurloughOngoing](
+    behave like optionsField[FurloughStatus](
       form,
       fieldName,
-      validValues = FurloughOngoing.values,
+      validValues = FurloughStatus.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

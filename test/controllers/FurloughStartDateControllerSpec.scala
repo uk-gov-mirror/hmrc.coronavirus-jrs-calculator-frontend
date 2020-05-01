@@ -28,7 +28,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
   val formProvider = new FurloughStartDateFormProvider(frontendAppConfig)
   private val claimPeriodStart = LocalDate.of(2020, 3, 1)
-  private val claimPeriodEnd = LocalDate.of(2020, 5, 1)
+  private val claimPeriodEnd = LocalDate.of(2020, 6, 1)
   private def form = formProvider(claimPeriodEnd)
 
   def onwardRoute = Call("GET", "/foo")
