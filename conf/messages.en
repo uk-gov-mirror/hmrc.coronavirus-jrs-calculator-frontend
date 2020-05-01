@@ -260,8 +260,8 @@ nicCategory.details.category.z = Employees under 21 who can defer National Insur
 
 pensionContribution.title = Do you pay pension contributions for this employee?
 pensionContribution.heading = Do you pay pension contributions for this employee?
-pensionContribution.yes = Yes
-pensionContribution.no = No
+pensionContribution.doesContribute = Yes
+pensionContribution.doesNotContribute = No
 pensionContribution.error.required = Select yes if you pay pension contributions for this employee
 
 confirmation.title = What you can claim for this employee

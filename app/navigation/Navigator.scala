@@ -67,7 +67,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case NicCategoryPage =>
       _ =>
         routes.PensionContributionController.onPageLoad()
-    case PensionContributionPage =>
+    case PensionStatusPage =>
       _ =>
         routes.FurloughCalculationsController.onPageLoad()
     case FurloughCalculationsPage =>

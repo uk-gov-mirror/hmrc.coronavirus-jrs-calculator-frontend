@@ -35,7 +35,7 @@ trait CoreTestData {
        |            "amount" : "$variableGrossPay"
        |        },
        |        "employeeStartDate": "$employeeStartDate",
-       |        "pensionContribution" : "yes",
+       |        "pensionStatus" : "doesContribute",
        |        "claimPeriodEnd" : "2020-04-30",
        |        "paymentFrequency" : "monthly",
        |        "salary" : {
@@ -63,7 +63,7 @@ trait CoreTestData {
       |    "furloughStatus": "ongoing",
       |    "furloughStartDate" : "2020-03-01",
       |    "payMethod": "regular",
-      |    "pensionContribution": "no",
+      |    "pensionStatus": "doesNotContribute",
       |    "claimPeriodEnd": "2020-04-30",
       |    "paymentFrequency": "monthly",
       |    "salary": {
@@ -90,7 +90,7 @@ trait CoreTestData {
       |        "furloughStatus" : "ongoing",
       |        "furloughStartDate" : "2020-03-10",
       |        "payMethod" : "regular",
-      |        "pensionContribution" : "yes",
+      |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-03-31",
       |        "paymentFrequency" : "monthly",
       |        "salary" : {
@@ -132,7 +132,7 @@ trait CoreTestData {
       |        },
       |        "furloughStartDate" : "2020-03-10",
       |        "payMethod" : "variable",
-      |        "pensionContribution" : "yes",
+      |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-04-30",
       |        "nicCategory" : "payable",
       |        "payDate" : [
@@ -167,7 +167,7 @@ trait CoreTestData {
       |        },
       |        "furloughStartDate" : "2020-03-05",
       |        "payMethod" : "variable",
-      |        "pensionContribution" : "yes",
+      |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-03-31",
       |        "nicCategory" : "payable",
       |        "payDate" : [
@@ -199,7 +199,7 @@ trait CoreTestData {
        |        "lastPayDate" : "$lastPayDate",
        |        "furloughStartDate" : "2020-03-10",
        |        "payMethod" : "variable",
-       |        "pensionContribution" : "yes",
+       |        "pensionStatus" : "doesContribute",
        |        "claimPeriodEnd" : "2020-03-21",
        |        "nicCategory" : "payable",
        |        "payDate" : [
@@ -233,7 +233,7 @@ trait CoreTestData {
       |        "lastPayDate" : "2020-03-28",
       |        "furloughStartDate" : "2020-03-10",
       |        "payMethod" : "variable",
-      |        "pensionContribution" : "yes",
+      |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-03-21",
       |        "nicCategory" : "payable",
       |        "payDate" : [
@@ -266,7 +266,7 @@ trait CoreTestData {
       |        "lastPayDate" : "2020-04-25",
       |        "furloughStartDate" : "2020-03-10",
       |        "payMethod" : "variable",
-      |        "pensionContribution" : "yes",
+      |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-03-21",
       |        "nicCategory" : "payable",
       |        "payDate" : [
@@ -311,7 +311,7 @@ trait CoreTestData {
       |        },
       |        "furloughStartDate" : "2020-03-15",
       |        "payMethod" : "variable",
-      |        "pensionContribution" : "yes",
+      |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-04-30",
       |        "nicCategory" : "payable",
       |        "payDate" : [
@@ -356,7 +356,7 @@ trait CoreTestData {
       |        },
       |        "furloughStartDate" : "2020-03-02",
       |        "payMethod" : "variable",
-      |        "pensionContribution" : "yes",
+      |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-03-28",
       |        "nicCategory" : "payable",
       |        "payDate" : [
@@ -412,7 +412,7 @@ trait CoreTestData {
       |        },
       |        "furloughStartDate" : "2020-03-01",
       |        "payMethod" : "variable",
-      |        "pensionContribution" : "yes",
+      |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-03-31",
       |        "nicCategory" : "payable",
       |        "payDate" : [

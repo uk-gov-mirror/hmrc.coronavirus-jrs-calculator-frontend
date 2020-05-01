@@ -30,7 +30,7 @@ trait UserAnswersGenerator extends TryValues {
       arbitrary[(FurloughStatusPage.type, JsValue)] ::
       arbitrary[(ClaimPeriodEndPage.type, JsValue)] ::
       arbitrary[(ClaimPeriodStartPage.type, JsValue)] ::
-      arbitrary[(PensionContributionPage.type, JsValue)] ::
+      arbitrary[(PensionStatusPage.type, JsValue)] ::
       arbitrary[(NicCategoryPage.type, JsValue)] ::
       arbitrary[(SalaryQuestionPage.type, JsValue)] ::
       arbitrary[(PaymentFrequencyPage.type, JsValue)] ::

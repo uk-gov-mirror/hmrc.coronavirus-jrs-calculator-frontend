@@ -7,13 +7,13 @@ package forms
 
 import javax.inject.Inject
 import forms.mappings.Mappings
-import models.PensionContribution
+import models.PensionStatus
 import play.api.data.Form
 
 class PensionContributionFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[PensionContribution] =
+  def apply(): Form[PensionStatus] =
     Form(
-      "value" -> enumerable[PensionContribution]("pensionContribution.error.required")
+      "value" -> enumerable[PensionStatus]("pensionContribution.error.required")
     )
 }

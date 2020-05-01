@@ -81,7 +81,7 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       "employeePartialPayBeforeFurlough"   -> JsString(userAnswers.get(PartialPayBeforeFurloughPage).fold("")(_.value.toString)),
       "employeePartialPayAfterFurlough"    -> JsString(userAnswers.get(PartialPayAfterFurloughPage).fold("")(_.value.toString)),
       "employeeNationalInsuranceCategory"  -> JsString(userAnswers.get(NicCategoryPage).fold("")(_.toString)),
-      "employerPensionContributions"       -> JsString(userAnswers.get(PensionContributionPage).fold("")(_.toString))
+      "employerPensionStatus"              -> JsString(userAnswers.get(PensionStatusPage).fold("")(_.toString))
     )
 
   private def breakdownTransformer(breakdown: ConfirmationViewBreakdown) = {

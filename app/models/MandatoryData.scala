@@ -11,7 +11,7 @@ case class MandatoryData(
   claimPeriod: Period,
   paymentFrequency: PaymentFrequency,
   nicCategory: NicCategory,
-  pensionContribution: PensionContribution,
+  payStatus: PensionStatus,
   payMethod: PayMethod,
   furloughOngoing: FurloughStatus,
   payDates: Seq[LocalDate],

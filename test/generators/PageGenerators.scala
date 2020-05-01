@@ -46,11 +46,11 @@ trait PageGenerators {
   implicit lazy val arbitraryClaimPeriodEndPage: Arbitrary[ClaimPeriodEndPage.type] =
     Arbitrary(ClaimPeriodEndPage)
 
-  implicit lazy val arbitraryfurloughOngoingPage: Arbitrary[FurloughStatusPage.type] =
+  implicit lazy val arbitraryFurloughOngoingPage: Arbitrary[FurloughStatusPage.type] =
     Arbitrary(FurloughStatusPage)
 
-  implicit lazy val arbitraryPensionAutoEnrolmentPage: Arbitrary[PensionContributionPage.type] =
-    Arbitrary(PensionContributionPage)
+  implicit lazy val arbitraryPensionStatusPage: Arbitrary[PensionStatusPage.type] =
+    Arbitrary(PensionStatusPage)
 
   implicit lazy val arbitraryNicCategoryPage: Arbitrary[NicCategoryPage.type] =
     Arbitrary(NicCategoryPage)
