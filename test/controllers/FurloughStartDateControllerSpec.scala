@@ -5,7 +5,7 @@
 
 package controllers
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.FurloughStartDateFormProvider
@@ -33,7 +33,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.of(2020, 4, 1)
 
   lazy val furloughStartDateRoute = routes.FurloughStartDateController.onPageLoad().url
 

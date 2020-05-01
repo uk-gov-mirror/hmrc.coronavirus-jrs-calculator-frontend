@@ -11,6 +11,8 @@ import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalacheck.{Gen, Shrink}
 
+import scala.math.BigDecimal.RoundingMode
+
 trait Generators extends UserAnswersGenerator with PageGenerators with ModelGenerators with UserAnswersEntryGenerators {
 
   implicit val dontShrink: Shrink[String] = Shrink.shrinkAny
@@ -50,7 +52,12 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
 
   def positiveBigDecimals: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (_ >= 0)
 
-  def positiveBigDecimalsWith2dp: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (bd => bd >= 0 && bd.scale <= 2)
+  def positiveBigDecimalsWith2dp: Gen[BigDecimal] =
+    for {
+      value <- arbitrary[BigDecimal] suchThat (bd => bd >= 0)
+    } yield {
+      value.setScale(2, RoundingMode.HALF_UP)
+    }
 
   def positiveBigDecimalsWithMoreThan2dp: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (bd => bd >= 0 && bd.scale > 2)
 

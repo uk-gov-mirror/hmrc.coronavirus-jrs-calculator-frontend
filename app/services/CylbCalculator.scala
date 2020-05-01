@@ -7,10 +7,9 @@ package services
 
 import java.time.LocalDate
 
-import cats.data.NonEmptyList
 import models.PayQuestion.Varies
 import models.{Amount, CylbOperators, CylbPayment, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodWithPaymentDate, Periods}
-import Calculators._
+import Calculators.AmountRounding
 
 trait CylbCalculator extends PreviousYearPeriod {
 
@@ -34,7 +33,7 @@ trait CylbCalculator extends PreviousYearPeriod {
     nfp: Amount,
     cylbs: Seq[CylbPayment]): PaymentWithPeriod = {
     val cylbOps = operators(frequency, period.period)
-    val furlough: Amount = previousYearFurlough(cylbOps, previousPayments(datesRequired, cylbs).toList)
+    val furlough: Amount = previousYearFurlough(datesRequired, cylbs, cylbOps)
 
     period match {
       case fp: FullPeriodWithPaymentDate    => PaymentWithFullPeriod(furlough, fp, Varies)
@@ -42,29 +41,28 @@ trait CylbCalculator extends PreviousYearPeriod {
     }
   }
 
-  private def previousYearFurlough(cylbOps: CylbOperators, previous: List[Amount]): Amount =
-    (for {
-      oneOrTwo <- NonEmptyList.fromList(previous)
-      two      <- oneOrTwo.tail.headOption
-    } yield two)
-      .fold(totalOneToOne(previous.head, cylbOps))(two => totalTwoToOne(previous.head, two, cylbOps))
-      .halfUp
-
-  private def previousPayments(datesRequired: Seq[LocalDate], cylbs: Seq[CylbPayment]): Seq[Amount] =
-    for {
-      date     <- datesRequired
-      previous <- cylbs.find(_.date == date)
-    } yield previous.amount
-
-  private def totalTwoToOne(payOne: Amount, payTwo: Amount, operator: CylbOperators): Amount = {
-    import operator._
-    Amount(((payOne.value / divider) * daysFromPrevious) + ((payTwo.value / divider) * daysFromCurrent))
+  sealed trait PreviousYearAmount {
+    def total: Amount
   }
 
-  private def totalOneToOne(pay: Amount, operator: CylbOperators): Amount =
-    operator match {
-      case CylbOperators(div, 0, multiplier) => Amount((pay.value / div) * multiplier)
-      case CylbOperators(div, multiplier, 0) => Amount((pay.value / div) * multiplier)
+  final case class OnePreviousAmount(amount: Amount, ops: CylbOperators) extends PreviousYearAmount {
+    def total: Amount = ops match {
+      case CylbOperators(div, 0, multiplier) => Amount((amount.value / div) * multiplier)
+      case CylbOperators(div, multiplier, 0) => Amount((amount.value / div) * multiplier)
     }
+  }
+
+  final case class TwoPreviousAmounts(firstAmount: Amount, secondAmount: Amount, ops: CylbOperators) extends PreviousYearAmount {
+    def total: Amount = ops match {
+      case CylbOperators(divider, daysFromPrevious, daysFromCurrent) =>
+        Amount(((firstAmount.value / divider) * daysFromPrevious) + ((secondAmount.value / divider) * daysFromCurrent))
+    }
+  }
+
+  private def previousYearFurlough(datesRequired: Seq[LocalDate], cylbs: Seq[CylbPayment], ops: CylbOperators): Amount =
+    (datesRequired.flatMap(date => cylbs.find(_.date == date)).map(_.amount) match {
+      case x :: Nil      => OnePreviousAmount(x, ops)
+      case x :: y :: Nil => TwoPreviousAmounts(x, y, ops)
+    }).total.halfUp
 
 }

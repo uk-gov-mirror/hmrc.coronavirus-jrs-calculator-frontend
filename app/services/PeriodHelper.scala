@@ -93,10 +93,4 @@ trait PeriodHelper {
       }
     }
 
-  def numberOfDaysRequiredFromPreviousYear(paymentFrequency: PaymentFrequency, period: Periods): (Int, Int) =
-    (paymentFrequency, period) match {
-      case (FortNightly, pp: PartialPeriod) => 0 -> periodDaysCount(pp.partial)
-      case (FortNightly, _: FullPeriod)     => 2 -> 12
-    }
-
 }
