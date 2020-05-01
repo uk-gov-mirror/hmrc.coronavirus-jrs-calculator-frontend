@@ -32,7 +32,7 @@ trait ModelGenerators {
       Gen.oneOf(NicCategory.values.toSeq)
     }
 
-  implicit lazy val arbitraryPensionContribution: Arbitrary[PensionStatus] =
+  implicit lazy val arbitraryPensionStatus: Arbitrary[PensionStatus] =
     Arbitrary {
       Gen.oneOf(PensionStatus.values.toSeq)
     }

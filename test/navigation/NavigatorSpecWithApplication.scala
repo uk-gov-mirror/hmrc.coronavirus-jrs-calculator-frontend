@@ -230,7 +230,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
-      "go from PensionAutoEnrolmentPage to FurloughCalculationsPage" in {
+      "go from PensionStatusPage to FurloughCalculationsPage" in {
         navigator.nextPage(PensionStatusPage, emptyUserAnswers) mustBe routes.FurloughCalculationsController.onPageLoad()
       }
 

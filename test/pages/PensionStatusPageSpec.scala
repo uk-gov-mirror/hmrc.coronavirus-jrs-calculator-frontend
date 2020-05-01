@@ -10,7 +10,7 @@ import pages.behaviours.PageBehaviours
 
 class PensionStatusPageSpec extends PageBehaviours {
 
-  "PensionAutoEnrolmentPage" must {
+  "PensionStatusPage" must {
 
     beRetrievable[PensionStatus](PensionStatusPage)
 
