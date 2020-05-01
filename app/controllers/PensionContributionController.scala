@@ -9,7 +9,7 @@ import controllers.actions._
 import forms.PensionContributionFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.PensionContributionPage
+import pages.PensionStatusPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -34,7 +34,7 @@ class PensionContributionController @Inject()(
   val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(PensionContributionPage) match {
+    val preparedForm = request.userAnswers.get(PensionStatusPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -49,9 +49,9 @@ class PensionContributionController @Inject()(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PensionContributionPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(PensionStatusPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(PensionContributionPage, updatedAnswers))
+          } yield Redirect(navigator.nextPage(PensionStatusPage, updatedAnswers))
       )
   }
 }

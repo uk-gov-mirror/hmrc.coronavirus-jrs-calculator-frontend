@@ -10,16 +10,16 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait PensionContribution
+sealed trait PensionStatus
 
-object PensionContribution extends Enumerable.Implicits {
+object PensionStatus extends Enumerable.Implicits {
 
-  case object Yes extends WithName("yes") with PensionContribution
-  case object No extends WithName("no") with PensionContribution
+  case object DoesContribute extends WithName("doesContribute") with PensionStatus
+  case object DoesNotContribute extends WithName("doesNotContribute") with PensionStatus
 
-  val values: Seq[PensionContribution] = Seq(
-    Yes,
-    No
+  val values: Seq[PensionStatus] = Seq(
+    DoesContribute,
+    DoesNotContribute
   )
 
   def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
@@ -30,6 +30,6 @@ object PensionContribution extends Enumerable.Implicits {
     )
   }
 
-  implicit val enumerable: Enumerable[PensionContribution] =
+  implicit val enumerable: Enumerable[PensionStatus] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

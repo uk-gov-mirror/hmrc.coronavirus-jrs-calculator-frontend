@@ -20,7 +20,7 @@ trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor 
       claimEnd      <- userAnswers.get(ClaimPeriodEndPage)
       frequency     <- userAnswers.get(PaymentFrequencyPage)
       nic           <- userAnswers.get(NicCategoryPage)
-      pension       <- userAnswers.get(PensionContributionPage)
+      pension       <- userAnswers.get(PensionStatusPage)
       payMethod     <- userAnswers.get(PayMethodPage)
       furlough      <- userAnswers.get(FurloughStatusPage)
       furloughStart <- userAnswers.get(FurloughStartDatePage)

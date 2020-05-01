@@ -7,13 +7,13 @@ package controllers
 
 import base.SpecBaseWithApplication
 import forms.PensionContributionFormProvider
-import models.PensionContribution.Yes
+import models.PensionStatus.DoesContribute
 import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.PensionContributionPage
+import pages.PensionStatusPage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
@@ -31,7 +31,7 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
   val formProvider = new PensionContributionFormProvider()
   val form = formProvider()
 
-  lazy val pensionAutoEnrolmentRoute = routes.PensionContributionController.onPageLoad().url
+  lazy val pensionContributionRoute = routes.PensionContributionController.onPageLoad().url
 
   "PensionAutoEnrolment Controller" must {
 
@@ -39,7 +39,7 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, pensionAutoEnrolmentRoute).withCSRFToken
+      val request = FakeRequest(GET, pensionContributionRoute).withCSRFToken
 
       val result = route(application, request).value
 
@@ -55,11 +55,11 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(PensionContributionPage, Yes).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(PensionStatusPage, DoesContribute).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, pensionAutoEnrolmentRoute).withCSRFToken
+      val request = FakeRequest(GET, pensionContributionRoute).withCSRFToken
 
       val view = application.injector.instanceOf[PensionContributionView]
 
@@ -68,7 +68,7 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(Yes))(request, messages).toString
+        view(form.fill(DoesContribute))(request, messages).toString
 
       application.stop()
     }
@@ -88,8 +88,8 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
           .build()
 
       val request =
-        FakeRequest(POST, pensionAutoEnrolmentRoute)
-          .withFormUrlEncodedBody(("value", "yes"))
+        FakeRequest(POST, pensionContributionRoute)
+          .withFormUrlEncodedBody(("value", "doesContribute"))
           .withCSRFToken
 
       val result = route(application, request).value
@@ -106,7 +106,7 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, pensionAutoEnrolmentRoute).withCSRFToken
+        FakeRequest(POST, pensionContributionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 
@@ -128,7 +128,7 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, pensionAutoEnrolmentRoute)
+      val request = FakeRequest(GET, pensionContributionRoute)
 
       val result = route(application, request).value
 
@@ -144,7 +144,7 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, pensionAutoEnrolmentRoute)
+        FakeRequest(POST, pensionContributionRoute)
           .withFormUrlEncodedBody(("value", "optedIn"))
 
       val result = route(application, request).value

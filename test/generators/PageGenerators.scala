@@ -49,8 +49,8 @@ trait PageGenerators {
   implicit lazy val arbitraryfurloughOngoingPage: Arbitrary[FurloughStatusPage.type] =
     Arbitrary(FurloughStatusPage)
 
-  implicit lazy val arbitraryPensionAutoEnrolmentPage: Arbitrary[PensionContributionPage.type] =
-    Arbitrary(PensionContributionPage)
+  implicit lazy val arbitraryPensionAutoEnrolmentPage: Arbitrary[PensionStatusPage.type] =
+    Arbitrary(PensionStatusPage)
 
   implicit lazy val arbitraryNicCategoryPage: Arbitrary[NicCategoryPage.type] =
     Arbitrary(NicCategoryPage)

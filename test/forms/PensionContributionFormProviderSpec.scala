@@ -6,7 +6,7 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.PensionContribution
+import models.PensionStatus
 import play.api.data.FormError
 
 class PensionContributionFormProviderSpec extends OptionFieldBehaviours {
@@ -18,10 +18,10 @@ class PensionContributionFormProviderSpec extends OptionFieldBehaviours {
     val fieldName = "value"
     val requiredKey = "pensionContribution.error.required"
 
-    behave like optionsField[PensionContribution](
+    behave like optionsField[PensionStatus](
       form,
       fieldName,
-      validValues = PensionContribution.values,
+      validValues = PensionStatus.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 
