@@ -13,7 +13,7 @@ package handlers
 import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
-import models.PayQuestion.{Regularly, Varies}
+import models.PayMethod.{Regular, Variable}
 import models.{Amount, CylbEligibility, FullPeriod, FullPeriodWithPaymentDate, MandatoryData, PaymentDate, Period, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import play.api.libs.json.Json
@@ -63,7 +63,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
 
   }
 
-  "Extract Salary as an Amount() when payQuestion answer is Regularly" in new DataExtractor {
+  "Extract Salary as an Amount() when payMethod answer is Regular" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
     val expected = Amount(2000.0)
 
@@ -77,8 +77,8 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
     extractPriorFurloughPeriod(userAnswers) mustBe Some(expected)
   }
 
-  "Extract variable gross pay when payQuestion answer is Varies" in new DataExtractor {
-    val userAnswers = Json.parse(userAnswersJson(payQuestion = "varies", variableGrossPay = "2400.0")).as[UserAnswers]
+  "Extract variable gross pay when payMethod answer is Variable" in new DataExtractor {
+    val userAnswers = Json.parse(userAnswersJson(payMethod = "variable", variableGrossPay = "2400.0")).as[UserAnswers]
     val expected = Amount(2400.0)
 
     extractGrossPay(userAnswers) mustBe Some(expected)
@@ -92,13 +92,13 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 20))),
-        Regularly),
+        Regular),
       paymentWithFullPeriod(
         2000.0,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
           PaymentDate(LocalDate.of(2020, 4, 20))),
-        Regularly
+        Regular
       )
     )
 
@@ -109,21 +109,21 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
 
   "Extract payments for employees that are paid a variable amount each time" in new DataExtractor {
     val userAnswers =
-      Json.parse(userAnswersJson(payQuestion = "varies", variableGrossPay = "2400.00", employeeStartDate = "2019-12-01")).as[UserAnswers]
+      Json.parse(userAnswersJson(payMethod = "variable", variableGrossPay = "2400.00", employeeStartDate = "2019-12-01")).as[UserAnswers]
     val expected = Seq(
       paymentWithFullPeriod(
         817.47,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 20))),
-        Varies
+        Variable
       ),
       paymentWithFullPeriod(
         791.10,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
           PaymentDate(LocalDate.of(2020, 4, 20))),
-        Varies
+        Variable
       )
     )
 
@@ -141,8 +141,8 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
           150,
           988.38,
           partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-15", "2020-03-31", "2020-03-30"),
-          Varies),
-        paymentWithFullPeriod(1744.20, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"), Varies)
+          Variable),
+        paymentWithFullPeriod(1744.20, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"), Variable)
       )
     extractPayments(userAnswers, extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers)) mustBe Some(expected)
   }
@@ -156,7 +156,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
           100.0,
           3271.43,
           partialPeriodWithPaymentDate("2020-3-1", "2020-3-28", "2020-3-2", "2020-3-28", "2020-03-28"),
-          Varies)
+          Variable)
       )
 
     extractPayments(userAnswers, extractRelevantFurloughPeriod(extract(userAnswers).get, userAnswers)) mustBe Some(expected)

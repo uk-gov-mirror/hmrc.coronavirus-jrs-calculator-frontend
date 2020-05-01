@@ -7,7 +7,7 @@ package services
 
 import java.time.LocalDate
 
-import models.PayQuestion.Varies
+import models.PayMethod.Variable
 import models.{Amount, CylbOperators, CylbPayment, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodWithPaymentDate, Periods}
 import Calculators.AmountRounding
 
@@ -36,8 +36,8 @@ trait CylbCalculator extends PreviousYearPeriod {
     val furlough: Amount = previousYearFurlough(datesRequired, cylbs, cylbOps)
 
     period match {
-      case fp: FullPeriodWithPaymentDate    => PaymentWithFullPeriod(furlough, fp, Varies)
-      case pp: PartialPeriodWithPaymentDate => PaymentWithPartialPeriod(nfp, furlough, pp, Varies)
+      case fp: FullPeriodWithPaymentDate    => PaymentWithFullPeriod(furlough, fp, Variable)
+      case pp: PartialPeriodWithPaymentDate => PaymentWithPartialPeriod(nfp, furlough, pp, Variable)
     }
   }
 

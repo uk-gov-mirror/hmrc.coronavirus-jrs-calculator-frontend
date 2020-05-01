@@ -44,7 +44,7 @@ trait ModelGenerators {
       } yield Salary(salary)
     }
 
-  implicit lazy val arbitraryCylbPayQuestion: Arbitrary[CylbPayment] =
+  implicit lazy val arbitraryCylbpayMethod: Arbitrary[CylbPayment] =
     Arbitrary {
       for {
         date  <- Arbitrary.arbitrary[LocalDate]
@@ -52,14 +52,14 @@ trait ModelGenerators {
       } yield CylbPayment(date, Amount(value))
     }
 
-  implicit lazy val arbitraryVariableGrossPayQuestion: Arbitrary[VariableGrossPay] =
+  implicit lazy val arbitraryVariableGrosspayMethod: Arbitrary[VariableGrossPay] =
     Arbitrary {
       for {
         value <- Arbitrary.arbitrary[BigDecimal]
       } yield VariableGrossPay(value)
     }
 
-  implicit lazy val arbitraryVariableLengthPartialPayQuestion: Arbitrary[FurloughPartialPay] =
+  implicit lazy val arbitraryVariableLengthPartialpayMethod: Arbitrary[FurloughPartialPay] =
     Arbitrary {
       for {
         value <- Arbitrary.arbitrary[BigDecimal]
@@ -71,9 +71,9 @@ trait ModelGenerators {
       Gen.oneOf(PaymentFrequency.values.toSeq)
     }
 
-  implicit lazy val arbitraryPayQuestion: Arbitrary[PayQuestion] =
+  implicit lazy val arbitrarypayMethod: Arbitrary[PayMethod] =
     Arbitrary {
-      Gen.oneOf(PayQuestion.values.toSeq)
+      Gen.oneOf(PayMethod.values.toSeq)
     }
 
   val claimPeriodDatesGen = for {

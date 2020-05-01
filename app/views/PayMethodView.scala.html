@@ -4,7 +4,7 @@
  *@
 
 @import controllers.routes._
-@import models.PayQuestion
+@import models.PayMethod
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -16,16 +16,16 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "payQuestion.title"))) {
+@govukLayout(pageTitle = Some(title(form, "payMethod.title"))) {
 
-    @formHelper(action = PayQuestionController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = PayMethodController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
         @inputRadio(
             form = form,
-            legend = messages("payQuestion.heading"),
-            items = PayQuestion.options(form)
+            legend = messages("payMethod.heading"),
+            items = PayMethod.options(form)
         )
 
         @button("site.continue")

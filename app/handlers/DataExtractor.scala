@@ -7,7 +7,7 @@ package handlers
 
 import java.time.LocalDate
 
-import models.PayQuestion.{Regularly, Varies}
+import models.PayMethod.{Regular, Variable}
 import models.{Amount, CylbEligibility, CylbPayment, FullPeriodWithPaymentDate, MandatoryData, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers, VariableLengthEmployed}
 import pages._
 import services.{FurloughPeriodExtractor, ReferencePayCalculator}
@@ -21,12 +21,12 @@ trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor 
       frequency     <- userAnswers.get(PaymentFrequencyPage)
       nic           <- userAnswers.get(NicCategoryPage)
       pension       <- userAnswers.get(PensionContributionPage)
-      payQuestion   <- userAnswers.get(PayQuestionPage)
+      payMethod     <- userAnswers.get(PayMethodPage)
       furlough      <- userAnswers.get(FurloughStatusPage)
       furloughStart <- userAnswers.get(FurloughStartDatePage)
       lastPayDay    <- userAnswers.get(LastPayDatePage)
       payDate = userAnswers.getList(PayDatePage)
-    } yield MandatoryData(Period(claimStart, claimEnd), frequency, nic, pension, payQuestion, furlough, payDate, furloughStart, lastPayDay)
+    } yield MandatoryData(Period(claimStart, claimEnd), frequency, nic, pension, payMethod, furlough, payDate, furloughStart, lastPayDay)
 
   def extractRelevantFurloughPeriod(data: MandatoryData, userAnswers: UserAnswers): Period =
     extractRelevantFurloughPeriod(data.furloughStart, userAnswers.get(FurloughEndDatePage), data.claimPeriod.start, data.claimPeriod.end)
@@ -41,9 +41,9 @@ trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor 
 
   protected def extractGrossPay(userAnswers: UserAnswers): Option[Amount] =
     extract(userAnswers).flatMap { data =>
-      data.payQuestion match {
-        case Regularly => userAnswers.get(SalaryQuestionPage).map(v => Amount(v.amount))
-        case Varies    => userAnswers.get(VariableGrossPayPage).map(v => Amount(v.amount))
+      data.payMethod match {
+        case Regular  => userAnswers.get(SalaryQuestionPage).map(v => Amount(v.amount))
+        case Variable => userAnswers.get(VariableGrossPayPage).map(v => Amount(v.amount))
       }
     }
 
@@ -58,16 +58,16 @@ trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor 
     data: MandatoryData,
     grossPay: Amount,
     periodsWithPayDay: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
-    data.payQuestion match {
-      case Regularly =>
+    data.payMethod match {
+      case Regular =>
         periodsWithPayDay.map {
-          case fp: FullPeriodWithPaymentDate    => PaymentWithFullPeriod(grossPay, fp, Regularly)
-          case pp: PartialPeriodWithPaymentDate => PaymentWithPartialPeriod(Amount(0.0), grossPay, pp, Regularly)
+          case fp: FullPeriodWithPaymentDate    => PaymentWithFullPeriod(grossPay, fp, Regular)
+          case pp: PartialPeriodWithPaymentDate => PaymentWithPartialPeriod(Amount(0.0), grossPay, pp, Regular)
         }
-      case Varies => processVaries(userAnswers, data, periodsWithPayDay)
+      case Variable => processVariable(userAnswers, data, periodsWithPayDay)
     }
 
-  private def processVaries(
+  private def processVariable(
     userAnswers: UserAnswers,
     data: MandatoryData,
     periodsWithPayDay: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] = {

@@ -146,11 +146,11 @@ errorPage.p1 = Try again later.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-payQuestion.title = How is this employee paid?
-payQuestion.heading = How is this employee paid?
-payQuestion.regularly= A regular amount each time
-payQuestion.varies = A variable amount each time
-payQuestion.error.required = Select one of the options below
+payMethod.title = How is this employee paid?
+payMethod.heading = How is this employee paid?
+payMethod.regular= A regular amount each time
+payMethod.variable = A variable amount each time
+payMethod.error.required = Select one of the options below
 
 payFrequency.title = How often do you pay this employee?
 payFrequency.heading = How often do you pay this employee?

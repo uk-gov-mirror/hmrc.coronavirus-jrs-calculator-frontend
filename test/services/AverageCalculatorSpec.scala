@@ -8,7 +8,7 @@ package services
 import java.time.LocalDate
 
 import base.{CoreDataBuilder, SpecBase}
-import models.PayQuestion.Varies
+import models.PayMethod.Variable
 import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, Period, PeriodWithPaymentDate}
 
 class AverageCalculatorSpec extends SpecBase with CoreDataBuilder {
@@ -33,8 +33,8 @@ class AverageCalculatorSpec extends SpecBase with CoreDataBuilder {
     val payPeriods: Seq[PeriodWithPaymentDate] = Seq(afterFurloughPeriod, afterFurloughPartial)
 
     val expected = Seq(
-      paymentWithFullPeriod(817.47, afterFurloughPeriod, Varies),
-      paymentWithPartialPeriod(1000.0, 395.55, afterFurloughPartial, Varies)
+      paymentWithFullPeriod(817.47, afterFurloughPeriod, Variable),
+      paymentWithPartialPeriod(1000.0, 395.55, afterFurloughPartial, Variable)
     )
 
     calculateAveragePay(nonFurloughPay, priorFurloughPeriod, payPeriods.head, grossPay) mustBe expected.head

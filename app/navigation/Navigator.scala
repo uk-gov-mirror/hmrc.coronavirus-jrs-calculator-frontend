@@ -11,7 +11,7 @@ import config.FrontendAppConfig
 import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.{Inject, Singleton}
-import models.PayQuestion.{Regularly, Varies}
+import models.PayMethod.{Regular, Variable}
 import models.{UserAnswers, _}
 import pages.{PayDatePage, _}
 import play.api.Logger
@@ -44,9 +44,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.PaymentFrequencyController.onPageLoad()
     case PaymentFrequencyPage =>
       _ =>
-        routes.PayQuestionController.onPageLoad()
-    case PayQuestionPage =>
-      payQuestionRoutes
+        routes.PayMethodController.onPageLoad()
+    case PayMethodPage =>
+      payMethodRoutes
     case SalaryQuestionPage =>
       _ =>
         routes.PayDateController.onPageLoad(1)
@@ -153,11 +153,11 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def payQuestionRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(PayQuestionPage) match {
-      case Some(Regularly) => routes.SalaryQuestionController.onPageLoad()
-      case Some(Varies)    => routes.VariableLengthEmployedController.onPageLoad()
-      case None            => routes.PayQuestionController.onPageLoad()
+  private def payMethodRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(PayMethodPage) match {
+      case Some(Regular)  => routes.SalaryQuestionController.onPageLoad()
+      case Some(Variable) => routes.VariableLengthEmployedController.onPageLoad()
+      case None           => routes.PayMethodController.onPageLoad()
     }
   }
 
@@ -178,9 +178,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(PayQuestionPage) match {
-      case Some(Regularly) => routes.NicCategoryController.onPageLoad()
-      case Some(Varies) =>
+    userAnswers.get(PayMethodPage) match {
+      case Some(Regular) => routes.NicCategoryController.onPageLoad()
+      case Some(Variable) =>
         if (hasPartialPayBefore(userAnswers)) {
           routes.PartialPayBeforeFurloughController.onPageLoad()
         } else if (hasPartialPayAfter(userAnswers)) {
@@ -196,7 +196,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
               }
           }
         }
-      case None => routes.PayQuestionController.onPageLoad()
+      case None => routes.PayMethodController.onPageLoad()
     }
   }
 

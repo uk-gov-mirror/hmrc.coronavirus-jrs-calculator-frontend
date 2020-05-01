@@ -6,7 +6,7 @@
 package services
 
 import models.NonFurloughPay.determineNonFurloughPay
-import models.PayQuestion.Varies
+import models.PayMethod.Variable
 import models.{Amount, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate}
 import Calculators._
 
@@ -20,12 +20,12 @@ trait AverageCalculator extends PeriodHelper {
     afterFurloughPayPeriod match {
       case fp: FullPeriodWithPaymentDate =>
         val daily = periodDaysCount(fp.period.period) * averageDailyCalculator(priorFurloughPeriod, amount).value
-        PaymentWithFullPeriod(Amount(daily), fp, Varies)
+        PaymentWithFullPeriod(Amount(daily), fp, Variable)
       case pp: PartialPeriodWithPaymentDate =>
         val nfp = determineNonFurloughPay(afterFurloughPayPeriod.period, nonFurloughPay)
         val daily = periodDaysCount(pp.period.partial) * averageDailyCalculator(priorFurloughPeriod, amount).value
 
-        PaymentWithPartialPeriod(nfp, Amount(daily), pp, Varies)
+        PaymentWithPartialPeriod(nfp, Amount(daily), pp, Variable)
     }
 
   protected def averageDailyCalculator(period: Period, amount: Amount): Amount =

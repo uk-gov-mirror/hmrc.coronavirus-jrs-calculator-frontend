@@ -6,22 +6,22 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.PayQuestion
+import models.PayMethod
 import play.api.data.FormError
 
-class PayQuestionFormProviderSpec extends OptionFieldBehaviours {
+class PayMethodFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new PayQuestionFormProvider()()
+  val form = new PayMethodFormProvider()()
 
   ".value" must {
 
     val fieldName = "value"
-    val requiredKey = "payQuestion.error.required"
+    val requiredKey = "payMethod.error.required"
 
-    behave like optionsField[PayQuestion](
+    behave like optionsField[PayMethod](
       form,
       fieldName,
-      validValues = PayQuestion.values,
+      validValues = PayMethod.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

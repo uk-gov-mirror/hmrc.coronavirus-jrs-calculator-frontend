@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import controllers.routes
-import models.PayQuestion.{Regularly, Varies}
+import models.PayMethod.{Regular, Variable}
 import models._
 import pages._
 import play.api.libs.json.Json
@@ -58,26 +58,26 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .onPageLoad()
       }
 
-      "go to correct page after PayQuestionPage" in {
+      "go to correct page after PayMethodPage" in {
         navigator.nextPage(
-          PayQuestionPage,
+          PayMethodPage,
           UserAnswers("id")
-            .set(PayQuestionPage, PayQuestion.Regularly)
+            .set(PayMethodPage, PayMethod.Regular)
             .success
             .value) mustBe routes.SalaryQuestionController.onPageLoad()
 
         navigator.nextPage(
-          PayQuestionPage,
+          PayMethodPage,
           UserAnswers("id")
-            .set(PayQuestionPage, PayQuestion.Varies)
+            .set(PayMethodPage, PayMethod.Variable)
             .success
             .value) mustBe routes.VariableLengthEmployedController.onPageLoad()
 
-        navigator.nextPage(PayQuestionPage, UserAnswers("id")) mustBe routes.PayQuestionController.onPageLoad()
+        navigator.nextPage(PayMethodPage, UserAnswers("id")) mustBe routes.PayMethodController.onPageLoad()
       }
 
       "go to SalaryQuestionPage after PaymentQuestionPage" in {
-        navigator.nextPage(PaymentFrequencyPage, UserAnswers("id")) mustBe routes.PayQuestionController
+        navigator.nextPage(PaymentFrequencyPage, UserAnswers("id")) mustBe routes.PayMethodController
           .onPageLoad()
       }
 
@@ -118,17 +118,17 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .onPageLoad()
       }
 
-      "go to NicCategoryPage after LastPayDatePage if the pay-method is Regularly" in {
+      "go to NicCategoryPage after LastPayDatePage if the pay-method is Regular" in {
         val userAnswers = UserAnswers("id")
-          .set(PayQuestionPage, Regularly)
+          .set(PayMethodPage, Regular)
           .get
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.NicCategoryController.onPageLoad()
       }
 
-      "go to NicCategoryPage after LastPayDatePage if the pay-method is Varies and employee has been employed over 12 months" in {
+      "go to NicCategoryPage after LastPayDatePage if the pay-method is Variable and employee has been employed over 12 months" in {
         val userAnswers = UserAnswers("id")
-          .set(PayQuestionPage, Varies)
+          .set(PayMethodPage, Variable)
           .get
           .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
           .get
@@ -144,9 +144,9 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
-      "go to NicCategoryPage after LastPayDatePage if the pay-method is Varies and employee start after 5th April 2019" in {
+      "go to NicCategoryPage after LastPayDatePage if the pay-method is Variable and employee start after 5th April 2019" in {
         val userAnswers = UserAnswers("id")
-          .set(PayQuestionPage, Varies)
+          .set(PayMethodPage, Variable)
           .get
           .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
           .get
@@ -162,9 +162,9 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.NicCategoryController.onPageLoad()
       }
 
-      "go to LastYearPay after LastPayDatePage if the pay-method is Varies and employee start before 6th April 2019" in {
+      "go to LastYearPay after LastPayDatePage if the pay-method is Variable and employee start before 6th April 2019" in {
         val userAnswers = UserAnswers("id")
-          .set(PayQuestionPage, Varies)
+          .set(PayMethodPage, Variable)
           .get
           .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
           .get
@@ -180,9 +180,9 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
-      "go to PartialPayBeforeFurloughPage after LastPayDatePage if the pay-method is Varies and first pay period is partial" in {
+      "go to PartialPayBeforeFurloughPage after LastPayDatePage if the pay-method is Variable and first pay period is partial" in {
         val userAnswers = UserAnswers("id")
-          .set(PayQuestionPage, Varies)
+          .set(PayMethodPage, Variable)
           .get
           .set(FurloughStartDatePage, LocalDate.of(2020, 3, 15))
           .get
@@ -202,9 +202,9 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
       }
 
-      "go to PartialPayAfterFurloughPage after LastPayDatePage if the pay-method is Varies and last pay period is partial" in {
+      "go to PartialPayAfterFurloughPage after LastPayDatePage if the pay-method is Variable and last pay period is partial" in {
         val userAnswers = UserAnswers("id")
-          .set(PayQuestionPage, Varies)
+          .set(PayMethodPage, Variable)
           .get
           .set(FurloughStartDatePage, LocalDate.of(2020, 3, 10))
           .get
@@ -224,10 +224,10 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PartialPayAfterFurloughController.onPageLoad()
       }
 
-      "go to PayQuestionPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
+      "go to payMethodPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
         val userAnswers = UserAnswers("id")
 
-        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PayQuestionController.onPageLoad()
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
       "go from PensionAutoEnrolmentPage to FurloughCalculationsPage" in {

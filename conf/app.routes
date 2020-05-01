@@ -34,8 +34,8 @@ POST        /furlough-ongoing                                controllers.Furloug
 GET         /claim-period-end                                controllers.ClaimPeriodEndController.onPageLoad()
 POST        /claim-period-end                                controllers.ClaimPeriodEndController.onSubmit()
 
-GET         /pay-method                                      controllers.PayQuestionController.onPageLoad()
-POST        /pay-method                                      controllers.PayQuestionController.onSubmit()
+GET         /pay-method                                      controllers.PayMethodController.onPageLoad()
+POST        /pay-method                                      controllers.PayMethodController.onSubmit()
 
 GET         /pay-frequency                                   controllers.PaymentFrequencyController.onPageLoad()
 POST        /pay-frequency                                   controllers.PaymentFrequencyController.onSubmit()
