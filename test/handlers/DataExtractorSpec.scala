@@ -19,7 +19,7 @@ import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, Fur
 import play.api.libs.json.Json
 import utils.CoreTestData
 
-class TestDataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuilder {
+class DataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuilder {
 
   "Extract mandatory data in order to do the calculation" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]

@@ -82,4 +82,56 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     calculateCylb(nonFurloughPay, FourWeekly, cylbs, periods, determineNonFurloughPay) mustBe expected
   }
 
+  "calculate cylb amounts for partial period where only days from current required" in new CylbCalculator {
+    val cylbs = Seq(
+      CylbPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
+      CylbPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
+      CylbPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
+    )
+
+    val periods = Seq(
+      partialPeriodWithPaymentDate("2020,3,1", "2020,3,7", "2020,3,3", "2020,3,7", "2020, 3, 7"),
+      fullPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020, 3, 14")
+    )
+
+    val nonFurloughPay = NonFurloughPay(None, None)
+
+    val expected = Seq(
+      paymentWithPartialPeriod(
+        0.0,
+        250.00,
+        partialPeriodWithPaymentDate("2020,3,1", "2020,3,7", "2020,3,3", "2020,3,7", "2020, 3, 7"),
+        Variable),
+      paymentWithFullPeriod(200.00, fullPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020, 3, 14"), Variable)
+    )
+
+    calculateCylb(nonFurloughPay, Weekly, cylbs, periods, determineNonFurloughPay) mustBe expected
+  }
+
+  "calculate cylb amounts for partial period where only days from previous required" in new CylbCalculator {
+    val cylbs = Seq(
+      CylbPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
+      CylbPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
+      CylbPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
+    )
+
+    val periods = Seq(
+      fullPeriodWithPaymentDate("2020,3,1", "2020,3,7", "2020, 3, 7"),
+      partialPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020,3,8", "2020,3,9", "2020, 3, 14")
+    )
+
+    val nonFurloughPay = NonFurloughPay(None, None)
+
+    val expected = Seq(
+      paymentWithFullPeriod(450.00, fullPeriodWithPaymentDate("2020,3,1", "2020,3,7", "2020, 3, 7"), Variable),
+      paymentWithPartialPeriod(
+        0.0,
+        100.00,
+        partialPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020,3,8", "2020,3,9", "2020, 3, 14"),
+        Variable)
+    )
+
+    calculateCylb(nonFurloughPay, Weekly, cylbs, periods, determineNonFurloughPay) mustBe expected
+  }
+
 }

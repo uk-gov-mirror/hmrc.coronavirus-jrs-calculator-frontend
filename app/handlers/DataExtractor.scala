@@ -114,6 +114,9 @@ trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor 
   def extractVariableGrossPay(userAnswers: UserAnswers): Option[Amount] =
     userAnswers.get(VariableGrossPayPage).map(v => Amount(v.amount))
 
+  def extractCylbPayments(userAnswers: UserAnswers): Seq[CylbPayment] =
+    userAnswers.getList(LastYearPayPage)
+
   def extractJourneyCoreData(userAnswers: UserAnswers): Option[JourneyCoreData] =
     for {
       data           <- extract(userAnswers)

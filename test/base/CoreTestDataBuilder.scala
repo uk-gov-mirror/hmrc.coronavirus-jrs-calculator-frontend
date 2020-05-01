@@ -77,7 +77,7 @@ trait CoreTestDataBuilder {
       Payable,
       PensionStatus.DoesContribute)
 
-  val mandatoryAnswer = UserAnswers("id")
+  val mandatoryAnswers = UserAnswers("id")
     .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
     .get
     .set(ClaimPeriodEndPage, LocalDate.of(2020, 3, 31))
