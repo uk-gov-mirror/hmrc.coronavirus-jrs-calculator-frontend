@@ -26,7 +26,9 @@ object ViewUtils {
   def errorPrefix(form: Form[_])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
 
-  private val dateWithMonthNameFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(Locale.UK)
+  private val dateWithMonthNameFormat = DateTimeFormatter
+    .ofPattern("d 'of' MMMM uuuu", Locale.UK);
+
   private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
   private val dateFormatterWithoutYear = DateTimeFormatter.ofPattern("d MMMM")
   private val dateFormatterOnlyMonth = DateTimeFormatter.ofPattern("MMMM")
