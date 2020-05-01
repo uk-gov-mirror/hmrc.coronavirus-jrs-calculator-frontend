@@ -137,7 +137,7 @@ index.heading = Calculate your Job Retention Scheme claim
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 1 hour.
-session_expired.restart = Restart the journey
+session_expired.restart = Start another calculation
 
 errorPage.title = Sorry, there is a problem with the service
 errorPage.heading = Sorry, there is a problem with the service
