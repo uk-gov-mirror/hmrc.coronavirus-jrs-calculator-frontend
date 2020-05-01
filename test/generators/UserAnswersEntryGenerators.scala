@@ -93,11 +93,11 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryfurloughOngoingUserAnswersEntry: Arbitrary[(FurloughOngoingPage.type, JsValue)] =
+  implicit lazy val arbitraryfurloughOngoingUserAnswersEntry: Arbitrary[(FurloughStatusPage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[FurloughOngoingPage.type]
-        value <- arbitrary[FurloughOngoing].map(Json.toJson(_))
+        page  <- arbitrary[FurloughStatusPage.type]
+        value <- arbitrary[FurloughStatus].map(Json.toJson(_))
       } yield (page, value)
     }
 

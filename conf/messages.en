@@ -344,8 +344,8 @@ claimPeriodEnd.hint = For example, 31 3 2020
 
 furloughOngoing.title = Has the employee’s furlough ended?
 furloughOngoing.heading = Has the employee’s furlough ended?
-furloughOngoing.yes = Yes
-furloughOngoing.no = No, it is ongoing
+furloughOngoing.ended = Yes
+furloughOngoing.ongoing = No, it is ongoing
 furloughOngoing.error.required = Select one of the options below
 
 furloughEndDate.title = When did their furlough end?

@@ -12,7 +12,7 @@ import models.Calculation.{FurloughCalculationResult, NicCalculationResult, Pens
 import models.NicCategory.Payable
 import models.PaymentFrequency.Monthly
 import models.PensionContribution.Yes
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, FurloughOngoing, PaymentDate, Period}
+import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, FurloughStatus, PaymentDate, Period}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
@@ -33,7 +33,9 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(meta, breakdown, frontendAppConfig.calculatorVersion, FurloughOngoing.No)(request, messages).toString
+      contentAsString(result) mustEqual view(meta, breakdown, frontendAppConfig.calculatorVersion, FurloughStatus.FurloughOngoing)(
+        request,
+        messages).toString
 
       application.stop()
     }

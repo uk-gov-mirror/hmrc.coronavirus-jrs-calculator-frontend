@@ -40,15 +40,15 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
       "go to correct page after furloughOngoingPage" in {
         navigator.nextPage(
-          FurloughOngoingPage,
+          FurloughStatusPage,
           UserAnswers("id")
-            .set(FurloughOngoingPage, FurloughOngoing.No)
+            .set(FurloughStatusPage, FurloughStatus.FurloughOngoing)
             .success
             .value) mustBe routes.PaymentFrequencyController.onPageLoad()
         navigator.nextPage(
-          FurloughOngoingPage,
+          FurloughStatusPage,
           UserAnswers("id")
-            .set(FurloughOngoingPage, FurloughOngoing.Yes)
+            .set(FurloughStatusPage, FurloughStatus.FurloughEnded)
             .success
             .value) mustBe routes.FurloughEndDateController.onPageLoad()
       }

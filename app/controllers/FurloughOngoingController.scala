@@ -9,7 +9,7 @@ import controllers.actions._
 import forms.FurloughOngoingFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughOngoingPage}
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughStatusPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -35,7 +35,7 @@ class FurloughOngoingController @Inject()(
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybeClaimStart = request.userAnswers.get(ClaimPeriodStartPage)
     val maybeClaimEnd = request.userAnswers.get(ClaimPeriodEndPage)
-    val maybeFurlough = request.userAnswers.get(FurloughOngoingPage)
+    val maybeFurlough = request.userAnswers.get(FurloughStatusPage)
 
     (maybeClaimStart, maybeClaimEnd) match {
       case (Some(start), Some(end)) => Ok(view(maybeFurlough.map(fr => form.fill(fr)).getOrElse(form), start, end))
@@ -63,9 +63,9 @@ class FurloughOngoingController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(
                                request.userAnswers
-                                 .set(FurloughOngoingPage, value))
+                                 .set(FurloughStatusPage, value))
             _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(FurloughOngoingPage, updatedAnswers))
+          } yield Redirect(navigator.nextPage(FurloughStatusPage, updatedAnswers))
       )
   }
 }

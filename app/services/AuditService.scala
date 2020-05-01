@@ -67,7 +67,7 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       "claimPeriodStartDate"               -> JsString(userAnswers.get(ClaimPeriodStartPage).fold("")(_.toString)),
       "claimPeriodEndDate"                 -> JsString(userAnswers.get(ClaimPeriodEndPage).fold("")(_.toString)),
       "employeeFurloughStartDate"          -> JsString(userAnswers.get(FurloughStartDatePage).fold("")(_.toString)),
-      "hasTheEmployeeFurloughEnded"        -> JsString(userAnswers.get(FurloughOngoingPage).fold("")(_.toString)),
+      "hasTheEmployeeFurloughEnded"        -> JsString(userAnswers.get(FurloughStatusPage).fold("")(_.toString)),
       "employeeFurloughEndDate"            -> JsString(userAnswers.get(FurloughEndDatePage).fold("")(_.toString)),
       "employeePayFrequency"               -> JsString(userAnswers.get(PaymentFrequencyPage).fold("")(_.toString)),
       "employeePayMethod"                  -> JsString(userAnswers.get(PayQuestionPage).fold("")(_.toString)),

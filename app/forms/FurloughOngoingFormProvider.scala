@@ -9,12 +9,12 @@ import javax.inject.Inject
 
 import forms.mappings.Mappings
 import play.api.data.Form
-import models.FurloughOngoing
+import models.FurloughStatus
 
 class FurloughOngoingFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[FurloughOngoing] =
+  def apply(): Form[FurloughStatus] =
     Form(
-      "value" -> enumerable[FurloughOngoing]("furloughOngoing.error.required")
+      "value" -> enumerable[FurloughStatus]("furloughOngoing.error.required")
     )
 }

@@ -5,7 +5,7 @@
 
 @import java.time.LocalDate
 
-@import models.FurloughOngoing.Yes
+@import models.FurloughStatus.FurloughEnded
 @import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
 
 @this(
@@ -20,7 +20,7 @@
         appConfig: config.FrontendAppConfig
 )
 
-@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String, furlough: FurloughOngoing)(implicit request: Request[_], messages: Messages)
+@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String, furlough: FurloughStatus)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false) {
 
@@ -58,7 +58,7 @@
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("confirmation.claimPeriod", dateToString(cm.claimPeriod.start), dateToString(cm.claimPeriod.end))</li>
         <li>
-        @if(furlough == Yes) {
+        @if(furlough == FurloughEnded) {
             @messages("confirmation.furloughPeriod.startedAndEnded", dateToString(cm.furloughPeriod.start), dateToString(cm.furloughPeriod.end))
         } else {
             @messages("confirmation.furloughPeriod.started", dateToString(cm.furloughPeriod.start))

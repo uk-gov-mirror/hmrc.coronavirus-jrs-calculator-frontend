@@ -9,12 +9,12 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.FurloughOngoingFormProvider
-import models.{FurloughOngoing, UserAnswers}
+import models.{FurloughStatus, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughOngoingPage}
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughStatusPage}
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Call}
@@ -70,7 +70,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers1 = userAnswers.set(FurloughOngoingPage, FurloughOngoing.values.head).success.value
+      val userAnswers1 = userAnswers.set(FurloughStatusPage, FurloughStatus.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers1)).build()
 
@@ -81,7 +81,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(FurloughOngoing.values.head), start, end)(getRequest, messages).toString
+        view(form.fill(FurloughStatus.values.head), start, end)(getRequest, messages).toString
 
       application.stop()
     }
@@ -102,7 +102,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       val request =
         FakeRequest(POST, furloughOngoingRoute)
-          .withFormUrlEncodedBody(("value", FurloughOngoing.values.head.toString))
+          .withFormUrlEncodedBody(("value", FurloughStatus.values.head.toString))
 
       val result = route(application, request).value
 
@@ -156,7 +156,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       val request =
         FakeRequest(POST, furloughOngoingRoute)
-          .withFormUrlEncodedBody(("value", FurloughOngoing.values.head.toString))
+          .withFormUrlEncodedBody(("value", FurloughStatus.values.head.toString))
 
       val result = route(application, request).value
 
