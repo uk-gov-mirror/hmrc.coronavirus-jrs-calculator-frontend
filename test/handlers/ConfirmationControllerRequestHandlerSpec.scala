@@ -7,14 +7,14 @@ package handlers
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
 import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, Period, UserAnswers}
 import play.api.libs.json.Json
 import utils.CoreTestData
 import viewmodels.ConfirmationViewBreakdown
 
-class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData with CoreDataBuilder {
+class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData with CoreTestDataBuilder {
 
   "do all calculations given a set of userAnswers" in new ConfirmationControllerRequestHandler {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]

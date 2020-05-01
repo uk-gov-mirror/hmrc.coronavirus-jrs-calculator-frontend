@@ -7,11 +7,11 @@ package services
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.PayMethod.Variable
 import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, Period, PeriodWithPaymentDate}
 
-class AverageCalculatorSpec extends SpecBase with CoreDataBuilder {
+class AverageCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculates average pay for an employee" in new AverageCalculator {
     val employeeStartDate = LocalDate.of(2019, 12, 1)

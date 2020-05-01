@@ -7,14 +7,14 @@ package services
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{FullPeriod, PartialPeriod, PaymentDate, Period, Periods}
 import org.scalacheck.Gen.choose
 import org.scalacheck.Shrink
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreDataBuilder {
+class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
 
   "For a given list of pay period end dates, should return a List[LocalDate] in ascending order" in new PeriodHelper {
     val unsortedEndDates: List[LocalDate] = List(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 3, 18), LocalDate.of(2020, 3, 19))

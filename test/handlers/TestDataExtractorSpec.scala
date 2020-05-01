@@ -12,14 +12,14 @@ package handlers
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.PayMethod.{Regular, Variable}
 import models.{Amount, CylbEligibility, FullPeriod, FullPeriodWithPaymentDate, MandatoryData, PaymentDate, Period, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import play.api.libs.json.Json
 import utils.CoreTestData
 
-class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder {
+class TestDataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuilder {
 
   "Extract mandatory data in order to do the calculation" in new DataExtractor {
     val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]

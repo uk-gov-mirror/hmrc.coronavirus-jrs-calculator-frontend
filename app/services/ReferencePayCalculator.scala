@@ -7,9 +7,19 @@ package services
 
 import cats.data.NonEmptyList
 import models.NonFurloughPay._
-import models.{Amount, CylbPayment, NonFurloughPay, PaymentFrequency, PaymentWithPeriod, Period, PeriodWithPaymentDate}
+import models.PayMethod.Regular
+import models.{Amount, CylbPayment, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate}
 
-trait ReferencePayCalculator extends CylbCalculator with AverageCalculator {
+trait ReferencePayCalculator extends CylbCalculator with AverageCalculator with Calculators {
+
+  def calculateRegularPay(wage: Amount, periods: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
+    periods.map {
+      case fp: FullPeriodWithPaymentDate => PaymentWithFullPeriod(wage, fp, Regular)
+      case pp: PartialPeriodWithPaymentDate =>
+        val furloughAmount = partialPeriodDailyCalculation(wage, pp.period)
+        val nonFurlough = Amount(wage.value - furloughAmount.value)
+        PaymentWithPartialPeriod(nonFurlough, furloughAmount, pp, Regular)
+    }
 
   def calculateVariablePay(
     nonFurloughPay: NonFurloughPay,

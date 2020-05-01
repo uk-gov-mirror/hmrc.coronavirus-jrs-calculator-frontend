@@ -7,12 +7,12 @@ package services
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
-import models.PayMethod.Variable
+import base.{CoreTestDataBuilder, SpecBase}
+import models.PayMethod.{Regular, Variable}
 import models.PaymentFrequency.Monthly
 import models.{Amount, CylbPayment, FullPeriod, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithPeriod, Period}
 
-class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
+class ReferencePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculates reference gross pay for an employee on variable pays not including cylb when empty" in new ReferencePayCalculator {
     val employeeStartDate = LocalDate.of(2019, 12, 1)
@@ -77,5 +77,22 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreDataBuilder {
     )
 
     calculateVariablePay(nonFurloughPay, priorFurloughPeriod, Seq(afterFurloughPeriod), Amount(2400.0), cylbs, Monthly) mustBe expected
+  }
+
+  "calculates regular pay" in new ReferencePayCalculator {
+    val salary = Amount(2000)
+    val afterFurlough = partialPeriodWithPaymentDate("2020, 4, 1", "2020, 4, 30", "2020, 4, 1", "2020, 4, 15", "2020, 4, 30")
+
+    val periods = Seq(
+      fullPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 31"),
+      afterFurlough
+    )
+
+    val expected = Seq(
+      paymentWithFullPeriod(2000.0, fullPeriodWithPaymentDate("2020,3,1", "2020,3,31", "2020, 3, 31"), Regular),
+      paymentWithPartialPeriod(1000.0, 1000.0, afterFurlough, Regular)
+    )
+
+    calculateRegularPay(salary, periods) mustBe expected
   }
 }

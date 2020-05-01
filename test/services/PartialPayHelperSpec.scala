@@ -5,10 +5,10 @@
 
 package services
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreDataBuilder {
+class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
 
   "PartialPayHelper" when {
 

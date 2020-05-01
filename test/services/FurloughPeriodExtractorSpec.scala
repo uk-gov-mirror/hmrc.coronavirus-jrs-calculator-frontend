@@ -7,11 +7,11 @@ package services
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.{Period, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 
-class FurloughPeriodExtractorSpec extends SpecBase with CoreDataBuilder {
+class FurloughPeriodExtractorSpec extends SpecBase with CoreTestDataBuilder {
 
   "extractFurloughPeriod" must {
 

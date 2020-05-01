@@ -7,10 +7,10 @@ package services
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, Monthly, Weekly}
 
-class PreviousYearCoreDataSpec extends SpecBase with CoreDataBuilder {
+class PreviousYearCoreTestDataSpec extends SpecBase with CoreTestDataBuilder {
 
   "return previous year date for a given date of this year" in new PreviousYearPeriod {
     fullPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 7", "2020, 3, 7")

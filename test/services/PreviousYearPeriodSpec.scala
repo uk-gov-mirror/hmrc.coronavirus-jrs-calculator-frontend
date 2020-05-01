@@ -5,11 +5,11 @@
 
 package services
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.CylbOperators
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 
-class PreviousYearPeriodSpec extends SpecBase with CoreDataBuilder {
+class PreviousYearPeriodSpec extends SpecBase with CoreTestDataBuilder {
 
   "Return operators for cylb" in new PreviousYearPeriod {
 

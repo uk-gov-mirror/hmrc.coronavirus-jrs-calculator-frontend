@@ -7,14 +7,14 @@ package services
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.Calculation.FurloughCalculationResult
 import models.PayMethod.Regular
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithPeriod, Period}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreDataBuilder {
+class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
 
   forAll(fullPeriodScenarios) { (frequency, payment, expectedFurlough) =>
     s"Full Period: For payment frequency $frequency and payment ${payment.furloughPayment.value} return $expectedFurlough" in new FurloughCalculator {

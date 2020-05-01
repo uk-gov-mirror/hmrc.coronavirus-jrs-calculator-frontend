@@ -7,12 +7,12 @@ package services
 
 import java.time.LocalDate
 
-import base.{CoreDataBuilder, SpecBase}
+import base.{CoreTestDataBuilder, SpecBase}
 import models.PayMethod.Variable
 import models.PaymentFrequency.{FortNightly, FourWeekly, Weekly}
 import models.{Amount, CylbPayment, NonFurloughPay, Periods}
 
-class CylbCalculatorSpec extends SpecBase with CoreDataBuilder {
+class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   val determineNonFurloughPay: (Periods, NonFurloughPay) => Amount = NonFurloughPay.determineNonFurloughPay
 
