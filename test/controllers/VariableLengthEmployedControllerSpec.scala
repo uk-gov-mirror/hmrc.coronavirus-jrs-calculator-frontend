@@ -7,12 +7,12 @@ package controllers
 
 import base.SpecBaseWithApplication
 import forms.VariableLengthEmployedFormProvider
-import models.{UserAnswers, VariableLengthEmployed}
+import models.{EmployeeStarted, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.VariableLengthEmployedPage
+import pages.EmployedStartedPage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
@@ -57,7 +57,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(VariableLengthEmployedPage, VariableLengthEmployed.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(EmployedStartedPage, EmployeeStarted.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -68,7 +68,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(VariableLengthEmployed.values.head))(getRequest, messages).toString
+        view(form.fill(EmployeeStarted.values.head))(getRequest, messages).toString
 
       application.stop()
     }
@@ -103,7 +103,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       val request =
         FakeRequest(POST, variableLengthEmployedRoute)
-          .withFormUrlEncodedBody(("value", VariableLengthEmployed.values.head.toString))
+          .withFormUrlEncodedBody(("value", EmployeeStarted.values.head.toString))
 
       val result = route(application, request).value
 
@@ -130,7 +130,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       val request =
         FakeRequest(POST, variableLengthEmployedRoute)
-          .withFormUrlEncodedBody(("value", VariableLengthEmployed.values.head.toString))
+          .withFormUrlEncodedBody(("value", EmployeeStarted.values.head.toString))
 
       val result = route(application, request).value
 
@@ -184,7 +184,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       val request =
         FakeRequest(POST, variableLengthEmployedRoute)
-          .withFormUrlEncodedBody(("value", VariableLengthEmployed.values.head.toString))
+          .withFormUrlEncodedBody(("value", EmployeeStarted.values.head.toString))
 
       val result = route(application, request).value
 

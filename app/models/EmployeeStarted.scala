@@ -10,16 +10,16 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait VariableLengthEmployed
+sealed trait EmployeeStarted
 
-object VariableLengthEmployed extends Enumerable.Implicits {
+object EmployeeStarted extends Enumerable.Implicits {
 
-  case object Yes extends WithName("yes") with VariableLengthEmployed
-  case object No extends WithName("no") with VariableLengthEmployed
+  case object OnOrBefore1Feb2019 extends WithName("onOrBefore1Feb2019") with EmployeeStarted
+  case object After1Feb2019 extends WithName("after1Feb2019") with EmployeeStarted
 
-  val values: Seq[VariableLengthEmployed] = Seq(
-    Yes,
-    No
+  val values: Seq[EmployeeStarted] = Seq(
+    OnOrBefore1Feb2019,
+    After1Feb2019
   )
 
   def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
@@ -30,6 +30,6 @@ object VariableLengthEmployed extends Enumerable.Implicits {
     )
   }
 
-  implicit val enumerable: Enumerable[VariableLengthEmployed] =
+  implicit val enumerable: Enumerable[EmployeeStarted] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

@@ -163,11 +163,11 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreDataBuilder 
   }
 
   "defines a variable calculation that requires cylb" in new DataExtractor {
-    import models.VariableLengthEmployed._
+    import models.EmployeeStarted._
 
-    cylbCalculationPredicate(Yes, LocalDate.now) mustBe CylbEligibility(true)
-    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 5)) mustBe CylbEligibility(true)
-    cylbCalculationPredicate(No, LocalDate.of(2019, 4, 6)) mustBe CylbEligibility(false)
+    cylbCalculationPredicate(OnOrBefore1Feb2019, LocalDate.now) mustBe CylbEligibility(true)
+    cylbCalculationPredicate(After1Feb2019, LocalDate.of(2019, 4, 5)) mustBe CylbEligibility(true)
+    cylbCalculationPredicate(After1Feb2019, LocalDate.of(2019, 4, 6)) mustBe CylbEligibility(false)
   }
 
 }

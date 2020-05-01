@@ -4,7 +4,7 @@
  *@
 
 @import controllers.routes._
-@import models.VariableLengthEmployed
+@import models.EmployeeStarted
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -31,7 +31,7 @@
         @inputRadio(
             form = form,
             legend = "",
-            items = VariableLengthEmployed.options(form)
+            items = EmployeeStarted.options(form)
         )
 
         @button("site.continue")

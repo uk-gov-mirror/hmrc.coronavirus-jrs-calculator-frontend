@@ -50,7 +50,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case SalaryQuestionPage =>
       _ =>
         routes.PayDateController.onPageLoad(1)
-    case VariableLengthEmployedPage =>
+    case EmployedStartedPage =>
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
       _ =>
@@ -134,9 +134,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
 
   private def partialPayAfterFurloughRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(VariableLengthEmployedPage) match {
-      case Some(VariableLengthEmployed.Yes) => routes.LastYearPayController.onPageLoad(1)
-      case Some(VariableLengthEmployed.No) =>
+    userAnswers.get(EmployedStartedPage) match {
+      case Some(EmployeeStarted.OnOrBefore1Feb2019) => routes.LastYearPayController.onPageLoad(1)
+      case Some(EmployeeStarted.After1Feb2019) =>
         userAnswers.get(EmployeeStartDatePage) match {
           case Some(date) if date.isBefore(apr6th2019) => routes.LastYearPayController.onPageLoad(1)
           case _                                       => routes.NicCategoryController.onPageLoad()
@@ -162,10 +162,10 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(VariableLengthEmployedPage) match {
-      case Some(VariableLengthEmployed.Yes) => routes.VariableGrossPayController.onPageLoad()
-      case Some(VariableLengthEmployed.No)  => routes.EmployeeStartDateController.onPageLoad()
-      case _                                => routes.VariableLengthEmployedController.onPageLoad()
+    userAnswers.get(EmployedStartedPage) match {
+      case Some(EmployeeStarted.OnOrBefore1Feb2019) => routes.VariableGrossPayController.onPageLoad()
+      case Some(EmployeeStarted.After1Feb2019)      => routes.EmployeeStartDateController.onPageLoad()
+      case _                                        => routes.VariableLengthEmployedController.onPageLoad()
     }
   }
 
@@ -186,8 +186,8 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         } else if (hasPartialPayAfter(userAnswers)) {
           routes.PartialPayAfterFurloughController.onPageLoad()
         } else {
-          userAnswers.get(VariableLengthEmployedPage) match {
-            case Some(VariableLengthEmployed.Yes) =>
+          userAnswers.get(EmployedStartedPage) match {
+            case Some(EmployeeStarted.OnOrBefore1Feb2019) =>
               routes.LastYearPayController.onPageLoad(1)
             case _ =>
               userAnswers.get(EmployeeStartDatePage) match {

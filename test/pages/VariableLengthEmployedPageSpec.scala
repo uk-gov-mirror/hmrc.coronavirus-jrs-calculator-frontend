@@ -5,17 +5,17 @@
 
 package pages
 
-import models.VariableLengthEmployed
+import models.EmployeeStarted
 import pages.behaviours.PageBehaviours
 
-class VariableLengthEmployedSpec extends PageBehaviours {
+class EmployeeStartedSpec extends PageBehaviours {
 
-  "VariableLengthEmployedPage" must {
+  "EmployedStartedPage" must {
 
-    beRetrievable[VariableLengthEmployed](VariableLengthEmployedPage)
+    beRetrievable[EmployeeStarted](EmployedStartedPage)
 
-    beSettable[VariableLengthEmployed](VariableLengthEmployedPage)
+    beSettable[EmployeeStarted](EmployedStartedPage)
 
-    beRemovable[VariableLengthEmployed](VariableLengthEmployedPage)
+    beRemovable[EmployeeStarted](EmployedStartedPage)
   }
 }

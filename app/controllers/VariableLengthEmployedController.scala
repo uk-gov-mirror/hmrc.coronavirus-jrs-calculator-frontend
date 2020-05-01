@@ -10,7 +10,7 @@ import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.VariableLengthEmployedPage
+import pages.EmployedStartedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -37,7 +37,7 @@ class VariableLengthEmployedController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(VariableLengthEmployedPage) match {
+      val preparedForm = request.userAnswers.get(EmployedStartedPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -53,9 +53,9 @@ class VariableLengthEmployedController @Inject()(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableLengthEmployedPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployedStartedPage, value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(VariableLengthEmployedPage, updatedAnswers))
+            } yield Redirect(navigator.nextPage(EmployedStartedPage, updatedAnswers))
         )
   }
 }

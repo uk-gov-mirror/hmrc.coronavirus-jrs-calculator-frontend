@@ -6,7 +6,7 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.VariableLengthEmployed
+import models.EmployeeStarted
 import play.api.data.FormError
 
 class VariableLengthEmployedFormProviderSpec extends OptionFieldBehaviours {
@@ -18,10 +18,10 @@ class VariableLengthEmployedFormProviderSpec extends OptionFieldBehaviours {
     val fieldName = "value"
     val requiredKey = "variableLengthEmployed.error.required"
 
-    behave like optionsField[VariableLengthEmployed](
+    behave like optionsField[EmployeeStarted](
       form,
       fieldName,
-      validValues = VariableLengthEmployed.values,
+      validValues = EmployeeStarted.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

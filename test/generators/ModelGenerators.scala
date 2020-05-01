@@ -17,9 +17,9 @@ trait ModelGenerators {
       Gen.oneOf(FurloughCalculations.values.toSeq)
     }
 
-  implicit lazy val arbitraryVariableLengthEmployed: Arbitrary[VariableLengthEmployed] =
+  implicit lazy val arbitraryEmployeeStarted: Arbitrary[EmployeeStarted] =
     Arbitrary {
-      Gen.oneOf(VariableLengthEmployed.values.toSeq)
+      Gen.oneOf(EmployeeStarted.values.toSeq)
     }
 
   implicit lazy val arbitraryfurloughOngoing: Arbitrary[FurloughStatus] =

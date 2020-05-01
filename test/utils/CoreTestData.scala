@@ -117,7 +117,7 @@ trait CoreTestData {
       |        "variableGrossPay" : {
       |            "amount" : 10000
       |        },
-      |        "variableLengthEmployed" : "no",
+      |        "employeeStarted" : "after1Feb2019",
       |        "employeeStartDate" : "2019-12-01",
       |        "furloughEndDate" : "2020-04-20",
       |        "paymentFrequency" : "monthly",
@@ -156,7 +156,7 @@ trait CoreTestData {
       |        "variableGrossPay" : {
       |            "amount" : 12960
       |        },
-      |        "variableLengthEmployed" : "no",
+      |        "employeeStarted" : "after1Feb2019",
       |        "employeeStartDate" : "2019-08-01",
       |        "paymentFrequency" : "monthly",
       |        "claimPeriodStart" : "2020-03-01",
@@ -190,7 +190,7 @@ trait CoreTestData {
        |        "variableGrossPay" : {
        |            "amount" : 10000
        |        },
-       |        "variableLengthEmployed" : "no",
+       |        "employeeStarted" : "after1Feb2019",
        |        "employeeStartDate" : "2019-12-01",
        |        "furloughEndDate" : "2020-03-21",
        |        "paymentFrequency" : "weekly",
@@ -224,7 +224,7 @@ trait CoreTestData {
       |        "variableGrossPay" : {
       |            "amount" : 10000
       |        },
-      |        "variableLengthEmployed" : "no",
+      |        "employeeStarted" : "after1Feb2019",
       |        "employeeStartDate" : "2019-12-01",
       |        "furloughEndDate" : "2020-03-21",
       |        "paymentFrequency" : "fortnightly",
@@ -257,7 +257,7 @@ trait CoreTestData {
       |        "variableGrossPay" : {
       |            "amount" : 10000
       |        },
-      |        "variableLengthEmployed" : "no",
+      |        "employeeStarted" : "after1Feb2019",
       |        "employeeStartDate" : "2019-12-01",
       |        "furloughEndDate" : "2020-04-26",
       |        "paymentFrequency" : "fourweekly",
@@ -290,7 +290,7 @@ trait CoreTestData {
       |        "variableGrossPay" : {
       |            "amount" : 20000.0
       |        },
-      |        "variableLengthEmployed" : "no",
+      |        "employeeStarted" : "after1Feb2019",
       |        "employeeStartDate" : "2019-04-03",
       |        "paymentFrequency" : "monthly",
       |        "claimPeriodStart" : "2020-03-01",
@@ -335,7 +335,7 @@ trait CoreTestData {
       |        "variableGrossPay" : {
       |            "amount" : 31970
       |        },
-      |        "variableLengthEmployed" : "yes",
+      |        "employeeStarted" : "onOrBefore1Feb2019",
       |        "furloughEndDate" : "2020-03-28",
       |        "paymentFrequency" : "fourweekly",
       |        "claimPeriodStart" : "2020-03-01",
@@ -379,7 +379,7 @@ trait CoreTestData {
       |        "variableGrossPay" : {
       |            "amount" : 31970
       |        },
-      |        "variableLengthEmployed" : "yes",
+      |        "employeeStarted" : "onOrBefore1Feb2019",
       |        "furloughEndDate" : "2020-03-31",
       |        "paymentFrequency" : "weekly",
       |        "claimPeriodStart" : "2020-03-01",

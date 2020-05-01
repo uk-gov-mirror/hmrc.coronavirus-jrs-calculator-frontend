@@ -138,7 +138,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           .get
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 10))
           .get
-          .set(VariableLengthEmployedPage, VariableLengthEmployed.Yes)
+          .set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
           .get
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
@@ -247,17 +247,17 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         }
       }
 
-      "go to correct page after VariableLengthEmployedPage" in {
+      "go to correct page after EmployedStartedPage" in {
         navigator.nextPage(
-          VariableLengthEmployedPage,
+          EmployedStartedPage,
           UserAnswers("id")
-            .set(VariableLengthEmployedPage, VariableLengthEmployed.Yes)
+            .set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
             .success
             .value) mustBe routes.VariableGrossPayController.onPageLoad()
         navigator.nextPage(
-          VariableLengthEmployedPage,
+          EmployedStartedPage,
           UserAnswers("id")
-            .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
+            .set(EmployedStartedPage, EmployeeStarted.After1Feb2019)
             .success
             .value) mustBe routes.EmployeeStartDateController.onPageLoad()
       }
@@ -317,8 +317,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
 
       "go to correct page after PartialPayAfterFurloughPage" when {
 
-        "VariableLengthEmployed is Yes" in {
-          val userAnswers = emptyUserAnswers.set(VariableLengthEmployedPage, VariableLengthEmployed.Yes).success.value
+        "EmployedStarted is OnOrBefore1Feb2019" in {
+          val userAnswers = emptyUserAnswers.set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019).success.value
 
           navigator.nextPage(
             PartialPayAfterFurloughPage,
@@ -326,9 +326,9 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           ) mustBe routes.LastYearPayController.onPageLoad(1)
         }
 
-        "VariableLengthEmployed is No and date is before April 6th" in {
+        "EmployedStarted is After1Feb2019 and date is before April 6th" in {
           val userAnswers = emptyUserAnswers
-            .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
+            .set(EmployedStartedPage, EmployeeStarted.After1Feb2019)
             .success
             .value
             .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
@@ -341,9 +341,9 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           ) mustBe routes.LastYearPayController.onPageLoad(1)
         }
 
-        "VariableLengthEmployed is No and date is April 7th" in {
+        "EmployedStarted is After1Feb2019 and date is April 7th" in {
           val userAnswers = emptyUserAnswers
-            .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
+            .set(EmployedStartedPage, EmployeeStarted.After1Feb2019)
             .success
             .value
             .set(EmployeeStartDatePage, LocalDate.of(2020, 4, 7))
@@ -356,9 +356,9 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           ) mustBe routes.NicCategoryController.onPageLoad()
         }
 
-        "VariableLengthEmployed is No and date is after April 7th" in {
+        "EmployeeStarted is After1Feb2019 and date is after April 7th" in {
           val userAnswers = emptyUserAnswers
-            .set(VariableLengthEmployedPage, VariableLengthEmployed.No)
+            .set(EmployedStartedPage, EmployeeStarted.After1Feb2019)
             .success
             .value
             .set(EmployeeStartDatePage, LocalDate.of(2020, 4, 8))
@@ -371,7 +371,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
           ) mustBe routes.NicCategoryController.onPageLoad()
         }
 
-        "VariableLengthEmployed is missing" in {
+        "EmployeeStarted is missing" in {
           val userAnswers = emptyUserAnswers
 
           navigator.nextPage(

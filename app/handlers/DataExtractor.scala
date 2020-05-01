@@ -8,7 +8,7 @@ package handlers
 import java.time.LocalDate
 
 import models.PayMethod.{Regular, Variable}
-import models.{Amount, CylbEligibility, CylbPayment, FullPeriodWithPaymentDate, MandatoryData, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers, VariableLengthEmployed}
+import models.{Amount, CylbEligibility, CylbPayment, EmployeeStarted, FullPeriodWithPaymentDate, MandatoryData, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, Period, PeriodWithPaymentDate, Periods, UserAnswers}
 import pages._
 import services.{FurloughPeriodExtractor, ReferencePayCalculator}
 
@@ -84,8 +84,8 @@ trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor 
   private def cylbEligible(userAnswers: UserAnswers): Option[CylbEligibility] =
     for {
       priorFurloughPeriod <- extractPriorFurloughPeriod(userAnswers)
-      variableLength      <- userAnswers.get(VariableLengthEmployedPage)
-    } yield cylbCalculationPredicate(variableLength, priorFurloughPeriod.start)
+      employeeStarted     <- userAnswers.get(EmployedStartedPage)
+    } yield cylbCalculationPredicate(employeeStarted, priorFurloughPeriod.start)
 
   private def extractVariablePayments(
     userAnswers: UserAnswers,
@@ -100,6 +100,6 @@ trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor 
       nonFurloughPay = NonFurloughPay(preFurloughPay.map(v => Amount(v.value)), postFurloughPay.map(v => Amount(v.value)))
     } yield calculateVariablePay(nonFurloughPay, priorFurloughPeriod, periods, grossPay, cylbs, frequency)
 
-  protected def cylbCalculationPredicate(variableLength: VariableLengthEmployed, employeeStartDate: LocalDate): CylbEligibility =
-    CylbEligibility(variableLength == VariableLengthEmployed.Yes || employeeStartDate.isBefore(LocalDate.of(2019, 4, 6)))
+  protected def cylbCalculationPredicate(employeeStarted: EmployeeStarted, employeeStartDate: LocalDate): CylbEligibility =
+    CylbEligibility(employeeStarted == EmployeeStarted.OnOrBefore1Feb2019 || employeeStartDate.isBefore(LocalDate.of(2019, 4, 6)))
 }
