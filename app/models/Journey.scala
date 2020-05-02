@@ -12,7 +12,7 @@ case object RegularPay extends Journey
 case object VariablePay extends Journey
 case object VariablePayWithCylb extends Journey
 
-case class BranchingQuestions(payMethod: PayMethod, variableLengthEmployed: Option[EmployeeStarted], employeeStartDate: Option[LocalDate])
+case class BranchingQuestions(payMethod: PayMethod, employeeStarted: Option[EmployeeStarted], employeeStartDate: Option[LocalDate])
 
 case class JourneyCoreData(
   furloughPeriod: FurloughWithinClaim,
@@ -21,14 +21,16 @@ case class JourneyCoreData(
   nic: NicCategory,
   pension: PensionStatus)
 
-sealed trait JourneyData
-case class RegularPayData(data: JourneyCoreData, wage: Amount) extends JourneyData
+sealed trait JourneyData {
+  val core: JourneyCoreData
+}
+case class RegularPayData(core: JourneyCoreData, wage: Amount) extends JourneyData
 
-case class VariablePayData(data: JourneyCoreData, grossPay: Amount, nonFurloughPay: NonFurloughPay, priorFurlough: Period)
+case class VariablePayData(core: JourneyCoreData, grossPay: Amount, nonFurloughPay: NonFurloughPay, priorFurlough: Period)
     extends JourneyData
 
 case class VariablePayWithCylbData(
-  data: JourneyCoreData,
+  core: JourneyCoreData,
   grossPay: Amount,
   nonFurloughPay: NonFurloughPay,
   priorFurlough: Period,

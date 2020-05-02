@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{FullPeriod, PartialPeriod, PaymentDate, Period, Periods}
+import models.{FullPeriod, FurloughWithinClaim, PartialPeriod, PaymentDate, Period, Periods}
 import org.scalacheck.Gen.choose
 import org.scalacheck.Shrink
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -24,7 +24,7 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
   "Returns a Pay Period with the same start and end date if only one date is supplied" in new PeriodHelper {
     //This is not a valid scenario, just testing for safety
     val endDates: List[LocalDate] = List(LocalDate.of(2020, 2, 20))
-    val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val furloughPeriod = FurloughWithinClaim(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
 
     val expected: List[Periods] = List(FullPeriod(Period(LocalDate.of(2020, 2, 20), LocalDate.of(2020, 2, 20))))
 
@@ -35,8 +35,8 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
     val endDates: List[LocalDate] = List(LocalDate.of(2020, 4, 20), LocalDate.of(2020, 3, 20), LocalDate.of(2020, 2, 20))
     val endDatesTwo: List[LocalDate] = List(LocalDate.of(2020, 3, 31), LocalDate.of(2020, 2, 29))
 
-    val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 10))
-    val furloughPeriodTwo: Period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val furloughPeriod = FurloughWithinClaim(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 10))
+    val furloughPeriodTwo = FurloughWithinClaim(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
 
     val expected: List[Periods] =
       List(
@@ -58,7 +58,7 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
 
   "Return periods for a given List[LocalDate] and a furloughPeriod" in new PeriodHelper {
     val endDates: List[LocalDate] = List(LocalDate.of(2020, 4, 30), LocalDate.of(2020, 3, 31), LocalDate.of(2020, 2, 29))
-    val furloughPeriod: Period = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 30))
+    val furloughPeriod = FurloughWithinClaim(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 30))
 
     val originalPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
 

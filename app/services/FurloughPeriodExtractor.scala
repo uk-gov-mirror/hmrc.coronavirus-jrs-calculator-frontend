@@ -13,8 +13,7 @@ import utils.LocalDateHelpers
 
 trait FurloughPeriodExtractor extends LocalDateHelpers {
 
-  // TODO: Equivalent to extractFurloughPeriod - rename after that is removed
-  def extractFurloughPeriod2(userAnswers: UserAnswers): Option[FurloughDates] =
+  def extractFurloughPeriod(userAnswers: UserAnswers): Option[FurloughDates] =
     for {
       furloughStart <- userAnswers.get(FurloughStartDatePage)
     } yield {
@@ -25,7 +24,7 @@ trait FurloughPeriodExtractor extends LocalDateHelpers {
     for {
       claimPeriodStart <- userAnswers.get(ClaimPeriodStartPage)
       claimPeriodEnd   <- userAnswers.get(ClaimPeriodEndPage)
-      furloughDates    <- extractFurloughPeriod2(userAnswers)
+      furloughDates    <- extractFurloughPeriod(userAnswers)
     } yield {
       val startDate = latestOf(claimPeriodStart, furloughDates.start)
       val endDate = furloughDates match {
@@ -34,32 +33,4 @@ trait FurloughPeriodExtractor extends LocalDateHelpers {
       }
       FurloughWithinClaim(startDate, endDate)
     }
-
-  // TODO: Remove after refactor
-  def extractFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
-    for {
-      furloughStart  <- userAnswers.get(FurloughStartDatePage)
-      claimPeriodEnd <- userAnswers.get(ClaimPeriodEndPage)
-    } yield
-      userAnswers
-        .get(FurloughEndDatePage)
-        .fold(Period(furloughStart, claimPeriodEnd))(furloughEnd => Period(furloughStart, furloughEnd))
-
-  // TODO: Remove after refactor
-  def extractRelevantFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
-    for {
-      furloughStart    <- userAnswers.get(FurloughStartDatePage)
-      claimPeriodStart <- userAnswers.get(ClaimPeriodStartPage)
-      claimPeriodEnd   <- userAnswers.get(ClaimPeriodEndPage)
-    } yield extractRelevantFurloughPeriod(furloughStart, userAnswers.get(FurloughEndDatePage), claimPeriodStart, claimPeriodEnd)
-
-  // TODO: Remove after refactor
-  def extractRelevantFurloughPeriod(
-    furloughStart: LocalDate,
-    furloughEnd: Option[LocalDate],
-    claimPeriodStart: LocalDate,
-    claimPeriodEnd: LocalDate): Period = {
-    val effectiveStartDate = latestOf(claimPeriodStart, furloughStart)
-    furloughEnd.fold(Period(effectiveStartDate, claimPeriodEnd))(furloughEnd => Period(effectiveStartDate, furloughEnd))
-  }
 }

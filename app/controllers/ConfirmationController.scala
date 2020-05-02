@@ -10,7 +10,6 @@ import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
 import navigation.Navigator
-import pages.FurloughStatusPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AuditService
@@ -32,11 +31,9 @@ class ConfirmationController @Inject()(
     extends BaseController with ConfirmationControllerRequestHandler {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswer(FurloughStatusPage) { furlough =>
-      loadResultData(request.userAnswers).fold(Future.successful(Redirect(routes.ErrorController.somethingWentWrong())))(data => {
-        auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
-        Future.successful(Ok(view(data.confirmationMetadata, data.confirmationViewBreakdown, config.calculatorVersion, furlough)))
-      })
-    }
+    loadResultData(request.userAnswers).fold(Future.successful(Redirect(routes.ErrorController.somethingWentWrong())))(data => {
+      auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
+      Future.successful(Ok(view(data.confirmationMetadata, data.confirmationViewBreakdown, config.calculatorVersion)))
+    })
   }
 }

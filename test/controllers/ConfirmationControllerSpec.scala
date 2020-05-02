@@ -12,7 +12,7 @@ import models.Calculation.{FurloughCalculationResult, NicCalculationResult, Pens
 import models.NicCategory.Payable
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.DoesContribute
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, FurloughStatus, PaymentDate, Period}
+import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, FurloughOngoing, PaymentDate, Period}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
@@ -33,9 +33,7 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(meta, breakdown, frontendAppConfig.calculatorVersion, FurloughStatus.FurloughOngoing)(
-        request,
-        messages).toString
+      contentAsString(result) mustEqual view(meta, breakdown, frontendAppConfig.calculatorVersion)(request, messages).toString
 
       application.stop()
     }
@@ -60,7 +58,7 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication {
   val nic = CalculationResult(NicCalculationResult, 241.36, List(periodBreakdownOne(121.58), periodBreakdownTwo(119.78)))
   val pension =
     CalculationResult(PensionCalculationResult, 65.04, List(periodBreakdownOne(32.64), periodBreakdownTwo(32.40)))
-  val furloughPeriod = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 4, 30))
+  val furloughPeriod = FurloughOngoing(LocalDate.of(2020, 3, 1))
 
   val breakdown = ConfirmationViewBreakdown(furlough, nic, pension)
 

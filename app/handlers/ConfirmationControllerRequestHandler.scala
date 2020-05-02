@@ -13,21 +13,23 @@ import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
 
 trait ConfirmationControllerRequestHandler
-    extends FurloughCalculator with PeriodHelper with NicCalculator with PensionCalculator with DataExtractor {
+    extends FurloughCalculator with PeriodHelper with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator {
 
   def loadResultData(userAnswers: UserAnswers): Option[ConfirmationDataResult] =
     for {
       data      <- extract(userAnswers)
-      breakdown <- breakdown(userAnswers, data)
+      breakdown <- breakdown(userAnswers)
       metadata  <- meta(userAnswers, data)
     } yield ConfirmationDataResult(metadata, breakdown)
 
-  private def breakdown(userAnswers: UserAnswers, data: MandatoryData): Option[ConfirmationViewBreakdown] =
+  private def breakdown(userAnswers: UserAnswers): Option[ConfirmationViewBreakdown] =
     for {
-      regulars <- extractPayments(userAnswers, extractRelevantFurloughPeriod(data, userAnswers))
-      furlough = calculateFurloughGrant(data.paymentFrequency, regulars)
-      ni = calculateNi(furlough, data.nicCategory, data.paymentFrequency)
-      pension = calculatePension(furlough, data.pensionStatus, data.paymentFrequency)
+      questions <- extractBranchingQuestions(userAnswers)
+      data      <- journeyData(define(questions), userAnswers)
+      payments = calculateReferencePay(data)
+      furlough = calculateFurloughGrant(data.core.frequency, payments)
+      ni = calculateNi(furlough, data.core.nic, data.core.frequency)
+      pension = calculatePension(furlough, data.core.pension, data.core.frequency)
     } yield ConfirmationViewBreakdown(furlough, ni, pension)
 
   private def meta(userAnswers: UserAnswers, data: MandatoryData): Option[ConfirmationMetadata] =

@@ -8,12 +8,11 @@ package services
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
-import models.PayMethod.Variable
 import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, Period, PeriodWithPaymentDate}
 
-class AverageCalculatorSpec extends SpecBase with CoreTestDataBuilder {
+class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
-  "calculates average pay for an employee" in new AverageCalculator {
+  "calculates average pay for an employee" in new AveragePayCalculator {
     val employeeStartDate = LocalDate.of(2019, 12, 1)
     val furloughStartDate = LocalDate.of(2020, 3, 1)
     val nonFurloughPay = NonFurloughPay(None, Some(Amount(1000.00)))
@@ -33,15 +32,14 @@ class AverageCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val payPeriods: Seq[PeriodWithPaymentDate] = Seq(afterFurloughPeriod, afterFurloughPartial)
 
     val expected = Seq(
-      paymentWithFullPeriod(817.47, afterFurloughPeriod, Variable),
-      paymentWithPartialPeriod(1000.0, 395.55, afterFurloughPartial, Variable)
+      paymentWithFullPeriod(817.47, afterFurloughPeriod),
+      paymentWithPartialPeriod(1000.0, 395.55, afterFurloughPartial)
     )
 
-    calculateAveragePay(nonFurloughPay, priorFurloughPeriod, payPeriods.head, grossPay) mustBe expected.head
-    calculateAveragePay(nonFurloughPay, priorFurloughPeriod, payPeriods.tail.head, grossPay) mustBe expected.tail.head
+    calculateAveragePay(nonFurloughPay, priorFurloughPeriod, payPeriods, grossPay) mustBe expected
   }
 
-  "calculate daily average gross earning for a given pay period" in new AverageCalculator {
+  "calculate daily average gross earning for a given pay period" in new AveragePayCalculator {
     val employeeStartDate = LocalDate.of(2019, 12, 1)
     val furloughStartDate = LocalDate.of(2020, 3, 1)
     val periodBeforeFurlough = Period(employeeStartDate, furloughStartDate.minusDays(1))

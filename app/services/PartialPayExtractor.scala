@@ -17,7 +17,7 @@ trait PartialPayExtractor extends PeriodHelper with FurloughPeriodExtractor {
     getPartialPeriods(userAnswers).exists(isFurloughEnd)
 
   def getPartialPeriods(userAnswers: UserAnswers): Seq[PartialPeriod] =
-    extractRelevantFurloughPeriod(userAnswers).fold(
+    extractFurloughWithinClaim(userAnswers).fold(
       Seq.empty[PartialPeriod]
     ) { furloughPeriod =>
       val payDates = userAnswers.getList(PayDatePage)

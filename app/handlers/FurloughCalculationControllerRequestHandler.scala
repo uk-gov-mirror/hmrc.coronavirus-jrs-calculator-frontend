@@ -6,15 +6,15 @@
 package handlers
 
 import models.{CalculationResult, UserAnswers}
-import services.FurloughCalculator
+import services.{FurloughCalculator, ReferencePayCalculator}
 
-trait FurloughCalculationControllerRequestHandler extends FurloughCalculator with DataExtractor {
+trait FurloughCalculationControllerRequestHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
 
   def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
     for {
-      data <- extract(userAnswers)
-      furloughPeriod = extractRelevantFurloughPeriod(data, userAnswers)
-      regulars <- extractPayments(userAnswers, furloughPeriod)
-    } yield calculateFurloughGrant(data.paymentFrequency, regulars)
+      questions <- extractBranchingQuestions(userAnswers)
+      data      <- journeyData(define(questions), userAnswers)
+      payments = calculateReferencePay(data)
+    } yield calculateFurloughGrant(data.core.frequency, payments)
 
 }

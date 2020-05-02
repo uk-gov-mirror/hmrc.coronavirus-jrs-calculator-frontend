@@ -9,14 +9,15 @@ import java.time.LocalDate
 
 import models.UserAnswers
 import pages._
+import services.PreviousYearPeriod
 
-trait LastYearPayControllerRequestHandler extends DataExtractor {
+trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYearPeriod {
 
   def getPayDates(userAnswers: UserAnswers): Option[Seq[LocalDate]] =
     for {
       frequency      <- userAnswers.get(PaymentFrequencyPage)
       lastPayDay     <- userAnswers.get(LastPayDatePage)
-      furloughPeriod <- extractRelevantFurloughPeriod(userAnswers)
+      furloughPeriod <- extractFurloughWithinClaim(userAnswers)
     } yield {
       val payDates = userAnswers.getList(PayDatePage)
       val periods = generatePeriods(payDates, furloughPeriod)

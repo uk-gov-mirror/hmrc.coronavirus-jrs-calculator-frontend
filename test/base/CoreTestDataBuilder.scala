@@ -11,7 +11,7 @@ import models.FurloughStatus.FurloughOngoing
 import models.NicCategory.Payable
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, JourneyCoreData, MandatoryData, PartialPeriod, PartialPeriodWithPaymentDate, PayMethod, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionStatus, Period, UserAnswers}
+import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, JourneyCoreData, MandatoryData, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionStatus, Period, UserAnswers}
 import pages._
 
 trait CoreTestDataBuilder {
@@ -24,15 +24,14 @@ trait CoreTestDataBuilder {
 
   def fullPeriod(start: String, end: String) = FullPeriod(period(start, end))
 
-  def paymentWithFullPeriod(furloughPayment: BigDecimal, period: FullPeriodWithPaymentDate, payMethod: PayMethod): PaymentWithFullPeriod =
-    PaymentWithFullPeriod(Amount(furloughPayment), period, payMethod)
+  def paymentWithFullPeriod(furloughPayment: BigDecimal, period: FullPeriodWithPaymentDate): PaymentWithFullPeriod =
+    PaymentWithFullPeriod(Amount(furloughPayment), period)
 
   def paymentWithPartialPeriod(
     nonFurloughPay: BigDecimal,
     furloughPayment: BigDecimal,
-    period: PartialPeriodWithPaymentDate,
-    payMethod: PayMethod): PaymentWithPartialPeriod =
-    PaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(furloughPayment), period, payMethod)
+    period: PartialPeriodWithPaymentDate): PaymentWithPartialPeriod =
+    PaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(furloughPayment), period)
 
   def fullPeriodWithPaymentDate(start: String, end: String, paymentDate: String): FullPeriodWithPaymentDate =
     FullPeriodWithPaymentDate(FullPeriod(period(start, end)), PaymentDate(buildLocalDate(periodBuilder(paymentDate))))

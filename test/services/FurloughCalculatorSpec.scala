@@ -9,7 +9,6 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.Calculation.FurloughCalculationResult
-import models.PayMethod.Regular
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithPeriod, Period}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -39,8 +38,8 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
       FullPeriodWithPaymentDate(
         FullPeriod(Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))),
         PaymentDate(LocalDate.of(2020, 4, 30)))
-    val paymentOne: PaymentWithPeriod = paymentWithFullPeriod(2000.00, periodOne, Regular)
-    val paymentTwo: PaymentWithPeriod = paymentWithFullPeriod(2000.00, periodTwo, Regular)
+    val paymentOne: PaymentWithPeriod = paymentWithFullPeriod(2000.00, periodOne)
+    val paymentTwo: PaymentWithPeriod = paymentWithFullPeriod(2000.00, periodTwo)
     val payments: List[PaymentWithPeriod] = List(paymentOne, paymentTwo)
 
     val expected =
@@ -64,8 +63,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         2000,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-          PaymentDate(LocalDate.of(2020, 3, 31))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 3, 31)))
       ),
       Amount(1600.00)),
     (
@@ -74,8 +72,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         5000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-          PaymentDate(LocalDate.of(2020, 3, 31))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 3, 31)))
       ),
       Amount(2500.00)),
     (
@@ -84,8 +81,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         5000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))),
-          PaymentDate(LocalDate.of(2020, 4, 30))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 4, 30)))
       ),
       Amount(2621.15)),
     (
@@ -94,8 +90,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         500.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
-          PaymentDate(LocalDate.of(2020, 3, 21))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 3, 21)))
       ),
       Amount(400.00)),
     (
@@ -104,8 +99,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         1000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
-          PaymentDate(LocalDate.of(2020, 3, 21))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 3, 21)))
       ),
       Amount(576.92)),
     (
@@ -114,8 +108,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         2000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
-          PaymentDate(LocalDate.of(2020, 3, 28))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 3, 28)))
       ),
       Amount(1153.84)),
     (
@@ -124,8 +117,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         1000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
-          PaymentDate(LocalDate.of(2020, 3, 28))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 3, 28)))
       ),
       Amount(800.00)),
     (
@@ -134,8 +126,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         5000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
-          PaymentDate(LocalDate.of(2020, 4, 15))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 4, 15)))
       ),
       Amount(2307.68)),
     (
@@ -144,8 +135,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
         2000.00,
         FullPeriodWithPaymentDate(
           FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
-          PaymentDate(LocalDate.of(2020, 4, 15))),
-        Regular
+          PaymentDate(LocalDate.of(2020, 4, 15)))
       ),
       Amount(1600.00))
   )
@@ -155,40 +145,37 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
     (
       paymentWithPartialPeriod(
         677.42,
-        1500.00,
+        822.58,
         PartialPeriodWithPaymentDate(
           PartialPeriod(
             Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
             Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 31))
-        ),
-        Regular
+        )
       ),
       Amount(658.06)),
     (
       paymentWithPartialPeriod(
         1580.65,
-        3500.00,
+        1919.35,
         PartialPeriodWithPaymentDate(
           PartialPeriod(
             Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
             Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))),
           PaymentDate(LocalDate.of(2020, 3, 31))
-        ),
-        Regular
+        )
       ),
       Amount(1371.05)),
     (
       paymentWithPartialPeriod(
         1096.77,
-        2000.00,
+        903.23,
         PartialPeriodWithPaymentDate(
           PartialPeriod(
             Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
             Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28))),
           PaymentDate(LocalDate.of(2020, 3, 31))
-        ),
-        Regular
+        )
       ),
       Amount(722.58))
   )

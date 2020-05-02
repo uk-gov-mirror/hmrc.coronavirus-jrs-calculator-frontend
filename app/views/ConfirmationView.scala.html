@@ -4,8 +4,6 @@
  *@
 
 @import java.time.LocalDate
-
-@import models.FurloughStatus.FurloughEnded
 @import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
 
 @this(
@@ -20,7 +18,7 @@
         appConfig: config.FrontendAppConfig
 )
 
-@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String, furlough: FurloughStatus)(implicit request: Request[_], messages: Messages)
+@(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false) {
 
@@ -58,11 +56,10 @@
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("confirmation.claimPeriod", dateToString(cm.claimPeriod.start), dateToString(cm.claimPeriod.end))</li>
         <li>
-        @if(furlough == FurloughEnded) {
-            @messages("confirmation.furloughPeriod.startedAndEnded", dateToString(cm.furloughPeriod.start), dateToString(cm.furloughPeriod.end))
-        } else {
-            @messages("confirmation.furloughPeriod.started", dateToString(cm.furloughPeriod.start))
-        }
+        @{cm.furloughDates match {
+          case FurloughEnded(start, end) => messages("confirmation.furloughPeriod.startedAndEnded", dateToString(start), dateToString(end))
+          case FurloughOngoing(start) =>  messages("confirmation.furloughPeriod.started", dateToString(start))
+        }}
         <li>@messages(s"confirmation.paid.${cm.frequency}")</li>
         <li>@messages(s"confirmation.nic.${cm.nic}")</li>
         <li>@messages(s"confirmation.pension.${cm.pension}")</li>
