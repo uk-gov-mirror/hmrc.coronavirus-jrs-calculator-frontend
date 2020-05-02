@@ -11,7 +11,7 @@ import base.{CoreTestDataBuilder, SpecBase}
 import models.NicCategory.Payable
 import models.PayMethod.{Regular, Variable}
 import models.PaymentFrequency.Monthly
-import models.{Amount, BranchingQuestions, CylbPayment, EmployeeStarted, JourneyCoreData, NonFurloughPay, PensionStatus, PeriodWithPaymentDate, RegularPay, RegularPayData, Salary, UserAnswers, VariableGrossPay, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
+import models.{Amount, BranchingQuestions, CylbPayment, EmployeeStarted, FurloughWithinClaim, JourneyCoreData, NonFurloughPay, PensionStatus, PeriodWithPaymentDate, RegularPay, RegularPayData, Salary, UserAnswers, VariableGrossPay, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import pages.{EmployedStartedPage, EmployeeStartDatePage, LastYearPayPage, PayMethodPage, SalaryQuestionPage, VariableGrossPayPage}
 
 class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
@@ -42,7 +42,8 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
       .get
     val periods: Seq[PeriodWithPaymentDate] = defaultJourneyCoreData.periods
 
-    val expected = JourneyCoreData(period("2020-03-01", "2020-03-31"), periods, Monthly, Payable, PensionStatus.DoesContribute)
+    val expected =
+      JourneyCoreData(FurloughWithinClaim(period("2020-03-01", "2020-03-31")), periods, Monthly, Payable, PensionStatus.DoesContribute)
 
     val actual = journeyData(RegularPay, answers)
 
@@ -60,7 +61,8 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
 
     val periods: Seq[PeriodWithPaymentDate] = defaultJourneyCoreData.periods
 
-    val expected = JourneyCoreData(period("2020-03-01", "2020-03-31"), periods, Monthly, Payable, PensionStatus.DoesContribute)
+    val expected =
+      JourneyCoreData(FurloughWithinClaim(period("2020-03-01", "2020-03-31")), periods, Monthly, Payable, PensionStatus.DoesContribute)
 
     val actual = journeyData(VariablePay, answers)
 
@@ -80,7 +82,8 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
 
     val periods: Seq[PeriodWithPaymentDate] = defaultJourneyCoreData.periods
 
-    val expected = JourneyCoreData(period("2020-03-01", "2020-03-31"), periods, Monthly, Payable, PensionStatus.DoesContribute)
+    val expected =
+      JourneyCoreData(FurloughWithinClaim(period("2020-03-01", "2020-03-31")), periods, Monthly, Payable, PensionStatus.DoesContribute)
 
     val actual = journeyData(VariablePayWithCylb, answers)
 

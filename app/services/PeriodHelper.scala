@@ -9,12 +9,16 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{FullPeriod, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
+import models.{FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
 import utils.LocalDateHelpers._
 
 trait PeriodHelper {
 
-  def generatePeriods(endDates: Seq[LocalDate], furloughPeriod: Period): Seq[Periods] = {
+  // TODO: Remove this when the old implementation is refactored
+  def generatePeriods(endDates: Seq[LocalDate], furloughPeriod: Period): Seq[Periods] =
+    generatePeriods(endDates, FurloughWithinClaim(furloughPeriod))
+
+  def generatePeriods(endDates: Seq[LocalDate], furloughPeriod: FurloughWithinClaim): Seq[Periods] = {
     PeriodWithPaymentDate
     def generate(acc: Seq[Period], list: Seq[LocalDate]): Seq[Period] = list match {
       case Nil      => acc
@@ -51,7 +55,11 @@ trait PeriodHelper {
   def isFurloughEnd(period: PartialPeriod) =
     period.original.end.isAfter((period.partial.end))
 
-  def fullOrPartialPeriod(period: Period, furloughPeriod: Period): Periods = {
+  // TODO: Remove this when the old implementation is refactored
+  def fullOrPartialPeriod(period: Period, furloughPeriod: Period): Periods =
+    fullOrPartialPeriod(period, FurloughWithinClaim(furloughPeriod))
+
+  def fullOrPartialPeriod(period: Period, furloughPeriod: FurloughWithinClaim): Periods = {
     val start =
       if (furloughPeriod.start.isAfter(period.start) && furloughPeriod.start.isEqualOrBefore(period.end)) furloughPeriod.start
       else period.start

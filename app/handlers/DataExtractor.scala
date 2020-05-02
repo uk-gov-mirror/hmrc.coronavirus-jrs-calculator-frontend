@@ -120,7 +120,7 @@ trait DataExtractor extends ReferencePayCalculator with FurloughPeriodExtractor 
   def extractJourneyCoreData(userAnswers: UserAnswers): Option[JourneyCoreData] =
     for {
       data           <- extract(userAnswers)
-      furloughPeriod <- extractRelevantFurloughPeriod(userAnswers)
+      furloughPeriod <- extractFurloughWithinClaim(userAnswers)
       periods = generatePeriods(data.payDates, furloughPeriod)
       assigned = assignPayDates(data.paymentFrequency, periods, data.lastPayDay)
     } yield JourneyCoreData(furloughPeriod, assigned, data.paymentFrequency, data.nicCategory, data.pensionStatus)

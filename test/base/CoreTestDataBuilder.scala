@@ -11,7 +11,7 @@ import models.FurloughStatus.FurloughOngoing
 import models.NicCategory.Payable
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, JourneyCoreData, MandatoryData, PartialPeriod, PartialPeriodWithPaymentDate, PayMethod, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionStatus, Period, UserAnswers}
+import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, JourneyCoreData, MandatoryData, PartialPeriod, PartialPeriodWithPaymentDate, PayMethod, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionStatus, Period, UserAnswers}
 import pages._
 
 trait CoreTestDataBuilder {
@@ -71,7 +71,7 @@ trait CoreTestDataBuilder {
 
   val defaultJourneyCoreData =
     JourneyCoreData(
-      claimPeriod,
+      FurloughWithinClaim(claimPeriod),
       Seq(fullPeriodWithPaymentDate("2020-3-1", "2020-3-31", "2020-3-31")),
       Monthly,
       Payable,

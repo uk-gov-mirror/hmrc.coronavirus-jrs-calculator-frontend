@@ -15,7 +15,7 @@ case object VariablePayWithCylb extends Journey
 case class BranchingQuestions(payMethod: PayMethod, variableLengthEmployed: Option[EmployeeStarted], employeeStartDate: Option[LocalDate])
 
 case class JourneyCoreData(
-  furloughPeriod: Period,
+  furloughPeriod: FurloughWithinClaim,
   periods: Seq[PeriodWithPaymentDate],
   frequency: PaymentFrequency,
   nic: NicCategory,
