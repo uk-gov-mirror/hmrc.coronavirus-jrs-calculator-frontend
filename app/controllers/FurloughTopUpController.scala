@@ -6,32 +6,32 @@
 package controllers
 
 import controllers.actions._
-import forms.FurloughCalculationsFormProvider
-import handlers.FurloughCalculationControllerRequestHandler
+import forms.FurloughTopUpFormProvider
+import handlers.FurloughTopUpControllerRequestHandler
 import javax.inject.Inject
 import navigation.Navigator
-import pages.FurloughCalculationsPage
+import pages.FurloughTopUpStatusPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.FurloughCalculationsView
+import views.html.FurloughTopUpView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FurloughCalculationsController @Inject()(
+class FurloughTopUpController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: FurloughCalculationsFormProvider,
+  formProvider: FurloughTopUpFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: FurloughCalculationsView
+  view: FurloughTopUpView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with FurloughCalculationControllerRequestHandler {
+    extends FrontendBaseController with I18nSupport with FurloughTopUpControllerRequestHandler {
 
   val form = formProvider()
 
@@ -40,7 +40,7 @@ class FurloughCalculationsController @Inject()(
       Logger.warn("couldn't calculate Furlough out of UserAnswers, restarting the journey")
       Redirect(routes.ClaimPeriodStartController.onPageLoad())
     } { data =>
-      val preparedForm = request.userAnswers.get(FurloughCalculationsPage) match {
+      val preparedForm = request.userAnswers.get(FurloughTopUpStatusPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -61,9 +61,9 @@ class FurloughCalculationsController @Inject()(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, data))),
             value =>
               for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughCalculationsPage, value))
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughTopUpStatusPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(FurloughCalculationsPage, updatedAnswers))
+              } yield Redirect(navigator.nextPage(FurloughTopUpStatusPage, updatedAnswers))
           )
       }
 

@@ -69,8 +69,8 @@ POST        /variable-gross-pay                              controllers.Variabl
 
 GET         /coming-soon                                     controllers.ComingSoonController.onPageLoad(showCalculateTopupsLink: Boolean ?= false)
 
-GET         /furlough-pay-topup                              controllers.FurloughCalculationsController.onPageLoad()
-POST        /furlough-pay-topup                              controllers.FurloughCalculationsController.onSubmit()
+GET         /furlough-pay-topup                              controllers.FurloughTopUpController.onPageLoad()
+POST        /furlough-pay-topup                              controllers.FurloughTopUpController.onSubmit()
 
 GET         /variable-pay-partial-pay-before-furlough        controllers.PartialPayBeforeFurloughController.onPageLoad
 POST        /variable-pay-partial-pay-before-furlough        controllers.PartialPayBeforeFurloughController.onSubmit

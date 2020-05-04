@@ -8,31 +8,31 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
-import forms.FurloughCalculationsFormProvider
+import forms.FurloughTopUpFormProvider
 import models.Calculation.FurloughCalculationResult
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, FurloughCalculations, PaymentDate, Period}
+import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, FurloughTopUpStatus, PaymentDate, Period}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.FurloughCalculationsPage
+import pages.FurloughTopUpStatusPage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.FurloughCalculationsView
+import views.html.FurloughTopUpView
 
 import scala.concurrent.Future
 
-class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+class FurloughTopUpControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val furloughCalculationsRoute = routes.FurloughCalculationsController.onPageLoad().url
+  val furloughTopUpStatusRoute = routes.FurloughTopUpController.onPageLoad().url
 
-  val formProvider = new FurloughCalculationsFormProvider()
+  val formProvider = new FurloughTopUpFormProvider()
   val form = formProvider()
 
   val furlough =
@@ -53,10 +53,10 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
     )
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, furloughCalculationsRoute).withCSRFToken
+    FakeRequest(GET, furloughTopUpStatusRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  "FurloughCalculations Controller" must {
+  "FurloughTopUp Controller" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -64,7 +64,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
 
       val result = route(application, getRequest).value
 
-      val view = application.injector.instanceOf[FurloughCalculationsView]
+      val view = application.injector.instanceOf[FurloughTopUpView]
 
       status(result) mustEqual OK
 
@@ -76,18 +76,18 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = dummyUserAnswers.set(FurloughCalculationsPage, FurloughCalculations.values.head).success.value
+      val userAnswers = dummyUserAnswers.set(FurloughTopUpStatusPage, FurloughTopUpStatus.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val view = application.injector.instanceOf[FurloughCalculationsView]
+      val view = application.injector.instanceOf[FurloughTopUpView]
 
       val result = route(application, getRequest).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(FurloughCalculations.values.head), furlough)(getRequest, messages).toString
+        view(form.fill(FurloughTopUpStatus.values.head), furlough)(getRequest, messages).toString
 
       application.stop()
     }
@@ -107,8 +107,8 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
           .build()
 
       val request =
-        FakeRequest(POST, furloughCalculationsRoute)
-          .withFormUrlEncodedBody(("value", FurloughCalculations.values.head.toString))
+        FakeRequest(POST, furloughTopUpStatusRoute)
+          .withFormUrlEncodedBody(("value", FurloughTopUpStatus.values.head.toString))
 
       val result = route(application, request).value
 
@@ -124,13 +124,13 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       val application = applicationBuilder(userAnswers = Some(dummyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, furloughCalculationsRoute).withCSRFToken
+        FakeRequest(POST, furloughTopUpStatusRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[FurloughCalculationsView]
+      val view = application.injector.instanceOf[FurloughTopUpView]
 
       val result = route(application, request).value
 
@@ -146,7 +146,7 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, furloughCalculationsRoute)
+      val request = FakeRequest(GET, furloughTopUpStatusRoute)
 
       val result = route(application, request).value
 
@@ -161,8 +161,8 @@ class FurloughCalculationsControllerSpec extends SpecBaseWithApplication with Mo
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, furloughCalculationsRoute)
-          .withFormUrlEncodedBody(("value", FurloughCalculations.values.head.toString))
+        FakeRequest(POST, furloughTopUpStatusRoute)
+          .withFormUrlEncodedBody(("value", FurloughTopUpStatus.values.head.toString))
 
       val result = route(application, request).value
 
