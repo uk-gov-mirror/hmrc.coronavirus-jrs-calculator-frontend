@@ -19,11 +19,9 @@ GET         /service-unavailable                             controllers.ErrorCo
 
 GET         /error                                           controllers.ErrorController.somethingWentWrong
 
-GET         /accessibility-statement                         controllers.AccessibilityStatementController.onPageLoad
+GET         /accessibility-statement                         controllers.AccessibilityStatementController.onPageLoad(problemPageUri: String)
 
 GET         /restart-service                                 controllers.StartAgainController.startAgain
-
-GET         /accessibility                                   controllers.AccessibilityStatementController.onPageLoad
 
 GET         /claim-period-start                              controllers.ClaimPeriodStartController.onPageLoad()
 POST        /claim-period-start                              controllers.ClaimPeriodStartController.onSubmit()

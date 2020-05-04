@@ -3,15 +3,18 @@
  *
  *@
 
+@import config.FrontendAppConfig
+
 @this(
     main_template: templates.GovukLayoutWrapper,
     h1: components.h1,
     h2: components.h2,
     lede: components.lede,
-    p: components.p
+    p: components.p,
+        appConfig: FrontendAppConfig
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(problemPageUri: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(Some(titleNoForm("accessibility.title")), timeout = false) {
 
@@ -56,7 +59,7 @@
     @h2(messages("compliant.five.heading"))
 
     <p class="govuk-body">@messages("compliant.five.p.1")
-        <a href="https://www.tax.service.gov.uk/contact/accessibility-unauthenticated?service=jrsc" class="govuk-link" target=".blank">@messages("compliant.five.p.2")</a>.
+        <a href="@appConfig.reportAccessibilityIssueUrl(problemPageUri)" class="govuk-link" target=".blank">@messages("compliant.five.p.2")</a>.
     </p>
 
     @h2(messages("compliant.six.heading"))

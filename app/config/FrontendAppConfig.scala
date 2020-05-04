@@ -9,6 +9,7 @@ import java.time.LocalDate
 
 import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
+import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 
 import scala.util.Try
 
@@ -20,6 +21,9 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "jrsc"
+
+  def reportAccessibilityIssueUrl(problemPageUri: String): String =
+    s"$contactHost/contact/accessibility-unauthenticated?service=$contactFormServiceIdentifier&userAction=${SafeRedirectUrl(host + problemPageUri).encodedUrl}"
 
   val gtmContainer: Option[String] = (Try {
     configuration.get[String]("gtm.container")
