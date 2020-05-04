@@ -360,7 +360,7 @@ furloughEndDate.error.min.max = The furlough end date must be at least 3 weeks a
 
 furloughStartDate.title = When was this employee furloughed?
 furloughStartDate.heading = When was this employee furloughed?
-furloughStartDate.hint = This is the date that the employee started their furlough. This may be before or after the the start date of your current claim.
+furloughStartDate.hint = This is the date that the employee started their furlough. This may be before or after the start date of your current claim.
 furloughStartDate.error.required.all = Enter the furlough start date
 furloughStartDate.error.required.two = The furlough start date must include {0} and {1}
 furloughStartDate.error.required = The furlough start date must include {0}
@@ -419,10 +419,10 @@ FurloughPartialPay.title.between = What did the employee get paid between {0} an
 FurloughPartialPay.title.on = What did the employee get paid on {0}?
 FurloughPartialPay.heading.between = What did the employee get paid between {0} and {1}?
 FurloughPartialPay.heading.on = What did the employee get paid on {0}?
-FurloughPartialPay.label = This is for the time that employee was paid when they were not furloughed.
+FurloughPartialPay.label = This is for the time this employee was paid when they were not furloughed.
 FurloughPartialPay.error.required = Enter a valid amount
 FurloughPartialPay.error.invalid = Enter a valid amount
-FurloughPartialPay.p = This is for the time that employee was paid when they were not furloughed.
+FurloughPartialPay.p = This is for the time this employee was paid when they were not furloughed.
 
 lastPayDate.title = What’s this employee’s pay date for the pay period ending {0}?
 lastPayDate.heading = What’s this employee’s pay date for the pay period ending {0}?
