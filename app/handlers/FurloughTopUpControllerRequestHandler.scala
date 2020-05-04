@@ -8,7 +8,7 @@ package handlers
 import models.{CalculationResult, UserAnswers}
 import services.{FurloughCalculator, ReferencePayCalculator}
 
-trait FurloughCalculationControllerRequestHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
+trait FurloughTopUpControllerRequestHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
 
   def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
     for {

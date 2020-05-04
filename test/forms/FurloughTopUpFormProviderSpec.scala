@@ -6,22 +6,22 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.FurloughCalculations
+import models.FurloughTopUpStatus
 import play.api.data.FormError
 
-class FurloughCalculationsFormProviderSpec extends OptionFieldBehaviours {
+class FurloughTopUpFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new FurloughCalculationsFormProvider()()
+  val form = new FurloughTopUpFormProvider()()
 
   ".value" must {
 
     val fieldName = "value"
-    val requiredKey = "furloughCalculations.error.required"
+    val requiredKey = "furloughTopUp.error.required"
 
-    behave like optionsField[FurloughCalculations](
+    behave like optionsField[FurloughTopUpStatus](
       form,
       fieldName,
-      validValues = FurloughCalculations.values,
+      validValues = FurloughTopUpStatus.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

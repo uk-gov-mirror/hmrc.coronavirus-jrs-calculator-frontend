@@ -4,7 +4,7 @@
  *@
 
 @import controllers.routes._
-@import models.FurloughCalculations
+@import models.FurloughTopUpStatus
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -19,23 +19,23 @@
 
 @(form: Form[_], calculationResult: CalculationResult)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "furloughCalculations.title"))) {
+@govukLayout(pageTitle = Some(title(form, "furloughTopUp.title"))) {
 
-    @formHelper(action = FurloughCalculationsController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = FurloughTopUpController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1("furloughCalculations.heading")
+        @h1("furloughTopUp.heading")
 
         <table class="govuk-table review-authorisations govuk-!-margin-bottom-7">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
 
                     <th class="govuk-table__header">
-                        @messages("furloughCalculations.payperiodending.label")
+                        @messages("furloughTopUp.payperiodending.label")
                     </th>
                     <th class="govuk-table__header">
-                        <span class="govuk-!-font-weight-bold">@messages("furloughCalculations.grossfurloughamount.label")</span>
+                        <span class="govuk-!-font-weight-bold">@messages("furloughTopUp.grossfurloughamount.label")</span>
                     </th>
 
                 </tr>
@@ -50,7 +50,7 @@
                 }
 
                 <tr class="govuk-table__row" style="border-top: 5px solid #b1b4b6">
-                    <td class="govuk-table__cell" style="border-bottom:0"><span class="govuk-!-font-weight-bold">@messages("furloughCalculations.total.label")</span></td>
+                    <td class="govuk-table__cell" style="border-bottom:0"><span class="govuk-!-font-weight-bold">@messages("furloughTopUp.total.label")</span></td>
                     <td class="govuk-table__cell" style="border-bottom:0">
                         <span class="govuk-!-font-weight-bold"> £@calculationResult.total.setScale(2) </span>
                     </td>
@@ -58,18 +58,18 @@
             </tbody>
         </table>
 
-        @h2("furloughCalculations.p1", classes = Some("govuk-heading-m govuk-!-margin-bottom-1"))
+        @h2("furloughTopUp.p1", classes = Some("govuk-heading-m govuk-!-margin-bottom-1"))
 
-        @p(Html(messages("furloughCalculations.p2")))
+        @p(Html(messages("furloughTopUp.p2")))
 
-        @p(Html(messages("furloughCalculations.p3")))
+        @p(Html(messages("furloughTopUp.p3")))
 
         @inputRadio(
             form = form,
-            legend = messages("furloughCalculations.p1"),
+            legend = messages("furloughTopUp.p1"),
             legendAsHeading = false,
             classes = "govuk-visually-hidden",
-            items = FurloughCalculations.options(form)
+            items = FurloughTopUpStatus.options(form)
         )
 
         @button("site.continue")

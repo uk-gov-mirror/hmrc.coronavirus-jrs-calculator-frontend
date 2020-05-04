@@ -230,8 +230,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
-      "go from PensionStatusPage to FurloughCalculationsPage" in {
-        navigator.nextPage(PensionStatusPage, emptyUserAnswers) mustBe routes.FurloughCalculationsController.onPageLoad()
+      "go from PensionStatusPage to FurloughTopUpStatusPage" in {
+        navigator.nextPage(PensionStatusPage, emptyUserAnswers) mustBe routes.FurloughTopUpController.onPageLoad()
       }
 
       "go from furlough start date to furlough question" in {
@@ -279,18 +279,18 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         ) mustBe routes.VariableGrossPayController.onPageLoad()
       }
 
-      "go to correct page after FurloughCalculationsPage" in {
+      "go to correct page after FurloughTopUpStatusPage" in {
         navigator.nextPage(
-          FurloughCalculationsPage,
+          FurloughTopUpStatusPage,
           UserAnswers("id")
-            .set(FurloughCalculationsPage, FurloughCalculations.Yes)
+            .set(FurloughTopUpStatusPage, FurloughTopUpStatus.ToppedUp)
             .success
             .value
         ) mustBe routes.ComingSoonController.onPageLoad(true)
         navigator.nextPage(
-          FurloughCalculationsPage,
+          FurloughTopUpStatusPage,
           UserAnswers("id")
-            .set(FurloughCalculationsPage, FurloughCalculations.No)
+            .set(FurloughTopUpStatusPage, FurloughTopUpStatus.NotToppedUp)
             .success
             .value
         ) mustBe routes.ConfirmationController.onPageLoad()

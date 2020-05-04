@@ -12,9 +12,9 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryFurloughCalculations: Arbitrary[FurloughCalculations] =
+  implicit lazy val arbitraryFurloughTopUpStatus: Arbitrary[FurloughTopUpStatus] =
     Arbitrary {
-      Gen.oneOf(FurloughCalculations.values.toSeq)
+      Gen.oneOf(FurloughTopUpStatus.values.toSeq)
     }
 
   implicit lazy val arbitraryEmployeeStarted: Arbitrary[EmployeeStarted] =

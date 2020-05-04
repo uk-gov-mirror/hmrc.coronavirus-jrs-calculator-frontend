@@ -69,9 +69,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.PensionContributionController.onPageLoad()
     case PensionStatusPage =>
       _ =>
-        routes.FurloughCalculationsController.onPageLoad()
-    case FurloughCalculationsPage =>
-      furloughCalculationsRoutes
+        routes.FurloughTopUpController.onPageLoad()
+    case FurloughTopUpStatusPage =>
+      furloughTopUpStatusRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -169,11 +169,11 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def furloughCalculationsRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(FurloughCalculationsPage) match {
-      case Some(FurloughCalculations.Yes) => routes.ComingSoonController.onPageLoad(true)
-      case Some(FurloughCalculations.No)  => routes.ConfirmationController.onPageLoad()
-      case _                              => routes.FurloughCalculationsController.onPageLoad()
+  private def furloughTopUpStatusRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(FurloughTopUpStatusPage) match {
+      case Some(FurloughTopUpStatus.ToppedUp)    => routes.ComingSoonController.onPageLoad(true)
+      case Some(FurloughTopUpStatus.NotToppedUp) => routes.ConfirmationController.onPageLoad()
+      case _                                     => routes.FurloughTopUpController.onPageLoad()
     }
   }
 
