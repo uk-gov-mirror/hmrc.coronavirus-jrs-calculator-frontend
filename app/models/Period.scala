@@ -6,10 +6,13 @@
 package models
 
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 import play.api.libs.json.{Format, JsResult, JsValue, Json}
 
-final case class Period(start: LocalDate, end: LocalDate)
+final case class Period(start: LocalDate, end: LocalDate) {
+  def countDays: Int = (ChronoUnit.DAYS.between(start, end) + 1).toInt
+}
 
 object Period {
   implicit val defaultFormat: Format[Period] = Json.format
@@ -21,6 +24,8 @@ sealed trait Periods {
 final case class FullPeriod(period: Period) extends Periods
 final case class PartialPeriod(original: Period, partial: Period) extends Periods {
   override val period = original
+  def isFurloughStart: Boolean = original.start.isBefore(partial.start)
+  def isFurloughEnd: Boolean = original.end.isAfter(partial.end)
 }
 
 object FullPeriod {
