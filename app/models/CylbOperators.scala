@@ -9,29 +9,29 @@ import models.PaymentFrequency._
 
 case class CylbOperators(fullPeriodLength: Int, daysFromPrevious: Int, daysFromCurrent: Int)
 
-private sealed trait FixedLength {
+protected sealed trait FixedLength {
   def fullPeriodLength: Int
 }
 
-private trait Weekly extends FixedLength {
+protected trait Weekly extends FixedLength {
   override def fullPeriodLength: Int = 7
 }
 
-private trait Fortnightly extends FixedLength {
+protected trait Fortnightly extends FixedLength {
   override def fullPeriodLength: Int = 14
 }
 
-private trait FourWeekly extends FixedLength {
+protected trait FourWeekly extends FixedLength {
   override def fullPeriodLength: Int = 28
 }
 
-private trait FullPeriodCylb { this: FixedLength =>
+protected trait FullPeriodCylb { this: FixedLength =>
   def equivalentPeriodDays: Int = fullPeriodLength - previousPeriodDays
 
   def previousPeriodDays: Int = 2
 }
 
-private trait PartialPeriodCylb { this: FixedLength =>
+protected trait PartialPeriodCylb { this: FixedLength =>
   def partial: PartialPeriod
 
   def equivalentPeriodDays: Int = partial.partial.countDays - previousPeriodDays
