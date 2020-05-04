@@ -42,24 +42,6 @@ private trait PartialPeriodCylb { this: FixedLength =>
     } else { 2 }
 }
 
-private object WeeklyFullCylb extends CylbDuration with FullPeriodCylb with Weekly
-private object FortnightlyFullCylb extends CylbDuration with FullPeriodCylb with Fortnightly
-private object FourweeklyFullCylb extends CylbDuration with FullPeriodCylb with FourWeekly
-private case class MonthlyFullCylb(fullPeriod: FullPeriod) extends CylbDuration {
-  val fullPeriodLength: Int = fullPeriod.period.countDays
-  override def equivalentPeriodDays: Int = fullPeriodLength
-  override def previousPeriodDays: Int = 0
-}
-
-private case class WeeklyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with Weekly
-private case class FortnightlyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with Fortnightly
-private case class FourweeklyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with FourWeekly
-private case class MonthlyPartialCylb(partialPeriod: PartialPeriod) extends CylbDuration {
-  val fullPeriodLength: Int = partialPeriod.original.countDays
-  override def equivalentPeriodDays: Int = partialPeriod.partial.countDays
-  override def previousPeriodDays: Int = 0
-}
-
 trait CylbDuration {
   def fullPeriodLength: Int
   def equivalentPeriodDays: Int
@@ -67,6 +49,24 @@ trait CylbDuration {
 }
 
 object CylbDuration {
+
+  object WeeklyFullCylb extends CylbDuration with FullPeriodCylb with Weekly
+  object FortnightlyFullCylb extends CylbDuration with FullPeriodCylb with Fortnightly
+  object FourweeklyFullCylb extends CylbDuration with FullPeriodCylb with FourWeekly
+  case class MonthlyFullCylb(fullPeriod: FullPeriod) extends CylbDuration {
+    val fullPeriodLength: Int = fullPeriod.period.countDays
+    override def equivalentPeriodDays: Int = fullPeriodLength
+    override def previousPeriodDays: Int = 0
+  }
+
+  case class WeeklyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with Weekly
+  case class FortnightlyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with Fortnightly
+  case class FourweeklyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with FourWeekly
+  case class MonthlyPartialCylb(partialPeriod: PartialPeriod) extends CylbDuration {
+    val fullPeriodLength: Int = partialPeriod.original.countDays
+    override def equivalentPeriodDays: Int = partialPeriod.partial.countDays
+    override def previousPeriodDays: Int = 0
+  }
 
   def apply(paymentFrequency: PaymentFrequency, period: Periods): CylbDuration =
     (paymentFrequency, period) match {
