@@ -24,20 +24,6 @@ trait CylbCalculator extends PreviousYearPeriod {
       nfp = determineNonFurloughPay(period.period, nonFurloughPay)
     } yield cylbsAmount(frequency, period, datesRequired, nfp, cylbs)
 
-  //TODO delete this one
-  def calculateCylb(
-    nonFurloughPay: NonFurloughPay,
-    frequency: PaymentFrequency,
-    cylbs: Seq[CylbPayment],
-    periods: Seq[PeriodWithPaymentDate],
-    fn: (Periods, NonFurloughPay) => Amount
-  ): Seq[PaymentWithPeriod] =
-    for {
-      period: PeriodWithPaymentDate <- periods
-      datesRequired = previousYearPayDate(frequency, period)
-      nfp = fn(period.period, nonFurloughPay)
-    } yield cylbsAmount(frequency, period, datesRequired, nfp, cylbs)
-
   private def cylbsAmount(
     frequency: PaymentFrequency,
     period: PeriodWithPaymentDate,

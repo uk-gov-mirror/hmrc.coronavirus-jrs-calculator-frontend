@@ -130,13 +130,14 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
   }
 
   "Determine the full or partial period within the furlough period" when {
-    val furloughPeriod = period("2020,3,1", "2020,3,31")
+    val payPeriod = period("2020,3,1", "2020,3,31")
+    val furloughPeriod = FurloughWithinClaim(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
 
     implicit val generatorDrivenConfig: PropertyCheckConfiguration = PropertyCheckConfiguration(minSuccessful = 30)
     implicit val noShrink: Shrink[Int] = Shrink.shrinkAny
 
     "furlough and period match" in new PeriodHelper {
-      fullOrPartialPeriod(furloughPeriod, furloughPeriod) mustBe fullPeriod("2020,3,1", "2020,3,31")
+      fullOrPartialPeriod(payPeriod, furloughPeriod) mustBe fullPeriod("2020,3,1", "2020,3,31")
     }
 
     "period is within furlough" in new PeriodHelper {

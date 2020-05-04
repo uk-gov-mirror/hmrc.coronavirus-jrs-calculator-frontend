@@ -24,7 +24,7 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
   forAll(partialPeriodScenarios) { (payment, expectedFurlough) =>
     s"Partial Period: For gross payment: ${payment.furloughPayment.value} " +
       s"should return $expectedFurlough" in new FurloughCalculator {
-      val expected = PartialPeriodBreakdown(payment.nonFurloughPay, expectedFurlough, payment.period)
+      val expected = PartialPeriodBreakdown(payment.nonFurloughPay, expectedFurlough, payment.periodWithPaymentDate)
       calculatePartialPeriod(payment) mustBe expected
     }
   }

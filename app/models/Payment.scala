@@ -50,6 +50,6 @@ object CylbPayment {
 sealed trait PaymentWithPeriod {
   val furloughPayment: Amount
 }
-case class PaymentWithFullPeriod(furloughPayment: Amount, period: FullPeriodWithPaymentDate) extends PaymentWithPeriod
-case class PaymentWithPartialPeriod(nonFurloughPay: Amount, furloughPayment: Amount, period: PartialPeriodWithPaymentDate)
+case class PaymentWithFullPeriod(furloughPayment: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate) extends PaymentWithPeriod
+case class PaymentWithPartialPeriod(nonFurloughPay: Amount, furloughPayment: Amount, periodWithPaymentDate: PartialPeriodWithPaymentDate)
     extends PaymentWithPeriod

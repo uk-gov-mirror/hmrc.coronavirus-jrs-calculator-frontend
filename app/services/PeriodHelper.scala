@@ -51,10 +51,6 @@ trait PeriodHelper {
   def isFurloughEnd(period: PartialPeriod) =
     period.original.end.isAfter((period.partial.end))
 
-  // TODO: Remove this when the old implementation is refactored
-  def fullOrPartialPeriod(period: Period, furloughPeriod: Period): Periods =
-    fullOrPartialPeriod(period, FurloughWithinClaim(furloughPeriod))
-
   def fullOrPartialPeriod(period: Period, furloughPeriod: FurloughWithinClaim): Periods = {
     val start =
       if (furloughPeriod.start.isAfter(period.start) && furloughPeriod.start.isEqualOrBefore(period.end)) furloughPeriod.start

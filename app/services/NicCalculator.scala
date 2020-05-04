@@ -38,27 +38,4 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
     PartialPeriodBreakdown(nonFurloughPay, Amount(grant), PartialPeriodWithPaymentDate(period, paymentDate))
   }
 
-//  def calculatePartialPeriodWithTopUp(
-//    frequency: PaymentFrequency,
-//    totalPay: Amount,
-//    furloughPayment: Amount,
-//    PeriodWithPaymentDate: PeriodWithPaymentDate): PeriodBreakdown = {
-//    val threshold = FrequencyTaxYearThresholdMapping.findThreshold(frequency, taxYearAt(partialPeriodWithPaymentDate.paymentDate), NiRate())
-//
-//    val roundedTotalPay = totalPay.value.setScale(0, RoundingMode.DOWN)
-//
-//    val totalNic = roundWithMode((roundedTotalPay - threshold) * NiRate().value, RoundingMode.HALF_UP)
-//    val dailyNic = totalNic / periodDaysCount(partialPeriodWithPaymentDate.period.original)
-//
-//    val totalPayForFurloughPeriod =
-//      (totalPay.value / periodDaysCount(partialPeriodWithPaymentDate.period.original)) * periodDaysCount(
-//        partialPeriodWithPaymentDate.period.partial)
-//
-//    val furloughNic = dailyNic * periodDaysCount(partialPeriodWithPaymentDate.period.partial)
-//
-//    val grant = roundWithMode(furloughNic * (furloughPayment.value / totalPayForFurloughPeriod), RoundingMode.HALF_UP)
-//
-//    PartialPeriodBreakdown(Amount(grant), partialPeriodWithPaymentDate)
-//  }
-
 }

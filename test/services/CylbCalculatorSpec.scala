@@ -9,11 +9,9 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Weekly}
-import models.{Amount, CylbPayment, NonFurloughPay, Periods}
+import models.{Amount, CylbPayment, NonFurloughPay}
 
 class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
-
-  val determineNonFurloughPay: (Periods, NonFurloughPay) => Amount = NonFurloughPay.determineNonFurloughPay
 
   "calculate cylb amounts for weekly" in new CylbCalculator {
     val cylbs = Seq(
@@ -34,7 +32,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       paymentWithFullPeriod(200.00, fullPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020, 3, 14"))
     )
 
-    calculateCylb(nonFurloughPay, Weekly, cylbs, periods, determineNonFurloughPay) mustBe expected
+    calculateCylb(nonFurloughPay, Weekly, cylbs, periods) mustBe expected
   }
 
   "calculate cylb amounts for fortnightly" in new CylbCalculator {
@@ -56,7 +54,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       paymentWithFullPeriod(340.00, fullPeriodWithPaymentDate("2020,3,15", "2020,3,28", "2020, 3, 28"))
     )
 
-    calculateCylb(nonFurloughPay, FortNightly, cylbs, periods, determineNonFurloughPay) mustBe expected
+    calculateCylb(nonFurloughPay, FortNightly, cylbs, periods) mustBe expected
   }
 
   "calculate cylb amounts for fourweekly" in new CylbCalculator {
@@ -78,7 +76,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       paymentWithFullPeriod(620.00, fullPeriodWithPaymentDate("2020,3,29", "2020,4,25", "2020, 4, 25"))
     )
 
-    calculateCylb(nonFurloughPay, FourWeekly, cylbs, periods, determineNonFurloughPay) mustBe expected
+    calculateCylb(nonFurloughPay, FourWeekly, cylbs, periods) mustBe expected
   }
 
   "calculate cylb amounts for partial period where only days from current required" in new CylbCalculator {
@@ -100,7 +98,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       paymentWithFullPeriod(200.00, fullPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020, 3, 14"))
     )
 
-    calculateCylb(nonFurloughPay, Weekly, cylbs, periods, determineNonFurloughPay) mustBe expected
+    calculateCylb(nonFurloughPay, Weekly, cylbs, periods) mustBe expected
   }
 
   "calculate cylb amounts for partial period where only days from previous required" in new CylbCalculator {
@@ -122,7 +120,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       paymentWithPartialPeriod(0.0, 100.00, partialPeriodWithPaymentDate("2020,3,8", "2020,3,14", "2020,3,8", "2020,3,9", "2020, 3, 14"))
     )
 
-    calculateCylb(nonFurloughPay, Weekly, cylbs, periods, determineNonFurloughPay) mustBe expected
+    calculateCylb(nonFurloughPay, Weekly, cylbs, periods) mustBe expected
   }
 
 }

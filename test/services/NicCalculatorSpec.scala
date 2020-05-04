@@ -34,16 +34,6 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
     calculatePartialPeriodNic(FourWeekly, Amount(1124.23), Amount(426.02), period, paymentDate) mustBe expected
   }
 
-//  forAll(partialPeriodWithTopUpScenarios) { (frequency, totalPay, furloughPayment, partialPeriodWithPaymentDate, expectedGrant) =>
-//    s"Calculate NIC grant for a partial period where the employer has topped up the employees pay " +
-//      s"Frequency: $frequency, PaymentDate: ${partialPeriodWithPaymentDate.paymentDate}, Total Pay: ${totalPay.value} " +
-//      s"and Furlough Payment: $furloughPayment" in new NicAndPensionCalculator {
-//      val expected = PartialPeriodBreakdown(expectedGrant, partialPeriodWithPaymentDate)
-//
-//      calculatePartialPeriodWithTopUp(frequency, totalPay, furloughPayment, partialPeriodWithPaymentDate) mustBe expected
-//    }
-//  }
-
   private lazy val partialPeriodScenarios = Table(
     ("frequency", "grossPay", "furloughPayment", "period", "paymentDate", "expectedGrant"),
     (
@@ -71,20 +61,5 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
       Amount(0.00)
     )
   )
-
-//  private lazy val partialPeriodWithTopUpScenarios = Table(
-//    ("frequency", "totalPay", "furloughPayment", "periodWithPaymentDate", "expectedGrant"),
-//    (
-//      Monthly,
-//      Amount(2400.00),
-//      Amount(960.0),
-//      PartialPeriodWithPaymentDate(
-//        PartialPeriod(
-//          Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)),
-//          Period(LocalDate.of(2020, 4, 16), LocalDate.of(2020, 4, 30))),
-//        PaymentDate(LocalDate.of(2020, 4, 30))
-//      ),
-//      Amount(92.07))
-//  )
 
 }
