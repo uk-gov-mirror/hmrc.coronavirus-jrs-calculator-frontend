@@ -5,20 +5,11 @@
 
 package services
 
-import java.time.LocalDate
-
-import models.{FurloughDates, FurloughEnded, FurloughOngoing, FurloughWithinClaim, Period, UserAnswers}
+import models.{FurloughDates, FurloughEnded, FurloughOngoing, FurloughWithinClaim, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import utils.LocalDateHelpers
 
 trait FurloughPeriodExtractor extends LocalDateHelpers {
-
-  def extractFurloughPeriod(userAnswers: UserAnswers): Option[FurloughDates] =
-    for {
-      furloughStart <- userAnswers.get(FurloughStartDatePage)
-    } yield {
-      FurloughDates(furloughStart, userAnswers.get(FurloughEndDatePage))
-    }
 
   def extractFurloughWithinClaim(userAnswers: UserAnswers): Option[FurloughWithinClaim] =
     for {
@@ -33,4 +24,7 @@ trait FurloughPeriodExtractor extends LocalDateHelpers {
       }
       FurloughWithinClaim(startDate, endDate)
     }
+
+  def extractFurloughPeriod(userAnswers: UserAnswers): Option[FurloughDates] =
+    userAnswers.get(FurloughStartDatePage).map(FurloughDates(_, userAnswers.get(FurloughEndDatePage)))
 }
