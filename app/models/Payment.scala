@@ -53,3 +53,15 @@ sealed trait PaymentWithPeriod {
 case class PaymentWithFullPeriod(furloughPayment: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate) extends PaymentWithPeriod
 case class PaymentWithPartialPeriod(nonFurloughPay: Amount, furloughPayment: Amount, periodWithPaymentDate: PartialPeriodWithPaymentDate)
     extends PaymentWithPeriod
+
+case class AdditionalPayment(date: LocalDate, amount: Amount)
+
+object AdditionalPayment {
+  implicit val defaultFormat: Format[AdditionalPayment] = Json.format
+}
+
+case class TopUpPayment(date: LocalDate, amount: Amount)
+
+object TopUpPayment {
+  implicit val defaultFormat: Format[TopUpPayment] = Json.format
+}

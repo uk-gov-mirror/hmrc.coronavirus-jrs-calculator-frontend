@@ -31,5 +31,6 @@ trait Calculators extends PeriodHelper {
 object Calculators {
   implicit class AmountRounding(amount: Amount) {
     def halfUp: Amount = roundAmountWithMode(amount, RoundingMode.HALF_UP)
+    def down: Amount = Amount(amount.value.setScale(0, RoundingMode.DOWN))
   }
 }

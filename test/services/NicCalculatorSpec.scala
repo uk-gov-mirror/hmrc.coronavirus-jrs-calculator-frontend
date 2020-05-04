@@ -9,17 +9,38 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FourWeekly, Monthly}
-import models.{Amount, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, Period}
+import models.{AdditionalPayment, Amount, FullPeriodBreakdown, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, Period, TopUpPayment}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import Amount._
 
 class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
+
+  "Calculate Nic including additional and top up payments" in new NicCalculator {
+    val breakDowns = Seq(
+      FullPeriodBreakdown(2500.0.toAmount, fullPeriodWithPaymentDate("2020,3,1", "2020, 3, 31", "2020, 3, 31")),
+      PartialPeriodBreakdown(
+        1250.0.toAmount,
+        1250.0.toAmount,
+        partialPeriodWithPaymentDate("2020,4,1", "2020, 4, 30", "2020,4,1", "2020, 4, 15", "2020, 4, 30"))
+    )
+    val additionals = Seq(
+      AdditionalPayment(LocalDate.of(2020, 3, 31), 200.0.toAmount),
+      AdditionalPayment(LocalDate.of(2020, 4, 30), 200.0.toAmount)
+    )
+    val topUps = Seq(
+      TopUpPayment(LocalDate.of(2020, 3, 31), 300.0.toAmount),
+      TopUpPayment(LocalDate.of(2020, 4, 30), 300.0.toAmount)
+    )
+
+    calculateNicGrant(Monthly, breakDowns, additionals, topUps).total mustBe 407.25
+  }
 
   forAll(partialPeriodScenarios) { (frequency, grossPay, furloughPayment, period, paymentDate, expectedGrant) =>
     s"Calculate grant for a partial period with Payment Frequency: $frequency," +
       s"a PaymentDate: $paymentDate and a Gross Pay: ${grossPay.value}" in new NicCalculator {
       val expected = PartialPeriodBreakdown(grossPay, expectedGrant, PartialPeriodWithPaymentDate(period, paymentDate))
 
-      calculatePartialPeriodNic(frequency, grossPay, furloughPayment, period, paymentDate) mustBe expected
+      calculatePartialPeriodNic(frequency, grossPay, furloughPayment, period, paymentDate, None, None) mustBe expected
     }
   }
 
@@ -31,7 +52,50 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
 
     val expected = PartialPeriodBreakdown(Amount(1124.23), Amount(39.30), PartialPeriodWithPaymentDate(period, paymentDate))
 
-    calculatePartialPeriodNic(FourWeekly, Amount(1124.23), Amount(426.02), period, paymentDate) mustBe expected
+    calculatePartialPeriodNic(FourWeekly, Amount(1124.23), Amount(426.02), period, paymentDate, None, None) mustBe expected
+  }
+
+  "calculates Nic with additional payment and 0.0 top up for a partial period" in new NicCalculator {
+    val additionalPayment = Some(Amount(300))
+    val topUp = None
+    val nonFurlough = Amount(2200.0)
+    val furlough = Amount(720.0)
+    val pp = partialPeriod("2020,3,1" -> "2020,3,31", "2020,3,23" -> "2020, 3, 31")
+
+    calculatePartialPeriodNic(Monthly, nonFurlough, furlough, pp, PaymentDate(LocalDate.of(2020, 3, 31)), additionalPayment, topUp).grant mustBe Amount(
+      100.20)
+  }
+
+  "calculates Nic with top up and 0.0 additional payment for a partial period" in new NicCalculator {
+    val additionalPayment = None
+    val topUp = Some(Amount(200.0))
+    val nonFurlough = Amount(2200.0)
+    val furlough = Amount(720.0)
+    val pp = partialPeriod("2020,3,1" -> "2020,3,31", "2020,3,23" -> "2020, 3, 31")
+
+    calculatePartialPeriodNic(Monthly, nonFurlough, furlough, pp, PaymentDate(LocalDate.of(2020, 3, 31)), additionalPayment, topUp).grant mustBe Amount(
+      75.28)
+  }
+
+  "calculates Nic with additional payment plus top up for a partial period" in new NicCalculator {
+    val additionalPayment = Some(Amount(300))
+    val topUp = Some(Amount(200))
+    val nonFurlough = Amount(2200.0)
+    val furlough = Amount(720.0)
+    val pp = partialPeriod("2020,3,1" -> "2020,3,31", "2020,3,23" -> "2020, 3, 31")
+
+    calculatePartialPeriodNic(Monthly, nonFurlough, furlough, pp, PaymentDate(LocalDate.of(2020, 3, 31)), additionalPayment, topUp).grant mustBe Amount(
+      84.69)
+  }
+
+  "calculates Nic plus top up for a full period" in new NicCalculator {
+    val additionalPayment = None
+    val topUp = Some(Amount(300))
+    val furlough = Amount(2200.0)
+    val fp = fullPeriod("2020,3,1", "2020, 3, 31")
+
+    calculateFullPeriodNic(Monthly, furlough, fp, PaymentDate(LocalDate.of(2020, 3, 31)), additionalPayment, topUp).grant mustBe Amount(
+      216.29)
   }
 
   private lazy val partialPeriodScenarios = Table(
