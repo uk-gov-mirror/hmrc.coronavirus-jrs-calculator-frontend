@@ -21,13 +21,14 @@
 
         @errorSummary(form.errors)
 
+        @h1(messages("furloughStartDate.heading"))
+        @p(Html(messages("furloughStartDate.hint")))
+
         @inputDate(
             form,
             legendContent = "furloughStartDate.heading",
-            legendAsPageHeading = true,
-            legendClasses = "govuk-fieldset__legend--xl",
-            hintText=Some("furloughStartDate.hint")
-
+            legendAsPageHeading = false,
+            legendClasses = "govuk-visually-hidden"
         )
 
         @button("site.continue")
