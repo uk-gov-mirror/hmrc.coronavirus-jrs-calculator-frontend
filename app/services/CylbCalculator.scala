@@ -8,8 +8,7 @@ package services
 import java.time.LocalDate
 
 import models.NonFurloughPay.determineNonFurloughPay
-import models.{Amount, CylbOperators, CylbPayment, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodWithPaymentDate}
-import services.Calculators.AmountRounding
+import models.{Amount, CylbDuration, CylbOperators, CylbPayment, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodWithPaymentDate}
 
 trait CylbCalculator extends PreviousYearPeriod {
 
@@ -30,7 +29,7 @@ trait CylbCalculator extends PreviousYearPeriod {
     datesRequired: Seq[LocalDate],
     nfp: Amount,
     cylbs: Seq[CylbPayment]): PaymentWithPeriod = {
-    val cylbOps = operators(frequency, period.period)
+    val cylbOps: CylbDuration = CylbDuration(frequency, period.period)
     val furlough: Amount = previousYearFurlough(datesRequired, cylbs, cylbOps)
 
     period match {
@@ -39,28 +38,22 @@ trait CylbCalculator extends PreviousYearPeriod {
     }
   }
 
-  sealed trait PreviousYearAmount {
-    def total: Amount
-  }
+  private def previousYearFurlough(datesRequired: Seq[LocalDate], cylbs: Seq[CylbPayment], ops: CylbDuration): Amount = {
+    val amounts: Seq[Amount] = datesRequired.flatMap(date => cylbs.find(_.date == date)).map(_.amount)
 
-  final case class OnePreviousAmount(amount: Amount, ops: CylbOperators) extends PreviousYearAmount {
-    def total: Amount = ops match {
-      case CylbOperators(div, 0, multiplier) => Amount((amount.value / div) * multiplier)
-      case CylbOperators(div, multiplier, 0) => Amount((amount.value / div) * multiplier)
+    amounts match {
+      case amount :: Nil                          => previousOrCurrent(amount, ops)
+      case previousAmount :: currentAmount :: Nil => previousAndCurrent(ops, previousAmount, currentAmount)
     }
   }
 
-  final case class TwoPreviousAmounts(firstAmount: Amount, secondAmount: Amount, ops: CylbOperators) extends PreviousYearAmount {
-    def total: Amount = ops match {
-      case CylbOperators(divider, daysFromPrevious, daysFromCurrent) =>
-        Amount(((firstAmount.value / divider) * daysFromPrevious) + ((secondAmount.value / divider) * daysFromCurrent))
-    }
-  }
+  private def previousOrCurrent(amount: Amount, ops: CylbDuration) =
+    if (ops.equivalentPeriodDays == 0)
+      Amount((amount.value / ops.fullPeriodLength) * ops.previousPeriodDays)
+    else Amount((amount.value / ops.fullPeriodLength) * ops.equivalentPeriodDays)
 
-  private def previousYearFurlough(datesRequired: Seq[LocalDate], cylbs: Seq[CylbPayment], ops: CylbOperators): Amount =
-    (datesRequired.flatMap(date => cylbs.find(_.date == date)).map(_.amount) match {
-      case x :: Nil      => OnePreviousAmount(x, ops)
-      case x :: y :: Nil => TwoPreviousAmounts(x, y, ops)
-    }).total.halfUp
+  private def previousAndCurrent(ops: CylbDuration, previousAmount: Amount, currentAmount: Amount): Amount =
+    Amount(
+      ((previousAmount.value / ops.fullPeriodLength) * ops.previousPeriodDays) + ((currentAmount.value / ops.fullPeriodLength) * ops.equivalentPeriodDays))
 
 }

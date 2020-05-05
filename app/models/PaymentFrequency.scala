@@ -29,6 +29,12 @@ object PaymentFrequency extends Enumerable.Implicits {
     Monthly
   )
 
+  val paymentFrequencyDays: Map[PaymentFrequency, Int] = Map(
+    Weekly      -> 7,
+    FortNightly -> 14,
+    FourWeekly  -> 28
+  )
+
   def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = values.toSeq.map { value =>
     RadioItem(
       value = Some(value.toString),
