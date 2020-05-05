@@ -19,10 +19,8 @@ import scala.concurrent.Future
 class IndexControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   lazy val keepAliveRoute = routes.IndexController.keepalive().url
-  lazy val restartRoute = routes.IndexController.restart().url
 
   lazy val getKeepAliveRequest = FakeRequest(GET, keepAliveRoute)
-  lazy val getRestartRequest = FakeRequest(GET, restartRoute)
 
   "StartAgainController Controller" must {
 
@@ -41,26 +39,6 @@ class IndexControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       val result = route(application, getKeepAliveRequest).value
 
       status(result) mustEqual NO_CONTENT
-
-      application.stop()
-    }
-
-    "restart request should redirect to /claim-period-start as expected" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      val result = route(application, getRestartRequest).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.ClaimPeriodStartController.onPageLoad().url
 
       application.stop()
     }

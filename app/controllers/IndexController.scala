@@ -30,8 +30,4 @@ class IndexController @Inject()(
       NoContent
     }
   }
-
-  def restart: Action[AnyContent] = Action { _ =>
-    Redirect(routes.ClaimPeriodStartController.onPageLoad()).withNewSession
-  }
 }
