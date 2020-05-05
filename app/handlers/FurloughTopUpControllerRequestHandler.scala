@@ -15,6 +15,6 @@ trait FurloughTopUpControllerRequestHandler extends FurloughCalculator with Refe
       questions <- extractBranchingQuestions(userAnswers)
       data      <- journeyData(define(questions), userAnswers)
       payments = calculateReferencePay(data)
-    } yield calculateFurloughGrant(data.core.frequency, payments)
+    } yield calculateFurloughGrant(data.frequency, payments)
 
 }

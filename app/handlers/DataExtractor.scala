@@ -7,31 +7,17 @@ package handlers
 
 import java.time.LocalDate
 
-import models.{Amount, BranchingQuestions, CylbPayment, JourneyCoreData, MandatoryData, NonFurloughPay, Period, UserAnswers}
+import models.{Amount, BranchingQuestions, CylbPayment, NicCategory, NonFurloughPay, PaymentFrequency, PensionStatus, Period, ReferencePayData, UserAnswers}
 import pages._
 import services.{FurloughPeriodExtractor, PeriodHelper}
 
 trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
 
-  def extract(userAnswers: UserAnswers): Option[MandatoryData] =
-    for {
-      claimStart    <- userAnswers.get(ClaimPeriodStartPage)
-      claimEnd      <- userAnswers.get(ClaimPeriodEndPage)
-      frequency     <- userAnswers.get(PaymentFrequencyPage)
-      nic           <- userAnswers.get(NicCategoryPage)
-      pension       <- userAnswers.get(PensionStatusPage)
-      payMethod     <- userAnswers.get(PayMethodPage)
-      furlough      <- userAnswers.get(FurloughStatusPage)
-      furloughStart <- userAnswers.get(FurloughStartDatePage)
-      lastPayDay    <- userAnswers.get(LastPayDatePage)
-      payDate = userAnswers.getList(PayDatePage)
-    } yield MandatoryData(Period(claimStart, claimEnd), frequency, nic, pension, payMethod, furlough, payDate, furloughStart, lastPayDay)
-
   def extractPriorFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
     for {
-      data <- extract(userAnswers)
-      employeeStartDate = userAnswers.get(EmployeeStartDatePage).fold(LocalDate.of(2019, 4, 6))(v => v)
-    } yield endDateOrTaxYearEnd(Period(employeeStartDate, data.furloughStart.minusDays(1)))
+      furloughStart <- userAnswers.get(FurloughStartDatePage)
+      employeeStartDate = userAnswers.get(EmployeeStartDatePage).getOrElse(LocalDate.of(2019, 4, 6))
+    } yield endDateOrTaxYearEnd(Period(employeeStartDate, furloughStart.minusDays(1)))
 
   def extractNonFurlough(userAnswers: UserAnswers): NonFurloughPay = {
     val preFurloughPay = userAnswers.get(PartialPayBeforeFurloughPage)
@@ -56,12 +42,29 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
   def extractCylbPayments(userAnswers: UserAnswers): Seq[CylbPayment] =
     userAnswers.getList(LastYearPayPage)
 
-  def extractJourneyCoreData(userAnswers: UserAnswers): Option[JourneyCoreData] =
+  def extractNicCategory(userAnswers: UserAnswers): Option[NicCategory] =
+    userAnswers.get(NicCategoryPage)
+
+  def extractPensionStatus(userAnswers: UserAnswers): Option[PensionStatus] =
+    userAnswers.get(PensionStatusPage)
+
+  def extractClaimPeriodStart(userAnswers: UserAnswers): Option[LocalDate] =
+    userAnswers.get(ClaimPeriodStartPage)
+
+  def extractClaimPeriodEnd(userAnswers: UserAnswers): Option[LocalDate] =
+    userAnswers.get(ClaimPeriodEndPage)
+
+  def extractPaymentFrequency(userAnswers: UserAnswers): Option[PaymentFrequency] =
+    userAnswers.get(PaymentFrequencyPage)
+
+  def extractReferencePayData(userAnswers: UserAnswers): Option[ReferencePayData] =
     for {
-      data           <- extract(userAnswers)
       furloughPeriod <- extractFurloughWithinClaim(userAnswers)
-      periods = generatePeriods(data.payDates, furloughPeriod)
-      assigned = assignPayDates(data.paymentFrequency, periods, data.lastPayDay)
-    } yield JourneyCoreData(furloughPeriod, assigned, data.paymentFrequency, data.nicCategory, data.pensionStatus)
+      payDates = userAnswers.getList(PayDatePage)
+      periods = generatePeriods(payDates, furloughPeriod)
+      frequency  <- extractPaymentFrequency(userAnswers)
+      lastPayDay <- userAnswers.get(LastPayDatePage)
+      assigned = assignPayDates(frequency, periods, lastPayDay)
+    } yield ReferencePayData(furloughPeriod, assigned, frequency)
 
 }

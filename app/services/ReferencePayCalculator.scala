@@ -5,16 +5,16 @@
 
 package services
 
-import models.{JourneyData, PaymentWithPeriod, RegularPayData, VariablePayData, VariablePayWithCylbData}
+import models.{PaymentWithPeriod, ReferencePay, RegularPayData, VariablePayData, VariablePayWithCylbData}
 
 trait ReferencePayCalculator extends RegularPayCalculator with AveragePayCalculator with CylbCalculator with Calculators {
 
-  def calculateReferencePay(journeyData: JourneyData): Seq[PaymentWithPeriod] = journeyData match {
-    case rpd: RegularPayData  => calculateRegularPay(rpd.wage, rpd.core.periods)
-    case vpd: VariablePayData => calculateAveragePay(vpd.nonFurloughPay, vpd.priorFurlough, vpd.core.periods, vpd.grossPay)
+  def calculateReferencePay(data: ReferencePay): Seq[PaymentWithPeriod] = data match {
+    case rpd: RegularPayData  => calculateRegularPay(rpd.wage, rpd.referencePayData.periods)
+    case vpd: VariablePayData => calculateAveragePay(vpd.nonFurloughPay, vpd.priorFurlough, vpd.periods, vpd.grossPay)
     case lbd: VariablePayWithCylbData => {
-      val avg = calculateAveragePay(lbd.nonFurloughPay, lbd.priorFurlough, lbd.core.periods, lbd.grossPay)
-      val cylb = calculateCylb(lbd.nonFurloughPay, lbd.core.frequency, lbd.cylbPayments, lbd.core.periods)
+      val avg = calculateAveragePay(lbd.nonFurloughPay, lbd.priorFurlough, lbd.periods, lbd.grossPay)
+      val cylb = calculateCylb(lbd.nonFurloughPay, lbd.frequency, lbd.cylbPayments, lbd.periods)
 
       takeGreaterGrossPay(cylb, avg)
     }

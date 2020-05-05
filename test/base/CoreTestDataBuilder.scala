@@ -11,7 +11,7 @@ import models.FurloughStatus.FurloughOngoing
 import models.NicCategory.Payable
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, JourneyCoreData, MandatoryData, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionStatus, Period, UserAnswers}
+import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionStatus, Period, ReferencePayData, UserAnswers}
 import pages._
 
 trait CoreTestDataBuilder {
@@ -54,27 +54,9 @@ trait CoreTestDataBuilder {
   private val buildLocalDate: Array[Int] => LocalDate = array => LocalDate.of(array(0), array(1), array(2))
 
   private val claimPeriod: Period = period("2020-3-1", "2020-3-31")
-  private val furloughStart = buildLocalDate(periodBuilder("2020-3-1"))
-  private val lastPayDate = buildLocalDate(periodBuilder("2020-3-31"))
-  val defaultedMandatoryData =
-    MandatoryData(
-      claimPeriod,
-      Monthly,
-      Payable,
-      PensionStatus.DoesContribute,
-      Regular,
-      FurloughOngoing,
-      Seq.empty,
-      furloughStart,
-      lastPayDate)
 
-  val defaultJourneyCoreData =
-    JourneyCoreData(
-      FurloughWithinClaim(claimPeriod),
-      Seq(fullPeriodWithPaymentDate("2020-3-1", "2020-3-31", "2020-3-31")),
-      Monthly,
-      Payable,
-      PensionStatus.DoesContribute)
+  val defaultReferencePayData =
+    ReferencePayData(FurloughWithinClaim(claimPeriod), Seq(fullPeriodWithPaymentDate("2020-3-1", "2020-3-31", "2020-3-31")), Monthly)
 
   val mandatoryAnswers = UserAnswers("id")
     .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))

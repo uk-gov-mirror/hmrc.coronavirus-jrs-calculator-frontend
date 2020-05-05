@@ -8,7 +8,7 @@ package handlers
 import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.NicCategory.{Nonpayable, Payable}
 import models.PensionStatus.{DoesContribute, DoesNotContribute}
-import models.{Amount, CalculationResult, FullPeriodBreakdown, MandatoryData, NicCategory, PartialPeriodBreakdown, PaymentFrequency, PensionStatus, Period, UserAnswers}
+import models.{Amount, CalculationResult, FullPeriodBreakdown, NicCategory, PartialPeriodBreakdown, PaymentFrequency, PensionStatus, Period, UserAnswers}
 import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
 
@@ -17,9 +17,8 @@ trait ConfirmationControllerRequestHandler
 
   def loadResultData(userAnswers: UserAnswers): Option[ConfirmationDataResult] =
     for {
-      data      <- extract(userAnswers)
       breakdown <- breakdown(userAnswers)
-      metadata  <- meta(userAnswers, data)
+      metadata  <- meta(userAnswers)
     } yield ConfirmationDataResult(metadata, breakdown)
 
   private def breakdown(userAnswers: UserAnswers): Option[ConfirmationViewBreakdown] =
@@ -27,21 +26,22 @@ trait ConfirmationControllerRequestHandler
       questions <- extractBranchingQuestions(userAnswers)
       data      <- journeyData(define(questions), userAnswers)
       payments = calculateReferencePay(data)
-      furlough = calculateFurloughGrant(data.core.frequency, payments)
-      ni = calculateNi(furlough, data.core.nic, data.core.frequency)
-      pension = calculatePension(furlough, data.core.pension, data.core.frequency)
+      furlough = calculateFurloughGrant(data.frequency, payments)
+      niAnswer <- extractNicCategory(userAnswers)
+      ni = calculateNi(furlough, niAnswer, data.frequency)
+      pensionAnswer <- extractPensionStatus(userAnswers)
+      pension = calculatePension(furlough, pensionAnswer, data.frequency)
     } yield ConfirmationViewBreakdown(furlough, ni, pension)
 
-  private def meta(userAnswers: UserAnswers, data: MandatoryData): Option[ConfirmationMetadata] =
+  private def meta(userAnswers: UserAnswers): Option[ConfirmationMetadata] =
     for {
       furloughPeriod <- extractFurloughPeriod(userAnswers)
-    } yield
-      ConfirmationMetadata(
-        Period(data.claimPeriod.start, data.claimPeriod.end),
-        furloughPeriod,
-        data.paymentFrequency,
-        data.nicCategory,
-        data.pensionStatus)
+      claimStart     <- extractClaimPeriodStart(userAnswers)
+      claimEnd       <- extractClaimPeriodEnd(userAnswers)
+      frequency      <- extractPaymentFrequency(userAnswers)
+      nicCategory    <- extractNicCategory(userAnswers)
+      pensionStatus  <- extractPensionStatus(userAnswers)
+    } yield ConfirmationMetadata(Period(claimStart, claimEnd), furloughPeriod, frequency, nicCategory, pensionStatus)
 
   private def calculateNi(furloughResult: CalculationResult, nic: NicCategory, frequency: PaymentFrequency): CalculationResult =
     nic match {

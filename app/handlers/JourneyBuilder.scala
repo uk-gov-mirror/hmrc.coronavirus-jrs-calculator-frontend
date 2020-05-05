@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PayMethod.{Regular, Variable}
-import models.{BranchingQuestions, Journey, JourneyData, RegularPay, RegularPayData, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
+import models.{BranchingQuestions, Journey, ReferencePay, RegularPay, RegularPayData, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 
 trait JourneyBuilder extends DataExtractor {
 
@@ -20,7 +20,7 @@ trait JourneyBuilder extends DataExtractor {
     case BranchingQuestions(Variable, Some(OnOrBefore1Feb2019), _)                                          => VariablePayWithCylb
   }
 
-  def journeyData(journey: Journey, userAnswers: UserAnswers): Option[JourneyData] = journey match {
+  def journeyData(journey: Journey, userAnswers: UserAnswers): Option[ReferencePay] = journey match {
     case RegularPay          => regularPayData(userAnswers)
     case VariablePay         => variablePayData(userAnswers)
     case VariablePayWithCylb => variablePayWithCylbData(userAnswers)
@@ -28,24 +28,24 @@ trait JourneyBuilder extends DataExtractor {
 
   private def regularPayData(userAnswers: UserAnswers): Option[RegularPayData] =
     for {
-      coreData <- extractJourneyCoreData(userAnswers)
+      referencePayData <- extractReferencePayData(userAnswers)
       salary   <- extractSalary(userAnswers)
-    } yield RegularPayData(coreData, salary)
+    } yield RegularPayData(referencePayData, salary)
 
   private def variablePayData(userAnswers: UserAnswers): Option[VariablePayData] =
     for {
-      coreData <- extractJourneyCoreData(userAnswers)
+      referencePayData <- extractReferencePayData(userAnswers)
       grossPay <- extractVariableGrossPay(userAnswers)
       nonFurlough = extractNonFurlough(userAnswers)
       priorFurlough <- extractPriorFurloughPeriod(userAnswers)
-    } yield VariablePayData(coreData, grossPay, nonFurlough, priorFurlough)
+    } yield VariablePayData(referencePayData, grossPay, nonFurlough, priorFurlough)
 
   private def variablePayWithCylbData(userAnswers: UserAnswers): Option[VariablePayWithCylbData] =
     for {
-      coreData <- extractJourneyCoreData(userAnswers)
+      referencePayData <- extractReferencePayData(userAnswers)
       grossPay <- extractVariableGrossPay(userAnswers)
       nonFurlough = extractNonFurlough(userAnswers)
       priorFurlough <- extractPriorFurloughPeriod(userAnswers)
       cylbPayments = extractCylbPayments(userAnswers)
-    } yield VariablePayWithCylbData(coreData, grossPay, nonFurlough, priorFurlough, cylbPayments)
+    } yield VariablePayWithCylbData(referencePayData, grossPay, nonFurlough, priorFurlough, cylbPayments)
 }

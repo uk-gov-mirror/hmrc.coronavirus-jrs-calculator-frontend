@@ -39,7 +39,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
       .set(SalaryQuestionPage, Salary(1000.0))
       .get
 
-    val expected = RegularPayData(defaultJourneyCoreData, Amount(1000.0))
+    val expected = RegularPayData(defaultReferencePayData, Amount(1000.0))
 
     journeyData(RegularPay, answers) mustBe Some(expected)
   }
@@ -53,7 +53,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
       .set(EmployeeStartDatePage, LocalDate.of(2019, 12, 1))
       .get
 
-    val expected = VariablePayData(defaultJourneyCoreData, Amount(1000.0), NonFurloughPay(None, None), period("2019-12-01", "2020-02-29"))
+    val expected = VariablePayData(defaultReferencePayData, Amount(1000.0), NonFurloughPay(None, None), period("2019-12-01", "2020-02-29"))
 
     journeyData(VariablePay, answers) mustBe Some(expected)
   }
@@ -70,7 +70,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
       .get
 
     val expected = VariablePayWithCylbData(
-      defaultJourneyCoreData,
+      defaultReferencePayData,
       Amount(1000.0),
       NonFurloughPay(None, None),
       period("2019-04-06", "2020-02-29"),
