@@ -1,6 +1,6 @@
 # Site-wide Messages
 # ----------------------------------------------------------
-service.name = Job Retention Scheme Calculator
+service.name = Job Retention Scheme calculator
 
 site.back = Back
 site.delete = Delete
