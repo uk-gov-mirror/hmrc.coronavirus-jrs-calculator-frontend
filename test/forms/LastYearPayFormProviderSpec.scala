@@ -29,6 +29,17 @@ class LastYearPayFormProviderSpec extends BigDecimalFieldBehaviours {
     val requiredKey = "lastYearPay.error.required"
     val invalidKey = "lastYearPay.error.nonNumeric"
 
+    "accept 0 as a valid input" in {
+      val value = "0.0"
+
+      val data = Map("value" -> value)
+
+      val result = form.bind(data)
+
+      result.errors shouldBe empty
+      result.value.value.value shouldEqual BigDecimal(value)
+    }
+
     behave like bigDecimalField(
       form,
       fieldName,

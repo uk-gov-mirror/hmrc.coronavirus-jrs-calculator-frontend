@@ -65,12 +65,17 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
 
   def positiveBigDecimalsWith2dp: Gen[BigDecimal] =
     for {
-      value <- arbitrary[BigDecimal] suchThat (bd => bd >= 0)
+      value <- arbitrary[BigDecimal] suchThat (bd => bd >= 1)
     } yield {
       value.setScale(2, RoundingMode.HALF_UP)
     }
 
-  def positiveBigDecimalsWithMoreThan2dp: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (bd => bd >= 0 && bd.scale > 2)
+  def positiveBigDecimalsWithMoreThan2dp: Gen[BigDecimal] =
+    for {
+      value <- arbitrary[BigDecimal] suchThat (bd => bd >= 1)
+    } yield {
+      value.setScale(3, RoundingMode.HALF_UP)
+    }
 
   def decimals: Gen[String] =
     arbitrary[BigDecimal]
