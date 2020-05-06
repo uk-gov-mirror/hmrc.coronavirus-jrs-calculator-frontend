@@ -10,6 +10,7 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import forms.behaviours.DateBehaviours
 import play.api.data.FormError
+import views.ViewUtils
 
 class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
@@ -82,7 +83,12 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
       val result = form.bind(data)
 
-      result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.after.policyEnd"))
+      result.errors shouldBe List(
+        FormError(
+          "endDate",
+          "claimPeriodEnd.cannot.be.after.policyEnd",
+          Seq(ViewUtils.dateToString(frontendAppConfig.schemeEndDate))
+        ))
     }
 
     "fail with invalid dates -  more than today + 14 days" in {

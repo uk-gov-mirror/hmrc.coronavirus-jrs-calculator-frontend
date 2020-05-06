@@ -13,6 +13,7 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import utils.ImplicitDateFormatter
+import views.ViewUtils
 
 class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends Mappings with ImplicitDateFormatter {
 
@@ -30,7 +31,7 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
     if (claimEndDate.isBefore(claimStart)) {
       Invalid("claimPeriodEnd.cannot.be.before.claimStart")
     } else if (claimEndDate.isAfter(appConfig.schemeEndDate)) {
-      Invalid("claimPeriodEnd.cannot.be.after.policyEnd")
+      Invalid("claimPeriodEnd.cannot.be.after.policyEnd", ViewUtils.dateToString(appConfig.schemeEndDate))
     } else if (claimEndDate.isAfter(LocalDate.now().plusDays(14))) {
       Invalid("claimPeriodEnd.cannot.be.after.14days")
     } else {
