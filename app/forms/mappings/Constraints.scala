@@ -104,7 +104,7 @@ trait Constraints {
     }
 
   protected def positiveValue(errorKey: Option[String] = None): Constraint[BigDecimal] = Constraint { value =>
-    if (value >= 0) Valid else Invalid(errorKey.getOrElse("amount.error.negative"))
+    if (value > 0) Valid else Invalid(errorKey.getOrElse("amount.error.must.be.positive"))
   }
 
   protected def maxTwoDecimals(errorKey: Option[String] = None): Constraint[BigDecimal] = Constraint { value =>
