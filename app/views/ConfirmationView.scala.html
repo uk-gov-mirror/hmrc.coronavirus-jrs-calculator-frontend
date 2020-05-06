@@ -87,19 +87,15 @@
                 cvb.pension.payPeriodBreakdowns).zipped.toList) {
             <h3 class="govuk-heading-s">@messages("confirmation.breakdown.dt")
                 @messages("confirmation.breakdown.ending", dateToString(furlough.periodWithPaymentDate.period.period.end))</h3>
-            <dl class="govuk-summary-list govuk-!-margin-bottom-5">
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-full">@Html(messages("confirmation.breakdown.furlough"))</dt>
-                    <dd class="govuk-summary-list__value">@furlough.grant.value.setScale(2)</dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-full">@Html(messages("confirmation.breakdown.nic"))</dt>
-                    <dd class="govuk-summary-list__value">@nic.grant.value.setScale(2)</dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-full">@Html(messages("confirmation.breakdown.pension"))</dt>
-                    <dd class="govuk-summary-list__value">@pension.grant.value.setScale(2)</dd>
-                </div>
+            <dl class="govuk-summary-list">
+                <dt class="govuk-!-margin-bottom-0">@Html(messages("confirmation.breakdown.furlough"))</dt>
+                <dd class="govuk-heading-s govuk-!-margin-left-0">&pound;@furlough.grant.value.setScale(2)</dd>
+
+                <dt class="govuk-!-margin-bottom-0">@Html(messages("confirmation.breakdown.nic"))</dt>
+                <dd class="govuk-heading-s govuk-!-margin-left-0">&pound;@nic.grant.value.setScale(2)</dd>
+
+                <dt class="govuk-!-margin-bottom-0">@Html(messages("confirmation.breakdown.pension"))</dt>
+                <dd class="govuk-heading-s govuk-!-margin-left-0">&pound;@pension.grant.value.setScale(2)</dd>
             </dl>
         }
     }
