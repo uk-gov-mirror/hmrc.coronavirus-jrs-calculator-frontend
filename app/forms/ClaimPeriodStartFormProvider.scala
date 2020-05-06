@@ -27,11 +27,10 @@ class ClaimPeriodStartFormProvider @Inject()(appConfig: FrontendAppConfig) exten
     )
 
   private def validStartDate: Constraint[LocalDate] = Constraint { claimStartDate =>
-    if (!claimStartDate.isBefore(appConfig.schemeStartDate) &&
-        !claimStartDate.isAfter(appConfig.schemeEndDate))
+    if (!claimStartDate.isBefore(appConfig.schemeStartDate) && !claimStartDate.isAfter(appConfig.schemeEndDate)) {
       Valid
-    else {
-      Invalid("claimPeriodStart.error.outofrange", dateToString(appConfig.schemeStartDate), dateToString((appConfig.schemeEndDate)))
+    } else {
+      Invalid("claimPeriodStart.error.outofrange", dateToString(appConfig.schemeStartDate), dateToString(appConfig.schemeEndDate))
     }
   }
 }
