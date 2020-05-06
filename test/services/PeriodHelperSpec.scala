@@ -118,10 +118,10 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
     val periodThree = Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 20))
     val periodFour = Period(LocalDate.of(2020, 3, 10), LocalDate.of(2020, 3, 31))
 
-    periodDaysCount(periodOne) mustBe 30
-    periodDaysCount(periodTwo) mustBe 16
-    periodDaysCount(periodThree) mustBe 20
-    periodDaysCount(periodFour) mustBe 22
+    periodOne.countDays mustBe 30
+    periodTwo.countDays mustBe 16
+    periodThree.countDays mustBe 20
+    periodFour.countDays mustBe 22
   }
 
   "determine if pay period spans two months" in new PeriodHelper {

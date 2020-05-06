@@ -24,7 +24,7 @@ import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
 
 trait ConfirmationControllerRequestHandler
-    extends FurloughCalculator with PeriodHelper with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator {
+    extends FurloughCalculator with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator {
 
   def loadResultData(userAnswers: UserAnswers): Option[ConfirmationDataResult] =
     for {
@@ -56,7 +56,7 @@ trait ConfirmationControllerRequestHandler
 
   private def calculateNi(furloughResult: CalculationResult, nic: NicCategory, frequency: PaymentFrequency): CalculationResult =
     nic match {
-      case Payable => calculateNicGrant(frequency, furloughResult.payPeriodBreakdowns)
+      case Payable => calculateNicGrant(frequency, furloughResult.payPeriodBreakdowns, Seq.empty, Seq.empty) //TODO wire with UI data
       case Nonpayable =>
         CalculationResult(
           NicCalculationResult,

@@ -19,7 +19,7 @@ package services
 import java.time.LocalDate
 
 import models.NonFurloughPay.determineNonFurloughPay
-import models.{Amount, CylbDuration, CylbOperators, CylbPayment, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodWithPaymentDate}
+import models.{Amount, CylbDuration, CylbPayment, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodWithPaymentDate}
 
 trait CylbCalculator extends PreviousYearPeriod {
 

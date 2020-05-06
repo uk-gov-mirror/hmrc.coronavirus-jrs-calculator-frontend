@@ -21,12 +21,15 @@ import java.time.temporal.ChronoUnit
 
 import play.api.libs.json.{Format, JsResult, JsValue, Json}
 
-final case class Period(start: LocalDate, end: LocalDate) {
-  def countDays: Int = (ChronoUnit.DAYS.between(start, end) + 1).toInt
-}
+final case class Period(start: LocalDate, end: LocalDate)
 
 object Period {
   implicit val defaultFormat: Format[Period] = Json.format
+
+  implicit class DaysCounter(period: Period) {
+    def countDays: Int =
+      (ChronoUnit.DAYS.between(period.start, period.end) + 1).toInt
+  }
 }
 
 sealed trait Periods {

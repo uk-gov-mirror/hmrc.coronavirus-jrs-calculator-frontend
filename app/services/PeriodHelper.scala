@@ -17,9 +17,9 @@
 package services
 
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
+import models.Period._
 import models.{FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
 import utils.LocalDateHelpers._
 
@@ -42,9 +42,6 @@ trait PeriodHelper {
 
     generated.map(p => fullOrPartialPeriod(p, furloughPeriod))
   }
-
-  def periodDaysCount(period: Period): Int =
-    (ChronoUnit.DAYS.between(period.start, period.end) + 1).toInt
 
   def endDateOrTaxYearEnd(period: Period): Period = {
     val taxYearStart = LocalDate.of(2019, 4, 6)
@@ -71,7 +68,7 @@ trait PeriodHelper {
 
     val partial = Period(start, end)
 
-    if (periodDaysCount(period) != periodDaysCount(partial)) PartialPeriod(period, partial) else FullPeriod(period)
+    if (period.countDays != partial.countDays) PartialPeriod(period, partial) else FullPeriod(period)
   }
 
   def periodContainsNewTaxYear(period: Period): Boolean =

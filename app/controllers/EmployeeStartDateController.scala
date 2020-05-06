@@ -21,7 +21,6 @@ import java.time.LocalDate
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.EmployeeStartDateFormProvider
-import handlers.ErrorHandler
 import javax.inject.Inject
 import navigation.Navigator
 import pages.{EmployeeStartDatePage, FurloughStartDatePage}
@@ -44,7 +43,7 @@ class EmployeeStartDateController @Inject()(
   formProvider: EmployeeStartDateFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: EmployeeStartDateView
-)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+)(implicit ec: ExecutionContext)
     extends BaseController with I18nSupport {
 
   def form: LocalDate => Form[LocalDate] = formProvider(_)

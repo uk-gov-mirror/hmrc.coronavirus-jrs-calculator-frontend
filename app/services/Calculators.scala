@@ -28,7 +28,7 @@ trait Calculators extends PeriodHelper {
     capCalulation(cap, eightyPercent(amount).value)
 
   def partialPeriodDailyCalculation(payment: Amount, partialPeriod: PartialPeriod): Amount =
-    dailyCalculation(payment, periodDaysCount(partialPeriod.original), periodDaysCount(partialPeriod.partial))
+    dailyCalculation(payment, partialPeriod.original.countDays, partialPeriod.partial.countDays)
 
   def dailyCalculation(payment: Amount, wholePeriodCount: Int, partialPeriodCount: Int): Amount =
     Amount((payment.value / wholePeriodCount) * partialPeriodCount).halfUp

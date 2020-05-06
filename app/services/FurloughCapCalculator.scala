@@ -49,7 +49,7 @@ trait FurloughCapCalculator extends PeriodHelper {
       calculateFurloughCapNonSimplified(period)
     } else {
       val max = dailyMax(period.start.getMonth)
-      val periodDays = periodDaysCount(period)
+      val periodDays = period.countDays
       roundWithMode(periodDays * max, HALF_UP)
     }
 
@@ -58,9 +58,9 @@ trait FurloughCapCalculator extends PeriodHelper {
 
   protected def calculateFurloughCapNonSimplified(payPeriod: Period): BigDecimal = {
     val startMonthPeriod = Period(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength()))
-    val startMonthDays: Long = periodDaysCount(startMonthPeriod)
+    val startMonthDays = startMonthPeriod.countDays
     val endMonthPeriod = Period(payPeriod.end.withDayOfMonth(1), payPeriod.end)
-    val endMonthDays: Long = periodDaysCount(endMonthPeriod)
+    val endMonthDays = endMonthPeriod.countDays
     val startMonthDailyMax: BigDecimal = dailyMax(payPeriod.start.getMonth)
     val endMonthDailyMax: BigDecimal = dailyMax(payPeriod.end.getMonth)
 

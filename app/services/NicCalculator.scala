@@ -18,38 +18,37 @@ package services
 
 import models.Amount._
 import models.Calculation.NicCalculationResult
-import models.{AdditionalPayment, Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodBreakdown, TopUpPayment}
+import models.{AdditionalPayment, Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodBreakdown, PeriodWithPaymentDate, TopUpPayment}
 import services.Calculators._
+import models.Period._
 
 trait NicCalculator extends FurloughCapCalculator with CommonCalculationService {
 
   def calculateNicGrant(
     frequency: PaymentFrequency,
     furloughBreakdown: Seq[PeriodBreakdown],
-    additionals: Seq[AdditionalPayment] = Seq.empty,
-    topUps: Seq[TopUpPayment] = Seq.empty): CalculationResult = { //TODO remove dafaulted
+    additionals: Seq[AdditionalPayment],
+    topUps: Seq[TopUpPayment]): CalculationResult = { //TODO remove dafaulted
     val nicBreakdowns = furloughBreakdown.map {
       case FullPeriodBreakdown(grant, periodWithPaymentDate) =>
-        val additionalPayment = additionals.find(_.date == periodWithPaymentDate.period.period.end).map(_.amount)
-        val topUpPayment = topUps.find(_.date == periodWithPaymentDate.period.period.end).map(_.amount)
         calculateFullPeriodNic(
           frequency,
           grant,
           periodWithPaymentDate.period,
           periodWithPaymentDate.paymentDate,
-          additionalPayment,
-          topUpPayment) //TODO to be wired
+          additionalPayments(additionals, periodWithPaymentDate),
+          topUpPayments(topUps, periodWithPaymentDate)
+        ) //TODO to be wired
       case PartialPeriodBreakdown(nonFurloughPay, grant, periodWithPaymentDate) =>
-        val additionalPayment = additionals.find(_.date == periodWithPaymentDate.period.period.end).map(_.amount)
-        val topUpPayment = topUps.find(_.date == periodWithPaymentDate.period.period.end).map(_.amount)
         calculatePartialPeriodNic(
           frequency,
           nonFurloughPay,
           grant,
           periodWithPaymentDate.period,
           periodWithPaymentDate.paymentDate,
-          additionalPayment,
-          topUpPayment)
+          additionalPayments(additionals, periodWithPaymentDate),
+          topUpPayments(topUps, periodWithPaymentDate)
+        )
     }
     CalculationResult(NicCalculationResult, nicBreakdowns.map(_.grant.value).sum, nicBreakdowns)
   }
@@ -63,13 +62,12 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
     additionalPayment: Option[Amount],
     topUp: Option[Amount]): PartialPeriodBreakdown = {
 
-    val total = nonFurloughPay.value + furloughPayment.value + additionalPayment.defaulted.value + topUp.defaulted.value
-    val roundedTotalPay = Amount(total).down
-    val threshold = FrequencyTaxYearThresholdMapping.findThreshold(frequency, taxYearAt(paymentDate), NiRate())
-    val grossNi = greaterThanAllowance(roundedTotalPay, threshold, NiRate())
-    val dailyNi = grossNi.value / periodDaysCount(period.original)
-    val apportion = furloughPayment.value / (furloughPayment.value + topUp.defaulted.value)
-    val grant = Amount((dailyNi * periodDaysCount(period.partial)) * apportion).halfUp
+    val total = Amount(nonFurloughPay.value + sumValues(furloughPayment, additionalPayment, topUp))
+    val calculationParameters = periodCalculation(total, frequency, paymentDate, furloughPayment, topUp)
+    import calculationParameters._
+
+    val dailyNi = grossNi.value / period.original.countDays
+    val grant = niGrant(Amount(dailyNi * period.partial.countDays), apportion)
 
     PartialPeriodBreakdown(nonFurloughPay, grant, PartialPeriodWithPaymentDate(period, paymentDate))
   }
@@ -82,15 +80,39 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
     additionalPayment: Option[Amount],
     topUp: Option[Amount]): FullPeriodBreakdown = {
 
-    val total = furloughPayment.value + additionalPayment.defaulted.value + topUp.defaulted.value
-    val roundedTotalPay = Amount(total).down
-    val threshold = thresholdFinder(frequency, paymentDate, NiRate())
-    val apportion = furloughPayment.value / (furloughPayment.value + topUp.defaulted.value)
-    val grossNi = greaterThanAllowance(roundedTotalPay, threshold, NiRate())
+    val total = Amount(sumValues(furloughPayment, additionalPayment, topUp))
+    val calculationParameters = periodCalculation(total, frequency, paymentDate, furloughPayment, topUp)
+    import calculationParameters._
 
-    val grant = Amount(grossNi.value * apportion).halfUp
+    val grant = niGrant(grossNi, apportion)
 
     FullPeriodBreakdown(grant, FullPeriodWithPaymentDate(period, paymentDate))
   }
 
+  private def periodCalculation(
+    total: Amount,
+    frequency: PaymentFrequency,
+    paymentDate: PaymentDate,
+    furloughPayment: Amount,
+    topUpPayment: Option[Amount]): CalculationParameters = {
+    val roundedTotalPay = total.down
+    val threshold: BigDecimal = thresholdFinder(frequency, paymentDate, NiRate())
+    val grossNi: Amount = greaterThanAllowance(roundedTotalPay, threshold, NiRate())
+    val apportion: BigDecimal = furloughPayment.value / (furloughPayment.value + topUpPayment.defaulted.value)
+
+    CalculationParameters(roundedTotalPay, threshold, grossNi, apportion)
+  }
+
+  private def topUpPayments(topUps: Seq[TopUpPayment], periodWithPaymentDate: PeriodWithPaymentDate): Option[Amount] =
+    topUps.find(_.date == periodWithPaymentDate.period.period.end).map(_.amount)
+
+  private def additionalPayments(additionals: Seq[AdditionalPayment], periodWithPaymentDate: PeriodWithPaymentDate): Option[Amount] =
+    additionals.find(_.date == periodWithPaymentDate.period.period.end).map(_.amount)
+
+  private def sumValues(furloughPayment: Amount, additional: Option[Amount], topUp: Option[Amount]): BigDecimal =
+    furloughPayment.value + additional.defaulted.value + topUp.defaulted.value
+
+  private def niGrant(grossNi: Amount, apportion: BigDecimal) = Amount(grossNi.value * apportion).halfUp
+
+  case class CalculationParameters(total: Amount, threshold: BigDecimal, grossNi: Amount, apportion: BigDecimal)
 }
