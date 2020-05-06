@@ -7,9 +7,8 @@ package services
 
 import java.time.LocalDate
 
-import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{CylbDuration, CylbOperators, FullPeriod, PartialPeriod, PaymentFrequency, PeriodWithPaymentDate, Periods}
-import PaymentFrequency._
+import models.PaymentFrequency.{Monthly, _}
+import models.{CylbDuration, PaymentFrequency, PeriodWithPaymentDate}
 
 trait PreviousYearPeriod extends PeriodHelper {
 
@@ -23,34 +22,6 @@ trait PreviousYearPeriod extends PeriodHelper {
       case _ => calculateDatesForPreviousYear(paymentFrequency, withPaymentDate.paymentDate.value)
     }
   }
-
-  //TODO remove this
-  def operators(paymentFrequency: PaymentFrequency, period: Periods): CylbOperators =
-    (paymentFrequency, period) match {
-      case (Monthly, FullPeriod(p))                 => CylbOperators(periodDaysCount(p), 0, periodDaysCount(p))
-      case (Monthly, PartialPeriod(o, p))           => CylbOperators(periodDaysCount(o), 0, periodDaysCount(p))
-      case (Weekly, _: FullPeriod)                  => CylbOperators(7, 2, 5)
-      case (f: Weekly.type, pp: PartialPeriod)      => handlePartial(f, pp)
-      case (FortNightly, _: FullPeriod)             => CylbOperators(14, 2, 12)
-      case (f: FortNightly.type, pp: PartialPeriod) => handlePartial(f, pp)
-      case (FourWeekly, _: FullPeriod)              => CylbOperators(28, 2, 26)
-      case (f: FourWeekly.type, pp: PartialPeriod)  => handlePartial(f, pp)
-    }
-
-  private val predicateStart: PartialPeriod => Boolean =
-    pp => periodDaysCount(pp.partial) < (periodDaysCount(pp.original) - 1)
-
-  private def handlePartial(frequency: PaymentFrequency, p: PartialPeriod): CylbOperators =
-    if (isFurloughStart(p))
-      handleFurloughStart(frequency, p)
-    else
-      CylbOperators(paymentFrequencyDays(frequency), 2, periodDaysCount(p.partial) - 2)
-
-  private def handleFurloughStart(frequency: PaymentFrequency, p: PartialPeriod): CylbOperators =
-    if (predicateStart(p))
-      CylbOperators(paymentFrequencyDays(frequency), 0, periodDaysCount(p.partial))
-    else
-      CylbOperators(paymentFrequencyDays(frequency), 1, periodDaysCount(p.partial) - 1)
 
   private def calculateDatesForPreviousYear(paymentFrequency: PaymentFrequency, payDateThisYear: LocalDate): Seq[LocalDate] = {
     val payDateTwo = lastYear(paymentFrequency, payDateThisYear)
