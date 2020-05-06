@@ -447,4 +447,4 @@ lastYearPay.error.nonNumeric = Enter the salary using numbers
 lastYearPay.error.required = Enter the salary
 
 amount.error.max.2.decimals = The amount can’t have more than two decimal places
-amount.error.must.be.positive = Enter an amount greater than 0
+amount.error.negative = The amount can’t be negative
