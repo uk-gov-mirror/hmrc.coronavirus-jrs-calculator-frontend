@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-package base
+package pages
 
-import org.scalatest.{MustMatchers, OptionValues, TryValues, WordSpec}
+import java.time.LocalDate
 
-trait SpecBase extends WordSpec with MustMatchers with TryValues with OptionValues
+import play.api.libs.json.JsPath
+
+case object TopUpPeriodsPage extends QuestionPage[List[LocalDate]] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "topupPeriods"
+}

@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.FurloughTopUpFormProvider
-import handlers.FurloughTopUpControllerRequestHandler
+import handlers.FurloughCalculationHandler
 import javax.inject.Inject
 import navigation.Navigator
 import pages.FurloughTopUpStatusPage
@@ -42,7 +42,7 @@ class FurloughTopUpController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: FurloughTopUpView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with FurloughTopUpControllerRequestHandler {
+    extends FrontendBaseController with I18nSupport with FurloughCalculationHandler {
 
   val form = formProvider()
 

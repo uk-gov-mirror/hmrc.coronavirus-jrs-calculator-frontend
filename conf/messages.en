@@ -449,3 +449,11 @@ lastYearPay.error.required = Enter the salary
 amount.error.max.2.decimals = The amount can’t have more than two decimal places
 amount.error.must.be.positive = Enter an amount greater than 0
 amount.error.negative = The amount can’t be negative
+
+topupPeriods.title = Which of these are you topping up?
+topupPeriods.heading = Which of these are you topping up?
+topupPeriods.hint = Select all that apply.
+topupPeriods.period = Pay period end: {0}
+topupPeriods.amount = Amount before top-up: £{0}
+topupPeriods.checkYourAnswersLabel = Which of these are you topping up?
+topupPeriods.error.required = Select the pay periods you are topping up

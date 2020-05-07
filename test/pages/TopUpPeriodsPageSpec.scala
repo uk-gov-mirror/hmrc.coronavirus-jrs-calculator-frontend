@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package handlers
+package pages
 
-import models.{CalculationResult, UserAnswers}
-import services.{FurloughCalculator, ReferencePayCalculator}
+import java.time.LocalDate
 
-trait FurloughTopUpControllerRequestHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
+import pages.behaviours.PageBehaviours
 
-  def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
-    for {
-      questions <- extractBranchingQuestions(userAnswers)
-      data      <- journeyData(define(questions), userAnswers)
-      payments = calculateReferencePay(data)
-    } yield calculateFurloughGrant(data.frequency, payments)
+class TopUpPeriodsPageSpec extends PageBehaviours {
 
+  "TopupPeriodsPage" must {
+
+    beRetrievable[List[LocalDate]](TopUpPeriodsPage)
+
+    beSettable[List[LocalDate]](TopUpPeriodsPage)
+
+    beRemovable[List[LocalDate]](TopUpPeriodsPage)
+  }
 }

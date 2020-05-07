@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package base
+package forms
 
-import org.scalatest.{MustMatchers, OptionValues, TryValues, WordSpec}
+import java.time.LocalDate
 
-trait SpecBase extends WordSpec with MustMatchers with TryValues with OptionValues
+import javax.inject.Inject
+import forms.mappings.Mappings
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.data.format.Formats._
+
+class TopUpPeriodsFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[List[LocalDate]] =
+    Form(
+      "value" -> list(of(localDateFormat)).verifying("topupPeriods.error.required", _.nonEmpty)
+    )
+}

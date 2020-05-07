@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package base
+package handlers
 
-import org.scalatest.{MustMatchers, OptionValues, TryValues, WordSpec}
+import models.{CalculationResult, UserAnswers}
+import services.{FurloughCalculator, ReferencePayCalculator}
 
-trait SpecBase extends WordSpec with MustMatchers with TryValues with OptionValues
+trait FurloughCalculationHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
+
+  def handleCalculationFurlough(userAnswers: UserAnswers): Option[CalculationResult] =
+    for {
+      questions <- extractBranchingQuestions(userAnswers)
+      data      <- journeyData(define(questions), userAnswers)
+      payments = calculateReferencePay(data)
+    } yield calculateFurloughGrant(data.frequency, payments)
+
+}

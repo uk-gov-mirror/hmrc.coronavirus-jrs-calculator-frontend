@@ -16,6 +16,8 @@
 
 package generators
 
+import java.time.LocalDate
+
 import models._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
@@ -23,6 +25,14 @@ import pages._
 import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
+
+  implicit lazy val arbitraryTopupPeriodsUserAnswersEntry: Arbitrary[(TopUpPeriodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[TopUpPeriodsPage.type]
+        value <- arbitrary[List[LocalDate]].map(Json.toJson(_))
+      } yield (page, value)
+    }
 
   implicit lazy val arbitraryLastYearPayUserAnswersEntry: Arbitrary[(LastYearPayPage.type, JsValue)] =
     Arbitrary {

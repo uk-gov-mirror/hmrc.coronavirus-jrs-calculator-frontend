@@ -1,36 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration LastYearPay"
+echo "Applying migration TopupPeriods"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /lastYearPay                  controllers.LastYearPayController.onPageLoad( = NormalMode)" >> ../conf/app.routes
-echo "POST       /lastYearPay                  controllers.LastYearPayController.onSubmit( = NormalMode)" >> ../conf/app.routes
+echo "GET        /topupPeriods                        controllers.TopupPeriodsController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /topupPeriods                        controllers.TopupPeriodsController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeLastYearPay                        controllers.LastYearPayController.onPageLoad( = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeLastYearPay                        controllers.LastYearPayController.onSubmit( = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeTopupPeriods                  controllers.TopupPeriodsController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeTopupPeriods                  controllers.TopupPeriodsController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "lastYearPay.title = LastYearPay" >> ../conf/messages.en
-echo "lastYearPay.heading = LastYearPay" >> ../conf/messages.en
-echo "lastYearPay.checkYourAnswersLabel = LastYearPay" >> ../conf/messages.en
-echo "lastYearPay.error.nonNumeric = Enter your lastYearPay using numbers" >> ../conf/messages.en
-echo "lastYearPay.error.required = Enter your lastYearPay" >> ../conf/messages.en
-echo "lastYearPay.error.wholeNumber = Enter your lastYearPay using whole numbers" >> ../conf/messages.en
-echo "lastYearPay.error.outOfRange = LastYearPay must be between {0} and {1}" >> ../conf/messages.en
+echo "topupPeriods.title = Which of these are you topping up?" >> ../conf/messages.en
+echo "topupPeriods.heading = Which of these are you topping up?" >> ../conf/messages.en
+echo "topupPeriods.period1 = Pay period end:" >> ../conf/messages.en
+echo "topupPeriods.period2 = Pay period end:" >> ../conf/messages.en
+echo "topupPeriods.checkYourAnswersLabel = Which of these are you topping up?" >> ../conf/messages.en
+echo "topupPeriods.error.required = Select topupPeriods" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryLastYearPayUserAnswersEntry: Arbitrary[(LastYearPayPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryTopupPeriodsUserAnswersEntry: Arbitrary[(TopupPeriodsPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[LastYearPayPage.type]";\
-    print "        value <- arbitrary[Int].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[TopupPeriodsPage.type]";\
+    print "        value <- arbitrary[TopupPeriods].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -39,14 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryLastYearPayPage: Arbitrary[LastYearPayPage.type] =";\
-    print "    Arbitrary(LastYearPayPage)";\
+    print "  implicit lazy val arbitraryTopupPeriodsPage: Arbitrary[TopupPeriodsPage.type] =";\
+    print "    Arbitrary(TopupPeriodsPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
+
+echo "Adding to ModelGenerators"
+awk '/trait ModelGenerators/ {\
+    print;\
+    print "";\
+    print "  implicit lazy val arbitraryTopupPeriods: Arbitrary[TopupPeriods] =";\
+    print "    Arbitrary {";\
+    print "      Gen.oneOf(TopupPeriods.values.toSeq)";\
+    print "    }";\
+    next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(LastYearPayPage.type, JsValue)] ::";\
+    print "    arbitrary[(TopupPeriodsPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration LastYearPay completed"
+echo "Migration TopupPeriods completed"

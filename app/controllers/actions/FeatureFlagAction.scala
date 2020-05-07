@@ -17,7 +17,8 @@
 package controllers.actions
 
 import com.google.inject.{Inject, Singleton}
-import controllers.routes
+import controllers.{ErrorController, routes}
+import handlers.ErrorHandler
 import models.requests.IdentifierRequest
 import play.api.Configuration
 import play.api.mvc.Results.{Redirect, _}
@@ -28,6 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class FeatureFlagAction(
   maybeFlag: Option[FeatureFlag],
   configuration: Configuration,
+  eh: ErrorHandler,
   implicit protected val executionContext: ExecutionContext
 ) extends ActionFilter[IdentifierRequest] {
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] =
@@ -38,7 +40,7 @@ class FeatureFlagAction(
         } else {
           flag match {
             case FeatureFlagKeyWithRedirect(_, redirectRoute) => Some(Redirect(redirectRoute))
-            case FeatureFlagWith404(_)                        => Some(NotFound)
+            case FeatureFlagWith404(_)                        => Some(NotFound(eh.notFoundTemplate(request)))
           }
         }))
       .getOrElse(Future.successful(None))
@@ -50,9 +52,10 @@ trait FeatureFlagActionProvider {
   def apply(flag: FeatureFlag): ActionFilter[IdentifierRequest] = apply(Some(flag))
 }
 
-class FeatureFlagActionProviderImpl @Inject()(configuration: Configuration, ec: ExecutionContext) extends FeatureFlagActionProvider {
+class FeatureFlagActionProviderImpl @Inject()(configuration: Configuration, ec: ExecutionContext, eh: ErrorHandler)
+    extends FeatureFlagActionProvider {
   override def apply(flag: Option[FeatureFlag] = None): ActionFilter[IdentifierRequest] =
-    new FeatureFlagAction(flag, configuration, ec)
+    new FeatureFlagAction(flag, configuration, eh, ec)
 }
 
 sealed trait FeatureFlag {
@@ -67,10 +70,7 @@ object FeatureFlag {
     "variable.journey.enabled",
     routes.ComingSoonController.onPageLoad()
   )
-  lazy val TopupJourneyFlag = FeatureFlagKeyWithRedirect(
-    "topup.journey.enabled",
-    routes.ComingSoonController.onPageLoad(showCalculateTopupsLink = true)
-  )
+  lazy val TopUpJourneyFlag = FeatureFlagWith404("topup.journey.enabled")
 
   def isEnabled(flag: FeatureFlag, configuration: Configuration): Boolean =
     configuration.getOptional[Boolean](flag.key).getOrElse(false)
