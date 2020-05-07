@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.TopUpPeriodsFormProvider
 import handlers.FurloughCalculationHandler
 import javax.inject.Inject
-import models.TopUpPeriod
+import models.{TopUpPeriod, UserAnswers}
 import navigation.Navigator
 import pages.TopUpPeriodsPage
 import play.Logger
@@ -49,20 +49,24 @@ class TopUpPeriodsController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
       handleCalculationFurlough(request.userAnswers)
         .map { furlough =>
-          val preparedForm = request.userAnswers.get(TopUpPeriodsPage) match {
-            case None => form
-            case Some(selectedDates) =>
-              form.fill(selectedDates.map(_.date))
+          furlough.payPeriodBreakdowns match {
+            case breakdown :: Nil =>
+              saveAndRedirect(request.userAnswers, List(TopUpPeriod(breakdown.periodWithPaymentDate.period.period.end, breakdown.grant)))
+            case _ =>
+              val preparedForm = request.userAnswers.get(TopUpPeriodsPage) match {
+                case None => form
+                case Some(selectedDates) =>
+                  form.fill(selectedDates.map(_.date))
+              }
+              Future.successful(Ok(view(preparedForm, furlough.payPeriodBreakdowns)))
           }
-
-          Ok(view(preparedForm, furlough.payPeriodBreakdowns))
         }
         .getOrElse(
-          Redirect(routes.ErrorController.somethingWentWrong())
+          Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         )
   }
 
@@ -87,10 +91,7 @@ class TopUpPeriodsController @Inject()(
                   Logger.warn("[TopUpPeriodsController][onSubmit] Dates in furlough and input do not align")
                   Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
                 } else {
-                  for {
-                    updatedAnswers <- Future.fromTry(request.userAnswers.set(TopUpPeriodsPage, topUpPeriods))
-                    _              <- sessionRepository.set(updatedAnswers)
-                  } yield Redirect(navigator.nextPage(TopUpPeriodsPage, updatedAnswers))
+                  saveAndRedirect(request.userAnswers, topUpPeriods)
                 }
               }
             )
@@ -99,4 +100,10 @@ class TopUpPeriodsController @Inject()(
           Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         )
   }
+
+  private def saveAndRedirect(userAnswers: UserAnswers, topUpPeriods: List[TopUpPeriod]) =
+    for {
+      updatedAnswers <- Future.fromTry(userAnswers.set(TopUpPeriodsPage, topUpPeriods))
+      _              <- sessionRepository.set(updatedAnswers)
+    } yield Redirect(navigator.nextPage(TopUpPeriodsPage, updatedAnswers))
 }
