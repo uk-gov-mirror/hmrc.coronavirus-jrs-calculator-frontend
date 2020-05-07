@@ -21,12 +21,15 @@ import java.time.LocalDate
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import controllers.actions.FeatureFlag._
 import forms.TopUpPeriodsFormProvider
+import models.FurloughStatus.FurloughOngoing
+import models.PayMethod.Regular
+import models.PaymentFrequency.Monthly
 import models.{Amount, FullPeriodBreakdown, PeriodBreakdown, Salary, TopUpPeriod, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{SalaryQuestionPage, TopUpPeriodsPage}
+import pages._
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
@@ -48,19 +51,30 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
   val formProvider = new TopUpPeriodsFormProvider()
   val form = formProvider()
 
-  val dates = List(LocalDate.of(2020, 3, 31))
+  val dates = List(LocalDate.of(2020, 3, 31), LocalDate.of(2020, 4, 30))
   val periodBreakdowns: Seq[PeriodBreakdown] = Seq(
-    FullPeriodBreakdown(Amount(1600.00), fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"))
+    FullPeriodBreakdown(Amount(1600.00), fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
+    FullPeriodBreakdown(Amount(1600.00), fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"))
   )
+
+  val baseUserAnswers = UserAnswers("id")
+    .setValue(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
+    .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 4, 30))
+    .setValue(PaymentFrequencyPage, Monthly)
+    .setValue(PayMethodPage, Regular)
+    .setValue(FurloughStatusPage, FurloughOngoing)
+    .setValue(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
+    .setValue(LastPayDatePage, LocalDate.of(2020, 3, 31))
+    .setValue(PayDatePage, LocalDate.of(2020, 2, 29), Some(1))
+    .setValue(PayDatePage, LocalDate.of(2020, 3, 31), Some(2))
+    .setValue(PayDatePage, LocalDate.of(2020, 4, 30), Some(3))
+    .setValue(SalaryQuestionPage, Salary(2000))
 
   "TopupPeriods Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
 
       val result = route(application, getRequest).value
 
@@ -74,12 +88,45 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
       application.stop()
     }
 
+    "redirect for a GET when there is only one period to top up" in {
+      val userAnswers = UserAnswers("id")
+        .setValue(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
+        .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 3, 31))
+        .setValue(PaymentFrequencyPage, Monthly)
+        .setValue(PayMethodPage, Regular)
+        .setValue(FurloughStatusPage, FurloughOngoing)
+        .setValue(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
+        .setValue(LastPayDatePage, LocalDate.of(2020, 3, 31))
+        .setValue(PayDatePage, LocalDate.of(2020, 2, 29), Some(1))
+        .setValue(PayDatePage, LocalDate.of(2020, 3, 31), Some(2))
+        .setValue(SalaryQuestionPage, Salary(2000))
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      val result = route(application, getRequest).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe onwardRoute.url
+
+      application.stop()
+    }
+
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val topUpPeriod = dates.map(TopUpPeriod(_, furloughGrant = Amount(100)))
 
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
+      val userAnswers = baseUserAnswers
         .setValue(TopUpPeriodsPage, topUpPeriod)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -98,15 +145,12 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
 
     "redirect to the next page when valid data is submitted" in {
 
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
-
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(baseUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -128,10 +172,7 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
 
       val request =
         FakeRequest(POST, topupPeriodsRoute).withCSRFToken
@@ -216,14 +257,11 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
 
     "redirect to error page for a POST if dates in furlough and input do not align" in {
 
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
 
       val request =
         FakeRequest(POST, topupPeriodsRoute)
-          .withFormUrlEncodedBody(("value[0]", dates.head.toString), ("value[1]", "2020-04-30"))
+          .withFormUrlEncodedBody(("value[0]", dates(0).toString), ("value[1]", dates(1).toString), ("value[2]", "2020-05-30"))
 
       val result = route(application, request).value
 
