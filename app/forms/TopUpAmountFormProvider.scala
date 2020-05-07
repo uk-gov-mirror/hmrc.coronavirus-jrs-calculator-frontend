@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import models.TopUpPeriod
-import pages.behaviours.PageBehaviours
+import javax.inject.Inject
+import forms.mappings.Mappings
+import models.Amount
+import play.api.data.Form
+import play.api.data.Forms.mapping
 
-class TopUpPeriodsPageSpec extends PageBehaviours {
+class TopUpAmountFormProvider @Inject() extends Mappings {
 
-  "TopupPeriodsPage" must {
-
-    beRetrievable[List[TopUpPeriod]](TopUpPeriodsPage)
-
-    beSettable[List[TopUpPeriod]](TopUpPeriodsPage)
-
-    beRemovable[List[TopUpPeriod]](TopUpPeriodsPage)
-  }
+  def apply(): Form[Amount] =
+    Form(
+      mapping(
+        "value" -> bigDecimal(
+          requiredKey = "topUpAmount.error.required",
+          nonNumericKey = "topUpAmount.error.nonNumeric"
+        ).verifying(minimumValue(BigDecimal(0.0), "amount.error.negative"))
+          .verifying(maxTwoDecimals())
+      )(Amount.apply)(Amount.unapply))
 }

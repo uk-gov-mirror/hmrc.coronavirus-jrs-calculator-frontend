@@ -83,6 +83,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.FurloughTopUpController.onPageLoad()
     case FurloughTopUpStatusPage =>
       furloughTopUpStatusRoutes
+    case TopUpPeriodsPage =>
+      _ =>
+        routes.TopUpAmountController.onPageLoad(1)
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -120,10 +123,36 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
+  private val topUpAmountRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+    userAnswers
+      .get(TopUpPeriodsPage)
+      .map { topUpPeriods =>
+        if (topUpPeriods.isDefinedAt(previousIdx)) {
+          routes.TopUpAmountController.onPageLoad(previousIdx + 1)
+        } else {
+          routes.NicCategoryController.onPageLoad()
+        }
+      }
+      .getOrElse(routes.TopUpPeriodsController.onPageLoad())
+  }
+
   private val idxRoutes: Page => (Int, UserAnswers) => Call = {
     case PayDatePage     => payDateRoutes
     case LastYearPayPage => lastYearPayRoutes
+    case TopUpAmountPage => topUpAmountRoutes
+    case _ =>
+      (_, _) =>
+        routes.RootPageController.onPageLoad()
   }
+
+  def routeFor(page: Page): Call =
+    page match {
+      case FurloughStartDatePage => routes.FurloughStartDateController.onPageLoad()
+      case TopUpPeriodsPage      => routes.TopUpPeriodsController.onPageLoad()
+      case p =>
+        Logger.warn(s"can't find the route for the page: $p")
+        routes.ErrorController.internalServerError()
+    }
 
   private def partialPayBeforeFurloughRoutes: UserAnswers => Call = { userAnswers =>
     if (hasPartialPayAfter(userAnswers)) {
@@ -135,14 +164,6 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   def nextPage(page: Page, userAnswers: UserAnswers, idx: Option[Int] = None): Call =
     idx.fold(normalRoutes(page)(userAnswers))(idx => idxRoutes(page)(idx, userAnswers))
-
-  def routeFor(page: Page): Call =
-    page match {
-      case FurloughStartDatePage => routes.FurloughStartDateController.onPageLoad()
-      case p =>
-        Logger.warn(s"can't find the route for the page: $p")
-        routes.ErrorController.internalServerError()
-    }
 
   private def partialPayAfterFurloughRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(EmployedStartedPage) match {

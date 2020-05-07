@@ -16,17 +16,12 @@
 
 package pages
 
-import models.TopUpPeriod
-import pages.behaviours.PageBehaviours
+import models.TopUpPayment
+import play.api.libs.json.JsPath
 
-class TopUpPeriodsPageSpec extends PageBehaviours {
+case object TopUpAmountPage extends QuestionPage[TopUpPayment] {
 
-  "TopupPeriodsPage" must {
+  override def path: JsPath = JsPath \ toString
 
-    beRetrievable[List[TopUpPeriod]](TopUpPeriodsPage)
-
-    beSettable[List[TopUpPeriod]](TopUpPeriodsPage)
-
-    beRemovable[List[TopUpPeriod]](TopUpPeriodsPage)
-  }
+  override def toString: String = "topUpAmount"
 }

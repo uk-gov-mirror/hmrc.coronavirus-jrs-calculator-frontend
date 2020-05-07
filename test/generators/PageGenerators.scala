@@ -21,6 +21,9 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryTopUpAmountPage: Arbitrary[TopUpAmountPage.type] =
+    Arbitrary(TopUpAmountPage)
+
   implicit lazy val arbitraryTopupPeriodsPage: Arbitrary[TopUpPeriodsPage.type] =
     Arbitrary(TopUpPeriodsPage)
 

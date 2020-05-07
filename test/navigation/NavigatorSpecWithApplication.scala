@@ -18,14 +18,14 @@ package navigation
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import controllers.routes
 import models.PayMethod.{Regular, Variable}
 import models._
 import pages._
 import play.api.libs.json.Json
 
-class NavigatorSpecWithApplication extends SpecBaseWithApplication {
+class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTestDataBuilder {
 
   val navigator = new Navigator(frontendAppConfig)
 
@@ -324,6 +324,50 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication {
         val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
 
         navigator.nextPage(LastYearPayPage, userAnswers, Some(2)) mustBe routes.NicCategoryController.onPageLoad()
+      }
+
+      "go to start of top up loop after top up periods page" in {
+        val topUpPeriods = List(
+          TopUpPeriod(LocalDate.of(2020, 3, 15), Amount(100.00)),
+          TopUpPeriod(LocalDate.of(2020, 4, 15), Amount(150.00))
+        )
+
+        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, topUpPeriods)
+
+        navigator.nextPage(
+          TopUpPeriodsPage,
+          userAnswers
+        ) mustBe routes.TopUpAmountController.onPageLoad(1)
+      }
+
+      "loop around top up amounts if there are more periods to ask" in {
+        val topUpPeriods = List(
+          TopUpPeriod(LocalDate.of(2020, 3, 15), Amount(100.00)),
+          TopUpPeriod(LocalDate.of(2020, 4, 15), Amount(150.00))
+        )
+
+        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, topUpPeriods)
+
+        navigator.nextPage(
+          TopUpAmountPage,
+          userAnswers,
+          Some(1)
+        ) mustBe routes.TopUpAmountController.onPageLoad(2)
+      }
+
+      "stop loop around top up amounts if there are no more periods to ask" in {
+        val topUpPeriods = List(
+          TopUpPeriod(LocalDate.of(2020, 3, 15), Amount(100.00)),
+          TopUpPeriod(LocalDate.of(2020, 4, 15), Amount(150.00))
+        )
+
+        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, topUpPeriods)
+
+        navigator.nextPage(
+          TopUpAmountPage,
+          userAnswers,
+          Some(2)
+        ) mustBe routes.NicCategoryController.onPageLoad()
       }
 
       "go to correct page after PartialPayAfterFurloughPage" when {

@@ -14,31 +14,39 @@
  * limitations under the License.
  *@
 
-@import java.time.LocalDate
+@import models.TopUpPeriod
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
+        button: components.button,
         inputCurrency: components.inputCurrency,
         h1: components.h1,
-        button: components.button
+        p: components.p
 )
 
-@(form: Form[_], idx: Int, payDate: LocalDate, isMonthly: Boolean)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], topUpPeriod: TopUpPeriod, idx: Int)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToStringWithoutYear(payDate))))) {
+@govukLayout(pageTitle = Some(title(form, "topUpAmount.title"))) {
 
-    @formHelper(action = LastYearPayController.onSubmit(idx), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+
+    @formHelper(action = TopUpAmountController.onSubmit(idx), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
+
+        @h1(messages("topUpAmount.heading", dateToString(topUpPeriod.date)))
+
+        @p(Html(messages("topUpAmount.p1", topUpPeriod.furloughGrant.value.formatted("%.2f"))))
+
+        @p(Html(messages("topUpAmount.p2")))
 
         @inputCurrency(
             form,
             id = "value",
             name = "value",
-            label = if(isMonthly){messages("lastYearPay.heading.monthly", dateToStringOnlyMonth(payDate))} else {messages("lastYearPay.heading", dateToStringWithoutYear(payDate))},
-            isPageHeading = true,
+            label = messages(s"topUpAmount.heading", dateToString(topUpPeriod.date)),
+            labelClasses = Some("govuk-visually-hidden"),
             classes = Some("govuk-input--width-10")
         )
 

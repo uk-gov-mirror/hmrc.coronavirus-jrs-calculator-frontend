@@ -85,3 +85,6 @@ POST        /last-year-pay/:idx                              controllers.LastYea
 
 GET         /topup-pay-periods                               controllers.TopUpPeriodsController.onPageLoad()
 POST        /topup-pay-periods                               controllers.TopUpPeriodsController.onSubmit()
+
+GET         /topup-pay-amount/:idx                           controllers.TopUpAmountController.onPageLoad(idx: Int)
+POST        /topup-pay-amount/:idx                           controllers.TopUpAmountController.onSubmit(idx: Int)

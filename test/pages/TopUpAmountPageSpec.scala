@@ -16,17 +16,17 @@
 
 package pages
 
-import models.TopUpPeriod
+import models.TopUpPayment
 import pages.behaviours.PageBehaviours
 
-class TopUpPeriodsPageSpec extends PageBehaviours {
+class TopUpAmountPageSpec extends PageBehaviours {
 
-  "TopupPeriodsPage" must {
+  "TopUpAmountPage" must {
 
-    beRetrievable[List[TopUpPeriod]](TopUpPeriodsPage)
+    beRetrievable[TopUpPayment](TopUpAmountPage)
 
-    beSettable[List[TopUpPeriod]](TopUpPeriodsPage)
+    beSettable[TopUpPayment](TopUpAmountPage)
 
-    beRemovable[List[TopUpPeriod]](TopUpPeriodsPage)
+    beRemovable[TopUpPayment](TopUpAmountPage)
   }
 }

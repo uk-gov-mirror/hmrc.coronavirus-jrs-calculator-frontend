@@ -21,8 +21,10 @@ import controllers.actions._
 import forms.TopUpPeriodsFormProvider
 import handlers.FurloughCalculationHandler
 import javax.inject.Inject
+import models.TopUpPeriod
 import navigation.Navigator
 import pages.TopUpPeriodsPage
+import play.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -54,7 +56,7 @@ class TopUpPeriodsController @Inject()(
           val preparedForm = request.userAnswers.get(TopUpPeriodsPage) match {
             case None => form
             case Some(selectedDates) =>
-              form.fill(selectedDates)
+              form.fill(selectedDates.map(_.date))
           }
 
           Ok(view(preparedForm, furlough.payPeriodBreakdowns))
@@ -72,10 +74,24 @@ class TopUpPeriodsController @Inject()(
             .bindFromRequest()
             .fold(
               formWithErrors => Future.successful(BadRequest(view(formWithErrors, furlough.payPeriodBreakdowns))), { dates =>
-                for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(TopUpPeriodsPage, dates))
-                  _              <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(TopUpPeriodsPage, updatedAnswers))
+                val topUpPeriods = dates.flatMap { date =>
+                  furlough.payPeriodBreakdowns
+                    .find(_.periodWithPaymentDate.period.period.end == date)
+                    .map(_.grant)
+                    .map(
+                      TopUpPeriod(date, _)
+                    )
+                }
+
+                if (dates.length != topUpPeriods.length) {
+                  Logger.warn("[TopUpPeriodsController][onSubmit] Dates in furlough and input do not align")
+                  Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+                } else {
+                  for {
+                    updatedAnswers <- Future.fromTry(request.userAnswers.set(TopUpPeriodsPage, topUpPeriods))
+                    _              <- sessionRepository.set(updatedAnswers)
+                  } yield Redirect(navigator.nextPage(TopUpPeriodsPage, updatedAnswers))
+                }
               }
             )
         }

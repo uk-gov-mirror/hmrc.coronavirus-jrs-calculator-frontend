@@ -16,12 +16,21 @@
 
 package models
 
+import java.time.LocalDate
+
 import play.api.data.Form
 import play.api.i18n.Messages
+import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import views.ViewUtils._
+
+case class TopUpPeriod(date: LocalDate, furloughGrant: Amount)
+
+object TopUpPeriod {
+  implicit val defaultFormat: Format[TopUpPeriod] = Json.format
+}
 
 object TopUpPeriods {
 

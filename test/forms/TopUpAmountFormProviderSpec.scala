@@ -14,19 +14,31 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import models.TopUpPeriod
-import pages.behaviours.PageBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
+import play.api.data.FormError
 
-class TopUpPeriodsPageSpec extends PageBehaviours {
+class TopUpAmountFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  "TopupPeriodsPage" must {
+  val fieldName = "value"
+  val requiredKey = "topUpAmount.error.required"
+  val invalidKey = "topUpAmount.error.nonNumeric"
 
-    beRetrievable[List[TopUpPeriod]](TopUpPeriodsPage)
+  val form = new TopUpAmountFormProvider()()
 
-    beSettable[List[TopUpPeriod]](TopUpPeriodsPage)
+  ".value" must {
 
-    beRemovable[List[TopUpPeriod]](TopUpPeriodsPage)
+    behave like bigDecimalField(
+      form,
+      fieldName,
+      error = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
   }
 }

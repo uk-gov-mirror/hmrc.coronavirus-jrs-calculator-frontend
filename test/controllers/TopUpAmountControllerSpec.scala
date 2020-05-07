@@ -19,87 +19,139 @@ package controllers
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
-import controllers.actions.FeatureFlag._
-import forms.TopUpPeriodsFormProvider
-import models.{Amount, FullPeriodBreakdown, PeriodBreakdown, Salary, TopUpPeriod, UserAnswers}
+import controllers.actions.FeatureFlag.TopUpJourneyFlag
+import forms.TopUpAmountFormProvider
+import models.{Amount, TopUpPayment, TopUpPeriod, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{SalaryQuestionPage, TopUpPeriodsPage}
+import pages.{TopUpAmountPage, TopUpPeriodsPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.TopUpPeriodsView
+import views.html.TopUpAmountView
 
 import scala.concurrent.Future
 
-class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSugar with CoreTestDataBuilder {
+class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSugar with CoreTestDataBuilder {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val topupPeriodsRoute = routes.TopUpPeriodsController.onPageLoad().url
-
-  lazy val getRequest = FakeRequest(GET, topupPeriodsRoute).withCSRFToken
-    .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-  val formProvider = new TopUpPeriodsFormProvider()
+  val formProvider = new TopUpAmountFormProvider()
   val form = formProvider()
 
-  val dates = List(LocalDate.of(2020, 3, 31))
-  val periodBreakdowns: Seq[PeriodBreakdown] = Seq(
-    FullPeriodBreakdown(Amount(1600.00), fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"))
-  )
+  def topUpAmountRoute(idx: Int) = routes.TopUpAmountController.onPageLoad(idx).url
+  def getRequest(method: String, idx: Int) =
+    FakeRequest(method, topUpAmountRoute(idx)).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  "TopupPeriods Controller" must {
+  "TopUpAmount Controller" must {
 
     "return OK and the correct view for a GET" in {
+      val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
+      val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val result = route(application, getRequest).value
+      val request = getRequest(GET, 1)
 
-      val view = application.injector.instanceOf[TopUpPeriodsView]
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[TopUpAmountView]
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, periodBreakdowns)(getRequest, messages).toString
+        view(form, topUpPeriod, 1)(request, messages).toString
 
       application.stop()
     }
 
-    "populate the view correctly on a GET when the question has previously been answered" in {
+    "redirect to error page for GET when index is not valid" when {
 
-      val topUpPeriod = dates.map(TopUpPeriod(_, furloughGrant = Amount(100)))
+      "index is negative" in {
+        val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
+
+        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val result = route(application, getRequest(GET, -1)).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
+
+        application.stop()
+      }
+
+      "index is 0" in {
+        val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
+
+        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val result = route(application, getRequest(GET, 0)).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
+
+        application.stop()
+      }
+
+      "index is too high" in {
+        val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
+
+        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val result = route(application, getRequest(GET, 3)).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
+
+        application.stop()
+      }
+    }
+
+    "populate the view correctly on a GET when the question has previously been answered" in {
+      val topUpAmount = TopUpPayment(LocalDate.of(2020, 3, 31), Amount(25))
+
+      val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
       val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
-        .setValue(TopUpPeriodsPage, topUpPeriod)
+        .setValue(TopUpPeriodsPage, List(topUpPeriod))
+        .setValue(TopUpAmountPage, topUpAmount, Some(1))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val view = application.injector.instanceOf[TopUpPeriodsView]
+      val request = getRequest(GET, 1)
 
-      val result = route(application, getRequest).value
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[TopUpAmountView]
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(dates), periodBreakdowns)(getRequest, messages).toString
+        view(form.fill(Amount(25)), topUpPeriod, 1)(request, messages).toString
 
       application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
 
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
+      val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
+
+      val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -114,13 +166,12 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
           .build()
 
       val request =
-        FakeRequest(POST, topupPeriodsRoute)
-          .withFormUrlEncodedBody(("value[0]" -> dates.head.toString()))
+        getRequest(POST, 1)
+          .withFormUrlEncodedBody(("value", "100.00"))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual onwardRoute.url
 
       application.stop()
@@ -128,26 +179,27 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
+      val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
+
+      val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
-        FakeRequest(POST, topupPeriodsRoute).withCSRFToken
+        getRequest(POST, 1).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-          .withFormUrlEncodedBody(("value[0]", "invalid value"))
+          .withFormUrlEncodedBody(("value", ""))
 
-      val boundForm = form.bind(Map("value[0]" -> "invalid value"))
+      val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[TopUpPeriodsView]
+      val view = application.injector.instanceOf[TopUpAmountView]
 
       val result = route(application, request).value
 
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, periodBreakdowns)(request, messages).toString
+        view(boundForm, topUpPeriod, 1)(request, messages).toString
 
       application.stop()
     }
@@ -156,7 +208,7 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
 
       val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
 
-      val request = FakeRequest(GET, topupPeriodsRoute)
+      val request = getRequest(GET, 1)
 
       val result = route(application, request).value
 
@@ -170,8 +222,8 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
       val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
 
       val request =
-        FakeRequest(POST, topupPeriodsRoute)
-          .withFormUrlEncodedBody(("value[0]", dates.head.toString))
+        getRequest(POST, 1)
+          .withFormUrlEncodedBody(("value", "100.00"))
 
       val result = route(application, request).value
 
@@ -180,69 +232,16 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
       application.stop()
     }
 
-    "redirect to error page for a GET if missing values for furlough pay calculation" in {
-
-      val application = applicationBuilder(userAnswers = Some(UserAnswers("id"))).build()
-
-      val request =
-        FakeRequest(GET, topupPeriodsRoute)
-          .withFormUrlEncodedBody(("value[0]", dates.head.toString))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
-
-      application.stop()
-    }
-
-    "redirect to error page for a POST if missing values for furlough pay calculation" in {
-
-      val application = applicationBuilder(userAnswers = Some(UserAnswers("id"))).build()
-
-      val request =
-        FakeRequest(POST, topupPeriodsRoute)
-          .withFormUrlEncodedBody(("value[0]", dates.head.toString))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
-
-      application.stop()
-    }
-
-    "redirect to error page for a POST if dates in furlough and input do not align" in {
-
-      val userAnswers = mandatoryAnswers
-        .setValue(SalaryQuestionPage, Salary(2000))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val request =
-        FakeRequest(POST, topupPeriodsRoute)
-          .withFormUrlEncodedBody(("value[0]", dates.head.toString), ("value[1]", "2020-04-30"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
-
-      application.stop()
-    }
-
     "redirect to Session Expired for a GET if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, topupPeriodsRoute)
+      val request = getRequest(GET, 1)
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
+
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
 
       application.stop()
@@ -253,8 +252,8 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, topupPeriodsRoute)
-          .withFormUrlEncodedBody(("value[0]", dates.head.toString))
+        getRequest(POST, 1)
+          .withFormUrlEncodedBody(("value", "100.00"))
 
       val result = route(application, request).value
 

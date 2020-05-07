@@ -23,6 +23,22 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryTopUpPayment: Arbitrary[TopUpPayment] =
+    Arbitrary {
+      for {
+        date  <- Arbitrary.arbitrary[LocalDate]
+        value <- Arbitrary.arbitrary[BigDecimal]
+      } yield TopUpPayment(date, Amount(value))
+    }
+
+  implicit lazy val arbitraryTopUpPeriod: Arbitrary[TopUpPeriod] =
+    Arbitrary {
+      for {
+        date  <- Arbitrary.arbitrary[LocalDate]
+        value <- Arbitrary.arbitrary[BigDecimal]
+      } yield TopUpPeriod(date, Amount(value))
+    }
+
   implicit lazy val arbitraryFurloughTopUpStatus: Arbitrary[FurloughTopUpStatus] =
     Arbitrary {
       Gen.oneOf(FurloughTopUpStatus.values.toSeq)

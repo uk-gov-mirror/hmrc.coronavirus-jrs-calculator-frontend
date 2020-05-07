@@ -457,3 +457,10 @@ topupPeriods.period = Pay period end: {0}
 topupPeriods.amount = Amount before top-up: £{0}
 topupPeriods.checkYourAnswersLabel = Which of these are you topping up?
 topupPeriods.error.required = Select the pay periods you are topping up
+
+topUpAmount.title = What’s the top up amount for the pay period ending {0}?
+topUpAmount.heading = What’s the top up amount for the pay period ending {0}?
+topUpAmount.p1 = Furlough pay for this pay period before top up: £{0}
+topUpAmount.p2 = Only include the amount of top up. Do not include the employee's furlough pay or any other additional pay.
+topUpAmount.error.required = Enter the top up amount for this pay period
+topUpAmount.error.nonNumeric = Enter the top up amount in numbers
