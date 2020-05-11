@@ -81,8 +81,6 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case PensionStatusPage =>
       _ =>
         routes.ConfirmationController.onPageLoad()
-    case FurloughTopUpStatusPage =>
-      furloughTopUpStatusRoutes
     case TopUpStatusPage =>
       topUpStatusRoutes
     case TopUpPeriodsPage =>
@@ -207,14 +205,6 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       case Some(EmployeeStarted.OnOrBefore1Feb2019) => routes.PayDateController.onPageLoad(1)
       case Some(EmployeeStarted.After1Feb2019)      => routes.EmployeeStartDateController.onPageLoad()
       case _                                        => routes.VariableLengthEmployedController.onPageLoad()
-    }
-  }
-
-  private def furloughTopUpStatusRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(FurloughTopUpStatusPage) match {
-      case Some(FurloughTopUpStatus.ToppedUp)    => routes.ComingSoonController.onPageLoad(true)
-      case Some(FurloughTopUpStatus.NotToppedUp) => routes.ConfirmationController.onPageLoad()
-      case _                                     => routes.FurloughTopUpController.onPageLoad()
     }
   }
 

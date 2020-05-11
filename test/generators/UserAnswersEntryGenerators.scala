@@ -66,14 +66,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryFurloughTopUpStatusUserAnswersEntry: Arbitrary[(FurloughTopUpStatusPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[FurloughTopUpStatusPage.type]
-        value <- arbitrary[FurloughTopUpStatus].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryPartialPayBeforeFurloughUserAnswersEntry: Arbitrary[(PartialPayBeforeFurloughPage.type, JsValue)] =
     Arbitrary {
       for {
