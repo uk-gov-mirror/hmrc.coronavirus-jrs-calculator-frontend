@@ -16,7 +16,7 @@
 
 package pages
 
-import models.{AdditionalPaymentStatus, FurloughStatus, UserAnswers}
+import models.{AdditionalPaymentStatus, UserAnswers}
 import play.api.libs.json.JsPath
 
 import scala.util.Try

@@ -91,6 +91,8 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       "employeeLastYearPay"                -> Json.toJson(userAnswers.getList(LastYearPayPage)),
       "employeePartialPayBeforeFurlough"   -> JsString(userAnswers.get(PartialPayBeforeFurloughPage).fold("")(_.value.toString)),
       "employeePartialPayAfterFurlough"    -> JsString(userAnswers.get(PartialPayAfterFurloughPage).fold("")(_.value.toString)),
+      "employerTopUpAmounts"               -> Json.toJson(userAnswers.getList(TopUpAmountPage)),
+      "employerAdditionalPayments"         -> Json.toJson(userAnswers.getList(AdditionalPaymentAmountPage)),
       "employeeNationalInsuranceCategory"  -> JsString(userAnswers.get(NicCategoryPage).fold("")(_.toString)),
       "employerPensionStatus"              -> JsString(userAnswers.get(PensionStatusPage).fold("")(_.toString))
     )

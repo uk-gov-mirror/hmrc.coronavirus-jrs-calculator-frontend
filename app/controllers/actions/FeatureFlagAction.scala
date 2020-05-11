@@ -17,7 +17,7 @@
 package controllers.actions
 
 import com.google.inject.{Inject, Singleton}
-import controllers.{ErrorController, routes}
+import controllers.routes
 import handlers.ErrorHandler
 import models.requests.IdentifierRequest
 import play.api.Configuration

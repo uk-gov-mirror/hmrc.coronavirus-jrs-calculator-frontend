@@ -16,7 +16,7 @@
 
 @this(govukPhaseBanner: GovukPhaseBanner, appConfig: config.FrontendAppConfig)
 
-@(phase: String)(implicit request: Request[_], messages: Messages)
+@(phase: String)(implicit messages: Messages)
 
 @feedbackBanner = {
     @messages("feedback.before")
