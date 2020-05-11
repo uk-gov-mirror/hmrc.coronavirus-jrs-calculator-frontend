@@ -1,34 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration TopUpAmount"
+echo "Applying migration TopUpQuestion"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /topUpAmount                        controllers.TopUpAmountController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /topUpAmount                        controllers.TopUpAmountController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /topUpQuestion                        controllers.TopUpQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /topUpQuestion                        controllers.TopUpQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeTopUpAmount                  controllers.TopUpAmountController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeTopUpAmount                  controllers.TopUpAmountController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeTopUpQuestion                  controllers.TopUpQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeTopUpQuestion                  controllers.TopUpQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "topUpAmount.title = topUpAmount" >> ../conf/messages.en
-echo "topUpAmount.heading = topUpAmount" >> ../conf/messages.en
-echo "topUpAmount.checkYourAnswersLabel = topUpAmount" >> ../conf/messages.en
-echo "topUpAmount.error.required = Enter topUpAmount" >> ../conf/messages.en
-echo "topUpAmount.error.length = TopUpAmount must be 1 characters or less" >> ../conf/messages.en
+echo "topUpStatus.title = Have you topped up this employee’s pay?" >> ../conf/messages.en
+echo "topUpStatus.heading = Have you topped up this employee’s pay?" >> ../conf/messages.en
+echo "topUpStatus.topUpStatus.ToppedUp = Yes" >> ../conf/messages.en
+echo "topUpStatus.topUpStatus.NotToppedUp = No" >> ../conf/messages.en
+echo "topUpStatus.checkYourAnswersLabel = Have you topped up this employee’s pay?" >> ../conf/messages.en
+echo "topUpStatus.error.required = Select topUpQuestion" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTopUpAmountUserAnswersEntry: Arbitrary[(TopUpAmountPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryTopUpQuestionUserAnswersEntry: Arbitrary[(TopUpQuestionPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[TopUpAmountPage.type]";\
-    print "        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))";\
+    print "        page  <- arbitrary[TopUpQuestionPage.type]";\
+    print "        value <- arbitrary[TopUpQuestion].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -37,14 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTopUpAmountPage: Arbitrary[TopUpAmountPage.type] =";\
-    print "    Arbitrary(TopUpAmountPage)";\
+    print "  implicit lazy val arbitraryTopUpQuestionPage: Arbitrary[TopUpQuestionPage.type] =";\
+    print "    Arbitrary(TopUpQuestionPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
+
+echo "Adding to ModelGenerators"
+awk '/trait ModelGenerators/ {\
+    print;\
+    print "";\
+    print "  implicit lazy val arbitraryTopUpQuestion: Arbitrary[TopUpQuestion] =";\
+    print "    Arbitrary {";\
+    print "      Gen.oneOf(topUpStatus.values.toSeq)";\
+    print "    }";\
+    next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(TopUpAmountPage.type, JsValue)] ::";\
+    print "    arbitrary[(TopUpQuestionPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration TopUpAmount completed"
+echo "Migration TopUpQuestion completed"

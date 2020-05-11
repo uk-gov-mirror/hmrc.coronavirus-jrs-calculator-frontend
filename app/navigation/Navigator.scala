@@ -83,6 +83,8 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.FurloughTopUpController.onPageLoad()
     case FurloughTopUpStatusPage =>
       furloughTopUpStatusRoutes
+    case TopUpStatusPage =>
+      topUpStatusRoutes
     case TopUpPeriodsPage =>
       _ =>
         routes.TopUpAmountController.onPageLoad(1)
@@ -228,6 +230,14 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
+  private def topUpStatusRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(TopUpStatusPage) match {
+      case Some(TopUpStatus.ToppedUp)    => routes.TopUpPeriodsController.onPageLoad()
+      case Some(TopUpStatus.NotToppedUp) => routes.AdditionalPaymentStatusController.onPageLoad()
+      case _                             => routes.TopUpStatusController.onPageLoad()
+    }
+  }
+
   private def additionalPaymentStatusRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(AdditionalPaymentStatusPage) match {
       case Some(AdditionalPaymentStatus.YesAdditionalPayments) => routes.AdditionalPaymentPeriodsController.onPageLoad()
@@ -258,5 +268,4 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       case None => routes.PayMethodController.onPageLoad()
     }
   }
-
 }

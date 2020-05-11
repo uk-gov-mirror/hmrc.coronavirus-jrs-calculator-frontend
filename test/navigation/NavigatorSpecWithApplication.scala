@@ -93,8 +93,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
       }
 
       "go to PayDatePage after SalaryQuestionPage" in {
-        navigator.nextPage(SalaryQuestionPage, UserAnswers("id")) mustBe routes.PayDateController
-          .onPageLoad(1)
+        navigator.nextPage(SalaryQuestionPage, UserAnswers("id")) mustBe routes.PayDateController.onPageLoad(1)
       }
 
       "loop around pay date if last pay date isn't claim end date or after" in {

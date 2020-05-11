@@ -71,6 +71,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   val variableJourneyEnabled = configuration.get[Boolean]("variable.journey.enabled")
 
+  val topUpJourneyEnabled = configuration.get[Boolean]("topup.journey.enabled")
+
   val calculationGuidance =
     "https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme"
 

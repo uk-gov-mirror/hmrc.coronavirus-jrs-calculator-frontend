@@ -31,6 +31,11 @@ trait ModelGenerators {
       } yield AdditionalPayment(date, Amount(value))
     }
 
+  implicit lazy val arbitraryTopUpQuestion: Arbitrary[TopUpStatus] =
+    Arbitrary {
+      Gen.oneOf(TopUpStatus.values.toSeq)
+    }
+
   implicit lazy val arbitraryTopUpPayment: Arbitrary[TopUpPayment] =
     Arbitrary {
       for {

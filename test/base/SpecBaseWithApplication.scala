@@ -47,7 +47,7 @@ trait SpecBaseWithApplication
 
   protected def applicationBuilder(
     userAnswers: Option[UserAnswers] = None,
-    config: Map[String, Any] = Map("variable.journey.enabled" -> true)): GuiceApplicationBuilder =
+    config: Map[String, Any] = Map("variable.journey.enabled" -> true, "topup.journey.enabled" -> true)): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
