@@ -17,7 +17,7 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.FurloughTopUpStatus
+import models.TopUpStatus
 import play.api.data.FormError
 
 class AdditionalPaymentStatusFormProviderSpec extends OptionFieldBehaviours {
@@ -29,10 +29,10 @@ class AdditionalPaymentStatusFormProviderSpec extends OptionFieldBehaviours {
     val fieldName = "value"
     val requiredKey = "additionalPaymentStatus.error.required"
 
-    behave like optionsField[FurloughTopUpStatus](
+    behave like optionsField[TopUpStatus](
       form,
       fieldName,
-      validValues = FurloughTopUpStatus.values,
+      validValues = TopUpStatus.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

@@ -52,11 +52,6 @@ trait ModelGenerators {
       } yield TopUpPeriod(date, Amount(value))
     }
 
-  implicit lazy val arbitraryFurloughTopUpStatus: Arbitrary[FurloughTopUpStatus] =
-    Arbitrary {
-      Gen.oneOf(FurloughTopUpStatus.values.toSeq)
-    }
-
   implicit lazy val arbitraryEmployeeStarted: Arbitrary[EmployeeStarted] =
     Arbitrary {
       Gen.oneOf(EmployeeStarted.values.toSeq)
