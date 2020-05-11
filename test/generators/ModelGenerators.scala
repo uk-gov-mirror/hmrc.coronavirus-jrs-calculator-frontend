@@ -54,6 +54,11 @@ trait ModelGenerators {
       Gen.oneOf(FurloughStatus.values.toSeq)
     }
 
+  implicit lazy val arbitraryAdditionalPaymentStatus: Arbitrary[AdditionalPaymentStatus] =
+    Arbitrary {
+      Gen.oneOf(AdditionalPaymentStatus.values)
+    }
+
   implicit lazy val arbitraryNicCategory: Arbitrary[NicCategory] =
     Arbitrary {
       Gen.oneOf(NicCategory.values.toSeq)

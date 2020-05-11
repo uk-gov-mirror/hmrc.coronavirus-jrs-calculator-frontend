@@ -88,3 +88,9 @@ POST        /topup-pay-periods                               controllers.TopUpPe
 
 GET         /topup-pay-amount/:idx                           controllers.TopUpAmountController.onPageLoad(idx: Int)
 POST        /topup-pay-amount/:idx                           controllers.TopUpAmountController.onSubmit(idx: Int)
+
+GET         /additional-pay-question                         controllers.AdditionalPaymentStatusController.onPageLoad
+POST        /additional-pay-question                         controllers.AdditionalPaymentStatusController.onSubmit
+
+GET         /additional-pay-periods                          controllers.AdditionalPaymentPeriodsController.onPageLoad()
+POST        /additional-pay-periods                          controllers.AdditionalPaymentPeriodsController.onSubmit()

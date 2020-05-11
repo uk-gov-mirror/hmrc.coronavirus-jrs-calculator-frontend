@@ -86,6 +86,8 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case TopUpPeriodsPage =>
       _ =>
         routes.TopUpAmountController.onPageLoad(1)
+    case AdditionalPaymentStatusPage =>
+      additionalPaymentStatusRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -130,7 +132,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         if (topUpPeriods.isDefinedAt(previousIdx)) {
           routes.TopUpAmountController.onPageLoad(previousIdx + 1)
         } else {
-          routes.NicCategoryController.onPageLoad()
+          routes.AdditionalPaymentStatusController.onPageLoad()
         }
       }
       .getOrElse(routes.TopUpPeriodsController.onPageLoad())
@@ -206,6 +208,14 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       case Some(FurloughTopUpStatus.ToppedUp)    => routes.ComingSoonController.onPageLoad(true)
       case Some(FurloughTopUpStatus.NotToppedUp) => routes.ConfirmationController.onPageLoad()
       case _                                     => routes.FurloughTopUpController.onPageLoad()
+    }
+  }
+
+  private def additionalPaymentStatusRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(AdditionalPaymentStatusPage) match {
+      case Some(AdditionalPaymentStatus.YesAdditionalPayments) => routes.AdditionalPaymentPeriodsController.onPageLoad()
+      case Some(AdditionalPaymentStatus.NoAdditionalPayments)  => routes.NicCategoryController.onPageLoad()
+      case _                                                   => routes.AdditionalPaymentStatusController.onPageLoad()
     }
   }
 

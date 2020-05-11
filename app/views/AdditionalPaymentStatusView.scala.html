@@ -1,0 +1,57 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.routes._
+@import models.AdditionalPaymentStatus
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        inputRadio: components.inputRadio,
+        button: components.button,
+        h1: components.h1,
+        p: components.p,
+        detail: components.additionalPayments
+)
+
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(title(form, "additionalPaymentStatus.title"))) {
+
+    @formHelper(action = AdditionalPaymentStatusController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+
+        @errorSummary(form.errors)
+
+        @h1("additionalPaymentStatus.heading")
+
+        @p(Html(messages("additionalPaymentStatus.p1")))
+
+        @p(Html(messages("additionalPaymentStatus.p2")))
+
+        @detail()
+
+        @inputRadio(
+            form = form,
+            legend = messages("additionalPaymentStatus.heading"),
+            legendAsHeading = false,
+            classes = "govuk-visually-hidden",
+            items = AdditionalPaymentStatus.options(form)
+        )
+
+        @button("site.continue")
+    }
+}

@@ -367,6 +367,24 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           TopUpAmountPage,
           userAnswers,
           Some(2)
+        ) mustBe routes.AdditionalPaymentStatusController.onPageLoad()
+      }
+
+      "go to correct page after AdditionalPaymentStatusPage" in {
+        navigator.nextPage(
+          AdditionalPaymentStatusPage,
+          UserAnswers("id")
+            .set(AdditionalPaymentStatusPage, AdditionalPaymentStatus.YesAdditionalPayments)
+            .success
+            .value
+        ) mustBe routes.AdditionalPaymentPeriodsController.onPageLoad()
+
+        navigator.nextPage(
+          AdditionalPaymentStatusPage,
+          UserAnswers("id")
+            .set(AdditionalPaymentStatusPage, AdditionalPaymentStatus.NoAdditionalPayments)
+            .success
+            .value
         ) mustBe routes.NicCategoryController.onPageLoad()
       }
 
