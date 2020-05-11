@@ -88,6 +88,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.TopUpAmountController.onPageLoad(1)
     case AdditionalPaymentStatusPage =>
       additionalPaymentStatusRoutes
+    case AdditionalPaymentPeriodsPage =>
+      _ =>
+        routes.AdditionalPaymentAmountController.onPageLoad(1)
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -138,10 +141,24 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       .getOrElse(routes.TopUpPeriodsController.onPageLoad())
   }
 
+  private val additionalPaymentAmountRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+    userAnswers
+      .get(AdditionalPaymentPeriodsPage)
+      .map { additionalPaymentPeriods =>
+        if (additionalPaymentPeriods.isDefinedAt(previousIdx)) {
+          routes.AdditionalPaymentAmountController.onPageLoad(previousIdx + 1)
+        } else {
+          routes.NicCategoryController.onPageLoad()
+        }
+      }
+      .getOrElse(routes.AdditionalPaymentPeriodsController.onPageLoad())
+  }
+
   private val idxRoutes: Page => (Int, UserAnswers) => Call = {
-    case PayDatePage     => payDateRoutes
-    case LastYearPayPage => lastYearPayRoutes
-    case TopUpAmountPage => topUpAmountRoutes
+    case PayDatePage                 => payDateRoutes
+    case LastYearPayPage             => lastYearPayRoutes
+    case TopUpAmountPage             => topUpAmountRoutes
+    case AdditionalPaymentAmountPage => additionalPaymentAmountRoutes
     case _ =>
       (_, _) =>
         routes.RootPageController.onPageLoad()

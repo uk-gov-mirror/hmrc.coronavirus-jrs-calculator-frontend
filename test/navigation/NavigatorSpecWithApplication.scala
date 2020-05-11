@@ -370,6 +370,50 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         ) mustBe routes.AdditionalPaymentStatusController.onPageLoad()
       }
 
+      "go to start of additional payment loop after additional payment periods page" in {
+        val additionalPaymentDates = List(
+          LocalDate.of(2020, 3, 15),
+          LocalDate.of(2020, 4, 15)
+        )
+
+        val userAnswers = mandatoryAnswers.setValue(AdditionalPaymentPeriodsPage, additionalPaymentDates)
+
+        navigator.nextPage(
+          AdditionalPaymentPeriodsPage,
+          userAnswers
+        ) mustBe routes.AdditionalPaymentAmountController.onPageLoad(1)
+      }
+
+      "loop around additional payment amounts if there are more periods to ask" in {
+        val additionalPaymentDates = List(
+          LocalDate.of(2020, 3, 15),
+          LocalDate.of(2020, 4, 15)
+        )
+
+        val userAnswers = mandatoryAnswers.setValue(AdditionalPaymentPeriodsPage, additionalPaymentDates)
+
+        navigator.nextPage(
+          AdditionalPaymentAmountPage,
+          userAnswers,
+          Some(1)
+        ) mustBe routes.AdditionalPaymentAmountController.onPageLoad(2)
+      }
+
+      "stop loop around additional payment amounts if there are no more periods to ask" in {
+        val additionalPaymentDates = List(
+          LocalDate.of(2020, 3, 15),
+          LocalDate.of(2020, 4, 15)
+        )
+
+        val userAnswers = mandatoryAnswers.setValue(AdditionalPaymentPeriodsPage, additionalPaymentDates)
+
+        navigator.nextPage(
+          AdditionalPaymentAmountPage,
+          userAnswers,
+          Some(2)
+        ) mustBe routes.NicCategoryController.onPageLoad()
+      }
+
       "go to correct page after AdditionalPaymentStatusPage" in {
         navigator.nextPage(
           AdditionalPaymentStatusPage,
