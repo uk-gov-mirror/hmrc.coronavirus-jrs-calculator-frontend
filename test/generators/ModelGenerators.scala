@@ -23,6 +23,14 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryAdditionalPayment: Arbitrary[AdditionalPayment] =
+    Arbitrary {
+      for {
+        date  <- Arbitrary.arbitrary[LocalDate]
+        value <- Arbitrary.arbitrary[BigDecimal]
+      } yield AdditionalPayment(date, Amount(value))
+    }
+
   implicit lazy val arbitraryTopUpPayment: Arbitrary[TopUpPayment] =
     Arbitrary {
       for {

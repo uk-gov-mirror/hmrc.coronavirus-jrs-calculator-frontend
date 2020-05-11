@@ -487,3 +487,9 @@ additionalPaymentPeriods.heading = When did this employee get additional payment
 additionalPaymentPeriods.hint = Select all that apply.
 additionalPaymentPeriods.period = Pay period end: {0}
 additionalPaymentPeriods.error.required = Select the pay periods when there were additional payments
+
+additionalPaymentAmount.title = What additional payments did this employee get in the pay period ending {0}?
+additionalPaymentAmount.heading = What additional payments did this employee get in the pay period ending {0}?
+additionalPaymentAmount.p1 = Do not include their regular payments in this amount.
+additionalPaymentAmount.error.required = Enter the additional payment amount for this pay period
+additionalPaymentAmount.error.nonNumeric = Enter the additional payment amount in numbers

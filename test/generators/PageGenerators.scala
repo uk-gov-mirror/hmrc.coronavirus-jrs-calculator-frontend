@@ -21,6 +21,9 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryAdditionalPaymentAmountPage: Arbitrary[AdditionalPaymentAmountPage.type] =
+    Arbitrary(AdditionalPaymentAmountPage)
+
   implicit lazy val arbitraryTopUpAmountPage: Arbitrary[TopUpAmountPage.type] =
     Arbitrary(TopUpAmountPage)
 

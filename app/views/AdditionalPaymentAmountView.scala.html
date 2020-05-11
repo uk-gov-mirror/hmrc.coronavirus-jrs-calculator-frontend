@@ -1,0 +1,56 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import java.time.LocalDate
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        button: components.button,
+        inputCurrency: components.inputCurrency,
+        h1: components.h1,
+        p: components.p,
+        detail: components.additionalPayments
+)
+
+@(form: Form[_], payPeriodEnd: LocalDate, idx: Int)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(title(form, "additionalPaymentAmount.title"))) {
+
+
+    @formHelper(action = AdditionalPaymentAmountController.onSubmit(idx), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+
+        @errorSummary(form.errors)
+
+        @h1(messages("additionalPaymentAmount.heading", dateToString(payPeriodEnd)))
+
+        @p(Html(messages("additionalPaymentAmount.p1")))
+
+        @detail()
+
+        @inputCurrency(
+            form,
+            id = "value",
+            name = "value",
+            label = messages(s"additionalPaymentAmount.heading", dateToString(payPeriodEnd)),
+            labelClasses = Some("govuk-visually-hidden"),
+            classes = Some("govuk-input--width-10")
+        )
+
+        @button("site.continue")
+    }
+}
