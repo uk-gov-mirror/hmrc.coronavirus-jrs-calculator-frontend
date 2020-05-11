@@ -100,3 +100,6 @@ POST        /additional-pay-periods                          controllers.Additio
 
 GET         /additional-pay-amount/:idx                      controllers.AdditionalPaymentAmountController.onPageLoad(idx: Int)
 POST        /additional-pay-amount/:idx                      controllers.AdditionalPaymentAmountController.onSubmit(idx: Int)
+
+GET         /check-your-answers                              controllers.CheckYourAnswersController.onPageLoad()
+POST        /check-your-answers                              controllers.CheckYourAnswersController.onSubmit()
