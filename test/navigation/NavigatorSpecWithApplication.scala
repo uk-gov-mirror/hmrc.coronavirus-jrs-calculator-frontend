@@ -87,13 +87,13 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         navigator.nextPage(PayMethodPage, UserAnswers("id")) mustBe routes.PayMethodController.onPageLoad()
       }
 
-      "go to SalaryQuestionPage after PaymentQuestionPage" in {
+      "go to RegularPayAmountPage after PaymentQuestionPage" in {
         navigator.nextPage(PaymentFrequencyPage, UserAnswers("id")) mustBe routes.PayMethodController
           .onPageLoad()
       }
 
-      "go to TopUpStatusPage after SalaryQuestionPage" in {
-        navigator.nextPage(SalaryQuestionPage, UserAnswers("id")) mustBe routes.TopUpStatusController.onPageLoad()
+      "go to TopUpStatusPage after RegularPayAmountPage" in {
+        navigator.nextPage(RegularPayAmountPage, UserAnswers("id")) mustBe routes.TopUpStatusController.onPageLoad()
       }
 
       "loop around pay date if last pay date isn't claim end date or after" in {
@@ -133,7 +133,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           .set(PayMethodPage, Regular)
           .get
 
-        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.SalaryQuestionController.onPageLoad()
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.RegularPayAmountController.onPageLoad()
       }
 
       "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted.OnOrBefore1Feb2019" in {

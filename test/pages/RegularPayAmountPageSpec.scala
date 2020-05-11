@@ -19,14 +19,14 @@ package pages
 import models.Salary
 import pages.behaviours.PageBehaviours
 
-class SalaryQuestionPageSpec extends PageBehaviours {
+class RegularPayAmountPageSpec extends PageBehaviours {
 
-  "SalaryQuestionPage" must {
+  "RegularPayAmountPage" must {
 
-    beRetrievable[Salary](SalaryQuestionPage)
+    beRetrievable[Salary](RegularPayAmountPage)
 
-    beSettable[Salary](SalaryQuestionPage)
+    beSettable[Salary](RegularPayAmountPage)
 
-    beRemovable[Salary](SalaryQuestionPage)
+    beRemovable[Salary](RegularPayAmountPage)
   }
 }

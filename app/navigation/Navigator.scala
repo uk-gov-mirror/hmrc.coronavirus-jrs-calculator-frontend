@@ -58,7 +58,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.PayMethodController.onPageLoad()
     case PayMethodPage =>
       payMethodRoutes
-    case SalaryQuestionPage =>
+    case RegularPayAmountPage =>
       _ =>
         routes.TopUpStatusController.onPageLoad()
     case EmployedStartedPage =>
@@ -226,7 +226,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   private def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayMethodPage) match {
-      case Some(Regular) => routes.SalaryQuestionController.onPageLoad()
+      case Some(Regular) => routes.RegularPayAmountController.onPageLoad()
       case Some(Variable) =>
         userAnswers.get(EmployedStartedPage) match {
           case Some(EmployeeStarted.OnOrBefore1Feb2019) =>

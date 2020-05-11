@@ -47,7 +47,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
 
   "build a RegularPayData for a RegularPay journey" in new JourneyBuilder {
     val answers: UserAnswers = mandatoryAnswers
-      .set(SalaryQuestionPage, Salary(1000.0))
+      .set(RegularPayAmountPage, Salary(1000.0))
       .get
 
     val expected = RegularPayData(defaultReferencePayData, Amount(1000.0))

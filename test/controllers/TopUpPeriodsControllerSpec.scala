@@ -68,7 +68,7 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
     .setValue(PayDatePage, LocalDate.of(2020, 2, 29), Some(1))
     .setValue(PayDatePage, LocalDate.of(2020, 3, 31), Some(2))
     .setValue(PayDatePage, LocalDate.of(2020, 4, 30), Some(3))
-    .setValue(SalaryQuestionPage, Salary(2000))
+    .setValue(RegularPayAmountPage, Salary(2000))
 
   "TopupPeriods Controller" must {
 
@@ -99,7 +99,7 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
         .setValue(LastPayDatePage, LocalDate.of(2020, 3, 31))
         .setValue(PayDatePage, LocalDate.of(2020, 2, 29), Some(1))
         .setValue(PayDatePage, LocalDate.of(2020, 3, 31), Some(2))
-        .setValue(SalaryQuestionPage, Salary(2000))
+        .setValue(RegularPayAmountPage, Salary(2000))
 
       val mockSessionRepository = mock[SessionRepository]
 

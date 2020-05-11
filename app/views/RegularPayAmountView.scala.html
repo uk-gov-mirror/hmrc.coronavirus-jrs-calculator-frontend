@@ -28,24 +28,24 @@
 
 @(form: Form[_], paymentFrequency: PaymentFrequency)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, s"salaryQuestion.title.${paymentFrequency}"))) {
+@govukLayout(pageTitle = Some(title(form, s"regularPayAmount.title.${paymentFrequency}"))) {
 
 
-    @formHelper(action = SalaryQuestionController.onSubmit(), args = 'novalidate -> "novalidate") {
+    @formHelper(action = RegularPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages(s"salaryQuestion.heading.$paymentFrequency"))
+        @h1(messages(s"regularPayAmount.heading.$paymentFrequency"))
 
-        @p(Html(messages("salaryQuestion.salary.hint")))
+        @p(Html(messages("regularPayAmount.salary.hint")))
 
-        @panel(Html(messages("salaryQuestion.inset.info")))
+        @panel(Html(messages("regularPayAmount.inset.info")))
 
         @inputCurrency(
             form,
             id = "value",
             name = "value",
-            label = messages(s"salaryQuestion.heading.$paymentFrequency"),
+            label = messages(s"regularPayAmount.heading.$paymentFrequency"),
             labelClasses = Some("govuk-visually-hidden"),
             isPageHeading = false,
             classes = Some("govuk-input--width-10")

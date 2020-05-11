@@ -45,7 +45,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
     } yield BranchingQuestions(payMethod, employeeStarted, employeeStartDate)
 
   def extractSalary(userAnswers: UserAnswers): Option[Amount] =
-    userAnswers.get(SalaryQuestionPage).map(v => Amount(v.amount))
+    userAnswers.get(RegularPayAmountPage).map(v => Amount(v.amount))
 
   def extractVariableGrossPay(userAnswers: UserAnswers): Option[Amount] =
     userAnswers.get(VariableGrossPayPage).map(v => Amount(v.amount))

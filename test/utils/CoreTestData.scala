@@ -49,7 +49,7 @@ trait CoreTestData {
        |        "pensionStatus" : "doesContribute",
        |        "claimPeriodEnd" : "2020-04-30",
        |        "paymentFrequency" : "monthly",
-       |        "salary" : {
+       |        "regularPayAmount" : {
        |            "amount" : 2000.0
        |        },
        |        "nicCategory" : "payable",
@@ -77,7 +77,7 @@ trait CoreTestData {
       |    "pensionStatus": "doesNotContribute",
       |    "claimPeriodEnd": "2020-04-30",
       |    "paymentFrequency": "monthly",
-      |    "salary": {
+      |    "regularPayAmount": {
       |      "amount": 2000
       |    },
       |    "nicCategory": "nonPayable",
@@ -104,7 +104,7 @@ trait CoreTestData {
       |        "pensionStatus" : "doesContribute",
       |        "claimPeriodEnd" : "2020-03-31",
       |        "paymentFrequency" : "monthly",
-      |        "salary" : {
+      |        "regularPayAmount" : {
       |            "amount" : 3500
       |        },
       |        "nicCategory" : "payable",

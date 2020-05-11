@@ -40,8 +40,8 @@ POST        /pay-frequency                                   controllers.Payment
 GET         /pay-date/:idx                                   controllers.PayDateController.onPageLoad(idx: Int)
 POST        /pay-date/:idx                                   controllers.PayDateController.onSubmit(idx: Int)
 
-GET         /regular-pay                                     controllers.SalaryQuestionController.onPageLoad()
-POST        /regular-pay                                     controllers.SalaryQuestionController.onSubmit()
+GET         /regular-pay-amount                              controllers.RegularPayAmountController.onPageLoad()
+POST        /regular-pay-amount                              controllers.RegularPayAmountController.onSubmit()
 
 GET         /ni-category-letter                              controllers.NicCategoryController.onPageLoad()
 POST        /ni-category-letter                              controllers.NicCategoryController.onSubmit()

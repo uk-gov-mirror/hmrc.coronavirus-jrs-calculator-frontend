@@ -77,7 +77,7 @@ trait ModelGenerators {
       Gen.oneOf(PensionStatus.values.toSeq)
     }
 
-  implicit lazy val arbitrarySalaryQuestion: Arbitrary[Salary] =
+  implicit lazy val arbitraryRegularPayAmount: Arbitrary[Salary] =
     Arbitrary {
       for {
         salary <- Arbitrary.arbitrary[BigDecimal]

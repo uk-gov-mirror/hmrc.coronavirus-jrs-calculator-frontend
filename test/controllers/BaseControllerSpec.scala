@@ -25,7 +25,7 @@ import models.Salary
 import models.requests.DataRequest
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{PayDatePage, SalaryQuestionPage}
+import pages.{PayDatePage, RegularPayAmountPage}
 import play.api.http.Status._
 import play.api.mvc.Results._
 import play.api.mvc.{MessagesControllerComponents, Result}
@@ -53,7 +53,7 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     "answer is not found" must {
 
       "return None" in {
-        val result = BaseController.getAnswer(SalaryQuestionPage)(DataRequest(fakeRequest, "id", emptyUserAnswers), implicitly)
+        val result = BaseController.getAnswer(RegularPayAmountPage)(DataRequest(fakeRequest, "id", emptyUserAnswers), implicitly)
 
         result mustBe None
       }
@@ -63,9 +63,9 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     "answer is found" must {
 
       "return Some(A)" in {
-        val userAnswers = emptyUserAnswers.set(SalaryQuestionPage, Salary(100))(implicitly).success.value
+        val userAnswers = emptyUserAnswers.set(RegularPayAmountPage, Salary(100))(implicitly).success.value
 
-        val result = BaseController.getAnswer(SalaryQuestionPage)(DataRequest(fakeRequest, "id", userAnswers), implicitly)
+        val result = BaseController.getAnswer(RegularPayAmountPage)(DataRequest(fakeRequest, "id", userAnswers), implicitly)
 
         result mustBe Some(Salary(100))
       }
@@ -105,7 +105,7 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     "answer is not found" must {
 
       "return internal server error" in {
-        val result = BaseController.getRequiredAnswer(SalaryQuestionPage)(futureResult)(
+        val result = BaseController.getRequiredAnswer(RegularPayAmountPage)(futureResult)(
           DataRequest(fakeRequest, "id", emptyUserAnswers),
           implicitly,
           errorHandler)
@@ -118,9 +118,9 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     "answer is found" must {
 
       "execute provided function" in {
-        val userAnswers = emptyUserAnswers.set(SalaryQuestionPage, Salary(123.45))(implicitly).success.value
+        val userAnswers = emptyUserAnswers.set(RegularPayAmountPage, Salary(123.45))(implicitly).success.value
 
-        val result = BaseController.getRequiredAnswer(SalaryQuestionPage)(futureResult)(
+        val result = BaseController.getRequiredAnswer(RegularPayAmountPage)(futureResult)(
           DataRequest(fakeRequest, "id", userAnswers),
           implicitly,
           errorHandler)

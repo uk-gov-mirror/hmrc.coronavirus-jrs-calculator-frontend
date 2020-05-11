@@ -17,14 +17,14 @@
 package controllers
 
 import base.SpecBaseWithApplication
-import forms.SalaryQuestionFormProvider
+import forms.RegularPayAmountFormProvider
 import models.PaymentFrequency.{FourWeekly, Weekly}
 import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{PaymentFrequencyPage, SalaryQuestionPage}
+import pages.{PaymentFrequencyPage, RegularPayAmountPage}
 import play.api.inject.bind
 import play.api.libs.json.{JsNumber, JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, Call}
@@ -32,32 +32,32 @@ import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.SalaryQuestionView
+import views.html.RegularPayAmountView
 
 import scala.concurrent.Future
 
-class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+class RegularPayAmountControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new SalaryQuestionFormProvider()
+  val formProvider = new RegularPayAmountFormProvider()
   val form = formProvider()
 
-  lazy val salaryQuestionRoute = routes.SalaryQuestionController.onPageLoad().url
+  lazy val regularPayAmountRoute = routes.RegularPayAmountController.onPageLoad().url
 
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
-      SalaryQuestionPage.toString   -> JsNumber(111),
+      RegularPayAmountPage.toString -> JsNumber(111),
       PaymentFrequencyPage.toString -> JsString("fourweekly")
     )
   )
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, salaryQuestionRoute).withCSRFToken
+    FakeRequest(GET, regularPayAmountRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  "SalaryQuestion Controller" must {
+  "RegularPayAmountController" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -65,7 +65,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val view = application.injector.instanceOf[SalaryQuestionView]
+      val view = application.injector.instanceOf[RegularPayAmountView]
 
       val result = route(application, getRequest).value
 
@@ -92,7 +92,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
           .build()
 
       val request =
-        FakeRequest(POST, salaryQuestionRoute)
+        FakeRequest(POST, regularPayAmountRoute)
           .withFormUrlEncodedBody(("value", "111"))
 
       val result = route(application, request).value
@@ -109,13 +109,13 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
-        FakeRequest(POST, salaryQuestionRoute).withCSRFToken
+        FakeRequest(POST, regularPayAmountRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[SalaryQuestionView]
+      val view = application.injector.instanceOf[RegularPayAmountView]
 
       val result = route(application, request).value
 
@@ -131,7 +131,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, salaryQuestionRoute)
+      val request = FakeRequest(GET, regularPayAmountRoute)
 
       val result = route(application, request).value
 
@@ -146,7 +146,7 @@ class SalaryQuestionControllerSpec extends SpecBaseWithApplication with MockitoS
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, salaryQuestionRoute)
+        FakeRequest(POST, regularPayAmountRoute)
           .withFormUrlEncodedBody(("value", "111"))
 
       val result = route(application, request).value

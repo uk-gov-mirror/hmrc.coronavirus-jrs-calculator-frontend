@@ -17,29 +17,29 @@
 package controllers
 
 import controllers.actions._
-import forms.SalaryQuestionFormProvider
+import forms.RegularPayAmountFormProvider
 import javax.inject.Inject
 import models.PaymentFrequency
 import navigation.Navigator
-import pages.{PaymentFrequencyPage, SalaryQuestionPage}
+import pages.{PaymentFrequencyPage, RegularPayAmountPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.SalaryQuestionView
+import views.html.RegularPayAmountView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SalaryQuestionController @Inject()(
+class RegularPayAmountController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: SalaryQuestionFormProvider,
+  formProvider: RegularPayAmountFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: SalaryQuestionView
+  view: RegularPayAmountView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
@@ -47,7 +47,7 @@ class SalaryQuestionController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybePf = request.userAnswers.get[PaymentFrequency](PaymentFrequencyPage)
-    val maybeSalary = request.userAnswers.get(SalaryQuestionPage)
+    val maybeSalary = request.userAnswers.get(RegularPayAmountPage)
 
     (maybePf, maybeSalary) match {
       case (Some(pf), Some(sq)) => Ok(view(form.fill(sq), pf))
@@ -71,9 +71,9 @@ class SalaryQuestionController @Inject()(
         },
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(SalaryQuestionPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(RegularPayAmountPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(SalaryQuestionPage, updatedAnswers))
+          } yield Redirect(navigator.nextPage(RegularPayAmountPage, updatedAnswers))
       )
   }
 }
