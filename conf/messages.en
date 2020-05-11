@@ -148,17 +148,20 @@ unauthorised.heading = You can’t access this service with this account
 
 payMethod.title = How is this employee paid?
 payMethod.heading = How is this employee paid?
+payMethod.checkYourAnswersLabel = Pay method
 payMethod.regular= A regular amount each time
 payMethod.variable = A variable amount each time
 payMethod.error.required = Select one of the options below
 
 payFrequency.title = How often do you pay this employee?
 payFrequency.heading = How often do you pay this employee?
+payFrequency.checkYourAnswersLabel = Pay frequency
 payFrequency.weekly = Weekly
 payFrequency.fortnightly = Every 2 weeks
 payFrequency.fourweekly = Every 4 weeks
 payFrequency.monthly = Monthly
 payFrequency.error.required = Select one of the options below
+payFrequency.change.hidden = the pay frequency
 
 rootPage.title = Coronavirus Job Retention Scheme calculator
 rootPage.heading = Coronavirus Job Retention Scheme calculator
@@ -200,6 +203,8 @@ rootPage.beforeYouStart.p1.l7.link = National Insurance category letter
 
 payDate.title = What’s the end of the next pay period after {0}?
 payDate.heading = What’s the end of the next pay period after {0}?
+payDate.checkYourAnswersLabel = Pay periods
+payDate.change.hidden = pay period dates
 payDate.title.firstDate = What’s the last day this employee was paid for before {0}?
 payDate.heading.firstDate = What’s the last day this employee was paid for before {0}?
 payDate.error.required.all = Enter the date
@@ -226,6 +231,7 @@ salaryQuestion.heading.weekly = On 19 March 2020, what was this employee getting
 salaryQuestion.heading.fortnightly = On 19 March 2020, what was this employee getting paid every 2 weeks?
 salaryQuestion.heading.fourweekly = On 19 March 2020, what was this employee getting paid every 4 weeks?
 salaryQuestion.heading.monthly = On 19 March 2020, what was this employee getting paid each month?
+salaryQuestion.checkYourAnswersLabel = Salary
 salaryQuestion.salary.label= If this employee started work in February, enter the amount they will get paid from now on.
 salaryQuestion.salary.hint = This is the gross amount before deductions.
 salaryQuestion.salary.error.required = Enter a valid amount
@@ -234,6 +240,7 @@ salaryQuestion.inset.info = If this employee started work between 1 and 18 March
 
 nicCategory.title = What’s the employee’s National Insurance category letter?
 nicCategory.heading = What’s the employee’s National Insurance category letter?
+nicCategory.checkYourAnswersLabel = National Insurance category letter
 nicCategory.payable = A, B, C or J
 nicCategory.nonPayable = H, M or Z
 nicCategory.error.required = Select the employee’s National Insurance category letter
@@ -260,6 +267,7 @@ nicCategory.details.category.z = Employees under 21 who can defer National Insur
 
 pensionContribution.title = Do you pay pension contributions for this employee?
 pensionContribution.heading = Do you pay pension contributions for this employee?
+pensionContribution.checkYourAnswersLabel = Pension contributions paid
 pensionContribution.doesContribute = Yes
 pensionContribution.doesNotContribute = No
 pensionContribution.error.required = Select yes if you pay pension contributions for this employee
@@ -343,12 +351,6 @@ claimPeriodEnd.cannot.be.after.14days = The claim period end date cannot be more
 claimPeriodEnd.cannot.be.before.claimStart = The claim period end date can’t be before start date
 claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
-
-claimPeriodStartAndEnd.checkYourAnswersLabel = Claim period
-claimPeriodStartAndEnd.checkYourAnswersValue = {0} to {1}
-furloughPeriod.checkYourAnswersLabel = Furlough period
-furloughPeriod.ongoing.checkYourAnswersValue = Started {0}
-furloughPeriod.ended.checkYourAnswersValue = {0} to {1}
 
 furloughOngoing.title = Has the employee’s furlough ended?
 furloughOngoing.heading = Has the employee’s furlough ended?
@@ -512,3 +514,14 @@ topUpStatus.error.required = Select ‘Yes’ if you topped up this employee’s
 
 checkYourAnswers.title = Check your answers
 checkYourAnswers.heading = Check your answers
+checkYourAnswers.button = Calculate amount
+claimPeriodStartAndEnd.checkYourAnswersLabel = Claim period
+claimPeriodStartAndEnd.checkYourAnswersValue = {0} to {1}
+claimPeriodStartAndEnd.change.hidden = the claim period
+furloughPeriod.checkYourAnswersLabel = Furlough period
+furloughPeriod.ongoing.checkYourAnswersValue = Started {0}
+furloughPeriod.ended.checkYourAnswersValue = {0} to {1}
+furloughPeriod.change.hidden = the furlough period
+payDate.checkYourAnswersValue = {0} to {1}
+payDate.checkYourAnswersValue.last = {0} to {1} (paid on {2})
+salaryQuestion.checkYourAnswersValue = £{0} ({1})
