@@ -63,8 +63,8 @@ POST        /variable-length-employed                        controllers.Variabl
 GET         /employee-start-date                             controllers.EmployeeStartDateController.onPageLoad()
 POST        /employee-start-date                             controllers.EmployeeStartDateController.onSubmit()
 
-GET         /variable-gross-pay                              controllers.VariableGrossPayController.onPageLoad()
-POST        /variable-gross-pay                              controllers.VariableGrossPayController.onSubmit()
+GET         /annual-pay-amount                               controllers.AnnualPayAmountController.onPageLoad()
+POST        /annual-pay-amount                               controllers.AnnualPayAmountController.onSubmit()
 
 GET         /coming-soon                                     controllers.ComingSoonController.onPageLoad(showCalculateTopupsLink: Boolean ?= false)
 

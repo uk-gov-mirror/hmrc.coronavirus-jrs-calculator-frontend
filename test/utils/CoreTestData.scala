@@ -30,7 +30,7 @@ trait CoreTestData {
     furloughStartDate: String = "2020-03-01",
     furloughEndDate: String = "",
     payMethod: String = "regular",
-    variableGrossPay: String = "",
+    annualPayAmount: String = "",
     employeeStartDate: String = "",
     claimStartDate: String = "2020-03-01"): String =
     s"""
@@ -42,8 +42,8 @@ trait CoreTestData {
        |        "furloughStartDate" : "$furloughStartDate",
        |        "furloughEndDate" : "$furloughEndDate",
        |        "payMethod" : "$payMethod",
-       |        "variableGrossPay": {
-       |            "amount" : "$variableGrossPay"
+       |        "annualPayAmount": {
+       |            "amount" : "$annualPayAmount"
        |        },
        |        "employeeStartDate": "$employeeStartDate",
        |        "pensionStatus" : "doesContribute",
@@ -125,7 +125,7 @@ trait CoreTestData {
       |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
       |    "data" : {
       |        "furloughStatus" : "ended",
-      |        "variableGrossPay" : {
+      |        "annualPayAmount" : {
       |            "amount" : 10000
       |        },
       |        "employeeStarted" : "after1Feb2019",
@@ -164,7 +164,7 @@ trait CoreTestData {
       |    "_id" : "session-a33fd288-bafb-475b-9767-84df4315d230",
       |    "data" : {
       |        "furloughStatus" : "ongoing",
-      |        "variableGrossPay" : {
+      |        "annualPayAmount" : {
       |            "amount" : 12960
       |        },
       |        "employeeStarted" : "after1Feb2019",
@@ -198,7 +198,7 @@ trait CoreTestData {
        |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
        |    "data" : {
        |        "furloughStatus" : "ended",
-       |        "variableGrossPay" : {
+       |        "annualPayAmount" : {
        |            "amount" : 10000
        |        },
        |        "employeeStarted" : "after1Feb2019",
@@ -232,7 +232,7 @@ trait CoreTestData {
       |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
       |    "data" : {
       |        "furloughStatus" : "ended",
-      |        "variableGrossPay" : {
+      |        "annualPayAmount" : {
       |            "amount" : 10000
       |        },
       |        "employeeStarted" : "after1Feb2019",
@@ -265,7 +265,7 @@ trait CoreTestData {
       |    "_id" : "session-08e14c4d-8956-4d3a-b457-1b76e3922dd6",
       |    "data" : {
       |        "furloughStatus" : "ended",
-      |        "variableGrossPay" : {
+      |        "annualPayAmount" : {
       |            "amount" : 10000
       |        },
       |        "employeeStarted" : "after1Feb2019",
@@ -298,7 +298,7 @@ trait CoreTestData {
       |    "_id" : "session-559ffcf7-de7b-49e6-bf4d-bbc248698ae1",
       |    "data" : {
       |        "furloughStatus" : "ongoing",
-      |        "variableGrossPay" : {
+      |        "annualPayAmount" : {
       |            "amount" : 20000.0
       |        },
       |        "employeeStarted" : "after1Feb2019",
@@ -343,7 +343,7 @@ trait CoreTestData {
       |    "_id" : "session-559ffcf7-de7b-49e6-bf4d-bbc248698ae1",
       |    "data" : {
       |        "furloughStatus" : "ended",
-      |        "variableGrossPay" : {
+      |        "annualPayAmount" : {
       |            "amount" : 31970
       |        },
       |        "employeeStarted" : "onOrBefore1Feb2019",
@@ -387,7 +387,7 @@ trait CoreTestData {
       |    "_id" : "session-7f38466c-1922-4cf8-9be2-9e9d3de9bdc2",
       |    "data" : {
       |        "furloughStatus" : "ended",
-      |        "variableGrossPay" : {
+      |        "annualPayAmount" : {
       |            "amount" : 31970
       |        },
       |        "employeeStarted" : "onOrBefore1Feb2019",

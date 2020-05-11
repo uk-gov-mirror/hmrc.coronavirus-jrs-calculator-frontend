@@ -16,17 +16,12 @@
 
 package pages
 
-import models.VariableGrossPay
-import pages.behaviours.PageBehaviours
+import models.AnnualPayAmount
+import play.api.libs.json.JsPath
 
-class VariableGrossPayPageSpec extends PageBehaviours {
+case object AnnualPayAmountPage extends QuestionPage[AnnualPayAmount] {
 
-  "VariableGrossPayPage" must {
+  override def path: JsPath = JsPath \ toString
 
-    beRetrievable[VariableGrossPay](VariableGrossPayPage)
-
-    beSettable[VariableGrossPay](VariableGrossPayPage)
-
-    beRemovable[VariableGrossPay](VariableGrossPayPage)
-  }
+  override def toString: String = "annualPayAmount"
 }

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package pages
+package models
 
-import models.VariableGrossPay
-import play.api.libs.json.JsPath
+import play.api.libs.json.Json
 
-case object VariableGrossPayPage extends QuestionPage[VariableGrossPay] {
+case class AnnualPayAmount(amount: BigDecimal)
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "variableGrossPay"
+object AnnualPayAmount {
+  implicit val format = Json.format[AnnualPayAmount]
 }

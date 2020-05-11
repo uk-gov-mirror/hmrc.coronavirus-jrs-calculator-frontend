@@ -46,7 +46,7 @@ trait JourneyBuilder extends DataExtractor {
   private def variablePayData(userAnswers: UserAnswers): Option[VariablePayData] =
     for {
       referencePayData <- extractReferencePayData(userAnswers)
-      grossPay         <- extractVariableGrossPay(userAnswers)
+      grossPay         <- extractAnnualPayAmount(userAnswers)
       nonFurlough = extractNonFurlough(userAnswers)
       priorFurlough <- extractPriorFurloughPeriod(userAnswers)
     } yield VariablePayData(referencePayData, grossPay, nonFurlough, priorFurlough)
@@ -54,7 +54,7 @@ trait JourneyBuilder extends DataExtractor {
   private def variablePayWithCylbData(userAnswers: UserAnswers): Option[VariablePayWithCylbData] =
     for {
       referencePayData <- extractReferencePayData(userAnswers)
-      grossPay         <- extractVariableGrossPay(userAnswers)
+      grossPay         <- extractAnnualPayAmount(userAnswers)
       nonFurlough = extractNonFurlough(userAnswers)
       priorFurlough <- extractPriorFurloughPeriod(userAnswers)
       cylbPayments = extractCylbPayments(userAnswers)

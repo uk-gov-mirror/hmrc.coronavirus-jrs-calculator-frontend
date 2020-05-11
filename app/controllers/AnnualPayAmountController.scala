@@ -18,18 +18,18 @@ package controllers
 
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
-import forms.VariableGrossPayFormProvider
+import forms.AnnualPayAmountFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.{FurloughStartDatePage, VariableGrossPayPage}
+import pages.{AnnualPayAmountPage, FurloughStartDatePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import views.html.VariableGrossPayView
+import views.html.AnnualPayAmountView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class VariableGrossPayController @Inject()(
+class AnnualPayAmountController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   val navigator: Navigator,
@@ -37,9 +37,9 @@ class VariableGrossPayController @Inject()(
   feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: VariableGrossPayFormProvider,
+  formProvider: AnnualPayAmountFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: VariableGrossPayView
+  view: AnnualPayAmountView
 )(implicit ec: ExecutionContext)
     extends BaseController with I18nSupport {
 
@@ -49,7 +49,7 @@ class VariableGrossPayController @Inject()(
     (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.get(FurloughStartDatePage) match {
         case Some(furloughStart) =>
-          val preparedForm = request.userAnswers.get(VariableGrossPayPage) match {
+          val preparedForm = request.userAnswers.get(AnnualPayAmountPage) match {
             case None        => form
             case Some(value) => form.fill(value)
           }
@@ -70,9 +70,9 @@ class VariableGrossPayController @Inject()(
               formWithErrors => Future.successful(BadRequest(view(formWithErrors, furloughStart))),
               value =>
                 for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(VariableGrossPayPage, value))
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(AnnualPayAmountPage, value))
                   _              <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(VariableGrossPayPage, updatedAnswers))
+                } yield Redirect(navigator.nextPage(AnnualPayAmountPage, updatedAnswers))
             )
 
         case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad()))

@@ -47,8 +47,8 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
   def extractSalary(userAnswers: UserAnswers): Option[Amount] =
     userAnswers.get(RegularPayAmountPage).map(v => Amount(v.amount))
 
-  def extractVariableGrossPay(userAnswers: UserAnswers): Option[Amount] =
-    userAnswers.get(VariableGrossPayPage).map(v => Amount(v.amount))
+  def extractAnnualPayAmount(userAnswers: UserAnswers): Option[Amount] =
+    userAnswers.get(AnnualPayAmountPage).map(v => Amount(v.amount))
 
   def extractCylbPayments(userAnswers: UserAnswers): Seq[CylbPayment] =
     userAnswers.getList(LastYearPayPage)

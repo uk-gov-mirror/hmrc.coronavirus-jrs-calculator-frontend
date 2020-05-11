@@ -30,24 +30,24 @@
 
 @(form: Form[_], furloughStart: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "variableGrossPay.title"))) {
+@govukLayout(pageTitle = Some(title(form, "annualPayAmount.title"))) {
 
-    @formHelper(action = VariableGrossPayController.onSubmit(), args = 'novalidate -> "novalidate") {
+    @formHelper(action = AnnualPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages("variableGrossPay.heading"))
-        @p(Html(messages("variableGrossPay.p")))
+        @h1(messages("annualPayAmount.heading"))
+        @p(Html(messages("annualPayAmount.p")))
         <ul class="govuk-list govuk-list--bullet">
-            <li>@messages("variableGrossPay.l1")</li>
-            <li>@messages("variableGrossPay.l2", dateToString(furloughStart))</li>
+            <li>@messages("annualPayAmount.l1")</li>
+            <li>@messages("annualPayAmount.l2", dateToString(furloughStart))</li>
         </ul>
 
         @inputCurrency(
             form,
             id = "value",
             name = "value",
-            label = messages("variableGrossPay.heading"),
+            label = messages("annualPayAmount.heading"),
             labelClasses = Some("govuk-visually-hidden"),
             isPageHeading = false,
             classes = Some("govuk-input--width-10")
