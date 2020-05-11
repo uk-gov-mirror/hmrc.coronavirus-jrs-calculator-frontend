@@ -28,7 +28,7 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
     frequency: PaymentFrequency,
     furloughBreakdown: Seq[PeriodBreakdown],
     additionals: Seq[AdditionalPayment],
-    topUps: Seq[TopUpPayment]): CalculationResult = { //TODO remove dafaulted
+    topUps: Seq[TopUpPayment]): CalculationResult = {
     val nicBreakdowns = furloughBreakdown.map {
       case FullPeriodBreakdown(grant, periodWithPaymentDate) =>
         calculateFullPeriodNic(
@@ -38,7 +38,7 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
           periodWithPaymentDate.paymentDate,
           additionalPayments(additionals, periodWithPaymentDate),
           topUpPayments(topUps, periodWithPaymentDate)
-        ) //TODO to be wired
+        )
       case PartialPeriodBreakdown(nonFurloughPay, grant, periodWithPaymentDate) =>
         calculatePartialPeriodNic(
           frequency,

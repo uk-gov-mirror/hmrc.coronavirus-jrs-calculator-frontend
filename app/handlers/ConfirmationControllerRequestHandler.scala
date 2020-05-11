@@ -19,7 +19,7 @@ package handlers
 import models.Calculation.{NicCalculationResult, PensionCalculationResult}
 import models.NicCategory.{Nonpayable, Payable}
 import models.PensionStatus.{DoesContribute, DoesNotContribute}
-import models.{Amount, CalculationResult, FullPeriodBreakdown, NicCategory, PartialPeriodBreakdown, PaymentFrequency, PensionStatus, Period, UserAnswers}
+import models.{AdditionalPayment, Amount, Calculation, CalculationResult, FullPeriodBreakdown, NicCategory, PartialPeriodBreakdown, PaymentFrequency, PensionStatus, Period, PeriodBreakdown, TopUpPayment, UserAnswers}
 import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
 
@@ -39,7 +39,7 @@ trait ConfirmationControllerRequestHandler
       payments = calculateReferencePay(data)
       furlough = calculateFurloughGrant(data.frequency, payments)
       niAnswer <- extractNicCategory(userAnswers)
-      ni = calculateNi(furlough, niAnswer, data.frequency)
+      ni = calculateNi(furlough, niAnswer, data.frequency, extractAdditionalPayment(userAnswers), extractTopUpPayment(userAnswers))
       pensionAnswer <- extractPensionStatus(userAnswers)
       pension = calculatePension(furlough, pensionAnswer, data.frequency)
     } yield ConfirmationViewBreakdown(furlough, ni, pension)
@@ -54,18 +54,15 @@ trait ConfirmationControllerRequestHandler
       pensionStatus  <- extractPensionStatus(userAnswers)
     } yield ConfirmationMetadata(Period(claimStart, claimEnd), furloughPeriod, frequency, nicCategory, pensionStatus)
 
-  private def calculateNi(furloughResult: CalculationResult, nic: NicCategory, frequency: PaymentFrequency): CalculationResult =
+  private def calculateNi(
+    furloughResult: CalculationResult,
+    nic: NicCategory,
+    frequency: PaymentFrequency,
+    additionals: Seq[AdditionalPayment],
+    topUps: Seq[TopUpPayment]): CalculationResult =
     nic match {
-      case Payable => calculateNicGrant(frequency, furloughResult.payPeriodBreakdowns, Seq.empty, Seq.empty) //TODO wire with UI data
-      case Nonpayable =>
-        CalculationResult(
-          NicCalculationResult,
-          0.0,
-          furloughResult.payPeriodBreakdowns.map {
-            case FullPeriodBreakdown(_, withPaymentDate)       => FullPeriodBreakdown(Amount(0.0), withPaymentDate)
-            case PartialPeriodBreakdown(_, _, withPaymentDate) => PartialPeriodBreakdown(Amount(0.0), Amount(0.0), withPaymentDate)
-          }
-        )
+      case Payable    => calculateNicGrant(frequency, furloughResult.payPeriodBreakdowns, additionals, topUps)
+      case Nonpayable => buildZeroAmountResult(furloughResult.payPeriodBreakdowns)(NicCalculationResult)
     }
 
   private def calculatePension(
@@ -73,15 +70,16 @@ trait ConfirmationControllerRequestHandler
     payStatus: PensionStatus,
     frequency: PaymentFrequency): CalculationResult =
     payStatus match {
-      case DoesContribute => calculatePensionGrant(frequency, furloughResult.payPeriodBreakdowns)
-      case DoesNotContribute =>
-        CalculationResult(
-          PensionCalculationResult,
-          0.0,
-          furloughResult.payPeriodBreakdowns.map {
-            case FullPeriodBreakdown(_, withPaymentDate)       => FullPeriodBreakdown(Amount(0.0), withPaymentDate)
-            case PartialPeriodBreakdown(_, _, withPaymentDate) => PartialPeriodBreakdown(Amount(0.0), Amount(0.0), withPaymentDate)
-          }
-        )
+      case DoesContribute    => calculatePensionGrant(frequency, furloughResult.payPeriodBreakdowns)
+      case DoesNotContribute => buildZeroAmountResult(furloughResult.payPeriodBreakdowns)(PensionCalculationResult)
+    }
+
+  private def buildZeroAmountResult(periodBreakdowns: Seq[PeriodBreakdown]): Calculation => CalculationResult =
+    CalculationResult(_, 0.0, buildZeroAmountBreakdown(periodBreakdowns))
+
+  private def buildZeroAmountBreakdown(periodBreakdowns: Seq[PeriodBreakdown]) =
+    periodBreakdowns.map {
+      case FullPeriodBreakdown(_, withPaymentDate)       => FullPeriodBreakdown(Amount(0.0), withPaymentDate)
+      case PartialPeriodBreakdown(_, _, withPaymentDate) => PartialPeriodBreakdown(Amount(0.0), Amount(0.0), withPaymentDate)
     }
 }

@@ -21,8 +21,11 @@
 
 package handlers
 
+import java.time.LocalDate
+
 import base.{CoreTestDataBuilder, SpecBase}
-import models.UserAnswers
+import models.{AdditionalPayment, Amount, TopUpPayment, UserAnswers}
+import pages.{AdditionalPaymentAmountPage, TopUpAmountPage}
 import play.api.libs.json.Json
 import utils.CoreTestData
 
@@ -44,6 +47,38 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuil
       extractPriorFurloughPeriod(userAnswers) mustBe Some(expected)
     }
 
-  }
+    "extract top up payments" in new DataExtractor {
+      val payments = List(
+        TopUpPayment(LocalDate.of(2020, 3, 1), Amount(100.0)),
+        TopUpPayment(LocalDate.of(2020, 4, 1), Amount(0.0)),
+        TopUpPayment(LocalDate.of(2020, 5, 1), Amount(50.0))
+      )
+      val userAnswers = UserAnswers("123")
+        .setListWithInvalidation(TopUpAmountPage, payments.head, 1)
+        .get
+        .setListWithInvalidation(TopUpAmountPage, payments.tail.head, 2)
+        .get
+        .setListWithInvalidation(TopUpAmountPage, payments.drop(2).head, 3)
+        .get
 
+      extractTopUpPayment(userAnswers) mustBe payments
+    }
+
+    "extract additional payments" in new DataExtractor {
+      val payments = List(
+        AdditionalPayment(LocalDate.of(2020, 3, 1), Amount(100.0)),
+        AdditionalPayment(LocalDate.of(2020, 4, 1), Amount(0.0)),
+        AdditionalPayment(LocalDate.of(2020, 5, 1), Amount(50.0))
+      )
+      val userAnswers = UserAnswers("123")
+        .setListWithInvalidation(AdditionalPaymentAmountPage, payments.head, 1)
+        .get
+        .setListWithInvalidation(AdditionalPaymentAmountPage, payments.tail.head, 2)
+        .get
+        .setListWithInvalidation(AdditionalPaymentAmountPage, payments.drop(2).head, 3)
+        .get
+
+      extractAdditionalPayment(userAnswers) mustBe payments
+    }
+  }
 }
