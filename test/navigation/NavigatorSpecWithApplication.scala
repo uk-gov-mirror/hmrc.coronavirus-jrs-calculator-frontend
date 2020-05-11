@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import controllers.routes
+import models.EmployeeStarted.OnOrBefore1Feb2019
 import models.PayMethod.{Regular, Variable}
 import models._
 import pages._
@@ -75,7 +76,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           UserAnswers("id")
             .set(PayMethodPage, PayMethod.Regular)
             .success
-            .value) mustBe routes.SalaryQuestionController.onPageLoad()
+            .value) mustBe routes.PayDateController.onPageLoad(1)
 
         navigator.nextPage(
           PayMethodPage,
@@ -92,8 +93,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           .onPageLoad()
       }
 
-      "go to PayDatePage after SalaryQuestionPage" in {
-        navigator.nextPage(SalaryQuestionPage, UserAnswers("id")) mustBe routes.PayDateController.onPageLoad(1)
+      "go to TopUpStatusPage after SalaryQuestionPage" in {
+        navigator.nextPage(SalaryQuestionPage, UserAnswers("id")) mustBe routes.TopUpStatusController.onPageLoad()
       }
 
       "loop around pay date if last pay date isn't claim end date or after" in {
@@ -133,105 +134,37 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           .set(PayMethodPage, Regular)
           .get
 
-        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.NicCategoryController.onPageLoad()
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.SalaryQuestionController.onPageLoad()
       }
 
-      "go to NicCategoryPage after LastPayDatePage if the pay-method is Variable and employee has been employed over 12 months" in {
+      "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted.OnOrBefore1Feb2019" in {
         val userAnswers = UserAnswers("id")
           .set(PayMethodPage, Variable)
           .get
-          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 3, 1), Some(1))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
-          .get
-          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 10))
-          .get
-          .set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+          .set(EmployeeStartDatePage, LocalDate.of(2019, 1, 2))
           .get
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
-      "go to NicCategoryPage after LastPayDatePage if the pay-method is Variable and employee start after 5th April 2019" in {
+      "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and employee started before apr6th2019" in {
         val userAnswers = UserAnswers("id")
           .set(PayMethodPage, Variable)
           .get
-          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 3, 1), Some(1))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
-          .get
-          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 10))
-          .get
-          .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 6))
-          .get
-
-        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.NicCategoryController.onPageLoad()
-      }
-
-      "go to LastYearPay after LastPayDatePage if the pay-method is Variable and employee start before 6th April 2019" in {
-        val userAnswers = UserAnswers("id")
-          .set(PayMethodPage, Variable)
-          .get
-          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 3, 1), Some(1))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
-          .get
-          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 10))
-          .get
-          .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
+          .set(EmployeeStartDatePage, LocalDate.of(2019, 3, 4))
           .get
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
-      "go to PartialPayBeforeFurloughPage after LastPayDatePage if the pay-method is Variable and first pay period is partial" in {
+      "go to VariableGrossPayPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted on or after Apr6th" in {
         val userAnswers = UserAnswers("id")
           .set(PayMethodPage, Variable)
           .get
-          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 15))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 3, 10), Some(1))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 5, 10), Some(3))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 6, 10), Some(4))
-          .get
-          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 15))
-          .get
-          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
+          .set(EmployeeStartDatePage, LocalDate.of(2019, 6, 1))
           .get
 
-        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
-      }
-
-      "go to PartialPayAfterFurloughPage after LastPayDatePage if the pay-method is Variable and last pay period is partial" in {
-        val userAnswers = UserAnswers("id")
-          .set(PayMethodPage, Variable)
-          .get
-          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 10))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 3, 9), Some(1))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 5, 10), Some(3))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 6, 10), Some(4))
-          .get
-          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 10))
-          .get
-          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
-          .get
-
-        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PartialPayAfterFurloughController.onPageLoad()
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.VariableGrossPayController.onPageLoad()
       }
 
       "go to payMethodPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
@@ -240,8 +173,8 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
-      "go from PensionStatusPage to FurloughTopUpStatusPage" in {
-        navigator.nextPage(PensionStatusPage, emptyUserAnswers) mustBe routes.FurloughTopUpController.onPageLoad()
+      "go from PensionStatusPage to ConfirmationPage" in {
+        navigator.nextPage(PensionStatusPage, emptyUserAnswers) mustBe routes.ConfirmationController.onPageLoad()
       }
 
       "go from furlough start date to furlough question" in {
@@ -263,7 +196,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           UserAnswers("id")
             .set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
             .success
-            .value) mustBe routes.VariableGrossPayController.onPageLoad()
+            .value) mustBe routes.PayDateController.onPageLoad(1)
         navigator.nextPage(
           EmployedStartedPage,
           UserAnswers("id")
@@ -279,14 +212,15 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
             .set(EmployeeStartDatePage, LocalDate.now().minusDays(2))
             .success
             .value
-        ) mustBe routes.VariableGrossPayController.onPageLoad()
+        ) mustBe routes.PayDateController.onPageLoad(1)
+
         navigator.nextPage(
           EmployeeStartDatePage,
           UserAnswers("id")
             .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
             .success
             .value
-        ) mustBe routes.VariableGrossPayController.onPageLoad()
+        ) mustBe routes.PayDateController.onPageLoad(1)
       }
 
       "go to correct page after FurloughTopUpStatusPage" in {
@@ -306,11 +240,67 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         ) mustBe routes.ConfirmationController.onPageLoad()
       }
 
-      "go to start of pay date loop after variable gross pay page" in {
+      "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {
+        val userAnswers = UserAnswers("id")
+          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 15))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 3, 10), Some(1))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 5, 10), Some(3))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 6, 10), Some(4))
+          .get
+          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 15))
+          .get
+          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
+          .get
+
         navigator.nextPage(
           VariableGrossPayPage,
-          emptyUserAnswers
-        ) mustBe routes.PayDateController.onPageLoad(1)
+          userAnswers
+        ) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
+      }
+
+      "go to PartialPayAfterFurloughPage loop after variable gross pay page" in {
+        val userAnswers = UserAnswers("id")
+          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 10))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 3, 9), Some(1))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 5, 10), Some(3))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 6, 10), Some(4))
+          .get
+          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 10))
+          .get
+          .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 15))
+          .get
+
+        navigator.nextPage(
+          VariableGrossPayPage,
+          userAnswers
+        ) mustBe routes.PartialPayAfterFurloughController.onPageLoad()
+      }
+
+      "go to TopUpStatusPage after variable gross pay page if there are no partial furloughs" in {
+        val userAnswers = UserAnswers("id")
+          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
+          .get
+          .set(FurloughEndDatePage, LocalDate.of(2020, 4, 10))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 3, 1), Some(1))
+          .get
+          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
+          .get
+
+        navigator.nextPage(
+          VariableGrossPayPage,
+          userAnswers
+        ) mustBe routes.TopUpStatusController.onPageLoad()
       }
 
       "loop around last year pay if there are more years to ask" in {
@@ -322,7 +312,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
       "stop loop around last year pay if there are no more years to ask" in {
         val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
 
-        navigator.nextPage(LastYearPayPage, userAnswers, Some(2)) mustBe routes.NicCategoryController.onPageLoad()
+        navigator.nextPage(LastYearPayPage, userAnswers, Some(2)) mustBe routes.VariableGrossPayController.onPageLoad()
       }
 
       "go to start of top up loop after top up periods page" in {
@@ -431,71 +421,11 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         ) mustBe routes.NicCategoryController.onPageLoad()
       }
 
-      "go to correct page after PartialPayAfterFurloughPage" when {
-
-        "EmployedStarted is OnOrBefore1Feb2019" in {
-          val userAnswers = emptyUserAnswers.set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019).success.value
-
-          navigator.nextPage(
-            PartialPayAfterFurloughPage,
-            userAnswers
-          ) mustBe routes.LastYearPayController.onPageLoad(1)
-        }
-
-        "EmployedStarted is After1Feb2019 and date is before April 6th" in {
-          val userAnswers = emptyUserAnswers
-            .set(EmployedStartedPage, EmployeeStarted.After1Feb2019)
-            .success
-            .value
-            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
-            .success
-            .value
-
-          navigator.nextPage(
-            PartialPayAfterFurloughPage,
-            userAnswers
-          ) mustBe routes.LastYearPayController.onPageLoad(1)
-        }
-
-        "EmployedStarted is After1Feb2019 and date is April 7th" in {
-          val userAnswers = emptyUserAnswers
-            .set(EmployedStartedPage, EmployeeStarted.After1Feb2019)
-            .success
-            .value
-            .set(EmployeeStartDatePage, LocalDate.of(2020, 4, 7))
-            .success
-            .value
-
-          navigator.nextPage(
-            PartialPayAfterFurloughPage,
-            userAnswers
-          ) mustBe routes.NicCategoryController.onPageLoad()
-        }
-
-        "EmployeeStarted is After1Feb2019 and date is after April 7th" in {
-          val userAnswers = emptyUserAnswers
-            .set(EmployedStartedPage, EmployeeStarted.After1Feb2019)
-            .success
-            .value
-            .set(EmployeeStartDatePage, LocalDate.of(2020, 4, 8))
-            .success
-            .value
-
-          navigator.nextPage(
-            PartialPayAfterFurloughPage,
-            userAnswers
-          ) mustBe routes.NicCategoryController.onPageLoad()
-        }
-
-        "EmployeeStarted is missing" in {
-          val userAnswers = emptyUserAnswers
-
-          navigator.nextPage(
-            PartialPayAfterFurloughPage,
-            userAnswers
-          ) mustBe routes.NicCategoryController.onPageLoad()
-        }
-
+      "go to TopUpStatusPage after PartialPayAfterFurloughPage" in {
+        navigator.nextPage(
+          PartialPayAfterFurloughPage,
+          emptyUserAnswers
+        ) mustBe routes.TopUpStatusController.onPageLoad()
       }
     }
 

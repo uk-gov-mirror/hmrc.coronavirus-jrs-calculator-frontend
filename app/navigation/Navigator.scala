@@ -60,19 +60,19 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       payMethodRoutes
     case SalaryQuestionPage =>
       _ =>
-        routes.PayDateController.onPageLoad(1)
+        routes.TopUpStatusController.onPageLoad()
     case EmployedStartedPage =>
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
       _ =>
-        routes.VariableGrossPayController.onPageLoad()
+        routes.PayDateController.onPageLoad(1)
     case PartialPayBeforeFurloughPage =>
       partialPayBeforeFurloughRoutes
     case PartialPayAfterFurloughPage =>
-      partialPayAfterFurloughRoutes
-    case VariableGrossPayPage =>
       _ =>
-        routes.PayDateController.onPageLoad(1)
+        routes.TopUpStatusController.onPageLoad()
+    case VariableGrossPayPage =>
+      variableGrossPayRoutes
     case LastPayDatePage =>
       lastPayDateRoutes
     case NicCategoryPage =>
@@ -80,7 +80,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.PensionContributionController.onPageLoad()
     case PensionStatusPage =>
       _ =>
-        routes.FurloughTopUpController.onPageLoad()
+        routes.ConfirmationController.onPageLoad()
     case FurloughTopUpStatusPage =>
       furloughTopUpStatusRoutes
     case TopUpStatusPage =>
@@ -125,7 +125,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     ) { payDates =>
       payDates.lift.apply(previousIdx) match {
         case Some(_) => routes.LastYearPayController.onPageLoad(previousIdx + 1)
-        case None    => routes.NicCategoryController.onPageLoad()
+        case None    => routes.VariableGrossPayController.onPageLoad()
       }
     }
   }
@@ -186,18 +186,6 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   def nextPage(page: Page, userAnswers: UserAnswers, idx: Option[Int] = None): Call =
     idx.fold(normalRoutes(page)(userAnswers))(idx => idxRoutes(page)(idx, userAnswers))
 
-  private def partialPayAfterFurloughRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(EmployedStartedPage) match {
-      case Some(EmployeeStarted.OnOrBefore1Feb2019) => routes.LastYearPayController.onPageLoad(1)
-      case Some(EmployeeStarted.After1Feb2019) =>
-        userAnswers.get(EmployeeStartDatePage) match {
-          case Some(date) if date.isBefore(apr6th2019) => routes.LastYearPayController.onPageLoad(1)
-          case _                                       => routes.NicCategoryController.onPageLoad()
-        }
-      case None => routes.NicCategoryController.onPageLoad()
-    }
-  }
-
   private def furloughOngoingRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(FurloughStatusPage) match {
       case Some(FurloughStatus.FurloughEnded)   => routes.FurloughEndDateController.onPageLoad()
@@ -208,7 +196,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   private def payMethodRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayMethodPage) match {
-      case Some(Regular)  => routes.SalaryQuestionController.onPageLoad()
+      case Some(Regular)  => routes.PayDateController.onPageLoad(1)
       case Some(Variable) => routes.VariableLengthEmployedController.onPageLoad()
       case None           => routes.PayMethodController.onPageLoad()
     }
@@ -216,7 +204,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(EmployedStartedPage) match {
-      case Some(EmployeeStarted.OnOrBefore1Feb2019) => routes.VariableGrossPayController.onPageLoad()
+      case Some(EmployeeStarted.OnOrBefore1Feb2019) => routes.PayDateController.onPageLoad(1)
       case Some(EmployeeStarted.After1Feb2019)      => routes.EmployeeStartDateController.onPageLoad()
       case _                                        => routes.VariableLengthEmployedController.onPageLoad()
     }
@@ -248,24 +236,28 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   private def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayMethodPage) match {
-      case Some(Regular) => routes.NicCategoryController.onPageLoad()
+      case Some(Regular) => routes.SalaryQuestionController.onPageLoad()
       case Some(Variable) =>
-        if (hasPartialPayBefore(userAnswers)) {
-          routes.PartialPayBeforeFurloughController.onPageLoad()
-        } else if (hasPartialPayAfter(userAnswers)) {
-          routes.PartialPayAfterFurloughController.onPageLoad()
-        } else {
-          userAnswers.get(EmployedStartedPage) match {
-            case Some(EmployeeStarted.OnOrBefore1Feb2019) =>
-              routes.LastYearPayController.onPageLoad(1)
-            case _ =>
-              userAnswers.get(EmployeeStartDatePage) match {
-                case Some(date) if date.isBefore(apr6th2019) => routes.LastYearPayController.onPageLoad(1)
-                case _                                       => routes.NicCategoryController.onPageLoad()
-              }
-          }
+        userAnswers.get(EmployedStartedPage) match {
+          case Some(EmployeeStarted.OnOrBefore1Feb2019) =>
+            routes.LastYearPayController.onPageLoad(1)
+          case _ =>
+            userAnswers.get(EmployeeStartDatePage) match {
+              case Some(date) if date.isBefore(apr6th2019) => routes.LastYearPayController.onPageLoad(1)
+              case _                                       => routes.VariableGrossPayController.onPageLoad()
+            }
         }
       case None => routes.PayMethodController.onPageLoad()
+    }
+  }
+
+  private def variableGrossPayRoutes: UserAnswers => Call = { userAnswers =>
+    if (hasPartialPayBefore(userAnswers)) {
+      routes.PartialPayBeforeFurloughController.onPageLoad()
+    } else if (hasPartialPayAfter(userAnswers)) {
+      routes.PartialPayAfterFurloughController.onPageLoad()
+    } else {
+      routes.TopUpStatusController.onPageLoad()
     }
   }
 }
