@@ -27,7 +27,7 @@
         button: components.button
 )
 
-@(form: Form[_], startDate: LocalDate, endDate: LocalDate)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughOngoing.title"))) {
 

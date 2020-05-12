@@ -16,18 +16,15 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.SpecBaseWithApplication
 import forms.FurloughOngoingFormProvider
-import models.{FurloughStatus, UserAnswers}
+import models.FurloughStatus
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughStatusPage}
+import pages.FurloughStatusPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
@@ -46,17 +43,6 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
   val formProvider = new FurloughOngoingFormProvider()
   val form = formProvider()
 
-  val start = LocalDate.of(2020, 3, 1)
-  val end = LocalDate.of(2020, 4, 1)
-
-  val userAnswers = UserAnswers(
-    userAnswersId,
-    Json.obj(
-      ClaimPeriodStartPage.toString -> start,
-      ClaimPeriodEndPage.toString   -> end
-    )
-  )
-
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, furloughOngoingRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -65,7 +51,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val result = route(application, getRequest).value
 
@@ -74,14 +60,14 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, start, end)(getRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers1 = userAnswers.set(FurloughStatusPage, FurloughStatus.values.head).success.value
+      val userAnswers1 = emptyUserAnswers.set(FurloughStatusPage, FurloughStatus.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers1)).build()
 
@@ -92,7 +78,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(FurloughStatus.values.head), start, end)(getRequest, messages).toString
+        view(form.fill(FurloughStatus.values.head))(getRequest, messages).toString
 
       application.stop()
     }
@@ -126,7 +112,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
         FakeRequest(POST, furloughOngoingRoute).withCSRFToken
@@ -142,7 +128,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, start, end)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }
