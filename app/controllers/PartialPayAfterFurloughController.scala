@@ -51,7 +51,7 @@ class PartialPayAfterFurloughController @Inject()(
     implicit request =>
       getPartialPeriods(request.userAnswers)
         .find(isFurloughEnd)
-        .map(getPeriodRemainder)
+        .map(getAfterFurloughPeriodRemainder)
         .fold(
           Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         ) { afterFurlough =>
@@ -75,7 +75,7 @@ class PartialPayAfterFurloughController @Inject()(
     implicit request =>
       getPartialPeriods(request.userAnswers)
         .find(isFurloughEnd)
-        .map(getPeriodRemainder)
+        .map(getAfterFurloughPeriodRemainder)
         .fold(
           Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         ) { afterFurlough =>

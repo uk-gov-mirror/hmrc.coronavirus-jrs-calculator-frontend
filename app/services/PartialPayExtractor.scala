@@ -37,15 +37,9 @@ trait PartialPayExtractor extends PeriodHelper with FurloughPeriodExtractor {
       }
     }
 
-  def getPeriodRemainder(partialPeriod: PartialPeriod): Period = {
-    val original = partialPeriod.original
-    val partial = partialPeriod.partial
+  def getBeforeFurloughPeriodRemainder(partialPeriod: PartialPeriod): Period =
+    Period(partialPeriod.original.start, partialPeriod.partial.start.minusDays(1))
 
-    if (partial.start.isAfter(original.start)) {
-      Period(original.start, partial.start.minusDays(1))
-    } else {
-      Period(partial.end.plusDays(1), original.end)
-    }
-  }
-
+  def getAfterFurloughPeriodRemainder(partialPeriod: PartialPeriod): Period =
+    Period(partialPeriod.partial.end.plusDays(1), partialPeriod.original.end)
 }
