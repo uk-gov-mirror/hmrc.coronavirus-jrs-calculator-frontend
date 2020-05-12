@@ -403,18 +403,6 @@ comingSoon.topup.title = We’re unable to calculate claims when pay is topped u
 comingSoon.topup.heading = We’re unable to calculate claims when pay is topped up
 comingSoon.topup.p = This will be available in a future version.
 
-furloughTopUp.heading = Furlough amount calculated so far
-furloughTopUp.title = Furlough amount calculated so far
-furloughTopUp.p1 = Are you paying the employee more than this?
-furloughTopUp.p2 = You can top up your employees’ pay to 100% while they’re furloughed.
-furloughTopUp.p3 = If you do, the employer National Insurance contributions will be divided between the 80% you’re claiming and the amount you funded.
-furloughTopUp.toppedUp = Yes
-furloughTopUp.notToppedUp = No
-furloughTopUp.error.required = Select one of the options below
-furloughTopUp.payperiodending.label = Pay period end date
-furloughTopUp.grossfurloughamount.label = Furlough amount (80% of pay)
-furloughTopUp.total.label = Total
-
 FurloughPartialPay.title.between = What did the employee get paid between {0} and {1}?
 FurloughPartialPay.title.on = What did the employee get paid on {0}?
 FurloughPartialPay.heading.between = What did the employee get paid between {0} and {1}?
