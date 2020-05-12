@@ -133,7 +133,7 @@ trait CoreTestData {
       |        "furloughEndDate" : "2020-04-20",
       |        "paymentFrequency" : "monthly",
       |        "claimPeriodStart" : "2020-03-01",
-      |        "furloughTopUpStatus" : "notToppedUp",
+      |        "topUpStatus" : "notToppedUp",
       |        "PartialPayAfterFurlough" : {
       |            "value" : 800
       |        },
@@ -171,7 +171,7 @@ trait CoreTestData {
       |        "employeeStartDate" : "2019-08-01",
       |        "paymentFrequency" : "monthly",
       |        "claimPeriodStart" : "2020-03-01",
-      |        "furloughTopUpStatus" : "notToppedUp",
+      |        "topUpStatus" : "notToppedUp",
       |        "lastPayDate" : "2020-03-31",
       |        "PartialPayBeforeFurlough" : {
       |            "value" : 280
@@ -206,7 +206,7 @@ trait CoreTestData {
        |        "furloughEndDate" : "2020-03-21",
        |        "paymentFrequency" : "weekly",
        |        "claimPeriodStart" : "2020-03-01",
-       |        "furloughTopUpStatus" : "notToppedUp",
+       |        "topUpStatus" : "notToppedUp",
        |        "lastPayDate" : "$lastPayDate",
        |        "furloughStartDate" : "2020-03-10",
        |        "payMethod" : "variable",
@@ -240,7 +240,7 @@ trait CoreTestData {
       |        "furloughEndDate" : "2020-03-21",
       |        "paymentFrequency" : "fortnightly",
       |        "claimPeriodStart" : "2020-03-01",
-      |        "furloughTopUpStatus" : "notToppedUp",
+      |        "topUpStatus" : "notToppedUp",
       |        "lastPayDate" : "2020-03-28",
       |        "furloughStartDate" : "2020-03-10",
       |        "payMethod" : "variable",
@@ -273,7 +273,7 @@ trait CoreTestData {
       |        "furloughEndDate" : "2020-04-26",
       |        "paymentFrequency" : "fourweekly",
       |        "claimPeriodStart" : "2020-03-01",
-      |        "furloughTopUpStatus" : "notToppedUp",
+      |        "topUpStatus" : "notToppedUp",
       |        "lastPayDate" : "2020-04-25",
       |        "furloughStartDate" : "2020-03-10",
       |        "payMethod" : "variable",
@@ -305,7 +305,7 @@ trait CoreTestData {
       |        "employeeStartDate" : "2019-04-03",
       |        "paymentFrequency" : "monthly",
       |        "claimPeriodStart" : "2020-03-01",
-      |        "furloughTopUpStatus" : "notToppedUp",
+      |        "topUpStatus" : "notToppedUp",
       |        "lastYearPay" : [
       |            {
       |                "date" : "2019-03-30",
@@ -350,7 +350,7 @@ trait CoreTestData {
       |        "furloughEndDate" : "2020-03-28",
       |        "paymentFrequency" : "fourweekly",
       |        "claimPeriodStart" : "2020-03-01",
-      |        "furloughTopUpStatus" : "notToppedUp",
+      |        "topUpStatus" : "notToppedUp",
       |        "lastYearPay" : [
       |            {
       |                "date" : "2019-03-02",
@@ -394,7 +394,7 @@ trait CoreTestData {
       |        "furloughEndDate" : "2020-03-31",
       |        "paymentFrequency" : "weekly",
       |        "claimPeriodStart" : "2020-03-01",
-      |        "furloughTopUpStatus" : "notToppedUp",
+      |        "topUpStatus" : "notToppedUp",
       |        "lastYearPay" : [
       |            {
       |                "date" : "2019-03-05",
