@@ -440,7 +440,7 @@ amount.error.must.be.positive = Enter an amount greater than 0
 amount.error.negative = The amount cannot be negative
 
 topupPeriods.title = When did you top up this employee’s pay?
-topupPeriods.heading = Which of these are you topping up?
+topupPeriods.heading = When did you top up this employee’s pay?
 topupPeriods.hint = Select all that apply.
 topupPeriods.period = Pay period end: {0}
 topupPeriods.amount = Amount before top-up: £{0}
