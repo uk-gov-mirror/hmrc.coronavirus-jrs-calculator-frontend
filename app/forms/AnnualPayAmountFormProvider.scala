@@ -14,12 +14,24 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.libs.json.Json
+import forms.mappings.Mappings
+import javax.inject.Inject
+import models.AnnualPayAmount
+import play.api.data.Form
+import play.api.data.Forms.mapping
 
-case class VariableGrossPay(amount: BigDecimal)
+class AnnualPayAmountFormProvider @Inject() extends Mappings {
 
-object VariableGrossPay {
-  implicit val format = Json.format[VariableGrossPay]
+  def apply(): Form[AnnualPayAmount] =
+    Form(
+      mapping(
+        "value" -> bigDecimal(
+          requiredKey = "annualPayAmount.error.required",
+          nonNumericKey = "annualPayAmount.error.invalid"
+        ).verifying(positiveValue())
+          .verifying(maxTwoDecimals())
+      )(AnnualPayAmount.apply)(AnnualPayAmount.unapply)
+    )
 }

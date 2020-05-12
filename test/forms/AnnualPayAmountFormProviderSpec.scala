@@ -19,15 +19,15 @@ package forms
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
-class VariableGrossPayFormProviderSpec extends BigDecimalFieldBehaviours {
+class AnnualPayAmountFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new VariableGrossPayFormProvider()()
+  val form = new AnnualPayAmountFormProvider()()
 
   ".value" must {
 
     val fieldName = "value"
-    val requiredKey = "variableGrossPay.error.required"
-    val invalidKey = "variableGrossPay.error.invalid"
+    val requiredKey = "annualPayAmount.error.required"
+    val invalidKey = "annualPayAmount.error.invalid"
 
     behave like bigDecimalField(
       form,

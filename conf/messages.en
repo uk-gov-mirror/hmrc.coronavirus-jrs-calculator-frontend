@@ -385,14 +385,14 @@ employeeStartDate.hint = For example, 28 11 2019
 employeeStartDate.error.min = The employee start date must be on or after {0}
 employeeStartDate.error.max = The employee start date must be before they started furlough or on or before 19th March 2020
 
-variableGrossPay.title = What’s the employee’s total pay since 6 April 2019?
-variableGrossPay.heading = What’s the employee’s total pay since 6 April 2019?
-variableGrossPay.error.required = Enter a valid amount
-variableGrossPay.label = This is the gross amount before deductions.
-variableGrossPay.error.invalid = Enter a valid amount
-variableGrossPay.p = This is the total gross amount before deductions the employee has been paid up to the earlier of:
-variableGrossPay.l1 = 5th April 2020 or
-variableGrossPay.l2 = the day before they were furloughed ({0})
+annualPayAmount.title = What’s the employee’s total pay since 6 April 2019?
+annualPayAmount.heading = What’s the employee’s total pay since 6 April 2019?
+annualPayAmount.error.required = Enter a valid amount
+annualPayAmount.label = This is the gross amount before deductions.
+annualPayAmount.error.invalid = Enter a valid amount
+annualPayAmount.p = This is the total gross amount before deductions the employee has been paid up to the earlier of:
+annualPayAmount.l1 = 5th April 2020 or
+annualPayAmount.l2 = the day before they were furloughed ({0})
 
 comingSoon.title = We are unable to do this calculation at the moment
 comingSoon.heading = We are unable to do this calculation at the moment

@@ -92,14 +92,14 @@ trait ModelGenerators {
       } yield CylbPayment(date, Amount(value))
     }
 
-  implicit lazy val arbitraryVariableGrosspayMethod: Arbitrary[VariableGrossPay] =
+  implicit lazy val arbitraryAnnualPayAmountMethod: Arbitrary[AnnualPayAmount] =
     Arbitrary {
       for {
         value <- Arbitrary.arbitrary[BigDecimal]
-      } yield VariableGrossPay(value)
+      } yield AnnualPayAmount(value)
     }
 
-  implicit lazy val arbitraryVariableLengthPartialpayMethod: Arbitrary[FurloughPartialPay] =
+  implicit lazy val arbitraryVariableLengthPartialPayMethod: Arbitrary[FurloughPartialPay] =
     Arbitrary {
       for {
         value <- Arbitrary.arbitrary[BigDecimal]

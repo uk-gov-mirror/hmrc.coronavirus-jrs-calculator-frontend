@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PayMethod.{Regular, Variable}
-import models.{Amount, BranchingQuestions, CylbPayment, EmployeeStarted, NonFurloughPay, RegularPay, RegularPayData, Salary, UserAnswers, VariableGrossPay, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
+import models.{Amount, AnnualPayAmount, BranchingQuestions, CylbPayment, EmployeeStarted, NonFurloughPay, RegularPay, RegularPayData, Salary, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import pages._
 
 class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
@@ -57,7 +57,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
 
   "build a VariablePayData for a VariablePay journey where CYLB is not required" in new JourneyBuilder {
     val answers: UserAnswers = mandatoryAnswers
-      .set(VariableGrossPayPage, VariableGrossPay(1000.0))
+      .set(AnnualPayAmountPage, AnnualPayAmount(1000.0))
       .get
       .set(PayMethodPage, Variable)
       .get
@@ -71,7 +71,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
 
   "build a VariablePayData for a VariablePay journey where CYLB is required" in new JourneyBuilder {
     val answers: UserAnswers = mandatoryAnswers
-      .set(VariableGrossPayPage, VariableGrossPay(1000.0))
+      .set(AnnualPayAmountPage, AnnualPayAmount(1000.0))
       .get
       .set(PayMethodPage, Variable)
       .get

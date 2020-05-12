@@ -156,14 +156,14 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
-      "go to VariableGrossPayPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted on or after Apr6th" in {
+      "go to AnnualPayAmountPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted on or after Apr6th" in {
         val userAnswers = UserAnswers("id")
           .set(PayMethodPage, Variable)
           .get
           .set(EmployeeStartDatePage, LocalDate.of(2019, 6, 1))
           .get
 
-        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.VariableGrossPayController.onPageLoad()
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.AnnualPayAmountController.onPageLoad()
       }
 
       "go to payMethodPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
@@ -240,7 +240,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           .get
 
         navigator.nextPage(
-          VariableGrossPayPage,
+          AnnualPayAmountPage,
           userAnswers
         ) mustBe routes.PartialPayBeforeFurloughController.onPageLoad()
       }
@@ -263,7 +263,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           .get
 
         navigator.nextPage(
-          VariableGrossPayPage,
+          AnnualPayAmountPage,
           userAnswers
         ) mustBe routes.PartialPayAfterFurloughController.onPageLoad()
       }
@@ -280,7 +280,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           .get
 
         navigator.nextPage(
-          VariableGrossPayPage,
+          AnnualPayAmountPage,
           userAnswers
         ) mustBe routes.TopUpStatusController.onPageLoad()
       }
@@ -294,7 +294,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
       "stop loop around last year pay if there are no more years to ask" in {
         val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
 
-        navigator.nextPage(LastYearPayPage, userAnswers, Some(2)) mustBe routes.VariableGrossPayController.onPageLoad()
+        navigator.nextPage(LastYearPayPage, userAnswers, Some(2)) mustBe routes.AnnualPayAmountController.onPageLoad()
       }
 
       "go to start of top up loop after top up periods page" in {

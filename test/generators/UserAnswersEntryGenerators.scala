@@ -82,11 +82,11 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryVariableGrossPayUserAnswersEntry: Arbitrary[(VariableGrossPayPage.type, JsValue)] =
+  implicit lazy val arbitraryAnnualPayAmountUserAnswersEntry: Arbitrary[(AnnualPayAmountPage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[VariableGrossPayPage.type]
-        value <- arbitrary[VariableGrossPay].map(Json.toJson(_))
+        page  <- arbitrary[AnnualPayAmountPage.type]
+        value <- arbitrary[AnnualPayAmount].map(Json.toJson(_))
       } yield (page, value)
     }
 

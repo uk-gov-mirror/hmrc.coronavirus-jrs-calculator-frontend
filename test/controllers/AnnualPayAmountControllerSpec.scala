@@ -19,13 +19,13 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
-import forms.VariableGrossPayFormProvider
-import models.{UserAnswers, VariableGrossPay}
+import forms.AnnualPayAmountFormProvider
+import models.{AnnualPayAmount, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmployeeStartDatePage, FurloughStartDatePage, VariableGrossPayPage}
+import pages.{AnnualPayAmountPage, EmployeeStartDatePage, FurloughStartDatePage}
 import play.api.inject.bind
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
@@ -33,28 +33,28 @@ import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.VariableGrossPayView
+import views.html.AnnualPayAmountView
 
 import scala.concurrent.Future
 
-class VariableGrossPayControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new VariableGrossPayFormProvider()
+  val formProvider = new AnnualPayAmountFormProvider()
   val form = formProvider()
 
-  lazy val variableGrossPayRoute = routes.VariableGrossPayController.onPageLoad().url
+  lazy val annualPayAmountRoute = routes.AnnualPayAmountController.onPageLoad().url
 
   val furloughStart = LocalDate.parse("2020-04-01")
   val empStart = LocalDate.parse("2020-02-01")
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, variableGrossPayRoute).withCSRFToken
+    FakeRequest(GET, annualPayAmountRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, variableGrossPayRoute).withCSRFToken
+    FakeRequest(POST, annualPayAmountRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(("value", "123"))
 
@@ -66,7 +66,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
     )
   )
 
-  "VariableGrossPay Controller" must {
+  "AnnualPayAmountController" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -74,7 +74,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
 
       val result = route(application, getRequest).value
 
-      val view = application.injector.instanceOf[VariableGrossPayView]
+      val view = application.injector.instanceOf[AnnualPayAmountView]
 
       status(result) mustEqual OK
 
@@ -86,18 +86,18 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswersUpdated = userAnswers.set(VariableGrossPayPage, VariableGrossPay(111)).success.value
+      val userAnswersUpdated = userAnswers.set(AnnualPayAmountPage, AnnualPayAmount(111)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswersUpdated)).build()
 
-      val view = application.injector.instanceOf[VariableGrossPayView]
+      val view = application.injector.instanceOf[AnnualPayAmountView]
 
       val result = route(application, getRequest).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(VariableGrossPay(111)), furloughStart)(getRequest, messages).toString
+        view(form.fill(AnnualPayAmount(111)), furloughStart)(getRequest, messages).toString
 
       application.stop()
     }
@@ -166,13 +166,13 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
-        FakeRequest(POST, variableGrossPayRoute).withCSRFToken
+        FakeRequest(POST, annualPayAmountRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[VariableGrossPayView]
+      val view = application.injector.instanceOf[AnnualPayAmountView]
 
       val result = route(application, request).value
 
@@ -188,7 +188,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, variableGrossPayRoute)
+      val request = FakeRequest(GET, annualPayAmountRoute)
 
       val result = route(application, request).value
 
@@ -204,7 +204,7 @@ class VariableGrossPayControllerSpec extends SpecBaseWithApplication with Mockit
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, variableGrossPayRoute)
+        FakeRequest(POST, annualPayAmountRoute)
           .withFormUrlEncodedBody(("value", "answer"))
 
       val result = route(application, request).value

@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package forms
+package pages
 
-import forms.mappings.Mappings
-import javax.inject.Inject
-import models.VariableGrossPay
-import play.api.data.Form
-import play.api.data.Forms.mapping
+import models.AnnualPayAmount
+import pages.behaviours.PageBehaviours
 
-class VariableGrossPayFormProvider @Inject() extends Mappings {
+class AnnualPayAmountPageSpec extends PageBehaviours {
 
-  def apply(): Form[VariableGrossPay] =
-    Form(
-      mapping(
-        "value" -> bigDecimal(
-          requiredKey = "variableGrossPay.error.required",
-          nonNumericKey = "variableGrossPay.error.invalid"
-        ).verifying(positiveValue())
-          .verifying(maxTwoDecimals())
-      )(VariableGrossPay.apply)(VariableGrossPay.unapply)
-    )
+  "AnnualPayAmountPage" must {
+
+    beRetrievable[AnnualPayAmount](AnnualPayAmountPage)
+
+    beSettable[AnnualPayAmount](AnnualPayAmountPage)
+
+    beRemovable[AnnualPayAmount](AnnualPayAmountPage)
+  }
 }

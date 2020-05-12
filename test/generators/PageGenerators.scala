@@ -45,8 +45,8 @@ trait PageGenerators {
   implicit lazy val arbitraryPartialPayAfterFurloughPage: Arbitrary[PartialPayAfterFurloughPage.type] =
     Arbitrary(PartialPayAfterFurloughPage)
 
-  implicit lazy val arbitraryVariableGrossPayPage: Arbitrary[VariableGrossPayPage.type] =
-    Arbitrary(VariableGrossPayPage)
+  implicit lazy val arbitraryAnnualPayAmountPage: Arbitrary[AnnualPayAmountPage.type] =
+    Arbitrary(AnnualPayAmountPage)
 
   implicit lazy val arbitraryEmployeeStartDatePage: Arbitrary[EmployeeStartDatePage.type] =
     Arbitrary(EmployeeStartDatePage)
