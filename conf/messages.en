@@ -496,8 +496,8 @@ additionalPaymentAmount.error.nonNumeric = Enter the additional payment amount i
 
 topUpStatus.title = Have you topped up this employee’s pay?
 topUpStatus.heading = Have you topped up this employee’s pay?
-topUpStatus.ToppedUp = Yes
-topUpStatus.NotToppedUp = No
+topUpStatus.toppedUp = Yes
+topUpStatus.notToppedUp = No
 topUpStatus.p1 = You can top up the remaining 20 per cent of your employee’s pay while they’re furloughed.
 topUpStatus.p2 = We’re asking because it affects National Insurance contributions.
 topUpStatus.error.required = Select ‘Yes’ if you topped up this employee’s pay
