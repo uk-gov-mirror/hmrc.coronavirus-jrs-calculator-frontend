@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.AdditionalPaymentStatusFormProvider
 import handlers.FurloughCalculationHandler
@@ -34,6 +35,7 @@ class AdditionalPaymentStatusController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
+  feature: FeatureFlagActionProvider,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -45,25 +47,27 @@ class AdditionalPaymentStatusController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(AdditionalPaymentStatusPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(AdditionalPaymentStatusPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm))
+      Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdditionalPaymentStatusPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AdditionalPaymentStatusPage, updatedAnswers))
-      )
+  def onSubmit(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
+    implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(AdditionalPaymentStatusPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(AdditionalPaymentStatusPage, updatedAnswers))
+        )
   }
 }

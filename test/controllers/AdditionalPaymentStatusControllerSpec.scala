@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBaseWithApplication
+import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import forms.AdditionalPaymentStatusFormProvider
 import models.{AdditionalPaymentStatus, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -39,6 +40,7 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
   def onwardRoute = Call("GET", "/foo")
 
   lazy val additionalPaymentStatusRoute = routes.AdditionalPaymentStatusController.onPageLoad().url
+  lazy val additionalPaymentStatusRoutePost = routes.AdditionalPaymentStatusController.onSubmit().url
 
   val formProvider = new AdditionalPaymentStatusFormProvider()
   val form = formProvider()
@@ -100,7 +102,7 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
           .build()
 
       val request =
-        FakeRequest(POST, additionalPaymentStatusRoute)
+        FakeRequest(POST, additionalPaymentStatusRoutePost)
           .withFormUrlEncodedBody(("value", validAnswer))
 
       val result = route(application, request).value
@@ -117,7 +119,7 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
       val application = applicationBuilder(userAnswers = Some(UserAnswers("id"))).build()
 
       val request =
-        FakeRequest(POST, additionalPaymentStatusRoute).withCSRFToken
+        FakeRequest(POST, additionalPaymentStatusRoutePost).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
@@ -131,6 +133,34 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
 
       contentAsString(result) mustEqual
         view(boundForm)(request, messages).toString
+
+      application.stop()
+    }
+
+    "redirect to 404 page for a GET if topups flag is disabled" in {
+
+      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
+
+      val request = FakeRequest(GET, additionalPaymentStatusRoute)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
+
+      application.stop()
+    }
+
+    "redirect to 404 page for a POST if topups flag is disabled" in {
+
+      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
+
+      val request =
+        FakeRequest(POST, additionalPaymentStatusRoutePost)
+          .withFormUrlEncodedBody(("value", "yesAdditionalPayments"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }
