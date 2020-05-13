@@ -29,15 +29,19 @@
 
 @(form: Form[_], idx: Int, messageDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, if(idx == 1){"payDate.title.firstDate"} else {"payDate.title"}, titleMessageArgs = Seq(dateToString(messageDate))))) {
+@govukLayout(pageTitle = Some(title(form, if(idx == 1) {
+  "payDate.title.firstDate"
+} else {
+  "payDate.title"
+}, titleMessageArgs = Seq(dateToString(messageDate))))) {
 
     @formHelper(action = PayDateController.onSubmit(idx), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages(if(idx == 1){"payDate.heading.firstDate"} else {"payDate.heading"}, dateToString(messageDate)))
+        @h1(messages(if(idx == 1) { "payDate.heading.firstDate" } else { "payDate.heading" }, dateToString(messageDate)))
 
-        @p(Html(messages(if(idx == 1){"payDate.firstP"} else {"payDate.p"})))
+        @p(Html(messages(if(idx == 1) { "payDate.firstP" } else { "payDate.p" })))
 
         @details(
           summaryText = Messages("payDate.details.title")
@@ -47,7 +51,7 @@
 
         @inputDate(
             form,
-            legendContent = messages(if(idx == 1){"payDate.heading.firstDate"} else {"payDate.heading"}, dateToString(messageDate)),
+            legendContent = messages(if(idx == 1) { "payDate.heading.firstDate" } else { "payDate.heading" }, dateToString(messageDate)),
             legendClasses = "govuk-visually-hidden",
             legendAsPageHeading = false
         )
