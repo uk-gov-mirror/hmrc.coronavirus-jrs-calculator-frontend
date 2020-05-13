@@ -60,7 +60,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       payMethodRoutes
     case RegularPayAmountPage =>
       _ =>
-        routes.TopUpStatusController.onPageLoad()
+        topUpFeatureRoutes
     case EmployedStartedPage =>
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
@@ -70,7 +70,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       partialPayBeforeFurloughRoutes
     case PartialPayAfterFurloughPage =>
       _ =>
-        routes.TopUpStatusController.onPageLoad()
+        topUpFeatureRoutes
     case AnnualPayAmountPage =>
       annualPayAmountRoutes
     case LastPayDatePage =>
@@ -247,7 +247,14 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     } else if (hasPartialPayAfter(userAnswers)) {
       routes.PartialPayAfterFurloughController.onPageLoad()
     } else {
-      routes.TopUpStatusController.onPageLoad()
+      topUpFeatureRoutes
     }
   }
+
+  private lazy val topUpFeatureRoutes =
+    if (appConfig.topUpJourneyEnabled) {
+      routes.TopUpStatusController.onPageLoad()
+    } else {
+      routes.NicCategoryController.onPageLoad()
+    }
 }
