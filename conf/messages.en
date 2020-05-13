@@ -361,7 +361,9 @@ furloughEndDate.error.min.max = The furlough end date must be at least 3 weeks a
 
 furloughStartDate.title = When was this employee furloughed?
 furloughStartDate.heading = When was this employee furloughed?
-furloughStartDate.hint = This is the date that the employee started their furlough. This may be before or after the start date of your current claim.
+furloughStartDate.hint = This is the date this employee started furlough. It could be before or after the start date of this claim.
+furloughStartDate.p1 = We’re asking because your claim could include employees who were furloughed on different dates.
+
 furloughStartDate.error.required.all = Enter the furlough start date
 furloughStartDate.error.required.two = The furlough start date must include {0} and {1}
 furloughStartDate.error.required = The furlough start date must include {0}
@@ -394,6 +396,8 @@ annualPayAmount.error.invalid = Enter a valid amount
 annualPayAmount.p = This is the total gross amount before deductions the employee has been paid up to the earlier of:
 annualPayAmount.l1 = 5th April 2020 or
 annualPayAmount.l2 = the day before they were furloughed ({0})
+annualPayAmount.l3 = This is the total amount before deductions.
+annualPayAmount.l4 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 
 comingSoon.title = We are unable to do this calculation at the moment
 comingSoon.heading = We are unable to do this calculation at the moment
@@ -421,6 +425,7 @@ lastPayDate.error.required = The pay date must include {0}
 lastPayDate.error.invalid = Enter a real date
 lastPayDate.error.minimum = The pay date must be on or after {0}
 lastPayDate.p1 = This is the date this employee got paid. We’re asking because it may not be the same as the pay period end date.
+lastPayDate.p1_hint = We need this to work out their average pay based on last year’s amount.
 lastPayDate.p2 = This is needed to calculate National Insurance and pension contributions.
 lastPayDate.details.title = What’s the difference between a pay date and a pay period?
 lastPayDate.details.p1 = A ‘pay date’ is the date the employee actually gets their pay. It may not be the same as the end of the ‘pay period’. For example, the pay period might be 1 February to 28 February, but the employee gets paid on 27 February.
@@ -450,7 +455,7 @@ topupPeriods.error.required = Select the pay periods you are topping up
 topUpAmount.title = What’s the top up amount for the pay period ending {0}?
 topUpAmount.heading = What’s the top up amount for the pay period ending {0}?
 topUpAmount.p1 = Furlough pay for this pay period before top up: £{0}
-topUpAmount.p2 = Only include the amount of top up. Do not include the employee's furlough pay or any other additional pay.
+topUpAmount.p2 = Only include the amount of top up. Do not include the employee’s furlough pay or any other additional pay.
 topUpAmount.error.required = Enter the top up amount for this pay period
 topUpAmount.error.nonNumeric = Enter the top up amount in numbers
 
@@ -487,6 +492,6 @@ topUpStatus.title = Have you topped up this employee’s pay?
 topUpStatus.heading = Have you topped up this employee’s pay?
 topUpStatus.toppedUp = Yes
 topUpStatus.notToppedUp = No
-topUpStatus.p1 = You can top up the remaining 20 per cent of your employee’s pay while they’re furloughed.
+topUpStatus.p1 = You can top up the remaining 20 per cent of your employees’ pay while they’re furloughed.
 topUpStatus.p2 = We’re asking because it affects National Insurance contributions.
 topUpStatus.error.required = Select ‘Yes’ if you topped up this employee’s pay
