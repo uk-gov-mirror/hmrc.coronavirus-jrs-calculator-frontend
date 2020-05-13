@@ -24,7 +24,6 @@ import controllers.routes
 import models.PayMethod.{Regular, Variable}
 import models._
 import pages._
-import play.api.libs.json.Json
 
 class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTestDataBuilder {
 
@@ -314,13 +313,13 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
       }
 
       "loop around last year pay if there are more years to ask" in {
-        val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
+        val userAnswers = variableMonthlyPartial
 
         navigator.nextPage(LastYearPayPage, userAnswers, Some(1)) mustBe routes.LastYearPayController.onPageLoad(2)
       }
 
       "stop loop around last year pay if there are no more years to ask" in {
-        val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
+        val userAnswers = variableMonthlyPartial
 
         navigator.nextPage(LastYearPayPage, userAnswers, Some(2)) mustBe routes.AnnualPayAmountController.onPageLoad()
       }

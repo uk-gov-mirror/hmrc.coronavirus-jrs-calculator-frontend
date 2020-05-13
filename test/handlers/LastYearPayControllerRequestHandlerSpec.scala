@@ -19,14 +19,12 @@ package handlers
 import java.time.LocalDate
 
 import base.SpecBase
-import models.UserAnswers
-import play.api.libs.json.Json
 import utils.CoreTestData
 
 class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData {
 
   "get the pay dates in previous year for monthly" in new LastYearPayControllerRequestHandler {
-    val userAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
+    val userAnswers = variableMonthlyPartial
 
     val payDates = getPayDates(userAnswers).get
 
@@ -37,7 +35,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   }
 
   "get the pay dates in previous year for weekly" in new LastYearPayControllerRequestHandler {
-    val userAnswers = Json.parse(variableWeekly()).as[UserAnswers]
+    val userAnswers = variableWeekly()
 
     val payDates = getPayDates(userAnswers).get
 
@@ -52,7 +50,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   }
 
   "get the pay dates in previous year for weekly with later pay date" in new LastYearPayControllerRequestHandler {
-    val userAnswers = Json.parse(variableWeekly("2020-03-28")).as[UserAnswers]
+    val userAnswers = variableWeekly("2020-03-28")
 
     val payDates = getPayDates(userAnswers).get
 
@@ -67,7 +65,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   }
 
   "get the pay dates in previous year for fortnightly" in new LastYearPayControllerRequestHandler {
-    val userAnswers = Json.parse(variableFortnightly).as[UserAnswers]
+    val userAnswers = variableFortnightly
     val payDates = getPayDates(userAnswers).get
 
     val expected = Seq(
@@ -79,7 +77,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   }
 
   "get the pay dates in previous year for fourweekly" in new LastYearPayControllerRequestHandler {
-    val userAnswers = Json.parse(variableFourweekly).as[UserAnswers]
+    val userAnswers = variableFourweekly
 
     val payDates = getPayDates(userAnswers).get
 

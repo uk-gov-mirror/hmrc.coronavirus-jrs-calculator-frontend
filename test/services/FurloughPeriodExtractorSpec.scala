@@ -18,13 +18,14 @@ package services
 
 import java.time.LocalDate
 
-import base.{CoreTestDataBuilder, SpecBase}
+import base.SpecBase
 import generators.Generators
 import models.{FurloughEnded, FurloughOngoing, FurloughWithinClaim, UserAnswers}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
+import utils.CoreTestData
 
-class FurloughPeriodExtractorSpec extends SpecBase with CoreTestDataBuilder with ScalaCheckPropertyChecks with Generators {
+class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaCheckPropertyChecks with Generators {
 
   "extractFurloughPeriod" must {
 

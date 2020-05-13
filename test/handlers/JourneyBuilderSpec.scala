@@ -18,12 +18,13 @@ package handlers
 
 import java.time.LocalDate
 
-import base.{CoreTestDataBuilder, SpecBase}
+import base.SpecBase
 import models.PayMethod.{Regular, Variable}
 import models.{Amount, AnnualPayAmount, BranchingQuestions, CylbPayment, EmployeeStarted, NonFurloughPay, RegularPay, RegularPayData, Salary, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import pages._
+import utils.CoreTestData
 
-class JourneyBuilderSpec extends SpecBase with CoreTestDataBuilder {
+class JourneyBuilderSpec extends SpecBase with CoreTestData {
 
   "return regular journey if pay question is Regularly" in new JourneyBuilder {
     val questions = BranchingQuestions(Regular, None, None)

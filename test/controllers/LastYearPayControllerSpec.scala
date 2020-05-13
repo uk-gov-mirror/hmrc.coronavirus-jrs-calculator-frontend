@@ -20,14 +20,13 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.LastYearPayFormProvider
-import models.{Amount, CylbPayment, UserAnswers}
+import models.{Amount, CylbPayment}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import pages.LastYearPayPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
@@ -44,7 +43,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
   def onwardRoute = Call("GET", "/foo")
 
-  val variableMonthlyUserAnswers = Json.parse(variableMonthlyPartial).as[UserAnswers]
+  val variableMonthlyUserAnswers = variableMonthlyPartial
 
   val validAnswer = Amount(BigDecimal(100))
 

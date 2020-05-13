@@ -20,15 +20,14 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, Period, UserAnswers}
-import play.api.libs.json.Json
+import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, Period}
 import utils.CoreTestData
 import viewmodels.ConfirmationViewBreakdown
 
 class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData with CoreTestDataBuilder {
 
   "do all calculations given a set of userAnswers" in new ConfirmationControllerRequestHandler {
-    val userAnswers = Json.parse(userAnswersJson()).as[UserAnswers]
+    val userAnswers = userAnswersJson()
 
     def periodBreakdownOne(grant: BigDecimal) =
       FullPeriodBreakdown(
@@ -59,7 +58,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
   }
 
   "for a given user answer calculate furlough and empty results for ni and pension if do not apply" in new ConfirmationControllerRequestHandler {
-    val userAnswers = Json.parse(jsStringWithNoNiNoPension).as[UserAnswers]
+    val userAnswers = userAnswersJson().withNoNi.withNoPension
     val withPayDay: FullPeriodWithPaymentDate =
       FullPeriodWithPaymentDate(
         FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
@@ -84,8 +83,6 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
   }
 
   "partial period scenario" in new ConfirmationControllerRequestHandler {
-    val userAnswers = Json.parse(tempTest).as[UserAnswers]
-
     def periodBreakdownOne(grossPay: BigDecimal, grant: BigDecimal) =
       PartialPeriodBreakdown(
         Amount(grossPay),
@@ -105,11 +102,11 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
-    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected //TODO metadata to be tested
+    loadResultData(answersWithPartialPeriod).get.confirmationViewBreakdown mustBe expected //TODO metadata to be tested
   }
 
   "variable average partial period scenario" in new ConfirmationControllerRequestHandler {
-    val userAnswers = Json.parse(variableAveragePartial).as[UserAnswers]
+    val userAnswers = variableAveragePartial
 
     def periodBreakdownOne(grossPay: BigDecimal, grant: BigDecimal) =
       PartialPeriodBreakdown(
@@ -130,16 +127,11 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
     loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected
-
   }
 
   "take into account all cylb payments for weekly frequency with partial period as first period" in new ConfirmationControllerRequestHandler {
-    val userAnswers = Json.parse(manyPeriods).as[UserAnswers]
 
-    val expected = 2402.63
-
-    loadResultData(userAnswers).get.confirmationViewBreakdown.furlough.total mustBe expected
-
+    loadResultData(manyPeriods).get.confirmationViewBreakdown.furlough.total mustBe 2402.63
   }
 
 }
