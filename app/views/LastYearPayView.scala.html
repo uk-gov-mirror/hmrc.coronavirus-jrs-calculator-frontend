@@ -22,7 +22,9 @@
         errorSummary: components.errorSummary,
         inputCurrency: components.inputCurrency,
         h1: components.h1,
-        button: components.button
+        p: components.p,
+        button: components.button,
+        whatToInclude: components.whatToInclude
 )
 
 @(form: Form[_], idx: Int, payDate: LocalDate, isMonthly: Boolean)(implicit request: Request[_], messages: Messages)
@@ -33,12 +35,25 @@
 
         @errorSummary(form.errors)
 
+        @if(isMonthly) {
+            @h1(messages("lastYearPay.heading.monthly", dateToStringOnlyMonth(payDate)))
+        } else {
+            @h1(messages("lastYearPay.heading", dateToStringWithoutYear(payDate)))
+        }
+
+        @p(Html(messages("lastYearPay.p1")))
+
+        @p(Html(messages("lastYearPay.p2")))
+
+        @whatToInclude()
+
         @inputCurrency(
             form,
             id = "value",
             name = "value",
             label = if(isMonthly){messages("lastYearPay.heading.monthly", dateToStringOnlyMonth(payDate))} else {messages("lastYearPay.heading", dateToStringWithoutYear(payDate))},
-            isPageHeading = true,
+            isPageHeading = false,
+            labelClasses = Some("govuk-visually-hidden"),
             classes = Some("govuk-input--width-10")
         )
 

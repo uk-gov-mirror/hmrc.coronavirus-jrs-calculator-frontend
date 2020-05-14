@@ -64,6 +64,8 @@
 
     @p(Html(messages("confirmation.disclaimer")))
 
+    @p(Html(messages("confirmation.bullets.heading")))
+
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("confirmation.claimPeriod", dateToString(cm.claimPeriod.start), dateToString(cm.claimPeriod.end))</li>
         <li>
