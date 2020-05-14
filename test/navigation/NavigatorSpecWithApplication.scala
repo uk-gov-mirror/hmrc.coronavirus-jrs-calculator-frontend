@@ -330,7 +330,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           TopUpPeriod(LocalDate.of(2020, 4, 15), Amount(150.00))
         )
 
-        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, topUpPeriods)
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(topUpPeriods)
 
         navigator.nextPage(
           TopUpPeriodsPage,
@@ -344,7 +344,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           TopUpPeriod(LocalDate.of(2020, 4, 15), Amount(150.00))
         )
 
-        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, topUpPeriods)
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(topUpPeriods)
 
         navigator.nextPage(
           TopUpAmountPage,
@@ -359,7 +359,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           TopUpPeriod(LocalDate.of(2020, 4, 15), Amount(150.00))
         )
 
-        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, topUpPeriods)
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(topUpPeriods)
 
         navigator.nextPage(
           TopUpAmountPage,
@@ -374,7 +374,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           LocalDate.of(2020, 4, 15)
         )
 
-        val userAnswers = mandatoryAnswers.setValue(AdditionalPaymentPeriodsPage, additionalPaymentDates)
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withAdditionalPaymentPeriods(additionalPaymentDates.map(_.toString))
 
         navigator.nextPage(
           AdditionalPaymentPeriodsPage,
@@ -388,7 +388,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           LocalDate.of(2020, 4, 15)
         )
 
-        val userAnswers = mandatoryAnswers.setValue(AdditionalPaymentPeriodsPage, additionalPaymentDates)
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withAdditionalPaymentPeriods(additionalPaymentDates.map(_.toString))
 
         navigator.nextPage(
           AdditionalPaymentAmountPage,
@@ -403,7 +403,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           LocalDate.of(2020, 4, 15)
         )
 
-        val userAnswers = mandatoryAnswers.setValue(AdditionalPaymentPeriodsPage, additionalPaymentDates)
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withAdditionalPaymentPeriods(additionalPaymentDates.map(_.toString))
 
         navigator.nextPage(
           AdditionalPaymentAmountPage,

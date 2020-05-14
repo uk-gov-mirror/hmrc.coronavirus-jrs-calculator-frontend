@@ -57,18 +57,16 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
     FullPeriodBreakdown(Amount(1600.00), fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"))
   )
 
-  val baseUserAnswers = UserAnswers("id")
-    .setValue(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
-    .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 4, 30))
-    .setValue(PaymentFrequencyPage, Monthly)
-    .setValue(PayMethodPage, Regular)
-    .setValue(FurloughStatusPage, FurloughOngoing)
-    .setValue(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
-    .setValue(LastPayDatePage, LocalDate.of(2020, 3, 31))
-    .setValue(PayDatePage, LocalDate.of(2020, 2, 29), Some(1))
-    .setValue(PayDatePage, LocalDate.of(2020, 3, 31), Some(2))
-    .setValue(PayDatePage, LocalDate.of(2020, 4, 30), Some(3))
-    .setValue(RegularPayAmountPage, Salary(2000))
+  val baseUserAnswers = emptyUserAnswers
+    .withClaimPeriodStart("2020, 3, 1")
+    .withClaimPeriodEnd("2020, 4, 30")
+    .withPaymentFrequency(Monthly)
+    .withPayMethod(Regular)
+    .withFurloughStatus(FurloughOngoing)
+    .withFurloughStartDate("2020, 3, 1")
+    .withLastPayDate("2020, 3, 31")
+    .withPayDate(List("2020, 2, 29", "2020, 3, 31", "2020, 4, 30"))
+    .withRegularPayAmount(2000)
 
   "TopupPeriods Controller" must {
 
@@ -89,17 +87,16 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
     }
 
     "redirect for a GET when there is only one period to top up" in {
-      val userAnswers = UserAnswers("id")
-        .setValue(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
-        .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 3, 31))
-        .setValue(PaymentFrequencyPage, Monthly)
-        .setValue(PayMethodPage, Regular)
-        .setValue(FurloughStatusPage, FurloughOngoing)
-        .setValue(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
-        .setValue(LastPayDatePage, LocalDate.of(2020, 3, 31))
-        .setValue(PayDatePage, LocalDate.of(2020, 2, 29), Some(1))
-        .setValue(PayDatePage, LocalDate.of(2020, 3, 31), Some(2))
-        .setValue(RegularPayAmountPage, Salary(2000))
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020, 3, 1")
+        .withClaimPeriodEnd("2020, 3, 31")
+        .withPaymentFrequency(Monthly)
+        .withPayMethod(Regular)
+        .withFurloughStatus(FurloughOngoing)
+        .withFurloughStartDate("2020, 3, 1")
+        .withLastPayDate("2020, 3, 31")
+        .withPayDate(List("2020, 2, 29", "2020, 3, 31"))
+        .withRegularPayAmount(2000)
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -127,7 +124,7 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
       val topUpPeriod = dates.map(TopUpPeriod(_, furloughGrant = Amount(100)))
 
       val userAnswers = baseUserAnswers
-        .setValue(TopUpPeriodsPage, topUpPeriod)
+        .withTopUpPeriods(topUpPeriod)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

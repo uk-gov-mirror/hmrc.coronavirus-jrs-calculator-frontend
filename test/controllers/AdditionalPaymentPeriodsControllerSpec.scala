@@ -24,12 +24,11 @@ import forms.AdditionalPaymentPeriodsFormProvider
 import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriodBreakdown, PeriodBreakdown, Salary, UserAnswers}
+import models.{Amount, FullPeriodBreakdown, PeriodBreakdown, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages._
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
@@ -57,18 +56,16 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseWithApplication wit
     FullPeriodBreakdown(Amount(1600.00), fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"))
   )
 
-  val baseUserAnswers = UserAnswers("id")
-    .setValue(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
-    .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 4, 30))
-    .setValue(PaymentFrequencyPage, Monthly)
-    .setValue(PayMethodPage, Regular)
-    .setValue(FurloughStatusPage, FurloughOngoing)
-    .setValue(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
-    .setValue(LastPayDatePage, LocalDate.of(2020, 3, 31))
-    .setValue(PayDatePage, LocalDate.of(2020, 2, 29), Some(1))
-    .setValue(PayDatePage, LocalDate.of(2020, 3, 31), Some(2))
-    .setValue(PayDatePage, LocalDate.of(2020, 4, 30), Some(3))
-    .setValue(RegularPayAmountPage, Salary(2000))
+  val baseUserAnswers = emptyUserAnswers
+    .withClaimPeriodStart("2020, 3, 1")
+    .withClaimPeriodEnd("2020, 4, 30")
+    .withPaymentFrequency(Monthly)
+    .withPayMethod(Regular)
+    .withFurloughStatus(FurloughOngoing)
+    .withFurloughStartDate("2020, 3, 1")
+    .withLastPayDate("2020, 3, 31")
+    .withPayDate(List("2020, 2, 29", "2020, 3, 31", "2020, 4, 30"))
+    .withRegularPayAmount(2000)
 
   "TopupPeriods Controller" must {
 
@@ -89,17 +86,16 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseWithApplication wit
     }
 
     "redirect for a GET when there is only one period to top up" in {
-      val userAnswers = UserAnswers("id")
-        .setValue(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
-        .setValue(ClaimPeriodEndPage, LocalDate.of(2020, 3, 31))
-        .setValue(PaymentFrequencyPage, Monthly)
-        .setValue(PayMethodPage, Regular)
-        .setValue(FurloughStatusPage, FurloughOngoing)
-        .setValue(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
-        .setValue(LastPayDatePage, LocalDate.of(2020, 3, 31))
-        .setValue(PayDatePage, LocalDate.of(2020, 2, 29), Some(1))
-        .setValue(PayDatePage, LocalDate.of(2020, 3, 31), Some(2))
-        .setValue(RegularPayAmountPage, Salary(2000))
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020, 3, 1")
+        .withClaimPeriodEnd("2020, 3, 31")
+        .withPaymentFrequency(Monthly)
+        .withPayMethod(Regular)
+        .withFurloughStatus(FurloughOngoing)
+        .withFurloughStartDate("2020, 3, 1")
+        .withLastPayDate("2020, 3, 31")
+        .withPayDate(List("2020, 2, 29", "2020, 3, 31"))
+        .withRegularPayAmount(2000)
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -125,7 +121,7 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseWithApplication wit
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = baseUserAnswers
-        .setValue(AdditionalPaymentPeriodsPage, validAnswer)
+        .withAdditionalPaymentPeriods(validAnswer.map(_.toString))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

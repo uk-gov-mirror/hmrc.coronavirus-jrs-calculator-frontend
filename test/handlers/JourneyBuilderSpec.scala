@@ -47,7 +47,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
   }
 
   "build a RegularPayData for a RegularPay journey" in new JourneyBuilder {
-    val answers: UserAnswers = mandatoryAnswers
+    val answers: UserAnswers = mandatoryAnswersOnRegularMonthly
       .set(RegularPayAmountPage, Salary(1000.0))
       .get
 
@@ -57,7 +57,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
   }
 
   "build a VariablePayData for a VariablePay journey where CYLB is not required" in new JourneyBuilder {
-    val answers: UserAnswers = mandatoryAnswers
+    val answers: UserAnswers = mandatoryAnswersOnRegularMonthly
       .set(AnnualPayAmountPage, AnnualPayAmount(1000.0))
       .get
       .set(PayMethodPage, Variable)
@@ -71,7 +71,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
   }
 
   "build a VariablePayData for a VariablePay journey where CYLB is required" in new JourneyBuilder {
-    val answers: UserAnswers = mandatoryAnswers
+    val answers: UserAnswers = mandatoryAnswersOnRegularMonthly
       .set(AnnualPayAmountPage, AnnualPayAmount(1000.0))
       .get
       .set(PayMethodPage, Variable)

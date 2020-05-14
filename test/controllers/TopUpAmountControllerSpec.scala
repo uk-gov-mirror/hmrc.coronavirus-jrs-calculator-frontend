@@ -26,7 +26,6 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{TopUpAmountPage, TopUpPeriodsPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
@@ -53,7 +52,7 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
     "return OK and the correct view for a GET" in {
       val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
-      val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+      val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(List(topUpPeriod))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,7 +75,7 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
       "index is negative" in {
         val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
-        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(List(topUpPeriod))
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -92,7 +91,7 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
       "index is 0" in {
         val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
-        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(List(topUpPeriod))
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -108,7 +107,7 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
       "index is too high" in {
         val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
-        val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(List(topUpPeriod))
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -127,9 +126,9 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
-      val userAnswers = mandatoryAnswers
-        .setValue(TopUpPeriodsPage, List(topUpPeriod))
-        .setValue(TopUpAmountPage, topUpAmount, Some(1))
+      val userAnswers = mandatoryAnswersOnRegularMonthly
+        .withTopUpPeriods(List(topUpPeriod))
+        .withTopUpAmount(topUpAmount, Some(1))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -151,7 +150,7 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
-      val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+      val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(List(topUpPeriod))
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -181,7 +180,7 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
 
-      val userAnswers = mandatoryAnswers.setValue(TopUpPeriodsPage, List(topUpPeriod))
+      val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(List(topUpPeriod))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

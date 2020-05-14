@@ -29,15 +29,15 @@ trait AveragePayCalculator {
     grossPay: Amount): Seq[PaymentWithPeriod] =
     periods map {
       case fp: FullPeriodWithPaymentDate =>
-        val daily = fp.period.period.countDays * averageDailyCalculator(priorFurloughPeriod, grossPay).value
-        PaymentWithFullPeriod(Amount(daily), fp)
+        PaymentWithFullPeriod(Amount(daily(fp.period.period, priorFurloughPeriod, grossPay)), fp)
       case pp: PartialPeriodWithPaymentDate =>
         val nfp = determineNonFurloughPay(pp.period, nonFurloughPay)
-        val daily = pp.period.partial.countDays * averageDailyCalculator(priorFurloughPeriod, grossPay).value
-
-        PaymentWithPartialPeriod(nfp, Amount(daily), pp)
+        PaymentWithPartialPeriod(nfp, Amount(daily(pp.period.partial, priorFurloughPeriod, grossPay)), pp)
     }
 
   protected def averageDailyCalculator(period: Period, amount: Amount): Amount =
     Amount(amount.value / period.countDays).halfUp
+
+  private def daily(period: Period, priorFurloughPeriod: Period, grossPay: Amount): BigDecimal =
+    period.countDays * averageDailyCalculator(priorFurloughPeriod, grossPay).value
 }

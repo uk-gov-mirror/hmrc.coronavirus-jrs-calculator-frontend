@@ -19,7 +19,7 @@ package services
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
-import models.{Amount, FullPeriod, FullPeriodWithPaymentDate, NonFurloughPay, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, Period, PeriodWithPaymentDate}
+import models.{Amount, NonFurloughPay, Period, PeriodWithPaymentDate}
 
 class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
@@ -29,17 +29,11 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val nonFurloughPay = NonFurloughPay(None, Some(Amount(1000.00)))
     val grossPay = Amount(2400.00)
     val priorFurloughPeriod = Period(employeeStartDate, furloughStartDate.minusDays(1))
-    val afterFurloughPeriod =
-      FullPeriodWithPaymentDate(
-        FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-        PaymentDate(LocalDate.of(2020, 3, 31)))
+    val afterFurloughPeriod = fullPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 31")
 
-    val afterFurloughPartial = PartialPeriodWithPaymentDate(
-      PartialPeriod(
-        Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31)),
-        Period(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 15))),
-      PaymentDate(LocalDate.of(2020, 5, 31))
-    )
+    val afterFurloughPartial =
+      partialPeriodWithPaymentDate("2020, 5, 1", "2020, 5, 31", "2020, 5, 1", "2020, 5, 15", "2020, 5, 31")
+
     val payPeriods: Seq[PeriodWithPaymentDate] = Seq(afterFurloughPeriod, afterFurloughPartial)
 
     val expected = Seq(
