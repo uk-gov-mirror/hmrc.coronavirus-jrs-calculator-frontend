@@ -24,7 +24,8 @@
     formHelper: FormWithCSRF,
     errorSummary: components.errorSummary,
     button: components.button,
-    checkboxes: components.inputCheckboxes
+    checkboxes: components.inputCheckboxes,
+    h1: components.h1
 )
 
 @(form: Form[List[LocalDate]], payDates: Seq[PeriodBreakdown])(implicit request: Request[_], messages: Messages)
@@ -33,12 +34,15 @@
 
     @formHelper(action = AdditionalPaymentPeriodsController.onSubmit()) {
 
-        @errorSummary(form.errors)
+        @errorSummary(form.errors, Some("additional-payment-period_0"))
+
+        @h1(messages("additionalPaymentPeriods.heading"))
 
         @checkboxes(
             form = form,
             legend = messages("additionalPaymentPeriods.heading"),
-            legendAsHeading = true,
+            legendAsHeading = false,
+            legendClasses = "govuk-visually-hidden",
             items = AdditionalPaymentPeriods.options(form, payDates),
             hint = Some(Html(messages("additionalPaymentPeriods.hint")))
         )
