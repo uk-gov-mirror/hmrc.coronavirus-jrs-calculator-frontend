@@ -28,7 +28,7 @@ import play.api.libs.json.Json
 trait CoreTestData extends UserAnswersBuilder {
 
   def userAnswersId: String = UUID.randomUUID().toString
-  def dummyUserAnswers = userAnswersJson()
+  def dummyUserAnswers = regularJourney()
   def emptyUserAnswers = UserAnswers(userAnswersId, Json.obj())
 
   def mandatoryAnswersOnRegularMonthly =
@@ -44,7 +44,7 @@ trait CoreTestData extends UserAnswersBuilder {
       .withLastPayDate("2020, 3, 31")
       .withPayDate(List("2020, 2, 29", "2020, 3, 31"))
 
-  private def userAnswersJson(): UserAnswers =
+  private def regularJourney(): UserAnswers =
     mandatoryAnswersOnRegularMonthly
       .withClaimPeriodStart("2020-03-01")
       .withClaimPeriodEnd("2020-04-30")
@@ -101,9 +101,9 @@ trait CoreTestData extends UserAnswersBuilder {
       .withToppedUpStatus(NotToppedUp)
       .withFurloughStatus(FurloughEnded)
 
-  def variableWeekly(lastPayDate: String = "2020-03-21"): UserAnswers =
+  lazy val variableWeekly: UserAnswers =
     variablePartialWith10KAnnualPayment
-      .withLastPayDate(lastPayDate)
+      .withLastPayDate("2020-03-21")
       .withPaymentFrequency(Weekly)
       .withPayDate(List("2020-02-29", "2020-03-07", "2020-03-14", "2020-03-21"))
 
@@ -116,10 +116,7 @@ trait CoreTestData extends UserAnswersBuilder {
   lazy val variableFourweekly: UserAnswers =
     variablePartialWith10KAnnualPayment
       .withPaymentFrequency(FourWeekly)
-      .withEmployeeStartDate("2019-12-01")
       .withFurloughEndDate("2020-04-26")
-      .withClaimPeriodStart("2020-03-01")
-      .withClaimPeriodEnd("2020-03-21")
       .withLastPayDate("2020-04-25")
       .withFurloughStartDate("2020-03-10")
       .withPayDate(List("2020-02-29", "2020-03-28", "2020-04-25"))

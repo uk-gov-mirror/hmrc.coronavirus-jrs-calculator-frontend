@@ -25,7 +25,7 @@ import models.PayMethod.Regular
 import models.PensionStatus.DoesContribute
 import models.TopUpStatus.ToppedUp
 import models.{AdditionalPayment, AnnualPayAmount, CylbPayment, FurloughPartialPay, FurloughStatus, NicCategory, PayMethod, PaymentFrequency, PensionStatus, Salary, TopUpPayment, TopUpPeriod, TopUpStatus, UserAnswers}
-import pages.{TopUpPeriodsPage, _}
+import pages.{QuestionPage, TopUpPeriodsPage, _}
 import play.api.libs.json.Writes
 import queries.Settable
 
@@ -101,39 +101,24 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withTopUpAmount(payment: TopUpPayment, idx: Option[Int]): UserAnswers =
       userAnswers.setValue(TopUpAmountPage, payment, idx)
 
-    def withPayDate(dates: List[String]): UserAnswers = {
-      val zipped: List[(String, Int)] = dates.zip(1 to dates.length)
+    def withPayDate(dates: List[String]): UserAnswers =
+      withListOfValues[String](dates, PayDatePage)
+
+    def withLastYear(payments: List[(String, Int)]): UserAnswers =
+      withListOfValues[(String, Int)](payments, LastYearPayPage)
+
+    def withListOfValues[A](payments: List[A], page: QuestionPage[_]): UserAnswers = {
+      val zipped: List[(A, Int)] = payments.zip(1 to payments.length)
 
       @tailrec
-      def rec(userAnswers: UserAnswers, dates: List[(String, Int)]): UserAnswers =
-        dates match {
-          case Nil => userAnswers
-          case (d, idx) :: tail =>
-            rec(
-              userAnswers
-                .setListWithInvalidation(PayDatePage, d.toLocalDate, idx)
-                .get,
-              tail)
+      def rec(userAnswers: UserAnswers, payments: List[(A, Int)]): UserAnswers =
+        (payments, page) match {
+          case (Nil, _) => userAnswers
+          case (((d: String, amount: Int), idx) :: tail, LastYearPayPage) =>
+            rec(userAnswers.setValue(LastYearPayPage, CylbPayment(d.toLocalDate, amount.toAmount), Some(idx)), tail)
+          case ((d: String, idx) :: tail, PayDatePage) =>
+            rec(userAnswers.setValue(PayDatePage, d.toLocalDate, Some(idx)), tail)
         }
-
-      rec(userAnswers, zipped)
-    }
-
-    def withLastYear(payments: List[(String, Int)]): UserAnswers = {
-      val zipped: List[((String, Int), Int)] = payments.zip(1 to payments.length)
-
-      @tailrec
-      def rec(userAnswers: UserAnswers, payments: List[((String, Int), Int)]): UserAnswers =
-        payments match {
-          case Nil => userAnswers
-          case ((d, amount), idx) :: tail =>
-            rec(
-              userAnswers
-                .setListWithInvalidation(LastYearPayPage, CylbPayment(d.toLocalDate, amount.toAmount), idx)
-                .get,
-              tail)
-        }
-
       rec(userAnswers, zipped)
     }
   }

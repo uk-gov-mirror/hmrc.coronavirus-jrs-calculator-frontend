@@ -24,12 +24,11 @@ import forms.TopUpPeriodsFormProvider
 import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriodBreakdown, PeriodBreakdown, Salary, TopUpPeriod, UserAnswers}
+import models.{Amount, FullPeriodBreakdown, PeriodBreakdown, TopUpPeriod, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages._
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
