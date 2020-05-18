@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package handlers
+@this()
 
-import models.{FurloughCalculationResult, UserAnswers}
-import services.{FurloughCalculator, ReferencePayCalculator}
+@(msg: String, classes: Option[String] = None)(implicit messages: Messages)
 
-trait FurloughCalculationHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
-
-  def handleCalculationFurlough(userAnswers: UserAnswers): Option[FurloughCalculationResult] =
-    for {
-      questions <- extractBranchingQuestions(userAnswers)
-      data      <- journeyData(define(questions), userAnswers)
-      payments = calculateReferencePay(data)
-    } yield calculateFurloughGrant(data.frequency, payments)
-
-}
+<h3 class="@classes.getOrElse("govuk-heading-m")">@messages(msg)</h3>

@@ -20,20 +20,12 @@ import java.time.LocalDate
 
 import play.api.libs.json.{Format, Json}
 import services.PeriodHelper
-import utils.ValueClassFormat
 
 case class PaymentDate(value: LocalDate)
-
-object PaymentDate {
-  implicit val defaultFormat: Format[PaymentDate] =
-    ValueClassFormat.format(dateString => PaymentDate.apply(LocalDate.parse(dateString)))(_.value)
-}
 
 case class NonFurloughPay(pre: Option[Amount], post: Option[Amount])
 
 object NonFurloughPay extends PeriodHelper {
-  implicit val defaultFormat: Format[NonFurloughPay] = Json.format[NonFurloughPay]
-
   implicit class PrePostFurlough(nonFurloughPay: NonFurloughPay) {
     def preAmount: Amount = opt(nonFurloughPay.pre)
     def postAmount: Amount = opt(nonFurloughPay.post)
@@ -60,6 +52,7 @@ object CylbPayment {
 
 sealed trait PaymentWithPeriod {
   val furloughPayment: Amount
+  val periodWithPaymentDate: PeriodWithPaymentDate
 }
 case class PaymentWithFullPeriod(furloughPayment: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate) extends PaymentWithPeriod
 case class PaymentWithPartialPeriod(nonFurloughPay: Amount, furloughPayment: Amount, periodWithPaymentDate: PartialPeriodWithPaymentDate)

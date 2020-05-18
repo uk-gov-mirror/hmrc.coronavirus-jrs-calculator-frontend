@@ -24,7 +24,7 @@ import forms.TopUpPeriodsFormProvider
 import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriodBreakdown, PeriodBreakdown, TopUpPeriod, UserAnswers}
+import models.{Amount, FullPeriodCap, FurloughBreakdown, TopUpPeriod, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -51,9 +51,15 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
   val form = formProvider()
 
   val dates = List(LocalDate.of(2020, 3, 31), LocalDate.of(2020, 4, 30))
-  val periodBreakdowns: Seq[PeriodBreakdown] = Seq(
-    FullPeriodBreakdown(Amount(1600.00), fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
-    FullPeriodBreakdown(Amount(1600.00), fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30"))
+  val periodBreakdowns: Seq[FurloughBreakdown] = Seq(
+    fullPeriodFurloughBreakdown(
+      1600.00,
+      paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
+      FullPeriodCap(2500.00)),
+    fullPeriodFurloughBreakdown(
+      1600.00,
+      paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30")),
+      FullPeriodCap(2500.00))
   )
 
   val baseUserAnswers = emptyUserAnswers

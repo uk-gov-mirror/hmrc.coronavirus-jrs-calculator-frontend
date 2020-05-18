@@ -26,7 +26,6 @@ import utils.LocalDateHelpers._
 trait PeriodHelper {
 
   def generatePeriods(endDates: Seq[LocalDate], furloughPeriod: FurloughWithinClaim): Seq[Periods] = {
-    PeriodWithPaymentDate
     def generate(acc: Seq[Period], list: Seq[LocalDate]): Seq[Period] = list match {
       case Nil      => acc
       case _ :: Nil => acc

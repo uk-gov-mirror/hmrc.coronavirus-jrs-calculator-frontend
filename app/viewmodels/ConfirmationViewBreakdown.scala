@@ -16,11 +16,21 @@
 
 package viewmodels
 
-import models.{CalculationResult, FurloughDates, NicCategory, PaymentFrequency, PensionStatus, Period}
+import models.{FurloughBreakdown, FurloughCalculationResult, FurloughDates, NicBreakdown, NicCalculationResult, NicCategory, PaymentFrequency, PensionBreakdown, PensionCalculationResult, PensionStatus, Period}
 
-case class ConfirmationDataResult(confirmationMetadata: ConfirmationMetadata, confirmationViewBreakdown: ConfirmationViewBreakdown)
+case class ConfirmationDataResult(metaData: ConfirmationMetadata, confirmationViewBreakdown: ConfirmationViewBreakdown)
 
-case class ConfirmationViewBreakdown(furlough: CalculationResult, nic: CalculationResult, pension: CalculationResult)
+case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: NicCalculationResult, pension: PensionCalculationResult) {
+  def zippedBreakdowns: Seq[(FurloughBreakdown, NicBreakdown, PensionBreakdown)] =
+    (furlough.periodBreakdowns, nic.periodBreakdowns, pension.periodBreakdowns).zipped.toList
+
+  def detailedBreakdowns: Seq[DetailedBreakdown] = zippedBreakdowns map { breakdowns =>
+    DetailedBreakdown(
+      breakdowns._1.paymentWithPeriod.periodWithPaymentDate.period,
+      breakdowns._1.toDetailedFurloughBreakdown
+    )
+  }
+}
 
 case class ConfirmationMetadata(
   claimPeriod: Period,

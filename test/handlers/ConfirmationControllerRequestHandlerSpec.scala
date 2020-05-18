@@ -16,40 +16,65 @@
 
 package handlers
 
-import java.time.LocalDate
-
 import base.{CoreTestDataBuilder, SpecBase}
-import models.Calculation.{FurloughCalculationResult, NicCalculationResult, PensionCalculationResult}
-import models.NicCategory.{Nonpayable, Payable}
-import models.PaymentFrequency.Monthly
-import models.PensionStatus.{DoesContribute, DoesNotContribute}
-import models.{AdditionalPayment, CalculationResult, FurloughOngoing, Period, TopUpPayment, UserAnswers}
+import models.NicCategory.Nonpayable
+import models.PensionStatus.DoesNotContribute
+import models.{FullPeriodCap, FurloughCalculationResult, NicCalculationResult, PartialPeriodCap, PensionCalculationResult, UserAnswers}
 import utils.CoreTestData
-import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
-import models.Amount._
+import viewmodels.ConfirmationViewBreakdown
 
 class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData with CoreTestDataBuilder {
 
   "do all calculations given a set of userAnswers returning a breakdown of each" in new ConfirmationControllerRequestHandler {
-    val userAnswers: UserAnswers = dummyUserAnswers
-
-    def periodBreakdownOne(grant: BigDecimal) =
-      fullPeriodBreakdown(grant, fullPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 20"))
-
-    def periodBreakdownTwo(grant: BigDecimal) =
-      fullPeriodBreakdown(grant, fullPeriodWithPaymentDate("2020, 4, 1", "2020, 4, 30", "2020, 4, 20"))
     val furlough =
-      CalculationResult(FurloughCalculationResult, 3200.00, Seq(periodBreakdownOne(1600.00), periodBreakdownTwo(1600.00)))
-    val nic =
-      CalculationResult(NicCalculationResult, 241.36, List(periodBreakdownOne(121.58), periodBreakdownTwo(119.78)))
+      FurloughCalculationResult(
+        3200.00,
+        Seq(
+          fullPeriodFurloughBreakdown(
+            1600.00,
+            paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
+            FullPeriodCap(2500.00)),
+          fullPeriodFurloughBreakdown(
+            1600.00,
+            paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
+            FullPeriodCap(2500.00))
+        )
+      )
 
-    val pension =
-      CalculationResult(PensionCalculationResult, 65.04, List(periodBreakdownOne(32.64), periodBreakdownTwo(32.40)))
+    val nic = NicCalculationResult(
+      241.36,
+      Seq(
+        fullPeriodNicBreakdown(
+          121.58,
+          0.0,
+          0.0,
+          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+        fullPeriodNicBreakdown(
+          119.78,
+          0.0,
+          0.0,
+          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+      )
+    )
 
-    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe ConfirmationViewBreakdown(furlough, nic, pension)
-    loadResultData(userAnswers).get.confirmationMetadata must matchPattern {
-      case ConfirmationMetadata(Period(_, _), FurloughOngoing(_), Monthly, Payable, DoesContribute) =>
-    }
+    val pension = PensionCalculationResult(
+      65.04,
+      Seq(
+        fullPeriodPensionBreakdown(
+          32.64,
+          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+        fullPeriodPensionBreakdown(
+          32.40,
+          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+      )
+    )
+
+    val expectedBreakdown = ConfirmationViewBreakdown(furlough, nic, pension)
+
+    val expectedClaimPeriod = period("2020-03-01", "2020-04-30")
+
+    loadResultData(dummyUserAnswers).get.confirmationViewBreakdown mustBe expectedBreakdown
+    loadResultData(dummyUserAnswers).get.metaData.claimPeriod mustBe expectedClaimPeriod
   }
 
   "for a given user answer calculate furlough and empty results for ni and pension if do not apply" in new ConfirmationControllerRequestHandler {
@@ -61,26 +86,51 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
     confirmationViewBreakdown.pension.total mustBe 0.0
   }
 
-  "partial period scenario including topup and additional payment" in new ConfirmationControllerRequestHandler {
+  "partial period scenario" in new ConfirmationControllerRequestHandler {
     val userAnswers: UserAnswers = mandatoryAnswersOnRegularMonthly
       .withFurloughStartDate("2020-03-10")
-      .withRegularPayAmount(3500)
-      .withToppedUpStatus()
-      .withTopUpAmount(TopUpPayment(LocalDate.of(2020, 3, 31), 100.0.toAmount), Some(1))
-      .withAdditionalPaymentAmount(AdditionalPayment(LocalDate.of(2020, 3, 31), 50.0.toAmount), Some(1))
-      .withAdditionalPaymentPeriods(List("2020, 3, 31"))
+      .withRegularPayAmount(3500.0)
 
-    def periodBreakdown(grossPay: BigDecimal, grant: BigDecimal) =
-      partialPeriodBreakdown(
-        grossPay,
-        grant,
-        partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31"))
+    val furlough = FurloughCalculationResult(
+      1774.30,
+      Seq(
+        partialPeriodFurloughBreakdown(
+          1774.30,
+          paymentWithPartialPeriod(
+            1016.13,
+            2483.87,
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31")),
+          PartialPeriodCap(1774.30, 22, 3, 80.65)
+        )
+      )
+    )
 
-    val furlough = CalculationResult(FurloughCalculationResult, 1774.30, List(periodBreakdown(1016.13, 1774.30)))
-    val nic =
-      CalculationResult(NicCalculationResult, 205.91, List(periodBreakdown(1016.13, 205.91)))
-    val pension =
-      CalculationResult(PensionCalculationResult, 42.32, List(periodBreakdown(1016.13, 42.32)))
+    val nic = NicCalculationResult(
+      202.83,
+      Seq(
+        partialPeriodNicBreakdown(
+          202.83,
+          0.0,
+          0.0,
+          paymentWithPartialPeriod(
+            1016.13,
+            2483.87,
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31"))
+        )
+      )
+    )
+
+    val pension = PensionCalculationResult(
+      42.32,
+      Seq(
+        partialPeriodPensionBreakdown(
+          42.32,
+          paymentWithPartialPeriod(
+            1016.13,
+            2483.87,
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31")))
+      )
+    )
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
@@ -88,19 +138,52 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
   }
 
   "variable average partial period scenario" in new ConfirmationControllerRequestHandler {
-    def periodBreakdownOne(grossPay: BigDecimal, grant: BigDecimal) =
-      partialPeriodBreakdown(
-        grossPay,
-        grant,
-        partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31"))
+    val userAnswers = variableAveragePartial
 
-    val furlough = CalculationResult(FurloughCalculationResult, 1289.95, List(periodBreakdownOne(280.00, 1289.95)))
-    val nic = CalculationResult(NicCalculationResult, 102.16, List(periodBreakdownOne(280.00, 102.16)))
-    val pension = CalculationResult(PensionCalculationResult, 25.29, List(periodBreakdownOne(280.00, 25.29)))
+    val furlough = FurloughCalculationResult(
+      1289.95,
+      Seq(
+        partialPeriodFurloughBreakdown(
+          1289.95,
+          paymentWithPartialPeriod(
+            280.0,
+            1612.44,
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31")),
+          PartialPeriodCap(2177.55, 27, 3, 80.65)
+        )
+      )
+    )
+
+    val nic = NicCalculationResult(
+      102.16,
+      Seq(
+        partialPeriodNicBreakdown(
+          102.16,
+          0.0,
+          0.0,
+          paymentWithPartialPeriod(
+            280.0,
+            1612.44,
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31"))
+        )
+      )
+    )
+
+    val pension = PensionCalculationResult(
+      25.29,
+      Seq(
+        partialPeriodPensionBreakdown(
+          25.29,
+          paymentWithPartialPeriod(
+            280.0,
+            1612.44,
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31")))
+      )
+    )
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
-    loadResultData(variableAveragePartial).get.confirmationViewBreakdown mustBe expected
+    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected
   }
 
   "take into account all cylb payments for weekly frequency with partial period as first period" in new ConfirmationControllerRequestHandler {

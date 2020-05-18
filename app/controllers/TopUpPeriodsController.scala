@@ -53,16 +53,17 @@ class TopUpPeriodsController @Inject()(
     implicit request =>
       handleCalculationFurlough(request.userAnswers)
         .map { furlough =>
-          furlough.payPeriodBreakdowns match {
+          furlough.periodBreakdowns match {
             case breakdown :: Nil =>
-              saveAndRedirect(request.userAnswers, List(TopUpPeriod(breakdown.periodWithPaymentDate.period.period.end, breakdown.grant)))
+              import breakdown.paymentWithPeriod.periodWithPaymentDate.period._
+              saveAndRedirect(request.userAnswers, List(TopUpPeriod(period.end, breakdown.grant)))
             case _ =>
               val preparedForm = request.userAnswers.get(TopUpPeriodsPage) match {
                 case None => form
                 case Some(selectedDates) =>
                   form.fill(selectedDates.map(_.date))
               }
-              Future.successful(Ok(view(preparedForm, furlough.payPeriodBreakdowns)))
+              Future.successful(Ok(view(preparedForm, furlough.periodBreakdowns)))
           }
         }
         .getOrElse(
@@ -77,10 +78,10 @@ class TopUpPeriodsController @Inject()(
           form
             .bindFromRequest()
             .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, furlough.payPeriodBreakdowns))), { dates =>
+              formWithErrors => Future.successful(BadRequest(view(formWithErrors, furlough.periodBreakdowns))), { dates =>
                 val topUpPeriods = dates.flatMap { date =>
-                  furlough.payPeriodBreakdowns
-                    .find(_.periodWithPaymentDate.period.period.end == date)
+                  furlough.periodBreakdowns
+                    .find(_.paymentWithPeriod.periodWithPaymentDate.period.period.end == date)
                     .map(_.grant)
                     .map(
                       TopUpPeriod(date, _)

@@ -18,39 +18,39 @@
 @import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
 
 @this(
-        govukLayout: templates.GovukLayoutWrapper,
-        h1: components.h1,
-        h2: components.h2,
-        p: components.p,
-        confirmation: components.confirmation,
-        button: components.button,
-        details: components.details,
-        link: components.link,
-        appConfig: config.FrontendAppConfig
+    govukLayout: templates.GovukLayoutWrapper,
+    h1: components.h1,
+    h2: components.h2,
+    p: components.p,
+    confirmation: components.confirmation,
+    button: components.button,
+    details: components.details,
+    link: components.link,
+    appConfig: config.FrontendAppConfig
 )
 
 @(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false) {
 
-    @confirmation {
+@confirmation {
 
-        @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-margin-bottom-4 govuk-!-margin-top-0 govuk-!-font-size-27"))
+    @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-margin-bottom-4 govuk-!-margin-top-0 govuk-!-font-size-27"))
 
-        <div class="furlough-heading">
-            <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p1")</p>
-            <p class="govuk-panel__title">&pound;@cvb.furlough.total.setScale(2)</p>
-        </div>
+    <div class="furlough-heading">
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p1")</p>
+        <p class="govuk-panel__title">&pound;@cvb.furlough.total.setScale(2)</p>
+    </div>
 
-        <div class="furlough-heading">
-            <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p2")</p>
-            <p class="govuk-panel__title">&pound;@cvb.nic.total.setScale(2)</p>
-        </div>
+    <div class="furlough-heading">
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p2")</p>
+        <p class="govuk-panel__title">&pound;@cvb.nic.total.setScale(2)</p>
+    </div>
 
-        <div class="furlough-heading">
-            <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p3")</p>
-            <p class="govuk-panel__title">&pound;@cvb.pension.total.setScale(2)</p>
-        </div>
+    <div class="furlough-heading">
+        <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p3")</p>
+        <p class="govuk-panel__title">&pound;@cvb.pension.total.setScale(2)</p>
+    </div>
 
     }
 
@@ -69,10 +69,10 @@
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("confirmation.claimPeriod", dateToString(cm.claimPeriod.start), dateToString(cm.claimPeriod.end))</li>
         <li>
-        @{cm.furloughDates match {
-          case FurloughEnded(start, end) => messages("confirmation.furloughPeriod.startedAndEnded", dateToString(start), dateToString(end))
-          case FurloughOngoing(start) =>  messages("confirmation.furloughPeriod.started", dateToString(start))
-        }}
+            @{cm.furloughDates match {
+            case FurloughEnded(start, end) => messages("confirmation.furloughPeriod.startedAndEnded", dateToString(start), dateToString(end))
+            case FurloughOngoing(start) =>  messages("confirmation.furloughPeriod.started", dateToString(start))
+            }}
         <li>@messages(s"confirmation.paid.${cm.frequency}")</li>
         <li>@messages(s"confirmation.nic.${cm.nic}")</li>
         <li>@messages(s"confirmation.pension.${cm.pension}")</li>
@@ -83,12 +83,12 @@
     @p(Html(messages("confirmation.breakdown.p")))
 
     @details(
-        summaryText = Messages("confirmation.breakdown.details")
+    summaryText = Messages("confirmation.breakdown.details")
     ) {
-        @for((furlough, nic, pension) <- (cvb.furlough.payPeriodBreakdowns, cvb.nic.payPeriodBreakdowns,
-                cvb.pension.payPeriodBreakdowns).zipped.toList) {
+        @for((furlough, nic, pension) <- (cvb.furlough.periodBreakdowns, cvb.nic.periodBreakdowns,
+        cvb.pension.periodBreakdowns).zipped.toList) {
             <h3 class="govuk-heading-s">@messages("confirmation.breakdown.dt")
-                @messages("confirmation.breakdown.ending", dateToString(furlough.periodWithPaymentDate.period.period.end))</h3>
+                @messages("confirmation.breakdown.ending", dateToString(furlough.paymentWithPeriod.periodWithPaymentDate.period.period.end))</h3>
             <dl class="govuk-summary-list">
                 <dt class="govuk-!-margin-bottom-0">@Html(messages("confirmation.breakdown.furlough"))</dt>
                 <dd class="govuk-heading-s govuk-!-margin-left-0">&pound;@furlough.grant.value.setScale(2)</dd>

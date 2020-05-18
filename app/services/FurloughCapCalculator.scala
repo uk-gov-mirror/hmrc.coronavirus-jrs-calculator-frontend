@@ -18,45 +18,39 @@ package services
 
 import java.time.Month
 
-import models.PaymentFrequency.Monthly
-import models.{PaymentFrequency, Period}
-import play.api.Logger
+import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
+import models.{FullPeriodCap, FurloughCap, PartialPeriodCap, PaymentFrequency, Period, PeriodSpansMonthCap}
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode._
 
 trait FurloughCapCalculator extends PeriodHelper {
 
-  def furloughCap(paymentFrequency: PaymentFrequency, payPeriod: Period): BigDecimal = {
-    val furloughCap = FurloughCapMapping.mappings
-      .get(paymentFrequency)
-      .fold {
-        Logger.warn(s"Unable to find a Furlough Cap for $paymentFrequency")
-        BigDecimal(0).setScale(2)
-      } { cap =>
-        cap.value
-      }
+  def furloughCap(paymentFrequency: PaymentFrequency, payPeriod: Period): FurloughCap = {
+    val furloughCap = capForFrequency(paymentFrequency)
 
     paymentFrequency match {
       case Monthly if (periodSpansMonth(payPeriod)) =>
         calculateFurloughCapNonSimplified(payPeriod)
-      case _ => furloughCap
+      case _ => FullPeriodCap(furloughCap)
     }
   }
 
-  def partialFurloughCap(period: Period): BigDecimal =
+  def partialFurloughCap(period: Period): FurloughCap =
     if (periodSpansMonth(period)) {
       calculateFurloughCapNonSimplified(period)
     } else {
       val max = dailyMax(period.start.getMonth)
       val periodDays = period.countDays
-      roundWithMode(periodDays * max, HALF_UP)
+      val cap = roundWithMode(periodDays * max, HALF_UP)
+
+      PartialPeriodCap(cap, periodDays, period.start.getMonthValue, max)
     }
 
   protected def dailyMax(month: Month): BigDecimal =
     roundWithMode(2500.00 / month.maxLength, UP)
 
-  protected def calculateFurloughCapNonSimplified(payPeriod: Period): BigDecimal = {
+  protected def calculateFurloughCapNonSimplified(payPeriod: Period): PeriodSpansMonthCap = {
     val startMonthPeriod = Period(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength()))
     val startMonthDays = startMonthPeriod.countDays
     val endMonthPeriod = Period(payPeriod.end.withDayOfMonth(1), payPeriod.end)
@@ -64,6 +58,22 @@ trait FurloughCapCalculator extends PeriodHelper {
     val startMonthDailyMax: BigDecimal = dailyMax(payPeriod.start.getMonth)
     val endMonthDailyMax: BigDecimal = dailyMax(payPeriod.end.getMonth)
 
-    roundWithMode((startMonthDays * startMonthDailyMax) + (endMonthDays * endMonthDailyMax), HALF_UP)
+    val cap = roundWithMode((startMonthDays * startMonthDailyMax) + (endMonthDays * endMonthDailyMax), HALF_UP)
+
+    PeriodSpansMonthCap(
+      cap,
+      startMonthDays,
+      payPeriod.start.getMonthValue,
+      startMonthDailyMax,
+      endMonthDays,
+      payPeriod.end.getMonthValue,
+      endMonthDailyMax)
+  }
+
+  private def capForFrequency(frequency: PaymentFrequency): BigDecimal = frequency match {
+    case Monthly     => BigDecimal(2500.00)
+    case Weekly      => BigDecimal(576.92)
+    case FortNightly => BigDecimal(1153.84)
+    case FourWeekly  => BigDecimal(2307.68)
   }
 }

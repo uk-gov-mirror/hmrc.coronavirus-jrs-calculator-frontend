@@ -16,36 +16,62 @@
 
 package models
 
-import play.api.libs.json.{Format, JsResult, JsValue, Json}
+import viewmodels.DetailedFurloughBreakdown
 
 sealed trait PeriodBreakdown {
   val grant: Amount
-  val periodWithPaymentDate: PeriodWithPaymentDate
+  val paymentWithPeriod: PaymentWithPeriod
 }
 
-final case class FullPeriodBreakdown(grant: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate) extends PeriodBreakdown
-final case class PartialPeriodBreakdown(nonFurloughPay: Amount, grant: Amount, periodWithPaymentDate: PartialPeriodWithPaymentDate)
-    extends PeriodBreakdown
-
-object FullPeriodBreakdown {
-  implicit val defaultFormat: Format[FullPeriodBreakdown] = Json.format
+sealed trait FullPeriodBreakdown extends PeriodBreakdown {
+  val paymentWithPeriod: PaymentWithFullPeriod
 }
 
-object PartialPeriodBreakdown {
-  implicit val defaultFormat: Format[PartialPeriodBreakdown] = Json.format
+sealed trait PartialPeriodBreakdown extends PeriodBreakdown {
+  val paymentWithPeriod: PaymentWithPartialPeriod
 }
 
-object PeriodBreakdown {
+sealed trait FurloughBreakdown extends PeriodBreakdown {
+  val furloughCap: FurloughCap
+}
 
-  implicit val defaultFormat: Format[PeriodBreakdown] = new Format[PeriodBreakdown] {
-    override def writes(o: PeriodBreakdown): JsValue = o match {
-      case fp: FullPeriodBreakdown    => Json.writes[FullPeriodBreakdown].writes(fp)
-      case pp: PartialPeriodBreakdown => Json.writes[PartialPeriodBreakdown].writes(pp)
-    }
+sealed trait NicBreakdown extends PeriodBreakdown {
+  val topUpPay: Amount
+  val additionalPay: Amount
+}
 
-    override def reads(json: JsValue): JsResult[PeriodBreakdown] =
-      if ((json \ "original").isDefined && (json \ "partial").isDefined)
-        Json.reads[PartialPeriodBreakdown].reads(json)
-      else Json.reads[FullPeriodBreakdown].reads(json)
+sealed trait PensionBreakdown extends PeriodBreakdown
+
+final case class FullPeriodFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithFullPeriod, furloughCap: FurloughCap)
+    extends FullPeriodBreakdown with FurloughBreakdown
+
+final case class PartialPeriodFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithPartialPeriod, furloughCap: FurloughCap)
+    extends PartialPeriodBreakdown with FurloughBreakdown
+
+final case class FullPeriodNicBreakdown(grant: Amount, topUpPay: Amount, additionalPay: Amount, paymentWithPeriod: PaymentWithFullPeriod)
+    extends FullPeriodBreakdown with NicBreakdown
+
+final case class PartialPeriodNicBreakdown(
+  grant: Amount,
+  topUpPay: Amount,
+  additionalPay: Amount,
+  paymentWithPeriod: PaymentWithPartialPeriod)
+    extends PartialPeriodBreakdown with NicBreakdown
+
+final case class FullPeriodPensionBreakdown(grant: Amount, paymentWithPeriod: PaymentWithFullPeriod)
+    extends FullPeriodBreakdown with PensionBreakdown
+
+final case class PartialPeriodPensionBreakdown(grant: Amount, paymentWithPeriod: PaymentWithPartialPeriod)
+    extends PartialPeriodBreakdown with PensionBreakdown
+
+object FurloughBreakdown {
+  implicit class DetailedBreakdownTransformer(breakdown: FurloughBreakdown) {
+    def toDetailedFurloughBreakdown =
+      DetailedFurloughBreakdown(
+        breakdown.paymentWithPeriod.furloughPayment,
+        breakdown.furloughCap,
+        breakdown.grant,
+        breakdown.paymentWithPeriod.periodWithPaymentDate.period
+      )
   }
 }

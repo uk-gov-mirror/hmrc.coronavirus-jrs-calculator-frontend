@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package handlers
+package models
 
-import models.{FurloughCalculationResult, UserAnswers}
-import services.{FurloughCalculator, ReferencePayCalculator}
-
-trait FurloughCalculationHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
-
-  def handleCalculationFurlough(userAnswers: UserAnswers): Option[FurloughCalculationResult] =
-    for {
-      questions <- extractBranchingQuestions(userAnswers)
-      data      <- journeyData(define(questions), userAnswers)
-      payments = calculateReferencePay(data)
-    } yield calculateFurloughGrant(data.frequency, payments)
-
-}
+case class FurloughCalculationResult(total: BigDecimal, periodBreakdowns: Seq[FurloughBreakdown])
+case class NicCalculationResult(total: BigDecimal, periodBreakdowns: Seq[NicBreakdown])
+case class PensionCalculationResult(total: BigDecimal, periodBreakdowns: Seq[PensionBreakdown])

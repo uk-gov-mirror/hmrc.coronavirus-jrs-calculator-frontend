@@ -55,15 +55,16 @@ class AdditionalPaymentPeriodsController @Inject()(
     implicit request =>
       handleCalculationFurlough(request.userAnswers)
         .map { furlough =>
-          furlough.payPeriodBreakdowns match {
+          furlough.periodBreakdowns match {
             case breakdown :: Nil =>
-              saveAndRedirect(request.userAnswers, List(breakdown.periodWithPaymentDate.period.period.end))
+              import breakdown.paymentWithPeriod.periodWithPaymentDate.period._
+              saveAndRedirect(request.userAnswers, List(period.end))
             case _ =>
               val preparedForm = request.userAnswers.get(AdditionalPaymentPeriodsPage) match {
                 case None                => form
                 case Some(selectedDates) => form.fill(selectedDates)
               }
-              Future.successful(Ok(view(preparedForm, furlough.payPeriodBreakdowns)))
+              Future.successful(Ok(view(preparedForm, furlough.periodBreakdowns)))
           }
         }
         .getOrElse(
@@ -78,10 +79,10 @@ class AdditionalPaymentPeriodsController @Inject()(
           form
             .bindFromRequest()
             .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, furlough.payPeriodBreakdowns))), { dates =>
+              formWithErrors => Future.successful(BadRequest(view(formWithErrors, furlough.periodBreakdowns))), { dates =>
                 val periods = dates.flatMap { date =>
-                  furlough.payPeriodBreakdowns
-                    .map(_.periodWithPaymentDate.period.period.end)
+                  furlough.periodBreakdowns
+                    .map(_.paymentWithPeriod.periodWithPaymentDate.period.period.end)
                     .find(_ == date)
                 }
 

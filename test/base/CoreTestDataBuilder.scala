@@ -19,7 +19,7 @@ package base
 import java.time.LocalDate
 
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, FurloughWithinClaim, PartialPeriod, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, Period, ReferencePayData}
+import models.{Amount, FullPeriod, FullPeriodFurloughBreakdown, FullPeriodNicBreakdown, FullPeriodPensionBreakdown, FullPeriodWithPaymentDate, FurloughCap, FurloughWithinClaim, PartialPeriod, PartialPeriodFurloughBreakdown, PartialPeriodNicBreakdown, PartialPeriodPensionBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, Period, ReferencePayData}
 import org.scalatest.TryValues
 
 trait CoreTestDataBuilder extends TryValues {
@@ -44,15 +44,6 @@ trait CoreTestDataBuilder extends TryValues {
   def fullPeriodWithPaymentDate(start: String, end: String, paymentDate: String): FullPeriodWithPaymentDate =
     FullPeriodWithPaymentDate(FullPeriod(period(start, end)), PaymentDate(paymentDate.toLocalDate))
 
-  def fullPeriodBreakdown(grant: BigDecimal, period: FullPeriodWithPaymentDate): FullPeriodBreakdown =
-    FullPeriodBreakdown(
-      Amount(grant),
-      period
-    )
-
-  def partialPeriodBreakdown(nonFurlough: BigDecimal, grant: BigDecimal, period: PartialPeriodWithPaymentDate): PartialPeriodBreakdown =
-    PartialPeriodBreakdown(Amount(nonFurlough), Amount(grant), period)
-
   def partialPeriodWithPaymentDate(
     start: String,
     end: String,
@@ -60,6 +51,59 @@ trait CoreTestDataBuilder extends TryValues {
     pend: String,
     paymentDate: String): PartialPeriodWithPaymentDate =
     PartialPeriodWithPaymentDate(PartialPeriod(period(start, end), period(pstart, pend)), PaymentDate(paymentDate.toLocalDate))
+
+  def fullPeriodFurloughBreakdown(grant: BigDecimal, payment: PaymentWithFullPeriod, cap: FurloughCap): FullPeriodFurloughBreakdown =
+    FullPeriodFurloughBreakdown(
+      Amount(grant),
+      payment,
+      cap
+    )
+
+  def partialPeriodFurloughBreakdown(
+    grant: BigDecimal,
+    payment: PaymentWithPartialPeriod,
+    cap: FurloughCap): PartialPeriodFurloughBreakdown =
+    PartialPeriodFurloughBreakdown(
+      Amount(grant),
+      payment,
+      cap
+    )
+
+  def fullPeriodNicBreakdown(
+    grant: BigDecimal,
+    topUp: BigDecimal,
+    additional: BigDecimal,
+    payment: PaymentWithFullPeriod): FullPeriodNicBreakdown =
+    FullPeriodNicBreakdown(
+      Amount(grant),
+      Amount(topUp),
+      Amount(additional),
+      payment
+    )
+
+  def partialPeriodNicBreakdown(
+    grant: BigDecimal,
+    topUp: BigDecimal,
+    additional: BigDecimal,
+    payment: PaymentWithPartialPeriod): PartialPeriodNicBreakdown =
+    PartialPeriodNicBreakdown(
+      Amount(grant),
+      Amount(topUp),
+      Amount(additional),
+      payment
+    )
+
+  def fullPeriodPensionBreakdown(grant: BigDecimal, payment: PaymentWithFullPeriod): FullPeriodPensionBreakdown =
+    FullPeriodPensionBreakdown(
+      Amount(grant),
+      payment
+    )
+
+  def partialPeriodPensionBreakdown(grant: BigDecimal, payment: PaymentWithPartialPeriod): PartialPeriodPensionBreakdown =
+    PartialPeriodPensionBreakdown(
+      Amount(grant),
+      payment
+    )
 
   def paymentDate(date: String): PaymentDate = PaymentDate(date.toLocalDate)
 

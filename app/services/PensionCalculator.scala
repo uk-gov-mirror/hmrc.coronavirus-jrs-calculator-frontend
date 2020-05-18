@@ -16,49 +16,61 @@
 
 package services
 
-import models.Calculation.PensionCalculationResult
-import models.{Amount, CalculationResult, FullPeriod, FullPeriodBreakdown, FullPeriodWithPaymentDate, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, PeriodBreakdown}
+import models.PensionStatus.{DoesContribute, DoesNotContribute}
+import models.{Amount, FullPeriodFurloughBreakdown, FullPeriodPensionBreakdown, FurloughBreakdown, PartialPeriodFurloughBreakdown, PartialPeriodPensionBreakdown, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionCalculationResult, PensionStatus}
 import services.Calculators._
 
 trait PensionCalculator extends FurloughCapCalculator with CommonCalculationService {
 
-  def calculatePensionGrant(frequency: PaymentFrequency, furloughBreakdown: Seq[PeriodBreakdown]): CalculationResult = {
+  def calculatePensionGrant(
+    pensionStatus: PensionStatus,
+    frequency: PaymentFrequency,
+    furloughBreakdown: Seq[FurloughBreakdown]): PensionCalculationResult = {
     val pensionBreakdowns = furloughBreakdown.map {
-      case FullPeriodBreakdown(grant, period) =>
-        calculateFullPeriodPension(frequency, grant, period.period, period.paymentDate)
-      case PartialPeriodBreakdown(nonFurlough, grant, periodWithPaymentDate) =>
-        calculatePartialPeriodPension(frequency, nonFurlough, grant, periodWithPaymentDate)
+      case fp: FullPeriodFurloughBreakdown =>
+        calculateFullPeriodPension(pensionStatus, frequency, fp.grant, fp.paymentWithPeriod)
+      case pp: PartialPeriodFurloughBreakdown =>
+        calculatePartialPeriodPension(pensionStatus, frequency, pp.grant, pp.paymentWithPeriod)
     }
 
-    CalculationResult(PensionCalculationResult, pensionBreakdowns.map(_.grant.value).sum, pensionBreakdowns)
+    PensionCalculationResult(pensionBreakdowns.map(_.grant.value).sum, pensionBreakdowns)
   }
 
-  private def calculatePartialPeriodPension(
+  protected def calculatePartialPeriodPension(
+    pensionStatus: PensionStatus,
     frequency: PaymentFrequency,
-    grossPay: Amount,
     furloughPayment: Amount,
-    period: PartialPeriodWithPaymentDate): PartialPeriodBreakdown = {
-    val fullPeriodDays = period.period.original.countDays
-    val furloughDays = period.period.partial.countDays
-    val threshold = thresholdFinder(frequency, period.paymentDate, PensionRate())
+    payment: PaymentWithPartialPeriod): PartialPeriodPensionBreakdown = {
+
+    import payment.periodWithPaymentDate._
+
+    val fullPeriodDays = period.original.countDays
+    val furloughDays = period.partial.countDays
+    val threshold = thresholdFinder(frequency, paymentDate, PensionRate())
 
     val allowance = Amount((threshold / fullPeriodDays) * furloughDays).halfUp
     val roundedFurloughPayment = furloughPayment.down
-    val grant = greaterThanAllowance(roundedFurloughPayment, allowance.value, PensionRate())
+    val grant = pensionStatus match {
+      case DoesContribute    => greaterThanAllowance(roundedFurloughPayment, allowance.value, PensionRate())
+      case DoesNotContribute => Amount(0.00)
+    }
 
-    PartialPeriodBreakdown(grossPay, grant, PartialPeriodWithPaymentDate(period.period, period.paymentDate))
+    PartialPeriodPensionBreakdown(grant, payment)
   }
 
   protected def calculateFullPeriodPension(
+    pensionStatus: PensionStatus,
     frequency: PaymentFrequency,
     furloughPayment: Amount,
-    period: FullPeriod,
-    paymentDate: PaymentDate): FullPeriodBreakdown = {
+    payment: PaymentWithFullPeriod): FullPeriodPensionBreakdown = {
 
-    val threshold = thresholdFinder(frequency, paymentDate, PensionRate())
+    val threshold = thresholdFinder(frequency, payment.periodWithPaymentDate.paymentDate, PensionRate())
     val roundedFurloughPayment = furloughPayment.down
-    val grant = greaterThanAllowance(roundedFurloughPayment, threshold, PensionRate())
+    val grant = pensionStatus match {
+      case DoesContribute    => greaterThanAllowance(roundedFurloughPayment, threshold, PensionRate())
+      case DoesNotContribute => Amount(0.00)
+    }
 
-    FullPeriodBreakdown(grant, FullPeriodWithPaymentDate(period, paymentDate))
+    FullPeriodPensionBreakdown(grant, payment)
   }
 }

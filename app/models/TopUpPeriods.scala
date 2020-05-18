@@ -34,13 +34,13 @@ object TopUpPeriod {
 
 object TopUpPeriods {
 
-  def options(form: Form[_], payDates: Seq[PeriodBreakdown])(implicit messages: Messages): Seq[CheckboxItem] = payDates.zipWithIndex.map {
+  def options(form: Form[_], payDates: Seq[FurloughBreakdown])(implicit messages: Messages): Seq[CheckboxItem] = payDates.zipWithIndex.map {
     value =>
-      val periodEnd = value._1.periodWithPaymentDate.period.period.end
+      val periodEnd = value._1.paymentWithPeriod.periodWithPaymentDate.period.period.end
       val periodAmount = value._1.grant.value.formatted("%.2f")
 
       CheckboxItem(
-        name = Some("value[]"),
+        name = Some(s"value[${value._2}]"),
         id = Some(s"topup-period_${value._2.toString}"),
         value = periodEnd,
         content = Text(messages("topupPeriods.period", dateToString(periodEnd))),

@@ -512,3 +512,15 @@ whatToInclude.doNotInclude.l1.l2 = discretionary bonuses
 whatToInclude.doNotInclude.l1.l3 = discretionary commission payments
 whatToInclude.doNotInclude.l2 = non-cash payments
 whatToInclude.doNotInclude.l3 = non-monetary benefits like benefits in kind (such as a company car) and salary sacrifice schemes that reduce taxable pay
+
+detailedBreakdown.h3 = For pay period {0} to {1}
+
+furloughBreakdown.h4 = Furlough grant
+furloughBreakdown.l1 = Employee’s wages £{0}
+furloughBreakdown.l2 = Divide by {0} days in the pay period
+furloughBreakdown.l3 = Multiply by {0} furlough days in the pay period
+furloughBreakdown.l4 = Multiply by 80%
+furloughBreakdown.p1 = Total furlough grant for pay period = £{0}
+furloughBreakdown.furloughCap.l1 = Limit to the maximum amount of £{0}
+furloughBreakdown.furloughCap.periodSpansMonthCap = ({0} days of {1} at £{2} + {3} days of {4} at £{5})
+furloughBreakdown.furloughCap.partialPeriodCap = ({0} days of {1} at £{2})

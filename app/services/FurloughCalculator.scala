@@ -16,45 +16,42 @@
 
 package services
 
-import models.Calculation.FurloughCalculationResult
-import models.{Amount, CalculationResult, FullPeriodBreakdown, PartialPeriodBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodBreakdown}
+import models.{FullPeriodFurloughBreakdown, FurloughCalculationResult, PartialPeriodFurloughBreakdown, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod}
 import services.Calculators._
 import utils.TaxYearFinder
 
 trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with Calculators {
 
-  def calculateFurloughGrant(paymentFrequency: PaymentFrequency, payments: Seq[PaymentWithPeriod]): CalculationResult = {
-    val paymentDateBreakdowns = payPeriodBreakdownFromRegularPayment(paymentFrequency, payments)
-    CalculationResult(FurloughCalculationResult, paymentDateBreakdowns.map(_.grant.value).sum, paymentDateBreakdowns)
-  }
-
-  protected def payPeriodBreakdownFromRegularPayment(
-    paymentFrequency: PaymentFrequency,
-    paymentsWithPeriod: Seq[PaymentWithPeriod]): Seq[PeriodBreakdown] =
-    paymentsWithPeriod.map {
-      case fp: PaymentWithFullPeriod =>
-        FullPeriodBreakdown(calculateFullPeriod(paymentFrequency, fp), fp.periodWithPaymentDate)
-      case pp: PaymentWithPartialPeriod =>
-        calculatePartialPeriod(pp)
+  def calculateFurloughGrant(paymentFrequency: PaymentFrequency, payments: Seq[PaymentWithPeriod]): FurloughCalculationResult = {
+    val breakdowns = payments.map {
+      case fp: PaymentWithFullPeriod    => calculateFullPeriod(paymentFrequency, fp)
+      case pp: PaymentWithPartialPeriod => calculatePartialPeriod(pp)
     }
+    FurloughCalculationResult(breakdowns.map(_.grant.value).sum, breakdowns)
+  }
 
   protected def calculateFullPeriod(
     paymentFrequency: PaymentFrequency,
     payment: PaymentWithFullPeriod,
-  ): Amount = {
+  ): FullPeriodFurloughBreakdown = {
     val cap = furloughCap(paymentFrequency, payment.periodWithPaymentDate.period.period)
 
-    claimableAmount(payment.furloughPayment, cap).halfUp
+    val grant = claimableAmount(payment.furloughPayment, cap.value).halfUp
+
+    FullPeriodFurloughBreakdown(grant, payment, cap)
   }
 
-  protected def calculatePartialPeriod(payment: PaymentWithPartialPeriod): PartialPeriodBreakdown = {
+  protected def calculatePartialPeriod(payment: PaymentWithPartialPeriod): PartialPeriodFurloughBreakdown = {
     import payment.periodWithPaymentDate._
     val cap = partialFurloughCap(period.partial)
 
-    PartialPeriodBreakdown(
-      payment.nonFurloughPay,
-      claimableAmount(payment.furloughPayment, cap).halfUp,
-      PartialPeriodWithPaymentDate(period, paymentDate))
+    val grant = claimableAmount(payment.furloughPayment, cap.value).halfUp
+
+    PartialPeriodFurloughBreakdown(
+      grant,
+      payment,
+      cap
+    )
   }
 
 }

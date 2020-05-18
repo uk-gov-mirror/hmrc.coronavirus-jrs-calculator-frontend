@@ -100,19 +100,20 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
   private def breakdownTransformer(breakdown: ConfirmationViewBreakdown) = {
     val furlough = AuditCalculationResult(
       breakdown.furlough.total,
-      breakdown.furlough.payPeriodBreakdowns
-        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.periodWithPaymentDate.period.period.end))
+      breakdown.furlough.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
     )
 
     val nic = AuditCalculationResult(
       breakdown.nic.total,
-      breakdown.nic.payPeriodBreakdowns
-        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.periodWithPaymentDate.period.period.end)))
+      breakdown.nic.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
+    )
 
     val pension = AuditCalculationResult(
       breakdown.pension.total,
-      breakdown.pension.payPeriodBreakdowns
-        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.periodWithPaymentDate.period.period.end))
+      breakdown.pension.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
     )
 
     val result = AuditBreakdown(furlough, nic, pension)

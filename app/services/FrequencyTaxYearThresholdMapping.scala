@@ -62,13 +62,3 @@ object FrequencyTaxYearThresholdMapping {
       }
   }
 }
-case class FurloughCap(value: BigDecimal)
-
-object FurloughCapMapping {
-  val mappings = Map[PaymentFrequency, FurloughCap](
-    Monthly     -> FurloughCap(2500.00),
-    Weekly      -> FurloughCap(576.92),
-    FortNightly -> FurloughCap(1153.84),
-    FourWeekly  -> FurloughCap(2307.68)
-  )
-}

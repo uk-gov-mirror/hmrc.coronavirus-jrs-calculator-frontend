@@ -16,7 +16,6 @@
 
 @import controllers.routes.AdditionalPaymentPeriodsController
 @import models.AdditionalPaymentPeriods
-@import models.PeriodBreakdown
 @import java.time.LocalDate
 
 @this(
@@ -28,7 +27,7 @@
     h1: components.h1
 )
 
-@(form: Form[List[LocalDate]], payDates: Seq[PeriodBreakdown])(implicit request: Request[_], messages: Messages)
+@(form: Form[List[LocalDate]], payDates: Seq[FurloughBreakdown])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "additionalPaymentPeriods.title"))) {
 

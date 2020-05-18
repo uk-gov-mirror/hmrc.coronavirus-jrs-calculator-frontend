@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package handlers
+package viewmodels
 
-import models.{FurloughCalculationResult, UserAnswers}
-import services.{FurloughCalculator, ReferencePayCalculator}
+import models.Periods
+import views.ViewUtils._
 
-trait FurloughCalculationHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
-
-  def handleCalculationFurlough(userAnswers: UserAnswers): Option[FurloughCalculationResult] =
-    for {
-      questions <- extractBranchingQuestions(userAnswers)
-      data      <- journeyData(define(questions), userAnswers)
-      payments = calculateReferencePay(data)
-    } yield calculateFurloughGrant(data.frequency, payments)
-
+case class DetailedBreakdown(period: Periods, furlough: DetailedFurloughBreakdown) {
+  def payPeriodStart: String = dateToStringWithoutYear(period.period.start)
+  def payPeriodEnd: String = dateToString(period.period.end)
 }
