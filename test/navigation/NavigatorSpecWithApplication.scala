@@ -444,6 +444,24 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         val newNavigator = new Navigator(application.injector.instanceOf[FrontendAppConfig])
         newNavigator.nextPage(PartialPayAfterFurloughPage, UserAnswers("id")) mustBe routes.NicCategoryController.onPageLoad()
       }
+
+      "go to correct page after FurloughPeriodQuestionPage" in {
+        navigator.nextPage(
+          FurloughPeriodQuestionPage,
+          UserAnswers("id")
+            .set(FurloughPeriodQuestionPage, FurloughPeriodQuestion.FurloughedOnSamePeriod)
+            .success
+            .value
+        ) mustBe routes.RootPageController.onPageLoad()
+
+        navigator.nextPage(
+          FurloughPeriodQuestionPage,
+          UserAnswers("id")
+            .set(FurloughPeriodQuestionPage, FurloughPeriodQuestion.FurloughedOnDifferentPeriod)
+            .success
+            .value
+        ) mustBe routes.FurloughStartDateController.onPageLoad()
+      }
     }
 
     "routeFor() is called" should {

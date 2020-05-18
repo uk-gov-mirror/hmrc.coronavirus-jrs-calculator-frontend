@@ -524,3 +524,11 @@ furloughBreakdown.p1 = Total furlough grant for pay period = £{0}
 furloughBreakdown.furloughCap.l1 = Limit to the maximum amount of £{0}
 furloughBreakdown.furloughCap.periodSpansMonthCap = ({0} days of {1} at £{2} + {3} days of {4} at £{5})
 furloughBreakdown.furloughCap.partialPeriodCap = ({0} days of {1} at £{2})
+
+furloughPeriodQuestion.title = Has this employee furloughed for the same time?
+furloughPeriodQuestion.heading = Has this employee furloughed for the same time?
+furloughPeriodQuestion.furloughedOnSamePeriod = Yes
+furloughPeriodQuestion.furloughedOnDifferentPeriod = No
+furloughPeriodQuestion.error.required = Select one of the options below
+furloughPeriodQuestion.ongoing.text = Ongoing from {0}
+furloughPeriodQuestion.ended.text = from {0} to {1}

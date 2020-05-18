@@ -1,35 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration TopUpQuestion"
+echo "Applying migration FurloughPeriodQuestion"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /topUpQuestion                        controllers.TopUpQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /topUpQuestion                        controllers.TopUpQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /furloughPeriodQuestion                        controllers.FurloughPeriodQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /furloughPeriodQuestion                        controllers.FurloughPeriodQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeTopUpQuestion                  controllers.TopUpQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeTopUpQuestion                  controllers.TopUpQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeFurloughPeriodQuestion                  controllers.FurloughPeriodQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeFurloughPeriodQuestion                  controllers.FurloughPeriodQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "topUpStatus.title = Have you topped up this employee’s pay?" >> ../conf/messages.en
-echo "topUpStatus.heading = Have you topped up this employee’s pay?" >> ../conf/messages.en
-echo "topUpStatus.topUpStatus.ToppedUp = Yes" >> ../conf/messages.en
-echo "topUpStatus.topUpStatus.NotToppedUp = No" >> ../conf/messages.en
-echo "topUpStatus.checkYourAnswersLabel = Have you topped up this employee’s pay?" >> ../conf/messages.en
-echo "topUpStatus.error.required = Select topUpQuestion" >> ../conf/messages.en
+echo "furloughPeriodQuestion.title = Has this employee furloughed for the same time?" >> ../conf/messages.en
+echo "furloughPeriodQuestion.heading = Has this employee furloughed for the same time?" >> ../conf/messages.en
+echo "furloughPeriodQuestion.furloughedForTheSameTime = Yes" >> ../conf/messages.en
+echo "furloughPeriodQuestion.furloughPeriodNo = No" >> ../conf/messages.en
+echo "furloughPeriodQuestion.checkYourAnswersLabel = Has this employee furloughed for the same time?" >> ../conf/messages.en
+echo "furloughPeriodQuestion.error.required = Select furloughPeriodQuestion" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTopUpQuestionUserAnswersEntry: Arbitrary[(TopUpQuestionPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryFurloughPeriodQuestionUserAnswersEntry: Arbitrary[(FurloughPeriodQuestionPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[TopUpQuestionPage.type]";\
-    print "        value <- arbitrary[TopUpQuestion].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[FurloughPeriodQuestionPage.type]";\
+    print "        value <- arbitrary[FurloughPeriodQuestion].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -38,24 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTopUpQuestionPage: Arbitrary[TopUpQuestionPage.type] =";\
-    print "    Arbitrary(TopUpQuestionPage)";\
+    print "  implicit lazy val arbitraryFurloughPeriodQuestionPage: Arbitrary[FurloughPeriodQuestionPage.type] =";\
+    print "    Arbitrary(FurloughPeriodQuestionPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to ModelGenerators"
 awk '/trait ModelGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryTopUpQuestion: Arbitrary[TopUpQuestion] =";\
+    print "  implicit lazy val arbitraryFurloughPeriodQuestion: Arbitrary[FurloughPeriodQuestion] =";\
     print "    Arbitrary {";\
-    print "      Gen.oneOf(topUpStatus.values.toSeq)";\
+    print "      Gen.oneOf(FurloughPeriodQuestion.values.toSeq)";\
     print "    }";\
     next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(TopUpQuestionPage.type, JsValue)] ::";\
+    print "    arbitrary[(FurloughPeriodQuestionPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration TopUpQuestion completed"
+echo "Migration FurloughPeriodQuestion completed"

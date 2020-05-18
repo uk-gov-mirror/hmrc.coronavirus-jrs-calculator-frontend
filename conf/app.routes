@@ -97,3 +97,6 @@ POST        /additional-pay-periods                          controllers.Additio
 
 GET         /additional-pay-amount/:idx                      controllers.AdditionalPaymentAmountController.onPageLoad(idx: Int)
 POST        /additional-pay-amount/:idx                      controllers.AdditionalPaymentAmountController.onSubmit(idx: Int)
+
+GET         /furlough-period-question                        controllers.FurloughPeriodQuestionController.onPageLoad()
+POST        /furlough-period-question                        controllers.FurloughPeriodQuestionController.onSubmit()

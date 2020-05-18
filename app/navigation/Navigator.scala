@@ -91,6 +91,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case AdditionalPaymentPeriodsPage =>
       _ =>
         routes.AdditionalPaymentAmountController.onPageLoad(1)
+
+    case FurloughPeriodQuestionPage =>
+      furloughPeriodQuestionRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -257,4 +260,12 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     } else {
       routes.NicCategoryController.onPageLoad()
     }
+
+  private def furloughPeriodQuestionRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.get(FurloughPeriodQuestionPage) match {
+      case Some(FurloughPeriodQuestion.FurloughedOnSamePeriod)      => routes.RootPageController.onPageLoad()
+      case Some(FurloughPeriodQuestion.FurloughedOnDifferentPeriod) => routes.FurloughStartDateController.onPageLoad()
+      case None                                                     => routes.FurloughPeriodQuestionController.onPageLoad()
+    }
+  }
 }
