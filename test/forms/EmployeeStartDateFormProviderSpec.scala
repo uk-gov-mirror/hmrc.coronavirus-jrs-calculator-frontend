@@ -47,7 +47,7 @@ class EmployeeStartDateFormProviderSpec extends DateBehaviours {
       formProvider.feb2nd2019,
       FormError("value", "employeeStartDate.error.min", Array(dateToString(formProvider.feb2nd2019))))
 
-    behave like mandatoryDateField(form, "value", "employeeStartDate.error.required.all")
+    behave like mandatoryDateField(form, "value")
 
   }
 }

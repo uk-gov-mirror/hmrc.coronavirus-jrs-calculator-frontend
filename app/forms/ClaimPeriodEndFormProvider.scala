@@ -29,14 +29,7 @@ import views.ViewUtils
 class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends Mappings with ImplicitDateFormatter {
 
   def apply(claimStart: LocalDate): Form[LocalDate] =
-    Form(
-      "endDate" -> localDate(
-        invalidKey = "claimPeriodEnd.error.invalid",
-        allRequiredKey = "claimPeriodEnd.error.required.all",
-        twoRequiredKey = "claimPeriodEnd.error.required.two",
-        requiredKey = "claimPeriodEnd.error.required"
-      ).verifying(validEndDate(claimStart))
-    )
+    Form("endDate" -> localDate(invalidKey = "claimPeriodEnd.error.invalid").verifying(validEndDate(claimStart)))
 
   private def validEndDate(claimStart: LocalDate): Constraint[LocalDate] = Constraint { claimEndDate =>
     if (claimEndDate.isBefore(claimStart)) {

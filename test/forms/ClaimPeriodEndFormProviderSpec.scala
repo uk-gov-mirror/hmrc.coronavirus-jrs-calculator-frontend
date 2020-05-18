@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.behaviours.DateBehaviours
+import forms.mappings.LocalDateFormatter
 import play.api.data.FormError
 import views.ViewUtils
 
@@ -33,15 +34,6 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
   val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(claimStart)
 
   ".endDate" should {
-
-    val validData = datesBetween(
-      min = LocalDate.of(2020, 3, 2),
-      max = LocalDate.now().plusDays(14)
-    )
-
-    behave like dateField(form, "endDate", validData)
-
-    behave like mandatoryDateField(form, "endDate", "claimPeriodEnd.error.required.all")
 
     "bind valid data" in {
 
@@ -63,11 +55,12 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
     }
 
     "fail to bind an empty date" in {
-
       val result = form.bind(Map.empty[String, String])
 
-      result.errors shouldBe List(
-        FormError("endDate", "claimPeriodEnd.error.required.all"),
+      result.errors should contain allElementsOf List(
+        FormError("endDate.day", LocalDateFormatter.dayBlankErrorKey),
+        FormError("endDate.month", LocalDateFormatter.monthBlankErrorKey),
+        FormError("endDate.year", LocalDateFormatter.yearBlankErrorKey),
       )
     }
 

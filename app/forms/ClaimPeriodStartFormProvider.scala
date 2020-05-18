@@ -28,14 +28,7 @@ import utils.ImplicitDateFormatter
 class ClaimPeriodStartFormProvider @Inject()(appConfig: FrontendAppConfig) extends Mappings with ImplicitDateFormatter {
 
   def apply(): Form[LocalDate] =
-    Form(
-      "startDate" -> localDate(
-        invalidKey = "claimPeriodStart.error.invalid",
-        allRequiredKey = "claimPeriodStart.error.required.all",
-        twoRequiredKey = "claimPeriodStart.error.required.two",
-        requiredKey = "claimPeriodStart.error.required"
-      ).verifying(validStartDate)
-    )
+    Form("startDate" -> localDate(invalidKey = "claimPeriodStart.error.invalid").verifying(validStartDate))
 
   private def validStartDate: Constraint[LocalDate] = Constraint { claimStartDate =>
     if (!claimStartDate.isBefore(appConfig.schemeStartDate) && !claimStartDate.isAfter(appConfig.schemeEndDate)) {

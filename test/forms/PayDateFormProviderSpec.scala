@@ -37,7 +37,7 @@ class PayDateFormProviderSpec extends DateBehaviours {
 
       behave like dateField(form, "value", validData)
 
-      behave like mandatoryDateField(form, "value", "payDate.error.required.all")
+      behave like mandatoryDateField(form, "value")
     }
 
     "before constraint" must {

@@ -46,11 +46,5 @@ trait Mappings extends Formatters with Constraints {
     implicit ev: Enumerable[A]): FieldMapping[A] =
     of(enumerableFormatter[A](requiredKey, invalidKey))
 
-  protected def localDate(
-    invalidKey: String,
-    allRequiredKey: String,
-    twoRequiredKey: String,
-    requiredKey: String,
-    args: Seq[String] = Seq.empty): FieldMapping[LocalDate] =
-    of(new LocalDateFormatter(invalidKey, allRequiredKey, twoRequiredKey, requiredKey, args))
+  protected def localDate(invalidKey: String): FieldMapping[LocalDate] = of(new LocalDateFormatter(invalidKey))
 }

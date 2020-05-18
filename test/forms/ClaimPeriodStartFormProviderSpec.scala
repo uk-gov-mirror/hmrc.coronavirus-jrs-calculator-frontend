@@ -16,10 +16,9 @@
 
 package forms
 
-import java.time.{LocalDate, ZoneOffset}
-
 import base.SpecBaseWithApplication
 import forms.behaviours.DateBehaviours
+import forms.mappings.LocalDateFormatter
 import play.api.data.FormError
 
 class ClaimPeriodStartFormProviderSpec extends SpecBaseWithApplication {
@@ -29,15 +28,6 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseWithApplication {
   import dateBehaviours._
 
   ".startDate" should {
-
-    val validData = datesBetween(
-      min = LocalDate.of(2000, 1, 1),
-      max = LocalDate.now(ZoneOffset.UTC)
-    )
-
-    behave like dateField(form, "startDate", validData)
-
-    behave like mandatoryDateField(form, "startDate", "claimPeriodStart.error.required.all")
 
     "bind valid data" in {
 
@@ -55,11 +45,12 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseWithApplication {
     }
 
     "fail to bind an empty date" in {
-
       val result = form.bind(Map.empty[String, String])
 
-      result.errors shouldBe List(
-        FormError("startDate", "claimPeriodStart.error.required.all"),
+      result.errors should contain allElementsOf List(
+        FormError(s"startDate.day", LocalDateFormatter.dayBlankErrorKey),
+        FormError(s"startDate.month", LocalDateFormatter.monthBlankErrorKey),
+        FormError(s"startDate.year", LocalDateFormatter.yearBlankErrorKey),
       )
     }
 

@@ -28,12 +28,8 @@ class PayDateFormProvider @Inject() extends Mappings {
 
   def apply(beforeDate: Option[LocalDate] = None, afterDate: Option[LocalDate] = None): Form[LocalDate] =
     Form(
-      "value" -> localDate(
-        invalidKey = "payDate.error.invalid",
-        allRequiredKey = "payDate.error.required.all",
-        twoRequiredKey = "payDate.error.required.two",
-        requiredKey = "payDate.error.required"
-      ).verifying(isBeforeIfDefined(beforeDate))
+      "value" -> localDate(invalidKey = "payDate.error.invalid")
+        .verifying(isBeforeIfDefined(beforeDate))
         .verifying(isAfterIfDefined(afterDate))
     )
 

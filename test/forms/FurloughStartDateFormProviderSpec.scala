@@ -44,6 +44,6 @@ class FurloughStartDateFormProviderSpec extends SpecBaseWithApplication {
 
     behave like dateFieldWithMax(form, "value", endDate, FormError("value", "furloughStartDate.error.maximum", Array("1 May 2020")))
 
-    behave like mandatoryDateField(form, "value", "furloughStartDate.error.required.all")
+    behave like mandatoryDateField(form, "value")
   }
 }

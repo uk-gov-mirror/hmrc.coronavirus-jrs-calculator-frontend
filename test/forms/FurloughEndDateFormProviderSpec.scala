@@ -40,6 +40,6 @@ class FurloughEndDateFormProviderSpec extends DateBehaviours {
 
     behave like dateFieldWithMax(form, "value", endDate, FormError("value", "furloughEndDate.error.min.max"))
 
-    behave like mandatoryDateField(form, "value", "furloughEndDate.error.required.all")
+    behave like mandatoryDateField(form, "value")
   }
 }

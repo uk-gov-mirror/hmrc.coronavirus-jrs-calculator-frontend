@@ -19,6 +19,7 @@ package forms.behaviours
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+import forms.mappings.LocalDateFormatter
 import org.scalacheck.Gen
 import play.api.data.{Form, FormError}
 
@@ -76,11 +77,14 @@ class DateBehaviours extends FieldBehaviours {
       }
     }
 
-  def mandatoryDateField(form: Form[_], key: String, requiredAllKey: String, errorArgs: Seq[String] = Seq.empty): Unit =
+  def mandatoryDateField(form: Form[_], key: String): Unit =
     "fail to bind an empty date" in {
-
       val result = form.bind(Map.empty[String, String])
 
-      result.errors should contain only FormError(key, requiredAllKey, errorArgs)
+      result.errors should contain allElementsOf List(
+        FormError(s"$key.day", LocalDateFormatter.dayBlankErrorKey),
+        FormError(s"$key.month", LocalDateFormatter.monthBlankErrorKey),
+        FormError(s"$key.year", LocalDateFormatter.yearBlankErrorKey),
+      )
     }
 }

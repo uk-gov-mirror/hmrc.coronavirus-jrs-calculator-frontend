@@ -28,12 +28,8 @@ class FurloughStartDateFormProvider @Inject()(appConfig: FrontendAppConfig) exte
 
   def apply(claimPeriodEnd: LocalDate): Form[LocalDate] =
     Form(
-      "value" -> localDate(
-        invalidKey = "furloughStartDate.error.invalid",
-        allRequiredKey = "furloughStartDate.error.required.all",
-        twoRequiredKey = "furloughStartDate.error.required.two",
-        requiredKey = "furloughStartDate.error.required"
-      ).verifying(minDate(appConfig.schemeStartDate, "furloughStartDate.error.minimum", dateToString(appConfig.schemeStartDate)))
+      "value" -> localDate(invalidKey = "furloughStartDate.error.invalid")
+        .verifying(minDate(appConfig.schemeStartDate, "furloughStartDate.error.minimum", dateToString(appConfig.schemeStartDate)))
         .verifying(maxDate(claimPeriodEnd.minusDays(1), "furloughStartDate.error.maximum", dateToString(claimPeriodEnd)))
     )
 }
