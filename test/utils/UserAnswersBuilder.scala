@@ -24,8 +24,7 @@ import models.NicCategory.Payable
 import models.PayMethod.Regular
 import models.PensionStatus.DoesContribute
 import models.TopUpStatus.ToppedUp
-import models.{AdditionalPayment, AnnualPayAmount, LastYearPayment, FurloughPartialPay, FurloughStatus, NicCategory, PayMethod, PaymentFrequency, PensionStatus, Salary, TopUpPayment, TopUpPeriod, TopUpStatus, UserAnswers}
-import models.{AdditionalPayment, AnnualPayAmount, ClaimPeriodQuestion, CylbPayment, FurloughPartialPay, FurloughStatus, NicCategory, PayMethod, PaymentFrequency, PensionStatus, Salary, TopUpPayment, TopUpPeriod, TopUpStatus, UserAnswers}
+import models.{AdditionalPayment, AnnualPayAmount, FurloughPartialPay, FurloughStatus, LastYearPayment, NicCategory, PayMethod, PaymentFrequency, PensionStatus, Salary, TopUpPayment, TopUpPeriod, TopUpStatus, UserAnswers}
 import pages.{QuestionPage, TopUpPeriodsPage, _}
 import play.api.libs.json.Writes
 import queries.Settable

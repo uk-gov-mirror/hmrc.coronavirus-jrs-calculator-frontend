@@ -73,6 +73,7 @@ case class TwoPeriodCylb(
   daysInPeriodOne: Int,
   daysRequiredFromPeriodOne: Int,
   periodOneReferencePay: Amount,
+  periodTwoPay: Amount,
   daysInPeriodTwo: Int,
   daysRequiredFromPeriodTwo: Int,
   periodTwoReferencePay: Amount)

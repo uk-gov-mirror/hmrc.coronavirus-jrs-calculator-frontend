@@ -84,6 +84,7 @@ trait CylbCalculator extends PreviousYearPeriod {
       ops.fullPeriodLength,
       ops.previousPeriodDays,
       periodOneAmount,
+      currentAmount,
       ops.fullPeriodLength,
       ops.equivalentPeriodDays,
       periodTwoAmount

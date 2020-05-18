@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PayMethod.{Regular, Variable}
-import models.{Amount, AnnualPayAmount, BranchingQuestions, LastYearPayment, EmployeeStarted, NonFurloughPay, RegularPay, RegularPayData, Salary, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
+import models.{Amount, AnnualPayAmount, BranchingQuestions, EmployeeStarted, LastYearPayment, NonFurloughPay, RegularPay, RegularPayData, Salary, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import pages._
 import utils.CoreTestData
 

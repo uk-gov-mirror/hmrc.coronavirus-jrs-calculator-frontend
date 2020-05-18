@@ -30,7 +30,7 @@ trait ReferencePayCalculator extends RegularPayCalculator with AveragePayCalcula
     }
   }
 
-  protected def withCylb(avg: Seq[AveragePayment], data: VariablePayWithCylbData): Seq[CylbPayment] =
+  private def withCylb(avg: Seq[AveragePayment], data: VariablePayWithCylbData): Seq[CylbPayment] =
     avg.map(a => calculateCylb(a, data.nonFurloughPay, data.frequency, data.cylbPayments, a.periodWithPaymentDate))
 
 }
