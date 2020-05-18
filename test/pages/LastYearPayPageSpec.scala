@@ -16,17 +16,17 @@
 
 package pages
 
-import models.CylbPayment
+import models.LastYearPayment
 import pages.behaviours.PageBehaviours
 
 class LastYearPayPageSpec extends PageBehaviours {
 
   "LastYearPayPage" must {
 
-    beRetrievable[CylbPayment](LastYearPayPage)
+    beRetrievable[LastYearPayment](LastYearPayPage)
 
-    beSettable[CylbPayment](LastYearPayPage)
+    beSettable[LastYearPayment](LastYearPayPage)
 
-    beRemovable[CylbPayment](LastYearPayPage, "error.expected.jsobject")
+    beRemovable[LastYearPayment](LastYearPayPage)
   }
 }

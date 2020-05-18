@@ -68,7 +68,7 @@ object FurloughBreakdown {
   implicit class DetailedBreakdownTransformer(breakdown: FurloughBreakdown) {
     def toDetailedFurloughBreakdown =
       DetailedFurloughBreakdown(
-        breakdown.paymentWithPeriod.furloughPayment,
+        breakdown.paymentWithPeriod.referencePay,
         breakdown.furloughCap,
         breakdown.grant,
         breakdown.paymentWithPeriod.periodWithPaymentDate.period

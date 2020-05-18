@@ -20,15 +20,15 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Weekly}
-import models.{Amount, CylbPayment, NonFurloughPay}
+import models.{Amount, LastYearPayment, NonFurloughPay}
 
 class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculate cylb amounts for weekly" in new CylbCalculator {
     val cylbs = Seq(
-      CylbPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
-      CylbPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
-      CylbPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
+      LastYearPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
     )
 
     val periods = Seq(
@@ -48,9 +48,9 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculate cylb amounts for fortnightly" in new CylbCalculator {
     val cylbs = Seq(
-      CylbPayment(LocalDate.of(2019, 3, 2), Amount(1400.00)),
-      CylbPayment(LocalDate.of(2019, 3, 16), Amount(700.00)),
-      CylbPayment(LocalDate.of(2019, 3, 30), Amount(280.00))
+      LastYearPayment(LocalDate.of(2019, 3, 2), Amount(1400.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 16), Amount(700.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 30), Amount(280.00))
     )
 
     val periods = Seq(
@@ -70,9 +70,9 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculate cylb amounts for fourweekly" in new CylbCalculator {
     val cylbs = Seq(
-      CylbPayment(LocalDate.of(2019, 3, 2), Amount(2800.00)),
-      CylbPayment(LocalDate.of(2019, 3, 30), Amount(1400.00)),
-      CylbPayment(LocalDate.of(2019, 4, 27), Amount(560.00))
+      LastYearPayment(LocalDate.of(2019, 3, 2), Amount(2800.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 30), Amount(1400.00)),
+      LastYearPayment(LocalDate.of(2019, 4, 27), Amount(560.00))
     )
 
     val periods = Seq(
@@ -92,9 +92,9 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculate cylb amounts for partial period where only days from current required" in new CylbCalculator {
     val cylbs = Seq(
-      CylbPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
-      CylbPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
-      CylbPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
+      LastYearPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
     )
 
     val periods = Seq(
@@ -114,9 +114,9 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculate cylb amounts for partial period where only days from previous required" in new CylbCalculator {
     val cylbs = Seq(
-      CylbPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
-      CylbPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
-      CylbPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
+      LastYearPayment(LocalDate.of(2019, 3, 2), Amount(700.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 9), Amount(350.00)),
+      LastYearPayment(LocalDate.of(2019, 3, 16), Amount(140.00))
     )
 
     val periods = Seq(

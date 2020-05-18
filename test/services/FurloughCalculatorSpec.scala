@@ -26,14 +26,14 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
 
   forAll(fullPeriodScenarios) { (frequency, payment, cap, expectedFurlough) =>
-    s"Full Period: For payment frequency $frequency and payment ${payment.furloughPayment.value} return $expectedFurlough" in new FurloughCalculator {
+    s"Full Period: For payment frequency $frequency and payment ${payment.referencePay.value} return $expectedFurlough" in new FurloughCalculator {
       val expected = FullPeriodFurloughBreakdown(expectedFurlough, payment, cap)
       calculateFullPeriod(frequency, payment) mustBe expected
     }
   }
 
   forAll(partialPeriodScenarios) { (payment, cap, expectedFurlough) =>
-    s"Partial Period: For gross payment: ${payment.furloughPayment.value} " +
+    s"Partial Period: For gross payment: ${payment.referencePay.value} " +
       s"should return $expectedFurlough" in new FurloughCalculator {
       val expected = PartialPeriodFurloughBreakdown(expectedFurlough, payment, cap)
       calculatePartialPeriod(payment) mustBe expected
