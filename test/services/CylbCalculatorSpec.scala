@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Weekly}
-import models.{Amount, AveragePaymentWithFullPeriod, AveragePaymentWithPartialPeriod, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod, FullPeriodWithPaymentDate, LastYearPayment, NonFurloughPay, CylbPeriod, PartialPeriodWithPaymentDate, TwoPeriodCylb}
+import models.{Amount, AveragePaymentWithFullPeriod, AveragePaymentWithPartialPeriod, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod, FullPeriodWithPaymentDate, LastYearPayment, NonFurloughPay, OnePeriodCylb, PartialPeriodWithPaymentDate, TwoPeriodCylb}
 
 class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
@@ -40,16 +40,20 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val cylbBreakdown: TwoPeriodCylb =
       TwoPeriodCylb(
         Amount(450.0),
-        Amount(700.0),
-        7,
-        2,
-        Amount(200.00),
-        LocalDate.of(2019, 3, 2),
-        Amount(350.0),
-        7,
-        5,
-        Amount(250.0),
-        LocalDate.of(2019, 3, 9)
+        OnePeriodCylb(
+          Amount(200.00),
+          Amount(700.0),
+          7,
+          2,
+          LocalDate.of(2019, 3, 2)
+        ),
+        OnePeriodCylb(
+          Amount(250.0),
+          Amount(350.0),
+          7,
+          5,
+          LocalDate.of(2019, 3, 9)
+        )
       )
 
     val expected: CylbPaymentWithFullPeriod = cylbPaymentWithFullPeriod(450.00, payPeriod, averagePayment, cylbBreakdown)
@@ -73,16 +77,20 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val cylbBreakdown: TwoPeriodCylb =
       TwoPeriodCylb(
         Amount(1100.0),
-        Amount(1400.0),
-        14,
-        2,
-        Amount(200.00),
-        LocalDate.of(2019, 3, 2),
-        Amount(1050.0),
-        14,
-        12,
-        Amount(900.0),
-        LocalDate.of(2019, 3, 16)
+        OnePeriodCylb(
+          Amount(200.00),
+          Amount(1400.0),
+          14,
+          2,
+          LocalDate.of(2019, 3, 2)
+        ),
+        OnePeriodCylb(
+          Amount(900.0),
+          Amount(1050.0),
+          14,
+          12,
+          LocalDate.of(2019, 3, 16)
+        )
       )
 
     val expected: CylbPaymentWithFullPeriod = cylbPaymentWithFullPeriod(1100.00, payPeriod, averagePayment, cylbBreakdown)
@@ -106,16 +114,20 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val cylbBreakdown: TwoPeriodCylb =
       TwoPeriodCylb(
         Amount(1760.0),
-        Amount(2800.0),
-        28,
-        2,
-        Amount(200.00),
-        LocalDate.of(2019, 3, 2),
-        Amount(1680.0),
-        28,
-        26,
-        Amount(1560.0),
-        LocalDate.of(2019, 3, 30)
+        OnePeriodCylb(
+          Amount(200.00),
+          Amount(2800.0),
+          28,
+          2,
+          LocalDate.of(2019, 3, 2)
+        ),
+        OnePeriodCylb(
+          Amount(1560.0),
+          Amount(1680.0),
+          28,
+          26,
+          LocalDate.of(2019, 3, 30)
+        )
       )
 
     val expected: CylbPaymentWithFullPeriod = cylbPaymentWithFullPeriod(1760.00, payPeriod, averagePayment, cylbBreakdown)
@@ -136,7 +148,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
     val nonFurloughPay = NonFurloughPay(None, None)
 
-    val cylbBreakdown = CylbPeriod(Amount(500.00), Amount(700.00), 7, 5, LocalDate.of(2019, 3, 9))
+    val cylbBreakdown = OnePeriodCylb(Amount(500.00), Amount(700.00), 7, 5, LocalDate.of(2019, 3, 9))
 
     val expected = cylbPaymentWithPartialPeriod(0.0, 500.00, payPeriod, averagePayment, cylbBreakdown)
 
@@ -157,7 +169,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
     val nonFurloughPay = NonFurloughPay(None, None)
 
-    val cylbBreakdown: CylbPeriod = CylbPeriod(Amount(200.00), Amount(700.00), 7, 2, LocalDate.of(2019, 3, 9))
+    val cylbBreakdown = OnePeriodCylb(Amount(200.00), Amount(700.00), 7, 2, LocalDate.of(2019, 3, 9))
 
     val expected: CylbPaymentWithPartialPeriod = cylbPaymentWithPartialPeriod(0.0, 200.00, payPeriod, averagePayment, cylbBreakdown)
 
