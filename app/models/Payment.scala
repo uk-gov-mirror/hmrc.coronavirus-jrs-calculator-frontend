@@ -102,6 +102,13 @@ sealed trait AveragePayment extends PaymentWithPeriod {
   val referencePay: Amount
   val annualPay: Amount
   val priorFurloughPeriod: Period
+
+  def furloughDays: Int =
+    periodWithPaymentDate.period match {
+      case fp: FullPeriod    => fp.period.countDays
+      case pp: PartialPeriod => pp.partial.countDays
+    }
+
 }
 
 sealed trait CylbPayment extends PaymentWithPeriod {
