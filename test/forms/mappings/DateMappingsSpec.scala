@@ -18,7 +18,6 @@ package forms.mappings
 
 import java.time.LocalDate
 
-import forms.behaviours.DateBehaviours
 import generators.Generators
 import org.scalacheck.Gen
 import org.scalatest.{FreeSpec, MustMatchers, OptionValues}
