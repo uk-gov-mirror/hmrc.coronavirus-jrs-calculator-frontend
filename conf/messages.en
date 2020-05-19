@@ -525,7 +525,7 @@ referencePayBreakdown.cylb.p1 = Take pay from same dates last year.
 referencePayBreakdown.cylb.twoPeriods = Last year’s dates overlap two pay periods:
 referencePayBreakdown.cylb.l1 = Start with £{0} from pay day {1}
 referencePayBreakdown.cylb.l2 = Divide by {0} days in pay period
-referencePayBreakdown.cylb.l2 = Multiply by {0} furlough days in matching pay period
+referencePayBreakdown.cylb.l3 = Multiply by {0} furlough days in matching pay period
 referencePayBreakdown.cylb.periodTotal = Total for period = £{0}
 referencePayBreakdown.cylb.then = Then:
 referencePayBreakdown.cylb.addTotals = Add the totals, £{0} + £{1}

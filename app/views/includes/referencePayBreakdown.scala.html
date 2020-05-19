@@ -15,7 +15,9 @@
  *@
 
 @this(
-    p: components.p
+    p: components.p,
+    onePeriodCylbBreakdown: cylbPeriodBreakdown,
+    twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown
 )
 
 @(payment: PaymentWithPeriod)(implicit messages: Messages)
@@ -36,36 +38,11 @@
       @p(Html(messages("referencePayBreakdown.cylb.p1")))
 
       @{cylb.cylbBreakdown match {
-          case op: OnePeriodCylb =>
-              <ol class="govuk-list govuk-list--number">
-                  <li>@messages("referencePayBreakdown.cylb.l1", op.periodPay.value.formatted("%.2f"), dateToString(op.lastYearPayDay))</li>
-                  <li>@messages("referencePayBreakdown.cylb.l2", op.daysInPeriod)</li>
-                  <li>@messages("referencePayBreakdown.cylb.l3", op.daysRequiredFromPeriod)</li>
-                  <li>@messages("referencePayBreakdown.cylb.periodTotal", op.referencePay.value.formatted("%.2f")</li>
-              </ol>
-          case tp: TwoPeriodCylb =>
-              <ol class="govuk-list govuk-list--number">
-                  <li>@messages("referencePayBreakdown.cylb.l1", tp.periodOnePay.value.formatted("%.2f"), dateToString(tp.periodOnePayDay))</li>
-                  <li>@messages("referencePayBreakdown.cylb.l2", tp.daysInPeriodOne)</li>
-                  <li>@messages("referencePayBreakdown.cylb.l3", tp.daysRequiredFromPeriodOne)</li>
-                  <li>@messages("referencePayBreakdown.cylb.periodTotal", tp.periodOneReferencePay.value.formatted("%.2f"))</li>
-              </ol>
-
-              p(Html(messages("referencePayBreakdown.cylb.then")))
-
-              <ol class="govuk-list govuk-list--number">
-                  <li>@messages("referencePayBreakdown.cylb.l1", tp.periodTwoPay.value.formatted("%.2f"), dateToString(tp.periodTwoPayDay))</li>
-                  <li>@messages("referencePayBreakdown.cylb.l2", tp.daysInPeriodTwo)</li>
-                  <li>@messages("referencePayBreakdown.cylb.l3", tp.daysRequiredFromPeriodTwo)</li>
-                  <li>@messages("referencePayBreakdown.cylb.periodTotal", tp.periodTwoReferencePay.value.formatted("%.2f"))</li>
-              </ol>
-
-              p(Html(messages("referencePayBreakdown.cylb.then")))
-
-              p(Html(messages("referencePayBreakdown.cylb.addTotals", tp.periodOneReferencePay.value.formatted("%.2f"), tp.periodTwoReferencePay.value.formatted("%.2f"))))
-
-              p(Html(messages("referencePayBreakdown.cylb.result", tp.referencePay.value.formatted("%.2f"))))
+          case op: OnePeriodCylb => onePeriodCylbBreakdown(op)
+          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp)
       }}
+
+    @p(Html(messages("referencePayBreakdown.cylb.result", cylb.referencePay.value.formatted("%.2f"))))
 
     @averagePaymentBreakdown(cylb.averagePayment)
 

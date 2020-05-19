@@ -83,16 +83,20 @@ trait CylbCalculator extends PreviousYearPeriod {
 
     TwoPeriodCylb(
       referencePay,
-      lastYearPaymentOne.amount,
-      ops.fullPeriodLength,
-      ops.previousPeriodDays,
-      periodOneAmount,
-      lastYearPaymentOne.date,
-      lastYearPaymentTwo.amount,
-      ops.fullPeriodLength,
-      ops.equivalentPeriodDays,
-      periodTwoAmount,
-      lastYearPaymentTwo.date
+      OnePeriodCylb(
+        periodOneAmount,
+        lastYearPaymentOne.amount,
+        ops.fullPeriodLength,
+        ops.previousPeriodDays,
+        lastYearPaymentOne.date
+      ),
+      OnePeriodCylb(
+        periodTwoAmount,
+        lastYearPaymentTwo.amount,
+        ops.fullPeriodLength,
+        ops.equivalentPeriodDays,
+        lastYearPaymentTwo.date
+      )
     )
   }
 

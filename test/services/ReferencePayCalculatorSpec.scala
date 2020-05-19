@@ -19,7 +19,7 @@ package services
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
-import models.{Amount, LastYearPayment, NonFurloughPay, OnePeriodCylb, RegularPayData, VariablePayData, VariablePayWithCylbData}
+import models.{Amount, LastYearPayment, NonFurloughPay, CylbPeriod, RegularPayData, VariablePayData, VariablePayWithCylbData}
 
 class ReferencePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
@@ -49,9 +49,9 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculate reference pay for a given VariablePayWithCylbData" in new ReferencePayCalculator {
     val cylbPaymentsOne = Seq(LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1000.0)))
-    val cylbBreakdownOne = OnePeriodCylb(Amount(1000.0), Amount(1000.0), 31, 31, LocalDate.of(2019, 3, 31))
+    val cylbBreakdownOne = CylbPeriod(Amount(1000.0), Amount(1000.0), 31, 31, LocalDate.of(2019, 3, 31))
     val cylbPaymentsTwo = Seq(LastYearPayment(LocalDate.of(2019, 3, 31), Amount(5000.0)))
-    val cylbBreakdownTwo = OnePeriodCylb(Amount(5000.0), Amount(5000.0), 31, 31, LocalDate.of(2019, 3, 31))
+    val cylbBreakdownTwo = CylbPeriod(Amount(5000.0), Amount(5000.0), 31, 31, LocalDate.of(2019, 3, 31))
 
     val inputAvgGreater = VariablePayWithCylbData(
       defaultReferencePayData,
