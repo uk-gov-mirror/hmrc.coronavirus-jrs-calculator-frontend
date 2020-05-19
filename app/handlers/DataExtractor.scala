@@ -78,7 +78,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
     for {
       furloughPeriod <- extractFurloughWithinClaim(userAnswers)
       payDates = userAnswers.getList(PayDatePage)
-      periods = generatePeriods(payDates, furloughPeriod)
+      periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
       frequency  <- extractPaymentFrequency(userAnswers)
       lastPayDay <- userAnswers.get(LastPayDatePage)
       assigned = assignPayDates(frequency, periods, lastPayDay)

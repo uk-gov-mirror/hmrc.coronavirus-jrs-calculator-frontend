@@ -532,3 +532,10 @@ furloughPeriodQuestion.furloughedOnDifferentPeriod = No
 furloughPeriodQuestion.error.required = Select one of the options below
 furloughPeriodQuestion.ongoing.text = Ongoing from {0}
 furloughPeriodQuestion.ended.text = from {0} to {1}
+
+payPeriodQuestion.title = Do you want to use the same pay periods?
+payPeriodQuestion.heading = Do you want to use the same pay periods?
+payPeriodQuestion.useSamePayPeriod = Yes
+payPeriodQuestion.useDifferentPayPeriod = No
+payPeriodQuestion.error.required = Select one of the options below
+payPeriodQuestion.period.text = from {0} to {1}

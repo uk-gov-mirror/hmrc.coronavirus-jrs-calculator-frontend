@@ -23,23 +23,26 @@ import models.Period._
 import models.{FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
 import utils.LocalDateHelpers._
 
+import scala.annotation.tailrec
+
 trait PeriodHelper {
 
-  def generatePeriods(endDates: Seq[LocalDate], furloughPeriod: FurloughWithinClaim): Seq[Periods] = {
+  def generatePeriodsWithFurlough(endDates: Seq[LocalDate], furloughPeriod: FurloughWithinClaim): Seq[Periods] =
+    generatePeriods(endDates).map(p => fullOrPartialPeriod(p, furloughPeriod))
+
+  def generatePeriods(endDates: Seq[LocalDate]): Seq[Period] = {
+    @tailrec
     def generate(acc: Seq[Period], list: Seq[LocalDate]): Seq[Period] = list match {
       case Nil      => acc
       case _ :: Nil => acc
       case h :: t   => generate(acc ++ Seq(Period(h.plusDays(1), t.head)), t)
     }
 
-    val generated =
-      if (endDates.length == 1) {
-        endDates.map(date => Period(date, date))
-      } else {
-        generate(Seq(), sortedEndDates(endDates))
-      }
-
-    generated.map(p => fullOrPartialPeriod(p, furloughPeriod))
+    if (endDates.length == 1) {
+      endDates.map(date => Period(date, date))
+    } else {
+      generate(Seq(), sortedEndDates(endDates))
+    }
   }
 
   def endDateOrTaxYearEnd(period: Period): Period = {

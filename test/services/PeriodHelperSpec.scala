@@ -39,7 +39,7 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
 
     val expected: List[Periods] = List(FullPeriod(Period(LocalDate.of(2020, 2, 20), LocalDate.of(2020, 2, 20))))
 
-    generatePeriods(endDates, furloughPeriod) mustBe expected
+    generatePeriodsWithFurlough(endDates, furloughPeriod) mustBe expected
   }
 
   "Returns a sorted List[PayPeriod] for a given List[LocalDate] that represents PayPeriod.end LocalDates" in new PeriodHelper {
@@ -63,8 +63,8 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
       FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)))
     )
 
-    generatePeriods(endDates, furloughPeriod) mustBe expected
-    generatePeriods(endDatesTwo, furloughPeriodTwo) mustBe expectedTwo
+    generatePeriodsWithFurlough(endDates, furloughPeriod) mustBe expected
+    generatePeriodsWithFurlough(endDatesTwo, furloughPeriodTwo) mustBe expectedTwo
   }
 
   "Return periods for a given List[LocalDate] and a furloughPeriod" in new PeriodHelper {
@@ -83,7 +83,7 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
       )
     )
 
-    generatePeriods(endDates, furloughPeriod) mustBe expected
+    generatePeriodsWithFurlough(endDates, furloughPeriod) mustBe expected
   }
 
   "determine if a period contains the start of a new tax year" in new PeriodHelper {

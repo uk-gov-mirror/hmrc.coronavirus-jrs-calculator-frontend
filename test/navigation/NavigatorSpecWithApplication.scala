@@ -462,6 +462,24 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
             .value
         ) mustBe routes.FurloughStartDateController.onPageLoad()
       }
+
+      "go to correct page after PayPeriodQuestionPage" in {
+        navigator.nextPage(
+          PayPeriodQuestionPage,
+          UserAnswers("id")
+            .set(PayPeriodQuestionPage, PayPeriodQuestion.UseSamePayPeriod)
+            .success
+            .value
+        ) mustBe routes.PayMethodController.onPageLoad()
+
+        navigator.nextPage(
+          PayPeriodQuestionPage,
+          UserAnswers("id")
+            .set(PayPeriodQuestionPage, PayPeriodQuestion.UseDifferentPayPeriod)
+            .success
+            .value
+        ) mustBe routes.PaymentFrequencyController.onPageLoad()
+      }
     }
 
     "routeFor() is called" should {
