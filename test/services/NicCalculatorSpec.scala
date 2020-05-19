@@ -109,7 +109,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
 
   "calculates Nic Grant and enforces cap based on furlough grant" in new NicCalculator {
     val payment =
-      paymentWithFullPeriod(2750.0, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"))
+      regularPaymentWithFullPeriod(2750.0, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"))
 
     calculateFullPeriodNic(Payable, Monthly, Amount(2200.0), payment, Some(Amount(2000.0)), Some(Amount(300.0))).grant mustBe Amount(303.60)
   }
