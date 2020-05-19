@@ -66,17 +66,20 @@ sealed trait CylbBreakdown {
   val referencePay: Amount
 }
 
-case class OnePeriodCylb(referencePay: Amount, periodPay: Amount, daysInPeriod: Int, daysRequiredFromPeriod: Int) extends CylbBreakdown
+case class OnePeriodCylb(referencePay: Amount, periodPay: Amount, daysInPeriod: Int, daysRequiredFromPeriod: Int, lastYearPayDay: LocalDate)
+    extends CylbBreakdown
 case class TwoPeriodCylb(
   referencePay: Amount,
   periodOnePay: Amount,
   daysInPeriodOne: Int,
   daysRequiredFromPeriodOne: Int,
   periodOneReferencePay: Amount,
+  periodOnePayDay: LocalDate,
   periodTwoPay: Amount,
   daysInPeriodTwo: Int,
   daysRequiredFromPeriodTwo: Int,
-  periodTwoReferencePay: Amount)
+  periodTwoReferencePay: Amount,
+  periodTwoPayDay: LocalDate)
     extends CylbBreakdown
 
 sealed trait PaymentWithPeriod {

@@ -71,7 +71,7 @@ object FurloughBreakdown {
         breakdown.paymentWithPeriod.referencePay,
         breakdown.furloughCap,
         breakdown.grant,
-        breakdown.paymentWithPeriod.periodWithPaymentDate.period
+        breakdown.paymentWithPeriod
       )
   }
 }

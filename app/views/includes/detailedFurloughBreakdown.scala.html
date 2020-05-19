@@ -16,14 +16,16 @@
 
 @import viewmodels.DetailedFurloughBreakdown
 @import views.includes.FurloughCapHelper
+@import views.html.includes.referencePayBreakdown
 
 @this(h4: components.h4,
-      p: components.p,
-      helper: FurloughCapHelper)
+      helper: FurloughCapHelper, referencePayBreakdown: referencePayBreakdown)
 
 @(breakdown: DetailedFurloughBreakdown)(implicit messages: Messages)
 
     @h4(messages("furloughBreakdown.h4"))
+
+    @referencePayBreakdown(breakdown.payment)
 
     <ol class="govuk-list govuk-list--number">
         <li>@messages("furloughBreakdown.l1", breakdown.formattedWages)</li>
@@ -36,4 +38,7 @@
 
     </ol>
 
-    @p(Html(messages("furloughBreakdown.p1", breakdown.formattedGrant)))
+    <div class="govuk-inset-text">
+        @messages("furloughBreakdown.total", breakdown.formattedGrant)
+        <span class="govuk-hint">@messages("furloughBreakdown.total.rounding")</span>
+    </div>

@@ -37,7 +37,20 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
     val nonFurloughPay: NonFurloughPay = NonFurloughPay(None, None)
 
-    val cylbBreakdown: TwoPeriodCylb = TwoPeriodCylb(Amount(450.0), Amount(700.0), 7, 2, Amount(200.00), Amount(350.0), 7, 5, Amount(250.0))
+    val cylbBreakdown: TwoPeriodCylb =
+      TwoPeriodCylb(
+        Amount(450.0),
+        Amount(700.0),
+        7,
+        2,
+        Amount(200.00),
+        LocalDate.of(2019, 3, 2),
+        Amount(350.0),
+        7,
+        5,
+        Amount(250.0),
+        LocalDate.of(2019, 3, 9)
+      )
 
     val expected: CylbPaymentWithFullPeriod = cylbPaymentWithFullPeriod(450.00, payPeriod, averagePayment, cylbBreakdown)
 
@@ -58,7 +71,19 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val nonFurloughPay = NonFurloughPay(None, None)
 
     val cylbBreakdown: TwoPeriodCylb =
-      TwoPeriodCylb(Amount(1100.0), Amount(1400.0), 14, 2, Amount(200.00), Amount(1050.0), 14, 12, Amount(900.0))
+      TwoPeriodCylb(
+        Amount(1100.0),
+        Amount(1400.0),
+        14,
+        2,
+        Amount(200.00),
+        LocalDate.of(2019, 3, 2),
+        Amount(1050.0),
+        14,
+        12,
+        Amount(900.0),
+        LocalDate.of(2019, 3, 16)
+      )
 
     val expected: CylbPaymentWithFullPeriod = cylbPaymentWithFullPeriod(1100.00, payPeriod, averagePayment, cylbBreakdown)
 
@@ -79,7 +104,19 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val nonFurloughPay = NonFurloughPay(None, None)
 
     val cylbBreakdown: TwoPeriodCylb =
-      TwoPeriodCylb(Amount(1760.0), Amount(2800.0), 28, 2, Amount(200.00), Amount(1680.0), 28, 26, Amount(1560.0))
+      TwoPeriodCylb(
+        Amount(1760.0),
+        Amount(2800.0),
+        28,
+        2,
+        Amount(200.00),
+        LocalDate.of(2019, 3, 2),
+        Amount(1680.0),
+        28,
+        26,
+        Amount(1560.0),
+        LocalDate.of(2019, 3, 30)
+      )
 
     val expected: CylbPaymentWithFullPeriod = cylbPaymentWithFullPeriod(1760.00, payPeriod, averagePayment, cylbBreakdown)
 
@@ -99,7 +136,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
     val nonFurloughPay = NonFurloughPay(None, None)
 
-    val cylbBreakdown = OnePeriodCylb(Amount(500.00), Amount(700.00), 7, 5)
+    val cylbBreakdown = OnePeriodCylb(Amount(500.00), Amount(700.00), 7, 5, LocalDate.of(2019, 3, 9))
 
     val expected = cylbPaymentWithPartialPeriod(0.0, 500.00, payPeriod, averagePayment, cylbBreakdown)
 
@@ -120,7 +157,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
     val nonFurloughPay = NonFurloughPay(None, None)
 
-    val cylbBreakdown: OnePeriodCylb = OnePeriodCylb(Amount(200.00), Amount(700.00), 7, 2)
+    val cylbBreakdown: OnePeriodCylb = OnePeriodCylb(Amount(200.00), Amount(700.00), 7, 2, LocalDate.of(2019, 3, 9))
 
     val expected: CylbPaymentWithPartialPeriod = cylbPaymentWithPartialPeriod(0.0, 200.00, payPeriod, averagePayment, cylbBreakdown)
 

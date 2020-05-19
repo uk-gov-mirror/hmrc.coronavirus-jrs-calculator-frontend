@@ -55,39 +55,44 @@ trait CylbCalculator extends PreviousYearPeriod {
   }
 
   private def previousYearFurlough(datesRequired: Seq[LocalDate], cylbs: Seq[LastYearPayment], ops: CylbDuration): CylbBreakdown = {
-    val amounts: Seq[Amount] = datesRequired.flatMap(date => cylbs.find(_.date == date)).map(_.amount)
+    val lastYearPayments: Seq[LastYearPayment] = datesRequired.flatMap(date => cylbs.find(_.date == date))
 
-    amounts match {
+    lastYearPayments match {
       case amount :: Nil                          => previousOrCurrent(amount, ops)
       case previousAmount :: currentAmount :: Nil => previousAndCurrent(ops, previousAmount, currentAmount)
     }
   }
 
-  private def previousOrCurrent(amount: Amount, ops: CylbDuration): OnePeriodCylb =
+  private def previousOrCurrent(lastYearPayment: LastYearPayment, ops: CylbDuration): OnePeriodCylb =
     if (ops.equivalentPeriodDays == 0) {
-      val referencePay = Amount((amount.value / ops.fullPeriodLength) * ops.previousPeriodDays).halfUp
-      OnePeriodCylb(referencePay, amount, ops.fullPeriodLength, ops.previousPeriodDays)
+      val referencePay = Amount((lastYearPayment.amount.value / ops.fullPeriodLength) * ops.previousPeriodDays).halfUp
+      OnePeriodCylb(referencePay, lastYearPayment.amount, ops.fullPeriodLength, ops.previousPeriodDays, lastYearPayment.date)
     } else {
-      val referencePay = Amount((amount.value / ops.fullPeriodLength) * ops.equivalentPeriodDays).halfUp
-      OnePeriodCylb(referencePay, amount, ops.fullPeriodLength, ops.equivalentPeriodDays)
+      val referencePay = Amount((lastYearPayment.amount.value / ops.fullPeriodLength) * ops.equivalentPeriodDays).halfUp
+      OnePeriodCylb(referencePay, lastYearPayment.amount, ops.fullPeriodLength, ops.equivalentPeriodDays, lastYearPayment.date)
     }
 
-  private def previousAndCurrent(ops: CylbDuration, previousAmount: Amount, currentAmount: Amount): TwoPeriodCylb = {
-    val periodOneAmount = Amount((previousAmount.value / ops.fullPeriodLength) * ops.previousPeriodDays).halfUp
-    val periodTwoAmount = Amount((currentAmount.value / ops.fullPeriodLength) * ops.equivalentPeriodDays).halfUp
+  private def previousAndCurrent(
+    ops: CylbDuration,
+    lastYearPaymentOne: LastYearPayment,
+    lastYearPaymentTwo: LastYearPayment): TwoPeriodCylb = {
+    val periodOneAmount = Amount((lastYearPaymentOne.amount.value / ops.fullPeriodLength) * ops.previousPeriodDays).halfUp
+    val periodTwoAmount = Amount((lastYearPaymentTwo.amount.value / ops.fullPeriodLength) * ops.equivalentPeriodDays).halfUp
 
     val referencePay = Amount(periodOneAmount.value + periodTwoAmount.value)
 
     TwoPeriodCylb(
       referencePay,
-      previousAmount,
+      lastYearPaymentOne.amount,
       ops.fullPeriodLength,
       ops.previousPeriodDays,
       periodOneAmount,
-      currentAmount,
+      lastYearPaymentOne.date,
+      lastYearPaymentTwo.amount,
       ops.fullPeriodLength,
       ops.equivalentPeriodDays,
-      periodTwoAmount
+      periodTwoAmount,
+      lastYearPaymentTwo.date
     )
   }
 
