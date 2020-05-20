@@ -18,6 +18,7 @@ object AppDependencies {
 
   val test = Seq(
     "org.scalatest"               %% "scalatest"          % "3.0.8",
+    "com.ironcorelabs"            %% "cats-scalatest"     % "3.0.0",
     "org.scalatestplus.play"      %% "scalatestplus-play" % "3.1.2",
     "org.pegdown"                 %  "pegdown"            % "1.6.0",
     "org.jsoup"                   %  "jsoup"              % "1.12.1",

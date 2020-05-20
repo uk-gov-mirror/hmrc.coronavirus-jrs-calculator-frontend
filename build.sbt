@@ -4,6 +4,8 @@ import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 lazy val appName: String = "coronavirus-jrs-calculator-frontend"
 
 lazy val root = (project in file("."))

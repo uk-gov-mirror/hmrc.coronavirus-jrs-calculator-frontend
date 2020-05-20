@@ -28,6 +28,6 @@ class ClaimPeriodEndPageSpec extends PageBehaviours {
 
     beSettable[LocalDate](ClaimPeriodEndPage)
 
-    beRemovable[LocalDate](ClaimPeriodEndPage)
+    beRemovable[LocalDate](ClaimPeriodEndPage, "error.expected.date")
   }
 }

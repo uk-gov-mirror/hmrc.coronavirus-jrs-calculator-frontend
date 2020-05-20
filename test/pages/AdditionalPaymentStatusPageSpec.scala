@@ -27,6 +27,6 @@ class AdditionalPaymentStatusPageSpec extends PageBehaviours {
 
     beSettable[AdditionalPaymentStatus](AdditionalPaymentStatusPage)
 
-    beRemovable[AdditionalPaymentStatus](AdditionalPaymentStatusPage)
+    beRemovable[AdditionalPaymentStatus](AdditionalPaymentStatusPage, "error.invalid")
   }
 }

@@ -127,7 +127,7 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
   }
 
   private implicit class UserAnswersHelper(val userAnswers: UserAnswers) {
-    def setValue[A](page: Settable[A], value: A, idx: Option[Int] = None)(implicit writes: Writes[A]) =
+    def setValue[A](page: Settable[A], value: A, idx: Option[Int] = None)(implicit writes: Writes[A]): UserAnswers =
       userAnswers.set(page, value, idx).success.value
   }
 }

@@ -16,17 +16,17 @@
 
 package pages
 
-import models.AdditionalPayment
+import models.TopUpStatus
 import pages.behaviours.PageBehaviours
 
-class AdditionalPaymentAmountPageSpec extends PageBehaviours {
+class TopUpStatusPageSpec extends PageBehaviours {
 
-  "AdditionalPaymentAmountPage" must {
+  "TopUpStatusPage" must {
 
-    beRetrievable[AdditionalPayment](AdditionalPaymentAmountPage)
+    beRetrievable[TopUpStatus](TopUpStatusPage)
 
-    beSettable[AdditionalPayment](AdditionalPaymentAmountPage)
+    beSettable[TopUpStatus](TopUpStatusPage)
 
-    beRemovable[AdditionalPayment](AdditionalPaymentAmountPage, "error.expected.jsobject")
+    beRemovable[TopUpStatus](TopUpStatusPage)
   }
 }

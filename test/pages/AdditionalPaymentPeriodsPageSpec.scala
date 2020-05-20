@@ -28,6 +28,6 @@ class AdditionalPaymentPeriodsPageSpec extends PageBehaviours {
 
     beSettable[List[LocalDate]](AdditionalPaymentPeriodsPage)
 
-    beRemovable[List[LocalDate]](AdditionalPaymentPeriodsPage)
+    beRemovable[List[LocalDate]](AdditionalPaymentPeriodsPage, "error.expected.jsarray")
   }
 }

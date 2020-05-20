@@ -19,7 +19,7 @@ package pages
 import models.TopUpStatus
 import pages.behaviours.PageBehaviours
 
-class TopUpStatusPageSpec extends PageBehaviours {
+class TopUpQuestionPageSpec extends PageBehaviours {
 
   "TopUpStatusPage" must {
 

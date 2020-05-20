@@ -33,6 +33,6 @@ class FurloughStartDatePageSpec extends PageBehaviours {
 
     beSettable[LocalDate](FurloughStartDatePage)(arbitraryLocalDate, implicitly)
 
-    beRemovable[LocalDate](FurloughStartDatePage)(arbitraryLocalDate, implicitly)
+    beRemovable[LocalDate](FurloughStartDatePage, "error.expected.date")(arbitraryLocalDate, implicitly)
   }
 }

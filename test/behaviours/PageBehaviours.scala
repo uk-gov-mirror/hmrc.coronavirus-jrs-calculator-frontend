@@ -16,6 +16,7 @@
 
 package behaviours
 
+import cats.scalatest.ValidatedMatchers
 import generators.Generators
 import models.UserAnswers
 import org.scalacheck.Arbitrary.arbitrary
@@ -25,7 +26,9 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.QuestionPage
 import play.api.libs.json._
 
-trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with Generators with OptionValues with TryValues {
+trait PageBehaviours
+    extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with Generators with OptionValues with TryValues
+    with ValidatedMatchers {
 
   class BeRetrievable[A] {
     def apply[P <: QuestionPage[A]](genP: Gen[P])(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit = {
@@ -44,6 +47,26 @@ trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyC
             forAll(gen) {
               case (page, userAnswers) =>
                 userAnswers.get(page) must be(empty)
+            }
+          }
+        }
+      }
+
+      "return invalid" when {
+
+        "being retrieved from UserAnswers" when {
+
+          "the question has not been answered" in {
+
+            val gen = for {
+              page        <- genP
+              userAnswers <- arbitrary[UserAnswers]
+            } yield (page, userAnswers.remove(page).success.value)
+
+            forAll(gen) {
+              case (page, userAnswers) =>
+                Console.println(userAnswers.getV(page))
+                userAnswers.getV(page) mustBe beInvalid(JsError())
             }
           }
         }
