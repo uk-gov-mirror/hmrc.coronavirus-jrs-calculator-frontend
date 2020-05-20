@@ -94,6 +94,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
     case FurloughPeriodQuestionPage =>
       furloughPeriodQuestionRoutes
+
+    case ClaimPeriodQuestionPage =>
+      claimPeriodQuestionRoutes
     case PayPeriodQuestionPage =>
       payPeriodQuestionRoutes
     case _ =>
@@ -270,6 +273,13 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       case None                                                     => routes.FurloughPeriodQuestionController.onPageLoad()
     }
   }
+
+  private def claimPeriodQuestionRoutes: UserAnswers => Call =
+    userAnswers =>
+      userAnswers.get(ClaimPeriodQuestionPage).fold(routes.ClaimPeriodQuestionController.onPageLoad()) {
+        case ClaimPeriodQuestion.ClaimOnSamePeriod      => routes.FurloughPeriodQuestionController.onPageLoad()
+        case ClaimPeriodQuestion.ClaimOnDifferentPeriod => routes.ClaimPeriodStartController.onPageLoad()
+    }
 
   private def payPeriodQuestionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(PayPeriodQuestionPage) match {

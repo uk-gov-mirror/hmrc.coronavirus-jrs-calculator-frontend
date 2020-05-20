@@ -27,6 +27,9 @@ trait PageGenerators {
   implicit lazy val arbitraryFurloughPeriodQuestionPage: Arbitrary[FurloughPeriodQuestionPage.type] =
     Arbitrary(FurloughPeriodQuestionPage)
 
+  implicit lazy val arbitraryClaimPeriodQuestionPage: Arbitrary[ClaimPeriodQuestionPage.type] =
+    Arbitrary(ClaimPeriodQuestionPage)
+
   implicit lazy val arbitraryAdditionalPaymentAmountPage: Arbitrary[AdditionalPaymentAmountPage.type] =
     Arbitrary(AdditionalPaymentAmountPage)
 

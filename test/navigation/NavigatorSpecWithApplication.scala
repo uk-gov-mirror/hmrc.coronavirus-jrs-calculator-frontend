@@ -24,6 +24,7 @@ import controllers.routes
 import models.PayMethod.{Regular, Variable}
 import models._
 import pages._
+import ClaimPeriodQuestion._
 
 class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTestDataBuilder {
 
@@ -479,6 +480,18 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
             .success
             .value
         ) mustBe routes.PaymentFrequencyController.onPageLoad()
+      }
+
+      "go to correct page after ClaimPeriodQuestionPage" in {
+        navigator.nextPage(
+          ClaimPeriodQuestionPage,
+          emptyUserAnswers.withClaimPeriodQuestion(ClaimOnSamePeriod)
+        ) mustBe routes.FurloughPeriodQuestionController.onPageLoad()
+
+        navigator.nextPage(
+          ClaimPeriodQuestionPage,
+          emptyUserAnswers.withClaimPeriodQuestion(ClaimOnDifferentPeriod)
+        ) mustBe routes.ClaimPeriodStartController.onPageLoad()
       }
     }
 

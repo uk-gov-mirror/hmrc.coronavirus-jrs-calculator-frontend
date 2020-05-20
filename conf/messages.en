@@ -525,6 +525,14 @@ furloughBreakdown.furloughCap.l1 = Limit to the maximum amount of £{0}
 furloughBreakdown.furloughCap.periodSpansMonthCap = ({0} days of {1} at £{2} + {3} days of {4} at £{5})
 furloughBreakdown.furloughCap.partialPeriodCap = ({0} days of {1} at £{2})
 
+claimPeriodQuestion.title = Has this employee claimed for the same time?
+claimPeriodQuestion.heading = Has this employee claimed for the same time?
+claimPeriodQuestion.claimOnSamePeriod = Yes
+claimPeriodQuestion.claimOnDifferentPeriod = No
+claimPeriodQuestion.error.required = Select one of the options below
+claimPeriodQuestion.ongoing.text = Ongoing from {0}
+claimPeriodQuestion.ended.text = from {0} to {1}
+
 furloughPeriodQuestion.title = Has this employee furloughed for the same time?
 furloughPeriodQuestion.heading = Has this employee furloughed for the same time?
 furloughPeriodQuestion.furloughedOnSamePeriod = Yes

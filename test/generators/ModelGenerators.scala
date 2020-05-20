@@ -33,6 +33,11 @@ trait ModelGenerators {
       Gen.oneOf(FurloughPeriodQuestion.values)
     }
 
+  implicit lazy val arbitraryClaimPeriodQuestion: Arbitrary[ClaimPeriodQuestion] =
+    Arbitrary {
+      Gen.oneOf(ClaimPeriodQuestion.values)
+    }
+
   implicit lazy val arbitraryAdditionalPayment: Arbitrary[AdditionalPayment] =
     Arbitrary {
       for {

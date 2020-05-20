@@ -120,7 +120,7 @@
         <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme, "confirmation.nextSteps.li.4.2", true)))</li>
     </ul>
 
-    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodStartController.onPageLoad()), classes = Some("govuk-button"))
+    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
 
     @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
 }
