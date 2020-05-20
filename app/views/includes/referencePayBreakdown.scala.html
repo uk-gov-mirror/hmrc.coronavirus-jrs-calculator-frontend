@@ -15,6 +15,7 @@
  *@
 
 @this(
+    h4: components.h4,
     p: components.p,
     onePeriodCylbBreakdown: cylbPeriodBreakdown,
     twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown
@@ -36,9 +37,9 @@
       @p(Html(messages("referencePayBreakdown.average.p1")))
 
       <ol class="govuk-list govuk-list--number">
-          <li>@messages("referencePayBreakdown.average.step1", average.annualPay.value.formatted("%.2f"))</li>
-          <li>@messages("referencePayBreakdown.average.step2", average.priorFurloughPeriod.countDays)</li>
-          <li>@messages("referencePayBreakdown.average.step3", average.furloughDays)</li>
+          <li>@messages("referencePayBreakdown.average.l1", average.annualPay.value.formatted("%.2f"))</li>
+          <li>@messages("referencePayBreakdown.average.l2", average.priorFurloughPeriod.countDays)</li>
+          <li>@messages("referencePayBreakdown.average.l3", average.furloughDays)</li>
       </ol>
 
       @p(Html(messages("referencePayBreakdown.average.result", average.referencePay.value.formatted("%.2f"))))
@@ -62,6 +63,8 @@
         <li>@messages("referencePayBreakdown.cylb.higherOf.average", cylb.averagePayment.referencePay.value.formatted("%.2f"))</li>
     </ul>
   }
+
+@h4(messages("referencePayBreakdown.h4"))
 
   @{payment match {
     case p: RegularPayment => regularPaymentBreakdown(p)

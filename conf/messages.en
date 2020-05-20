@@ -517,22 +517,24 @@ whatToInclude.doNotInclude.l3 = non-monetary benefits like benefits in kind (suc
 
 detailedBreakdown.h3 = For pay period {0} to {1}
 
-referencePayBreakdown.regular.p1 = Start with £{0}
-referencePayBreakdown.regular.p2 = Divide by {0} days in the pay period
-referencePayBreakdown.regular.p3 = Multiply by {0} furlough days in the pay period
+referencePayBreakdown.h4 = Calculate relevant pay amount
+
+referencePayBreakdown.regular.l1 = Start with £{0} total pay
+referencePayBreakdown.regular.l2 = Divide by {0} days in the pay period
+referencePayBreakdown.regular.l3 = Multiply by {0} furlough days in the pay period
 referencePayBreakdown.regular.result = Pay based on furlough days = £{0}
 
 referencePayBreakdown.average.p1 = Take the average pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
-referencePayBreakdown.average.step1 = Step 1: Start with £{0} total pay
-referencePayBreakdown.average.step2 = Step 2: Divide by {0} days employed
-referencePayBreakdown.average.step3 = Step 3: Multiply by {0} furlough days in the pay period
+referencePayBreakdown.average.l1 = Start with £{0} total pay
+referencePayBreakdown.average.l2 = Divide by {0} days employed
+referencePayBreakdown.average.l3 = Multiply by {0} furlough days in the pay period
 referencePayBreakdown.average.result = Average pay for last year = £{0}
 
 referencePayBreakdown.cylb.p1 = Take pay from same dates last year.
 referencePayBreakdown.cylb.twoPeriods = Last year’s dates overlap two pay periods:
-referencePayBreakdown.cylb.step1 = Step 1: Start with £{0} from pay day {1}
-referencePayBreakdown.cylb.step2 = Step 2: Divide by {0} days in pay period
-referencePayBreakdown.cylb.step3 = Step 3: Multiply by {0} furlough days in matching pay period
+referencePayBreakdown.cylb.l1 = Start with £{0} from pay day {1}
+referencePayBreakdown.cylb.l2 = Divide by {0} days in pay period
+referencePayBreakdown.cylb.l3 = Multiply by {0} furlough days in matching pay period
 referencePayBreakdown.cylb.periodTotal = Total for period = £{0}
 referencePayBreakdown.cylb.then = Then:
 referencePayBreakdown.cylb.addTotals = Add the totals, £{0} + £{1}
@@ -542,9 +544,9 @@ referencePayBreakdown.cylb.higherOf.cylb = £{0} (pay from same dates last year)
 referencePayBreakdown.cylb.higherOf.average = £{0} (average pay for last year)
 
 
-furloughBreakdown.h4 = Furlough grant
-furloughBreakdown.p1 = Step 1: Employee’s wages £{0}
-furloughBreakdown.p2 = Step 4: Multiply by 80%
+furloughBreakdown.h4 = Calculate Furlough grant
+furloughBreakdown.l1 = Start with £{0} Employee’s pay
+furloughBreakdown.l2 = Multiply by 80%
 furloughBreakdown.total = Total furlough grant for pay period = £{0}
 furloughBreakdown.total.rounding = The total is rounded to the nearest penny.
 furloughBreakdown.furloughCap = Limit to the maximum amount of £{0}
