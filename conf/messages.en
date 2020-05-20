@@ -270,6 +270,7 @@ confirmation.confirmation.p1 = Amount paid to this furloughed employee
 confirmation.confirmation.p2 = Employer National Insurance contributions
 confirmation.confirmation.p3 = Employer minimum pension contributions
 confirmation.explanation.heading = How these figures were calculated
+confirmation.explanation.p = You can view a detailed calculation showing the furlough amounts, employer National Insurance and pension contributions for each pay period in your claim.
 confirmation.calculated.on = Calculated on:
 confirmation.date.version = (Calculator Version v{0})
 confirmation.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.
@@ -285,6 +286,7 @@ confirmation.nic.payable = Their National Insurance category is A, B, C or J
 confirmation.nic.nonPayable = Their National Insurance category is H, M or Z
 confirmation.pension.doesContribute = They receive employer pension contributions
 confirmation.pension.doesNotContribute = They do not receive employer pension contributions
+confirmation.breakdown.summary = Detailed breakdown of calculations
 confirmation.breakdown.h2 = Breakdown by pay period
 confirmation.breakdown.p = You can view a table showing the furlough amounts, employer National Insurance and pension contributions for each pay period in your claim.
 confirmation.breakdown.details = Figures for each pay period during the claim
@@ -516,16 +518,16 @@ whatToInclude.doNotInclude.l3 = non-monetary benefits like benefits in kind (suc
 detailedBreakdown.h3 = For pay period {0} to {1}
 
 referencePayBreakdown.average.p1 = Take the average pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
-referencePayBreakdown.average.l1 = Start with £{0} total pay
-referencePayBreakdown.average.l2 = Divide by {0} days employed
-referencePayBreakdown.average.l3 = Multiply by {0} furlough days in the pay period
+referencePayBreakdown.average.step1 = Step 1: Start with £{0} total pay
+referencePayBreakdown.average.step2 = Step 2: Divide by {0} days employed
+referencePayBreakdown.average.step3 = Step 3: Multiply by {0} furlough days in the pay period
 referencePayBreakdown.average.result = Average pay for last year = £{0}
 
 referencePayBreakdown.cylb.p1 = Take pay from same dates last year.
 referencePayBreakdown.cylb.twoPeriods = Last year’s dates overlap two pay periods:
-referencePayBreakdown.cylb.l1 = Start with £{0} from pay day {1}
-referencePayBreakdown.cylb.l2 = Divide by {0} days in pay period
-referencePayBreakdown.cylb.l3 = Multiply by {0} furlough days in matching pay period
+referencePayBreakdown.cylb.step1 = Step 1: Start with £{0} from pay day {1}
+referencePayBreakdown.cylb.step2 = Step 2: Divide by {0} days in pay period
+referencePayBreakdown.cylb.step3 = Step 3: Multiply by {0} furlough days in matching pay period
 referencePayBreakdown.cylb.periodTotal = Total for period = £{0}
 referencePayBreakdown.cylb.then = Then:
 referencePayBreakdown.cylb.addTotals = Add the totals, £{0} + £{1}
@@ -536,13 +538,13 @@ referencePayBreakdown.cylb.higherOf.average = £{0} (average pay for last year)
 
 
 furloughBreakdown.h4 = Furlough grant
-furloughBreakdown.l1 = Employee’s wages £{0}
-furloughBreakdown.l2 = Divide by {0} days in the pay period
-furloughBreakdown.l3 = Multiply by {0} furlough days in the pay period
-furloughBreakdown.l4 = Multiply by 80%
+furloughBreakdown.step1 = Step 1: Employee’s wages £{0}
+furloughBreakdown.step2 = Step 2: Divide by {0} days in the pay period
+furloughBreakdown.step3 = Step 3: Multiply by {0} furlough days in the pay period
+furloughBreakdown.step4 = Step 4: Multiply by 80%
 furloughBreakdown.total = Total furlough grant for pay period = £{0}
 furloughBreakdown.total.rounding = The total is rounded to the nearest penny.
-furloughBreakdown.furloughCap.l1 = Limit to the maximum amount of £{0}
+furloughBreakdown.furloughCap = Limit to the maximum amount of £{0}
 furloughBreakdown.furloughCap.periodSpansMonthCap = ({0} days of {1} at £{2} + {3} days of {4} at £{5})
 furloughBreakdown.furloughCap.partialPeriodCap = ({0} days of {1} at £{2})
 

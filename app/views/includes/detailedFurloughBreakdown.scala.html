@@ -18,7 +18,9 @@
 @import views.includes.FurloughCapHelper
 
 @this(h4: components.h4,
-      helper: FurloughCapHelper, referencePayBreakdown: referencePayBreakdown)
+      p: components.p,
+      helper: FurloughCapHelper,
+      referencePayBreakdown: referencePayBreakdown)
 
 @(breakdown: DetailedFurloughBreakdown)(implicit messages: Messages)
 
@@ -26,16 +28,13 @@
 
     @referencePayBreakdown(breakdown.payment)
 
-    <ol class="govuk-list govuk-list--number">
-        <li>@messages("furloughBreakdown.l1", breakdown.formattedWages)</li>
-        <li>@messages("furloughBreakdown.l2", breakdown.fullPeriodDays)</li>
-        <li>@messages("furloughBreakdown.l3", breakdown.furloughDays)</li>
-        <li>@messages("furloughBreakdown.l4")</li>
+        @p(Html(messages("furloughBreakdown.step1", breakdown.formattedWages)))
+        @p(Html(messages("furloughBreakdown.step2", breakdown.fullPeriodDays)))
+        @p(Html(messages("furloughBreakdown.step3", breakdown.furloughDays)))
+        @p(Html(messages("furloughBreakdown.step4")))
         @if(breakdown.isCapped) {
-        <li>@messages("furloughBreakdown.furloughCap.l1", breakdown.furloughCap.value.formatted("%.2f")) @helper.calculationFor(breakdown.furloughCap)</li>
+        @p(Html(messages("furloughBreakdown.furloughCap", breakdown.furloughCap.value.formatted("%.2f"))))
         }
-
-    </ol>
 
     <div class="govuk-inset-text">
         @messages("furloughBreakdown.total", breakdown.formattedGrant)
