@@ -25,7 +25,8 @@
         inputRadio: components.inputRadio,
         button: components.button,
         h1: components.h1,
-        p: components.p
+        p: components.p,
+        details: components.details
 )
 
 @(form: Form[_], claimStart: LocalDate, claimEnd: LocalDate)(implicit request: Request[_], messages: Messages)
@@ -38,7 +39,27 @@
 
         @h1("claimPeriodQuestion.heading")
 
-        @p(Html(messages("claimPeriodQuestion.ended.text", dateToString(claimStart), dateToString(claimEnd))))
+        @p {
+            <span class="govuk-!-font-weight-bold">@messages("claimPeriodQuestion.start")</span>
+            @dateToString(claimStart) <br>
+            <span class="govuk-!-font-weight-bold">@messages("claimPeriodQuestion.end")</span>
+            @dateToString(claimEnd)
+        }
+
+        @details(
+            summaryText = Messages("claimPeriodEnd.details.title")
+        ) {
+            <p>@Messages("claimPeriodEnd.details.p1")</p>
+            <p>@Messages("claimPeriodEnd.details.p2")</p>
+            <p>@Messages("claimPeriodEnd.details.p3")</p>
+
+            <h2 class="govuk-heading-m">@messages("claimPeriodEnd.heading1")</h2>
+            <p>@Messages("claimPeriodEnd.details.p4")</p>
+            <p>@Messages("claimPeriodEnd.details.p5")</p>
+
+            <h2 class="govuk-heading-m">@messages("claimPeriodEnd.heading2")</h2>
+            <p>@Messages("claimPeriodEnd.details.p6")</p>
+        }
 
         @inputRadio(
             form = form,

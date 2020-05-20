@@ -39,10 +39,16 @@
 
         @h1("furloughPeriodQuestion.heading")
 
-        @if(furloughStatus == FurloughStatus.FurloughOngoing) {
-          @p(Html(messages("furloughPeriodQuestion.ongoing.text", dateToString(furloughStart))))
-        } else {
-          @p(Html(messages("furloughPeriodQuestion.ended.text", dateToString(furloughStart), furloughEnd.map(dateToString).getOrElse(""))))
+        @p {
+            <span class="govuk-!-font-weight-bold">@messages("furloughPeriodQuestion.start")</span>
+            @dateToString(furloughStart) <br>
+            @if(furloughStatus == FurloughStatus.FurloughEnded) {
+                <span class="govuk-!-font-weight-bold">@messages("furloughPeriodQuestion.end")</span>
+                @furloughEnd.map(dateToString).getOrElse("")
+            } else {
+                <span class="govuk-!-font-weight-bold">@messages("furloughPeriodQuestion.end")</span>
+                @messages("furloughPeriodQuestion.ongoing")
+            }
         }
 
 

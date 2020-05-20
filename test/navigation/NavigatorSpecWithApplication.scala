@@ -453,7 +453,7 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
             .set(FurloughPeriodQuestionPage, FurloughPeriodQuestion.FurloughedOnSamePeriod)
             .success
             .value
-        ) mustBe routes.RootPageController.onPageLoad()
+        ) mustBe routes.PayPeriodQuestionController.onPageLoad()
 
         navigator.nextPage(
           FurloughPeriodQuestionPage,

@@ -16,17 +16,18 @@
 
 package controllers
 
+import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.FurloughPeriodQuestionFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.FurloughStatus.{FurloughEnded, FurloughOngoing}
+import models.{FurloughEnded, FurloughOngoing}
 import navigation.Navigator
-import pages.{FurloughEndDatePage, FurloughPeriodQuestionPage, FurloughStartDatePage, FurloughStatusPage}
-import play.api.Logger
+import pages.{FurloughPeriodQuestionPage, FurloughStartDatePage, FurloughStatusPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.FurloughPeriodExtractor
 import views.html.FurloughPeriodQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,6 +36,7 @@ class FurloughPeriodQuestionController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   val navigator: Navigator,
+  feature: FeatureFlagActionProvider,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -42,53 +44,46 @@ class FurloughPeriodQuestionController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: FurloughPeriodQuestionView
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
-    extends BaseController {
+    extends BaseController with FurloughPeriodExtractor {
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
-      val preparedForm = request.userAnswers.get(FurloughPeriodQuestionPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+  def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
+    implicit request =>
+      getRequiredAnswers(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
+        val preparedForm = request.userAnswers.get(FurloughPeriodQuestionPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      furloughStatus match {
-        case FurloughOngoing => Future.successful(Ok(view(preparedForm, furloughStart, furloughStatus, None)))
-        case FurloughEnded =>
-          getAnswer(FurloughEndDatePage) match {
-            case Some(furloughEnd) => Future.successful(Ok(view(preparedForm, furloughStart, furloughStatus, Some(furloughEnd))))
-            case None =>
-              Logger.error("expecting FurloughEndDate in mongo when its furlough ended, but not found")
-              Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-          }
+        extractFurloughPeriod(request.userAnswers) match {
+          case Some(FurloughOngoing(_)) =>
+            Future.successful(Ok(view(preparedForm, furloughStart, furloughStatus, None)))
+          case Some(FurloughEnded(_, end)) =>
+            Future.successful(Ok(view(preparedForm, furloughStart, furloughStatus, Some(end))))
+        }
       }
-    }
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors =>
-            furloughStatus match {
-              case FurloughOngoing => Future.successful(BadRequest(view(formWithErrors, furloughStart, furloughStatus, None)))
-              case FurloughEnded =>
-                getAnswer(FurloughEndDatePage) match {
-                  case Some(furloughEnd) =>
-                    Future.successful(BadRequest(view(formWithErrors, furloughStart, furloughStatus, Some(furloughEnd))))
-                  case None =>
-                    Logger.error("expecting FurloughEndDate in mongo when its furlough ended, but not found")
-                    Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-                }
-          },
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughPeriodQuestionPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(FurloughPeriodQuestionPage, updatedAnswers))
-        )
-    }
+  def onSubmit(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
+    implicit request =>
+      getRequiredAnswers(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors =>
+              extractFurloughPeriod(request.userAnswers) match {
+                case Some(FurloughOngoing(_)) =>
+                  Future.successful(BadRequest(view(formWithErrors, furloughStart, furloughStatus, None)))
+                case Some(FurloughEnded(_, end)) =>
+                  Future.successful(BadRequest(view(formWithErrors, furloughStart, furloughStatus, Some(end))))
+            },
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughPeriodQuestionPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(FurloughPeriodQuestionPage, updatedAnswers))
+          )
+      }
   }
 }

@@ -34,9 +34,7 @@ import utils.LocalDateHelpers
 class Navigator @Inject()(appConfig: FrontendAppConfig)
     extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor {
 
-  val apr7th2019 = LocalDate.of(2019, 4, 7)
-  val apr6th2019 = LocalDate.of(2019, 4, 6)
-  val apr5th2019 = LocalDate.of(2019, 4, 5)
+  val apr6th2019: LocalDate = LocalDate.of(2019, 4, 6)
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case ClaimPeriodStartPage =>
@@ -268,7 +266,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   private def furloughPeriodQuestionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(FurloughPeriodQuestionPage) match {
-      case Some(FurloughPeriodQuestion.FurloughedOnSamePeriod)      => routes.RootPageController.onPageLoad()
+      case Some(FurloughPeriodQuestion.FurloughedOnSamePeriod)      => routes.PayPeriodQuestionController.onPageLoad()
       case Some(FurloughPeriodQuestion.FurloughedOnDifferentPeriod) => routes.FurloughStartDateController.onPageLoad()
       case None                                                     => routes.FurloughPeriodQuestionController.onPageLoad()
     }

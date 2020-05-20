@@ -19,7 +19,9 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
+import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import forms.PayPeriodQuestionFormProvider
+import models.FurloughPeriodQuestion.FurloughedOnSamePeriod
 import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
@@ -103,6 +105,32 @@ class PayPeriodQuestionControllerSpec extends SpecBaseWithApplication with Mocki
 
       contentAsString(result) mustEqual
         view(form.fill(PayPeriodQuestion.values.head), payPeriods)(getRequest, messages).toString
+
+      application.stop()
+    }
+
+    "redirect to 404 page for a GET if FastTrackJourneyFlag is disabled" in {
+
+      val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
+
+      val result = route(application, getRequest).value
+
+      status(result) mustEqual NOT_FOUND
+
+      application.stop()
+    }
+
+    "redirect to 404 page for a POST if FastTrackJourneyFlag is disabled" in {
+
+      val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
+
+      val request =
+        FakeRequest(POST, payPeriodQuestionRoutePost)
+          .withFormUrlEncodedBody(("value", FurloughedOnSamePeriod.toString))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }

@@ -16,15 +16,12 @@
 
 package controllers
 
-import java.time.LocalDate
-
-import config.FrontendAppConfig
+import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.ClaimPeriodQuestionFormProvider
-import handlers.{ClaimPeriodQuestionRequestHandler, ErrorHandler}
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.ClaimPeriodQuestion
-import models.requests.DataRequest
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, ClaimPeriodQuestionPage, ClaimPeriodStartPage}
 import play.api.data.Form
@@ -39,47 +36,41 @@ class ClaimPeriodQuestionController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   val navigator: Navigator,
+  feature: FeatureFlagActionProvider,
   identify: IdentifierAction,
-  config: FrontendAppConfig,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: ClaimPeriodQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ClaimPeriodQuestionView,
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
-    extends BaseController with ClaimPeriodQuestionRequestHandler {
+    extends BaseController {
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
-      val filledForm: Form[ClaimPeriodQuestion] =
-        request.userAnswers.get(ClaimPeriodQuestionPage).fold(form)(form.fill)
+  def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
+    implicit request =>
+      getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
+        val filledForm: Form[ClaimPeriodQuestion] =
+          request.userAnswers.get(ClaimPeriodQuestionPage).fold(form)(form.fill)
 
-      onLoadResult(claimStart, claimEnd, filledForm)
-    }
+        Future.successful(Ok(view(filledForm, claimStart, claimEnd)))
+      }
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStart, claimEnd))),
-          value => onSubmitResult(request, value)
-        )
-    }
+  def onSubmit(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
+    implicit request =>
+      getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStart, claimEnd))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(ClaimPeriodQuestionPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(ClaimPeriodQuestionPage, updatedAnswers))
+          )
+      }
   }
-
-  private def onSubmitResult(request: DataRequest[AnyContent], value: ClaimPeriodQuestion): Future[Result] =
-    persistAnswer(request.userAnswers, value, sessionRepository.set).map(updatedAnswers =>
-      Redirect(navigator.nextPage(ClaimPeriodQuestionPage, updatedAnswers)))
-
-  private def onLoadResult(claimStart: LocalDate, claimEnd: LocalDate, filledForm: Form[ClaimPeriodQuestion])(
-    implicit request: Request[_]): Future[Result] =
-    if (config.fastTrackJourneyEnabled)
-      Future.successful(Ok(view(filledForm, claimStart, claimEnd)))
-    else
-      Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad()))
-
 }

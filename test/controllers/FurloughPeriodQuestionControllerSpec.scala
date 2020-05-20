@@ -19,8 +19,11 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
+import controllers.actions.FeatureFlag
+import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import forms.FurloughPeriodQuestionFormProvider
 import models.FurloughPeriodQuestion
+import models.FurloughPeriodQuestion.FurloughedOnSamePeriod
 import models.FurloughStatus.{FurloughEnded, FurloughOngoing}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -127,23 +130,28 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
       application.stop()
     }
 
-    "return /error and when Furlough is Ended but no FurloughEndDate saved in Mongo" in {
+    "redirect to 404 page for a GET if FastTrackJourneyFlag is disabled" in {
 
-      val userAnswersUpdated = emptyUserAnswers
-        .set(FurloughStartDatePage, furloughStart)
-        .success
-        .value
-        .set(FurloughStatusPage, FurloughEnded)
-        .success
-        .value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersUpdated)).build()
+      val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
 
       val result = route(application, getRequest).value
 
-      status(result) mustEqual 303
+      status(result) mustEqual NOT_FOUND
 
-      redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
+      application.stop()
+    }
+
+    "redirect to 404 page for a POST if FastTrackJourneyFlag is disabled" in {
+
+      val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
+
+      val request =
+        FakeRequest(POST, furloughPeriodQuestionRoutePost)
+          .withFormUrlEncodedBody(("value", FurloughedOnSamePeriod.toString))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }

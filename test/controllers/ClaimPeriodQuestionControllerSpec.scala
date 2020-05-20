@@ -19,6 +19,8 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
+import controllers.actions.FeatureFlag
+import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import forms.ClaimPeriodQuestionFormProvider
 import models.ClaimPeriodQuestion.ClaimOnSamePeriod
 import navigation.{FakeNavigator, Navigator}
@@ -46,36 +48,23 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
 
   lazy val claimPeriodQuestionRoute = routes.ClaimPeriodQuestionController.onPageLoad().url
 
+  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
+      .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
   "ClaimPeriodQuestion Controller" must {
-
-    "redirect to claim-period-start view if feature flag is disabled for a GET" in {
-
-      val application =
-        applicationBuilder(config = Map("fastTrackJourney.enabled" -> "false"), userAnswers = Some(dummyUserAnswers)).build()
-
-      val request = FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).get must include("job-retention-scheme-calculator/claim-period-start")
-
-      application.stop()
-    }
 
     "return OK and the correct view for a GET" in {
       val userAnswers = dummyUserAnswers.withClaimPeriodStart(claimStart.toString).withClaimPeriodEnd(claimEnd.toString)
       val application = applicationBuilder(config = Map("fastTrackJourney.enabled" -> "true"), userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
-
-      val result = route(application, request).value
+      val result = route(application, getRequest).value
 
       val view = application.injector.instanceOf[ClaimPeriodQuestionView]
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(form, claimStart, claimEnd)(request, messages).toString
+      contentAsString(result) mustEqual view(form, claimStart, claimEnd)(getRequest, messages).toString
 
       application.stop()
     }
@@ -89,16 +78,42 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
 
       val application = applicationBuilder(config = Map("fastTrackJourney.enabled" -> "true"), userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
-
       val view = application.injector.instanceOf[ClaimPeriodQuestionView]
 
-      val result = route(application, request).value
+      val result = route(application, getRequest).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(ClaimOnSamePeriod), claimStart, claimEnd)(request, messages).toString
+        view(form.fill(ClaimOnSamePeriod), claimStart, claimEnd)(getRequest, messages).toString
+
+      application.stop()
+    }
+
+    "redirect to 404 page for a GET if FastTrackJourneyFlag is disabled" in {
+
+      val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, claimPeriodQuestionRoute)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
+
+      application.stop()
+    }
+
+    "redirect to 404 page for a POST if FastTrackJourneyFlag is disabled" in {
+
+      val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
+
+      val request =
+        FakeRequest(POST, claimPeriodQuestionRoute)
+          .withFormUrlEncodedBody(("value", ClaimOnSamePeriod.toString))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }

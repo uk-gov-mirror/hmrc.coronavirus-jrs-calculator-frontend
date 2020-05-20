@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.PayPeriodQuestionFormProvider
 import javax.inject.Inject
@@ -34,6 +35,7 @@ class PayPeriodQuestionController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
+  feature: FeatureFlagActionProvider,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -45,24 +47,26 @@ class PayPeriodQuestionController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(PayPeriodQuestionPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
-    Ok(view(preparedForm, generatePeriods(request.userAnswers.getList(PayDatePage))))
+  def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(PayPeriodQuestionPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+      Ok(view(preparedForm, generatePeriods(request.userAnswers.getList(PayDatePage))))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, generatePeriods(request.userAnswers.getList(PayDatePage))))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PayPeriodQuestionPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(PayPeriodQuestionPage, updatedAnswers))
-      )
+  def onSubmit(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
+    implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, generatePeriods(request.userAnswers.getList(PayDatePage))))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(PayPeriodQuestionPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(PayPeriodQuestionPage, updatedAnswers))
+        )
   }
 }
