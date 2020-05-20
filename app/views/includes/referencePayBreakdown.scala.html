@@ -22,13 +22,24 @@
 
 @(payment: PaymentWithPeriod)(implicit messages: Messages)
 
+  @regularPaymentBreakdown(regular: RegularPayment) = {
+      <ol class="govuk-list govuk-list--number">
+          <li>@messages("referencePayBreakdown.regular.l1", regular.regularPay.value.formatted("%.2f"))</li>
+          <li>@messages("referencePayBreakdown.regular.l2", regular.periodDays)</li>
+          <li>@messages("referencePayBreakdown.regular.l3", regular.furloughDays)</li>
+      </ol>
+
+      @p(Html(messages("referencePayBreakdown.regular.result", regular.referencePay.value.formatted("%.2f"))))
+  }
+
   @averagePaymentBreakdown(average: AveragePayment) = {
       @p(Html(messages("referencePayBreakdown.average.p1")))
 
-
-      @p(Html(messages("referencePayBreakdown.average.step1", average.annualPay.value.formatted("%.2f"))))
-      @p(Html(messages("referencePayBreakdown.average.step2", average.priorFurloughPeriod.countDays)))
-      @p(Html(messages("referencePayBreakdown.average.step3", average.furloughDays)))
+      <ol class="govuk-list govuk-list--number">
+          <li>@messages("referencePayBreakdown.average.step1", average.annualPay.value.formatted("%.2f"))</li>
+          <li>@messages("referencePayBreakdown.average.step2", average.priorFurloughPeriod.countDays)</li>
+          <li>@messages("referencePayBreakdown.average.step3", average.furloughDays)</li>
+      </ol>
 
       @p(Html(messages("referencePayBreakdown.average.result", average.referencePay.value.formatted("%.2f"))))
   }
@@ -47,13 +58,13 @@
 
     @p(Html(messages("referencePayBreakdown.cylb.higherOf")))
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("referencePayBreakdown.cylb.higherOf.cylb", cylb.referencePay.value.formatted("%.2f"))</li>
+        <li>@messages("referencePayBreakdown.cylb.higherOf.cylb", cylb.cylbBreakdown.referencePay.value.formatted("%.2f"))</li>
         <li>@messages("referencePayBreakdown.cylb.higherOf.average", cylb.averagePayment.referencePay.value.formatted("%.2f"))</li>
     </ul>
   }
 
   @{payment match {
-    case _: RegularPayment => Html("")
+    case p: RegularPayment => regularPaymentBreakdown(p)
     case p: AveragePayment => averagePaymentBreakdown(p)
     case p: CylbPayment    => cylbPaymentBreakdown(p)
   }}

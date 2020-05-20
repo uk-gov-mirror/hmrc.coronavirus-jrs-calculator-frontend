@@ -18,9 +18,13 @@
 
 @this(p: components.p)
 
-@(cylb: OnePeriodCylb)(implicit messages: Messages)
+@(cylb: OnePeriodCylb)(implicit messages: Messages) {
 
-    @p(Html(messages("referencePayBreakdown.cylb.step1", cylb.periodPay.value.formatted("%.2f"), dateToString(cylb.lastYearPayDay))))
-    @p(Html(messages("referencePayBreakdown.cylb.step2", cylb.daysInPeriod)))
-    @p(Html(messages("referencePayBreakdown.cylb.step3", cylb.daysRequiredFromPeriod)))
+    <ol class="govuk-list govuk-list--number">
+        <li>@messages("referencePayBreakdown.cylb.step1", cylb.periodPay.value.formatted("%.2f"), dateToString(cylb.lastYearPayDay))</li>
+        <li>@messages("referencePayBreakdown.cylb.step2", cylb.daysInPeriod)</li>
+        <li>@messages("referencePayBreakdown.cylb.step3", cylb.daysRequiredFromPeriod)</li>
+    </ol>
+
     @p(Html(messages("referencePayBreakdown.cylb.periodTotal", cylb.referencePay.value.formatted("%.2f"))))
+}

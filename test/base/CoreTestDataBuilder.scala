@@ -32,11 +32,15 @@ trait CoreTestDataBuilder extends TryValues {
 
   def fullPeriod(start: String, end: String) = FullPeriod(period(start, end))
 
-  def regularPaymentWithFullPeriod(referencePay: BigDecimal, period: FullPeriodWithPaymentDate) =
-    RegularPaymentWithFullPeriod(Amount(referencePay), period)
+  def regularPaymentWithFullPeriod(regularPay: BigDecimal, referencePay: BigDecimal, period: FullPeriodWithPaymentDate) =
+    RegularPaymentWithFullPeriod(Amount(regularPay), Amount(referencePay), period)
 
-  def regularPaymentWithPartialPeriod(nonFurloughPay: BigDecimal, referencePay: BigDecimal, period: PartialPeriodWithPaymentDate) =
-    RegularPaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(referencePay), period)
+  def regularPaymentWithPartialPeriod(
+    nonFurloughPay: BigDecimal,
+    regularPay: BigDecimal,
+    referencePay: BigDecimal,
+    period: PartialPeriodWithPaymentDate) =
+    RegularPaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(regularPay), Amount(referencePay), period)
 
   def averagePaymentWithFullPeriod(
     referencePay: BigDecimal,

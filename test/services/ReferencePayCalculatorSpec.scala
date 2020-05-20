@@ -27,7 +27,7 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val input = RegularPayData(defaultReferencePayData, Amount(1000.0))
 
     val expected = Seq(
-      regularPaymentWithFullPeriod(1000.0, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"))
+      regularPaymentWithFullPeriod(1000.0, 1000.0, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"))
     )
 
     calculateReferencePay(input) mustBe expected

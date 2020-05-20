@@ -23,6 +23,8 @@
 
 @(cylb: TwoPeriodCylb)(implicit messages: Messages)
 
+@p(Html(messages("referencePayBreakdown.cylb.twoPeriods")))
+
 @cylbBreakdown(cylb.firstPeriod)
 
 @p(Html(messages("referencePayBreakdown.cylb.then")))

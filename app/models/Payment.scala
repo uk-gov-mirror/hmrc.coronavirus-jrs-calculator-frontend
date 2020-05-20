@@ -73,6 +73,13 @@ case class TwoPeriodCylb(referencePay: Amount, firstPeriod: OnePeriodCylb, secon
 sealed trait PaymentWithPeriod {
   val referencePay: Amount
   val periodWithPaymentDate: PeriodWithPaymentDate
+
+  def periodDays = periodWithPaymentDate.period.period.countDays
+
+  def furloughDays = periodWithPaymentDate.period match {
+    case fp: FullPeriod    => fp.period.countDays
+    case pp: PartialPeriod => pp.partial.countDays
+  }
 }
 
 sealed trait PaymentWithFullPeriod extends PaymentWithPeriod {
@@ -84,19 +91,14 @@ sealed trait PaymentWithPartialPeriod extends PaymentWithPeriod {
   val periodWithPaymentDate: PartialPeriodWithPaymentDate
 }
 
-sealed trait RegularPayment extends PaymentWithPeriod
+sealed trait RegularPayment extends PaymentWithPeriod {
+  val regularPay: Amount
+}
 
 sealed trait AveragePayment extends PaymentWithPeriod {
   val referencePay: Amount
   val annualPay: Amount
   val priorFurloughPeriod: Period
-
-  def furloughDays: Int =
-    periodWithPaymentDate.period match {
-      case fp: FullPeriod    => fp.period.countDays
-      case pp: PartialPeriod => pp.partial.countDays
-    }
-
 }
 
 sealed trait CylbPayment extends PaymentWithPeriod {
@@ -104,11 +106,12 @@ sealed trait CylbPayment extends PaymentWithPeriod {
   val cylbBreakdown: CylbBreakdown
 }
 
-case class RegularPaymentWithFullPeriod(referencePay: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate)
+case class RegularPaymentWithFullPeriod(regularPay: Amount, referencePay: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate)
     extends PaymentWithFullPeriod with RegularPayment
 
 case class RegularPaymentWithPartialPeriod(
   nonFurloughPay: Amount,
+  regularPay: Amount,
   referencePay: Amount,
   periodWithPaymentDate: PartialPeriodWithPaymentDate)
     extends PaymentWithPartialPeriod with RegularPayment

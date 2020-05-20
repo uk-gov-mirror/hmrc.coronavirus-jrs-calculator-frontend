@@ -517,6 +517,11 @@ whatToInclude.doNotInclude.l3 = non-monetary benefits like benefits in kind (suc
 
 detailedBreakdown.h3 = For pay period {0} to {1}
 
+referencePayBreakdown.regular.p1 = Start with £{0}
+referencePayBreakdown.regular.p2 = Divide by {0} days in the pay period
+referencePayBreakdown.regular.p3 = Multiply by {0} furlough days in the pay period
+referencePayBreakdown.regular.result = Pay based on furlough days = £{0}
+
 referencePayBreakdown.average.p1 = Take the average pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
 referencePayBreakdown.average.step1 = Step 1: Start with £{0} total pay
 referencePayBreakdown.average.step2 = Step 2: Divide by {0} days employed
@@ -538,10 +543,8 @@ referencePayBreakdown.cylb.higherOf.average = £{0} (average pay for last year)
 
 
 furloughBreakdown.h4 = Furlough grant
-furloughBreakdown.step1 = Step 1: Employee’s wages £{0}
-furloughBreakdown.step2 = Step 2: Divide by {0} days in the pay period
-furloughBreakdown.step3 = Step 3: Multiply by {0} furlough days in the pay period
-furloughBreakdown.step4 = Step 4: Multiply by 80%
+furloughBreakdown.p1 = Step 1: Employee’s wages £{0}
+furloughBreakdown.p2 = Step 4: Multiply by 80%
 furloughBreakdown.total = Total furlough grant for pay period = £{0}
 furloughBreakdown.total.rounding = The total is rounded to the nearest penny.
 furloughBreakdown.furloughCap = Limit to the maximum amount of £{0}
