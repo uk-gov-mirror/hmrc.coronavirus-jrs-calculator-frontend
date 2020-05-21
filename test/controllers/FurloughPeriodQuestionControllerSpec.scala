@@ -19,7 +19,6 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
-import controllers.actions.FeatureFlag
 import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import forms.FurloughPeriodQuestionFormProvider
 import models.FurloughPeriodQuestion

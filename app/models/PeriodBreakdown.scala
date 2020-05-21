@@ -16,6 +16,7 @@
 
 package models
 
+import services.Threshold
 import viewmodels.DetailedFurloughBreakdown
 
 sealed trait PeriodBreakdown {
@@ -36,11 +37,16 @@ sealed trait FurloughBreakdown extends PeriodBreakdown {
 }
 
 sealed trait NicBreakdown extends PeriodBreakdown {
-  val topUpPay: Amount
-  val additionalPay: Amount
+  def topUpPay: Amount
+  def additionalPay: Amount
+  def threshold: Threshold
+  def nicCap: NicCap
 }
 
-sealed trait PensionBreakdown extends PeriodBreakdown
+sealed trait PensionBreakdown extends PeriodBreakdown {
+  def threshold: Threshold
+  def allowance: Amount
+}
 
 final case class FullPeriodFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithFullPeriod, furloughCap: FurloughCap)
     extends FullPeriodBreakdown with FurloughBreakdown
@@ -48,20 +54,36 @@ final case class FullPeriodFurloughBreakdown(grant: Amount, paymentWithPeriod: P
 final case class PartialPeriodFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithPartialPeriod, furloughCap: FurloughCap)
     extends PartialPeriodBreakdown with FurloughBreakdown
 
-final case class FullPeriodNicBreakdown(grant: Amount, topUpPay: Amount, additionalPay: Amount, paymentWithPeriod: PaymentWithFullPeriod)
+final case class FullPeriodNicBreakdown(
+  grant: Amount,
+  topUpPay: Amount,
+  additionalPay: Amount,
+  paymentWithPeriod: PaymentWithFullPeriod,
+  threshold: Threshold,
+  nicCap: NicCap)
     extends FullPeriodBreakdown with NicBreakdown
 
 final case class PartialPeriodNicBreakdown(
   grant: Amount,
   topUpPay: Amount,
   additionalPay: Amount,
-  paymentWithPeriod: PaymentWithPartialPeriod)
+  paymentWithPeriod: PaymentWithPartialPeriod,
+  threshold: Threshold,
+  nicCap: NicCap)
     extends PartialPeriodBreakdown with NicBreakdown
 
-final case class FullPeriodPensionBreakdown(grant: Amount, paymentWithPeriod: PaymentWithFullPeriod)
+final case class FullPeriodPensionBreakdown(
+  grant: Amount,
+  paymentWithPeriod: PaymentWithFullPeriod,
+  threshold: Threshold,
+  allowance: Amount)
     extends FullPeriodBreakdown with PensionBreakdown
 
-final case class PartialPeriodPensionBreakdown(grant: Amount, paymentWithPeriod: PaymentWithPartialPeriod)
+final case class PartialPeriodPensionBreakdown(
+  grant: Amount,
+  paymentWithPeriod: PaymentWithPartialPeriod,
+  threshold: Threshold,
+  allowance: Amount)
     extends PartialPeriodBreakdown with PensionBreakdown
 
 object FurloughBreakdown {

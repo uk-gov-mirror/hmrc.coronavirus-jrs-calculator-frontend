@@ -48,14 +48,14 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
     val furloughDays = period.partial.countDays
     val threshold = thresholdFinder(frequency, paymentDate, PensionRate())
 
-    val allowance = Amount((threshold / fullPeriodDays) * furloughDays).halfUp
+    val allowance = Amount((threshold.value / fullPeriodDays) * furloughDays).halfUp
     val roundedFurloughPayment = furloughPayment.down
     val grant = pensionStatus match {
       case DoesContribute    => greaterThanAllowance(roundedFurloughPayment, allowance.value, PensionRate())
       case DoesNotContribute => Amount(0.00)
     }
 
-    PartialPeriodPensionBreakdown(grant, payment)
+    PartialPeriodPensionBreakdown(grant, payment, threshold, allowance)
   }
 
   protected def calculateFullPeriodPension(
@@ -67,10 +67,10 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
     val threshold = thresholdFinder(frequency, payment.periodWithPaymentDate.paymentDate, PensionRate())
     val roundedFurloughPayment = furloughPayment.down
     val grant = pensionStatus match {
-      case DoesContribute    => greaterThanAllowance(roundedFurloughPayment, threshold, PensionRate())
+      case DoesContribute    => greaterThanAllowance(roundedFurloughPayment, threshold.value, PensionRate())
       case DoesNotContribute => Amount(0.00)
     }
 
-    FullPeriodPensionBreakdown(grant, payment)
+    FullPeriodPensionBreakdown(grant, payment, threshold, Amount(threshold.value))
   }
 }

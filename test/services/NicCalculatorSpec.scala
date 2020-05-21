@@ -22,7 +22,7 @@ import base.{CoreTestDataBuilder, SpecBase}
 import models.Amount._
 import models.NicCategory.{Nonpayable, Payable}
 import models.PaymentFrequency.{FourWeekly, Monthly}
-import models.{AdditionalPayment, Amount, FullPeriodCap, PartialPeriodCap, PartialPeriodNicBreakdown, TopUpPayment}
+import models.{AdditionalPayment, Amount, FullPeriodCap, NicCap, PartialPeriodCap, PartialPeriodNicBreakdown, TaxYearEnding2020, TaxYearEnding2021, TopUpPayment}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
@@ -57,10 +57,10 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
     calculateNicGrant(Payable, Monthly, breakDowns, additionals, topUps).total mustBe 435.07
   }
 
-  forAll(partialPeriodScenarios) { (frequency, furloughGrant, payment, expectedGrant) =>
+  forAll(partialPeriodScenarios) { (frequency, furloughGrant, payment, threshold, nicCap, expectedGrant) =>
     s"Calculate grant for a partial period with Payment Frequency: $frequency," +
       s"a PaymentDate: ${payment.periodWithPaymentDate.paymentDate} and a Furlough Grant: ${furloughGrant.value}" in new NicCalculator {
-      val expected = PartialPeriodNicBreakdown(expectedGrant, Amount(0.0), Amount(0.0), payment)
+      val expected = PartialPeriodNicBreakdown(expectedGrant, Amount(0.0), Amount(0.0), payment, threshold, nicCap)
 
       calculatePartialPeriodNic(Payable, frequency, furloughGrant, payment, None, None) mustBe expected
     }
@@ -74,7 +74,13 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
         450.0,
         partialPeriodWithPaymentDate("2020-03-01", "2020-03-28", "2020-03-20", "2020-03-28", "2020-03-28"))
 
-    val expected = partialPeriodNicBreakdown(28.66, 0.00, 0.00, payment)
+    val expected = partialPeriodNicBreakdown(
+      28.66,
+      0.00,
+      0.00,
+      payment,
+      Threshold(664.0, TaxYearEnding2020),
+      NicCap(Amount(360.0), Amount(28.66), Amount(49.68)))
 
     calculatePartialPeriodNic(Payable, FourWeekly, Amount(360.0), payment, None, None) mustBe expected
   }
@@ -145,7 +151,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
   }
 
   private lazy val partialPeriodScenarios = Table(
-    ("frequency", "furloughGrant", "payment", "expectedGrant"),
+    ("frequency", "furloughGrant", "payment", "threshold", "nicCap", "expectedGrant"),
     (
       Monthly,
       Amount(960.00),
@@ -154,6 +160,8 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
         2400.00,
         1200.00,
         partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
+      Threshold(732.0, TaxYearEnding2021),
+      NicCap(Amount(960.0), Amount(98.53), Amount(132.48)),
       Amount(98.53)
     ),
     (
@@ -164,6 +172,8 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
         3516.13,
         2500.0,
         partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-10", "2020-03-31", "2020-03-31")),
+      Threshold(719.0, TaxYearEnding2020),
+      NicCap(Amount(1774.30), Amount(202.83), Amount(244.85)),
       Amount(202.83)
     ),
     (
@@ -174,6 +184,8 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
         800.0,
         620.0,
         partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-10", "2020-03-31", "2020-03-31")),
+      Threshold(719.0, TaxYearEnding2020),
+      NicCap(Amount(496.0), Amount(0.00), Amount(68.45)),
       Amount(0.00)
     )
   )

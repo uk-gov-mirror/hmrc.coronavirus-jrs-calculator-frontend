@@ -22,9 +22,10 @@ import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import models.NicCategory.Payable
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.DoesContribute
-import models.{FullPeriodCap, FurloughCalculationResult, FurloughOngoing, NicCalculationResult, PensionCalculationResult, Period}
+import models.{Amount, FullPeriodCap, FurloughCalculationResult, FurloughOngoing, NicCalculationResult, NicCap, PensionCalculationResult, Period, TaxYearEnding2020, TaxYearEnding2021}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.Threshold
 import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
 import views.html.ConfirmationView
 import views.html.ConfirmationViewWithDetailedBreakdowns
@@ -92,12 +93,18 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDa
         121.58,
         0.0,
         0.0,
-        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
+        Threshold(719.0, TaxYearEnding2020),
+        NicCap(Amount(1600.0), Amount(121.58), Amount(200.80))
+      ),
       fullPeriodNicBreakdown(
         119.78,
         0.0,
         0.0,
-        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
+        Threshold(732.0, TaxYearEnding2021),
+        NicCap(Amount(1600.00), Amount(119.78), Amount(220.80))
+      )
     )
   )
 
@@ -106,10 +113,16 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDa
     Seq(
       fullPeriodPensionBreakdown(
         32.64,
-        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
+        Threshold(512.0, TaxYearEnding2020),
+        512.0
+      ),
       fullPeriodPensionBreakdown(
         32.40,
-        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
+        Threshold(520.0, TaxYearEnding2021),
+        520.0
+      )
     )
   )
 

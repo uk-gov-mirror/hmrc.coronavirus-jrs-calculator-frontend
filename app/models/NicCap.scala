@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package services
+package models
 
-import models.{Amount, PaymentDate, PaymentFrequency}
-import services.Calculators._
-import utils.TaxYearFinder
-
-trait CommonCalculationService extends TaxYearFinder {
-
-  protected def greaterThanAllowance(amount: Amount, allowance: BigDecimal, rate: Rate): Amount =
-    if (amount.value < allowance) Amount(0.0)
-    else Amount((amount.value - allowance) * rate.value).halfUp
-
-  protected def thresholdFinder(frequency: PaymentFrequency, paymentDate: PaymentDate, rate: Rate): Threshold =
-    FrequencyTaxYearThresholdMapping.thresholdFor(frequency, taxYearAt(paymentDate), rate)
-
+case class NicCap(furloughGrant: Amount, nicGrant: Amount, cap: Amount) {
+  def cappedGrant = Amount(nicGrant.value.min(cap.value))
+  def isCapped = nicGrant.value > cap.value
 }

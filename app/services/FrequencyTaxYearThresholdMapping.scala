@@ -18,10 +18,8 @@ package services
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
-import play.api.Logger
 
-case class FrequencyTaxYearKey(paymentFrequency: PaymentFrequency, taxYear: TaxYear, rate: Rate)
-case class Threshold(lower: BigDecimal)
+case class Threshold(value: BigDecimal, taxYear: TaxYear)
 
 sealed trait Rate {
   val value: BigDecimal
@@ -30,35 +28,24 @@ case class NiRate(value: BigDecimal = 13.8 / 100) extends Rate
 case class PensionRate(value: BigDecimal = 3.0 / 100) extends Rate
 
 object FrequencyTaxYearThresholdMapping {
-  //TODO: This map could be loaded from application.conf
-  val mappings: Map[FrequencyTaxYearKey, Threshold] = Map(
-    FrequencyTaxYearKey(Monthly, TaxYearEnding2020, NiRate())          -> Threshold(719.00),
-    FrequencyTaxYearKey(Monthly, TaxYearEnding2021, NiRate())          -> Threshold(732.00),
-    FrequencyTaxYearKey(FourWeekly, TaxYearEnding2020, NiRate())       -> Threshold(664.00),
-    FrequencyTaxYearKey(FourWeekly, TaxYearEnding2021, NiRate())       -> Threshold(676.00),
-    FrequencyTaxYearKey(FortNightly, TaxYearEnding2020, NiRate())      -> Threshold(332.00),
-    FrequencyTaxYearKey(FortNightly, TaxYearEnding2021, NiRate())      -> Threshold(338.00),
-    FrequencyTaxYearKey(Weekly, TaxYearEnding2020, NiRate())           -> Threshold(166.00),
-    FrequencyTaxYearKey(Weekly, TaxYearEnding2021, NiRate())           -> Threshold(169.00),
-    FrequencyTaxYearKey(Monthly, TaxYearEnding2020, PensionRate())     -> Threshold(512.00),
-    FrequencyTaxYearKey(Monthly, TaxYearEnding2021, PensionRate())     -> Threshold(520.00),
-    FrequencyTaxYearKey(FourWeekly, TaxYearEnding2020, PensionRate())  -> Threshold(472.00),
-    FrequencyTaxYearKey(FourWeekly, TaxYearEnding2021, PensionRate())  -> Threshold(480.00),
-    FrequencyTaxYearKey(FortNightly, TaxYearEnding2020, PensionRate()) -> Threshold(236.00),
-    FrequencyTaxYearKey(FortNightly, TaxYearEnding2021, PensionRate()) -> Threshold(240.00),
-    FrequencyTaxYearKey(Weekly, TaxYearEnding2020, PensionRate())      -> Threshold(118.00),
-    FrequencyTaxYearKey(Weekly, TaxYearEnding2021, PensionRate())      -> Threshold(120.00)
-  )
-
-  def findThreshold(frequency: PaymentFrequency, taxYear: TaxYear, rate: Rate): BigDecimal = {
-    val frequencyTaxYearKey = FrequencyTaxYearKey(frequency, taxYear, rate)
-    FrequencyTaxYearThresholdMapping.mappings
-      .get(frequencyTaxYearKey)
-      .fold {
-        Logger.warn(s"Unable to find a threshold for $frequencyTaxYearKey")
-        BigDecimal(0).setScale(2)
-      } { threshold =>
-        threshold.lower
-      }
-  }
+  //noinspection ScalaStyle
+  def thresholdFor(frequency: PaymentFrequency, taxYear: TaxYear, rate: Rate): Threshold =
+    (frequency, taxYear, rate) match {
+      case (Monthly, TaxYearEnding2020, _: NiRate)          => Threshold(719.00, TaxYearEnding2020)
+      case (Monthly, TaxYearEnding2021, _: NiRate)          => Threshold(732.00, TaxYearEnding2021)
+      case (FourWeekly, TaxYearEnding2020, _: NiRate)       => Threshold(664.00, TaxYearEnding2020)
+      case (FourWeekly, TaxYearEnding2021, _: NiRate)       => Threshold(676.00, TaxYearEnding2021)
+      case (FortNightly, TaxYearEnding2020, _: NiRate)      => Threshold(332.00, TaxYearEnding2020)
+      case (FortNightly, TaxYearEnding2021, _: NiRate)      => Threshold(338.00, TaxYearEnding2021)
+      case (Weekly, TaxYearEnding2020, _: NiRate)           => Threshold(166.00, TaxYearEnding2020)
+      case (Weekly, TaxYearEnding2021, _: NiRate)           => Threshold(169.00, TaxYearEnding2021)
+      case (Monthly, TaxYearEnding2020, _: PensionRate)     => Threshold(512.00, TaxYearEnding2020)
+      case (Monthly, TaxYearEnding2021, _: PensionRate)     => Threshold(520.00, TaxYearEnding2021)
+      case (FourWeekly, TaxYearEnding2020, _: PensionRate)  => Threshold(472.00, TaxYearEnding2020)
+      case (FourWeekly, TaxYearEnding2021, _: PensionRate)  => Threshold(480.00, TaxYearEnding2021)
+      case (FortNightly, TaxYearEnding2020, _: PensionRate) => Threshold(236.00, TaxYearEnding2020)
+      case (FortNightly, TaxYearEnding2021, _: PensionRate) => Threshold(240.00, TaxYearEnding2021)
+      case (Weekly, TaxYearEnding2020, _: PensionRate)      => Threshold(118.00, TaxYearEnding2020)
+      case (Weekly, TaxYearEnding2021, _: PensionRate)      => Threshold(120.00, TaxYearEnding2021)
+    }
 }

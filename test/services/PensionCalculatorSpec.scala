@@ -19,7 +19,7 @@ package services
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.{DoesContribute, DoesNotContribute}
-import models.{Amount, FullPeriodPensionBreakdown, PartialPeriodPensionBreakdown}
+import models.{Amount, FullPeriodPensionBreakdown, PartialPeriodPensionBreakdown, TaxYearEnding2020, TaxYearEnding2021}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
@@ -38,41 +38,45 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
     calculatePartialPeriodPension(DoesNotContribute, Monthly, Amount(800.00), payment).grant mustBe Amount(0.00)
   }
 
-  forAll(fullPeriodScenarios) { (frequency, furloughGrant, payment, expectedGrant) =>
+  forAll(fullPeriodScenarios) { (frequency, furloughGrant, payment, threshold, allowance, expectedGrant) =>
     s"Calculate pension grant for a full period with Payment Frequency: $frequency, " +
       s"a Payment Date: ${payment.periodWithPaymentDate.paymentDate} and a Furlough Grant: ${furloughGrant.value}" in new PensionCalculator {
-      val expected = FullPeriodPensionBreakdown(expectedGrant, payment)
+      val expected = FullPeriodPensionBreakdown(expectedGrant, payment, threshold, allowance)
 
       calculateFullPeriodPension(DoesContribute, frequency, furloughGrant, payment) mustBe expected
     }
   }
 
   private lazy val fullPeriodScenarios = Table(
-    ("frequency", "furloughGrant", "payment", "expectedGrant"),
+    ("frequency", "furloughGrant", "payment", "threshold", "allowance", "expectedGrant"),
     (
       Monthly,
       Amount(1600.00),
       regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
+      Threshold(512.0, TaxYearEnding2020),
+      Amount(512.0),
       Amount(32.64)
     ),
     (
       Monthly,
       Amount(600.00),
       regularPaymentWithFullPeriod(750.00, 750.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
+      Threshold(512.0, TaxYearEnding2020),
+      Amount(512.0),
       Amount(2.64)
     )
   )
 
-  forAll(partialPeriodScenarios) { (frequency, furloughGrant, payment, expectedGrant) =>
+  forAll(partialPeriodScenarios) { (frequency, furloughGrant, payment, threshold, allowance, expectedGrant) =>
     s"Calculate pension grant for a partial period with Payment Frequency: $frequency, " +
       s"a Payment Date: ${payment.periodWithPaymentDate.paymentDate} and a Furlough Grant: ${furloughGrant.value}" in new PensionCalculator {
-      val expected = PartialPeriodPensionBreakdown(expectedGrant, payment)
+      val expected = PartialPeriodPensionBreakdown(expectedGrant, payment, threshold, allowance)
       calculatePartialPeriodPension(DoesContribute, frequency, furloughGrant, payment) mustBe expected
     }
   }
 
   private lazy val partialPeriodScenarios = Table(
-    ("frequency", "furloughGrant", "payment", "expectedGrant"),
+    ("frequency", "furloughGrant", "payment", "threshold", "allowance", "expectedGrant"),
     (
       Monthly,
       Amount(800.00),
@@ -81,6 +85,8 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
         2000.00,
         1000.00,
         partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
+      Threshold(520.0, TaxYearEnding2021),
+      Amount(260.0),
       Amount(16.20)
     )
   )

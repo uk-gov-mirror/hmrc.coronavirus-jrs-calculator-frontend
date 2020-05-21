@@ -19,7 +19,7 @@ package services
 import models.Amount._
 import models.NicCategory.{Nonpayable, Payable}
 import models.Period._
-import models.{AdditionalPayment, Amount, FullPeriodFurloughBreakdown, FullPeriodNicBreakdown, FurloughBreakdown, NicCalculationResult, NicCategory, PartialPeriodFurloughBreakdown, PartialPeriodNicBreakdown, PaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PeriodWithPaymentDate, TopUpPayment}
+import models.{AdditionalPayment, Amount, FullPeriodFurloughBreakdown, FullPeriodNicBreakdown, FurloughBreakdown, NicCalculationResult, NicCap, NicCategory, PartialPeriodFurloughBreakdown, PartialPeriodNicBreakdown, PaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PeriodWithPaymentDate, TopUpPayment}
 import services.Calculators._
 
 trait NicCalculator extends FurloughCapCalculator with CommonCalculationService {
@@ -73,9 +73,9 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
       case Nonpayable => Amount(0.00)
     }
 
-    val cappedGrant = nicGrantCap(furloughGrant, grant)
+    val nicCap = nicGrantCap(furloughGrant, grant)
 
-    PartialPeriodNicBreakdown(cappedGrant, topUp.defaulted, additionalPayment.defaulted, payment)
+    PartialPeriodNicBreakdown(nicCap.cappedGrant, topUp.defaulted, additionalPayment.defaulted, payment, threshold, nicCap)
   }
 
   protected def calculateFullPeriodNic(
@@ -97,9 +97,9 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
       case Nonpayable => Amount(0.00)
     }
 
-    val cappedGrant = nicGrantCap(furloughGrant, grant)
+    val nicCap = nicGrantCap(furloughGrant, grant)
 
-    FullPeriodNicBreakdown(cappedGrant, topUp.defaulted, additionalPayment.defaulted, payment)
+    FullPeriodNicBreakdown(nicCap.cappedGrant, topUp.defaulted, additionalPayment.defaulted, payment, threshold, nicCap)
   }
 
   private def periodCalculation(
@@ -109,17 +109,17 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
     furloughGrant: Amount,
     topUpPayment: Option[Amount]): CalculationParameters = {
     val roundedTotalPay = total.down
-    val threshold: BigDecimal = thresholdFinder(frequency, paymentDate, NiRate())
-    val grossNi: Amount = greaterThanAllowance(roundedTotalPay, threshold, NiRate())
+    val threshold: Threshold = thresholdFinder(frequency, paymentDate, NiRate())
+    val grossNi: Amount = greaterThanAllowance(roundedTotalPay, threshold.value, NiRate())
     val apportion: BigDecimal = furloughGrant.value / (furloughGrant.value + topUpPayment.defaulted.value)
 
     CalculationParameters(roundedTotalPay, threshold, grossNi, apportion)
   }
 
-  private def nicGrantCap(furloughGrant: Amount, nicGrant: Amount) = {
+  private def nicGrantCap(furloughGrant: Amount, nicGrant: Amount): NicCap = {
     val cap = Amount(furloughGrant.value * NiRate().value).halfUp
 
-    Amount(nicGrant.value.min(cap.value))
+    NicCap(furloughGrant, nicGrant, cap)
   }
 
   private def topUpPayments(topUps: Seq[TopUpPayment], periodWithPaymentDate: PeriodWithPaymentDate): Option[Amount] =
@@ -133,5 +133,5 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
 
   private def niGrant(grossNi: Amount, apportion: BigDecimal) = Amount(grossNi.value * apportion).halfUp
 
-  case class CalculationParameters(total: Amount, threshold: BigDecimal, grossNi: Amount, apportion: BigDecimal)
+  case class CalculationParameters(total: Amount, threshold: Threshold, grossNi: Amount, apportion: BigDecimal)
 }

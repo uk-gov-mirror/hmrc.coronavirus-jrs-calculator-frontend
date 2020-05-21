@@ -19,7 +19,8 @@ package handlers
 import base.{CoreTestDataBuilder, SpecBase}
 import models.NicCategory.Nonpayable
 import models.PensionStatus.DoesNotContribute
-import models.{FullPeriodCap, FurloughCalculationResult, NicCalculationResult, PartialPeriodCap, PensionCalculationResult, UserAnswers}
+import models.{Amount, FullPeriodCap, FurloughCalculationResult, NicCalculationResult, NicCap, PartialPeriodCap, PensionCalculationResult, TaxYearEnding2020, TaxYearEnding2021, UserAnswers}
+import services.Threshold
 import utils.CoreTestData
 import viewmodels.ConfirmationViewBreakdown
 
@@ -48,12 +49,18 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
           121.58,
           0.0,
           0.0,
-          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
+          Threshold(719.0, TaxYearEnding2020),
+          NicCap(Amount(1600.0), Amount(121.58), Amount(220.80))
+        ),
         fullPeriodNicBreakdown(
           119.78,
           0.0,
           0.0,
-          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
+          Threshold(732.0, TaxYearEnding2021),
+          NicCap(Amount(1600.0), Amount(119.78), Amount(220.80))
+        )
       )
     )
 
@@ -62,10 +69,16 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
       Seq(
         fullPeriodPensionBreakdown(
           32.64,
-          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
+          Threshold(512.0, TaxYearEnding2020),
+          512.0
+        ),
         fullPeriodPensionBreakdown(
           32.40,
-          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
+          Threshold(520.0, TaxYearEnding2021),
+          520.0
+        )
       )
     )
 
@@ -117,7 +130,9 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
             1016.13,
             3500.00,
             2483.87,
-            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31"))
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31")),
+          Threshold(719.0, TaxYearEnding2020),
+          NicCap(Amount(1774.30), Amount(202.83), Amount(244.85))
         )
       )
     )
@@ -131,7 +146,9 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
             1016.13,
             3500.00,
             2483.87,
-            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31"))
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31")),
+          Threshold(512.0, TaxYearEnding2020),
+          363.35
         )
       )
     )
@@ -174,7 +191,9 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
             partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31"),
             12960.0,
             period("2019-08-01", "2020-03-04")
-          )
+          ),
+          Threshold(719.0, TaxYearEnding2020),
+          NicCap(Amount(1289.95), Amount(102.16), Amount(178.01))
         )
       )
     )
@@ -190,7 +209,9 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
             partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31"),
             12960.0,
             period("2019-08-01", "2020-03-04")
-          )
+          ),
+          Threshold(512.0, TaxYearEnding2020),
+          445.94
         )
       )
     )

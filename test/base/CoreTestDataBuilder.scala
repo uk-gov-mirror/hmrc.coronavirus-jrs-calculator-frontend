@@ -21,6 +21,7 @@ import java.time.LocalDate
 import models.PaymentFrequency.Monthly
 import models._
 import org.scalatest.TryValues
+import services.Threshold
 
 trait CoreTestDataBuilder extends TryValues {
 
@@ -104,36 +105,56 @@ trait CoreTestDataBuilder extends TryValues {
     grant: BigDecimal,
     topUp: BigDecimal,
     additional: BigDecimal,
-    payment: PaymentWithFullPeriod): FullPeriodNicBreakdown =
+    payment: PaymentWithFullPeriod,
+    threshold: Threshold,
+    nicCap: NicCap): FullPeriodNicBreakdown =
     FullPeriodNicBreakdown(
       Amount(grant),
       Amount(topUp),
       Amount(additional),
-      payment
+      payment,
+      threshold,
+      nicCap
     )
 
   def partialPeriodNicBreakdown(
     grant: BigDecimal,
     topUp: BigDecimal,
     additional: BigDecimal,
-    payment: PaymentWithPartialPeriod): PartialPeriodNicBreakdown =
+    payment: PaymentWithPartialPeriod,
+    threshold: Threshold,
+    nicCap: NicCap): PartialPeriodNicBreakdown =
     PartialPeriodNicBreakdown(
       Amount(grant),
       Amount(topUp),
       Amount(additional),
-      payment
+      payment,
+      threshold,
+      nicCap
     )
 
-  def fullPeriodPensionBreakdown(grant: BigDecimal, payment: PaymentWithFullPeriod): FullPeriodPensionBreakdown =
+  def fullPeriodPensionBreakdown(
+    grant: BigDecimal,
+    payment: PaymentWithFullPeriod,
+    threshold: Threshold,
+    allowance: BigDecimal): FullPeriodPensionBreakdown =
     FullPeriodPensionBreakdown(
       Amount(grant),
-      payment
+      payment,
+      threshold,
+      Amount(allowance)
     )
 
-  def partialPeriodPensionBreakdown(grant: BigDecimal, payment: PaymentWithPartialPeriod): PartialPeriodPensionBreakdown =
+  def partialPeriodPensionBreakdown(
+    grant: BigDecimal,
+    payment: PaymentWithPartialPeriod,
+    threshold: Threshold,
+    allowance: BigDecimal): PartialPeriodPensionBreakdown =
     PartialPeriodPensionBreakdown(
       Amount(grant),
-      payment
+      payment,
+      threshold,
+      Amount(allowance)
     )
 
   def paymentDate(date: String): PaymentDate = PaymentDate(date.toLocalDate)
