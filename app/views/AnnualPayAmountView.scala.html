@@ -25,25 +25,23 @@
         fieldset: components.fieldset,
         h1: components.h1,
         p: components.p,
-        inputCurrency: components.inputCurrency
+        inputCurrency: components.inputCurrency,
+        whatToInclude: includes.whatToInclude
 )
 
 @(form: Form[_], furloughStart: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "annualPayAmount.title"))) {
+@govukLayout(pageTitle = Some(title(form, "annualPayAmount.title", titleMessageArgs = Seq(dateToString(furloughStart.minusDays(1)))))) {
 
     @formHelper(action = AnnualPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages("annualPayAmount.heading"))
-        @p(Html(messages("annualPayAmount.p")))
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@messages("annualPayAmount.l1")</li>
-            <li>@messages("annualPayAmount.l2", dateToString(furloughStart))</li>
-            <li>@messages("annualPayAmount.l3")</li>
-            <li>@messages("annualPayAmount.l4")</li>
-        </ul>
+        @h1(messages("annualPayAmount.heading", dateToString(furloughStart.minusDays(1))))
+        @p(Html(messages("annualPayAmount.p1")))
+        @p(Html(messages("annualPayAmount.p2")))
+
+        @whatToInclude()
 
         @inputCurrency(
             form,
