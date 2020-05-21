@@ -41,7 +41,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   } map {
     case "main"         => Some("GTM-NDJKHWK")
     case "transitional" => Some("GTM-TSFTCWZ")
-  }) getOrElse (None)
+  }) getOrElse None
 
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
@@ -64,29 +64,31 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val termsConditions: String = host + configuration.get[String]("urls.footer.termsConditions")
   lazy val govukHelp: String = configuration.get[String]("urls.footer.govukHelp")
 
-  lazy val schemeStartDate = LocalDate.parse(configuration.get[String]("scheme.startDate"))
-  lazy val schemeEndDate = LocalDate.parse(configuration.get[String]("scheme.endDate"))
+  lazy val schemeStartDate: LocalDate = LocalDate.parse(configuration.get[String]("scheme.startDate"))
+  lazy val schemeEndDate: LocalDate = LocalDate.parse(configuration.get[String]("scheme.endDate"))
 
-  lazy val calculatorVersion = configuration.get[String]("calculator.version")
+  lazy val calculatorVersion: String = configuration.get[String]("calculator.version")
 
-  val variableJourneyEnabled = configuration.get[Boolean]("variable.journey.enabled")
+  val variableJourneyEnabled: Boolean = configuration.get[Boolean]("variable.journey.enabled")
 
-  val topUpJourneyEnabled = configuration.get[Boolean]("topup.journey.enabled")
+  val topUpJourneyEnabled: Boolean = configuration.get[Boolean]("topup.journey.enabled")
 
-  val confirmationWithDetailedBreakdowns = configuration.get[Boolean]("confirmationWithDetailedBreakdowns.enabled")
+  val confirmationWithDetailedBreakdowns: Boolean = configuration.get[Boolean]("confirmationWithDetailedBreakdowns.enabled")
 
-  val fastTrackJourneyEnabled = configuration.get[Boolean]("fastTrackJourney.enabled")
+  val fastTrackJourneyEnabled: Boolean = configuration.get[Boolean]("fastTrackJourney.enabled")
 
-  val calculationGuidance =
+  val calculationGuidance: String =
     "https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme"
 
-  val ninoCatLetter = "https://www.gov.uk/national-insurance-rates-letters/category-letters"
+  val ninoCatLetter: String = "https://www.gov.uk/national-insurance-rates-letters/category-letters"
 
-  val workOutHowMuch =
-    "https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme#work-out-how-much-you-can-claim-for-employer-national-insurance-contributions"
+  val workOutHowMuch: String =
+    "https://www.gov.uk/guidance" +
+      "/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme" +
+      "#work-out-how-much-you-can-claim-for-employer-national-insurance-contributions-nics"
 
-  val webchatHelpUrl = "https://www.tax.service.gov.uk/ask-hmrc/webchat/job-retention-scheme"
+  val webchatHelpUrl: String = "https://www.tax.service.gov.uk/ask-hmrc/webchat/job-retention-scheme"
 
-  val jobRetentionScheme = "https://www.gov.uk/guidance/claim-for-wages-through-the-coronavirus-job-retention-scheme"
+  val jobRetentionScheme: String = "https://www.gov.uk/guidance/claim-for-wages-through-the-coronavirus-job-retention-scheme"
 
 }
