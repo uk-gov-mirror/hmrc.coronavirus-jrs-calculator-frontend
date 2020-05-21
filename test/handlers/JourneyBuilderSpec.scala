@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import models.PayMethod.{Regular, Variable}
-import models.{Amount, AnnualPayAmount, BranchingQuestions, CylbPayment, EmployeeStarted, NonFurloughPay, RegularPay, RegularPayData, Salary, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
+import models.{Amount, AnnualPayAmount, BranchingQuestions, EmployeeStarted, LastYearPayment, NonFurloughPay, RegularPay, RegularPayData, Salary, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import pages._
 import utils.CoreTestData
 
@@ -78,7 +78,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
       .get
       .set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
       .get
-      .setListWithInvalidation(LastYearPayPage, CylbPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)), 1)
+      .setListWithInvalidation(LastYearPayPage, LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)), 1)
       .get
 
     val expected = VariablePayWithCylbData(
@@ -86,7 +86,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
       Amount(1000.0),
       NonFurloughPay(None, None),
       period("2019-04-06", "2020-02-29"),
-      Seq(CylbPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)))
+      Seq(LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)))
     )
 
     journeyData(VariablePayWithCylb, answers) mustBe Some(expected)

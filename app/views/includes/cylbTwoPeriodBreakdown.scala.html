@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package pages
+@import models.TwoPeriodCylb
 
-import models.LastYearPayment
-import pages.behaviours.PageBehaviours
+@this(
+    cylbBreakdown: cylbPeriodBreakdown,
+    p: components.p
+)
 
-class LastYearPayPageSpec extends PageBehaviours {
+@(cylb: TwoPeriodCylb)(implicit messages: Messages)
 
-  "LastYearPayPage" must {
+@p(Html(messages("referencePayBreakdown.cylb.twoPeriods")))
 
-    beRetrievable[LastYearPayment](LastYearPayPage)
+@cylbBreakdown(cylb.firstPeriod)
 
-    beSettable[LastYearPayment](LastYearPayPage)
+@p(Html(messages("referencePayBreakdown.cylb.then")))
 
-    beRemovable[LastYearPayment](LastYearPayPage, "error.expected.jsobject")
-  }
-}
+@cylbBreakdown(cylb.secondPeriod)
+
+@p(Html(messages("referencePayBreakdown.cylb.then")))
+
+@p(Html(messages("referencePayBreakdown.cylb.addTotals", cylb.firstPeriod.referencePay.value.formatted("%.2f"), cylb.secondPeriod.referencePay.value.formatted("%.2f"))))

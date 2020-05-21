@@ -54,11 +54,11 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
   val periodBreakdowns: Seq[FurloughBreakdown] = Seq(
     fullPeriodFurloughBreakdown(
       1600.00,
-      paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
+      regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
       FullPeriodCap(2500.00)),
     fullPeriodFurloughBreakdown(
       1600.00,
-      paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30")),
+      regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-30")),
       FullPeriodCap(2500.00))
   )
 

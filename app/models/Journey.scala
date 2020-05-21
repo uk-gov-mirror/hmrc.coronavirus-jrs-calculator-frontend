@@ -45,5 +45,5 @@ case class VariablePayWithCylbData(
   grossPay: Amount,
   nonFurloughPay: NonFurloughPay,
   priorFurlough: Period,
-  cylbPayments: Seq[CylbPayment])
+  cylbPayments: Seq[LastYearPayment])
     extends ReferencePay

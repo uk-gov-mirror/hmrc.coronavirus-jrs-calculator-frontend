@@ -16,17 +16,17 @@
 
 package services
 
-import models.{Amount, FullPeriodWithPaymentDate, PartialPeriodWithPaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PeriodWithPaymentDate}
+import models.{Amount, FullPeriodWithPaymentDate, PartialPeriodWithPaymentDate, PeriodWithPaymentDate, RegularPayment, RegularPaymentWithFullPeriod, RegularPaymentWithPartialPeriod}
 
 trait RegularPayCalculator extends Calculators {
 
-  def calculateRegularPay(wage: Amount, periods: Seq[PeriodWithPaymentDate]): Seq[PaymentWithPeriod] =
+  def calculateRegularPay(regularPay: Amount, periods: Seq[PeriodWithPaymentDate]): Seq[RegularPayment] =
     periods.map {
-      case fp: FullPeriodWithPaymentDate => PaymentWithFullPeriod(wage, fp)
+      case fp: FullPeriodWithPaymentDate => RegularPaymentWithFullPeriod(regularPay, regularPay, fp)
       case pp: PartialPeriodWithPaymentDate =>
-        val furloughAmount = partialPeriodDailyCalculation(wage, pp.period)
-        val nonFurlough = Amount(wage.value - furloughAmount.value)
-        PaymentWithPartialPeriod(nonFurlough, furloughAmount, pp)
+        val furloughAmount = partialPeriodDailyCalculation(regularPay, pp.period)
+        val nonFurlough = Amount(regularPay.value - furloughAmount.value)
+        RegularPaymentWithPartialPeriod(nonFurlough, regularPay, furloughAmount, pp)
     }
 
 }

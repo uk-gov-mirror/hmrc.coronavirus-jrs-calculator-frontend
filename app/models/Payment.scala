@@ -44,19 +44,11 @@ object NonFurloughPay extends PeriodHelper {
     }
 }
 
-case class CylbPayment(date: LocalDate, amount: Amount)
+case class LastYearPayment(date: LocalDate, amount: Amount)
 
-object CylbPayment {
-  implicit val defaultFormat: Format[CylbPayment] = Json.format
+object LastYearPayment {
+  implicit val defaultFormat: Format[LastYearPayment] = Json.format
 }
-
-sealed trait PaymentWithPeriod {
-  val furloughPayment: Amount
-  val periodWithPaymentDate: PeriodWithPaymentDate
-}
-case class PaymentWithFullPeriod(furloughPayment: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate) extends PaymentWithPeriod
-case class PaymentWithPartialPeriod(nonFurloughPay: Amount, furloughPayment: Amount, periodWithPaymentDate: PartialPeriodWithPaymentDate)
-    extends PaymentWithPeriod
 
 case class AdditionalPayment(date: LocalDate, amount: Amount)
 
@@ -69,3 +61,87 @@ case class TopUpPayment(date: LocalDate, amount: Amount)
 object TopUpPayment {
   implicit val defaultFormat: Format[TopUpPayment] = Json.format
 }
+
+sealed trait CylbBreakdown {
+  val referencePay: Amount
+}
+
+case class OnePeriodCylb(referencePay: Amount, periodPay: Amount, daysInPeriod: Int, daysRequiredFromPeriod: Int, lastYearPayDay: LocalDate)
+    extends CylbBreakdown
+case class TwoPeriodCylb(referencePay: Amount, firstPeriod: OnePeriodCylb, secondPeriod: OnePeriodCylb) extends CylbBreakdown
+
+sealed trait PaymentWithPeriod {
+  val referencePay: Amount
+  val periodWithPaymentDate: PeriodWithPaymentDate
+
+  def periodDays = periodWithPaymentDate.period.period.countDays
+
+  def furloughDays = periodWithPaymentDate.period match {
+    case fp: FullPeriod    => fp.period.countDays
+    case pp: PartialPeriod => pp.partial.countDays
+  }
+}
+
+sealed trait PaymentWithFullPeriod extends PaymentWithPeriod {
+  val periodWithPaymentDate: FullPeriodWithPaymentDate
+}
+
+sealed trait PaymentWithPartialPeriod extends PaymentWithPeriod {
+  val nonFurloughPay: Amount
+  val periodWithPaymentDate: PartialPeriodWithPaymentDate
+}
+
+sealed trait RegularPayment extends PaymentWithPeriod {
+  val regularPay: Amount
+}
+
+sealed trait AveragePayment extends PaymentWithPeriod {
+  val referencePay: Amount
+  val annualPay: Amount
+  val priorFurloughPeriod: Period
+}
+
+sealed trait CylbPayment extends PaymentWithPeriod {
+  val averagePayment: AveragePayment
+  val cylbBreakdown: CylbBreakdown
+}
+
+case class RegularPaymentWithFullPeriod(regularPay: Amount, referencePay: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate)
+    extends PaymentWithFullPeriod with RegularPayment
+
+case class RegularPaymentWithPartialPeriod(
+  nonFurloughPay: Amount,
+  regularPay: Amount,
+  referencePay: Amount,
+  periodWithPaymentDate: PartialPeriodWithPaymentDate)
+    extends PaymentWithPartialPeriod with RegularPayment
+
+case class AveragePaymentWithFullPeriod(
+  referencePay: Amount,
+  periodWithPaymentDate: FullPeriodWithPaymentDate,
+  annualPay: Amount,
+  priorFurloughPeriod: Period)
+    extends PaymentWithFullPeriod with AveragePayment
+
+case class AveragePaymentWithPartialPeriod(
+  nonFurloughPay: Amount,
+  referencePay: Amount,
+  periodWithPaymentDate: PartialPeriodWithPaymentDate,
+  annualPay: Amount,
+  priorFurloughPeriod: Period)
+    extends PaymentWithPartialPeriod with AveragePayment
+
+case class CylbPaymentWithFullPeriod(
+  referencePay: Amount,
+  periodWithPaymentDate: FullPeriodWithPaymentDate,
+  averagePayment: AveragePayment,
+  cylbBreakdown: CylbBreakdown)
+    extends PaymentWithFullPeriod with CylbPayment
+
+case class CylbPaymentWithPartialPeriod(
+  nonFurloughPay: Amount,
+  referencePay: Amount,
+  periodWithPaymentDate: PartialPeriodWithPaymentDate,
+  averagePayment: AveragePayment,
+  cylbBreakdown: CylbBreakdown)
+    extends PaymentWithPartialPeriod with CylbPayment

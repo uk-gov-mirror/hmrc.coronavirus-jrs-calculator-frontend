@@ -19,7 +19,7 @@ package base
 import java.time.LocalDate
 
 import models.PaymentFrequency.Monthly
-import models.{Amount, FullPeriod, FullPeriodFurloughBreakdown, FullPeriodNicBreakdown, FullPeriodPensionBreakdown, FullPeriodWithPaymentDate, FurloughCap, FurloughWithinClaim, PartialPeriod, PartialPeriodFurloughBreakdown, PartialPeriodNicBreakdown, PartialPeriodPensionBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithFullPeriod, PaymentWithPartialPeriod, Period, ReferencePayData}
+import models._
 import org.scalatest.TryValues
 
 trait CoreTestDataBuilder extends TryValues {
@@ -32,14 +32,45 @@ trait CoreTestDataBuilder extends TryValues {
 
   def fullPeriod(start: String, end: String) = FullPeriod(period(start, end))
 
-  def paymentWithFullPeriod(furloughPayment: BigDecimal, period: FullPeriodWithPaymentDate): PaymentWithFullPeriod =
-    PaymentWithFullPeriod(Amount(furloughPayment), period)
+  def regularPaymentWithFullPeriod(regularPay: BigDecimal, referencePay: BigDecimal, period: FullPeriodWithPaymentDate) =
+    RegularPaymentWithFullPeriod(Amount(regularPay), Amount(referencePay), period)
 
-  def paymentWithPartialPeriod(
+  def regularPaymentWithPartialPeriod(
     nonFurloughPay: BigDecimal,
-    furloughPayment: BigDecimal,
-    period: PartialPeriodWithPaymentDate): PaymentWithPartialPeriod =
-    PaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(furloughPayment), period)
+    regularPay: BigDecimal,
+    referencePay: BigDecimal,
+    period: PartialPeriodWithPaymentDate) =
+    RegularPaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(regularPay), Amount(referencePay), period)
+
+  def averagePaymentWithFullPeriod(
+    referencePay: BigDecimal,
+    period: FullPeriodWithPaymentDate,
+    annualPay: BigDecimal,
+    priorFurloughPeriod: Period) =
+    AveragePaymentWithFullPeriod(Amount(referencePay), period, Amount(annualPay), priorFurloughPeriod)
+
+  def averagePaymentWithPartialPeriod(
+    nonFurloughPay: BigDecimal,
+    referencePay: BigDecimal,
+    period: PartialPeriodWithPaymentDate,
+    annualPay: BigDecimal,
+    priorFurloughPeriod: Period) =
+    AveragePaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(referencePay), period, Amount(annualPay), priorFurloughPeriod)
+
+  def cylbPaymentWithFullPeriod(
+    referencePay: BigDecimal,
+    period: FullPeriodWithPaymentDate,
+    averagePayment: AveragePayment,
+    cylbBreakdown: CylbBreakdown) =
+    CylbPaymentWithFullPeriod(Amount(referencePay), period, averagePayment, cylbBreakdown)
+
+  def cylbPaymentWithPartialPeriod(
+    nonFurloughPay: BigDecimal,
+    referencePay: BigDecimal,
+    period: PartialPeriodWithPaymentDate,
+    averagePayment: AveragePayment,
+    cylbBreakdown: CylbBreakdown) =
+    CylbPaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(referencePay), period, averagePayment, cylbBreakdown)
 
   def fullPeriodWithPaymentDate(start: String, end: String, paymentDate: String): FullPeriodWithPaymentDate =
     FullPeriodWithPaymentDate(FullPeriod(period(start, end)), PaymentDate(paymentDate.toLocalDate))

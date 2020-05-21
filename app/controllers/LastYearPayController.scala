@@ -23,7 +23,7 @@ import controllers.actions._
 import forms.LastYearPayFormProvider
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.Inject
-import models.{CylbPayment, PaymentFrequency}
+import models.{LastYearPayment, PaymentFrequency}
 import navigation.Navigator
 import pages.{LastYearPayPage, PaymentFrequencyPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -87,7 +87,7 @@ class LastYearPayController @Inject()(
               formWithErrors => Future.successful(BadRequest(view(formWithErrors, idx, date, isMonthlyFrequency))),
               value =>
                 for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(LastYearPayPage, CylbPayment(date, value), Some(idx)))
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(LastYearPayPage, LastYearPayment(date, value), Some(idx)))
                   _              <- sessionRepository.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
             )

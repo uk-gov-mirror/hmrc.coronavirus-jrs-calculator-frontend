@@ -36,7 +36,7 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
   ): FullPeriodFurloughBreakdown = {
     val cap = furloughCap(paymentFrequency, payment.periodWithPaymentDate.period.period)
 
-    val grant = claimableAmount(payment.furloughPayment, cap.value).halfUp
+    val grant = claimableAmount(payment.referencePay, cap.value).halfUp
 
     FullPeriodFurloughBreakdown(grant, payment, cap)
   }
@@ -45,7 +45,7 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
     import payment.periodWithPaymentDate._
     val cap = partialFurloughCap(period.partial)
 
-    val grant = claimableAmount(payment.furloughPayment, cap.value).halfUp
+    val grant = claimableAmount(payment.referencePay, cap.value).halfUp
 
     PartialPeriodFurloughBreakdown(
       grant,

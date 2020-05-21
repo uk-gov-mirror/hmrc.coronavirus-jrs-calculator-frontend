@@ -25,13 +25,14 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
 
   "Returns 0.00 for Pension grant if not eligible for Pension grant full period" in new PensionCalculator {
-    val payment = paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"))
+    val payment = regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"))
     calculateFullPeriodPension(DoesNotContribute, Monthly, Amount(1600.00), payment).grant mustBe Amount(0.00)
   }
 
   "Returns 0.00 for Pension grant if not eligible for Pension grant partial period" in new PensionCalculator {
-    val payment = paymentWithPartialPeriod(
+    val payment = regularPaymentWithPartialPeriod(
       1000.00,
+      2000.00,
       1000.00,
       partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30"))
     calculatePartialPeriodPension(DoesNotContribute, Monthly, Amount(800.00), payment).grant mustBe Amount(0.00)
@@ -51,13 +52,13 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
     (
       Monthly,
       Amount(1600.00),
-      paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
+      regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
       Amount(32.64)
     ),
     (
       Monthly,
       Amount(600.00),
-      paymentWithFullPeriod(750.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
+      regularPaymentWithFullPeriod(750.00, 750.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
       Amount(2.64)
     )
   )
@@ -75,8 +76,9 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
     (
       Monthly,
       Amount(800.00),
-      paymentWithPartialPeriod(
+      regularPaymentWithPartialPeriod(
         1000.00,
+        2000.00,
         1000.00,
         partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
       Amount(16.20)

@@ -16,9 +16,11 @@
 
 package viewmodels
 
-import models.{Amount, FullPeriod, FurloughCap, PartialPeriod, Periods}
+import models.{Amount, FullPeriod, FurloughCap, PartialPeriod, PaymentWithPeriod}
 
-case class DetailedFurloughBreakdown(employeesWages: Amount, furloughCap: FurloughCap, furloughGrant: Amount, period: Periods) {
+case class DetailedFurloughBreakdown(employeesWages: Amount, furloughCap: FurloughCap, furloughGrant: Amount, payment: PaymentWithPeriod) {
+  import payment.periodWithPaymentDate.period
+
   def fullPeriodDays: Int = period.period.countDays
 
   def furloughDays: Int = period match {

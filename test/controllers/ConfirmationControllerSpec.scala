@@ -76,11 +76,11 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDa
       Seq(
         fullPeriodFurloughBreakdown(
           1600.00,
-          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
           FullPeriodCap(2500.00)),
         fullPeriodFurloughBreakdown(
           1600.00,
-          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
           FullPeriodCap(2500.00))
       )
     )
@@ -92,12 +92,12 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDa
         121.58,
         0.0,
         0.0,
-        paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
       fullPeriodNicBreakdown(
         119.78,
         0.0,
         0.0,
-        paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
     )
   )
 
@@ -106,8 +106,10 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDa
     Seq(
       fullPeriodPensionBreakdown(
         32.64,
-        paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
-      fullPeriodPensionBreakdown(32.40, paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+      fullPeriodPensionBreakdown(
+        32.40,
+        regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
     )
   )
 

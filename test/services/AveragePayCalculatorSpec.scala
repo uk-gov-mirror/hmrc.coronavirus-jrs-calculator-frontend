@@ -37,8 +37,8 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val payPeriods: Seq[PeriodWithPaymentDate] = Seq(afterFurloughPeriod, afterFurloughPartial)
 
     val expected = Seq(
-      paymentWithFullPeriod(817.47, afterFurloughPeriod),
-      paymentWithPartialPeriod(1000.0, 395.55, afterFurloughPartial)
+      averagePaymentWithFullPeriod(817.47, afterFurloughPeriod, grossPay.value, priorFurloughPeriod),
+      averagePaymentWithPartialPeriod(1000.0, 395.55, afterFurloughPartial, grossPay.value, priorFurloughPeriod)
     )
 
     calculateAveragePay(nonFurloughPay, priorFurloughPeriod, payPeriods, grossPay) mustBe expected

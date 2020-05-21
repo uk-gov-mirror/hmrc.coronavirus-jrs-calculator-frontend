@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.LastYearPayFormProvider
-import models.{Amount, CylbPayment}
+import models.{Amount, LastYearPayment}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
@@ -149,7 +149,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = variableMonthlyUserAnswers.set(LastYearPayPage, CylbPayment(validDate, validAnswer)).success.value
+      val userAnswers = variableMonthlyUserAnswers.set(LastYearPayPage, LastYearPayment(validDate, validAnswer)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

@@ -1,0 +1,73 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this(
+    h4: components.h4,
+    p: components.p,
+    onePeriodCylbBreakdown: cylbPeriodBreakdown,
+    twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown
+)
+
+@(payment: PaymentWithPeriod)(implicit messages: Messages)
+
+  @regularPaymentBreakdown(regular: RegularPayment) = {
+      <ol class="govuk-list govuk-list--number">
+          <li>@messages("referencePayBreakdown.regular.l1", regular.regularPay.value.formatted("%.2f"))</li>
+          <li>@messages("referencePayBreakdown.regular.l2", regular.periodDays)</li>
+          <li>@messages("referencePayBreakdown.regular.l3", regular.furloughDays)</li>
+      </ol>
+
+      @p(Html(messages("referencePayBreakdown.regular.result", regular.referencePay.value.formatted("%.2f"))))
+  }
+
+  @averagePaymentBreakdown(average: AveragePayment) = {
+      @p(Html(messages("referencePayBreakdown.average.p1")))
+
+      <ol class="govuk-list govuk-list--number">
+          <li>@messages("referencePayBreakdown.average.l1", average.annualPay.value.formatted("%.2f"))</li>
+          <li>@messages("referencePayBreakdown.average.l2", average.priorFurloughPeriod.countDays)</li>
+          <li>@messages("referencePayBreakdown.average.l3", average.furloughDays)</li>
+      </ol>
+
+      @p(Html(messages("referencePayBreakdown.average.result", average.referencePay.value.formatted("%.2f"))))
+  }
+
+  @cylbPaymentBreakdown(cylb: CylbPayment) = {
+      @p(Html(messages("referencePayBreakdown.cylb.p1")))
+
+      @{cylb.cylbBreakdown match {
+          case op: OnePeriodCylb => onePeriodCylbBreakdown(op)
+          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp)
+      }}
+
+    @p(Html(messages("referencePayBreakdown.cylb.result", cylb.referencePay.value.formatted("%.2f"))))
+
+    @averagePaymentBreakdown(cylb.averagePayment)
+
+    @p(Html(messages("referencePayBreakdown.cylb.higherOf")))
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("referencePayBreakdown.cylb.higherOf.cylb", cylb.cylbBreakdown.referencePay.value.formatted("%.2f"))</li>
+        <li>@messages("referencePayBreakdown.cylb.higherOf.average", cylb.averagePayment.referencePay.value.formatted("%.2f"))</li>
+    </ul>
+  }
+
+@h4(messages("referencePayBreakdown.h4"))
+
+  @{payment match {
+    case p: RegularPayment => regularPaymentBreakdown(p)
+    case p: AveragePayment => averagePaymentBreakdown(p)
+    case p: CylbPayment    => cylbPaymentBreakdown(p)
+  }}

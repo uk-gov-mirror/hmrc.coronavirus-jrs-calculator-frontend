@@ -31,6 +31,10 @@ object Amount {
   implicit class FromDouble(value: Double) {
     def toAmount: Amount = Amount(value)
   }
+
+  implicit class FromBigDecimal(value: BigDecimal) {
+    def toAmount: Amount = Amount(value)
+  }
 }
 
 //TODO use Amount Vs BigDecimal

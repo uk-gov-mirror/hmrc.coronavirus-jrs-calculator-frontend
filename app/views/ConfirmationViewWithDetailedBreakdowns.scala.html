@@ -56,8 +56,6 @@
 
     }
 
-    @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
-
     @p {
         <span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
         @dateToString(LocalDate.now())
@@ -66,12 +64,12 @@
 
     @p(Html(messages("confirmation.disclaimer")))
 
-    @h2(Html(messages("confirmation.breakdown.h2")), classes = Some("govuk-heading-m"))
+    @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
 
-    @p(Html(messages("confirmation.breakdown.p")))
+    @p(Html(messages("confirmation.explanation.p")))
 
     @details(
-        summaryText = Messages("confirmation.breakdown.details")
+        summaryText = Messages("confirmation.breakdown.summary")
     ) {
         @for(detailedBreakdown <- cvb.detailedBreakdowns) {
             @h3(Messages("detailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))

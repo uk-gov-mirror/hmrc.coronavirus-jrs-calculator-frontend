@@ -32,11 +32,11 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
         Seq(
           fullPeriodFurloughBreakdown(
             1600.00,
-            paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
+            regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
             FullPeriodCap(2500.00)),
           fullPeriodFurloughBreakdown(
             1600.00,
-            paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
+            regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
             FullPeriodCap(2500.00))
         )
       )
@@ -48,12 +48,12 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
           121.58,
           0.0,
           0.0,
-          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
         fullPeriodNicBreakdown(
           119.78,
           0.0,
           0.0,
-          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
       )
     )
 
@@ -62,10 +62,10 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
       Seq(
         fullPeriodPensionBreakdown(
           32.64,
-          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20"))),
         fullPeriodPensionBreakdown(
           32.40,
-          paymentWithFullPeriod(2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
+          regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")))
       )
     )
 
@@ -96,8 +96,9 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
       Seq(
         partialPeriodFurloughBreakdown(
           1774.30,
-          paymentWithPartialPeriod(
+          regularPaymentWithPartialPeriod(
             1016.13,
+            3500.00,
             2483.87,
             partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31")),
           PartialPeriodCap(1774.30, 22, 3, 80.65)
@@ -112,8 +113,9 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
           202.83,
           0.0,
           0.0,
-          paymentWithPartialPeriod(
+          regularPaymentWithPartialPeriod(
             1016.13,
+            3500.00,
             2483.87,
             partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31"))
         )
@@ -125,10 +127,12 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
       Seq(
         partialPeriodPensionBreakdown(
           42.32,
-          paymentWithPartialPeriod(
+          regularPaymentWithPartialPeriod(
             1016.13,
+            3500.00,
             2483.87,
-            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31")))
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31"))
+        )
       )
     )
 
@@ -145,10 +149,13 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
       Seq(
         partialPeriodFurloughBreakdown(
           1289.95,
-          paymentWithPartialPeriod(
+          averagePaymentWithPartialPeriod(
             280.0,
             1612.44,
-            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31")),
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31"),
+            12960.0,
+            period("2019-08-01", "2020-03-04")
+          ),
           PartialPeriodCap(2177.55, 27, 3, 80.65)
         )
       )
@@ -161,10 +168,13 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
           102.16,
           0.0,
           0.0,
-          paymentWithPartialPeriod(
+          averagePaymentWithPartialPeriod(
             280.0,
             1612.44,
-            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31"))
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31"),
+            12960.0,
+            period("2019-08-01", "2020-03-04")
+          )
         )
       )
     )
@@ -174,10 +184,14 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
       Seq(
         partialPeriodPensionBreakdown(
           25.29,
-          paymentWithPartialPeriod(
+          averagePaymentWithPartialPeriod(
             280.0,
             1612.44,
-            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31")))
+            partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 5", "2020, 3, 31", "2020, 3, 31"),
+            12960.0,
+            period("2019-08-01", "2020-03-04")
+          )
+        )
       )
     )
 

@@ -24,7 +24,7 @@ import models.NicCategory.Payable
 import models.PayMethod.Regular
 import models.PensionStatus.DoesContribute
 import models.TopUpStatus.ToppedUp
-import models.{AdditionalPayment, AnnualPayAmount, ClaimPeriodQuestion, CylbPayment, FurloughPartialPay, FurloughStatus, NicCategory, PayMethod, PaymentFrequency, PensionStatus, Salary, TopUpPayment, TopUpPeriod, TopUpStatus, UserAnswers}
+import models.{AdditionalPayment, AnnualPayAmount, ClaimPeriodQuestion, FurloughPartialPay, FurloughStatus, LastYearPayment, NicCategory, PayMethod, PaymentFrequency, PensionStatus, Salary, TopUpPayment, TopUpPeriod, TopUpStatus, UserAnswers}
 import pages.{QuestionPage, TopUpPeriodsPage, _}
 import play.api.libs.json.Writes
 import queries.Settable
@@ -118,7 +118,7 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
         (payments, page) match {
           case (Nil, _) => userAnswers
           case (((d: String, amount: Int), idx) :: tail, LastYearPayPage) =>
-            rec(userAnswers.setValue(LastYearPayPage, CylbPayment(d.toLocalDate, amount.toAmount), Some(idx)), tail)
+            rec(userAnswers.setValue(LastYearPayPage, LastYearPayment(d.toLocalDate, amount.toAmount), Some(idx)), tail)
           case ((d: String, idx) :: tail, PayDatePage) =>
             rec(userAnswers.setValue(PayDatePage, d.toLocalDate, Some(idx)), tail)
         }
