@@ -1,0 +1,57 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this(h4: components.h4,
+        p: components.p)
+
+@(breakdown: NicBreakdown)(implicit messages: Messages)
+
+    @h4(messages("nicBreakdown.h4"))
+
+    <ol class="govuk-list govuk-list--number">
+        <li>@messages("nicBreakdown.l1", breakdown.nicCap.furloughGrant.value.formatted("%.2f"))</li>
+        @if(breakdown.isInstanceOf[PartialPeriodNicBreakdown]) {
+            <li>@messages("nicBreakdown.l2", (breakdown.asInstanceOf[PartialPeriodNicBreakdown]).paymentWithPeriod.nonFurloughPay.value.formatted("%.2f"))</li>
+        }
+        @if(breakdown.topUpPay.value != 0) {
+            <li>@messages("nicBreakdown.l3", breakdown.topUpPay.value.formatted("%.2f"))</li>
+        }
+        @if(breakdown.additionalPay.value != 0) {
+            <li>@messages("nicBreakdown.l4", breakdown.additionalPay.value.formatted("%.2f"))</li>
+        }
+        <li>@messages("nicBreakdown.l5")</li>
+        <li>@messages(breakdown.threshold.messagesKey, breakdown.threshold.value.formatted("%.2f"))</li>
+        <li>@messages("nicBreakdown.l7")</li>
+        <li>@messages("nicBreakdown.l8", breakdown.paymentWithPeriod.periodDays)</li>
+        <li>@messages("nicBreakdown.l9", breakdown.paymentWithPeriod.furloughDays)</li>
+        @if(breakdown.topUpPay.value != 0) {
+            <li>@messages("nicBreakdown.l10", (breakdown.nicCap.furloughGrant.value + breakdown.topUpPay.value).formatted("%.2f"))</li>
+            <li>@messages("nicBreakdown.l11", breakdown.nicCap.furloughGrant.value.formatted("%.2f"))</li>
+        }
+    </ol>
+
+    @if(breakdown.nicCap.isCapped) {
+        @p(Html(messages("nicBreakdown.nicCap.p1", breakdown.nicCap.nicGrant.value.formatted("%.2f"))))
+        @p(Html(messages("nicBreakdown.nicCap.p2")))
+        <ul>
+            <li>@messages("nicBreakdown.nicCap.l1", breakdown.nicCap.furloughGrant.value.formatted("%.2f"), breakdown.nicCap.cappedGrant.value.formatted("%.2f"))</li>
+        </ul>
+        @p(Html(messages("nicBreakdown.nicCap.p3")))
+    }
+
+    <div class="govuk-inset-text govuk-!-font-size-24">
+        @messages("nicBreakdown.total", breakdown.grant.value.formatted("%.2f"))
+    </div>

@@ -27,7 +27,8 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
   def detailedBreakdowns: Seq[DetailedBreakdown] = zippedBreakdowns map { breakdowns =>
     DetailedBreakdown(
       breakdowns._1.paymentWithPeriod.periodWithPaymentDate.period,
-      breakdowns._1.toDetailedFurloughBreakdown
+      breakdowns._1.toDetailedFurloughBreakdown,
+      breakdowns._2
     )
   }
 

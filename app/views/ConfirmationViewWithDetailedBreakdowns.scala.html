@@ -27,6 +27,7 @@
         button: components.button,
         details: components.details,
         detailedFurloughBreakdown: includes.detailedFurloughBreakdown,
+        detailedNicBreakdown: includes.detailedNicBreakdown,
         link: components.link,
         appConfig: config.FrontendAppConfig
 )
@@ -85,6 +86,7 @@
         @for(detailedBreakdown <- cvb.detailedBreakdowns) {
             @h3(Messages("detailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
             @detailedFurloughBreakdown(detailedBreakdown.furlough)
+            @detailedNicBreakdown(detailedBreakdown.nic)
         }
     }
 

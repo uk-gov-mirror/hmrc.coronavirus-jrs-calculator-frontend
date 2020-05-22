@@ -540,7 +540,7 @@ referencePayBreakdown.average.result = Total average pay last year = £{0}
 referencePayBreakdown.cylb.p1 = Method 1: take pay from same dates last year.
 referencePayBreakdown.cylb.twoPeriods = Last year’s dates overlap two pay periods so in period one:
 referencePayBreakdown.cylb.l1 = Start with £{0} (from pay day {1} last year).
-referencePayBreakdown.cylb.l2 = Divide by {0} (days in period).
+referencePayBreakdown.cylb.l2 = Divide by {0} (days in pay period).
 referencePayBreakdown.cylb.l3 = Multiply by {0} (furlough days).
 referencePayBreakdown.cylb.periodTotal = Total for period = £{0}
 referencePayBreakdown.cylb.then = Then:
@@ -561,6 +561,25 @@ furloughBreakdown.furloughCap.fullPeriodCap = £{0}
 furloughBreakdown.furloughCap.periodSpansMonthCap = {0} furlough days in {1} at £{2} + {3} furlough days in {4} at £{5} = £{6}.
 furloughBreakdown.furloughCap.partialPeriodCap ={0} furlough days in {1} at £{2} = £{3}
 furloughBreakdown.furloughCap.p3 = Therefore we use the maximum furlough grant amount.
+
+nicBreakdown.h4 = Employer National Insurance contributions
+nicBreakdown.l1 = Start with £{0} (furlough grant).
+nicBreakdown.l2 = Add £{0} (employer-funded pay).
+nicBreakdown.l3 = Add £{0} (employer top up).
+nicBreakdown.l4 = Add £{0} (additional pay).
+nicBreakdown.l5 = Round down to the nearest pound.
+nicBreakdown.l6.20 = Deduct £{0} (National Insurance contribution threshold for 19/20 tax year).
+nicBreakdown.l6.21 = Deduct £{0} (National Insurance contribution threshold for 20/21 tax year).
+nicBreakdown.l7 = Multiply by 13.8%.
+nicBreakdown.l8 = Divide by {0} (days in pay period).
+nicBreakdown.l9 = Multiply by {0} (furlough days).
+nicBreakdown.l10 = Divide by £{0} (furlough grant plus top up).
+nicBreakdown.l11 = Multiply by £{0} (furlough grant).
+nicBreakdown.nicCap.p1 = Calculated National Insurance contribution grant = £{0}
+nicBreakdown.nicCap.p2 = This exceeds the maximum National Insurance contribution grant for this pay period, which is:
+nicBreakdown.nicCap.l1 = £{0} furlough grant x 13.8% = £{1}.
+nicBreakdown.nicCap.p3 = Therefore we use the maximum National Insurance contribution grant amount.
+nicBreakdown.total = Total NI grant for pay period = £{0}
 
 claimPeriodQuestion.title = Do you want to use the same claim period?
 claimPeriodQuestion.heading = Do you want to use the same claim period?

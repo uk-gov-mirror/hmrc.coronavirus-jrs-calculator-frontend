@@ -19,7 +19,12 @@ package services
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
 
-case class Threshold(value: BigDecimal, taxYear: TaxYear)
+case class Threshold(value: BigDecimal, taxYear: TaxYear) {
+  def messagesKey: String = taxYear match {
+    case TaxYearEnding2020 => "nicBreakdown.l6.20"
+    case TaxYearEnding2021 => "nicBreakdown.l6.21"
+  }
+}
 
 sealed trait Rate {
   val value: BigDecimal
