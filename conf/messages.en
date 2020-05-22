@@ -581,6 +581,16 @@ nicBreakdown.nicCap.l1 = £{0} furlough grant x 13.8% = £{1}.
 nicBreakdown.nicCap.p3 = Therefore we use the maximum National Insurance contribution grant amount.
 nicBreakdown.total = Total NI grant for pay period = £{0}
 
+pensionBreakdown.h4 = Employer minimum pension contributions
+pensionBreakdown.l1 = Start with £{0} (furlough grant).
+pensionBreakdown.l2 = Round down to the nearest pound.
+pensionBreakdown.l3.full.20 = Deduct £{0} (Lower Level of Qualifying Earnings for 19/20 tax year).
+pensionBreakdown.l3.full.21 = Deduct £{0} (Lower Level of Qualifying Earnings for 20/21 tax year).
+pensionBreakdown.l3.partial.20 = Deduct £{0} (£{1} Lower Level of Qualifying Earnings for 19/20 tax year, divide by {2} days in pay period and multiply by {3} furlough days).
+pensionBreakdown.l3.partial.21 = Deduct £{0} (£{1} Lower Level of Qualifying Earnings for 20/21 tax year, divide by {2} days in pay period and multiply by {3} furlough days).
+pensionBreakdown.l4 = Multiply by 3%.
+pensionBreakdown.total = Total pension grant for pay period = £{0}
+
 claimPeriodQuestion.title = Do you want to use the same claim period?
 claimPeriodQuestion.heading = Do you want to use the same claim period?
 claimPeriodQuestion.claimOnSamePeriod = Yes

@@ -21,8 +21,8 @@ import models.{PaymentFrequency, TaxYear, TaxYearEnding2020, TaxYearEnding2021}
 
 case class Threshold(value: BigDecimal, taxYear: TaxYear) {
   def messagesKey: String = taxYear match {
-    case TaxYearEnding2020 => "nicBreakdown.l6.20"
-    case TaxYearEnding2021 => "nicBreakdown.l6.21"
+    case TaxYearEnding2020 => "20"
+    case TaxYearEnding2021 => "21"
   }
 }
 

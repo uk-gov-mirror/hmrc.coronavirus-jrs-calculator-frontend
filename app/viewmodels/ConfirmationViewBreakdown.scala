@@ -28,7 +28,8 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
     DetailedBreakdown(
       breakdowns._1.paymentWithPeriod.periodWithPaymentDate.period,
       breakdowns._1.toDetailedFurloughBreakdown,
-      breakdowns._2
+      breakdowns._2,
+      breakdowns._3
     )
   }
 

@@ -33,7 +33,7 @@
             <li>@messages("nicBreakdown.l4", breakdown.additionalPay.value.formatted("%.2f"))</li>
         }
         <li>@messages("nicBreakdown.l5")</li>
-        <li>@messages(breakdown.threshold.messagesKey, breakdown.threshold.value.formatted("%.2f"))</li>
+        <li>@messages("nicBreakdown.l6." + breakdown.threshold.messagesKey, breakdown.threshold.value.formatted("%.2f"))</li>
         <li>@messages("nicBreakdown.l7")</li>
         <li>@messages("nicBreakdown.l8", breakdown.paymentWithPeriod.periodDays)</li>
         <li>@messages("nicBreakdown.l9", breakdown.paymentWithPeriod.furloughDays)</li>

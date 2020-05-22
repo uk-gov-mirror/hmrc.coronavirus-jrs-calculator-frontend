@@ -20,14 +20,6 @@ import models.{Amount, FullPeriod, FurloughCap, PartialPeriod, PaymentWithPeriod
 import services.Calculators.AmountRounding
 
 case class DetailedFurloughBreakdown(employeesWages: Amount, furloughCap: FurloughCap, furloughGrant: Amount, payment: PaymentWithPeriod) {
-  import payment.periodWithPaymentDate.period
-
-  def fullPeriodDays: Int = period.period.countDays
-
-  def furloughDays: Int = period match {
-    case fp: FullPeriod    => fp.period.countDays
-    case pp: PartialPeriod => pp.partial.countDays
-  }
 
   def isCapped: Boolean = (employeesWages.value * 0.8) > furloughCap.value
 
