@@ -16,7 +16,7 @@
 
 package viewmodels
 
-import models.{FurloughBreakdown, FurloughCalculationResult, FurloughDates, NicBreakdown, NicCalculationResult, NicCategory, PaymentFrequency, PensionBreakdown, PensionCalculationResult, PensionStatus, Period}
+import models.{AveragePayment, CylbPayment, FurloughBreakdown, FurloughCalculationResult, FurloughDates, NicBreakdown, NicCalculationResult, NicCategory, PaymentFrequency, PensionBreakdown, PensionCalculationResult, PensionStatus, Period, RegularPayment}
 
 case class ConfirmationDataResult(metaData: ConfirmationMetadata, confirmationViewBreakdown: ConfirmationViewBreakdown)
 
@@ -29,6 +29,23 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
       breakdowns._1.paymentWithPeriod.periodWithPaymentDate.period,
       breakdowns._1.toDetailedFurloughBreakdown
     )
+  }
+
+  def detailedBreakdownMessageKeys: Seq[String] = furlough.periodBreakdowns.head.paymentWithPeriod match {
+    case _: RegularPayment =>
+      Seq(
+        "detailedBreakdown.p1.regular"
+      )
+    case _: AveragePayment =>
+      Seq(
+        "detailedBreakdown.p1.average"
+      )
+    case _: CylbPayment =>
+      Seq(
+        "detailedBreakdown.p1.cylb.1",
+        "detailedBreakdown.p1.cylb.2",
+        "detailedBreakdown.p1.cylb.3"
+      )
   }
 }
 

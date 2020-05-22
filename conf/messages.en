@@ -511,43 +511,56 @@ whatToInclude.doNotInclude.l1.l3 = discretionary commission payments
 whatToInclude.doNotInclude.l2 = non-cash payments
 whatToInclude.doNotInclude.l3 = non-monetary benefits like benefits in kind (such as a company car) and salary sacrifice schemes that reduce taxable pay
 
+detailedBreakdown.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days in each pay period. The furlough grant is 80% of this.
+detailedBreakdown.p1.average = You told us this employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing the total pay in this employment by the number of calendar days they’ve worked for you. Then we’ve multiplied that by the number of furlough days in each pay period. The furlough grant is 80% of this.
+detailedBreakdown.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 80% of this.
+detailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in 2019 and applied this to the number of furlough days in each pay period.
+detailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if earlier). Then we’ve multiplied that by the number of furlough days in each pay period.
+detailedBreakdown.p2 = There’s a maximum amount you can claim for furlough grant and Employer National Insurance contributions. If this affects your claim, we’ve adjusted the calculations. 
+detailedBreakdown.p2.a = Work out the maximum wage amount you can claim (opens in new tab).
+detailedBreakdown.p2.a.href = https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme#eighty-percent
+detailedBreakdown.p3 = Calculations are rounded to the nearest penny, unless otherwise stated.
 detailedBreakdown.h3 = For pay period {0} to {1}
 
-referencePayBreakdown.h4 = Calculate relevant pay amount
+referencePayBreakdown.h4 = Calculate pay based on furlough days
+referencePayBreakdown.result = Total pay based on furlough days = £{0}
 
-referencePayBreakdown.regular.l1 = Start with £{0} total pay
-referencePayBreakdown.regular.l2 = Divide by {0} days in the pay period
-referencePayBreakdown.regular.l3 = Multiply by {0} furlough days in the pay period
-referencePayBreakdown.regular.result = Pay based on furlough days = £{0}
+referencePayBreakdown.regular.p1 = Take the pay in pay period:
+referencePayBreakdown.regular.l1 = Start with £{0} (from pay period).
+referencePayBreakdown.regular.l2 = Divide by {0} (days in pay period).
+referencePayBreakdown.regular.l3 = Multiply by {0} (furlough days).
 
 referencePayBreakdown.average.p1 = Take the average pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
-referencePayBreakdown.average.l1 = Start with £{0} total pay
-referencePayBreakdown.average.l2 = Divide by {0} days employed
-referencePayBreakdown.average.l3 = Multiply by {0} furlough days in the pay period
-referencePayBreakdown.average.result = Average pay for last year = £{0}
+referencePayBreakdown.average.p1.partOfCylb = Method 2: take the average pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
+referencePayBreakdown.average.l1 = Start with £{0} (total pay).
+referencePayBreakdown.average.l2 = Divide by {0} (days employed).
+referencePayBreakdown.average.l3 = Multiply by {0} (furlough days).
+referencePayBreakdown.average.result = Total average pay last year = £{0}
 
-referencePayBreakdown.cylb.p1 = Take pay from same dates last year.
-referencePayBreakdown.cylb.twoPeriods = Last year’s dates overlap two pay periods:
-referencePayBreakdown.cylb.l1 = Start with £{0} from pay day {1}
-referencePayBreakdown.cylb.l2 = Divide by {0} days in pay period
-referencePayBreakdown.cylb.l3 = Multiply by {0} furlough days in matching pay period
+referencePayBreakdown.cylb.p1 = Method 1: take pay from same dates last year.
+referencePayBreakdown.cylb.twoPeriods = Last year’s dates overlap two pay periods so in period one:
+referencePayBreakdown.cylb.l1 = Start with £{0} (from pay day {1} last year).
+referencePayBreakdown.cylb.l2 = Divide by {0} (days in period).
+referencePayBreakdown.cylb.l3 = Multiply by {0} (furlough days).
 referencePayBreakdown.cylb.periodTotal = Total for period = £{0}
 referencePayBreakdown.cylb.then = Then:
-referencePayBreakdown.cylb.addTotals = Add the totals, £{0} + £{1}
+referencePayBreakdown.cylb.thenPeriodTwo = Then in period two:
+referencePayBreakdown.cylb.addTotals = Add £{0} + £{1} (the totals from both pay periods).
 referencePayBreakdown.cylb.result = Total pay from same dates last year = £{0}
-referencePayBreakdown.cylb.higherOf = User the higher of:
-referencePayBreakdown.cylb.higherOf.cylb = £{0} (pay from same dates last year)
-referencePayBreakdown.cylb.higherOf.average = £{0} (average pay for last year)
-
+referencePayBreakdown.cylb.higherOf = Then take the higher figure from methods 1 and 2:
+referencePayBreakdown.cylb.higherOf.cylb = £{0} (method 1: pay from same dates last year).
+referencePayBreakdown.cylb.higherOf.average = £{0} (method 2: average pay last year).
 
 furloughBreakdown.h4 = Calculate Furlough grant
-furloughBreakdown.l1 = Start with £{0} Employee’s pay
+furloughBreakdown.l1 = Take £{0} (pay based on furlough days).
 furloughBreakdown.l2 = Multiply by 80%
 furloughBreakdown.total = Total furlough grant for pay period = £{0}
-furloughBreakdown.total.rounding = The total is rounded to the nearest penny.
-furloughBreakdown.furloughCap = Limit to the maximum amount of £{0}
-furloughBreakdown.furloughCap.periodSpansMonthCap = ({0} days of {1} at £{2} + {3} days of {4} at £{5})
-furloughBreakdown.furloughCap.partialPeriodCap = ({0} days of {1} at £{2})
+furloughBreakdown.furloughCap.p1 = Calculated furlough grant = £{0}
+furloughBreakdown.furloughCap.p2 = This exceeds the maximum furlough grant for this pay period, which is:
+furloughBreakdown.furloughCap.fullPeriodCap = £{0}
+furloughBreakdown.furloughCap.periodSpansMonthCap = {0} furlough days in {1} at £{2} + {3} furlough days in {4} at £{5} = £{6}.
+furloughBreakdown.furloughCap.partialPeriodCap ={0} furlough days in {1} at £{2} = £{3}
+furloughBreakdown.furloughCap.p3 = Therefore we use the maximum furlough grant amount.
 
 claimPeriodQuestion.title = Do you want to use the same claim period?
 claimPeriodQuestion.heading = Do you want to use the same claim period?

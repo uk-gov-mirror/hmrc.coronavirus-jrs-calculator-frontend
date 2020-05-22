@@ -18,6 +18,7 @@
 @import views.includes.FurloughCapHelper
 
 @this(h4: components.h4,
+        p: components.p,
       helper: FurloughCapHelper,
       referencePayBreakdown: referencePayBreakdown)
 
@@ -30,12 +31,17 @@
     <ol class="govuk-list govuk-list--number">
         <li>@messages("furloughBreakdown.l1", breakdown.formattedWages)</li>
         <li>@messages("furloughBreakdown.l2")</li>
-        @if(breakdown.isCapped) {
-            <li>@messages("furloughBreakdown.furloughCap", breakdown.furloughCap.value.formatted("%.2f"))</li>
-        }
     </ol>
 
-    <div class="govuk-inset-text">
+    @if(breakdown.isCapped) {
+        @p(Html(messages("furloughBreakdown.furloughCap.p1", breakdown.calculatedFurlough)))
+        @p(Html(messages("furloughBreakdown.furloughCap.p2")))
+        <ul>
+            <li>@helper.calculationFor(breakdown.furloughCap)</li>
+        </ul>
+        @p(Html(messages("furloughBreakdown.furloughCap.p3")))
+    }
+
+    <div class="govuk-inset-text govuk-!-font-size-24">
         @messages("furloughBreakdown.total", breakdown.formattedGrant)
-        <span class="govuk-hint">@messages("furloughBreakdown.total.rounding")</span>
     </div>

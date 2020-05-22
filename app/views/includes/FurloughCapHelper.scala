@@ -26,30 +26,29 @@ import play.api.i18n.Messages
 
 class FurloughCapHelper @Inject()() {
 
-  def calculationFor(cap: FurloughCap)(implicit messages: Messages): Option[String] =
+  def calculationFor(cap: FurloughCap)(implicit messages: Messages): String =
     cap match {
-      case FullPeriodCap(_) => None
+      case FullPeriodCap(value) =>
+        messages("furloughBreakdown.furloughCap.fullPeriodCap", value.formatted("%.2f"))
       case PeriodSpansMonthCap(value, monthOneFurloughDays, monthOne, monthOneDaily, monthTwoFurloughDays, monthTwo, monthTwoDaily) =>
-        Some(
-          messages(
-            "furloughBreakdown.furloughCap.periodSpansMonthCap",
-            monthOneFurloughDays,
-            Month.of(monthOne).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
-            monthOneDaily.formatted("%.2f"),
-            monthTwoFurloughDays,
-            Month.of(monthTwo).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
-            monthTwoDaily.formatted("%.2f"),
-            value.formatted("%.2f")
-          ))
+        messages(
+          "furloughBreakdown.furloughCap.periodSpansMonthCap",
+          monthOneFurloughDays,
+          Month.of(monthOne).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          monthOneDaily.formatted("%.2f"),
+          monthTwoFurloughDays,
+          Month.of(monthTwo).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          monthTwoDaily.formatted("%.2f"),
+          value.formatted("%.2f")
+        )
       case PartialPeriodCap(value, furloughDays, month, dailyCap) =>
-        Some(
-          messages(
-            "furloughBreakdown.furloughCap.partialPeriodCap",
-            furloughDays,
-            Month.of(month).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
-            dailyCap.formatted("%.2f"),
-            value.formatted("%.2f")
-          ))
+        messages(
+          "furloughBreakdown.furloughCap.partialPeriodCap",
+          furloughDays,
+          Month.of(month).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          dailyCap.formatted("%.2f"),
+          value.formatted("%.2f")
+        )
     }
 
 }
