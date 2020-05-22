@@ -16,7 +16,9 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import handlers.ErrorHandler
+import models.UserAnswers.AnswerV
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.QuestionPage
@@ -35,12 +37,22 @@ trait BaseController extends FrontendBaseController with I18nSupport {
   def getAnswer[A](page: QuestionPage[A], idx: Int)(implicit request: DataRequest[_], reads: Reads[A]): Option[A] =
     getAnswer(page, Some(idx))
 
+  def getAnswerV[A](page: QuestionPage[A], idx: Int)(implicit request: DataRequest[_], reads: Reads[A]): AnswerV[A] =
+    getAnswerV(page, Some(idx))
+
   def getAnswer[A](page: QuestionPage[A], idx: Option[Int] = None)(implicit request: DataRequest[_], reads: Reads[A]): Option[A] =
     request.userAnswers.get(page, idx)
+
+  def getAnswerV[A](page: QuestionPage[A], idx: Option[Int] = None)(implicit request: DataRequest[_], reads: Reads[A]): AnswerV[A] =
+    request.userAnswers.getV(page, idx)
 
   def getRequiredAnswer[A](page: QuestionPage[A], idx: Int)(
     f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
     getRequiredAnswer(page, Some(idx))(f)
+
+  def getRequiredAnswerV[A](page: QuestionPage[A], idx: Int)(
+    f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
+    getRequiredAnswerV(page, Some(idx))(f)
 
   def getRequiredAnswer[A](page: QuestionPage[A], idx: Option[Int] = None)(
     f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
@@ -48,6 +60,17 @@ trait BaseController extends FrontendBaseController with I18nSupport {
       case Some(ans) => f(ans)
       case _ =>
         Logger.error(s"[BaseController][getRequiredAnswer] Failed to retrieve expected data for page: $page")
+        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+    }
+
+  def getRequiredAnswerV[A](page: QuestionPage[A], idx: Option[Int] = None)(
+    f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
+    getAnswerV(page, idx) match {
+      case Valid(ans)      => f(ans)
+      case Invalid(errors) =>
+        // TODO (flav): Discuss with team if we want to display errors on the page.
+        Logger.error(s"[BaseController][getRequiredAnswer] Failed to retrieve expected data for page: $page")
+        Logger.error(errors.toNonEmptyList.toList.mkString("\n"))
         Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
     }
 

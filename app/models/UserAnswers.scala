@@ -24,6 +24,7 @@ import queries.{Gettable, Query, Settable}
 import scala.util.{Failure, Success, Try}
 import cats.data.{NonEmptyChain, NonEmptyList, ValidatedNec}
 import cats.syntax.validated._
+import models.UserAnswers.AnswerV
 
 final case class UserAnswers(
   id: String,
@@ -31,11 +32,9 @@ final case class UserAnswers(
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
-  type Answer[A] = ValidatedNec[JsError, A]
-
   private def path[T <: Query](page: T, idx: Option[Int]): JsPath = idx.fold(page.path)(idx => page.path \ (idx - 1))
 
-  def getV[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): Answer[A] =
+  def getV[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): AnswerV[A] =
     Reads.at(path(page, idx)).reads(data) match {
       case JsSuccess(value, _) => value.validNec
       case error @ JsError(_) =>
@@ -101,6 +100,8 @@ final case class UserAnswers(
 }
 
 object UserAnswers {
+
+  type AnswerV[A] = ValidatedNec[JsError, A]
 
   implicit lazy val reads: Reads[UserAnswers] = {
 
