@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import forms.FurloughPeriodQuestionFormProvider
+import models.ClaimPeriodQuestion.ClaimOnSamePeriod
 import models.FurloughPeriodQuestion
 import models.FurloughPeriodQuestion.FurloughedOnSamePeriod
 import models.FurloughStatus.{FurloughEnded, FurloughOngoing}
@@ -29,7 +30,7 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.OptionValues
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{FurloughEndDatePage, FurloughPeriodQuestionPage, FurloughStartDatePage, FurloughStatusPage}
+import pages.FurloughPeriodQuestionPage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
@@ -58,13 +59,10 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
   val furloughEnd = furloughStart.plusDays(20)
   val furloughStatus = FurloughOngoing
 
-  val userAnswers = emptyUserAnswers
-    .set(FurloughStartDatePage, furloughStart)
-    .success
-    .value
-    .set(FurloughStatusPage, furloughStatus)
-    .success
-    .value
+  val userAnswers = dummyUserAnswers
+    .withFurloughStartDate(furloughStart.toString)
+    .withFurloughStatus(furloughStatus)
+    .withClaimPeriodQuestion(ClaimOnSamePeriod)
 
   "FurloughPeriodQuestion Controller" must {
 
@@ -85,17 +83,10 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
     }
 
     "return OK and the correct view for a GET when Furlough is Ended" in {
-
       val userAnswersUpdated = emptyUserAnswers
-        .set(FurloughStartDatePage, furloughStart)
-        .success
-        .value
-        .set(FurloughStatusPage, FurloughEnded)
-        .success
-        .value
-        .set(FurloughEndDatePage, furloughEnd)
-        .success
-        .value
+        .withFurloughStartDate(furloughStart.toString)
+        .withFurloughStatus(FurloughEnded)
+        .withFurloughEndDate(furloughEnd.toString)
 
       val application = applicationBuilder(userAnswers = Some(userAnswersUpdated)).build()
 

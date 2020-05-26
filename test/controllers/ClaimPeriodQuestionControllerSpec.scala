@@ -47,18 +47,16 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
 
   lazy val claimPeriodQuestionRoute = routes.ClaimPeriodQuestionController.onPageLoad().url
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
-      .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-
   "ClaimPeriodQuestion Controller" must {
 
     "return OK and the correct view for a GET" in {
       val userAnswers = dummyUserAnswers.withClaimPeriodStart(claimStart.toString).withClaimPeriodEnd(claimEnd.toString)
+      val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
       val application = applicationBuilder(config = Map("fastTrackJourney.enabled" -> "true"), userAnswers = Some(userAnswers)).build()
-
       val result = route(application, getRequest).value
-
       val view = application.injector.instanceOf[ClaimPeriodQuestionView]
 
       status(result) mustEqual OK
@@ -69,15 +67,16 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-
       val userAnswers = dummyUserAnswers
         .withClaimPeriodStart(claimStart.toString)
         .withClaimPeriodEnd(claimEnd.toString)
         .withClaimPeriodQuestion(ClaimOnSamePeriod)
 
       val application = applicationBuilder(config = Map("fastTrackJourney.enabled" -> "true"), userAnswers = Some(userAnswers)).build()
-
       val view = application.injector.instanceOf[ClaimPeriodQuestionView]
+      val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
       val result = route(application, getRequest).value
 
@@ -90,11 +89,8 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
     }
 
     "redirect to 404 page for a GET if FastTrackJourneyFlag is disabled" in {
-
       val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
-
       val request = FakeRequest(GET, claimPeriodQuestionRoute)
-
       val result = route(application, request).value
 
       status(result) mustEqual NOT_FOUND
@@ -103,9 +99,7 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
     }
 
     "redirect to 404 page for a POST if FastTrackJourneyFlag is disabled" in {
-
       val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
-
       val request =
         FakeRequest(POST, claimPeriodQuestionRoute)
           .withFormUrlEncodedBody(("value", ClaimOnSamePeriod.toString))
@@ -167,11 +161,8 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
-
       val request = FakeRequest(GET, claimPeriodQuestionRoute)
-
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
@@ -182,7 +173,6 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
