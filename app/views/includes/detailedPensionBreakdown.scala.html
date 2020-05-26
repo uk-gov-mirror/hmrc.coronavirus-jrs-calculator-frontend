@@ -14,23 +14,27 @@
  * limitations under the License.
  *@
 
+@import models.PensionStatus.DoesContribute
+
 @this(h4: components.h4,
-        p: components.p)
+p: components.p)
 
 @(breakdown: PensionBreakdown, furloughGrant: Amount)(implicit messages: Messages)
 
     @h4(messages("pensionBreakdown.h4"))
 
-    <ol class="govuk-list govuk-list--number">
-        <li>@messages("pensionBreakdown.l1", furloughGrant.value.formatted("%.2f"))</li>
-        <li>@messages("pensionBreakdown.l2")</li>
-        @if(breakdown.isInstanceOf[PartialPeriodPensionBreakdown]) {
-            <li>@messages("pensionBreakdown.l3.partial." + breakdown.threshold.messagesKey, breakdown.allowance.value.formatted("%.2f"), breakdown.threshold.value.formatted("%.2f"), breakdown.paymentWithPeriod.periodDays, breakdown.paymentWithPeriod.furloughDays)</li>
-        } else {
-            <li>@messages("pensionBreakdown.l3.full." + breakdown.threshold.messagesKey, breakdown.allowance.value.formatted("%.2f"))</li>
-        }
-        <li>@messages("pensionBreakdown.l4")</li>
-    </ol>
+    @if(breakdown.pensionStatus == DoesContribute) {
+        <ol class="govuk-list govuk-list--number">
+            <li>@messages("pensionBreakdown.l1", furloughGrant.value.formatted("%.2f"))</li>
+            <li>@messages("pensionBreakdown.l2")</li>
+            @if(breakdown.isInstanceOf[PartialPeriodPensionBreakdown]) {
+                <li>@messages("pensionBreakdown.l3.partial." + breakdown.threshold.messagesKey, breakdown.allowance.value.formatted("%.2f"), breakdown.threshold.value.formatted("%.2f"), breakdown.paymentWithPeriod.periodDays, breakdown.paymentWithPeriod.furloughDays)</li>
+            } else {
+                <li>@messages("pensionBreakdown.l3.full." + breakdown.threshold.messagesKey, breakdown.allowance.value.formatted("%.2f"))</li>
+            }
+            <li>@messages("pensionBreakdown.l4")</li>
+        </ol>
+    }
 
     <div class="govuk-inset-text govuk-!-font-size-24">
         @messages("pensionBreakdown.total", breakdown.grant.value.formatted("%.2f"))

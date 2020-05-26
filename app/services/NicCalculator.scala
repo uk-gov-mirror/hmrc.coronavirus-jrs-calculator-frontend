@@ -75,7 +75,7 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
 
     val nicCap = nicGrantCap(furloughGrant, grant)
 
-    PartialPeriodNicBreakdown(nicCap.cappedGrant, topUp.defaulted, additionalPayment.defaulted, payment, threshold, nicCap)
+    PartialPeriodNicBreakdown(nicCap.cappedGrant, topUp.defaulted, additionalPayment.defaulted, payment, threshold, nicCap, nicCategory)
   }
 
   protected def calculateFullPeriodNic(
@@ -99,7 +99,7 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
 
     val nicCap = nicGrantCap(furloughGrant, grant)
 
-    FullPeriodNicBreakdown(nicCap.cappedGrant, topUp.defaulted, additionalPayment.defaulted, payment, threshold, nicCap)
+    FullPeriodNicBreakdown(nicCap.cappedGrant, topUp.defaulted, additionalPayment.defaulted, payment, threshold, nicCap, nicCategory)
   }
 
   private def periodCalculation(

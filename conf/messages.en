@@ -551,7 +551,7 @@ referencePayBreakdown.cylb.higherOf = Then take the higher figure from methods 1
 referencePayBreakdown.cylb.higherOf.cylb = £{0} (method 1: pay from same dates last year).
 referencePayBreakdown.cylb.higherOf.average = £{0} (method 2: average pay last year).
 
-furloughBreakdown.h4 = Calculate Furlough grant
+furloughBreakdown.h4 = Furlough grant
 furloughBreakdown.l1 = Take £{0} (pay based on furlough days).
 furloughBreakdown.l2 = Multiply by 80%
 furloughBreakdown.total = Total furlough grant for pay period = £{0}

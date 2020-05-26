@@ -41,11 +41,13 @@ sealed trait NicBreakdown extends PeriodBreakdown {
   def additionalPay: Amount
   def threshold: Threshold
   def nicCap: NicCap
+  def nicCategory: NicCategory
 }
 
 sealed trait PensionBreakdown extends PeriodBreakdown {
   def threshold: Threshold
   def allowance: Amount
+  def pensionStatus: PensionStatus
 }
 
 final case class FullPeriodFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithFullPeriod, furloughCap: FurloughCap)
@@ -60,7 +62,8 @@ final case class FullPeriodNicBreakdown(
   additionalPay: Amount,
   paymentWithPeriod: PaymentWithFullPeriod,
   threshold: Threshold,
-  nicCap: NicCap)
+  nicCap: NicCap,
+  nicCategory: NicCategory)
     extends FullPeriodBreakdown with NicBreakdown
 
 final case class PartialPeriodNicBreakdown(
@@ -69,21 +72,24 @@ final case class PartialPeriodNicBreakdown(
   additionalPay: Amount,
   paymentWithPeriod: PaymentWithPartialPeriod,
   threshold: Threshold,
-  nicCap: NicCap)
+  nicCap: NicCap,
+  nicCategory: NicCategory)
     extends PartialPeriodBreakdown with NicBreakdown
 
 final case class FullPeriodPensionBreakdown(
   grant: Amount,
   paymentWithPeriod: PaymentWithFullPeriod,
   threshold: Threshold,
-  allowance: Amount)
+  allowance: Amount,
+  pensionStatus: PensionStatus)
     extends FullPeriodBreakdown with PensionBreakdown
 
 final case class PartialPeriodPensionBreakdown(
   grant: Amount,
   paymentWithPeriod: PaymentWithPartialPeriod,
   threshold: Threshold,
-  allowance: Amount)
+  allowance: Amount,
+  pensionStatus: PensionStatus)
     extends PartialPeriodBreakdown with PensionBreakdown
 
 object FurloughBreakdown {

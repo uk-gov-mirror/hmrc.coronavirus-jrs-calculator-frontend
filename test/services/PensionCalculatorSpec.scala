@@ -41,7 +41,7 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
   forAll(fullPeriodScenarios) { (frequency, furloughGrant, payment, threshold, allowance, expectedGrant) =>
     s"Calculate pension grant for a full period with Payment Frequency: $frequency, " +
       s"a Payment Date: ${payment.periodWithPaymentDate.paymentDate} and a Furlough Grant: ${furloughGrant.value}" in new PensionCalculator {
-      val expected = FullPeriodPensionBreakdown(expectedGrant, payment, threshold, allowance)
+      val expected = FullPeriodPensionBreakdown(expectedGrant, payment, threshold, allowance, DoesContribute)
 
       calculateFullPeriodPension(DoesContribute, frequency, furloughGrant, payment) mustBe expected
     }
@@ -70,7 +70,7 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
   forAll(partialPeriodScenarios) { (frequency, furloughGrant, payment, threshold, allowance, expectedGrant) =>
     s"Calculate pension grant for a partial period with Payment Frequency: $frequency, " +
       s"a Payment Date: ${payment.periodWithPaymentDate.paymentDate} and a Furlough Grant: ${furloughGrant.value}" in new PensionCalculator {
-      val expected = PartialPeriodPensionBreakdown(expectedGrant, payment, threshold, allowance)
+      val expected = PartialPeriodPensionBreakdown(expectedGrant, payment, threshold, allowance, DoesContribute)
       calculatePartialPeriodPension(DoesContribute, frequency, furloughGrant, payment) mustBe expected
     }
   }

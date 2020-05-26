@@ -55,7 +55,7 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
       case DoesNotContribute => Amount(0.00)
     }
 
-    PartialPeriodPensionBreakdown(grant, payment, threshold, allowance)
+    PartialPeriodPensionBreakdown(grant, payment, threshold, allowance, pensionStatus)
   }
 
   protected def calculateFullPeriodPension(
@@ -71,6 +71,6 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
       case DoesNotContribute => Amount(0.00)
     }
 
-    FullPeriodPensionBreakdown(grant, payment, threshold, Amount(threshold.value))
+    FullPeriodPensionBreakdown(grant, payment, threshold, Amount(threshold.value), pensionStatus)
   }
 }

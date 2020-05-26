@@ -107,14 +107,16 @@ trait CoreTestDataBuilder extends TryValues {
     additional: BigDecimal,
     payment: PaymentWithFullPeriod,
     threshold: Threshold,
-    nicCap: NicCap): FullPeriodNicBreakdown =
+    nicCap: NicCap,
+    nicCategory: NicCategory): FullPeriodNicBreakdown =
     FullPeriodNicBreakdown(
       Amount(grant),
       Amount(topUp),
       Amount(additional),
       payment,
       threshold,
-      nicCap
+      nicCap,
+      nicCategory
     )
 
   def partialPeriodNicBreakdown(
@@ -123,38 +125,44 @@ trait CoreTestDataBuilder extends TryValues {
     additional: BigDecimal,
     payment: PaymentWithPartialPeriod,
     threshold: Threshold,
-    nicCap: NicCap): PartialPeriodNicBreakdown =
+    nicCap: NicCap,
+    nicCategory: NicCategory): PartialPeriodNicBreakdown =
     PartialPeriodNicBreakdown(
       Amount(grant),
       Amount(topUp),
       Amount(additional),
       payment,
       threshold,
-      nicCap
+      nicCap,
+      nicCategory
     )
 
   def fullPeriodPensionBreakdown(
     grant: BigDecimal,
     payment: PaymentWithFullPeriod,
     threshold: Threshold,
-    allowance: BigDecimal): FullPeriodPensionBreakdown =
+    allowance: BigDecimal,
+    pensionStatus: PensionStatus): FullPeriodPensionBreakdown =
     FullPeriodPensionBreakdown(
       Amount(grant),
       payment,
       threshold,
-      Amount(allowance)
+      Amount(allowance),
+      pensionStatus
     )
 
   def partialPeriodPensionBreakdown(
     grant: BigDecimal,
     payment: PaymentWithPartialPeriod,
     threshold: Threshold,
-    allowance: BigDecimal): PartialPeriodPensionBreakdown =
+    allowance: BigDecimal,
+    pensionStatus: PensionStatus): PartialPeriodPensionBreakdown =
     PartialPeriodPensionBreakdown(
       Amount(grant),
       payment,
       threshold,
-      Amount(allowance)
+      Amount(allowance),
+      pensionStatus
     )
 
   def paymentDate(date: String): PaymentDate = PaymentDate(date.toLocalDate)
