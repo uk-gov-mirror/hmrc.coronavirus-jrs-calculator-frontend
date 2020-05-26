@@ -83,13 +83,7 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       withFrequency <- answersState.updated.set(PaymentFrequencyPage, frequency).toOption
     } yield UserAnswersState(withFrequency, answersState.original))
 
-  private val keepPayQuestion: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
-    for {
-      question        <- extractPayPeriodQuestion(answersState.original)
-      withPayQuestion <- answersState.updated.set(PayPeriodQuestionPage, question).toOption
-    } yield UserAnswersState(withPayQuestion, answersState.original))
-
-  private val keepPayPeriodData = keepPayQuestion andThen keepPayPeriod andThen keepPayMethod andThen keepPaymentFrequency
+  private val keepPayPeriodData = keepPayPeriod andThen keepPayMethod andThen keepPaymentFrequency
 
   private val clearAllAnswers: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(
     answersState => Option(answersState.modify(_.updated.data).setTo(Json.obj())))
