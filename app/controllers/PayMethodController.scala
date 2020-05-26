@@ -16,11 +16,14 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.PayMethodFormProvider
 import javax.inject.Inject
+import models.PayMethod
 import navigation.Navigator
 import pages.PayMethodPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -42,12 +45,12 @@ class PayMethodController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[PayMethod] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(PayMethodPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+    val preparedForm = request.userAnswers.getV(PayMethodPage) match {
+      case Invalid(e)   => form
+      case Valid(value) => form.fill(value)
     }
 
     Ok(view(preparedForm))

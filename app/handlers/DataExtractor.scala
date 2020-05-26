@@ -18,10 +18,11 @@ package handlers
 
 import java.time.LocalDate
 
+import models.UserAnswers.AnswerV
 import models.{AdditionalPayment, Amount, BranchingQuestions, LastYearPayment, NicCategory, NonFurloughPay, PaymentFrequency, PensionStatus, Period, ReferencePayData, TopUpPayment, UserAnswers}
 import pages._
 import services.{FurloughPeriodExtractor, PeriodHelper}
-
+import cats.syntax.apply._
 trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
 
   def extractPriorFurloughPeriod(userAnswers: UserAnswers): Option[Period] =
@@ -37,12 +38,31 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
     NonFurloughPay(preFurloughPay.map(v => Amount(v.value)), postFurloughPay.map(v => Amount(v.value)))
   }
 
+  def extractNonFurloughV(userAnswers: UserAnswers): NonFurloughPay = {
+    val preFurloughPay = userAnswers.getV(PartialPayBeforeFurloughPage).toOption
+    val postFurloughPay = userAnswers.getV(PartialPayAfterFurloughPage).toOption
+
+    NonFurloughPay(
+      preFurloughPay.map(v => Amount(v.value)),
+      postFurloughPay.map(v => Amount(v.value))
+    )
+  }
+
   def extractBranchingQuestions(userAnswers: UserAnswers): Option[BranchingQuestions] =
     for {
       payMethod <- userAnswers.get(PayMethodPage)
       employeeStarted = userAnswers.get(EmployedStartedPage)
       employeeStartDate = userAnswers.get(EmployeeStartDatePage)
     } yield BranchingQuestions(payMethod, employeeStarted, employeeStartDate)
+
+  def extractBranchingQuestionsV(userAnswers: UserAnswers): AnswerV[BranchingQuestions] =
+    userAnswers.getV(PayMethodPage).map { payMethod =>
+      BranchingQuestions(
+        payMethod,
+        userAnswers.getV(EmployedStartedPage).toOption,
+        userAnswers.getV(EmployeeStartDatePage).toOption
+      )
+    }
 
   def extractSalary(userAnswers: UserAnswers): Option[Amount] =
     userAnswers.get(RegularPayAmountPage).map(v => Amount(v.amount))

@@ -16,6 +16,7 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.PayPeriodQuestionFormProvider
@@ -52,9 +53,9 @@ class PayPeriodQuestionController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(PayPeriodQuestionPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+      val preparedForm = request.userAnswers.getV(PayPeriodQuestionPage) match {
+        case Invalid(e)   => form
+        case Valid(value) => form.fill(value)
       }
       Ok(view(preparedForm, generatePeriods(request.userAnswers.getList(PayDatePage))))
   }

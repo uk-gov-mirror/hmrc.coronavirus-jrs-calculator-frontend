@@ -18,12 +18,14 @@ package controllers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.FurloughEndDateFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, FurloughEndDatePage, FurloughStartDatePage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -45,21 +47,21 @@ class FurloughEndDateController @Inject()(
     extends BaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(ClaimPeriodEndPage, FurloughStartDatePage) { (claimEndDate, furloughStart) =>
-      val preparedForm = request.userAnswers.get(FurloughEndDatePage) match {
-        case None        => form(claimEndDate, furloughStart)
-        case Some(value) => form(claimEndDate, furloughStart).fill(value)
+    getRequiredAnswersV(ClaimPeriodEndPage, FurloughStartDatePage) { (claimEndDate, furloughStart) =>
+      val preparedForm = request.userAnswers.getV(FurloughEndDatePage) match {
+        case Invalid(_)   => form(claimEndDate, furloughStart)
+        case Valid(value) => form(claimEndDate, furloughStart).fill(value)
       }
 
       Future.successful(Ok(view(preparedForm)))
     }
   }
 
-  def form(claimEndDate: LocalDate, furloughStartDate: LocalDate) =
+  def form(claimEndDate: LocalDate, furloughStartDate: LocalDate): Form[LocalDate] =
     formProvider(claimEndDate, furloughStartDate)
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(ClaimPeriodEndPage, FurloughStartDatePage) { (claimEndDate, furloughStart) =>
+    getRequiredAnswersV(ClaimPeriodEndPage, FurloughStartDatePage) { (claimEndDate, furloughStart) =>
       form(claimEndDate, furloughStart)
         .bindFromRequest()
         .fold(

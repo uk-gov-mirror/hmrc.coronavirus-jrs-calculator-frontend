@@ -18,11 +18,13 @@ package controllers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.ClaimPeriodEndFormProvider
 import javax.inject.Inject
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -44,16 +46,16 @@ class ClaimPeriodEndController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  def form(claimStart: LocalDate) = formProvider(claimStart)
+  def form(claimStart: LocalDate): Form[LocalDate] = formProvider(claimStart)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val maybeClaimStart = request.userAnswers.get(ClaimPeriodStartPage)
-    val maybeClaimEnd = request.userAnswers.get(ClaimPeriodEndPage)
+    val maybeClaimStart = request.userAnswers.getV(ClaimPeriodStartPage)
+    val maybeClaimEnd = request.userAnswers.getV(ClaimPeriodEndPage)
 
     (maybeClaimStart, maybeClaimEnd) match {
-      case (Some(claimStart), Some(end)) => Ok(view(form(claimStart).fill(end)))
-      case (Some(claimStart), None)      => Ok(view(form(claimStart)))
-      case (None, _)                     => Redirect(routes.ClaimPeriodStartController.onPageLoad())
+      case (Valid(claimStart), Valid(end)) => Ok(view(form(claimStart).fill(end)))
+      case (Valid(claimStart), Invalid(e)) => Ok(view(form(claimStart)))
+      case (Invalid(_), _)                 => Redirect(routes.ClaimPeriodStartController.onPageLoad())
     }
   }
 

@@ -18,13 +18,15 @@ package controllers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.AdditionalPaymentAmountFormProvider
 import javax.inject.Inject
-import models.AdditionalPayment
+import models.{AdditionalPayment, Amount}
 import navigation.Navigator
 import pages.{AdditionalPaymentAmountPage, AdditionalPaymentPeriodsPage}
+import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
@@ -46,15 +48,15 @@ class AdditionalPaymentAmountController @Inject()(
 )(implicit ec: ExecutionContext)
     extends BaseController {
 
-  val form = formProvider()
+  val form: Form[Amount] = formProvider()
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswerOrRedirect(AdditionalPaymentPeriodsPage) { additionalPaymentPeriods =>
+      getRequiredAnswerOrRedirectV(AdditionalPaymentPeriodsPage) { additionalPaymentPeriods =>
         withValidAdditionalPaymentDate(additionalPaymentPeriods, idx) { paymentDate =>
-          val preparedForm = request.userAnswers.get(AdditionalPaymentAmountPage, Some(idx)) match {
-            case None        => form
-            case Some(value) => form.fill(value.amount)
+          val preparedForm = request.userAnswers.getV(AdditionalPaymentAmountPage, Some(idx)) match {
+            case Invalid(e)   => form
+            case Valid(value) => form.fill(value.amount)
           }
 
           Future.successful(Ok(view(preparedForm, paymentDate, idx)))
@@ -64,7 +66,7 @@ class AdditionalPaymentAmountController @Inject()(
 
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswerOrRedirect(AdditionalPaymentPeriodsPage) { additionalPaymentPeriods =>
+      getRequiredAnswerOrRedirectV(AdditionalPaymentPeriodsPage) { additionalPaymentPeriods =>
         withValidAdditionalPaymentDate(additionalPaymentPeriods, idx) { paymentDate =>
           form
             .bindFromRequest()

@@ -19,8 +19,10 @@ package controllers
 import controllers.actions._
 import forms.FurloughOngoingFormProvider
 import javax.inject.Inject
+import models.FurloughStatus
 import navigation.Navigator
 import pages.FurloughStatusPage
+import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -41,10 +43,10 @@ class FurloughOngoingController @Inject()(
 )(implicit ec: ExecutionContext)
     extends BaseController {
 
-  val form = formProvider()
+  val form: Form[FurloughStatus] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val maybeFurlough = request.userAnswers.get(FurloughStatusPage)
+    val maybeFurlough = request.userAnswers.getV(FurloughStatusPage)
     Ok(view(maybeFurlough.map(fr => form.fill(fr)).getOrElse(form)))
   }
 

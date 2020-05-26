@@ -18,14 +18,16 @@ package controllers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.LastYearPayFormProvider
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.Inject
-import models.{LastYearPayment, PaymentFrequency}
+import models.{Amount, LastYearPayment, PaymentFrequency}
 import navigation.Navigator
 import pages.{LastYearPayPage, PaymentFrequencyPage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
@@ -48,7 +50,7 @@ class LastYearPayController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with LastYearPayControllerRequestHandler {
 
-  val form = formProvider()
+  val form: Form[Amount] = formProvider()
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
@@ -56,13 +58,15 @@ class LastYearPayController @Inject()(
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       ) { payDates =>
         withValidPayDate(payDates, idx) { date =>
-          val preparedForm = request.userAnswers.get(LastYearPayPage) match {
-            case None        => form
-            case Some(value) => form.fill(value.amount)
+          val preparedForm = request.userAnswers.getV(LastYearPayPage) match {
+            case Invalid(e)   => form
+            case Valid(value) => form.fill(value.amount)
           }
 
-          val isMonthlyFrequency = request.userAnswers.get(PaymentFrequencyPage).contains(PaymentFrequency.Monthly)
-
+          val isMonthlyFrequency = request.userAnswers.getV(PaymentFrequencyPage) match {
+            case Valid(PaymentFrequency.Monthly) => true
+            case _                               => false
+          }
           Future.successful(Ok(view(preparedForm, idx, date, isMonthlyFrequency)))
         }
       }
@@ -80,7 +84,11 @@ class LastYearPayController @Inject()(
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       ) { payDates =>
         withValidPayDate(payDates, idx) { date =>
-          val isMonthlyFrequency = request.userAnswers.get(PaymentFrequencyPage).contains(PaymentFrequency.Monthly)
+          val isMonthlyFrequency = request.userAnswers.getV(PaymentFrequencyPage) match {
+            case Valid(PaymentFrequency.Monthly) => true
+            case _                               => false
+          }
+
           form
             .bindFromRequest()
             .fold(

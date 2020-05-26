@@ -16,6 +16,7 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.NicCategoryFormProvider
 import javax.inject.Inject
@@ -45,9 +46,9 @@ class NicCategoryController @Inject()(
   val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(NicCategoryPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+    val preparedForm = request.userAnswers.getV(NicCategoryPage) match {
+      case Invalid(e)   => form
+      case Valid(value) => form.fill(value)
     }
 
     Ok(view(preparedForm))

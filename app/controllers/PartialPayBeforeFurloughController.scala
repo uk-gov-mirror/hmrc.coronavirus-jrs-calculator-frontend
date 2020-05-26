@@ -16,13 +16,16 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.FurloughPartialPayFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
+import models.FurloughPartialPay
 import navigation.Navigator
 import pages._
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -46,7 +49,7 @@ class PartialPayBeforeFurloughController @Inject()(
 )(implicit ec: ExecutionContext)
     extends BaseController with I18nSupport with PartialPayExtractor {
 
-  val form = formProvider()
+  val form: Form[FurloughPartialPay] = formProvider()
 
   def onPageLoad: Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
@@ -56,9 +59,9 @@ class PartialPayBeforeFurloughController @Inject()(
         .fold(
           Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         ) { beforeFurlough =>
-          val preparedForm = request.userAnswers.get(PartialPayBeforeFurloughPage) match {
-            case None        => form
-            case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.getV(PartialPayBeforeFurloughPage) match {
+            case Invalid(_)   => form
+            case Valid(value) => form.fill(value)
           }
 
           Future.successful(

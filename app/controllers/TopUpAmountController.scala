@@ -16,6 +16,7 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.TopUpAmountFormProvider
@@ -48,11 +49,11 @@ class TopUpAmountController @Inject()(
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswerOrRedirect(TopUpPeriodsPage) { topUpPeriods =>
+      getRequiredAnswerOrRedirectV(TopUpPeriodsPage) { topUpPeriods =>
         withValidTopUpDate(topUpPeriods, idx) { topUpPeriod =>
-          val preparedForm = request.userAnswers.get(TopUpAmountPage, Some(idx)) match {
-            case None        => form
-            case Some(value) => form.fill(value.amount)
+          val preparedForm = request.userAnswers.getV(TopUpAmountPage, Some(idx)) match {
+            case Invalid(e)   => form
+            case Valid(value) => form.fill(value.amount)
           }
 
           Future.successful(Ok(view(preparedForm, topUpPeriod, idx)))
@@ -62,7 +63,7 @@ class TopUpAmountController @Inject()(
 
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswerOrRedirect(TopUpPeriodsPage) { topUpPeriods =>
+      getRequiredAnswerOrRedirectV(TopUpPeriodsPage) { topUpPeriods =>
         withValidTopUpDate(topUpPeriods, idx) { topUpPeriod =>
           form
             .bindFromRequest()

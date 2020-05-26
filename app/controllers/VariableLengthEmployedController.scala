@@ -16,12 +16,15 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
 import javax.inject.Inject
+import models.EmployeeStarted
 import navigation.Navigator
 import pages.EmployedStartedPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -44,13 +47,13 @@ class VariableLengthEmployedController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[EmployeeStarted] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(EmployedStartedPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+      val preparedForm = request.userAnswers.getV(EmployedStartedPage) match {
+        case Invalid(e)   => form
+        case Valid(value) => form.fill(value)
       }
 
       Ok(view(preparedForm))

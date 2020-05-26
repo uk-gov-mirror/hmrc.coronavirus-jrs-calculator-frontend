@@ -18,6 +18,7 @@ package controllers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.EmployeeStartDateFormProvider
@@ -50,10 +51,10 @@ class EmployeeStartDateController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswerOrRedirect(FurloughStartDatePage) { furloughStart =>
-        val preparedForm = request.userAnswers.get(EmployeeStartDatePage) match {
-          case None        => form(furloughStart)
-          case Some(value) => form(furloughStart).fill(value)
+      getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
+        val preparedForm = request.userAnswers.getV(EmployeeStartDatePage) match {
+          case Invalid(_)   => form(furloughStart)
+          case Valid(value) => form(furloughStart).fill(value)
         }
         Future.successful(Ok(view(preparedForm)))
       }
@@ -61,7 +62,7 @@ class EmployeeStartDateController @Inject()(
 
   def onSubmit(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswerOrRedirect(FurloughStartDatePage) { furloughStart =>
+      getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
         form(furloughStart)
           .bindFromRequest()
           .fold(

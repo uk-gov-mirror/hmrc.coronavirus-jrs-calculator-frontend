@@ -16,6 +16,7 @@
 
 package services
 
+import models.UserAnswers.AnswerV
 import models.{FurloughDates, FurloughEnded, FurloughOngoing, FurloughWithinClaim, UserAnswers}
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import utils.LocalDateHelpers
@@ -35,7 +36,15 @@ trait FurloughPeriodExtractor extends LocalDateHelpers {
       }
       FurloughWithinClaim(startDate, endDate)
     }
-
   def extractFurloughPeriod(userAnswers: UserAnswers): Option[FurloughDates] =
-    userAnswers.get(FurloughStartDatePage).map(FurloughDates(_, userAnswers.get(FurloughEndDatePage)))
+    userAnswers
+      .get(FurloughStartDatePage)
+      .map(FurloughDates(_, userAnswers.get(FurloughEndDatePage)))
+
+  def extractFurloughPeriodV(
+    userAnswers: UserAnswers
+  ): AnswerV[FurloughDates] =
+    userAnswers.getV(FurloughStartDatePage).map { startDate =>
+      FurloughDates(startDate, userAnswers.getV(FurloughEndDatePage).toOption)
+    }
 }

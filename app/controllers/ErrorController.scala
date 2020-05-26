@@ -32,6 +32,6 @@ class ErrorController @Inject()(
   }
 
   def somethingWentWrong: Action[AnyContent] = Action { implicit request =>
-    InternalServerError(view(true))
+    InternalServerError(view(startAgain = true))
   }
 }

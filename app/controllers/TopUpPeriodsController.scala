@@ -16,6 +16,9 @@
 
 package controllers
 
+import java.time.LocalDate
+
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.TopUpPeriodsFormProvider
@@ -25,6 +28,7 @@ import models.{TopUpPeriod, UserAnswers}
 import navigation.Navigator
 import pages.TopUpPeriodsPage
 import play.Logger
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -47,7 +51,7 @@ class TopUpPeriodsController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with FurloughCalculationHandler {
 
-  val form = formProvider()
+  val form: Form[List[LocalDate]] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
@@ -58,9 +62,9 @@ class TopUpPeriodsController @Inject()(
               import breakdown.paymentWithPeriod.periodWithPaymentDate.period._
               saveAndRedirect(request.userAnswers, List(TopUpPeriod(period.end, breakdown.grant)))
             case _ =>
-              val preparedForm = request.userAnswers.get(TopUpPeriodsPage) match {
-                case None => form
-                case Some(selectedDates) =>
+              val preparedForm = request.userAnswers.getV(TopUpPeriodsPage) match {
+                case Invalid(e) => form
+                case Valid(selectedDates) =>
                   form.fill(selectedDates.map(_.date))
               }
               Future.successful(Ok(view(preparedForm, furlough.periodBreakdowns)))

@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class FurloughPartialPay(value: BigDecimal)
 
 object FurloughPartialPay {
-  implicit val format = Json.format[FurloughPartialPay]
+  implicit val format: OFormat[FurloughPartialPay] = Json.format[FurloughPartialPay]
 }

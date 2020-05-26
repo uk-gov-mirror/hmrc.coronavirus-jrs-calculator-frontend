@@ -32,6 +32,8 @@ final case class UserAnswers(
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
+  type Answer[A] = ValidatedNec[JsError, A]
+
   private def path[T <: Query](page: T, idx: Option[Int]): JsPath = idx.fold(page.path)(idx => page.path \ (idx - 1))
 
   def getV[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): AnswerV[A] =
@@ -43,6 +45,7 @@ final case class UserAnswers(
           .invalid[A]
     }
 
+  @deprecated("Use validated API instead", "1.0.0")
   def get[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(path(page, idx))).reads(data).getOrElse(None)
 
@@ -102,6 +105,12 @@ final case class UserAnswers(
 object UserAnswers {
 
   type AnswerV[A] = ValidatedNec[JsError, A]
+
+//  implicit class OptionMapper[A](val source: AnswerV[A]) extends AnyVal {
+//    def optional: AnswerV[Option[A]] = {
+//      source.bimap(_ => Option.empty[A], fa => Some(fa))
+//    }
+//  }
 
   implicit lazy val reads: Reads[UserAnswers] = {
 

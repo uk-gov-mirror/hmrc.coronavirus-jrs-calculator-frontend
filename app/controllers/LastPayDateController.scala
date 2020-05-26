@@ -18,11 +18,13 @@ package controllers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.LastPayDateFormProvider
 import javax.inject.Inject
 import navigation.Navigator
 import pages.{LastPayDatePage, PayDatePage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -44,14 +46,14 @@ class LastPayDateController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  def form(latestPayDate: LocalDate) = formProvider(latestPayDate)
+  def form(latestPayDate: LocalDate): Form[LocalDate] = formProvider(latestPayDate)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.getList(PayDatePage).lastOption match {
       case Some(date) =>
-        val preparedForm = request.userAnswers.get(LastPayDatePage) match {
-          case None        => form(date)
-          case Some(value) => form(date).fill(value)
+        val preparedForm = request.userAnswers.getV(LastPayDatePage) match {
+          case Invalid(e)   => form(date)
+          case Valid(value) => form(date).fill(value)
         }
 
         Ok(view(preparedForm, date))

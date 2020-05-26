@@ -16,12 +16,14 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.RegularPayAmountFormProvider
 import javax.inject.Inject
-import models.PaymentFrequency
+import models.{PaymentFrequency, Salary}
 import navigation.Navigator
 import pages.{PaymentFrequencyPage, RegularPayAmountPage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -43,16 +45,16 @@ class RegularPayAmountController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[Salary] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val maybePf = request.userAnswers.get[PaymentFrequency](PaymentFrequencyPage)
-    val maybeSalary = request.userAnswers.get(RegularPayAmountPage)
+    val maybePf = request.userAnswers.getV[PaymentFrequency](PaymentFrequencyPage)
+    val maybeSalary = request.userAnswers.getV(RegularPayAmountPage)
 
     (maybePf, maybeSalary) match {
-      case (Some(pf), Some(sq)) => Ok(view(form.fill(sq), pf))
-      case (Some(pf), None)     => Ok(view(form, pf))
-      case (None, _)            => Redirect(routes.PaymentFrequencyController.onPageLoad())
+      case (Valid(pf), Valid(sq))  => Ok(view(form.fill(sq), pf))
+      case (Valid(pf), Invalid(e)) => Ok(view(form, pf))
+      case (Invalid(_), _)         => Redirect(routes.PaymentFrequencyController.onPageLoad())
     }
   }
 
@@ -61,11 +63,11 @@ class RegularPayAmountController @Inject()(
       .bindFromRequest()
       .fold(
         formWithErrors => {
-          val maybePf = request.userAnswers.get[PaymentFrequency](PaymentFrequencyPage)
+          val maybePf = request.userAnswers.getV[PaymentFrequency](PaymentFrequencyPage)
 
           val result = maybePf match {
-            case Some(pf) => BadRequest(view(formWithErrors, pf))
-            case None     => Redirect(routes.PaymentFrequencyController.onPageLoad())
+            case Valid(pf)  => BadRequest(view(formWithErrors, pf))
+            case Invalid(e) => Redirect(routes.PaymentFrequencyController.onPageLoad())
           }
           Future.successful(result)
         },

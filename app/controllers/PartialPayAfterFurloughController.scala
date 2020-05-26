@@ -16,6 +16,7 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.FurloughPartialPayFormProvider
@@ -55,9 +56,9 @@ class PartialPayAfterFurloughController @Inject()(
         .fold(
           Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         ) { afterFurlough =>
-          val preparedForm = request.userAnswers.get(PartialPayAfterFurloughPage) match {
-            case None        => form
-            case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.getV(PartialPayAfterFurloughPage) match {
+            case Invalid(errors) => form
+            case Valid(value)    => form.fill(value)
           }
 
           Future.successful(

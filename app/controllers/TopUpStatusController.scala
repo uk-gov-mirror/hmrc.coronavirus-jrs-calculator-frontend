@@ -16,12 +16,15 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.TopUpStatusFormProvider
 import javax.inject.Inject
+import models.TopUpStatus
 import navigation.Navigator
 import pages.TopUpStatusPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -44,13 +47,13 @@ class TopUpStatusController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[TopUpStatus] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(TopUpStatusPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+      val preparedForm = request.userAnswers.getV(TopUpStatusPage) match {
+        case Invalid(e)   => form
+        case Valid(value) => form.fill(value)
       }
 
       Ok(view(preparedForm))

@@ -18,6 +18,7 @@ package controllers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.PayDateFormProvider
 import handlers.ErrorHandler
@@ -26,6 +27,7 @@ import models.UserAnswers
 import navigation.Navigator
 import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
 import play.api.Logger
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -48,16 +50,16 @@ class PayDateController @Inject()(
     extends BaseController with I18nSupport with LocalDateHelpers {
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
+    getRequiredAnswersV(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
       val effectiveStartDate = utils.LocalDateHelpers.latestOf(claimStartDate, furloughStartDate)
       messageDateFrom(effectiveStartDate, request.userAnswers, idx).fold {
         Logger.warn(s"onPageLoad messageDateFrom returned none for claimStartDate=$claimStartDate, payDates=${request.userAnswers.getList(
           PayDatePage)}, idx=$idx")
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       } { messageDate =>
-        val preparedForm = request.userAnswers.get(PayDatePage, Some(idx)) match {
-          case None        => form
-          case Some(value) => form.fill(value)
+        val preparedForm = request.userAnswers.getV(PayDatePage, Some(idx)) match {
+          case Invalid(e)   => form
+          case Valid(value) => form.fill(value)
         }
 
         Future.successful(Ok(view(preparedForm, idx, messageDate)))
@@ -65,10 +67,10 @@ class PayDateController @Inject()(
     }
   }
 
-  def form = formProvider()
+  def form: Form[LocalDate] = formProvider()
 
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswers(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
+    getRequiredAnswersV(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
       val effectiveStartDate = utils.LocalDateHelpers.latestOf(claimStartDate, furloughStartDate)
 
       val messageDate = messageDateFrom(effectiveStartDate, request.userAnswers, idx)

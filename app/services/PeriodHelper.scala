@@ -41,7 +41,7 @@ trait PeriodHelper {
     if (endDates.length == 1) {
       endDates.map(date => Period(date, date))
     } else {
-      generate(Seq(), sortedEndDates(endDates))
+      generate(Seq.empty, sortedEndDates(endDates))
     }
   }
 
@@ -55,18 +55,31 @@ trait PeriodHelper {
     Period(start, end)
   }
 
-  def isFurloughStart(period: PartialPeriod) =
+  def isFurloughStart(period: PartialPeriod): Boolean =
     period.original.start.isBefore(period.partial.start)
 
-  def isFurloughEnd(period: PartialPeriod) =
-    period.original.end.isAfter((period.partial.end))
+  def isFurloughEnd(period: PartialPeriod): Boolean =
+    period.original.end.isAfter(period.partial.end)
 
   def fullOrPartialPeriod(period: Period, furloughPeriod: FurloughWithinClaim): Periods = {
     val start =
-      if (furloughPeriod.start.isAfter(period.start) && furloughPeriod.start.isEqualOrBefore(period.end)) furloughPeriod.start
-      else period.start
-    val end =
-      if (furloughPeriod.end.isEqualOrAfter(period.start) && furloughPeriod.end.isBefore(period.end)) furloughPeriod.end else period.end
+      if (
+        furloughPeriod.start.isAfter(period.start) &&
+        furloughPeriod.start.isEqualOrBefore(period.end)
+      ) {
+        furloughPeriod.start
+      } else {
+        period.start
+      }
+
+    val end = if (
+      furloughPeriod.end.isEqualOrAfter(period.start) &&
+      furloughPeriod.end.isBefore(period.end)
+    ) {
+      furloughPeriod.end
+    } else {
+      period.end
+    }
 
     val partial = Period(start, end)
 
