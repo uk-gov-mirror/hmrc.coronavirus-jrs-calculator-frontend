@@ -59,7 +59,7 @@
           case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp)
       }}
 
-    @p(Html(messages("referencePayBreakdown.cylb.result", cylb.referencePay.value.formatted("%.2f"))))
+    @p(Html(messages("referencePayBreakdown.cylb.result", cylb.cylbBreakdown.referencePay.value.formatted("%.2f"))))
 
     @averagePaymentBreakdown(cylb.averagePayment, true)
 
