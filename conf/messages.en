@@ -515,11 +515,11 @@ detailedBreakdown.p1.regular = You told us this employee gets paid a regular amo
 detailedBreakdown.p1.average = You told us this employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing the total pay in this employment by the number of calendar days they’ve worked for you. Then we’ve multiplied that by the number of furlough days in each pay period. The furlough grant is 80% of this.
 detailedBreakdown.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 80% of this.
 detailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in 2019 and applied this to the number of furlough days in each pay period.
-detailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if earlier). Then we’ve multiplied that by the number of furlough days in each pay period.
+detailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days in each pay period.
 detailedBreakdown.p2 = There’s a maximum amount you can claim for furlough grant and Employer National Insurance contributions. If this affects your claim, we’ve adjusted the calculations. 
 detailedBreakdown.p2.a = Work out the maximum wage amount you can claim (opens in new tab).
 detailedBreakdown.p2.a.href = https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme#eighty-percent
-detailedBreakdown.p3 = Calculations are rounded to the nearest penny, unless otherwise stated.
+detailedBreakdown.p3 = Calculations are rounded to the nearest penny unless otherwise stated.
 detailedBreakdown.h3 = For pay period {0} to {1}
 
 referencePayBreakdown.h4 = Calculate pay based on furlough days
@@ -530,8 +530,8 @@ referencePayBreakdown.regular.l1 = Start with £{0} (from pay period).
 referencePayBreakdown.regular.l2 = Divide by {0} (days in pay period).
 referencePayBreakdown.regular.l3 = Multiply by {0} (furlough days).
 
-referencePayBreakdown.average.p1 = Take the average pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
-referencePayBreakdown.average.p1.partOfCylb = Method 2: take the average pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
+referencePayBreakdown.average.p1 = Take the total pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
+referencePayBreakdown.average.p1.partOfCylb = Method 2: take the total pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
 referencePayBreakdown.average.l1 = Start with £{0} (total pay).
 referencePayBreakdown.average.l2 = Divide by {0} (days employed).
 referencePayBreakdown.average.l3 = Multiply by {0} (furlough days).
