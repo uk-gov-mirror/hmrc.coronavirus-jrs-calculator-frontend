@@ -63,23 +63,20 @@ trait PeriodHelper {
 
   def fullOrPartialPeriod(period: Period, furloughPeriod: FurloughWithinClaim): Periods = {
     val start =
-      if (
-        furloughPeriod.start.isAfter(period.start) &&
-        furloughPeriod.start.isEqualOrBefore(period.end)
-      ) {
+      if (furloughPeriod.start.isAfter(period.start) &&
+          furloughPeriod.start.isEqualOrBefore(period.end)) {
         furloughPeriod.start
       } else {
         period.start
       }
 
-    val end = if (
-      furloughPeriod.end.isEqualOrAfter(period.start) &&
-      furloughPeriod.end.isBefore(period.end)
-    ) {
-      furloughPeriod.end
-    } else {
-      period.end
-    }
+    val end =
+      if (furloughPeriod.end.isEqualOrAfter(period.start) &&
+          furloughPeriod.end.isBefore(period.end)) {
+        furloughPeriod.end
+      } else {
+        period.end
+      }
 
     val partial = Period(start, end)
 
