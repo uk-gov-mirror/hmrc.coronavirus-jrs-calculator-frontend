@@ -102,5 +102,6 @@ class FurloughPeriodQuestionController @Inject()(
       updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughPeriodQuestionPage, value))
       _              <- sessionRepository.set(updatedAnswers)
       updatedJourney <- Future.fromTry(Try(updateJourney(updatedAnswers).get))
+      _              <- sessionRepository.set(updatedJourney.updated)
     } yield Redirect(navigator.nextPage(FurloughPeriodQuestionPage, updatedJourney.updated))
 }
