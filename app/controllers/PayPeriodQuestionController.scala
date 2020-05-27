@@ -75,5 +75,6 @@ class PayPeriodQuestionController @Inject()(
       updatedAnswers <- Future.fromTry(request.userAnswers.set(PayPeriodQuestionPage, value))
       _              <- sessionRepository.set(updatedAnswers)
       updatedJourney <- Future.fromTry(Try(updateJourney(updatedAnswers).get))
+      _              <- sessionRepository.set(updatedJourney.updated)
     } yield Redirect(navigator.nextPage(PayPeriodQuestionPage, updatedJourney.updated))
 }
