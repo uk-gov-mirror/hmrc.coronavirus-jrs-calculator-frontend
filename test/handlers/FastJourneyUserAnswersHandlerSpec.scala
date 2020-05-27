@@ -19,7 +19,6 @@ package handlers
 import base.SpecBase
 import models.ClaimPeriodQuestion.{ClaimOnDifferentPeriod, ClaimOnSamePeriod}
 import models.FurloughPeriodQuestion.{FurloughedOnDifferentPeriod, FurloughedOnSamePeriod}
-import models.PayMethod.Regular
 import models.PayPeriodQuestion.{UseDifferentPayPeriod, UseSamePayPeriod}
 import models.PaymentFrequency.Monthly
 import pages._
@@ -30,7 +29,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
 
   "delete all data from the DB if answer is `No` to claim period question excluding session id" in new FastJourneyUserAnswersHandler {
     val userAnswers = dummyUserAnswers.withClaimPeriodQuestion(ClaimOnDifferentPeriod)
-    val actualUserAnswers = updateJourney(userAnswers).get
+    val actualUserAnswers = claimQuestion(userAnswers).get
 
     userAnswers.data.value.values.size must be > 1
     actualUserAnswers.updated.id mustBe actualUserAnswers.original.id
@@ -40,7 +39,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
 
   "delete nothing from the DB if answer is `Yes` to claim period question" in new FastJourneyUserAnswersHandler {
     val userAnswers = dummyUserAnswers.withClaimPeriodQuestion(ClaimOnSamePeriod)
-    val actual: UserAnswersState = updateJourney(userAnswers).get
+    val actual: UserAnswersState = claimQuestion(userAnswers).get
 
     userAnswers.data.value.values.size must be > 1
     actual.original.data mustBe userAnswers.data
@@ -59,7 +58,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
       .withClaimPeriodEnd(userAnswers.get(ClaimPeriodEndPage).get.toString)
       .data
 
-    val actual: UserAnswersState = updateJourney(userAnswers).get
+    val actual: UserAnswersState = furloughQuestion(userAnswers).get
 
     userAnswers.data.value.values.size must be > 2
     actual.updated.id mustBe userAnswers.id
@@ -72,7 +71,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
       .withClaimPeriodQuestion(ClaimOnSamePeriod)
       .withFurloughPeriodQuestion(FurloughedOnSamePeriod)
 
-    val actual: UserAnswersState = updateJourney(userAnswers).get
+    val actual: UserAnswersState = furloughQuestion(userAnswers).get
 
     userAnswers.data.value.values.size must be > 2
     actual.updated.id mustBe userAnswers.id
@@ -80,8 +79,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
     actual.updated.data mustBe userAnswers.data
   }
 
-  "delete all from the DB if answer is `Yes` to claim and furlough period questions " +
-    "but `No` to pay period, keeping claim&furlough period dates" in new FastJourneyUserAnswersHandler {
+  "delete all from the DB if answer is `No` to pay period, keeping claim and furlough period" in new FastJourneyUserAnswersHandler {
     val userAnswers = dummyUserAnswers
       .withFurloughEndDate("2020-3-31")
       .withClaimPeriodQuestion(ClaimOnSamePeriod)
@@ -96,7 +94,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
       .withFurloughEndDate(userAnswers.get(FurloughEndDatePage).get.toString)
       .data
 
-    val actualUserAnswer: UserAnswersState = updateJourney(userAnswers).get
+    val actualUserAnswer: UserAnswersState = payQuestion(userAnswers).get
 
     userAnswers.data.value.values.size must be > 2
     actualUserAnswer.updated.id mustBe userAnswers.id
@@ -105,7 +103,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
   }
 
   "delete data from the DB if answer is `Yes` to pay period question excluding Claim, Furlough," +
-    "pay periods, pay question, pay frequency and pay method" in new FastJourneyUserAnswersHandler {
+    "pay periods, pay question, pay frequency" in new FastJourneyUserAnswersHandler {
     val userAnswers = dummyUserAnswers
       .withFurloughEndDate("2020-3-31")
       .withClaimPeriodQuestion(ClaimOnSamePeriod)
@@ -119,12 +117,10 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
       .withFurloughStartDate(userAnswers.get(FurloughStartDatePage).get.toString)
       .withFurloughEndDate(userAnswers.get(FurloughEndDatePage).get.toString)
       .withPayDate(userAnswers.getList(PayDatePage).map(_.toString).toList)
-      .withPayMethod(Regular)
       .withPaymentFrequency(Monthly)
-      .withPayPeriodQuestion(UseSamePayPeriod)
       .data
 
-    val actual: UserAnswersState = updateJourney(userAnswers).get
+    val actual: UserAnswersState = payQuestion(userAnswers).get
 
     userAnswers.data.value.values.size must be > 2
     actual.updated.id mustBe userAnswers.id

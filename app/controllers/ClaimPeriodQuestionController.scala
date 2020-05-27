@@ -76,7 +76,8 @@ class ClaimPeriodQuestionController @Inject()(
     for {
       updatedAnswers <- Future.fromTry(request.userAnswers.set(ClaimPeriodQuestionPage, value))
       _              <- sessionRepository.set(updatedAnswers)
-      updatedJourney <- Future.fromTry(Try(updateJourney(updatedAnswers).get))
+      call = navigator.nextPage(ClaimPeriodQuestionPage, updatedAnswers)
+      updatedJourney <- Future.fromTry(Try(claimQuestion(updatedAnswers).get))
       _              <- sessionRepository.set(updatedJourney.updated)
-    } yield Redirect(navigator.nextPage(ClaimPeriodQuestionPage, updatedJourney.updated))
+    } yield Redirect(call)
 }

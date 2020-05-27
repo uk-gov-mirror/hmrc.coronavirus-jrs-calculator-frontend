@@ -29,26 +29,24 @@ import com.softwaremill.quicklens._
 
 trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper {
 
-  def updateJourney(userAnswer: UserAnswers): Option[UserAnswersState] =
-    userAnswer.get(ClaimPeriodQuestionPage) flatMap {
-      case ClaimOnSamePeriod      => processFurloughQuestion(UserAnswersState(userAnswer, userAnswer))
-      case ClaimOnDifferentPeriod => Some(UserAnswersState(userAnswer.copy(data = Json.obj()), userAnswer))
+  def claimQuestion(userAnswer: UserAnswers): Option[UserAnswersState] =
+    userAnswer.get(ClaimPeriodQuestionPage) map {
+      case ClaimOnSamePeriod      => UserAnswersState(userAnswer, userAnswer)
+      case ClaimOnDifferentPeriod => UserAnswersState(userAnswer.copy(data = Json.obj()), userAnswer)
     }
 
-  private def processFurloughQuestion(answer: UserAnswersState): Option[UserAnswersState] =
-    answer.original.get(FurloughPeriodQuestionPage) match {
-      case Some(FurloughedOnSamePeriod)      => processPayQuestion(answer)
-      case Some(FurloughedOnDifferentPeriod) => (clearAllAnswers andThen keepClaimPeriod).run(answer)
-      case None                              => Some(answer)
+  def furloughQuestion(answer: UserAnswers): Option[UserAnswersState] =
+    answer.get(FurloughPeriodQuestionPage) flatMap {
+      case FurloughedOnSamePeriod      => Some(UserAnswersState(answer, answer))
+      case FurloughedOnDifferentPeriod => (clearAllAnswers andThen keepClaimPeriod).run(UserAnswersState(answer, answer))
     }
 
-  private def processPayQuestion(answer: UserAnswersState): Option[UserAnswersState] =
-    answer.original.get(PayPeriodQuestionPage) match {
-      case Some(UseSamePayPeriod) =>
-        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData).run(answer)
-      case Some(UseDifferentPayPeriod) =>
-        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod).run(answer)
-      case None => Some(answer)
+  def payQuestion(answer: UserAnswers): Option[UserAnswersState] =
+    answer.get(PayPeriodQuestionPage) flatMap {
+      case UseSamePayPeriod =>
+        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData).run(UserAnswersState(answer, answer))
+      case UseDifferentPayPeriod =>
+        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod).run(UserAnswersState(answer, answer))
     }
 
   private val keepClaimPeriod: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
@@ -71,25 +69,13 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       addPayDates(answersState.updated, answersState.original.getList(PayDatePage).toList).toOption
         .map(payPeriods => UserAnswersState(payPeriods, answersState.original)))
 
-  private val keepPayMethod: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
-    for {
-      method     <- extractPayMethod(answersState.original)
-      withMethod <- answersState.updated.set(PayMethodPage, method).toOption
-    } yield UserAnswersState(withMethod, answersState.original))
-
   private val keepPaymentFrequency: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
     for {
       frequency     <- extractPaymentFrequency(answersState.original)
       withFrequency <- answersState.updated.set(PaymentFrequencyPage, frequency).toOption
     } yield UserAnswersState(withFrequency, answersState.original))
 
-  private val keepPayQuestion: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
-    for {
-      question        <- extractPayPeriodQuestion(answersState.original)
-      withPayQuestion <- answersState.updated.set(PayPeriodQuestionPage, question).toOption
-    } yield UserAnswersState(withPayQuestion, answersState.original))
-
-  private val keepPayPeriodData = keepPayQuestion andThen keepPayPeriod andThen keepPayMethod andThen keepPaymentFrequency
+  private val keepPayPeriodData = keepPayPeriod andThen keepPaymentFrequency
 
   private val clearAllAnswers: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(
     answersState => Option(answersState.modify(_.updated.data).setTo(Json.obj())))
