@@ -16,12 +16,40 @@
 
 package pages
 
-import models.PayMethod
+import models.PayMethod.{Regular, Variable}
+import models.{PayMethod, UserAnswers}
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object PayMethodPage extends QuestionPage[PayMethod] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "payMethod"
+
+  override def cleanup(value: Option[PayMethod], userAnswers: UserAnswers): Try[UserAnswers] =
+    value match {
+      case Some(Regular) =>
+        removeVariableAnswers(userAnswers)
+      case Some(Variable) =>
+        userAnswers
+          .remove(RegularPayAmountPage)
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
+
+  private def removeVariableAnswers(userAnswers: UserAnswers) =
+    userAnswers
+      .remove(EmployeeStartedPage)
+      .get
+      .remove(EmployeeStartDatePage)
+      .get
+      .remove(LastYearPayPage)
+      .get
+      .remove(AnnualPayAmountPage)
+      .get
+      .remove(PartialPayBeforeFurloughPage)
+      .get
+      .remove(PartialPayAfterFurloughPage)
 }
