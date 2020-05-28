@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import forms.FurloughPartialPayFormProvider
 import models.PaymentFrequency.Weekly
+import models.requests.DataRequest
 import models.{FurloughPartialPay, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -101,8 +102,12 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(r, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form, LocalDate.of(2020, 3, 23), LocalDate.of(2020, 3, 26), routes.PartialPayBeforeFurloughController.onSubmit())(r, messages).toString
+        view(form, LocalDate.of(2020, 3, 23), LocalDate.of(2020, 3, 26), routes.PartialPayBeforeFurloughController.onSubmit())(
+          dataRequest,
+          messages).toString
 
       application.stop()
     }
@@ -135,13 +140,15 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(r, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
         view(
           form.fill(FurloughPartialPay(111)),
           LocalDate.of(2020, 3, 23),
           LocalDate.of(2020, 3, 26),
           routes.PartialPayBeforeFurloughController.onSubmit()
-        )(r, messages).toString
+        )(dataRequest, messages).toString
 
       application.stop()
     }
@@ -304,9 +311,11 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
         view(boundForm, LocalDate.of(2020, 3, 23), LocalDate.of(2020, 3, 26), routes.PartialPayBeforeFurloughController.onSubmit())(
-          request,
+          dataRequest,
           messages).toString
 
       application.stop()

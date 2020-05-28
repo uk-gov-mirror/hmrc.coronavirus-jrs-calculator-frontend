@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import pages.RegularPayAmountPage
+
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
@@ -28,7 +30,7 @@
 
 @(form: Form[_], paymentFrequency: PaymentFrequency)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, s"regularPayAmount.title.${paymentFrequency}"))) {
+@govukLayout(pageTitle = Some(title(form, s"regularPayAmount.title.${paymentFrequency}")), thisPage = Some(RegularPayAmountPage)) {
 
 
     @formHelper(action = RegularPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {

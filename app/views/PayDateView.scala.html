@@ -15,6 +15,7 @@
  *@
 
 @import java.time.LocalDate
+@import pages.PayDatePage
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -33,7 +34,7 @@
   "payDate.title.firstDate"
 } else {
   "payDate.title"
-}, titleMessageArgs = Seq(dateToString(messageDate))))) {
+}, titleMessageArgs = Seq(dateToString(messageDate)))), thisPage = Some(PayDatePage), currentIdx = Some(idx)) {
 
     @formHelper(action = PayDateController.onSubmit(idx), args = 'novalidate -> "novalidate") {
 

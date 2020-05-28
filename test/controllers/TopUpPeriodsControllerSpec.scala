@@ -24,6 +24,7 @@ import forms.TopUpPeriodsFormProvider
 import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
+import models.requests.DataRequest
 import models.{Amount, FullPeriodCap, FurloughBreakdown, TopUpPeriod, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -85,8 +86,10 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form, periodBreakdowns)(getRequest, messages).toString
+        view(form, periodBreakdowns)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -139,8 +142,10 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(dates), periodBreakdowns)(getRequest, messages).toString
+        view(form.fill(dates), periodBreakdowns)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -189,8 +194,10 @@ class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSug
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, periodBreakdowns)(request, messages).toString
+        view(boundForm, periodBreakdowns)(dataRequest, messages).toString
 
       application.stop()
     }

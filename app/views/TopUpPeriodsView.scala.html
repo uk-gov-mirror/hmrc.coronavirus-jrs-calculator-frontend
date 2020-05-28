@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import controllers.routes.TopUpPeriodsController
 @import models.TopUpPeriods
 @import java.time.LocalDate
+@import pages.TopUpPeriodsPage
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -29,7 +29,7 @@
 
 @(form: Form[List[LocalDate]], payDates: Seq[FurloughBreakdown])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "topupPeriods.title"))) {
+@govukLayout(pageTitle = Some(title(form, "topupPeriods.title")), thisPage = Some(TopUpPeriodsPage)) {
 
     @formHelper(action = TopUpPeriodsController.onSubmit()) {
 

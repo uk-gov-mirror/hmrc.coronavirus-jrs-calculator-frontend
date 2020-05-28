@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.LastYearPayFormProvider
+import models.requests.DataRequest
 import models.{Amount, LastYearPayment}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -123,7 +124,9 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       val view = application.injector.instanceOf[LastYearPayView]
 
-      val expectedView = view(form, 1, LocalDate.of(2019, 3, 20), true)(request, messages).toString
+      val dataRequest = DataRequest(request, variableMonthlyUserAnswers.id, variableMonthlyUserAnswers)
+
+      val expectedView = view(form, 1, LocalDate.of(2019, 3, 20), true)(dataRequest, messages).toString
 
       status(result) mustEqual OK
 
@@ -161,8 +164,10 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), 1, LocalDate.of(2019, 3, 20), true)(request, messages).toString
+        view(form.fill(validAnswer), 1, LocalDate.of(2019, 3, 20), true)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -297,8 +302,10 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, variableMonthlyUserAnswers.id, variableMonthlyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, 1, LocalDate.of(2019, 3, 20), true)(request, messages).toString
+        view(boundForm, 1, LocalDate.of(2019, 3, 20), true)(dataRequest, messages).toString
 
       application.stop()
     }

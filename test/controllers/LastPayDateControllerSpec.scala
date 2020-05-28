@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import forms.LastPayDateFormProvider
 import models.UserAnswers
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -75,8 +76,10 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form, validAnswer)(getRequest, messages).toString
+        view(form, validAnswer)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -93,8 +96,10 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), validAnswer)(getRequest, messages).toString
+        view(form.fill(validAnswer), validAnswer)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -162,8 +167,10 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, validAnswer)(request, messages).toString
+        view(boundForm, validAnswer)(dataRequest, messages).toString
 
       application.stop()
     }

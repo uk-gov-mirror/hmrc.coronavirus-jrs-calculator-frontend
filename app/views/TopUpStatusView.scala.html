@@ -15,6 +15,7 @@
  *@
 
 @import controllers.routes._
+@import pages.TopUpStatusPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -28,7 +29,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "topUpStatus.title"))) {
+@govukLayout(pageTitle = Some(title(form, "topUpStatus.title")), thisPage = Some(TopUpStatusPage)) {
 
     @formHelper(action = TopUpStatusController.onSubmit(), 'autoComplete -> "off") {
 

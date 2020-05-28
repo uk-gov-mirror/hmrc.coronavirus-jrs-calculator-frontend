@@ -19,6 +19,7 @@ package controllers
 import base.SpecBaseWithApplication
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import forms.TopUpStatusFormProvider
+import models.requests.DataRequest
 import models.{TopUpStatus, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -61,8 +62,10 @@ class TopUpStatusControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form)(getRequest, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -79,8 +82,10 @@ class TopUpStatusControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(TopUpStatus.values.head))(getRequest, messages).toString
+        view(form.fill(TopUpStatus.values.head))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -157,8 +162,10 @@ class TopUpStatusControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }

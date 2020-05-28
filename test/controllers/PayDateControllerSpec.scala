@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.SpecBaseWithApplication
 import forms.PayDateFormProvider
 import models.UserAnswers
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -81,8 +82,10 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
         status(result) mustEqual OK
 
+        val dataRequest = DataRequest(getRequest, userAnswersWithStartDate.id, userAnswersWithStartDate)
+
         contentAsString(result) mustEqual
-          view(form, 1, claimStartDate)(getRequest, messages).toString
+          view(form, 1, claimStartDate)(dataRequest, messages).toString
 
         application.stop()
       }
@@ -101,8 +104,10 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
         status(result) mustEqual OK
 
+        val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
+
         contentAsString(result) mustEqual
-          view(form, 1, claimStartDate)(getRequest, messages).toString
+          view(form, 1, claimStartDate)(dataRequest, messages).toString
 
         application.stop()
       }
@@ -121,8 +126,10 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
         status(result) mustEqual OK
 
+        val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
+
         contentAsString(result) mustEqual
-          view(form, 1, claimStartDate.plusDays(1))(getRequest, messages).toString
+          view(form, 1, claimStartDate.plusDays(1))(dataRequest, messages).toString
 
         application.stop()
       }
@@ -140,8 +147,10 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), 1, claimStartDate)(getRequest, messages).toString
+        view(form.fill(validAnswer), 1, claimStartDate)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -187,8 +196,10 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
         status(result) mustEqual BAD_REQUEST
 
+        val dataRequest = DataRequest(request, userAnswersWithStartDate.id, userAnswersWithStartDate)
+
         contentAsString(result) mustEqual
-          view(boundForm, 1, claimStartDate)(request, messages).toString
+          view(boundForm, 1, claimStartDate)(dataRequest, messages).toString
 
         application.stop()
       }

@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.AnnualPayAmountFormProvider
+import models.requests.DataRequest
 import models.{AnnualPayAmount, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -78,8 +79,10 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form, furloughStart)(getRequest, messages).toString
+        view(form, furloughStart)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -96,8 +99,10 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+
       contentAsString(result) mustEqual
-        view(form.fill(AnnualPayAmount(111)), furloughStart)(getRequest, messages).toString
+        view(form.fill(AnnualPayAmount(111)), furloughStart)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -178,8 +183,10 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, furloughStart)(request, messages).toString
+        view(boundForm, furloughStart)(dataRequest, messages).toString
 
       application.stop()
     }
