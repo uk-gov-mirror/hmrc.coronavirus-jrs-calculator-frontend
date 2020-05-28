@@ -80,6 +80,11 @@ sealed trait PaymentWithPeriod {
     case fp: FullPeriod    => fp.period.countDays
     case pp: PartialPeriod => pp.partial.countDays
   }
+
+  def nonFurloughDays = periodWithPaymentDate.period match {
+    case _: FullPeriod     => 0
+    case pp: PartialPeriod => pp.period.countDays - pp.partial.countDays
+  }
 }
 
 sealed trait PaymentWithFullPeriod extends PaymentWithPeriod {

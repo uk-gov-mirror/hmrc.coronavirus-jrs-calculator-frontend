@@ -508,6 +508,11 @@ referencePayBreakdown.regular.l1 = Start with £{0} (from pay period).
 referencePayBreakdown.regular.l2 = Divide by {0} (days in pay period).
 referencePayBreakdown.regular.l3 = Multiply by {0} (furlough days).
 
+referencePayBreakdown.regular.employerFunded.h4 = Calculate employer-funded pay
+referencePayBreakdown.regular.employerFunded.l1 = Start with £{0} (from pay period).
+referencePayBreakdown.regular.employerFunded.l2 = Minus £{0} (pay based on furlough days).
+referencePayBreakdown.regular.employerFunded.result = Employer-funded pay for the remaining {0} days in pay period = £{1}
+
 referencePayBreakdown.average.p1 = Take the total pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
 referencePayBreakdown.average.p1.partOfCylb = Method 2: take the total pay from employee start date (or 6 April 2019, if earlier) to day before the employee's furlough start date (or 5 April 2020, if later).
 referencePayBreakdown.average.l1 = Start with £{0} (total pay).
