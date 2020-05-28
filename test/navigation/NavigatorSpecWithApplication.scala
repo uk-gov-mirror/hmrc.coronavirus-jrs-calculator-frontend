@@ -21,10 +21,10 @@ import java.time.LocalDate
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import config.FrontendAppConfig
 import controllers.routes
+import models.ClaimPeriodQuestion._
 import models.PayMethod.{Regular, Variable}
 import models._
 import pages._
-import ClaimPeriodQuestion._
 
 class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTestDataBuilder {
 
@@ -203,19 +203,32 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         }
       }
 
-      "go to correct page after EmployedStartedPage" in {
+      "go to pay dates page after EmployedStartedPage in a normal journey" in {
         navigator.nextPage(
           EmployedStartedPage,
-          UserAnswers("id")
-            .set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
-            .success
-            .value) mustBe routes.PayDateController.onPageLoad(1)
+          emptyUserAnswers.withEmployeeStartedOnOrBefore1Feb2019()) mustBe routes.PayDateController.onPageLoad(1)
+
         navigator.nextPage(
           EmployedStartedPage,
-          UserAnswers("id")
-            .set(EmployedStartedPage, EmployeeStarted.After1Feb2019)
-            .success
-            .value) mustBe routes.EmployeeStartDateController.onPageLoad()
+          emptyUserAnswers.withEmployeeStartedAfter1Feb2019()) mustBe routes.EmployeeStartDateController.onPageLoad()
+      }
+
+      "go to last-year-pay after EmployedStartedPage in a fast journey if pay dates are persisted and OnOrBefore1Feb2019" in {
+        navigator.nextPage(
+          EmployedStartedPage,
+          emptyUserAnswers
+            .withEmployeeStartedOnOrBefore1Feb2019()
+            .withPayDate(List("2019-12-12"))
+        ) mustBe routes.LastYearPayController.onPageLoad(1)
+      }
+
+      "go to annual-pay-amount after EmployedStartedPage in a fast journey if pay dates are persisted and After1Feb2019" in {
+        navigator.nextPage(
+          EmployedStartedPage,
+          emptyUserAnswers
+            .withEmployeeStartedAfter1Feb2019()
+            .withPayDate(List("2019-12-12"))
+        ) mustBe routes.AnnualPayAmountController.onPageLoad()
       }
 
       "go to correct page after EmployeeStartDatePage" in {

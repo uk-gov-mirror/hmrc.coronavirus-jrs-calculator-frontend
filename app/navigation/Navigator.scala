@@ -208,10 +208,12 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(EmployedStartedPage) match {
-      case Some(EmployeeStarted.OnOrBefore1Feb2019) => routes.PayDateController.onPageLoad(1)
-      case Some(EmployeeStarted.After1Feb2019)      => routes.EmployeeStartDateController.onPageLoad()
-      case _                                        => routes.VariableLengthEmployedController.onPageLoad()
+    (userAnswers.get(EmployedStartedPage), userAnswers.getList(PayDatePage))  match {
+      case (Some(EmployeeStarted.OnOrBefore1Feb2019), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
+      case (Some(EmployeeStarted.OnOrBefore1Feb2019), _)                      => routes.LastYearPayController.onPageLoad(1)
+      case (Some(EmployeeStarted.After1Feb2019), dates) if dates.isEmpty      => routes.EmployeeStartDateController.onPageLoad()
+      case (Some(EmployeeStarted.After1Feb2019), _)                           => routes.AnnualPayAmountController.onPageLoad()
+      case _                                                                  => routes.VariableLengthEmployedController.onPageLoad()
     }
   }
 
