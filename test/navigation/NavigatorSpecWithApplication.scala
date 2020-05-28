@@ -70,22 +70,27 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           .onPageLoad()
       }
 
-      "go to correct page after PayMethodPage" in {
+      "go to pay dates page after PayMethodPage" in {
         navigator.nextPage(
           PayMethodPage,
-          UserAnswers("id")
-            .set(PayMethodPage, PayMethod.Regular)
-            .success
-            .value) mustBe routes.PayDateController.onPageLoad(1)
+          emptyUserAnswers
+            .withPayMethod(Regular)
+            .withPayDate(List())) mustBe routes.PayDateController.onPageLoad(1)
 
         navigator.nextPage(
           PayMethodPage,
-          UserAnswers("id")
-            .set(PayMethodPage, PayMethod.Variable)
-            .success
-            .value) mustBe routes.VariableLengthEmployedController.onPageLoad()
+          emptyUserAnswers.withPayMethod(PayMethod.Variable)
+        ) mustBe routes.VariableLengthEmployedController.onPageLoad()
 
         navigator.nextPage(PayMethodPage, UserAnswers("id")) mustBe routes.PayMethodController.onPageLoad()
+      }
+
+      "go to regular-pay-amount page after PayMethodPage if regular and PayDates were persisted in fast journey" in {
+        navigator.nextPage(
+          PayMethodPage,
+          dummyUserAnswers
+            .withPayMethod(Regular)
+            .withPayDate(List("2020-1-1"))) mustBe routes.RegularPayAmountController.onPageLoad()
       }
 
       "go to RegularPayAmountPage after PaymentQuestionPage" in {

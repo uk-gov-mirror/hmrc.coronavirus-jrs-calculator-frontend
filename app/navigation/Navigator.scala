@@ -199,10 +199,11 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private def payMethodRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.get(PayMethodPage) match {
-      case Some(Regular)  => routes.PayDateController.onPageLoad(1)
-      case Some(Variable) => routes.VariableLengthEmployedController.onPageLoad()
-      case None           => routes.PayMethodController.onPageLoad()
+    (userAnswers.get(PayMethodPage), userAnswers.getList(PayDatePage)) match {
+      case (Some(Regular), dates)  if dates.isEmpty => routes.PayDateController.onPageLoad(1)
+      case (Some(Regular), _)                       => routes.RegularPayAmountController.onPageLoad()
+      case (Some(Variable), _)                      => routes.VariableLengthEmployedController.onPageLoad()
+      case (None, _)                                => routes.PayMethodController.onPageLoad()
     }
   }
 
