@@ -76,7 +76,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
       .get
       .set(PayMethodPage, Variable)
       .get
-      .set(EmployedStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+      .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
       .get
       .setListWithInvalidation(LastYearPayPage, LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)), 1)
       .get

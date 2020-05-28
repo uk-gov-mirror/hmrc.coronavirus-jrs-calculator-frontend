@@ -16,6 +16,7 @@
 
 @import controllers.routes._
 @import models.EmployeeStarted
+@import pages.EmployeeStartedPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -29,7 +30,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "variableLengthEmployed.title"))) {
+@govukLayout(pageTitle = Some(title(form, "variableLengthEmployed.title")), thisPage = Some(EmployeeStartedPage)) {
 
     @formHelper(action = VariableLengthEmployedController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 

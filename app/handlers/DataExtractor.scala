@@ -49,7 +49,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
   def extractBranchingQuestions(userAnswers: UserAnswers): Option[BranchingQuestions] =
     for {
       payMethod <- extractPayMethod(userAnswers)
-      employeeStarted = userAnswers.get(EmployedStartedPage)
+      employeeStarted = userAnswers.get(EmployeeStartedPage)
       employeeStartDate = userAnswers.get(EmployeeStartDatePage)
     } yield BranchingQuestions(payMethod, employeeStarted, employeeStartDate)
 

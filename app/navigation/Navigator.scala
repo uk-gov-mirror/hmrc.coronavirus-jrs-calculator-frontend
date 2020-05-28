@@ -59,7 +59,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case RegularPayAmountPage =>
       _ =>
         topUpFeatureRoutes
-    case EmployedStartedPage =>
+    case EmployeeStartedPage =>
       variableLengthEmployedRoutes
     case EmployeeStartDatePage =>
       _ =>
@@ -208,7 +208,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
-    (userAnswers.get(EmployedStartedPage), userAnswers.getList(PayDatePage)) match {
+    (userAnswers.get(EmployeeStartedPage), userAnswers.getList(PayDatePage)) match {
       case (Some(EmployeeStarted.OnOrBefore1Feb2019), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
       case (Some(EmployeeStarted.OnOrBefore1Feb2019), _)                      => routes.LastYearPayController.onPageLoad(1)
       case (Some(EmployeeStarted.After1Feb2019), dates) if dates.isEmpty      => routes.EmployeeStartDateController.onPageLoad()
@@ -237,7 +237,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     userAnswers.get(PayMethodPage) match {
       case Some(Regular) => routes.RegularPayAmountController.onPageLoad()
       case Some(Variable) =>
-        userAnswers.get(EmployedStartedPage) match {
+        userAnswers.get(EmployeeStartedPage) match {
           case Some(EmployeeStarted.OnOrBefore1Feb2019) =>
             routes.LastYearPayController.onPageLoad(1)
           case _ =>

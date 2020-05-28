@@ -23,10 +23,10 @@ class EmployeeStartedSpec extends PageBehaviours {
 
   "EmployedStartedPage" must {
 
-    beRetrievable[EmployeeStarted](EmployedStartedPage)
+    beRetrievable[EmployeeStarted](EmployeeStartedPage)
 
-    beSettable[EmployeeStarted](EmployedStartedPage)
+    beSettable[EmployeeStarted](EmployeeStartedPage)
 
-    beRemovable[EmployeeStarted](EmployedStartedPage)
+    beRemovable[EmployeeStarted](EmployeeStartedPage)
   }
 }

@@ -18,12 +18,13 @@ package controllers
 
 import base.SpecBaseWithApplication
 import forms.VariableLengthEmployedFormProvider
+import models.requests.DataRequest
 import models.{EmployeeStarted, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.EmployedStartedPage
+import pages.EmployeeStartedPage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
@@ -60,15 +61,17 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form)(getRequest, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(EmployedStartedPage, EmployeeStarted.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(EmployeeStartedPage, EmployeeStarted.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -78,8 +81,10 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(EmployeeStarted.values.head))(getRequest, messages).toString
+        view(form.fill(EmployeeStarted.values.head))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -169,8 +174,10 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }

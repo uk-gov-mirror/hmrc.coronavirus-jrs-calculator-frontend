@@ -40,7 +40,7 @@ trait UserAnswersGenerator extends TryValues {
       arbitrary[(PartialPayAfterFurloughPage.type, JsValue)] ::
       arbitrary[(AnnualPayAmountPage.type, JsValue)] ::
       arbitrary[(EmployeeStartDatePage.type, JsValue)] ::
-      arbitrary[(EmployedStartedPage.type, JsValue)] ::
+      arbitrary[(EmployeeStartedPage.type, JsValue)] ::
       arbitrary[(FurloughStartDatePage.type, JsValue)] ::
       arbitrary[(FurloughEndDatePage.type, JsValue)] ::
       arbitrary[(FurloughStatusPage.type, JsValue)] ::

@@ -81,10 +81,10 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
       userAnswers.setValue(AnnualPayAmountPage, AnnualPayAmount(gross))
 
     def withEmployeeStartedOnOrBefore1Feb2019(): UserAnswers =
-      userAnswers.setValue(EmployedStartedPage, OnOrBefore1Feb2019)
+      userAnswers.setValue(EmployeeStartedPage, OnOrBefore1Feb2019)
 
     def withEmployeeStartedAfter1Feb2019(): UserAnswers =
-      userAnswers.setValue(EmployedStartedPage, After1Feb2019)
+      userAnswers.setValue(EmployeeStartedPage, After1Feb2019)
 
     def withToppedUpStatus(status: TopUpStatus = ToppedUp): UserAnswers =
       userAnswers.setValue(TopUpStatusPage, status)

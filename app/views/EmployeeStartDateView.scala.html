@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import pages.EmployeeStartDatePage
+
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         errorSummary: components.errorSummary,
@@ -24,7 +26,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, "employeeStartDate.title"))) {
+    @govukLayout(pageTitle = Some(title(form, "employeeStartDate.title")), thisPage = Some(EmployeeStartDatePage)) {
 
         @formHelper(action = EmployeeStartDateController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 

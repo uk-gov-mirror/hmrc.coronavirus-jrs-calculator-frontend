@@ -83,7 +83,7 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       "employeePayFrequency"               -> JsString(userAnswers.get(PaymentFrequencyPage).fold("")(_.toString)),
       "employeePayMethod"                  -> JsString(userAnswers.get(PayMethodPage).fold("")(_.toString)),
       "employeeRegularPay"                 -> JsString(userAnswers.get(RegularPayAmountPage).fold("")(_.amount.toString)),
-      "employeeEmployedOnOrBefore1Feb2019" -> JsString(userAnswers.get(EmployedStartedPage).fold("")(_.toString)),
+      "employeeEmployedOnOrBefore1Feb2019" -> JsString(userAnswers.get(EmployeeStartedPage).fold("")(_.toString)),
       "employeeStartDate"                  -> JsString(userAnswers.get(EmployeeStartDatePage).fold("")(_.toString)),
       "employeeAnnualPayForYear"           -> JsString(userAnswers.get(AnnualPayAmountPage).fold("")(_.amount.toString)),
       "employeePayPeriodEndDates"          -> Json.toJson(userAnswers.getList(PayDatePage)),

@@ -16,6 +16,7 @@
 
 @import controllers.routes._
 @import models.PaymentFrequency
+@import pages.PaymentFrequencyPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -27,7 +28,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "payFrequency.title"))) {
+@govukLayout(pageTitle = Some(title(form, "payFrequency.title")), thisPage = Some(PaymentFrequencyPage)) {
 
     @formHelper(action = PaymentFrequencyController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 

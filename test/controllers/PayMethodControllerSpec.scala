@@ -18,6 +18,7 @@ package controllers
 
 import base.SpecBaseWithApplication
 import forms.PayMethodFormProvider
+import models.requests.DataRequest
 import models.{PayMethod, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -68,8 +69,10 @@ class PayMethodControllerSpec extends SpecBaseWithApplication with MockitoSugar 
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form)(getRequest, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -86,8 +89,10 @@ class PayMethodControllerSpec extends SpecBaseWithApplication with MockitoSugar 
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(PayMethod.values.head))(getRequest, messages).toString
+        view(form.fill(PayMethod.values.head))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -132,8 +137,10 @@ class PayMethodControllerSpec extends SpecBaseWithApplication with MockitoSugar 
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }

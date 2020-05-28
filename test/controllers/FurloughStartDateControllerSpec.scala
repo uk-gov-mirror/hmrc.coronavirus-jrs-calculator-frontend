@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.FurloughStartDateFormProvider
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -81,8 +82,10 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
+
       contentAsString(result) mustEqual
-        view(form)(getRequest, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -99,8 +102,10 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer))(getRequest, messages).toString
+        view(form.fill(validAnswer))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -145,8 +150,10 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
+
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }

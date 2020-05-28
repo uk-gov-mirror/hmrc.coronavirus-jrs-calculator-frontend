@@ -19,7 +19,7 @@ package pages
 import models.EmployeeStarted
 import play.api.libs.json.JsPath
 
-case object EmployedStartedPage extends QuestionPage[EmployeeStarted] {
+case object EmployeeStartedPage extends QuestionPage[EmployeeStarted] {
 
   override def path: JsPath = JsPath \ toString
 

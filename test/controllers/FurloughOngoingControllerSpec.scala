@@ -19,6 +19,7 @@ package controllers
 import base.SpecBaseWithApplication
 import forms.FurloughOngoingFormProvider
 import models.FurloughStatus
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -59,8 +60,10 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form)(getRequest, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -77,8 +80,10 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers1.id, userAnswers1)
+
       contentAsString(result) mustEqual
-        view(form.fill(FurloughStatus.values.head))(getRequest, messages).toString
+        view(form.fill(FurloughStatus.values.head))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -127,8 +132,10 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }

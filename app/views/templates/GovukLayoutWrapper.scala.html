@@ -15,6 +15,8 @@
  *@
 
 @import views.components.FooterLinks
+@import pages.Page
+@import navigation.BackLinker
 
 @this(
     govukLayout: GovukLayout,
@@ -28,7 +30,7 @@
     footerLinks: FooterLinks
 )
 
-@(pageTitle: Option[String] = None, timeout: Boolean = true, js: Option[Html] = None, showBackButton: Boolean = true)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+@(pageTitle: Option[String] = None, timeout: Boolean = true, js: Option[Html] = None, showBackButton: Boolean = true, thisPage: Option[Page] = None, currentIdx: Option[Int] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
     <script src='@controllers.routes.Assets.versioned("javascripts/gtm.js")'></script>
@@ -71,7 +73,7 @@
     @phaseBanner("beta")
 
     @if(showBackButton) {
-        @govukBackLink(BackLink(href = "#", content = Text("Back"), attributes = Map("id" -> "back-link")))
+        @govukBackLink(BackLink(href = BackLinker.getFor(thisPage, currentIdx), content = Text("Back"), attributes = Map("id" -> "back-link")))
     }
 }
 

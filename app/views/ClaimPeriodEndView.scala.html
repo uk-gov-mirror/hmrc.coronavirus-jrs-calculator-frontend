@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import pages.ClaimPeriodEndPage
+
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         errorSummary: components.errorSummary,
@@ -27,7 +29,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, "claimPeriodEnd.title"))) {
+    @govukLayout(pageTitle = Some(title(form, "claimPeriodEnd.title")), thisPage = Some(ClaimPeriodEndPage)) {
 
         @formHelper(action = ClaimPeriodEndController.onSubmit(), args = 'novalidate -> "novalidate") {
 
