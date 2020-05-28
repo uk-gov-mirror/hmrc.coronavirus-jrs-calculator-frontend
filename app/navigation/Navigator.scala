@@ -200,15 +200,15 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   private def payMethodRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.get(PayMethodPage), userAnswers.getList(PayDatePage)) match {
-      case (Some(Regular), dates)  if dates.isEmpty => routes.PayDateController.onPageLoad(1)
-      case (Some(Regular), _)                       => routes.RegularPayAmountController.onPageLoad()
-      case (Some(Variable), _)                      => routes.VariableLengthEmployedController.onPageLoad()
-      case (None, _)                                => routes.PayMethodController.onPageLoad()
+      case (Some(Regular), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
+      case (Some(Regular), _)                      => routes.RegularPayAmountController.onPageLoad()
+      case (Some(Variable), _)                     => routes.VariableLengthEmployedController.onPageLoad()
+      case (None, _)                               => routes.PayMethodController.onPageLoad()
     }
   }
 
   private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
-    (userAnswers.get(EmployedStartedPage), userAnswers.getList(PayDatePage))  match {
+    (userAnswers.get(EmployedStartedPage), userAnswers.getList(PayDatePage)) match {
       case (Some(EmployeeStarted.OnOrBefore1Feb2019), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
       case (Some(EmployeeStarted.OnOrBefore1Feb2019), _)                      => routes.LastYearPayController.onPageLoad(1)
       case (Some(EmployeeStarted.After1Feb2019), dates) if dates.isEmpty      => routes.EmployeeStartDateController.onPageLoad()

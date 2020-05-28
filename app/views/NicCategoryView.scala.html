@@ -22,11 +22,7 @@
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
         inputRadio: components.inputRadio,
-        button: components.button,
-        details: components.details,
-        h1: components.h1,
-        p: components.p,
-        link: components.link
+        button: components.button
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
@@ -37,91 +33,10 @@
 
         @errorSummary(form.errors)
 
-      @h1(messages("nicCategory.heading"))
-      @p(Html(messages("nicCategory.hint")))
-
-      @details(
-        summaryText = Messages("nicCategory.details.summary")
-      ) {
-        @p(Html(messages("nicCategory.details.summary.p1")))
-        <table class="govuk-table">
-          <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th class="govuk-table__header">
-                @messages("nicCategory.letter.legend")
-              </th>
-              <th class="govuk-table__header">
-                @messages("nicCategory.group.legend")
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.letter.a")
-              </td>
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.category.a")
-              </td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.letter.b")
-              </td>
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.category.b")
-              </td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.letter.c")
-              </td>
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.category.c.1") @link("https://www.gov.uk/state-pension-age",
-                "nicCategory.details.category.c.2", true)
-              </td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.letter.j")
-              </td>
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.category.j")
-              </td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.letter.h")
-              </td>
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.category.h")
-              </td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.letter.m")
-              </td>
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.category.m")
-              </td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.letter.z")
-              </td>
-              <td class="govuk-table__cell">
-                @messages("nicCategory.details.category.z")
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      }
-
         @inputRadio(
             form = form,
             legend = messages("nicCategory.heading"),
-            legendAsHeading = false,
-            classes = "govuk-visually-hidden",
+            legendAsHeading = true,
             items = NicCategory.options(form)
         )
 
