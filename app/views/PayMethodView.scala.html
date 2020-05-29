@@ -28,7 +28,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "payMethod.title")), thisPage = Some(PayMethodPage)) {
+@govukLayout(pageTitle = Some(title(form, "payMethod.title")), thisPage = PayMethodPage) {
 
     @formHelper(action = PayMethodController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 

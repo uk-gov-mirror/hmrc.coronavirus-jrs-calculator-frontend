@@ -34,7 +34,7 @@
   "payDate.title.firstDate"
 } else {
   "payDate.title"
-}, titleMessageArgs = Seq(dateToString(messageDate)))), thisPage = Some(PayDatePage), currentIdx = Some(idx)) {
+}, titleMessageArgs = Seq(dateToString(messageDate)))), thisPage = PayDatePage, currentIdx = Some(idx)) {
 
     @formHelper(action = PayDateController.onSubmit(idx), args = 'novalidate -> "novalidate") {
 

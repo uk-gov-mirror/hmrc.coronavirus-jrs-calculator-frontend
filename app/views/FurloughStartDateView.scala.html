@@ -28,7 +28,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "furloughStartDate.title")), thisPage = Some(FurloughStartDatePage)) {
+@govukLayout(pageTitle = Some(title(form, "furloughStartDate.title")), thisPage = FurloughStartDatePage) {
 
     @formHelper(action = FurloughStartDateController.onSubmit(), args = 'novalidate -> "novalidate") {
 

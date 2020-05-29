@@ -30,7 +30,7 @@
 
 @(form: Form[_], idx: Int, payDate: LocalDate, isMonthly: Boolean)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToStringWithoutYear(payDate)))), thisPage = Some(LastYearPayPage), currentIdx = Some(idx)) {
+@govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToStringWithoutYear(payDate)))), thisPage = LastYearPayPage, currentIdx = Some(idx)) {
 
     @formHelper(action = LastYearPayController.onSubmit(idx), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 

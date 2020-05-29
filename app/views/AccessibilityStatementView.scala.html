@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import pages.info.AccessibilityStatementPage
 
 @this(
     main_template: templates.GovukLayoutWrapper,
@@ -27,7 +28,7 @@
 
 @(problemPageUri: String)(implicit request: Request[_], messages: Messages)
 
-@main_template(Some(titleNoForm("accessibility.title")), timeout = false) {
+@main_template(Some(titleNoForm("accessibility.title")), timeout = false, thisPage = AccessibilityStatementPage) {
 
     @h1(messages("compliant.one.heading"))
 

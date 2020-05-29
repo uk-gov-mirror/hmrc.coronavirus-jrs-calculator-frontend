@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import pages.info.UnauthorisedPage
+
 @this(
     main_template: templates.GovukLayoutWrapper,
     h1: components.h1
@@ -21,7 +23,7 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@main_template(Some(titleNoForm("unauthorised.title")), timeout = false) {
+@main_template(Some(titleNoForm("unauthorised.title")), timeout = false, thisPage = UnauthorisedPage) {
 
     @h1("unauthorised.heading")
 }

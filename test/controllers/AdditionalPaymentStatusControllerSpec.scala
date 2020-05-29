@@ -19,6 +19,7 @@ package controllers
 import base.SpecBaseWithApplication
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import forms.AdditionalPaymentStatusFormProvider
+import models.requests.DataRequest
 import models.{AdditionalPaymentStatus, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -51,11 +52,11 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
 
   val validAnswer = AdditionalPaymentStatus.values.headOption.value
 
-  "furloughOngoing Controller" must {
+  "AdditionalPaymentStatusController" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(UserAnswers("id"))).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val result = route(application, getRequest).value
 
@@ -63,8 +64,10 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form)(getRequest, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -81,8 +84,10 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer))(getRequest, messages).toString
+        view(form.fill(validAnswer))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -116,7 +121,7 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(UserAnswers("id"))).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
         FakeRequest(POST, additionalPaymentStatusRoutePost).withCSRFToken
@@ -131,8 +136,10 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }

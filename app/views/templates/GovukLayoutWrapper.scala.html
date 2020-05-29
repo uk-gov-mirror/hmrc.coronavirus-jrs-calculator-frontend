@@ -30,7 +30,7 @@
     footerLinks: FooterLinks
 )
 
-@(pageTitle: Option[String] = None, timeout: Boolean = true, js: Option[Html] = None, showBackButton: Boolean = true, thisPage: Option[Page] = None, currentIdx: Option[Int] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+@(pageTitle: Option[String] = None, timeout: Boolean = true, js: Option[Html] = None, showBackButton: Boolean = true, thisPage: Page, currentIdx: Option[Int] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
     <script src='@controllers.routes.Assets.versioned("javascripts/gtm.js")'></script>

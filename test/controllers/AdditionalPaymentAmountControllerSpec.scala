@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import forms.AdditionalPaymentAmountFormProvider
+import models.requests.DataRequest
 import models.{AdditionalPayment, Amount, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -65,8 +66,10 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseWithApplication with
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form, additionalPaymentPeriod, 1)(request, messages).toString
+        view(form, additionalPaymentPeriod, 1)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -141,8 +144,10 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseWithApplication with
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(amount), additionalPaymentPeriod, 1)(request, messages).toString
+        view(form.fill(amount), additionalPaymentPeriod, 1)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -198,8 +203,10 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseWithApplication with
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, additionalPaymentPeriod, 1)(request, messages).toString
+        view(boundForm, additionalPaymentPeriod, 1)(dataRequest, messages).toString
 
       application.stop()
     }

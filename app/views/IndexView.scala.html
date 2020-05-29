@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import pages.info.IndexPage
+
 @this(
         main_template: templates.GovukLayoutWrapper,
         h1: components.h1
@@ -21,7 +23,7 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@main_template(Some(titleNoForm("index.title")), timeout = false) {
+@main_template(Some(titleNoForm("index.title")), timeout = false, thisPage = IndexPage) {
 
     @h1(messages("index.heading"))
 }

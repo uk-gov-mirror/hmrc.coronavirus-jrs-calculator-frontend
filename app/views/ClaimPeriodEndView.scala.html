@@ -29,7 +29,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, "claimPeriodEnd.title")), thisPage = Some(ClaimPeriodEndPage)) {
+    @govukLayout(pageTitle = Some(title(form, "claimPeriodEnd.title")), thisPage = ClaimPeriodEndPage) {
 
         @formHelper(action = ClaimPeriodEndController.onSubmit(), args = 'novalidate -> "novalidate") {
 

@@ -32,7 +32,7 @@
 
 @(form: Form[_], furloughStart: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "annualPayAmount.title", titleMessageArgs = Seq(dateToString(furloughStart.minusDays(1))))), thisPage = Some(AnnualPayAmountPage)) {
+@govukLayout(pageTitle = Some(title(form, "annualPayAmount.title", titleMessageArgs = Seq(dateToString(furloughStart.minusDays(1))))), thisPage = AnnualPayAmountPage) {
 
     @formHelper(action = AnnualPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {
 

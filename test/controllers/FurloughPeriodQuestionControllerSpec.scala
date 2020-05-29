@@ -25,6 +25,7 @@ import models.ClaimPeriodQuestion.ClaimOnSamePeriod
 import models.FurloughPeriodQuestion
 import models.FurloughPeriodQuestion.FurloughedOnSamePeriod
 import models.FurloughStatus.{FurloughEnded, FurloughOngoing}
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -76,8 +77,10 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form, furloughStart, furloughStatus, None)(getRequest, messages).toString
+        view(form, furloughStart, furloughStatus, None)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -96,8 +99,10 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+
       contentAsString(result) mustEqual
-        view(form, furloughStart, FurloughEnded, Some(furloughEnd))(getRequest, messages).toString
+        view(form, furloughStart, FurloughEnded, Some(furloughEnd))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -114,8 +119,10 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+
       contentAsString(result) mustEqual
-        view(form.fill(FurloughPeriodQuestion.values.head), furloughStart, furloughStatus, None)(getRequest, messages).toString
+        view(form.fill(FurloughPeriodQuestion.values.head), furloughStart, furloughStatus, None)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -190,8 +197,10 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, furloughStart, furloughStatus, None)(request, messages).toString
+        view(boundForm, furloughStart, furloughStatus, None)(dataRequest, messages).toString
 
       application.stop()
     }

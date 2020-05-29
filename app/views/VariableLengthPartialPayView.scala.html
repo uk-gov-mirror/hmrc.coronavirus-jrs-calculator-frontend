@@ -30,7 +30,7 @@
 
 @(form: Form[_], date1: LocalDate, date2: LocalDate, submitUrl: Call)(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, if(date1.isEqual(date2)) "FurloughPartialPay.title.on" else "FurloughPartialPay.title.between", titleMessageArgs = Seq(dateToString(date1), dateToString(date2)))), thisPage = Some(if (submitUrl == routes.PartialPayBeforeFurloughController.onSubmit()) PartialPayBeforeFurloughPage else PartialPayAfterFurloughPage)) {
+    @govukLayout(pageTitle = Some(title(form, if(date1.isEqual(date2)) "FurloughPartialPay.title.on" else "FurloughPartialPay.title.between", titleMessageArgs = Seq(dateToString(date1), dateToString(date2)))), thisPage = if (submitUrl == routes.PartialPayBeforeFurloughController.onSubmit()) PartialPayBeforeFurloughPage else PartialPayAfterFurloughPage) {
 
 
         @formHelper(action = submitUrl, args = 'novalidate -> "novalidate") {

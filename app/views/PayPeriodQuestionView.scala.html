@@ -16,6 +16,7 @@
 
 @import controllers.routes._
 @import models.PayPeriodQuestion
+@import pages.PayPeriodQuestionPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -30,7 +31,7 @@
 
 @(form: Form[_], payPeriods: Seq[Period])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "payPeriodQuestion.title"))) {
+@govukLayout(pageTitle = Some(title(form, "payPeriodQuestion.title")), thisPage = PayPeriodQuestionPage) {
 
     @formHelper(action = PayPeriodQuestionController.onSubmit(), 'autoComplete -> "off") {
 

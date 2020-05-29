@@ -16,6 +16,7 @@
 
 @import controllers.actions.FeatureFlag._
 @import controllers.actions.FeatureFlagHelper
+@import pages.info.RootPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -30,7 +31,7 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(titleNoForm("rootPage.title")), showBackButton = false) {
+@govukLayout(pageTitle = Some(titleNoForm("rootPage.title")), showBackButton = false, thisPage = RootPage) {
 
     @h1("rootPage.heading")
 

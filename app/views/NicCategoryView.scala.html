@@ -16,6 +16,7 @@
 
 @import controllers.routes._
 @import models.NicCategory
+@import pages.NicCategoryPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -27,7 +28,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "nicCategory.title"))) {
+@govukLayout(pageTitle = Some(title(form, "nicCategory.title")), thisPage = NicCategoryPage) {
 
     @formHelper(action = NicCategoryController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 

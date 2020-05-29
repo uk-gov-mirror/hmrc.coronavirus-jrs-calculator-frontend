@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import forms.TopUpAmountFormProvider
+import models.requests.DataRequest
 import models.{Amount, TopUpPayment, TopUpPeriod, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -64,8 +65,10 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form, topUpPeriod, 1)(request, messages).toString
+        view(form, topUpPeriod, 1)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -140,8 +143,10 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(Amount(25)), topUpPeriod, 1)(request, messages).toString
+        view(form.fill(Amount(25)), topUpPeriod, 1)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -197,8 +202,10 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, topUpPeriod, 1)(request, messages).toString
+        view(boundForm, topUpPeriod, 1)(dataRequest, messages).toString
 
       application.stop()
     }

@@ -26,7 +26,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(title(form, "employeeStartDate.title")), thisPage = Some(EmployeeStartDatePage)) {
+    @govukLayout(pageTitle = Some(title(form, "employeeStartDate.title")), thisPage = EmployeeStartDatePage) {
 
         @formHelper(action = EmployeeStartDateController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 

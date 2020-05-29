@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import pages.PensionStatusPage
+
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
@@ -24,7 +26,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "pensionContribution.title"))) {
+@govukLayout(pageTitle = Some(title(form, "pensionContribution.title")), thisPage = PensionStatusPage) {
 
     @formHelper(action = PensionContributionController.onSubmit(), args = 'novalidate -> "novalidate") {
 

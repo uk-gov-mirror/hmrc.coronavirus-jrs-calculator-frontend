@@ -17,6 +17,7 @@
 @import java.time.LocalDate
 @import controllers.routes._
 @import models.ClaimPeriodQuestion
+@import pages.ClaimPeriodQuestionPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -31,7 +32,7 @@
 
 @(form: Form[_], claimStart: LocalDate, claimEnd: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "claimPeriodQuestion.title"))) {
+@govukLayout(pageTitle = Some(title(form, "claimPeriodQuestion.title")), showBackButton = false, thisPage = ClaimPeriodQuestionPage) {
 
     @formHelper(action = ClaimPeriodQuestionController.onSubmit(), 'autoComplete -> "off") {
 

@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import controllers.routes.AdditionalPaymentPeriodsController
 @import models.AdditionalPaymentPeriods
 @import java.time.LocalDate
+@import pages.AdditionalPaymentPeriodsPage
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -29,7 +29,7 @@
 
 @(form: Form[List[LocalDate]], payDates: Seq[FurloughBreakdown])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "additionalPaymentPeriods.title"))) {
+@govukLayout(pageTitle = Some(title(form, "additionalPaymentPeriods.title")), thisPage = AdditionalPaymentPeriodsPage) {
 
     @formHelper(action = AdditionalPaymentPeriodsController.onSubmit()) {
 

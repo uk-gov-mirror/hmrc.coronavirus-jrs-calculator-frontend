@@ -18,6 +18,7 @@
 @import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
 @import controllers.actions.FeatureFlagHelper
 @import controllers.actions.FeatureFlag._
+@import pages.info.ConfirmationPage
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -34,7 +35,7 @@
 
 @(cm: ConfirmationMetadata, cvb: ConfirmationViewBreakdown, version: String)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false) {
+@govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
 @confirmation {
 

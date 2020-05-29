@@ -24,6 +24,7 @@ import forms.AdditionalPaymentPeriodsFormProvider
 import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
+import models.requests.DataRequest
 import models.{FullPeriodCap, FurloughBreakdown, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -73,7 +74,7 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseWithApplication wit
     .withPayDate(List("2020, 2, 29", "2020, 3, 31", "2020, 4, 30"))
     .withRegularPayAmount(2000)
 
-  "TopupPeriods Controller" must {
+  "AdditionalPaymentPeriodsController" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -85,8 +86,10 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseWithApplication wit
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form, periodBreakdowns)(getRequest, messages).toString
+        view(form, periodBreakdowns)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -137,8 +140,10 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseWithApplication wit
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), periodBreakdowns)(getRequest, messages).toString
+        view(form.fill(validAnswer), periodBreakdowns)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -187,8 +192,10 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseWithApplication wit
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, periodBreakdowns)(request, messages).toString
+        view(boundForm, periodBreakdowns)(dataRequest, messages).toString
 
       application.stop()
     }

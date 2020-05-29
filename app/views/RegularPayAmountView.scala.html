@@ -30,7 +30,7 @@
 
 @(form: Form[_], paymentFrequency: PaymentFrequency)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, s"regularPayAmount.title.${paymentFrequency}")), thisPage = Some(RegularPayAmountPage)) {
+@govukLayout(pageTitle = Some(title(form, s"regularPayAmount.title.${paymentFrequency}")), thisPage = RegularPayAmountPage) {
 
 
     @formHelper(action = RegularPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {

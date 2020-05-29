@@ -26,6 +26,7 @@ import models.FurloughPeriodQuestion.FurloughedOnSamePeriod
 import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
+import models.requests.DataRequest
 import models.{PayPeriodQuestion, Period}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -83,8 +84,10 @@ class PayPeriodQuestionControllerSpec extends SpecBaseWithApplication with Mocki
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form, payPeriods)(getRequest, messages).toString
+        view(form, payPeriods)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -93,6 +96,7 @@ class PayPeriodQuestionControllerSpec extends SpecBaseWithApplication with Mocki
       val getRequest: FakeRequest[AnyContentAsEmpty.type] =
         FakeRequest(GET, payPeriodQuestionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
       val userAnswersUpdated = baseUserAnswers.withPayPeriodQuestion(PayPeriodQuestion.values.head)
       val application = applicationBuilder(userAnswers = Some(userAnswersUpdated)).build()
 
@@ -102,8 +106,10 @@ class PayPeriodQuestionControllerSpec extends SpecBaseWithApplication with Mocki
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+
       contentAsString(result) mustEqual
-        view(form.fill(PayPeriodQuestion.values.head), payPeriods)(getRequest, messages).toString
+        view(form.fill(PayPeriodQuestion.values.head), payPeriods)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -180,8 +186,10 @@ class PayPeriodQuestionControllerSpec extends SpecBaseWithApplication with Mocki
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm, payPeriods)(request, messages).toString
+        view(boundForm, payPeriods)(dataRequest, messages).toString
 
       application.stop()
     }

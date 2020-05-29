@@ -29,7 +29,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "topUpStatus.title")), thisPage = Some(TopUpStatusPage)) {
+@govukLayout(pageTitle = Some(title(form, "topUpStatus.title")), thisPage = TopUpStatusPage) {
 
     @formHelper(action = TopUpStatusController.onSubmit(), 'autoComplete -> "off") {
 

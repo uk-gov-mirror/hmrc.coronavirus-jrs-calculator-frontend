@@ -20,6 +20,7 @@ import base.SpecBaseWithApplication
 import forms.PensionContributionFormProvider
 import models.PensionStatus.DoesContribute
 import models.UserAnswers
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -44,7 +45,7 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
 
   lazy val pensionContributionRoute = routes.PensionContributionController.onPageLoad().url
 
-  "PensionAutoEnrolment Controller" must {
+  "PensionContributionController" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -58,8 +59,10 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(form)(request, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -78,8 +81,10 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
 
       status(result) mustEqual OK
 
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
       contentAsString(result) mustEqual
-        view(form.fill(DoesContribute))(request, messages).toString
+        view(form.fill(DoesContribute))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -129,8 +134,10 @@ class PensionContributionControllerSpec extends SpecBaseWithApplication with Moc
 
       status(result) mustEqual BAD_REQUEST
 
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }

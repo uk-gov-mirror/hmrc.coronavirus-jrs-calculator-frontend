@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import pages.info.ErrorPage
+package pages.info
 
-@this(
-        govuk_wrapper: templates.GovukLayoutWrapper,
-        h1: components.h1
-)
+import pages.Page
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+trait InfoPage extends Page
 
-@govuk_wrapper(Some(titleNoForm(pageTitle)), thisPage = ErrorPage) {
+case object AccessibilityStatementPage extends InfoPage
 
-    @h1(messages(heading))
+case object ComingSoonViewPage extends InfoPage
 
-    <p class="govuk-body">@messages(message)</p>
+case object ConfirmationPage extends InfoPage
 
-}
+case object ErrorPage extends InfoPage
+
+case object RootPage extends InfoPage
+
+case object SessionExpiredPage extends InfoPage
+
+case object UnauthorisedPage extends InfoPage
+
+case object IndexPage extends InfoPage

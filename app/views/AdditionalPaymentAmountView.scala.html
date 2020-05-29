@@ -15,6 +15,7 @@
  *@
 
 @import java.time.LocalDate
+@import pages.AdditionalPaymentAmountPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -29,7 +30,7 @@
 
 @(form: Form[_], payPeriodEnd: LocalDate, idx: Int)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "additionalPaymentAmount.title"))) {
+@govukLayout(pageTitle = Some(title(form, "additionalPaymentAmount.title")), thisPage = AdditionalPaymentAmountPage, currentIdx = Some(idx)) {
 
 
     @formHelper(action = AdditionalPaymentAmountController.onSubmit(idx), 'autoComplete -> "off", 'novalidate -> "novalidate") {

@@ -17,21 +17,25 @@
 package navigation
 
 import controllers.routes
+import models.AdditionalPaymentStatus.YesAdditionalPayments
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.FurloughStatus.FurloughEnded
 import models.PayMethod.{Regular, Variable}
+import models.TopUpStatus.ToppedUp
 import models.requests.DataRequest
 import pages._
+import pages.info.InfoPage
 import play.api.mvc.{Call, Request}
 
 object BackLinker {
 
-  def getFor(currentPage: Option[Page], idx: Option[Int] = None)(implicit request: Request[_]): String =
-    currentPage match {
-      case Some(page) if request.isInstanceOf[DataRequest[_]] =>
-        implicit val dataRequest: DataRequest[_] = request.asInstanceOf[DataRequest[_]]
-        getBackLink(page, idx).url
-
+  def getFor(currentPage: Page, idx: Option[Int] = None)(implicit request: Request[_]): String =
+    request match {
+      case dataRequest: DataRequest[_] =>
+        currentPage match {
+          case _: InfoPage => "#"
+          case other       => getBackLink(other, idx)(dataRequest).url
+        }
       case _ => "#"
     }
 
@@ -54,6 +58,15 @@ object BackLinker {
       case PartialPayAfterFurloughPage  => partialPayAfterFurloughBackLink()
       case TopUpStatusPage              => topUpStatusBackLink()
       case TopUpPeriodsPage             => routes.TopUpStatusController.onPageLoad()
+      case TopUpAmountPage              => topUpAmountBackLink(idx)
+      case AdditionalPaymentStatusPage  => additionalPayStatusBackLink()
+      case AdditionalPaymentPeriodsPage => routes.AdditionalPaymentStatusController.onPageLoad()
+      case AdditionalPaymentAmountPage  => additionalPayAmountPageBackLink(idx)
+      case NicCategoryPage              => nicCategoryPageBackLink()
+      case PensionStatusPage            => routes.NicCategoryController.onPageLoad()
+      case FurloughPeriodQuestionPage   => routes.ClaimPeriodQuestionController.onPageLoad()
+      case PayPeriodQuestionPage        => routes.FurloughPeriodQuestionController.onPageLoad()
+      case p                            => throw new RuntimeException(s"Back link not yet implemented for $p")
     }
 
   private def paymentFrequencyBackLink()(implicit request: DataRequest[_]): Call =
@@ -113,5 +126,43 @@ object BackLinker {
               case None           => routes.PayMethodController.onPageLoad()
             }
         }
+    }
+
+  private def topUpAmountBackLink(idx: Option[Int])(implicit request: DataRequest[_]): Call =
+    if (idx.getOrElse(1) == 1) {
+      request.userAnswers.get(TopUpPeriodsPage) match {
+        case Some(_) => routes.TopUpPeriodsController.onPageLoad()
+        case _       => routes.TopUpStatusController.onPageLoad()
+      }
+    } else {
+      routes.TopUpAmountController.onPageLoad(idx.getOrElse(1) - 1)
+    }
+
+  private def additionalPayStatusBackLink()(implicit request: DataRequest[_]): Call =
+    request.userAnswers.get(TopUpStatusPage) match {
+      case Some(ToppedUp) =>
+        val lastIdx = request.userAnswers.getList(TopUpAmountPage).length
+        routes.TopUpAmountController.onPageLoad(lastIdx)
+
+      case _ => routes.TopUpStatusController.onPageLoad()
+    }
+
+  private def additionalPayAmountPageBackLink(idx: Option[Int])(implicit request: DataRequest[_]): Call =
+    if (idx.getOrElse(1) == 1) {
+      request.userAnswers.get(AdditionalPaymentPeriodsPage) match {
+        case Some(_) => routes.AdditionalPaymentPeriodsController.onPageLoad()
+        case _       => routes.AdditionalPaymentStatusController.onPageLoad()
+      }
+    } else {
+      routes.AdditionalPaymentAmountController.onPageLoad(idx.getOrElse(1) - 1)
+    }
+
+  private def nicCategoryPageBackLink()(implicit request: DataRequest[_]): Call =
+    request.userAnswers.get(AdditionalPaymentStatusPage) match {
+      case Some(YesAdditionalPayments) =>
+        val lastIdx = request.userAnswers.getList(AdditionalPaymentAmountPage).length
+        routes.AdditionalPaymentAmountController.onPageLoad(lastIdx)
+
+      case _ => routes.AdditionalPaymentStatusController.onPageLoad()
     }
 }

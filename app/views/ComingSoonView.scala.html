@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import pages.info.ComingSoonViewPage
+
 @this(
         govukLayout: templates.GovukLayoutWrapper,
         h1: components.h1,
@@ -25,7 +27,7 @@
 
 @(showCalculateTopupsLink: Boolean = false)(implicit request: Request[_], messages: Messages)
 
-    @govukLayout(pageTitle = Some(titleNoForm( if(showCalculateTopupsLink) "comingSoon.topup.title" else "comingSoon.title"))) {
+    @govukLayout(pageTitle = Some(titleNoForm( if(showCalculateTopupsLink) "comingSoon.topup.title" else "comingSoon.title")), thisPage = ComingSoonViewPage) {
 
         @formHelper(action = ClaimPeriodStartController.onPageLoad(), args = 'novalidate -> "novalidate") {
 
