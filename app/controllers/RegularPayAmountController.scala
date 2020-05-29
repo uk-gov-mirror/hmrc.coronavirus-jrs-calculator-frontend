@@ -20,9 +20,9 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.RegularPayAmountFormProvider
 import javax.inject.Inject
-import models.{PaymentFrequency, Salary}
+import models.Salary
 import navigation.Navigator
-import pages.{PaymentFrequencyPage, RegularPayAmountPage}
+import pages.RegularPayAmountPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -48,13 +48,11 @@ class RegularPayAmountController @Inject()(
   val form: Form[Salary] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val maybePf = request.userAnswers.getV[PaymentFrequency](PaymentFrequencyPage)
     val maybeSalary = request.userAnswers.getV(RegularPayAmountPage)
 
-    (maybePf, maybeSalary) match {
-      case (Valid(pf), Valid(sq))  => Ok(view(form.fill(sq), pf))
-      case (Valid(pf), Invalid(e)) => Ok(view(form, pf))
-      case (Invalid(_), _)         => Redirect(routes.PaymentFrequencyController.onPageLoad())
+    maybeSalary match {
+      case Valid(sq)  => Ok(view(form.fill(sq)))
+      case Invalid(e) => Ok(view(form))
     }
   }
 
@@ -63,13 +61,7 @@ class RegularPayAmountController @Inject()(
       .bindFromRequest()
       .fold(
         formWithErrors => {
-          val maybePf = request.userAnswers.getV[PaymentFrequency](PaymentFrequencyPage)
-
-          val result = maybePf match {
-            case Valid(pf)  => BadRequest(view(formWithErrors, pf))
-            case Invalid(e) => Redirect(routes.PaymentFrequencyController.onPageLoad())
-          }
-          Future.successful(result)
+          Future.successful(BadRequest(view(formWithErrors)))
         },
         value =>
           for {

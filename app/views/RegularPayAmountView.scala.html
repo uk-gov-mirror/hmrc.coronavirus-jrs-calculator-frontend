@@ -25,29 +25,32 @@
         fieldset: components.fieldset,
         h1: components.h1,
         p: components.p,
-        panel: components.panelIndent
+        panel: components.panelIndent,
+        whatToInclude: includes.whatToInclude
 )
 
-@(form: Form[_], paymentFrequency: PaymentFrequency)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, s"regularPayAmount.title.${paymentFrequency}")), thisPage = RegularPayAmountPage) {
+@govukLayout(pageTitle = Some(title(form, "regularPayAmount.title")), thisPage = RegularPayAmountPage) {
 
 
     @formHelper(action = RegularPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages(s"regularPayAmount.heading.$paymentFrequency"))
+        @h1(messages("regularPayAmount.heading"))
 
-        @p(Html(messages("regularPayAmount.salary.hint")))
+        @p(Html(messages("regularPayAmount.p1")))
 
-        @panel(Html(messages("regularPayAmount.inset.info")))
+        @panel(Html(messages("regularPayAmount.inset")))
+
+        @whatToInclude()
 
         @inputCurrency(
             form,
             id = "value",
             name = "value",
-            label = messages(s"regularPayAmount.heading.$paymentFrequency"),
+            label = messages("regularPayAmount.heading"),
             labelClasses = Some("govuk-visually-hidden"),
             isPageHeading = false,
             classes = Some("govuk-input--width-10")

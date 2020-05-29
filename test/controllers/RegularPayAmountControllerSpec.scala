@@ -62,7 +62,7 @@ class RegularPayAmountControllerSpec extends SpecBaseWithApplication with Mockit
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(PaymentFrequencyPage, Weekly).success.value
+      val userAnswers = UserAnswers(userAnswersId)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +75,7 @@ class RegularPayAmountControllerSpec extends SpecBaseWithApplication with Mockit
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form, Weekly)(dataRequest, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -127,7 +127,7 @@ class RegularPayAmountControllerSpec extends SpecBaseWithApplication with Mockit
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm, FourWeekly)(dataRequest, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }

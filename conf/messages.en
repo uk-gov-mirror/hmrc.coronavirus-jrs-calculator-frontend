@@ -216,19 +216,12 @@ reviewPayDates.heading = Pay dates within the claim period
 reviewPayDates.addMore = Do you need to add another pay date for this claim period?
 reviewPayDates.error.required = Select yes if reviewPayDates
 
-regularPayAmount.title.weekly = On 19 March 2020, what was this employee getting paid each week?
-regularPayAmount.title.fortnightly = On 19 March 2020, what was this employee getting paid every 2 weeks?
-regularPayAmount.title.fourweekly = On 19 March 2020, what was this employee getting paid every 4 weeks?
-regularPayAmount.title.monthly = On 19 March 2020, what was this employee getting paid each month?
-regularPayAmount.heading.weekly = On 19 March 2020, what was this employee getting paid each week?
-regularPayAmount.heading.fortnightly = On 19 March 2020, what was this employee getting paid every 2 weeks?
-regularPayAmount.heading.fourweekly = On 19 March 2020, what was this employee getting paid every 4 weeks?
-regularPayAmount.heading.monthly = On 19 March 2020, what was this employee getting paid each month?
-regularPayAmount.salary.label= If this employee started work in February, enter the amount they will get paid from now on.
-regularPayAmount.salary.hint = This is the gross amount before deductions.
+regularPayAmount.title = On 19 March 2020, what was this employee’s most recent pay amount?
+regularPayAmount.heading = On 19 March 2020, what was this employee’s most recent pay amount?
+regularPayAmount.p1 = This is their regular payment before deductions. Do not include discretionary payments, non-cash payments or non-monetary benefits.
+regularPayAmount.inset = If this employee started work between 1 and 18 March 2020, enter the amount they’ll get paid from now on.
 regularPayAmount.salary.error.required = Enter a valid amount
 regularPayAmount.salary.error.invalid = Enter a valid amount
-regularPayAmount.inset.info = If this employee started work between 1 and 18 March 2020, enter the amount they’ll get paid from now on.
 
 nicCategory.title = Do you pay Employers Class 1 National Insurance contributions for this employee?
 nicCategory.heading = Do you pay Employers Class 1 National Insurance contributions for this employee?
