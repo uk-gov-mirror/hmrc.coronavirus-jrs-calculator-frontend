@@ -218,7 +218,8 @@ reviewPayDates.error.required = Select yes if reviewPayDates
 
 regularPayAmount.title = On 19 March 2020, what was this employee’s most recent pay amount?
 regularPayAmount.heading = On 19 March 2020, what was this employee’s most recent pay amount?
-regularPayAmount.p1 = This is their regular payment before deductions. Do not include discretionary payments, non-cash payments or non-monetary benefits.
+regularPayAmount.p1 = This is the latest payment that was due on or before 19 March, before deductions.
+regularPayAmount.p2 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 regularPayAmount.inset = If this employee started work between 1 and 18 March 2020, enter the amount they’ll get paid from now on.
 regularPayAmount.salary.error.required = Enter a valid amount
 regularPayAmount.salary.error.invalid = Enter a valid amount
