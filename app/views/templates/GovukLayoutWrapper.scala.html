@@ -73,7 +73,7 @@
     @phaseBanner("beta")
 
     @if(showBackButton) {
-        @govukBackLink(BackLink(href = BackLinker.getFor(thisPage, currentIdx), content = Text("Back"), attributes = Map("id" -> "back-link")))
+        @govukBackLink(BackLink(href = "#", content = Text("Back"), attributes = Map("id" -> "back-link")))
     }
 }
 
