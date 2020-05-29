@@ -18,7 +18,7 @@ package handlers
 
 import java.time.LocalDate
 
-import models.{AdditionalPayment, Amount, BranchingQuestions, LastYearPayment, NicCategory, NonFurloughPay, PayMethod, PayPeriodQuestion, PaymentFrequency, PensionStatus, Period, ReferencePayData, TopUpPayment, UserAnswers}
+import models.{AdditionalPayment, Amount, BranchingQuestions, FurloughStatus, LastYearPayment, NicCategory, NonFurloughPay, PayMethod, PayPeriodQuestion, PaymentFrequency, PensionStatus, Period, ReferencePayData, TopUpPayment, UserAnswers}
 import pages._
 import services.{FurloughPeriodExtractor, PeriodHelper}
 trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
@@ -89,13 +89,19 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
   def extractPayPeriodQuestion(userAnswers: UserAnswers): Option[PayPeriodQuestion] =
     userAnswers.get(PayPeriodQuestionPage)
 
+  def extractLastPayDate(userAnswers: UserAnswers): Option[LocalDate] =
+    userAnswers.get(LastPayDatePage)
+
+  def extractFurloughStatus(userAnswers: UserAnswers): Option[FurloughStatus] =
+    userAnswers.get(FurloughStatusPage)
+
   def extractReferencePayData(userAnswers: UserAnswers): Option[ReferencePayData] =
     for {
       furloughPeriod <- extractFurloughWithinClaim(userAnswers)
       payDates = userAnswers.getList(PayDatePage)
       periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
       frequency  <- extractPaymentFrequency(userAnswers)
-      lastPayDay <- userAnswers.get(LastPayDatePage)
+      lastPayDay <- extractLastPayDate(userAnswers)
       assigned = assignPayDates(frequency, periods, lastPayDay)
     } yield ReferencePayData(furloughPeriod, assigned, frequency)
 

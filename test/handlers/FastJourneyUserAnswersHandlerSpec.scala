@@ -103,7 +103,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
   }
 
   "delete data from the DB if answer is `Yes` to pay period question excluding Claim, Furlough," +
-    "pay periods, pay question, pay frequency" in new FastJourneyUserAnswersHandler {
+    "pay periods, pay question, pay frequency, furlough status and last pay date" in new FastJourneyUserAnswersHandler {
     val userAnswers = dummyUserAnswers
       .withFurloughEndDate("2020-3-31")
       .withClaimPeriodQuestion(ClaimOnSamePeriod)
@@ -118,6 +118,8 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData {
       .withFurloughEndDate(userAnswers.get(FurloughEndDatePage).get.toString)
       .withPayDate(userAnswers.getList(PayDatePage).map(_.toString).toList)
       .withPaymentFrequency(Monthly)
+      .withFurloughStatus()
+      .withLastPayDate(dummyUserAnswers.get(LastPayDatePage).get.toString)
       .data
 
     val actual: UserAnswersState = payQuestion(userAnswers).get
