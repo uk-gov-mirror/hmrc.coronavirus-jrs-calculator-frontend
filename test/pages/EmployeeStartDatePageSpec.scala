@@ -28,6 +28,6 @@ class EmployeeStartDatePageSpec extends PageBehaviours {
 
     beSettable[LocalDate](EmployeeStartDatePage)
 
-    beRemovable[LocalDate](EmployeeStartDatePage, "error.expected.date")
+    beRemovable[LocalDate](EmployeeStartDatePage)
   }
 }

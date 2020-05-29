@@ -88,7 +88,12 @@ final case class UserAnswers(
 
   def remove[A](page: Settable[A], idx: Option[Int] = None): Try[UserAnswers] = {
 
-    val updatedData = data.setObject(path(page, idx), JsNull) match {
+    val result = idx match {
+      case Some(_) => data.setObject(path(page, idx), JsNull)
+      case None    => data.removeObject(path(page, None))
+    }
+
+    val updatedData = result match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
       case JsError(_) =>

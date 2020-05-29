@@ -28,6 +28,6 @@ class PayDatePageSpec extends PageBehaviours {
 
     beSettable[LocalDate](PayDatePage)
 
-    beRemovable[LocalDate](PayDatePage, "error.expected.date")
+    beRemovable[LocalDate](PayDatePage)
   }
 }

@@ -147,8 +147,7 @@ trait PageBehaviours
 
   class BeRemovable[A] {
     def apply[P <: QuestionPage[A]](
-      genP: Gen[P],
-      error: String = "error.invalid"
+      genP: Gen[P]
     )(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit =
       "be able to be removed from UserAnswers" in {
 
@@ -162,7 +161,7 @@ trait PageBehaviours
           case (page, userAnswers) =>
             val updatedAnswers = userAnswers.remove(page).success.value
             updatedAnswers.get(page) must be(empty)
-            updatedAnswers.getV(page) mustEqual emptyError(page.path, error)
+            updatedAnswers.getV(page) mustEqual emptyError(page.path)
         }
       }
   }

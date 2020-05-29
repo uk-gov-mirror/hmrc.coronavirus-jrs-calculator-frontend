@@ -16,12 +16,23 @@
 
 package pages
 
-import models.TopUpPeriod
+import models.{AdditionalPaymentStatus, TopUpPeriod, UserAnswers}
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object TopUpPeriodsPage extends QuestionPage[List[TopUpPeriod]] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "topupPeriods"
+
+  override def cleanup(value: Option[List[TopUpPeriod]], userAnswers: UserAnswers): Try[UserAnswers] =
+    value match {
+      case Some(_) =>
+        userAnswers
+          .remove(TopUpAmountPage)
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
 }

@@ -27,6 +27,6 @@ class LastYearPayPageSpec extends PageBehaviours {
 
     beSettable[LastYearPayment](LastYearPayPage)
 
-    beRemovable[LastYearPayment](LastYearPayPage, "error.expected.jsobject")
+    beRemovable[LastYearPayment](LastYearPayPage)
   }
 }

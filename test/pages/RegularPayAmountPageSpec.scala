@@ -27,6 +27,6 @@ class RegularPayAmountPageSpec extends PageBehaviours {
 
     beSettable[Salary](RegularPayAmountPage)
 
-    beRemovable[Salary](RegularPayAmountPage, "error.expected.jsobject")
+    beRemovable[Salary](RegularPayAmountPage)
   }
 }

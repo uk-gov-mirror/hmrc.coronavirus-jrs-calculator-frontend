@@ -33,6 +33,6 @@ class LastPayDatePageSpec extends PageBehaviours {
 
     beSettable[LocalDate](LastPayDatePage)(arbitraryLocalDate, implicitly)
 
-    beRemovable[LocalDate](LastPayDatePage, "error.expected.date")(arbitraryLocalDate, implicitly)
+    beRemovable[LocalDate](LastPayDatePage)(arbitraryLocalDate, implicitly)
   }
 }

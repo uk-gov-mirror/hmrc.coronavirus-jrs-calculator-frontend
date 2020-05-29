@@ -27,6 +27,6 @@ class AnnualPayAmountPageSpec extends PageBehaviours {
 
     beSettable[AnnualPayAmount](AnnualPayAmountPage)
 
-    beRemovable[AnnualPayAmount](AnnualPayAmountPage, "error.expected.jsobject")
+    beRemovable[AnnualPayAmount](AnnualPayAmountPage)
   }
 }

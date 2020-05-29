@@ -27,6 +27,6 @@ class AdditionalPaymentAmountPageSpec extends PageBehaviours {
 
     beSettable[AdditionalPayment](AdditionalPaymentAmountPage)
 
-    beRemovable[AdditionalPayment](AdditionalPaymentAmountPage, "error.expected.jsobject")
+    beRemovable[AdditionalPayment](AdditionalPaymentAmountPage)
   }
 }

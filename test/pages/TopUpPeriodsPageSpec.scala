@@ -27,6 +27,6 @@ class TopUpPeriodsPageSpec extends PageBehaviours {
 
     beSettable[List[TopUpPeriod]](TopUpPeriodsPage)
 
-    beRemovable[List[TopUpPeriod]](TopUpPeriodsPage, "error.expected.jsarray")
+    beRemovable[List[TopUpPeriod]](TopUpPeriodsPage)
   }
 }

@@ -27,6 +27,6 @@ class TopUpAmountPageSpec extends PageBehaviours {
 
     beSettable[TopUpPayment](TopUpAmountPage)
 
-    beRemovable[TopUpPayment](TopUpAmountPage, "error.expected.jsobject")
+    beRemovable[TopUpPayment](TopUpAmountPage)
   }
 }

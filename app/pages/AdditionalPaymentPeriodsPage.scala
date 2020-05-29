@@ -18,11 +18,23 @@ package pages
 
 import java.time.LocalDate
 
+import models.UserAnswers
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object AdditionalPaymentPeriodsPage extends QuestionPage[List[LocalDate]] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "additionalPaymentPeriods"
+
+  override def cleanup(value: Option[List[LocalDate]], userAnswers: UserAnswers): Try[UserAnswers] =
+    value match {
+      case Some(_) =>
+        userAnswers
+          .remove(AdditionalPaymentAmountPage)
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
 }

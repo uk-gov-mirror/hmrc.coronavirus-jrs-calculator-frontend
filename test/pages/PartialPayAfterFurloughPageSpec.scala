@@ -27,6 +27,6 @@ class PartialPayAfterFurloughPageSpec extends PageBehaviours {
 
     beSettable[FurloughPartialPay](PartialPayAfterFurloughPage)
 
-    beRemovable[FurloughPartialPay](PartialPayAfterFurloughPage, "error.expected.jsobject")
+    beRemovable[FurloughPartialPay](PartialPayAfterFurloughPage)
   }
 }
