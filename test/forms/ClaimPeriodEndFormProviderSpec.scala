@@ -94,5 +94,22 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
           Seq(ViewUtils.dateToString(frontendAppConfig.schemeEndDate))
         ))
     }
+
+    "fail with invalid dates -  less than 7 days after phase two start date" in {
+
+      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(frontendAppConfig.phaseTwoStartDate)
+
+      val now = frontendAppConfig.phaseTwoStartDate.plusDays(5)
+
+      val data = Map(
+        "endDate.day"   -> now.getDayOfMonth.toString,
+        "endDate.month" -> now.getMonthValue.toString,
+        "endDate.year"  -> now.getYear.toString
+      )
+
+      val result = form.bind(data)
+
+      result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.lessThan.7days"))
+    }
   }
 }

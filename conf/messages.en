@@ -314,6 +314,7 @@ claimPeriodEnd.error.required = The end date must include {0}
 claimPeriodEnd.error.invalid = Enter a real end date
 claimPeriodEnd.cannot.be.after.policyEnd = The end date cannot be after the scheme end date ({0})
 claimPeriodEnd.cannot.be.before.claimStart = The end date cannot be before the start date
+claimPeriodEnd.cannot.be.lessThan.7days = The claim period must be at least 7 days
 claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
