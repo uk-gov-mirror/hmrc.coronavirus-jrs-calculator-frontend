@@ -94,20 +94,5 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
           Seq(ViewUtils.dateToString(frontendAppConfig.schemeEndDate))
         ))
     }
-
-    "fail with invalid dates -  more than today + 14 days" in {
-
-      val now = LocalDate.now().plusDays(15)
-
-      val data = Map(
-        "endDate.day"   -> now.getDayOfMonth.toString,
-        "endDate.month" -> now.getMonthValue.toString,
-        "endDate.year"  -> now.getYear.toString,
-      )
-
-      val result = form.bind(data)
-
-      result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.after.14days"))
-    }
   }
 }

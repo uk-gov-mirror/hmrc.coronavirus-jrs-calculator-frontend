@@ -36,8 +36,6 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
       Invalid("claimPeriodEnd.cannot.be.before.claimStart")
     } else if (claimEndDate.isAfter(appConfig.schemeEndDate)) {
       Invalid("claimPeriodEnd.cannot.be.after.policyEnd", ViewUtils.dateToString(appConfig.schemeEndDate))
-    } else if (claimEndDate.isAfter(LocalDate.now().plusDays(14))) {
-      Invalid("claimPeriodEnd.cannot.be.after.14days")
     } else {
       Valid
     }
