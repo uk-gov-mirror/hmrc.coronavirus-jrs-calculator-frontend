@@ -35,7 +35,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
     (
       userAnswers.getV(FurloughStartDatePage),
       userAnswers.getV(EmployeeStartDatePage) <+> default.validNec[JsError]
-      ).mapN { (furloughStart, employeeStartDate) =>
+    ).mapN { (furloughStart, employeeStartDate) =>
       endDateOrTaxYearEnd(Period(employeeStartDate, furloughStart.minusDays(1)))
     }
   }
@@ -103,7 +103,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
       extractFurloughWithinClaimV(userAnswers),
       extractPaymentFrequencyV(userAnswers),
       userAnswers.getV(LastPayDatePage)
-      ).mapN { (furloughPeriod, frequency, lastPayDay) =>
+    ).mapN { (furloughPeriod, frequency, lastPayDay) =>
       val payDates = userAnswers.getList(PayDatePage)
       val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
       val assigned = assignPayDates(frequency, periods, lastPayDay)

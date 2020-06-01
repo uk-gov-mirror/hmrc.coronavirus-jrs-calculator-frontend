@@ -29,7 +29,7 @@ trait FurloughPeriodExtractor extends LocalDateHelpers {
       userAnswers.getV(ClaimPeriodStartPage),
       userAnswers.getV(ClaimPeriodEndPage),
       extractFurloughPeriodV(userAnswers)
-      ).mapN { (claimPeriodStart, claimPeriodEnd, furloughDates) =>
+    ).mapN { (claimPeriodStart, claimPeriodEnd, furloughDates) =>
       val startDate = latestOf(claimPeriodStart, furloughDates.start)
       val endDate = furloughDates match {
         case FurloughOngoing(_)            => claimPeriodEnd
