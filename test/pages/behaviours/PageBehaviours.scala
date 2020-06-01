@@ -18,7 +18,7 @@ package pages.behaviours
 
 import cats.data.Chain
 import cats.data.Validated.{Invalid, Valid}
-import cats.scalatest.ValidatedMatchers
+import cats.scalatest.{ValidatedMatchers, ValidatedValues}
 import generators.Generators
 import models.UserAnswers
 import org.scalacheck.Arbitrary.arbitrary
@@ -30,8 +30,8 @@ import play.api.libs.json._
 import queries.Gettable
 
 trait PageBehaviours
-    extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with Generators with OptionValues with ValidatedMatchers
-    with TryValues {
+    extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with Generators with OptionValues with ValidatedValues
+    with ValidatedMatchers with TryValues {
 
   def emptyError(path: JsPath, error: String = "error.path.missing"): Invalid[Chain[JsError]] =
     Invalid(Chain(JsError(path -> JsonValidationError(List(error)))))
@@ -55,7 +55,7 @@ trait PageBehaviours
 
             forAll(gen) {
               case (page, userAnswers) =>
-                userAnswers.get(page) must be(empty)
+                userAnswers.getV(page) mustBe invalid
             }
           }
         }
@@ -96,7 +96,7 @@ trait PageBehaviours
 
             forAll(gen) {
               case (page, savedValue, userAnswers) =>
-                userAnswers.get(page).value mustEqual savedValue
+                userAnswers.getV(page).value mustEqual savedValue
             }
           }
         }
@@ -138,8 +138,7 @@ trait PageBehaviours
         forAll(gen) {
           case (page, newValue, userAnswers) =>
             val updatedAnswers = userAnswers.set(page, newValue).success.value
-            updatedAnswers.get(page).value mustEqual newValue
-            updatedAnswers.getV(page) mustEqual Valid(newValue)
+            updatedAnswers.getV(page).value mustEqual newValue
         }
       }
 
@@ -160,7 +159,6 @@ trait PageBehaviours
         forAll(gen) {
           case (page, userAnswers) =>
             val updatedAnswers = userAnswers.remove(page).success.value
-            updatedAnswers.get(page) must be(empty)
             updatedAnswers.getV(page) mustEqual emptyError(page.path)
         }
       }

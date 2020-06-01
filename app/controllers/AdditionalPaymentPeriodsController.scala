@@ -55,7 +55,7 @@ class AdditionalPaymentPeriodsController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      handleCalculationFurlough(request.userAnswers)
+      handleCalculationFurloughV(request.userAnswers)
         .map { furlough =>
           furlough.periodBreakdowns match {
             case breakdown :: Nil =>
@@ -76,7 +76,7 @@ class AdditionalPaymentPeriodsController @Inject()(
 
   def onSubmit(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      handleCalculationFurlough(request.userAnswers)
+      handleCalculationFurloughV(request.userAnswers)
         .map { furlough =>
           form
             .bindFromRequest()

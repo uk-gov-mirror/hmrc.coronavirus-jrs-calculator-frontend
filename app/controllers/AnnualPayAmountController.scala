@@ -16,12 +16,15 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.AnnualPayAmountFormProvider
 import javax.inject.Inject
+import models.AnnualPayAmount
 import navigation.Navigator
 import pages.{AnnualPayAmountPage, FurloughStartDatePage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -43,27 +46,27 @@ class AnnualPayAmountController @Inject()(
 )(implicit ec: ExecutionContext)
     extends BaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[AnnualPayAmount] = formProvider()
 
   def onPageLoad(): Action[AnyContent] =
     (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async { implicit request =>
-      request.userAnswers.get(FurloughStartDatePage) match {
-        case Some(furloughStart) =>
-          val preparedForm = request.userAnswers.get(AnnualPayAmountPage) match {
-            case None        => form
-            case Some(value) => form.fill(value)
+      request.userAnswers.getV(FurloughStartDatePage) match {
+        case Valid(furloughStart) =>
+          val preparedForm = request.userAnswers.getV(AnnualPayAmountPage) match {
+            case Invalid(e)   => form
+            case Valid(value) => form.fill(value)
           }
 
           Future.successful(Ok(view(preparedForm, furloughStart)))
 
-        case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad()))
+        case Invalid(e) => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad()))
       }
     }
 
   def onSubmit(): Action[AnyContent] =
     (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async { implicit request =>
-      request.userAnswers.get(FurloughStartDatePage) match {
-        case Some(furloughStart) =>
+      request.userAnswers.getV(FurloughStartDatePage) match {
+        case Valid(furloughStart) =>
           form
             .bindFromRequest()
             .fold(
@@ -75,7 +78,7 @@ class AnnualPayAmountController @Inject()(
                 } yield Redirect(navigator.nextPage(AnnualPayAmountPage, updatedAnswers))
             )
 
-        case None => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad()))
+        case Invalid(_) => Future.successful(Redirect(routes.FurloughStartDateController.onPageLoad()))
       }
     }
 }

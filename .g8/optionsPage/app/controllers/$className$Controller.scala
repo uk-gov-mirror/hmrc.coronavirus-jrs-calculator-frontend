@@ -13,6 +13,7 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.$className$View
 
 import scala.concurrent.{ExecutionContext, Future}
+import cats.data.Validated.{Invalid, Valid}
 
 class $className$Controller @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -31,9 +32,9 @@ class $className$Controller @Inject()(
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get($className$Page) match {
-        case None => form
-        case Some(value) => form.fill(value)
+      val preparedForm = request.userAnswers.getV($className$Page) match {
+        case Invalid(e) => form
+        case Valid(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, mode))

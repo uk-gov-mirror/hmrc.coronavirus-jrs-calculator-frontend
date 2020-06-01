@@ -122,19 +122,19 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private val lastYearPayRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
-    getPayDates(userAnswers).fold(
-      routes.ErrorController.somethingWentWrong()
-    ) { payDates =>
-      payDates.lift.apply(previousIdx) match {
-        case Some(_) => routes.LastYearPayController.onPageLoad(previousIdx + 1)
-        case None    => routes.AnnualPayAmountController.onPageLoad()
+    getPayDatesV(userAnswers).fold(
+      nel => routes.ErrorController.somethingWentWrong(), { payDates =>
+        payDates.lift.apply(previousIdx) match {
+          case Some(_) => routes.LastYearPayController.onPageLoad(previousIdx + 1)
+          case None    => routes.AnnualPayAmountController.onPageLoad()
+        }
       }
-    }
+    )
   }
 
   private val topUpAmountRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     userAnswers
-      .get(TopUpPeriodsPage)
+      .getV(TopUpPeriodsPage)
       .map { topUpPeriods =>
         if (topUpPeriods.isDefinedAt(previousIdx)) {
           routes.TopUpAmountController.onPageLoad(previousIdx + 1)
@@ -147,7 +147,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   private val additionalPaymentAmountRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     userAnswers
-      .get(AdditionalPaymentPeriodsPage)
+      .getV(AdditionalPaymentPeriodsPage)
       .map { additionalPaymentPeriods =>
         if (additionalPaymentPeriods.isDefinedAt(previousIdx)) {
           routes.AdditionalPaymentAmountController.onPageLoad(previousIdx + 1)

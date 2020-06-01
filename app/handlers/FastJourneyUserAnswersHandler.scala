@@ -31,8 +31,8 @@ import models.UserAnswers.AnswerV
 
 trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper {
 
-  def claimQuestion(userAnswer: UserAnswers): Option[UserAnswersState] =
-    userAnswer.get(ClaimPeriodQuestionPage) map {
+  def claimQuestion(userAnswer: UserAnswers): AnswerV[UserAnswersState] =
+    userAnswer.getV(ClaimPeriodQuestionPage) map {
       case ClaimOnSamePeriod      => UserAnswersState(userAnswer, userAnswer)
       case ClaimOnDifferentPeriod => UserAnswersState(userAnswer.copy(data = Json.obj()), userAnswer)
     }
@@ -41,12 +41,18 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
     userAnswer.getV(ClaimPeriodQuestionPage) match {
       case Valid(ClaimOnSamePeriod)      => processFurloughQuestion(UserAnswersState(userAnswer, userAnswer))
       case Valid(ClaimOnDifferentPeriod) => UserAnswersState(userAnswer.copy(data = Json.obj()), userAnswer).validNec
+      case inv @ Invalid(_)              => inv
     }
 
-  def furloughQuestion(answer: UserAnswers): Option[UserAnswersState] =
-    answer.get(FurloughPeriodQuestionPage) flatMap {
-      case FurloughedOnSamePeriod      => Some(UserAnswersState(answer, answer))
-      case FurloughedOnDifferentPeriod => (clearAllAnswers andThen keepClaimPeriod).run(UserAnswersState(answer, answer))
+  def furloughQuestionV(answer: UserAnswers): AnswerV[UserAnswersState] =
+    answer.getV(FurloughPeriodQuestionPage) match {
+      case Valid(FurloughedOnSamePeriod) => Valid(UserAnswersState(answer, answer))
+      case Valid(FurloughedOnDifferentPeriod) =>
+        (clearAllAnswers andThen keepClaimPeriod)
+          .run(UserAnswersState(answer, answer))
+          .toValidNec(JsError(s"Unable to clear answers while keeping pay period for $answer"))
+
+      case inv @ Invalid(_) => inv
     }
 
   private[this] def processFurloughQuestion(answer: UserAnswersState): AnswerV[UserAnswersState] =
@@ -59,12 +65,17 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       case Invalid(_) => Valid(answer)
     }
 
-  def payQuestion(answer: UserAnswers): Option[UserAnswersState] =
-    answer.get(PayPeriodQuestionPage) flatMap {
-      case UseSamePayPeriod =>
-        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData).run(UserAnswersState(answer, answer))
-      case UseDifferentPayPeriod =>
-        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod).run(UserAnswersState(answer, answer))
+  def payQuestion(answer: UserAnswers): AnswerV[UserAnswersState] =
+    answer.getV(PayPeriodQuestionPage) match {
+      case Valid(UseSamePayPeriod) =>
+        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData)
+          .run(UserAnswersState(answer, answer))
+          .toValidNec(JsError("Failed to run Kleisi composition for UseSamePayPeriod"))
+      case Valid(UseDifferentPayPeriod) =>
+        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod)
+          .run(UserAnswersState(answer, answer))
+          .toValidNec(JsError("Failed to run Kleisi composition for UseDifferentPayPeriod"))
+      case inv @ Invalid(_) => inv
     }
 
   private[this] def processPayQuestionV(answer: UserAnswersState): AnswerV[UserAnswersState] =
@@ -115,13 +126,13 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
 
   private val keepLastPayDate: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
     for {
-      frequency       <- extractLastPayDate(answersState.original)
+      frequency       <- extractLastPayDateV(answersState.original).toOption
       withLastPayDate <- answersState.updated.set(LastPayDatePage, frequency).toOption
     } yield UserAnswersState(withLastPayDate, answersState.original))
 
   private val keepFurloughStatus: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
     for {
-      frequency  <- extractFurloughStatus(answersState.original)
+      frequency  <- extractFurloughStatusV(answersState.original).toOption
       withStatus <- answersState.updated.set(FurloughStatusPage, frequency).toOption
     } yield UserAnswersState(withStatus, answersState.original))
 

@@ -16,16 +16,21 @@
 
 package handlers
 
+import cats.data.Validated.{Invalid, Valid}
+import models.UserAnswers.AnswerV
 import models.{FurloughCalculationResult, UserAnswers}
 import services.{FurloughCalculator, ReferencePayCalculator}
 
 trait FurloughCalculationHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
 
-  def handleCalculationFurlough(userAnswers: UserAnswers): Option[FurloughCalculationResult] =
-    for {
-      questions <- extractBranchingQuestions(userAnswers)
-      data      <- journeyData(define(questions), userAnswers)
-      payments = calculateReferencePay(data)
-    } yield calculateFurloughGrant(data.frequency, payments)
+  def handleCalculationFurloughV(userAnswers: UserAnswers): AnswerV[FurloughCalculationResult] =
+    extractBranchingQuestionsV(userAnswers) match {
+      case Valid(questions) =>
+        journeyDataV(define(questions), userAnswers).map { data =>
+          val payments = calculateReferencePay(data)
+          calculateFurloughGrant(data.frequency, payments)
+        }
 
+      case inv @ Invalid(e) => inv
+    }
 }

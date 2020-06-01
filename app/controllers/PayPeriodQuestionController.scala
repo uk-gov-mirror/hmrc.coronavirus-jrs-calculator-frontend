@@ -26,6 +26,7 @@ import models.PayPeriodQuestion
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.{PayDatePage, PayPeriodQuestionPage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
@@ -33,7 +34,6 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.PayPeriodQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 class PayPeriodQuestionController @Inject()(
   override val messagesApi: MessagesApi,
@@ -49,7 +49,7 @@ class PayPeriodQuestionController @Inject()(
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends FrontendBaseController with I18nSupport with FastJourneyUserAnswersHandler {
 
-  val form = formProvider()
+  val form: Form[PayPeriodQuestion] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData) {
     implicit request =>
@@ -91,7 +91,17 @@ class PayPeriodQuestionController @Inject()(
       updatedAnswers <- Future.fromTry(request.userAnswers.set(PayPeriodQuestionPage, value))
       _              <- sessionRepository.set(updatedAnswers)
       call = navigator.nextPage(PayPeriodQuestionPage, updatedAnswers)
-      updatedJourney <- Future.fromTry(Try(payQuestion(updatedAnswers).get))
-      _              <- sessionRepository.set(updatedJourney.updated)
-    } yield Redirect(call)
+      updatedJourney <- {
+        payQuestion(updatedAnswers) match {
+          case Valid(updatedJourney) =>
+            sessionRepository.set(updatedJourney.updated).map { _ =>
+              Redirect(call)
+            }
+          case Invalid(errors) =>
+            Future.successful {
+              InternalServerError(errorHandler.internalServerErrorTemplate(request))
+            }
+        }
+      }
+    } yield updatedJourney
 }

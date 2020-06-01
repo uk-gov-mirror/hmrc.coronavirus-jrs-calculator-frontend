@@ -24,27 +24,12 @@ import cats.syntax.apply._
 
 trait FurloughPeriodExtractor extends LocalDateHelpers {
 
-  @deprecated("Use validated API instead", "1.0.0")
-  def extractFurloughWithinClaim(userAnswers: UserAnswers): Option[FurloughWithinClaim] =
-    for {
-      claimPeriodStart <- userAnswers.get(ClaimPeriodStartPage)
-      claimPeriodEnd   <- userAnswers.get(ClaimPeriodEndPage)
-      furloughDates    <- extractFurloughPeriod(userAnswers)
-    } yield {
-      val startDate = latestOf(claimPeriodStart, furloughDates.start)
-      val endDate = furloughDates match {
-        case FurloughOngoing(_)            => claimPeriodEnd
-        case FurloughEnded(_, furloughEnd) => earliestOf(claimPeriodEnd, furloughEnd)
-      }
-      FurloughWithinClaim(startDate, endDate)
-    }
-
   def extractFurloughWithinClaimV(userAnswers: UserAnswers): AnswerV[FurloughWithinClaim] =
     (
       userAnswers.getV(ClaimPeriodStartPage),
       userAnswers.getV(ClaimPeriodEndPage),
       extractFurloughPeriodV(userAnswers)
-    ).mapN { (claimPeriodStart, claimPeriodEnd, furloughDates) =>
+      ).mapN { (claimPeriodStart, claimPeriodEnd, furloughDates) =>
       val startDate = latestOf(claimPeriodStart, furloughDates.start)
       val endDate = furloughDates match {
         case FurloughOngoing(_)            => claimPeriodEnd
@@ -52,12 +37,6 @@ trait FurloughPeriodExtractor extends LocalDateHelpers {
       }
       FurloughWithinClaim(startDate, endDate)
     }
-
-  @deprecated("Use validated API instead", "1.0.0")
-  def extractFurloughPeriod(userAnswers: UserAnswers): Option[FurloughDates] =
-    userAnswers
-      .get(FurloughStartDatePage)
-      .map(FurloughDates(_, userAnswers.get(FurloughEndDatePage)))
 
   def extractFurloughPeriodV(
     userAnswers: UserAnswers

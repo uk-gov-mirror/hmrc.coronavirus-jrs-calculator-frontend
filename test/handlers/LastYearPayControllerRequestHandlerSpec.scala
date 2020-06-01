@@ -19,12 +19,13 @@ package handlers
 import java.time.LocalDate
 
 import base.SpecBase
+import cats.scalatest.ValidatedValues
 import utils.CoreTestData
 
-class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData {
+class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData with ValidatedValues {
 
   "get the pay dates in previous year for monthly" in new LastYearPayControllerRequestHandler {
-    val payDates = getPayDates(variableMonthlyPartial).get
+    val payDates = getPayDatesV(variableMonthlyPartial).value
 
     payDates mustBe Seq(
       LocalDate.of(2019, 3, 20),
@@ -33,7 +34,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   }
 
   "get the pay dates in previous year for weekly" in new LastYearPayControllerRequestHandler {
-    val payDates = getPayDates(variableWeekly).get
+    val payDates = getPayDatesV(variableWeekly).value
 
     val expected = Seq(
       LocalDate.of(2019, 3, 2),
@@ -46,7 +47,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   }
 
   "get the pay dates in previous year for weekly with later pay date" in new LastYearPayControllerRequestHandler {
-    val payDates = getPayDates(variableWeekly.withLastPayDate("2020-03-28")).get
+    val payDates = getPayDatesV(variableWeekly.withLastPayDate("2020-03-28")).value
 
     val expected = Seq(
       LocalDate.of(2019, 3, 9),
@@ -59,7 +60,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   }
 
   "get the pay dates in previous year for fortnightly" in new LastYearPayControllerRequestHandler {
-    val payDates = getPayDates(variableFortnightly).get
+    val payDates = getPayDatesV(variableFortnightly).value
 
     val expected = Seq(
       LocalDate.of(2019, 3, 16),
@@ -70,7 +71,7 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
   }
 
   "get the pay dates in previous year for fourweekly" in new LastYearPayControllerRequestHandler {
-    val payDates = getPayDates(variableFourweekly).get
+    val payDates = getPayDatesV(variableFourweekly).value
 
     val expected = Seq(
       LocalDate.of(2019, 3, 30),

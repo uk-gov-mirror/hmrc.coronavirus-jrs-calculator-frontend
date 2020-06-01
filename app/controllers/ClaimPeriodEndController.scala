@@ -54,14 +54,14 @@ class ClaimPeriodEndController @Inject()(
 
     (maybeClaimStart, maybeClaimEnd) match {
       case (Valid(claimStart), Valid(end)) => Ok(view(form(claimStart).fill(end)))
-      case (Valid(claimStart), Invalid(e)) => Ok(view(form(claimStart)))
+      case (Valid(claimStart), Invalid(_)) => Ok(view(form(claimStart)))
       case (Invalid(_), _)                 => Redirect(routes.ClaimPeriodStartController.onPageLoad())
     }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    request.userAnswers.get(ClaimPeriodStartPage) match {
-      case Some(claimStart) =>
+    request.userAnswers.getV(ClaimPeriodStartPage) match {
+      case Valid(claimStart) =>
         form(claimStart)
           .bindFromRequest()
           .fold(
@@ -73,7 +73,7 @@ class ClaimPeriodEndController @Inject()(
               } yield Redirect(navigator.nextPage(ClaimPeriodEndPage, updatedAnswers))
             }
           )
-      case None => Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad()))
+      case Invalid(_) => Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad()))
     }
   }
 }

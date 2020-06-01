@@ -18,6 +18,7 @@ package controllers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.ClaimPeriodStartFormProvider
 import javax.inject.Inject
@@ -49,9 +50,11 @@ class ClaimPeriodStartController @Inject()(
   def form: Form[LocalDate] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.internalId)).get(ClaimPeriodStartPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+    val preparedForm = request.userAnswers
+      .getOrElse(UserAnswers(request.internalId))
+      .getV(ClaimPeriodStartPage) match {
+      case Invalid(e)   => form
+      case Valid(value) => form.fill(value)
     }
 
     Ok(view(preparedForm))

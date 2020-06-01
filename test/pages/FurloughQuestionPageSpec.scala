@@ -18,10 +18,11 @@ package pages
 
 import java.time.LocalDate
 
+import cats.scalatest.ValidatedMatchers
 import models.{FurloughStatus, UserAnswers}
 import pages.behaviours.PageBehaviours
 
-class FurloughOngoingSpec extends PageBehaviours {
+class FurloughOngoingSpec extends PageBehaviours with ValidatedMatchers {
 
   "furloughOngoingPage" must {
 
@@ -40,9 +41,15 @@ class FurloughOngoingSpec extends PageBehaviours {
         .success
         .get
 
-      val updatedAnswers = initialAnswers.set(FurloughStatusPage, FurloughStatus.FurloughOngoing).success.value
+      val updatedAnswers = initialAnswers
+        .set(
+          FurloughStatusPage,
+          FurloughStatus.FurloughOngoing
+        )
+        .success
+        .value
 
-      updatedAnswers.get(FurloughEndDatePage) must not be defined
+      updatedAnswers.getV(FurloughEndDatePage) mustBe invalid
     }
 
   }

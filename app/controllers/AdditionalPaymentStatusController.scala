@@ -16,13 +16,16 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.AdditionalPaymentStatusFormProvider
 import handlers.FurloughCalculationHandler
 import javax.inject.Inject
+import models.AdditionalPaymentStatus
 import navigation.Navigator
 import pages.AdditionalPaymentStatusPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -45,13 +48,13 @@ class AdditionalPaymentStatusController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with FurloughCalculationHandler {
 
-  val form = formProvider()
+  val form: Form[AdditionalPaymentStatus] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(AdditionalPaymentStatusPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+      val preparedForm = request.userAnswers.getV(AdditionalPaymentStatusPage) match {
+        case Invalid(e)   => form
+        case Valid(value) => form.fill(value)
       }
 
       Ok(view(preparedForm))
