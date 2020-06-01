@@ -90,11 +90,13 @@ class FurloughPeriodQuestionController @Inject()(
     furloughStart: LocalDate,
     furloughStatus: FurloughStatus,
     formWithErrors: Form[FurloughPeriodQuestion])(implicit request: DataRequest[AnyContent]): Future[Result] =
-    extractFurloughPeriod(request.userAnswers) match {
-      case Some(FurloughOngoing(_)) =>
+    extractFurloughPeriodV(request.userAnswers) match {
+      case Valid(FurloughOngoing(_)) =>
         Future.successful(BadRequest(view(formWithErrors, furloughStart, furloughStatus, None)))
-      case Some(FurloughEnded(_, end)) =>
+      case Valid(FurloughEnded(_, end)) =>
         Future.successful(BadRequest(view(formWithErrors, furloughStart, furloughStatus, Some(end))))
+      case Invalid(errors) =>
+        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
     }
 
   private def processSubmittedAnswer(request: DataRequest[AnyContent], value: FurloughPeriodQuestion): Future[Result] =

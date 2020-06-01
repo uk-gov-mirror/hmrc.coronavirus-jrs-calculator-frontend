@@ -19,13 +19,15 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
+import cats.scalatest.{ValidatedMatchers, ValidatedValues}
 import generators.Generators
-import models.{FurloughEnded, FurloughOngoing, FurloughWithinClaim}
+import models.{FurloughEnded, FurloughOngoing, FurloughWithinClaim, UserAnswers}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.FurloughStartDatePage
 import utils.CoreTestData
 
-class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaCheckPropertyChecks with Generators {
+class FurloughPeriodExtractorSpec
+    extends SpecBase with CoreTestData with ScalaCheckPropertyChecks with ValidatedMatchers with ValidatedValues with Generators {
 
   "extractFurloughPeriod" must {
 
@@ -34,20 +36,26 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
         .withFurloughStartDate("2020, 4, 1")
         .withFurloughEndDate("2020, 5, 2")
 
-      extractFurloughPeriod(userAnswers).value mustBe FurloughEnded(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 5, 2))
+      extractFurloughPeriodV(userAnswers).value mustBe
+        FurloughEnded(
+          LocalDate.of(2020, 4, 1),
+          LocalDate.of(2020, 5, 2)
+        )
     }
 
     "be ongoing if furlough start is set" in new FurloughPeriodExtractor {
       val userAnswers = emptyUserAnswers.withFurloughStartDate("2020, 4, 1")
 
-      extractFurloughPeriod(userAnswers).value mustBe FurloughOngoing(LocalDate.of(2020, 4, 1))
+      extractFurloughPeriodV(userAnswers).value mustBe FurloughOngoing(
+        LocalDate.of(2020, 4, 1)
+      )
     }
 
     "return none if furlough start is not set" in new FurloughPeriodExtractor {
       val userAnswers = emptyUserAnswers
 
-      userAnswers.get(FurloughStartDatePage) mustBe None
-      extractFurloughPeriod(userAnswers) mustBe None
+      userAnswers.getV(FurloughStartDatePage) mustBe invalid
+      extractFurloughPeriodV(userAnswers) mustBe invalid
     }
   }
 
@@ -61,7 +69,10 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
         .withClaimPeriodStart("2020, 3, 2")
         .withClaimPeriodEnd("2020, 3, 31")
 
-      extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(LocalDate.of(2020, 3, 2), LocalDate.of(2020, 3, 31))
+      extractFurloughWithinClaimV(userAnswers).value mustBe FurloughWithinClaim(
+        LocalDate.of(2020, 3, 2),
+        LocalDate.of(2020, 3, 31)
+      )
     }
 
     "use claim period start if after furlough start (generated)" in new FurloughPeriodExtractor {
@@ -78,7 +89,7 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
             .withClaimPeriodStart(claimStart.toString)
             .withClaimPeriodEnd(claimEnd.toString)
 
-          extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(claimStart, claimEnd)
+          extractFurloughWithinClaimV(userAnswers).value mustBe FurloughWithinClaim(claimStart, claimEnd)
       }
     }
 
@@ -88,7 +99,11 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
         .withClaimPeriodStart("2020, 3, 2")
         .withClaimPeriodEnd("2020, 3, 31")
 
-      extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(LocalDate.of(2020, 3, 3), LocalDate.of(2020, 3, 31))
+      extractFurloughWithinClaimV(userAnswers).value mustBe
+        FurloughWithinClaim(
+          LocalDate.of(2020, 3, 3),
+          LocalDate.of(2020, 3, 31)
+        )
     }
 
     "use furlough start if after claim period start (generated)" in new FurloughPeriodExtractor {
@@ -105,17 +120,21 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
             .withClaimPeriodStart(claimStart.toString)
             .withClaimPeriodEnd(claimEnd.toString)
 
-          extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(furloughStart, claimEnd)
+          extractFurloughWithinClaimV(userAnswers).value mustBe FurloughWithinClaim(furloughStart, claimEnd)
       }
     }
 
     "use claim period end if furlough end is missing" in new FurloughPeriodExtractor {
-      val userAnswers = emptyUserAnswers
+      val userAnswers: UserAnswers = emptyUserAnswers
         .withFurloughStartDate("2020, 3, 1")
         .withClaimPeriodStart("2020, 3, 2")
         .withClaimPeriodEnd("2020, 3, 30")
 
-      extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(LocalDate.of(2020, 3, 2), LocalDate.of(2020, 3, 30))
+      extractFurloughWithinClaimV(userAnswers).value mustBe
+        FurloughWithinClaim(
+          LocalDate.of(2020, 3, 2),
+          LocalDate.of(2020, 3, 30)
+        )
     }
 
     "use claim period end if furlough end is missing (generated)" in new FurloughPeriodExtractor {
@@ -132,7 +151,7 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
             .withClaimPeriodStart(claimStart.toString)
             .withClaimPeriodEnd(claimEnd.toString)
 
-          extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(claimStart, claimEnd)
+          extractFurloughWithinClaimV(userAnswers).value mustBe FurloughWithinClaim(claimStart, claimEnd)
       }
     }
 
@@ -143,7 +162,11 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
         .withClaimPeriodStart("2020, 3, 2")
         .withClaimPeriodEnd("2020, 3, 30")
 
-      extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(LocalDate.of(2020, 3, 2), LocalDate.of(2020, 3, 30))
+      extractFurloughWithinClaimV(userAnswers).value mustBe
+        FurloughWithinClaim(
+          LocalDate.of(2020, 3, 2),
+          LocalDate.of(2020, 3, 30)
+        )
     }
 
     "use claim period end if before furlough end (generated)" in new FurloughPeriodExtractor {
@@ -162,18 +185,22 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
             .withClaimPeriodStart(claimStart.toString)
             .withClaimPeriodEnd(claimEnd.toString)
 
-          extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(claimStart, claimEnd)
+          extractFurloughWithinClaimV(userAnswers).value mustBe FurloughWithinClaim(claimStart, claimEnd)
       }
     }
 
     "use furlough end if before claim period end" in new FurloughPeriodExtractor {
-      val userAnswers = emptyUserAnswers
+      val userAnswers: UserAnswers = emptyUserAnswers
         .withFurloughStartDate("2020, 3, 1")
         .withFurloughEndDate("2020, 3, 29")
         .withClaimPeriodStart("2020, 3, 2")
         .withClaimPeriodEnd("2020, 3, 30")
 
-      extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(LocalDate.of(2020, 3, 2), LocalDate.of(2020, 3, 29))
+      extractFurloughWithinClaimV(userAnswers).value mustBe
+        FurloughWithinClaim(
+          LocalDate.of(2020, 3, 2),
+          LocalDate.of(2020, 3, 29)
+        )
     }
 
     "use furlough end if before claim period end (generated)" in new FurloughPeriodExtractor {
@@ -192,7 +219,7 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
             .withClaimPeriodStart(claimStart.toString)
             .withClaimPeriodEnd(claimEnd.toString)
 
-          extractFurloughWithinClaim(userAnswers).value mustBe FurloughWithinClaim(claimStart, furloughEnd)
+          extractFurloughWithinClaimV(userAnswers).value mustBe FurloughWithinClaim(claimStart, furloughEnd)
       }
     }
 
@@ -203,7 +230,7 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
           .withFurloughStartDate("2020, 3, 1")
           .withClaimPeriodEnd("2020, 3, 31")
 
-        extractFurloughWithinClaim(userAnswers) mustBe None
+        extractFurloughWithinClaimV(userAnswers) mustBe invalid
       }
 
       "claim period end is missing" in new FurloughPeriodExtractor {
@@ -211,7 +238,7 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
           .withFurloughStartDate("2020, 3, 1")
           .withClaimPeriodStart("2020, 3, 2")
 
-        extractFurloughWithinClaim(userAnswers) mustBe None
+        extractFurloughWithinClaimV(userAnswers) mustBe invalid
       }
 
       "furlough start is missing" in new FurloughPeriodExtractor {
@@ -219,7 +246,7 @@ class FurloughPeriodExtractorSpec extends SpecBase with CoreTestData with ScalaC
           .withClaimPeriodStart("2020, 3, 2")
           .withClaimPeriodEnd("2020, 3, 31")
 
-        extractFurloughWithinClaim(userAnswers) mustBe None
+        extractFurloughWithinClaimV(userAnswers) mustBe invalid
       }
 
     }

@@ -17,6 +17,7 @@
 package handlers
 
 import base.{CoreTestDataBuilder, SpecBase}
+import cats.scalatest.ValidatedValues
 import models.NicCategory.{Nonpayable, Payable}
 import models.PensionStatus.{DoesContribute, DoesNotContribute}
 import models.{Amount, FullPeriodCap, FurloughCalculationResult, NicCalculationResult, NicCap, PartialPeriodCap, PensionCalculationResult, TaxYearEnding2020, TaxYearEnding2021, UserAnswers}
@@ -24,7 +25,7 @@ import services.Threshold
 import utils.CoreTestData
 import viewmodels.ConfirmationViewBreakdown
 
-class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData with CoreTestDataBuilder {
+class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData with ValidatedValues with CoreTestDataBuilder {
 
   "do all calculations given a set of userAnswers returning a breakdown of each" in new ConfirmationControllerRequestHandler {
     val furlough =
@@ -90,13 +91,13 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
 
     val expectedClaimPeriod = period("2020-03-01", "2020-04-30")
 
-    loadResultData(dummyUserAnswers).get.confirmationViewBreakdown mustBe expectedBreakdown
-    loadResultData(dummyUserAnswers).get.metaData.claimPeriod mustBe expectedClaimPeriod
+    loadResultData(dummyUserAnswers).value.confirmationViewBreakdown mustBe expectedBreakdown
+    loadResultData(dummyUserAnswers).value.metaData.claimPeriod mustBe expectedClaimPeriod
   }
 
   "for a given user answer calculate furlough and empty results for ni and pension if do not apply" in new ConfirmationControllerRequestHandler {
     val userAnswers = dummyUserAnswers.withNiCategory(Nonpayable).withPensionStatus(DoesNotContribute)
-    val confirmationViewBreakdown: ConfirmationViewBreakdown = loadResultData(userAnswers).get.confirmationViewBreakdown
+    val confirmationViewBreakdown: ConfirmationViewBreakdown = loadResultData(userAnswers).value.confirmationViewBreakdown
 
     confirmationViewBreakdown.furlough.total mustBe 3200.0
     confirmationViewBreakdown.nic.total mustBe 0.0
@@ -161,7 +162,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
-    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected
+    loadResultData(userAnswers).value.confirmationViewBreakdown mustBe expected
   }
 
   "variable average partial period scenario" in new ConfirmationControllerRequestHandler {
@@ -226,12 +227,12 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
-    loadResultData(userAnswers).get.confirmationViewBreakdown mustBe expected
+    loadResultData(userAnswers).value.confirmationViewBreakdown mustBe expected
   }
 
   "take into account all cylb payments for weekly frequency with partial period as first period" in new ConfirmationControllerRequestHandler {
 
-    loadResultData(manyPeriods).get.confirmationViewBreakdown.furlough.total mustBe 2402.63
+    loadResultData(manyPeriods).value.confirmationViewBreakdown.furlough.total mustBe 2402.63
   }
 
 }

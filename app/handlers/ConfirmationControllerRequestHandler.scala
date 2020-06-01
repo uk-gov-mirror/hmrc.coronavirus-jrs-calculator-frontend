@@ -16,40 +16,56 @@
 
 package handlers
 
-import models.{AdditionalPayment, FurloughCalculationResult, NicCalculationResult, NicCategory, PaymentFrequency, PensionCalculationResult, PensionStatus, Period, TopUpPayment, UserAnswers}
+import cats.data.Validated.{Invalid, Valid}
+import models.UserAnswers.AnswerV
+import models._
 import services._
 import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
+import cats.syntax.apply._
 
 trait ConfirmationControllerRequestHandler
     extends FurloughCalculator with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator {
 
-  def loadResultData(userAnswers: UserAnswers): Option[ConfirmationDataResult] =
-    for {
-      breakdown <- breakdown(userAnswers)
-      metadata  <- meta(userAnswers)
-    } yield ConfirmationDataResult(metadata, breakdown)
+  def loadResultData(userAnswers: UserAnswers): AnswerV[ConfirmationDataResult] =
+    (meta(userAnswers), breakdown(userAnswers)).mapN(ConfirmationDataResult.apply)
 
-  private def breakdown(userAnswers: UserAnswers): Option[ConfirmationViewBreakdown] =
-    for {
-      questions <- extractBranchingQuestions(userAnswers)
-      data      <- journeyData(define(questions), userAnswers)
-      payments = calculateReferencePay(data)
-      furlough = calculateFurloughGrant(data.frequency, payments)
-      niAnswer <- extractNicCategory(userAnswers)
-      ni = calculateNi(furlough, niAnswer, data.frequency, extractAdditionalPayment(userAnswers), extractTopUpPayment(userAnswers))
-      pensionAnswer <- extractPensionStatus(userAnswers)
-      pension = calculatePension(furlough, pensionAnswer, data.frequency)
-    } yield ConfirmationViewBreakdown(furlough, ni, pension)
+  private def breakdown(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdown] =
+    extractBranchingQuestionsV(userAnswers) match {
+      case Valid(questions) =>
+        journeyDataV(define(questions), userAnswers) match {
 
-  private def meta(userAnswers: UserAnswers): Option[ConfirmationMetadata] =
-    for {
-      furloughPeriod <- extractFurloughPeriod(userAnswers)
-      claimStart     <- extractClaimPeriodStart(userAnswers)
-      claimEnd       <- extractClaimPeriodEnd(userAnswers)
-      frequency      <- extractPaymentFrequency(userAnswers)
-      nicCategory    <- extractNicCategory(userAnswers)
-      pensionStatus  <- extractPensionStatus(userAnswers)
-    } yield ConfirmationMetadata(Period(claimStart, claimEnd), furloughPeriod, frequency, nicCategory, pensionStatus)
+          case Valid(data) =>
+            val payments = calculateReferencePay(data)
+            val furlough = calculateFurloughGrant(data.frequency, payments)
+
+            (
+              extractNicCategoryV(userAnswers),
+              extractPensionStatusV(userAnswers)
+            ).mapN { (niAnswer, pensionAnswer) =>
+              val ni =
+                calculateNi(furlough, niAnswer, data.frequency, extractAdditionalPayment(userAnswers), extractTopUpPayment(userAnswers))
+              val pension = calculatePension(furlough, pensionAnswer, data.frequency)
+              ConfirmationViewBreakdown(furlough, ni, pension)
+            }
+
+          case invalid @ Invalid(_) => invalid
+
+        }
+      case inv @ Invalid(e) => inv
+    }
+
+  private def meta(userAnswers: UserAnswers): AnswerV[ConfirmationMetadata] =
+    (
+      extractFurloughPeriodV(userAnswers),
+      extractClaimPeriodStartV(userAnswers),
+      extractClaimPeriodEndV(userAnswers),
+      extractPaymentFrequencyV(userAnswers),
+      extractNicCategoryV(userAnswers),
+      extractPensionStatusV(userAnswers)
+    ).mapN {
+      case (furloughPeriod, claimStart, claimEnd, frequency, nicCategory, pensionStatus) =>
+        ConfirmationMetadata(Period(claimStart, claimEnd), furloughPeriod, frequency, nicCategory, pensionStatus)
+    }
 
   private def calculateNi(
     furloughResult: FurloughCalculationResult,

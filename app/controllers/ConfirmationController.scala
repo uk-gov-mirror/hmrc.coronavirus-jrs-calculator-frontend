@@ -16,6 +16,7 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import config.FrontendAppConfig
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
@@ -43,15 +44,18 @@ class ConfirmationController @Inject()(
     extends BaseController with ConfirmationControllerRequestHandler {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    loadResultData(request.userAnswers).fold(Future.successful(Redirect(routes.ErrorController.somethingWentWrong())))(data => {
-      auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
+    loadResultData(request.userAnswers) match {
+      case Invalid(e) =>
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+      case Valid(data) =>
+        auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
 
-      if (config.confirmationWithDetailedBreakdowns) {
-        Future.successful(
-          Ok(viewWithDetailedBreakdowns(data.confirmationViewBreakdown, data.metaData.claimPeriod, config.calculatorVersion)))
-      } else {
-        Future.successful(Ok(view(data.metaData, data.confirmationViewBreakdown, config.calculatorVersion)))
-      }
-    })
+        if (config.confirmationWithDetailedBreakdowns) {
+          Future.successful(
+            Ok(viewWithDetailedBreakdowns(data.confirmationViewBreakdown, data.metaData.claimPeriod, config.calculatorVersion)))
+        } else {
+          Future.successful(Ok(view(data.metaData, data.confirmationViewBreakdown, config.calculatorVersion)))
+        }
+    }
   }
 }

@@ -21,6 +21,8 @@ import java.time.LocalDate
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PayMethod.{Regular, Variable}
 import models.{BranchingQuestions, Journey, ReferencePay, RegularPay, RegularPayData, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
+import cats.syntax.apply._
+import models.UserAnswers.AnswerV
 
 trait JourneyBuilder extends DataExtractor {
 
@@ -31,18 +33,33 @@ trait JourneyBuilder extends DataExtractor {
     case BranchingQuestions(Variable, Some(OnOrBefore1Feb2019), _)                                          => VariablePayWithCylb
   }
 
+  @deprecated("Use validated API instead", "1.0.0")
   def journeyData(journey: Journey, userAnswers: UserAnswers): Option[ReferencePay] = journey match {
     case RegularPay          => regularPayData(userAnswers)
     case VariablePay         => variablePayData(userAnswers)
     case VariablePayWithCylb => variablePayWithCylbData(userAnswers)
   }
 
+  def journeyDataV(journey: Journey, userAnswers: UserAnswers): AnswerV[ReferencePay] = journey match {
+    case RegularPay          => regularPayDataV(userAnswers)
+    case VariablePay         => variablePayDataV(userAnswers)
+    case VariablePayWithCylb => variablePayWithCylbDataV(userAnswers)
+  }
+
+  @deprecated("Use validated API instead", "1.0.0")
   private def regularPayData(userAnswers: UserAnswers): Option[RegularPayData] =
     for {
       referencePayData <- extractReferencePayData(userAnswers)
       salary           <- extractSalary(userAnswers)
     } yield RegularPayData(referencePayData, salary)
 
+  private def regularPayDataV(userAnswers: UserAnswers): AnswerV[RegularPayData] =
+    (
+      extractReferencePayDataV(userAnswers),
+      extractSalaryV(userAnswers)
+    ).mapN(RegularPayData.apply)
+
+  @deprecated("Use validated API instead", "1.0.0")
   private def variablePayData(userAnswers: UserAnswers): Option[VariablePayData] =
     for {
       referencePayData <- extractReferencePayData(userAnswers)
@@ -51,6 +68,15 @@ trait JourneyBuilder extends DataExtractor {
       priorFurlough <- extractPriorFurloughPeriod(userAnswers)
     } yield VariablePayData(referencePayData, grossPay, nonFurlough, priorFurlough)
 
+  private[this] def variablePayDataV(userAnswers: UserAnswers): AnswerV[VariablePayData] =
+    (
+      extractReferencePayDataV(userAnswers),
+      extractAnnualPayAmountV(userAnswers),
+      extractNonFurloughV(userAnswers),
+      extractPriorFurloughPeriodV(userAnswers)
+    ).mapN(VariablePayData.apply)
+
+  @deprecated("Use validated API instead", "1.0.0")
   private def variablePayWithCylbData(userAnswers: UserAnswers): Option[VariablePayWithCylbData] =
     for {
       referencePayData <- extractReferencePayData(userAnswers)
@@ -59,4 +85,21 @@ trait JourneyBuilder extends DataExtractor {
       priorFurlough <- extractPriorFurloughPeriod(userAnswers)
       cylbPayments = extractCylbPayments(userAnswers)
     } yield VariablePayWithCylbData(referencePayData, grossPay, nonFurlough, priorFurlough, cylbPayments)
+
+  private def variablePayWithCylbDataV(userAnswers: UserAnswers): AnswerV[VariablePayWithCylbData] =
+    (
+      extractReferencePayDataV(userAnswers),
+      extractAnnualPayAmountV(userAnswers),
+      extractNonFurloughV(userAnswers),
+      extractPriorFurloughPeriodV(userAnswers),
+    ).mapN { (referencePayData, grossPay, nonFurlough, priorFurlough) =>
+      val cylbPayments = extractCylbPayments(userAnswers)
+      VariablePayWithCylbData(
+        referencePayData = referencePayData,
+        grossPay = grossPay,
+        nonFurloughPay = nonFurlough,
+        priorFurlough = priorFurlough,
+        cylbPayments = cylbPayments
+      )
+    }
 }

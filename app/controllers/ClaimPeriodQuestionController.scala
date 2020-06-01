@@ -16,6 +16,7 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.ClaimPeriodQuestionFormProvider
@@ -32,7 +33,6 @@ import repositories.SessionRepository
 import views.html.ClaimPeriodQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 class ClaimPeriodQuestionController @Inject()(
   override val messagesApi: MessagesApi,
@@ -48,13 +48,13 @@ class ClaimPeriodQuestionController @Inject()(
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with FastJourneyUserAnswersHandler {
 
-  val form = formProvider()
+  val form: Form[ClaimPeriodQuestion] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
+      getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
         val filledForm: Form[ClaimPeriodQuestion] =
-          request.userAnswers.get(ClaimPeriodQuestionPage).fold(form)(form.fill)
+          request.userAnswers.getV(ClaimPeriodQuestionPage).fold(_ => form, form.fill)
 
         Future.successful(Ok(view(filledForm, claimStart, claimEnd)))
       }
@@ -62,7 +62,7 @@ class ClaimPeriodQuestionController @Inject()(
 
   def onSubmit(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswers(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
+      getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
         form
           .bindFromRequest()
           .fold(
@@ -75,9 +75,16 @@ class ClaimPeriodQuestionController @Inject()(
   private def processSubmittedAnswer(request: DataRequest[AnyContent], value: ClaimPeriodQuestion): Future[Result] =
     for {
       updatedAnswers <- Future.fromTry(request.userAnswers.set(ClaimPeriodQuestionPage, value))
-      _              <- sessionRepository.set(updatedAnswers)
       call = navigator.nextPage(ClaimPeriodQuestionPage, updatedAnswers)
-      updatedJourney <- Future.fromTry(Try(claimQuestion(updatedAnswers).get))
-      _              <- sessionRepository.set(updatedJourney.updated)
-    } yield Redirect(call)
+    } yield {
+
+      updateJourney(updatedAnswers) match {
+        case Valid(updatedJourney) =>
+          sessionRepository.set(updatedJourney.updated)
+          Redirect(call)
+        case Invalid(errors) =>
+          InternalServerError(errorHandler.internalServerErrorTemplate(request))
+      }
+
+    }
 }

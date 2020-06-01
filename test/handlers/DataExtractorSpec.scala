@@ -24,6 +24,7 @@ package handlers
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
+import cats.data.Validated.Valid
 import models.{AdditionalPayment, Amount, TopUpPayment, UserAnswers}
 import pages.{AdditionalPaymentAmountPage, TopUpAmountPage}
 import utils.CoreTestData
@@ -36,13 +37,13 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuil
       val userAnswers = dummyUserAnswers.withEmployeeStartDate("2020-12-01")
       val expected = period("2020, 12, 1", "2020, 2, 29")
 
-      extractPriorFurloughPeriod(userAnswers) mustBe Some(expected)
+      extractPriorFurloughPeriodV(userAnswers) mustBe Valid(expected)
     }
 
     "employee start date is not present" in new DataExtractor {
       val expected = period("2019, 4, 6", "2020, 2, 29")
 
-      extractPriorFurloughPeriod(dummyUserAnswers) mustBe Some(expected)
+      extractPriorFurloughPeriodV(dummyUserAnswers) mustBe Valid(expected)
     }
 
     "extract top up payments" in new DataExtractor {

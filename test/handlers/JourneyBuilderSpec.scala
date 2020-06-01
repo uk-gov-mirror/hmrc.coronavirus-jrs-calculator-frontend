@@ -19,12 +19,13 @@ package handlers
 import java.time.LocalDate
 
 import base.SpecBase
+import cats.scalatest.ValidatedValues
 import models.PayMethod.{Regular, Variable}
 import models.{Amount, AnnualPayAmount, BranchingQuestions, EmployeeStarted, LastYearPayment, NonFurloughPay, RegularPay, RegularPayData, Salary, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import pages._
 import utils.CoreTestData
 
-class JourneyBuilderSpec extends SpecBase with CoreTestData {
+class JourneyBuilderSpec extends SpecBase with CoreTestData with ValidatedValues {
 
   "return regular journey if pay question is Regularly" in new JourneyBuilder {
     val questions = BranchingQuestions(Regular, None, None)
@@ -51,9 +52,9 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
       .set(RegularPayAmountPage, Salary(1000.0))
       .get
 
-    val expected = RegularPayData(defaultReferencePayData, Amount(1000.0))
+    val expected: RegularPayData = RegularPayData(defaultReferencePayData, Amount(1000.0))
 
-    journeyData(RegularPay, answers) mustBe Some(expected)
+    journeyDataV(RegularPay, answers).value mustBe expected
   }
 
   "build a VariablePayData for a VariablePay journey where CYLB is not required" in new JourneyBuilder {
@@ -65,9 +66,14 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
       .set(EmployeeStartDatePage, LocalDate.of(2019, 12, 1))
       .get
 
-    val expected = VariablePayData(defaultReferencePayData, Amount(1000.0), NonFurloughPay(None, None), period("2019-12-01", "2020-02-29"))
+    val expected: VariablePayData = VariablePayData(
+      defaultReferencePayData,
+      Amount(1000.0),
+      NonFurloughPay(None, None),
+      period("2019-12-01", "2020-02-29")
+    )
 
-    journeyData(VariablePay, answers) mustBe Some(expected)
+    journeyDataV(VariablePay, answers).value mustBe expected
   }
 
   "build a VariablePayData for a VariablePay journey where CYLB is required" in new JourneyBuilder {
@@ -81,7 +87,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
       .setListWithInvalidation(LastYearPayPage, LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)), 1)
       .get
 
-    val expected = VariablePayWithCylbData(
+    val expected: VariablePayWithCylbData = VariablePayWithCylbData(
       defaultReferencePayData,
       Amount(1000.0),
       NonFurloughPay(None, None),
@@ -89,6 +95,6 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData {
       Seq(LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)))
     )
 
-    journeyData(VariablePayWithCylb, answers) mustBe Some(expected)
+    journeyDataV(VariablePayWithCylb, answers).value mustBe expected
   }
 }

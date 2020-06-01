@@ -20,7 +20,7 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.PayPeriodQuestionFormProvider
-import handlers.FastJourneyUserAnswersHandler
+import handlers.{ErrorHandler, FastJourneyUserAnswersHandler}
 import javax.inject.Inject
 import models.PayPeriodQuestion
 import models.requests.DataRequest
@@ -46,7 +46,7 @@ class PayPeriodQuestionController @Inject()(
   formProvider: PayPeriodQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: PayPeriodQuestionView
-)(implicit ec: ExecutionContext)
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends FrontendBaseController with I18nSupport with FastJourneyUserAnswersHandler {
 
   val form = formProvider()
@@ -69,6 +69,22 @@ class PayPeriodQuestionController @Inject()(
           value => processSubmittedAnswer(request, value)
         )
   }
+
+//  private def processSubmittedAnswer(
+//    request: DataRequest[AnyContent],
+//    value: PayPeriodQuestion
+//  ): Future[Result] =
+//    for {
+//      updatedAnswers <- Future.fromTry(request.userAnswers.set(PayPeriodQuestionPage, value))
+//      _              <- sessionRepository.set(updatedAnswers)
+//    } yield {
+//      updateJourney(updatedAnswers) match {
+//        case Valid(updatedJourney) =>
+//          Redirect(navigator.nextPage(PayPeriodQuestionPage, updatedJourney.updated))
+//        case Invalid(errors) =>
+//          InternalServerError(errorHandler.internalServerErrorTemplate(request))
+//      }
+//    }
 
   private def processSubmittedAnswer(request: DataRequest[AnyContent], value: PayPeriodQuestion): Future[Result] =
     for {

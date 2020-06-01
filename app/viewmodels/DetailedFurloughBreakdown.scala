@@ -16,14 +16,14 @@
 
 package viewmodels
 
-import models.{Amount, FullPeriod, FurloughCap, PartialPeriod, PaymentWithPeriod}
+import models.{Amount, FurloughCap, PaymentWithPeriod}
 import services.Calculators.AmountRounding
 
 case class DetailedFurloughBreakdown(employeesWages: Amount, furloughCap: FurloughCap, furloughGrant: Amount, payment: PaymentWithPeriod) {
 
   def isCapped: Boolean = (employeesWages.value * 0.8) > furloughCap.value
 
-  def calculatedFurlough = Amount(employeesWages.value * 0.8).halfUp.value.formatted("%.2f")
+  def calculatedFurlough: String = Amount(employeesWages.value * 0.8).halfUp.value.formatted("%.2f")
 
   def formattedWages: String = employeesWages.value.formatted("%.2f")
 
