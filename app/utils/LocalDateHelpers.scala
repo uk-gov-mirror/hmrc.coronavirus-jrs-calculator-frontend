@@ -30,6 +30,8 @@ trait LocalDateHelpers {
 
 object LocalDateHelpers extends LocalDateHelpers {
 
+  val apr5th2020 = LocalDate.of(2020, 4, 5)
+
   implicit class LocalDateHelper(val value: LocalDate) {
     def isEqualOrAfter(localDate: LocalDate) = value.compareTo(localDate) >= 0
     def isEqualOrBefore(localDate: LocalDate) = value.compareTo(localDate) <= 0

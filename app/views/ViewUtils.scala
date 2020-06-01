@@ -19,15 +19,10 @@ package views
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import models.EmployeeStarted
-import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import play.api.data.Form
 import play.api.i18n.Messages
-import utils.LocalDateHelpers
 
 object ViewUtils {
-
-  val apr5th2020 = LocalDate.of(2020, 4, 5)
 
   def title(form: Form[_], titleStr: String, section: Option[String] = None, titleMessageArgs: Seq[String] = Seq())(
     implicit messages: Messages): String =
@@ -46,10 +41,4 @@ object ViewUtils {
   def dateToString(date: LocalDate): String = dateFormatter.format(date)
   def dateToStringWithoutYear(date: LocalDate): String = dateFormatterWithoutYear.format(date)
   def dateToStringOnlyMonth(date: LocalDate): String = dateFormatterOnlyMonth.format(date)
-
-  def cappedFurloughStart(furloughStart: LocalDate, employeeStarted: EmployeeStarted) =
-    employeeStarted match {
-      case After1Feb2019      => furloughStart.minusDays(1)
-      case OnOrBefore1Feb2019 => LocalDateHelpers.earliestOf(apr5th2020, furloughStart.minusDays(1))
-    }
 }

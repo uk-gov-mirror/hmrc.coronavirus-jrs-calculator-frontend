@@ -49,6 +49,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
   lazy val annualPayAmountRoute = routes.AnnualPayAmountController.onPageLoad().url
 
   val furloughStart = LocalDate.parse("2020-04-01")
+  val uiDateToShow = furloughStart.minusDays(1)
   val empStart = LocalDate.parse("2020-02-01")
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
@@ -84,12 +85,12 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form, furloughStart, After1Feb2019)(dataRequest, messages).toString
+        view(form, uiDateToShow, After1Feb2019)(dataRequest, messages).toString
 
       application.stop()
     }
 
-    "return OK and the correct view for a GET if the EmployeeStarted is OnOrBefore1Feb" in {
+    "return OK and the correct view for a GET if the EmployeeStarted is OnOrBefore1Feb2019" in {
 
       val updatedAnswers = userAnswers.set(EmployeeStartedPage, OnOrBefore1Feb2019).success.value
       val application = applicationBuilder(userAnswers = Some(updatedAnswers)).build()
@@ -103,7 +104,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form, furloughStart, OnOrBefore1Feb2019)(dataRequest, messages).toString
+        view(form, uiDateToShow, OnOrBefore1Feb2019)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -123,7 +124,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
 
       contentAsString(result) mustEqual
-        view(form.fill(AnnualPayAmount(111)), furloughStart, After1Feb2019)(dataRequest, messages).toString
+        view(form.fill(AnnualPayAmount(111)), uiDateToShow, After1Feb2019)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -207,7 +208,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm, furloughStart, After1Feb2019)(dataRequest, messages).toString
+        view(boundForm, uiDateToShow, After1Feb2019)(dataRequest, messages).toString
 
       application.stop()
     }
