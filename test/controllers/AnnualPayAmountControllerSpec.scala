@@ -20,13 +20,14 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.AnnualPayAmountFormProvider
+import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.requests.DataRequest
 import models.{AnnualPayAmount, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AnnualPayAmountPage, EmployeeStartDatePage, FurloughStartDatePage}
+import pages.{AnnualPayAmountPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
 import play.api.inject.bind
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
@@ -63,7 +64,8 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
     userAnswersId,
     Json.obj(
       FurloughStartDatePage.toString -> JsString(furloughStart.toString),
-      EmployeeStartDatePage.toString -> JsString(empStart.toString)
+      EmployeeStartDatePage.toString -> JsString(empStart.toString),
+      EmployeeStartedPage.toString   -> JsString(After1Feb2019.toString)
     )
   )
 
@@ -82,7 +84,26 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form, furloughStart)(dataRequest, messages).toString
+        view(form, furloughStart, After1Feb2019)(dataRequest, messages).toString
+
+      application.stop()
+    }
+
+    "return OK and the correct view for a GET if the EmployeeStarted is OnOrBefore1Feb" in {
+
+      val updatedAnswers = userAnswers.set(EmployeeStartedPage, OnOrBefore1Feb2019).success.value
+      val application = applicationBuilder(userAnswers = Some(updatedAnswers)).build()
+
+      val result = route(application, getRequest).value
+
+      val view = application.injector.instanceOf[AnnualPayAmountView]
+
+      status(result) mustEqual OK
+
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+      contentAsString(result) mustEqual
+        view(form, furloughStart, OnOrBefore1Feb2019)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -102,7 +123,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
 
       contentAsString(result) mustEqual
-        view(form.fill(AnnualPayAmount(111)), furloughStart)(dataRequest, messages).toString
+        view(form.fill(AnnualPayAmount(111)), furloughStart, After1Feb2019)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -186,7 +207,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm, furloughStart)(dataRequest, messages).toString
+        view(boundForm, furloughStart, After1Feb2019)(dataRequest, messages).toString
 
       application.stop()
     }
