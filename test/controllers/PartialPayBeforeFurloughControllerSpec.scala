@@ -112,20 +112,6 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
       application.stop()
     }
 
-    "redirect GET to coming soon if variable journey feature is disabled" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers), Map("variable.journey.enabled" -> false))
-        .build()
-
-      val r = getRequest(pageLoadBeforeFurloughRoute)
-
-      val result = route(application, r).value
-
-      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
-
-      application.stop()
-    }
-
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers1 = userAnswers.set(PartialPayBeforeFurloughPage, FurloughPartialPay(111)).success.value
@@ -219,29 +205,6 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
-    }
-
-    "redirect POST to coming soon if variable journey feature is disabled" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers), Map("variable.journey.enabled" -> false))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      val result = route(application, postRequest(submitBeforeFurloughRoute)).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
 
       application.stop()
     }

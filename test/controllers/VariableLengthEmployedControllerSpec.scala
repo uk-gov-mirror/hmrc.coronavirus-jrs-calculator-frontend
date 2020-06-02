@@ -89,20 +89,6 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       application.stop()
     }
 
-    "redirect GET to coming soon if variable journey feature is disabled" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), Map("variable.journey.enabled" -> false))
-        .build()
-
-      val result = route(application, getRequest).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
-
-      application.stop()
-    }
-
     "redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
@@ -126,33 +112,6 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
-    }
-
-    "redirect POST to coming soon if variable journey feature is disabled" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers), Map("variable.journey.enabled" -> false))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      val request =
-        FakeRequest(POST, variableLengthEmployedRoute)
-          .withFormUrlEncodedBody(("value", EmployeeStarted.values.head.toString))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
 
       application.stop()
     }

@@ -17,7 +17,6 @@
 package controllers
 
 import cats.data.Validated.{Invalid, Valid}
-import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.TopUpStatusFormProvider
 import javax.inject.Inject
@@ -49,27 +48,25 @@ class TopUpStatusController @Inject()(
 
   val form: Form[TopUpStatus] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.getV(TopUpStatusPage) match {
-        case Invalid(e)   => form
-        case Valid(value) => form.fill(value)
-      }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.getV(TopUpStatusPage) match {
+      case Invalid(e)   => form
+      case Valid(value) => form.fill(value)
+    }
 
-      Ok(view(preparedForm))
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(TopUpStatusPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(TopUpStatusPage, updatedAnswers))
-        )
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(TopUpStatusPage, value))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(TopUpStatusPage, updatedAnswers))
+      )
   }
 }

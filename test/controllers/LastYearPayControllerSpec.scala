@@ -135,21 +135,6 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
       application.stop()
     }
 
-    "redirect GET to coming soon if variable journey feature is disabled" in {
-
-      val application = applicationBuilder(userAnswers = Some(variableMonthlyUserAnswers), Map("variable.journey.enabled" -> false)).build()
-
-      val request = getRequest(1)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
-
-      application.stop()
-    }
-
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = variableMonthlyUserAnswers.set(LastYearPayPage, LastYearPayment(validDate, validAnswer)).success.value
@@ -256,33 +241,6 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
         application.stop()
       }
 
-    }
-
-    "redirect POST to coming soon if variable journey feature is disabled" in {
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(variableMonthlyUserAnswers), Map("variable.journey.enabled" -> false))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      val request =
-        FakeRequest(POST, lastYearPayRoute).withCSRFToken
-          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-          .withFormUrlEncodedBody(("value", validAnswer.value.toString()))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
-
-      application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {

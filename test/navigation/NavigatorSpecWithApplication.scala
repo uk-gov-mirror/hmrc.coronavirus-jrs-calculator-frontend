@@ -18,17 +18,16 @@ package navigation
 
 import java.time.LocalDate
 
-import base.{CoreTestDataBuilder, SpecBaseWithApplication}
-import config.FrontendAppConfig
+import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
 import controllers.routes
 import models.ClaimPeriodQuestion._
 import models.PayMethod.{Regular, Variable}
 import models._
 import pages._
 
-class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTestDataBuilder {
+class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
-  val navigator = new Navigator(frontendAppConfig)
+  override val navigator = new Navigator(appConf)
 
   "Navigator" when {
 
@@ -51,18 +50,13 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
       }
 
       "go to correct page after furloughOngoingPage" in {
-        navigator.nextPage(
-          FurloughStatusPage,
-          UserAnswers("id")
-            .set(FurloughStatusPage, FurloughStatus.FurloughOngoing)
-            .success
-            .value) mustBe routes.PaymentFrequencyController.onPageLoad()
-        navigator.nextPage(
-          FurloughStatusPage,
-          UserAnswers("id")
-            .set(FurloughStatusPage, FurloughStatus.FurloughEnded)
-            .success
-            .value) mustBe routes.FurloughEndDateController.onPageLoad()
+        navigator
+          .nextPage(FurloughStatusPage, emptyUserAnswers.withFurloughStatus(FurloughStatus.FurloughOngoing)) mustBe routes.PaymentFrequencyController
+          .onPageLoad()
+
+        navigator
+          .nextPage(FurloughStatusPage, emptyUserAnswers.withFurloughStatus(FurloughStatus.FurloughEnded)) mustBe routes.FurloughEndDateController
+          .onPageLoad()
       }
 
       "go to PaymentFrequencyPage after FurloughEndDatePage" in {
@@ -100,14 +94,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
 
       "go to TopUpStatusPage after RegularPayAmountPage" in {
         navigator.nextPage(RegularPayAmountPage, UserAnswers("id")) mustBe routes.TopUpStatusController.onPageLoad()
-      }
-
-      "go to NicCategoryPage after RegularPayAmountPage when the topUp feature is disabled" in {
-        val application =
-          applicationBuilder(None, Map("topup.journey.enabled" -> false))
-            .build()
-        val newNavigator = new Navigator(application.injector.instanceOf[FrontendAppConfig])
-        newNavigator.nextPage(RegularPayAmountPage, UserAnswers("id")) mustBe routes.NicCategoryController.onPageLoad()
       }
 
       "loop around pay date if last pay date isn't claim end date or after" in {
@@ -311,25 +297,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
         ) mustBe routes.TopUpStatusController.onPageLoad()
       }
 
-      "go to NicCategoryPage after variable gross pay page if there are no partial furloughs when the topUp feature is disabled" in {
-        val userAnswers = UserAnswers("id")
-          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
-          .get
-          .set(FurloughEndDatePage, LocalDate.of(2020, 4, 10))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 3, 1), Some(1))
-          .get
-          .set(PayDatePage, LocalDate.of(2020, 4, 10), Some(2))
-          .get
-
-        val application =
-          applicationBuilder(Some(userAnswers), Map("topup.journey.enabled" -> false))
-            .build()
-        val newNavigator = new Navigator(application.injector.instanceOf[FrontendAppConfig])
-        newNavigator.nextPage(AnnualPayAmountPage, UserAnswers("id")) mustBe routes.NicCategoryController.onPageLoad()
-
-      }
-
       "loop around last year pay if there are more years to ask" in {
         val userAnswers = variableMonthlyPartial
 
@@ -453,14 +420,6 @@ class NavigatorSpecWithApplication extends SpecBaseWithApplication with CoreTest
           PartialPayAfterFurloughPage,
           emptyUserAnswers
         ) mustBe routes.TopUpStatusController.onPageLoad()
-      }
-
-      "go to NicCategoryPage after PartialPayAfterFurloughPage when the topUp feature is disabled" in {
-        val application =
-          applicationBuilder(None, Map("topup.journey.enabled" -> false))
-            .build()
-        val newNavigator = new Navigator(application.injector.instanceOf[FrontendAppConfig])
-        newNavigator.nextPage(PartialPayAfterFurloughPage, UserAnswers("id")) mustBe routes.NicCategoryController.onPageLoad()
       }
 
       "go to correct page after FurloughPeriodQuestionPage" in {

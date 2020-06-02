@@ -58,14 +58,14 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       payMethodRoutes
     case RegularPayAmountPage =>
       _ =>
-        topUpFeatureRoutes
+        routes.TopUpStatusController.onPageLoad()
     case EmployeeStartedPage =>
       variableLengthEmployedRoutes
     case PartialPayBeforeFurloughPage =>
       partialPayBeforeFurloughRoutes
     case PartialPayAfterFurloughPage =>
       _ =>
-        topUpFeatureRoutes
+        routes.TopUpStatusController.onPageLoad()
     case AnnualPayAmountPage =>
       annualPayAmountRoutes
     case LastPayDatePage =>
@@ -258,16 +258,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     } else if (hasPartialPayAfter(userAnswers)) {
       routes.PartialPayAfterFurloughController.onPageLoad()
     } else {
-      topUpFeatureRoutes
+      routes.TopUpStatusController.onPageLoad()
     }
   }
-
-  private lazy val topUpFeatureRoutes =
-    if (appConfig.topUpJourneyEnabled) {
-      routes.TopUpStatusController.onPageLoad()
-    } else {
-      routes.NicCategoryController.onPageLoad()
-    }
 
   private def furloughPeriodQuestionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(FurloughPeriodQuestionPage) match {

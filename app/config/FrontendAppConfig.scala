@@ -71,10 +71,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   lazy val calculatorVersion: String = configuration.get[String]("calculator.version")
 
-  val variableJourneyEnabled: Boolean = configuration.get[Boolean]("variable.journey.enabled")
-
-  val topUpJourneyEnabled: Boolean = configuration.get[Boolean]("topup.journey.enabled")
-
   val confirmationWithDetailedBreakdowns: Boolean = configuration.get[Boolean]("confirmationWithDetailedBreakdowns.enabled")
 
   val fastTrackJourneyEnabled: Boolean = configuration.get[Boolean]("fastTrackJourney.enabled")

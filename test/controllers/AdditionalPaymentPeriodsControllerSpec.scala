@@ -19,7 +19,6 @@ package controllers
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
-import controllers.actions.FeatureFlag._
 import forms.AdditionalPaymentPeriodsFormProvider
 import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
@@ -196,34 +195,6 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseWithApplication wit
 
       contentAsString(result) mustEqual
         view(boundForm, periodBreakdowns)(dataRequest, messages).toString
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a GET if topups flag is disabled" in {
-
-      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
-
-      val request = FakeRequest(GET, additionalPaymentPeriodsRoute)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a POST if topups flag is disabled" in {
-
-      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
-
-      val request =
-        FakeRequest(POST, additionalPaymentPeriodsRoute)
-          .withFormUrlEncodedBody(("value[0]", validAnswer.head.toString))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }

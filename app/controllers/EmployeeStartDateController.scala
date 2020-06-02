@@ -19,7 +19,6 @@ package controllers
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
-import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.EmployeeStartDateFormProvider
 import javax.inject.Inject
@@ -49,30 +48,28 @@ class EmployeeStartDateController @Inject()(
 
   def form: LocalDate => Form[LocalDate] = formProvider(_)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
-        val preparedForm = request.userAnswers.getV(EmployeeStartDatePage) match {
-          case Invalid(_)   => form(furloughStart)
-          case Valid(value) => form(furloughStart).fill(value)
-        }
-        Future.successful(Ok(view(preparedForm)))
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
+      val preparedForm = request.userAnswers.getV(EmployeeStartDatePage) match {
+        case Invalid(_)   => form(furloughStart)
+        case Valid(value) => form(furloughStart).fill(value)
       }
+      Future.successful(Ok(view(preparedForm)))
+    }
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
-        form(furloughStart)
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartDatePage, value))
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(EmployeeStartDatePage, updatedAnswers))
-          )
-      }
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
+      form(furloughStart)
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartDatePage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(EmployeeStartDatePage, updatedAnswers))
+        )
+    }
   }
 }

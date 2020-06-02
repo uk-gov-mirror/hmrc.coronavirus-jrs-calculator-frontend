@@ -67,13 +67,6 @@ final case class FeatureFlagKeyWithRedirect(key: String, redirectRoute: Call) ex
 final case class FeatureFlagWith404(key: String) extends FeatureFlag
 
 object FeatureFlag {
-  lazy val VariableJourneyFlag = FeatureFlagKeyWithRedirect(
-    "variable.journey.enabled",
-    routes.ComingSoonController.onPageLoad()
-  )
-
-  lazy val TopUpJourneyFlag = FeatureFlagWith404("topup.journey.enabled")
-
   lazy val FastTrackJourneyFlag = FeatureFlagWith404("fastTrackJourney.enabled")
 
   def isEnabled(flag: FeatureFlag, configuration: Configuration): Boolean =

@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBaseWithApplication
-import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import forms.AdditionalPaymentStatusFormProvider
 import models.requests.DataRequest
 import models.{AdditionalPaymentStatus, UserAnswers}
@@ -140,34 +139,6 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with
 
       contentAsString(result) mustEqual
         view(boundForm)(dataRequest, messages).toString
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a GET if topups flag is disabled" in {
-
-      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
-
-      val request = FakeRequest(GET, additionalPaymentStatusRoute)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a POST if topups flag is disabled" in {
-
-      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
-
-      val request =
-        FakeRequest(POST, additionalPaymentStatusRoutePost)
-          .withFormUrlEncodedBody(("value", "yesAdditionalPayments"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }

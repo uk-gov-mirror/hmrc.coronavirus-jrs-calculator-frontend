@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBaseWithApplication
-import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import forms.TopUpStatusFormProvider
 import models.requests.DataRequest
 import models.{TopUpStatus, UserAnswers}
@@ -113,34 +112,6 @@ class TopUpStatusControllerSpec extends SpecBaseWithApplication with MockitoSuga
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a GET if topups flag is disabled" in {
-
-      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
-
-      val request = FakeRequest(GET, topUpQuestionRoute)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a POST if topups flag is disabled" in {
-
-      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
-
-      val request =
-        FakeRequest(POST, topUpQuestionRoutePost)
-          .withFormUrlEncodedBody(("value", TopUpStatus.values.head.toString))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }

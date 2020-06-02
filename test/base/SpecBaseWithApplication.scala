@@ -69,9 +69,7 @@ trait SpecBaseWithApplication
 
   implicit def messages: Messages = messagesApi.preferred(fakeRequest)
 
-  protected def applicationBuilder(
-    userAnswers: Option[UserAnswers] = None,
-    config: Map[String, Any] = Map("variable.journey.enabled" -> true, "topup.journey.enabled" -> true)): GuiceApplicationBuilder =
+  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None, config: Map[String, Any] = Map()): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],

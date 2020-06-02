@@ -19,7 +19,6 @@ package controllers
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
-import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.TopUpPeriodsFormProvider
 import handlers.FurloughCalculationHandler
@@ -53,57 +52,55 @@ class TopUpPeriodsController @Inject()(
 
   val form: Form[List[LocalDate]] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      handleCalculationFurloughV(request.userAnswers)
-        .map { furlough =>
-          furlough.periodBreakdowns match {
-            case breakdown :: Nil =>
-              import breakdown.paymentWithPeriod.periodWithPaymentDate.period._
-              saveAndRedirect(request.userAnswers, List(TopUpPeriod(period.end, breakdown.grant)))
-            case _ =>
-              val preparedForm = request.userAnswers.getV(TopUpPeriodsPage) match {
-                case Invalid(e) => form
-                case Valid(selectedDates) =>
-                  form.fill(selectedDates.map(_.date))
-              }
-              Future.successful(Ok(view(preparedForm, furlough.periodBreakdowns)))
-          }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    handleCalculationFurloughV(request.userAnswers)
+      .map { furlough =>
+        furlough.periodBreakdowns match {
+          case breakdown :: Nil =>
+            import breakdown.paymentWithPeriod.periodWithPaymentDate.period._
+            saveAndRedirect(request.userAnswers, List(TopUpPeriod(period.end, breakdown.grant)))
+          case _ =>
+            val preparedForm = request.userAnswers.getV(TopUpPeriodsPage) match {
+              case Invalid(e) => form
+              case Valid(selectedDates) =>
+                form.fill(selectedDates.map(_.date))
+            }
+            Future.successful(Ok(view(preparedForm, furlough.periodBreakdowns)))
         }
-        .getOrElse(
-          Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-        )
+      }
+      .getOrElse(
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+      )
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      handleCalculationFurloughV(request.userAnswers)
-        .map { furlough =>
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, furlough.periodBreakdowns))), { dates =>
-                val topUpPeriods = dates.flatMap { date =>
-                  furlough.periodBreakdowns
-                    .find(_.paymentWithPeriod.periodWithPaymentDate.period.period.end == date)
-                    .map(_.grant)
-                    .map(
-                      TopUpPeriod(date, _)
-                    )
-                }
-
-                if (dates.length != topUpPeriods.length) {
-                  Logger.warn("[TopUpPeriodsController][onSubmit] Dates in furlough and input do not align")
-                  Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-                } else {
-                  saveAndRedirect(request.userAnswers, topUpPeriods)
-                }
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    handleCalculationFurloughV(request.userAnswers)
+      .map { furlough =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, furlough.periodBreakdowns))), { dates =>
+              val topUpPeriods = dates.flatMap { date =>
+                furlough.periodBreakdowns
+                  .find(_.paymentWithPeriod.periodWithPaymentDate.period.period.end == date)
+                  .map(_.grant)
+                  .map(
+                    TopUpPeriod(date, _)
+                  )
               }
-            )
-        }
-        .getOrElse(
-          Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-        )
+
+              if (dates.length != topUpPeriods.length) {
+                Logger.warn("[TopUpPeriodsController][onSubmit] Dates in furlough and input do not align")
+                Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+              } else {
+                saveAndRedirect(request.userAnswers, topUpPeriods)
+              }
+            }
+          )
+      }
+      .getOrElse(
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+      )
   }
 
   private def saveAndRedirect(userAnswers: UserAnswers, topUpPeriods: List[TopUpPeriod]) =

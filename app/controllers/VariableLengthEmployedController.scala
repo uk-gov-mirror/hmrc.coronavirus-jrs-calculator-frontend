@@ -17,7 +17,6 @@
 package controllers
 
 import cats.data.Validated.{Invalid, Valid}
-import controllers.actions.FeatureFlag.VariableJourneyFlag
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
 import javax.inject.Inject
@@ -49,27 +48,25 @@ class VariableLengthEmployedController @Inject()(
 
   val form: Form[EmployeeStarted] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.getV(EmployeeStartedPage) match {
-        case Invalid(e)   => form
-        case Valid(value) => form.fill(value)
-      }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.getV(EmployeeStartedPage) match {
+      case Invalid(e)   => form
+      case Valid(value) => form.fill(value)
+    }
 
-      Ok(view(preparedForm))
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(EmployeeStartedPage, updatedAnswers))
-        )
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(EmployeeStartedPage, updatedAnswers))
+      )
   }
 }

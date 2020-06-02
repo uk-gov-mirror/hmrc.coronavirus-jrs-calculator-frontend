@@ -88,20 +88,6 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       application.stop()
     }
 
-    "redirect GET to coming soon if variable journey feature is disabled" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers), Map("variable.journey.enabled" -> false))
-        .build()
-
-      val result = route(application, getRequest).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
-
-      application.stop()
-    }
-
     "redirect to /furlough-start if its already not found in userAnswers" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -154,29 +140,6 @@ class EmployeeStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
-    }
-
-    "redirect POST to coming soon if variable journey feature is disabled" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers), Map("variable.journey.enabled" -> false))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      val result = route(application, postRequest).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.ComingSoonController.onPageLoad().url
 
       application.stop()
     }

@@ -19,10 +19,9 @@ package controllers
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
-import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import forms.TopUpAmountFormProvider
 import models.requests.DataRequest
-import models.{Amount, TopUpPayment, TopUpPeriod, UserAnswers}
+import models.{Amount, TopUpPayment, TopUpPeriod}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -206,34 +205,6 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       contentAsString(result) mustEqual
         view(boundForm, topUpPeriod, 1)(dataRequest, messages).toString
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a GET if topups flag is disabled" in {
-
-      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
-
-      val request = getRequest(GET, 1)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a POST if topups flag is disabled" in {
-
-      val application = applicationBuilder(config = Map(TopUpJourneyFlag.key -> false), userAnswers = Some(UserAnswers("id"))).build()
-
-      val request =
-        getRequest(POST, 1)
-          .withFormUrlEncodedBody(("value", "100.00"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }
