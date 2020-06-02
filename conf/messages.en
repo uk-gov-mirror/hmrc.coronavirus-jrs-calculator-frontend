@@ -363,8 +363,10 @@ employeeStartDate.hint = For example, 28 11 2019
 employeeStartDate.error.min = The employee start date must be on or after {0}
 employeeStartDate.error.max = The employee start date must be before they started furlough or on or before 19th March 2020
 
-annualPayAmount.title = What did the employee get paid in total since they started until {0}?
-annualPayAmount.heading = What did the employee get paid in total since they started until {0}?
+annualPayAmount.title.after1Feb2019 = What did the employee get paid in total since they started until {0}?
+annualPayAmount.heading.after1Feb2019 = What did the employee get paid in total since they started until {0}?
+annualPayAmount.title.onOrBefore1Feb2019 = What did this employee earn from 6 April 2019 to {0}?
+annualPayAmount.heading.onOrBefore1Feb2019 = What did this employee earn from 6 April 2019 to {0}?
 annualPayAmount.error.required = Enter a valid amount
 annualPayAmount.error.invalid = Enter a valid amount
 annualPayAmount.p1 = This is the total amount before deductions.
