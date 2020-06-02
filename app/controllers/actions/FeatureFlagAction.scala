@@ -17,6 +17,7 @@
 package controllers.actions
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import controllers.routes
 import handlers.ErrorHandler
 import models.requests.IdentifierRequest
@@ -52,10 +53,10 @@ trait FeatureFlagActionProvider {
   def apply(flag: FeatureFlag): ActionFilter[IdentifierRequest] = apply(Some(flag))
 }
 
-class FeatureFlagActionProviderImpl @Inject()(configuration: Configuration, ec: ExecutionContext, eh: ErrorHandler)
+class FeatureFlagActionProviderImpl @Inject()(implicit appConf: FrontendAppConfig, ec: ExecutionContext, eh: ErrorHandler)
     extends FeatureFlagActionProvider {
   override def apply(flag: Option[FeatureFlag] = None): ActionFilter[IdentifierRequest] =
-    new FeatureFlagAction(flag, configuration, eh, ec)
+    new FeatureFlagAction(flag, appConf.configuration, eh, ec)
 }
 
 sealed trait FeatureFlag {

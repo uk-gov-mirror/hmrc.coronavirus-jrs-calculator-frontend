@@ -19,9 +19,11 @@ package controllers
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
+import config.FrontendAppConfig
 import controllers.actions.FeatureFlag.TopUpJourneyFlag
 import controllers.actions._
 import forms.AdditionalPaymentAmountFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.{AdditionalPayment, Amount}
 import navigation.Navigator
@@ -39,16 +41,16 @@ class AdditionalPaymentAmountController @Inject()(
   sessionRepository: SessionRepository,
   val navigator: Navigator,
   identify: IdentifierAction,
-  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: AdditionalPaymentAmountFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: AdditionalPaymentAmountView
-)(implicit ec: ExecutionContext)
+  view: AdditionalPaymentAmountView,
+)(implicit ec: ExecutionContext, appConf: FrontendAppConfig, eh: ErrorHandler)
     extends BaseController {
 
   val form: Form[Amount] = formProvider()
+  val feature: FeatureFlagActionProvider = new FeatureFlagActionProviderImpl()
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen feature(TopUpJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
