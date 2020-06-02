@@ -18,10 +18,15 @@ package forms
 
 import java.time.LocalDate
 
+import base.SpecBaseWithApplication
 import forms.behaviours.DateBehaviours
+import models.Period
 import play.api.data.FormError
 
-class FurloughEndDateFormProviderSpec extends DateBehaviours {
+class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
+
+  val dateBehaviours = new DateBehaviours
+  import dateBehaviours._
 
   private val startDate = LocalDate.of(2020, 3, 1)
   private val endDate = LocalDate.of(2020, 5, 1)
@@ -29,7 +34,7 @@ class FurloughEndDateFormProviderSpec extends DateBehaviours {
 
   ".value" should {
 
-    val form = new FurloughEndDateFormProvider()(endDate, furloughStart)
+    val form = new FurloughEndDateFormProvider(frontendAppConfig)(Period(startDate, endDate), furloughStart)
 
     val validData = datesBetween(
       min = startDate.plusDays(20),
@@ -41,5 +46,26 @@ class FurloughEndDateFormProviderSpec extends DateBehaviours {
     behave like dateFieldWithMax(form, "value", endDate, FormError("value", "furloughEndDate.error.min.max"))
 
     behave like mandatoryDateField(form, "value")
+  }
+
+  ".endDate" should {
+    val claimStart = LocalDate.of(2020, 7, 1)
+    val claimEnd = LocalDate.of(2020, 7, 31)
+    val furloughStart = claimStart
+    val furloughEnd = furloughStart.plusDays(6)
+
+    "not enforce 21 day minimum if claim start is on or after 1 July 2020" in {
+      val form = new FurloughEndDateFormProvider(frontendAppConfig)(Period(claimStart, claimEnd), furloughStart)
+
+      val data = Map(
+        "value.day"   -> furloughEnd.getDayOfMonth.toString,
+        "value.month" -> furloughEnd.getMonthValue.toString,
+        "value.year"  -> furloughEnd.getYear.toString
+      )
+
+      val result = form.bind(data)
+
+      result.errors shouldBe List()
+    }
   }
 }

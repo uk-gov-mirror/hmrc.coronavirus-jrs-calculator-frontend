@@ -18,7 +18,6 @@ package controllers
 
 import base.SpecBaseWithApplication
 import forms.RegularPayAmountFormProvider
-import models.PaymentFrequency.{FourWeekly, Weekly}
 import models.UserAnswers
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}

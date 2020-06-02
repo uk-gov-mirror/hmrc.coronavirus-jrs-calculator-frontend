@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.FurloughEndDateFormProvider
+import models.Period
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
@@ -38,11 +39,11 @@ import scala.concurrent.Future
 
 class FurloughEndDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
-  val formProvider = new FurloughEndDateFormProvider()
+  val formProvider = new FurloughEndDateFormProvider(frontendAppConfig)
   private val claimPeriodStart = LocalDate.of(2020, 3, 1)
   private val claimPeriodEnd = LocalDate.of(2020, 5, 1)
   private val furloughStart = LocalDate.of(2020, 4, 1)
-  private def form = formProvider(claimPeriodEnd, furloughStart)
+  private def form = formProvider(Period(claimPeriodStart, claimPeriodEnd), furloughStart)
 
   def onwardRoute = Call("GET", "/foo")
 

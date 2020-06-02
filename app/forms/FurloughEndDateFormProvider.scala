@@ -18,15 +18,27 @@ package forms
 
 import java.time.LocalDate
 
+import config.FrontendAppConfig
 import forms.mappings.Mappings
+import javax.inject.Inject
+import models.Period
 import play.api.data.Form
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
-class FurloughEndDateFormProvider extends Mappings {
+class FurloughEndDateFormProvider @Inject()(appConfig: FrontendAppConfig) extends Mappings {
 
-  def apply(claimPeriodEnd: LocalDate, furloughStartDate: LocalDate): Form[LocalDate] =
+  def apply(claimPeriod: Period, furloughStart: LocalDate): Form[LocalDate] =
     Form(
       "value" -> localDate(invalidKey = "furloughEndDate.error.invalid")
-        .verifying(minDate(furloughStartDate.plusDays(20), "furloughEndDate.error.min.max"))
-        .verifying(maxDate(claimPeriodEnd, "furloughEndDate.error.min.max"))
+        .verifying(validEndDate(claimPeriod, furloughStart))
+        .verifying(maxDate(claimPeriod.end, "furloughEndDate.error.min.max"))
     )
+
+  private def validEndDate(claimPeriod: Period, furloughStart: LocalDate): Constraint[LocalDate] = Constraint { furloughEnd =>
+    if (claimPeriod.start.isBefore(appConfig.phaseTwoStartDate) && furloughEnd.isBefore(furloughStart.plusDays(20))) {
+      Invalid("furloughEndDate.error.min.max")
+    } else {
+      Valid
+    }
+  }
 }

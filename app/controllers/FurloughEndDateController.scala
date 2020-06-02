@@ -23,8 +23,9 @@ import controllers.actions._
 import forms.FurloughEndDateFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
+import models.Period
 import navigation.Navigator
-import pages.{ClaimPeriodEndPage, FurloughEndDatePage, FurloughStartDatePage}
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughEndDatePage, FurloughStartDatePage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -47,31 +48,35 @@ class FurloughEndDateController @Inject()(
     extends BaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswersV(ClaimPeriodEndPage, FurloughStartDatePage) { (claimEndDate, furloughStart) =>
-      val preparedForm = request.userAnswers.getV(FurloughEndDatePage) match {
-        case Invalid(_)   => form(claimEndDate, furloughStart)
-        case Valid(value) => form(claimEndDate, furloughStart).fill(value)
-      }
+    getRequiredAnswerV(FurloughStartDatePage) { furloughStart =>
+      getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
+        val preparedForm = request.userAnswers.getV(FurloughEndDatePage) match {
+          case Invalid(_)   => form(Period(claimStart, claimEnd), furloughStart)
+          case Valid(value) => form(Period(claimStart, claimEnd), furloughStart).fill(value)
+        }
 
-      Future.successful(Ok(view(preparedForm)))
+        Future.successful(Ok(view(preparedForm)))
+      }
     }
   }
 
-  def form(claimEndDate: LocalDate, furloughStartDate: LocalDate): Form[LocalDate] =
-    formProvider(claimEndDate, furloughStartDate)
+  def form(claimPeriod: Period, furloughStart: LocalDate): Form[LocalDate] =
+    formProvider(claimPeriod, furloughStart)
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswersV(ClaimPeriodEndPage, FurloughStartDatePage) { (claimEndDate, furloughStart) =>
-      form(claimEndDate, furloughStart)
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughEndDatePage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(FurloughEndDatePage, updatedAnswers))
-        )
+    getRequiredAnswerV(FurloughStartDatePage) { furloughStart =>
+      getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
+        form(Period(claimStart, claimEnd), furloughStart)
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughEndDatePage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(FurloughEndDatePage, updatedAnswers))
+          )
+      }
     }
   }
 }
