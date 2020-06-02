@@ -23,24 +23,21 @@
         errorSummary: components.errorSummary,
         button: components.button,
         inputText: components.inputText,
-        fieldset: components.fieldset,
         h1: components.h1,
         p: components.p,
         inputCurrency: components.inputCurrency,
         whatToInclude: includes.whatToInclude
 )
 
-@(form: Form[_], furloughStart: LocalDate, employeeStarted: EmployeeStarted)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], cappedFurloughStart: LocalDate, employeeStarted: EmployeeStarted)(implicit request: Request[_], messages: Messages)
 
-    @dateToShow = @{dateToString(cappedFurloughStart(furloughStart, employeeStarted))}
-
-    @govukLayout(pageTitle = Some(title(form, s"annualPayAmount.title.$employeeStarted", titleMessageArgs = Seq(dateToShow))), thisPage = AnnualPayAmountPage) {
+    @govukLayout(pageTitle = Some(title(form, s"annualPayAmount.title.$employeeStarted", titleMessageArgs = Seq(dateToString(cappedFurloughStart)))), thisPage = AnnualPayAmountPage) {
 
     @formHelper(action = AnnualPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages(s"annualPayAmount.heading.$employeeStarted", dateToShow))
+        @h1(messages(s"annualPayAmount.heading.$employeeStarted", dateToString(cappedFurloughStart)))
         @p(Html(messages("annualPayAmount.p1")))
         @p(Html(messages("annualPayAmount.p2")))
 
@@ -50,7 +47,7 @@
             form,
             id = "value",
             name = "value",
-            label = messages(s"annualPayAmount.heading.$employeeStarted", dateToShow),
+            label = messages(s"annualPayAmount.heading.$employeeStarted", dateToString(cappedFurloughStart)),
             labelClasses = Some("govuk-visually-hidden"),
             isPageHeading = false,
             classes = Some("govuk-input--width-10")

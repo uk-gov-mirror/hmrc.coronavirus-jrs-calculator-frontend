@@ -28,6 +28,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import views.html.AnnualPayAmountView
+import utils.LocalDateHelpers._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -55,17 +56,21 @@ class AnnualPayAmountController @Inject()(
           case Valid(value) => form.fill(value)
         }
 
-        Future.successful(Ok(view(preparedForm, furloughStart, employeeStarted)))
+        val uiDate = earliestOf(apr5th2020, furloughStart.minusDays(1))
+
+        Future.successful(Ok(view(preparedForm, uiDate, employeeStarted)))
       }
     }
 
   def onSubmit(): Action[AnyContent] =
     (identify andThen feature(VariableJourneyFlag) andThen getData andThen requireData).async { implicit request =>
       getRequiredAnswersV(FurloughStartDatePage, EmployeeStartedPage) { (furloughStart, employeeStarted) =>
+        val uiDate = earliestOf(apr5th2020, furloughStart.minusDays(1))
+
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, furloughStart, employeeStarted))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, uiDate, employeeStarted))),
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(AnnualPayAmountPage, value))
