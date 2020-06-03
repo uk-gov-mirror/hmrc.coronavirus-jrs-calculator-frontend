@@ -37,7 +37,7 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
       isBeforeStart(claimStart, claimEndDate),
       isDifferentCalendarMonth(claimStart, claimEndDate),
       isAfterPolicyEnd(claimEndDate),
-      isAfterPhaseTwoStartAndLessThan7Days(claimStart, claimEndDate)) match {
+      isClaimLessThan7Days(claimStart, claimEndDate)) match {
       case (r @ Invalid(_), _, _, _) => r
       case (_, r @ Invalid(_), _, _) => r
       case (_, _, r @ Invalid(_), _) => r
@@ -60,8 +60,14 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
     } else Valid
   }
 
-  private val isAfterPhaseTwoStartAndLessThan7Days: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
-    if (start.isAfter(appConfig.phaseTwoStartDate.minusDays(1)) && Period(start, end).countDays < 7)
-      Invalid("claimPeriodEnd.cannot.be.lessThan.7days")
-    else Valid
+  private val isClaimLessThan7Days: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
+    if (start.isAfter(appConfig.phaseTwoStartDate.minusDays(1))) {
+      if (start.getDayOfMonth != 1 && end.getDayOfMonth != end.getMonth.maxLength() && Period(start, end).countDays < 7) {
+        Invalid("claimPeriodEnd.cannot.be.lessThan.7days")
+      } else {
+        Valid
+      }
+    } else {
+      Valid
+  }
 }

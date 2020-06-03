@@ -98,9 +98,9 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
         ))
     }
 
-    "fail with invalid dates -  less than 7 days after phase two start date" in {
+    "fail with invalid dates -  less than 7 days after phase two start date and not at the start or end of a month" in {
 
-      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(frontendAppConfig.phaseTwoStartDate)
+      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(LocalDate.of(2020, 7, 2))
 
       val now = frontendAppConfig.phaseTwoStartDate.plusDays(5)
 
@@ -113,6 +113,32 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
       val result = form.bind(data)
 
       result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.lessThan.7days"))
+    }
+
+    "fail with invalid dates - claim can be less than 7 days in phase two if start or end lines up with month boundary" in {
+      val form1 = new ClaimPeriodEndFormProvider(frontendAppConfig)(LocalDate.of(2020, 7, 1))
+      val form2 = new ClaimPeriodEndFormProvider(frontendAppConfig)(LocalDate.of(2020, 7, 27))
+
+      val end1 = LocalDate.of(2020, 7, 6)
+      val end2 = LocalDate.of(2020, 7, 31)
+
+      val data1 = Map(
+        "endDate.day"   -> end1.getDayOfMonth.toString,
+        "endDate.month" -> end1.getMonthValue.toString,
+        "endDate.year"  -> end1.getYear.toString
+      )
+
+      val data2 = Map(
+        "endDate.day"   -> end2.getDayOfMonth.toString,
+        "endDate.month" -> end2.getMonthValue.toString,
+        "endDate.year"  -> end2.getYear.toString
+      )
+
+      val result1 = form1.bind(data1)
+      val result2 = form2.bind(data2)
+
+      result1.errors shouldBe List()
+      result2.errors shouldBe List()
     }
 
     "fail with invalid dates - if start and end are not of the same calendar month" in {
