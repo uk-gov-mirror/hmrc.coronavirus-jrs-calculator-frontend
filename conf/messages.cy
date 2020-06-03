@@ -254,8 +254,8 @@ confirmation.paid.weekly = Caiff ei dalu bob wythnos
 confirmation.paid.fortnightly = Caiff ei dalu bob 2 wythnos
 confirmation.paid.fourweekly = Caiff ei dalu bob 4 wythnos
 confirmation.paid.monthly = Caiff ei dalu bob mis
-confirmation.nic.payable = Ei gategori Yswiriant Gwladol yw [ var ] neu [ var ]
-confirmation.nic.nonPayable = Ei gategori Yswiriant Gwladol yw [ var ] neu [ var ]
+confirmation.nic.payable = Ei gategori Yswiriant Gwladol yw A, B, C neu J
+confirmation.nic.nonPayable = Ei gategori Yswiriant Gwladol yw H, M neu Z
 confirmation.pension.doesContribute = Mae’n derbyn cyfraniadau pensiwn y cyflogwr
 confirmation.pension.doesNotContribute = Nid yw’n cael cyfraniadau pensiwn y cyflogwr
 confirmation.breakdown.summary = Detailed breakdown of calculations
@@ -390,8 +390,8 @@ FurloughPartialPay.error.required = Nodwch swm dilys
 FurloughPartialPay.error.invalid = Nodwch swm dilys
 FurloughPartialPay.p = Mae hyn ar gyfer y cyfnod y cafodd y cyflogai hwn ei dalu pan nad oedd ar ffyrlo.
 
-lastPayDate.title = Beth yw dyddiad cyflog y cyflogai hwn ar gyfer y cyfnod cyflog sy’n dod i ben ar [var date]?
-lastPayDate.heading = Beth yw dyddiad cyflog y cyflogai hwn ar gyfer y cyfnod cyflog sy’n dod i ben ar [var date]?
+lastPayDate.title = Beth yw dyddiad cyflog y cyflogai hwn ar gyfer y cyfnod cyflog sy’n dod i ben ar {0}?
+lastPayDate.heading = Beth yw dyddiad cyflog y cyflogai hwn ar gyfer y cyfnod cyflog sy’n dod i ben ar {0}?
 lastPayDate.error.required.all = Nodwch y dyddiad cyflog
 lastPayDate.error.required.two = Mae’n rhaid i’r dyddiad cyflog gynnwys {0} a {1}
 lastPayDate.error.required = Mae’n rhaid i’r dyddiad cyflog gynnwys {0}
@@ -428,7 +428,7 @@ topupPeriods.error.required = Dewiswch y cyfnodau cyflog rydych yn ychwanegu tal
 
 topUpAmount.title = Beth yw swm y taliad atodol ar gyfer y cyfnod cyflog sy’n dod i ben ar {0}?
 topUpAmount.heading = Beth yw swm y taliad atodol ar gyfer y cyfnod cyflog sy’n dod i ben ar {0}?
-topUpAmount.p1 = Cyflog ffyrlo am y cyfnod cyflog hwn cyn gwneud taliad atodol: [var amount]
+topUpAmount.p1 = Cyflog ffyrlo am y cyfnod cyflog hwn cyn gwneud taliad atodol: £{0}
 topUpAmount.p2 = Sicrhewch eich bod yn cynnwys swm y taliad atodol yn unig. Peidiwch â chynnwys cyflog ffyrlo’r cyflogai nac unrhyw gyflog atodol arall.
 topUpAmount.error.required = Nodwch swm y taliad atodol ar gyfer y cyfnod cyflog hwn
 topUpAmount.error.nonNumeric = Nodwch swm y taliad atodol mewn rhifau
@@ -506,7 +506,7 @@ referencePayBreakdown.regular.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 
 referencePayBreakdown.regular.employerFunded.h4 = Cyfrifo’r cyflog a ariennir gan y cyflogwr
 referencePayBreakdown.regular.employerFunded.l1 = Dechreuwch gyda £{0} (o’r cyfnod cyflog)
-referencePayBreakdown.regular.employerFunded.l2 = Llai {amount} (cyflog yn seiliedig ar ddiwrnodau ffyrlo)
+referencePayBreakdown.regular.employerFunded.l2 = Llai £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo)
 referencePayBreakdown.regular.employerFunded.result = Cyflog a ariennir gan y cyflogwr am y {0} o ddiwrnodau sy’n weddill yn y cyfnod cyflog = £{1}
 
 referencePayBreakdown.average.p1 = ystyriwch gyfanswm y cyflog o ddyddiad cychwyn y cyflogai (neu 6 Ebrill 2019, os yw hynny’n gynharach) hyd at y diwrnod cyn dyddiad cychwyn ffyrlo y cyflogai (neu 5 Ebrill 2020, os yw hynny’n hwyrach):
