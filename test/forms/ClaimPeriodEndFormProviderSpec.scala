@@ -22,6 +22,7 @@ import base.SpecBaseWithApplication
 import forms.behaviours.DateBehaviours
 import forms.mappings.LocalDateFormatter
 import play.api.data.FormError
+import play.api.data.validation.{Invalid, Valid}
 import views.ViewUtils
 
 class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
@@ -38,7 +39,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
     "bind valid data" in {
 
       val claimPeriodEndDatesGen = for {
-        date <- periodDatesBetween(LocalDate.of(2020, 3, 2), LocalDate.now().plusDays(14))
+        date <- periodDatesBetween(LocalDate.of(2020, 3, 2), LocalDate.of(2020, 3, 2).plusDays(14))
       } yield date
 
       forAll(claimPeriodEndDatesGen -> "valid date") { date =>
@@ -79,8 +80,10 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
     "fail with invalid dates -  after policy end" in {
 
+      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(LocalDate.of(2020, 8, 1))
+
       val data = Map(
-        "endDate.day"   -> "1",
+        "endDate.day"   -> "2",
         "endDate.month" -> "8",
         "endDate.year"  -> "2020",
       )
@@ -110,6 +113,33 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
       val result = form.bind(data)
 
       result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.lessThan.7days"))
+    }
+
+    "fail with invalid dates - if start and end are not of the same calendar month" in {
+
+      val now = LocalDate.of(2020, 6, 15)
+
+      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(now)
+
+      val data = Map(
+        "endDate.day"   -> now.getDayOfMonth.toString,
+        "endDate.month" -> now.plusDays(30).getMonthValue.toString,
+        "endDate.year"  -> now.getYear.toString
+      )
+
+      val result = form.bind(data)
+
+      result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.of.same.month"))
+    }
+  }
+
+  "start and end should be of the same calendar month" in {
+    val form = new ClaimPeriodEndFormProvider(frontendAppConfig)
+
+    form.isDifferentCalendarMonth(LocalDate.of(2020, 7, 1), LocalDate.of(2020, 7, 31)) mustBe Valid
+
+    form.isDifferentCalendarMonth(LocalDate.of(2020, 7, 1), LocalDate.of(2020, 8, 1)) must matchPattern {
+      case Invalid(_) =>
     }
   }
 }
