@@ -76,7 +76,7 @@ compliant.two.p4.2= gyngor ar wneud eich dyfais yn haws i’w defnyddio os oes g
 compliant.three.heading=Pa mor hygyrch yw’r gwasanaeth hwn
 compliant.three.p1.1=Mae’r gwasanaeth hwn yn cydymffurfio’n rhannol â
 compliant.three.p1.2=Safon ‘AA’ Canllawiau Hygyrchedd Cynnwys y We, fersiwn 2.1
-compliant.three.p2 =Nid oes unrhyw broblemau hygyrchedd hysbys yn y gwasanaeth hwn.
+compliant.three.p2=Nid oes unrhyw broblemau hygyrchedd hysbys yn y gwasanaeth hwn.
 
 ## section five
 compliant.five.heading=Rhoi gwybod am broblemau hygyrchedd gyda’r gwasanaeth hwn
@@ -109,7 +109,7 @@ compliant.nine.heading=Sut gwnaethom brofi’r gwasanaeth hwn
 compliant.nine.p1=Lansiwyd y gwasanaeth ar 20 Ebrill 2020 a gwiriwyd ei fod yn cydymffurfio â safon ‘AA’ Canllawiau Hygyrchedd Cynnwys y We, fersiwn 2.1.
 compliant.nine.p2.1=Adeiladwyd y gwasanaeth gan ddefnyddio rhannau a brofwyd gan y
 compliant.nine.p2.2=Ganolfan Hygyrchedd Digidol
-compliant.nine.p2.3=The full service was tested by HMRC and included disabled users.
+compliant.nine.p2.3=Profwyd y gwasanaeth llawn gan CThEM, ac roedd y gwaith o brofi’r gwasanaeth yn cynnwys defnyddwyr anabl.
 compliant.nine.p3=Paratowyd y dudalen hon ar 17 Ebrill 2020. Cafodd ei diweddaru ddiwethaf ar 20 Ebrill 2020.
 
 date.day = Diwrnod
@@ -363,8 +363,8 @@ employeeStartDate.hint = Er enghraifft, 28 11 2019
 employeeStartDate.error.min = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod ar neu ar ôl {0}
 employeeStartDate.error.max = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod cyn iddo ddechrau ei ffyrlo, ar neu cyn 19 Mawrth 2020
 
-annualPayAmount.title.after1Feb2019 = What did the employee get paid in total since they started until {0}?
-annualPayAmount.heading.after1Feb2019 = What did the employee get paid in total since they started until {0}?
+annualPayAmount.title.after1Feb2019 = Beth oedd cyfanswm yr hyn a dalwyd i’r cyflogai ers iddo ddechrau tan {0}?
+annualPayAmount.heading.after1Feb2019 = Beth oedd cyfanswm yr hyn a dalwyd i’r cyflogai ers iddo ddechrau tan {0}?
 annualPayAmount.title.onOrBefore1Feb2019 = Faint a enillodd y cyflogai hwn o 6 April 2019 i {0}?
 annualPayAmount.heading.onOrBefore1Feb2019 = Faint a enillodd y cyflogai hwn o 6 April 2019 i {0}?
 annualPayAmount.error.required = Nodwch swm dilys
@@ -537,8 +537,8 @@ furloughBreakdown.total = Cyfanswm y grant ffyrlo ar gyfer y cyfnod cyflog = £{
 furloughBreakdown.furloughCap.p1 = Grant ffyrlo wedi’i gyfrifo = £{0}
 furloughBreakdown.furloughCap.p2 = Mae hyn yn fwy na’r uchafswm grant ffyrlo ar gyfer y cyfnod cyflog hwn, sef:
 furloughBreakdown.furloughCap.fullPeriodCap = £{0}
-furloughBreakdown.furloughCap.periodSpansMonthCap = {0} furlough days in {1} at £{2} + {3} furlough days in {4} at £{5} = £{6}.
-furloughBreakdown.furloughCap.partialPeriodCap ={0} furlough days in {1} at £{2} = £{3}
+furloughBreakdown.furloughCap.periodSpansMonthCap = {0} diwrnodau ffyrlo ym mis {1} ar £{2} + {3} diwrnodau ffyrlo ym mis {4} ar £{5} = £{6}.
+furloughBreakdown.furloughCap.partialPeriodCap ={0} diwrnodau ffyrlo ym mis {1} ar £{2} = £{3}
 furloughBreakdown.furloughCap.p3 = Felly, rydym yn defnyddio’r uchafswm grant ffyrlo.
 
 nicBreakdown.h4 = Cyfraniadau Yswiriant Gwladol y cyflogwr
@@ -563,8 +563,8 @@ nicBreakdown.total = Cyfanswm y grant YG ar gyfer y cyfnod cyflog =  £{0}
 pensionBreakdown.h4 = Isafswm cyfraniadau pensiwn y cyflogwr
 pensionBreakdown.l1 = Dechreuwch gyda £{0} (grant ffyrlo).
 pensionBreakdown.l2 = Talgrynnwch i lawr i’r bunt agosaf.
-pensionBreakdown.l3.full.20 = Deduct £{0} (Lower Level of Qualifying Earnings for 19/20 tax year).
-pensionBreakdown.l3.full.21 = Deduct £{0} (Lower Level of Qualifying Earnings for 20/21 tax year).
+pensionBreakdown.l3.full.20 = Didynnwch £{0} (Lefel Is o Enillion Cymwys ar gyfer blwyddyn dreth 19/20).
+pensionBreakdown.l3.full.21 = Didynnwch £{0} (Lefel Is o Enillion Cymwys ar gyfer blwyddyn dreth 20/21).
 pensionBreakdown.l3.partial.20 = Didynnwch £{0} (£{1} Lefel Is o Enillion Cymwys ar gyfer blwyddyn dreth 2019/20, rhannwch â {2} o ddiwrnodau yn y cyfnod cyflog a lluoswch â {3} o ddiwrnodau ffyrlo).
 pensionBreakdown.l3.partial.21 = Didynnwch £{0} (£{1} Lefel Is o Enillion Cymwys ar gyfer blwyddyn dreth 2020/21, rhannwch â {2} o ddiwrnodau yn y cyfnod cyflog a lluoswch â {3} o ddiwrnodau ffyrlo).
 pensionBreakdown.l4 = Lluoswch â 3%.
