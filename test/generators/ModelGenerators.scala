@@ -23,6 +23,11 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryPartTimeQuestion: Arbitrary[PartTimeQuestion] =
+    Arbitrary {
+      Gen.oneOf(PartTimeQuestion.values)
+    }
+
   implicit lazy val arbitraryPayPeriodQuestion: Arbitrary[PayPeriodQuestion] =
     Arbitrary {
       Gen.oneOf(PayPeriodQuestion.values)

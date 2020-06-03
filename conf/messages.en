@@ -594,3 +594,10 @@ payPeriodQuestion.useSamePayPeriod = Yes
 payPeriodQuestion.useDifferentPayPeriod = No
 payPeriodQuestion.error.required = Select one of the options below
 payPeriodQuestion.period.text = from {0} to {1}
+
+partTimeQuestion.title = Has this employee done any work during the claim period?
+partTimeQuestion.heading = Has this employee done any work during the claim period?
+partTimeQuestion.p1 = From the 1 July employees are able to alternate between furlough and employee funded work during the claim period.
+partTimeQuestion.partTimeYes = Yes
+partTimeQuestion.partTimeNo = No
+partTimeQuestion.error.required = Select one of the options below

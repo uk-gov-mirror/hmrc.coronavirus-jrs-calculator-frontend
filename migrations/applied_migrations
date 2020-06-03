@@ -1,55 +1,35 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration FurloughPeriodQuestion"
-echo "Applying migration ClaimPeriodQuestion"
-echo "Applying migration PayPeriodQuestion"
+echo "Applying migration PartTimeQuestion"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /furloughPeriodQuestion                        controllers.FurloughPeriodQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /furloughPeriodQuestion                        controllers.FurloughPeriodQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "GET        /claimPeriodQuestion                        controllers.ClaimPeriodQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /claimPeriodQuestion                        controllers.ClaimPeriodQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "GET        /payPeriodQuestion                        controllers.PayPeriodQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /payPeriodQuestion                        controllers.PayPeriodQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /partTimeQuestion                        controllers.PartTimeQuestionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /partTimeQuestion                        controllers.PartTimeQuestionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeClaimPeriodQuestion                  controllers.ClaimPeriodQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeClaimPeriodQuestion                  controllers.ClaimPeriodQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "GET        /changeFurloughPeriodQuestion                  controllers.FurloughPeriodQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeFurloughPeriodQuestion                  controllers.FurloughPeriodQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "GET        /changePayPeriodQuestion                  controllers.PayPeriodQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changePayPeriodQuestion                  controllers.PayPeriodQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changePartTimeQuestion                  controllers.PartTimeQuestionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changePartTimeQuestion                  controllers.PartTimeQuestionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "claimPeriodQuestion.title = claimPeriodQuestion" >> ../conf/messages.en
-echo "claimPeriodQuestion.heading = claimPeriodQuestion" >> ../conf/messages.en
-echo "claimPeriodQuestion.checkYourAnswersLabel = claimPeriodQuestion" >> ../conf/messages.en
-echo "claimPeriodQuestion.error.required = Select yes if claimPeriodQuestion" >> ../conf/messages.en
-echo "furloughPeriodQuestion.title = Has this employee furloughed for the same time?" >> ../conf/messages.en
-echo "furloughPeriodQuestion.heading = Has this employee furloughed for the same time?" >> ../conf/messages.en
-echo "furloughPeriodQuestion.furloughedForTheSameTime = Yes" >> ../conf/messages.en
-echo "furloughPeriodQuestion.furloughPeriodNo = No" >> ../conf/messages.en
-echo "furloughPeriodQuestion.checkYourAnswersLabel = Has this employee furloughed for the same time?" >> ../conf/messages.en
-echo "furloughPeriodQuestion.error.required = Select furloughPeriodQuestion" >> ../conf/messages.en
-echo "payPeriodQuestion.title = Do you want to use the same pay periods?" >> ../conf/messages.en
-echo "payPeriodQuestion.heading = Do you want to use the same pay periods?" >> ../conf/messages.en
-echo "payPeriodQuestion.useSamePayPeriod = Yes" >> ../conf/messages.en
-echo "payPeriodQuestion.useDifferentPayPeriods = No" >> ../conf/messages.en
-echo "payPeriodQuestion.checkYourAnswersLabel = Do you want to use the same pay periods?" >> ../conf/messages.en
-echo "payPeriodQuestion.error.required = Select payPeriodQuestion" >> ../conf/messages.en
+echo "partTimeQuestion.title = Has this employee done any work during the claim period?" >> ../conf/messages.en
+echo "partTimeQuestion.heading = Has this employee done any work during the claim period?" >> ../conf/messages.en
+echo "partTimeQuestion.partTimeYes = Yes" >> ../conf/messages.en
+echo "partTimeQuestion.partTimeNo = No" >> ../conf/messages.en
+echo "partTimeQuestion.checkYourAnswersLabel = Has this employee done any work during the claim period?" >> ../conf/messages.en
+echo "partTimeQuestion.error.required = Select partTimeQuestion" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughPeriodQuestionUserAnswersEntry: Arbitrary[(FurloughPeriodQuestionPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryPartTimeQuestionUserAnswersEntry: Arbitrary[(PartTimeQuestionPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[FurloughPeriodQuestionPage.type]";\
-    print "        value <- arbitrary[FurloughPeriodQuestion].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[PartTimeQuestionPage.type]";\
+    print "        value <- arbitrary[PartTimeQuestion].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -58,24 +38,24 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughPeriodQuestionPage: Arbitrary[FurloughPeriodQuestionPage.type] =";\
-    print "    Arbitrary(FurloughPeriodQuestionPage)";\
+    print "  implicit lazy val arbitraryPartTimeQuestionPage: Arbitrary[PartTimeQuestionPage.type] =";\
+    print "    Arbitrary(PartTimeQuestionPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to ModelGenerators"
 awk '/trait ModelGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughPeriodQuestion: Arbitrary[FurloughPeriodQuestion] =";\
+    print "  implicit lazy val arbitraryPartTimeQuestion: Arbitrary[PartTimeQuestion] =";\
     print "    Arbitrary {";\
-    print "      Gen.oneOf(FurloughPeriodQuestion.values.toSeq)";\
+    print "      Gen.oneOf(PartTimeQuestion.values.toSeq)";\
     print "    }";\
     next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(FurloughPeriodQuestionPage.type, JsValue)] ::";\
+    print "    arbitrary[(PartTimeQuestionPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration FurloughPeriodQuestion completed"
+echo "Migration PartTimeQuestion completed"
