@@ -37,15 +37,7 @@ class IndexControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
     "keepAlive request should return 204 as expected" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val result = route(application, getKeepAliveRequest).value
 

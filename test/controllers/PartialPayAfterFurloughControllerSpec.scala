@@ -148,15 +148,10 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
     "redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
           .build()
 
@@ -170,17 +165,12 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
     "redirect to something went wrong if there is No furlough end stored in UserAnswers for POST" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
       val modifiedUserAnswers = userAnswers.remove(FurloughStartDatePage).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(modifiedUserAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
           .build()
 
@@ -194,17 +184,12 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
     "redirect to something went wrong when there no saved data for PayDatePage in mongo for POST" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
       val modifiedUserAnswers = userAnswers.remove(PayDatePage).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(modifiedUserAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
           .build()
 
@@ -218,10 +203,6 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
 
     "redirect to the /furlough-question when there no saved data for FurloughEndDate and ClaimEndDate in mongo for POST" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
       val modifiedUserAnswers = userAnswers
         .remove(FurloughEndDatePage)
         .success
@@ -233,8 +214,7 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseWithApplication with
       val application =
         applicationBuilder(userAnswers = Some(modifiedUserAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
           .build()
 

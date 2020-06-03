@@ -156,15 +156,10 @@ class TopUpAmountControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(List(topUpPeriod))
 
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
           .build()
 

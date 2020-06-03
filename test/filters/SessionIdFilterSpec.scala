@@ -21,6 +21,7 @@ import java.util.UUID
 import akka.stream.Materializer
 import com.google.inject.Inject
 import org.scalatest.{MustMatchers, OptionValues, WordSpec}
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -28,6 +29,7 @@ import play.api.mvc.SessionCookieBaker
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, BuiltInComponents, BuiltInComponentsFromContext, NoHttpFiltersComponents}
+import repositories.SessionRepository
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 
 import scala.concurrent.ExecutionContext
@@ -44,7 +46,7 @@ object SessionIdFilterSpec {
 
 }
 
-class SessionIdFilterSpec extends WordSpec with MustMatchers with OptionValues with OneAppPerSuiteWithComponents {
+class SessionIdFilterSpec extends WordSpec with MustMatchers with OptionValues with OneAppPerSuiteWithComponents with MockitoSugar {
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
@@ -79,7 +81,8 @@ class SessionIdFilterSpec extends WordSpec with MustMatchers with OptionValues w
 
     new GuiceApplicationBuilder()
       .overrides(
-        bind[SessionIdFilter].to[TestSessionIdFilter]
+        bind[SessionIdFilter].to[TestSessionIdFilter],
+        bind[SessionRepository].toInstance(mock[SessionRepository])
       )
       .configure(
         "play.filters.disabled" -> List("uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCryptoFilter")

@@ -16,14 +16,27 @@
 
 package controllers
 
-import models.Language
+import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction, FakeIdentifierAction, IdentifierAction}
+import models.{Language, UserAnswers}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, MustMatchers, OptionValues}
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import repositories.SessionRepository
 
-class LanguageSwitchControllerSpec extends FreeSpec with MustMatchers with OptionValues with ScalaFutures {
+class LanguageSwitchControllerSpec extends FreeSpec with MustMatchers with OptionValues with ScalaFutures with MockitoSugar {
+
+  def applicationBuilder(): GuiceApplicationBuilder =
+    new GuiceApplicationBuilder()
+      .overrides(
+        bind[SessionRepository].toInstance(mock[SessionRepository]),
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(Some(new UserAnswers("id"))))
+      )
 
   "switching language" - {
 
@@ -31,7 +44,7 @@ class LanguageSwitchControllerSpec extends FreeSpec with MustMatchers with Optio
 
       "should set the language to Cymraeg" in {
 
-        val application = new GuiceApplicationBuilder()
+        val application = applicationBuilder()
           .configure(
             "features.welsh-translation" -> true
           )
@@ -49,7 +62,7 @@ class LanguageSwitchControllerSpec extends FreeSpec with MustMatchers with Optio
 
       "should set the language to English" in {
 
-        val application = new GuiceApplicationBuilder()
+        val application = applicationBuilder()
           .configure(
             "features.welsh-translation" -> true
           )
@@ -70,7 +83,7 @@ class LanguageSwitchControllerSpec extends FreeSpec with MustMatchers with Optio
 
       "should set the language to English regardless of what is requested" in {
 
-        val application = new GuiceApplicationBuilder()
+        val application = applicationBuilder()
           .configure(
             "features.welsh-translation" -> false
           )

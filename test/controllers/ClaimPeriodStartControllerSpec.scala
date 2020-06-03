@@ -101,17 +101,12 @@ class ClaimPeriodStartControllerSpec extends SpecBaseWithApplication with Mockit
 
     "redirect to the next page when valid data is submitted and delete any existing mongo cache" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-
       val existingUserAnswers = emptyUserAnswers.copy(data = Json.obj(ClaimPeriodEndPage.toString -> JsString(validAnswer.toString)))
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(existingUserAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
           .build()
 

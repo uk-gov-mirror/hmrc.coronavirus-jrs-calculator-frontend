@@ -43,12 +43,10 @@ class StartAgainControllerSpec extends SpecBaseWithApplication with MockitoSugar
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ClaimPeriodStartPage, LocalDate.now()).success.value))
-          .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswers.set(ClaimPeriodStartPage, LocalDate.now()).success.value),
+        sessionRepository = mockSessionRepository
+      ).build()
 
       val result = route(application, getRequest).value
 

@@ -71,10 +71,6 @@ class $className$ControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
     "redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(

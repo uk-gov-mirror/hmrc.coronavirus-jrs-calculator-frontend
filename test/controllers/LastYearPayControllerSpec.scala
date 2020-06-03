@@ -159,15 +159,10 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
     "redirect to error page for POST when extract from user answers fails" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
           .build()
 
@@ -188,15 +183,11 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
     "redirect to the next page when valid data is submitted" when {
 
       "No existing data is present" in {
-        val mockSessionRepository = mock[SessionRepository]
-
-        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
         val application =
           applicationBuilder(userAnswers = Some(variableMonthlyUserAnswers))
             .overrides(
-              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-              bind[SessionRepository].toInstance(mockSessionRepository)
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
             )
             .build()
 
@@ -215,15 +206,11 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
       }
 
       "Existing data is present" in {
-        val mockSessionRepository = mock[SessionRepository]
-
-        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
         val application =
           applicationBuilder(userAnswers = Some(variableMonthlyUserAnswers))
             .overrides(
-              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-              bind[SessionRepository].toInstance(mockSessionRepository)
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
             )
             .build()
 
