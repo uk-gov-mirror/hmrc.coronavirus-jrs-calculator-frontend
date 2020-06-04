@@ -47,8 +47,9 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
   }
 
   val isDifferentCalendarMonth: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
-    if (start.getMonthValue == end.getMonthValue) Valid
-    else Invalid("claimPeriodEnd.cannot.be.of.same.month")
+    if (start.getMonthValue >= 6 && start.getMonthValue != end.getMonthValue)
+      Invalid("claimPeriodEnd.cannot.be.of.same.month")
+    else Valid
 
   private val isBeforeStart: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
     if (end.isBefore(start)) Invalid("claimPeriodEnd.cannot.be.before.claimStart") else Valid
