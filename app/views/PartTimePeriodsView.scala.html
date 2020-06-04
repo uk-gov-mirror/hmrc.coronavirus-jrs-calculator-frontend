@@ -29,7 +29,7 @@
 
 @(form: Form[List[LocalDate]], endDates: List[LocalDate])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "additionalPaymentPeriods.title")), thisPage = PartTimePeriodsPage) {
+@govukLayout(pageTitle = Some(title(form, "partTimePeriods.title")), thisPage = PartTimePeriodsPage) {
 
     @formHelper(action = PartTimePeriodsController.onSubmit()) {
 
