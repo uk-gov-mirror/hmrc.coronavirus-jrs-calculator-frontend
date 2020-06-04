@@ -17,15 +17,9 @@
 package controllers
 
 import base.SpecBaseWithApplication
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
-
-import scala.concurrent.Future
 
 class IndexControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 

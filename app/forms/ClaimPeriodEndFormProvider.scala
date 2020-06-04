@@ -16,7 +16,7 @@
 
 package forms
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate, ZoneId}
 
 import config.FrontendAppConfig
 import forms.mappings.Mappings
@@ -37,12 +37,37 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
       isBeforeStart(claimStart, claimEndDate),
       isDifferentCalendarMonth(claimStart, claimEndDate),
       isAfterPolicyEnd(claimEndDate),
-      isClaimLessThan7Days(claimStart, claimEndDate)) match {
-      case (r @ Invalid(_), _, _, _) => r
-      case (_, r @ Invalid(_), _, _) => r
-      case (_, _, r @ Invalid(_), _) => r
-      case (_, _, _, r @ Invalid(_)) => r
-      case _                         => Valid
+      isClaimLessThan7Days(claimStart, claimEndDate),
+      isWithinPolicyBounds(claimStart, claimEndDate)
+    ) match {
+      case (r @ Invalid(_), _, _, _, _) => r
+      case (_, r @ Invalid(_), _, _, _) => r
+      case (_, _, r @ Invalid(_), _, _) => r
+      case (_, _, _, r @ Invalid(_), _) => r
+      case (_, _, _, _, r @ Invalid(_)) => r
+      case _                            => Valid
+    }
+  }
+
+  /**
+    * Checking boundaries of start and end date.
+    * https://jira.tools.tax.service.gov.uk/browse/CJRSC-232
+    */
+  val isWithinPolicyBounds: (LocalDate, LocalDate) => ValidationResult = (start, end) => {
+    val firstOfAugust = LocalDate.of(1, 8, 2020)
+    val firstOfJuly = LocalDate.of(1, 7, 2020)
+    val today = LocalDate.now(ZoneId.of("Europe/London"))
+
+    if (start.isBefore(firstOfJuly) && end.isAfter(firstOfJuly)) {
+      Invalid("claimPeriodEnd.cannot.be.after.july")
+    } else if (start.isBefore(firstOfJuly) && end.isBefore(firstOfJuly)) {
+      if (today.isBefore(firstOfAugust)) {
+        Valid
+      } else {
+        Invalid("claimPeriodEnd.cannot.be.after.august")
+      }
+    } else {
+      Valid
     }
   }
 

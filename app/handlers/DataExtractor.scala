@@ -19,7 +19,7 @@ package handlers
 import java.time.LocalDate
 
 import models.UserAnswers.AnswerV
-import models.{AdditionalPayment, Amount, BranchingQuestions, FurloughStatus, LastYearPayment, NicCategory, NonFurloughPay, PayMethod, PayPeriodQuestion, PaymentFrequency, PensionStatus, Period, ReferencePayData, TopUpPayment, UserAnswers}
+import models._
 import pages._
 import services.{FurloughPeriodExtractor, PeriodHelper}
 import cats.syntax.apply._
