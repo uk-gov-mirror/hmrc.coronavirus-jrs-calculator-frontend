@@ -63,7 +63,7 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
 
   private val isClaimLessThan7Days: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
     if (start.isAfter(appConfig.phaseTwoStartDate.minusDays(1))) {
-      if (start.getDayOfMonth != 1 && end.getDayOfMonth != end.getMonth.maxLength() && Period(start, end).countDays < 7) {
+      if (end.getDayOfMonth != end.getMonth.maxLength() && Period(start, end).countDays < 7) {
         Invalid("claimPeriodEnd.cannot.be.lessThan.7days")
       } else {
         Valid
