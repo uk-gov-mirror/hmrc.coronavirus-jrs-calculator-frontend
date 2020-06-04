@@ -23,7 +23,7 @@ trait DoubleFieldBehaviours extends FieldBehaviours {
   def doubleField(form: Form[_], fieldName: String, error: FormError): Unit = {
 
     "bind all double values" in {
-      forAll(positveDoubles -> "doubles") { double: Double =>
+      forAll(positiveDoubles -> "doubles") { double: Double =>
         val result = form.bind(Map(fieldName -> double.toString)).apply(fieldName)
         result.errors shouldEqual Seq.empty
       }

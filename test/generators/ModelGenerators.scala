@@ -20,8 +20,16 @@ import java.time.{Instant, LocalDate, ZoneOffset}
 
 import models._
 import org.scalacheck.{Arbitrary, Gen}
-
+import org.scalacheck.Arbitrary.arbitrary
 trait ModelGenerators {
+
+  implicit lazy val arbitraryPartTimeHours: Arbitrary[PartTimeHours] =
+    Arbitrary {
+      for {
+        period <- arbitrary[Period]
+        hours  <- arbitrary[Double]
+      } yield PartTimeHours(period.end, Hours(hours))
+    }
 
   implicit lazy val arbitraryPeriods: Arbitrary[Periods] =
     Arbitrary {
