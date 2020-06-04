@@ -141,6 +141,25 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
       result2.errors shouldBe List()
     }
 
+    "fail with invalid dates - if start date is before July first and end date is after." ignore {
+
+      val now = LocalDate.of(2020, 6, 1)
+
+      val julyDate = LocalDate.of(2020, 7, 25)
+
+      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(now)
+
+      val data = Map(
+        "endDate.day"   -> julyDate.getDayOfMonth.toString,
+        "endDate.month" -> julyDate.getMonthValue.toString,
+        "endDate.year"  -> julyDate.getYear.toString
+      )
+
+      val result = form.bind(data)
+
+      result.errors shouldBe List(FormError("endDate", "claimPeriodEnd.cannot.be.after.july"))
+    }
+
     "fail with invalid dates - if start and end are not of the same calendar month" in {
 
       val now = LocalDate.of(2020, 6, 15)

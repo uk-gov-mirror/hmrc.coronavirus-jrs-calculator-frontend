@@ -16,7 +16,7 @@
 
 package forms
 
-import java.time.{Instant, LocalDate, ZoneId}
+import java.time.{LocalDate, ZoneId}
 
 import config.FrontendAppConfig
 import forms.mappings.Mappings
@@ -54,8 +54,8 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
     * https://jira.tools.tax.service.gov.uk/browse/CJRSC-232
     */
   val isWithinPolicyBounds: (LocalDate, LocalDate) => ValidationResult = (start, end) => {
-    val firstOfAugust = LocalDate.of(1, 8, 2020)
-    val firstOfJuly = LocalDate.of(1, 7, 2020)
+    val firstOfAugust = LocalDate.of(2020, 8, 1)
+    val firstOfJuly = LocalDate.of(2020, 7, 1)
     val today = LocalDate.now(ZoneId.of("Europe/London"))
 
     if (start.isBefore(firstOfJuly) && end.isAfter(firstOfJuly)) {
