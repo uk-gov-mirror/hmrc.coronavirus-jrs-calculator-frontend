@@ -1,6 +1,6 @@
 # Site-wide Messages
 # ----------------------------------------------------------
-service.name = Job Retention Scheme calculator
+service.name = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 
 site.back = Yn ôl
 site.delete = Dileu
@@ -262,7 +262,7 @@ confirmation.breakdown.summary = Detailed breakdown of calculations
 confirmation.breakdown.h2 = Dadansoddiad fesul cyfnod cyflog
 confirmation.breakdown.p = Gallwch fwrw golwg dros dabl yn dangos symiau’r ffyrlo, cyfraniadau Yswiriant Gwladol a phensiwn y cyflogwr ar gyfer pob cyfnod cyflog yn eich hawliad.
 confirmation.breakdown.details = Ffigurau ar gyfer pob cyfnod cyflog yn ystod yr hawliad
-confirmation.breakdown.dt = Pay period
+confirmation.breakdown.dt = cyfnod cyflog
 confirmation.breakdown.ending = yn dod i ben ar {0}
 confirmation.breakdown.furlough = Swm gros y ffyrlo
 confirmation.breakdown.nic = Cyfraniadau Yswiriant Gwladol y cyflogwr
