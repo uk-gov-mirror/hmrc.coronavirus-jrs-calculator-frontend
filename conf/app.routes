@@ -108,5 +108,8 @@ POST        /pay-period-question                             controllers.PayPeri
 GET        /claim-period-question                            controllers.ClaimPeriodQuestionController.onPageLoad()
 POST       /claim-period-question                            controllers.ClaimPeriodQuestionController.onSubmit()
 
+GET        /part-time-periods                                controllers.PartTimePeriodsController.onPageLoad()
+POST       /part-time-periods                                controllers.PartTimePeriodsController.onSubmit()
+
 GET        /part-time-question                               controllers.PartTimeQuestionController.onPageLoad()
 POST       /part-time-question                               controllers.PartTimeQuestionController.onSubmit()
