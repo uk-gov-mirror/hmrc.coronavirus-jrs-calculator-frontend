@@ -15,6 +15,7 @@
  *@
 
 @import pages.PartTimeHoursPage
+@import java.time.LocalDate
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -26,15 +27,17 @@
         inputNumber: components.inputNumber
 )
 
-@(form: Form[_], partTimePeriod: Period, idx: Int)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], start: LocalDate, end: LocalDate, idx: Int)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "partTimeHours.title")), thisPage = PartTimeHoursPage) {
+@header = @{messages("partTimeHours.heading", dateToStringWithoutYear(start), dateToString(end))}
+
+@govukLayout(pageTitle = Some(title(form, "partTimeHours.title", titleMessageArgs = Seq(dateToStringWithoutYear(start), dateToString(end)))), thisPage = PartTimeHoursPage) {
 
     @formHelper(action = PartTimeHoursController.onSubmit(idx)) {
 
         @errorSummary(form.errors)
 
-        @h1(messages("partTimeHours.heading", dateToString(partTimePeriod.end)))
+        @h1(header)
 
         @p{<span class="govuk-hint">@messages("partTimeHours.p1")</span>}
 
@@ -42,7 +45,7 @@
             form,
             id = "value",
             name = "value",
-            label = messages(s"partTimeHours.heading", dateToString(partTimePeriod.end)),
+            label = header,
             classes = Some("govuk-input--width-5"),
             hint = Some("partTimeHours.hint")
         )

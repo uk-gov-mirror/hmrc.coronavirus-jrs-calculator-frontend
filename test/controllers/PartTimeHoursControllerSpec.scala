@@ -60,6 +60,9 @@ class PartTimeHoursControllerSpec extends SpecBaseWithApplication with MockitoSu
 
   val endDates: List[LocalDate] = partTimePeriods.map(_.period.end)
 
+  val partTimeHoursStart = LocalDate.of(2020, 3, 1)
+  val partTimeHoursEnd = LocalDate.of(2020, 3, 31)
+
   def getRequest(method: String, idx: Int) =
     FakeRequest(method, partTimeHoursRoute(idx)).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -81,7 +84,7 @@ class PartTimeHoursControllerSpec extends SpecBaseWithApplication with MockitoSu
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form, period("2020,3,1", "2020,3,31"), 1)(dataRequest, messages).toString
+        view(form, partTimeHoursStart, partTimeHoursEnd, 1)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -105,7 +108,7 @@ class PartTimeHoursControllerSpec extends SpecBaseWithApplication with MockitoSu
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(preValue.hours), period("2020,3,1", "2020,3,31"), 1)(request, messages).toString
+        view(form.fill(preValue.hours), partTimeHoursStart, partTimeHoursEnd, 1)(request, messages).toString
 
       application.stop()
     }
@@ -195,7 +198,7 @@ class PartTimeHoursControllerSpec extends SpecBaseWithApplication with MockitoSu
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, period("2020,3,1", "2020,3,31"), 1)(request, messages).toString
+        view(boundForm, partTimeHoursStart, partTimeHoursEnd, 1)(request, messages).toString
 
       application.stop()
     }
