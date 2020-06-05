@@ -492,30 +492,6 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           emptyUserAnswers.withClaimPeriodQuestion(ClaimOnDifferentPeriod)
         ) mustBe routes.ClaimPeriodStartController.onPageLoad()
       }
-
-      "loop around part-time-hours if there are more part-time-periods to ask" in {
-        val partTimePeriods: List[Periods] = List(fullPeriod("2020,3,1", "2020,3,31"), fullPeriod("2020,4,1", "2020,4,30"))
-
-        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
-
-        navigator.nextPage(
-          PartTimeHoursPage,
-          userAnswers,
-          Some(1)
-        ) mustBe routes.PartTimeHoursController.onPageLoad(2)
-      }
-
-      "stop loop around part-time-hours if there are no more part-time-periods to ask" in {
-        val partTimePeriods: List[Periods] = List(fullPeriod("2020,3,1", "2020,3,31"), fullPeriod("2020,4,1", "2020,4,30"))
-
-        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
-
-        navigator.nextPage(
-          PartTimeHoursPage,
-          userAnswers,
-          Some(2)
-        ) mustBe routes.RootPageController.onPageLoad()
-      }
     }
 
     "routeFor() is called" should {

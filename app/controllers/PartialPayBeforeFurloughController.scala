@@ -19,7 +19,6 @@ package controllers
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.FurloughPartialPayFormProvider
-import handlers.ErrorHandler
 import javax.inject.Inject
 import models.FurloughPartialPay
 import navigation.Navigator

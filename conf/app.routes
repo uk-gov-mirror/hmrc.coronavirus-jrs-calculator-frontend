@@ -116,3 +116,6 @@ POST       /part-time-question                               controllers.PartTim
 
 GET        /part-time-hours/:idx                             controllers.PartTimeHoursController.onPageLoad(idx: Int)
 POST       /part-time-hours/:idx                             controllers.PartTimeHoursController.onSubmit(idx: Int)
+
+GET        /part-time-normal-hours/:idx                      controllers.PartTimeNormalHoursController.onPageLoad(idx: Int)
+POST       /part-time-normal-hours/:idx                      controllers.PartTimeNormalHoursController.onSubmit(idx: Int)

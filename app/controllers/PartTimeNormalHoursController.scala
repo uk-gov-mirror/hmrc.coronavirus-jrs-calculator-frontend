@@ -18,28 +18,28 @@ package controllers
 
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
-import forms.PartTimeHoursFormProvider
+import forms.PartTimeNormalHoursFormProvider
 import javax.inject.Inject
-import models.{PartTimeHours, Periods}
+import models.{Periods, UsualHours}
 import navigation.Navigator
-import pages.{PartTimeHoursPage, PartTimePeriodsPage}
+import pages.{PartTimeNormalHoursPage, PartTimePeriodsPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
-import views.html.PartTimeHoursView
+import views.html.PartTimeNormalHoursView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PartTimeHoursController @Inject()(
+class PartTimeNormalHoursController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   val navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: PartTimeHoursFormProvider,
+  formProvider: PartTimeNormalHoursFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: PartTimeHoursView
+  view: PartTimeNormalHoursView
 )(implicit ec: ExecutionContext)
     extends BaseController {
 
@@ -48,7 +48,7 @@ class PartTimeHoursController @Inject()(
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerOrRedirectV(PartTimePeriodsPage) { partTimePeriods =>
       withValidPartTimePeriod(partTimePeriods, idx) { partTimePeriod =>
-        val preparedForm = request.userAnswers.getV(PartTimeHoursPage, Some(idx)) match {
+        val preparedForm = request.userAnswers.getV(PartTimeNormalHoursPage, Some(idx)) match {
           case Invalid(e)   => form
           case Valid(value) => form.fill(value.hours)
         }
@@ -64,15 +64,13 @@ class PartTimeHoursController @Inject()(
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => {
-              Future.successful(BadRequest(view(formWithErrors, partTimePeriod, idx)))
-            },
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, partTimePeriod, idx))),
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers
-                                   .set(PartTimeHoursPage, PartTimeHours(partTimePeriod.period.end, value), Some(idx)))
+                                   .set(PartTimeNormalHoursPage, UsualHours(partTimePeriod.period.end, value), Some(idx)))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(PartTimeHoursPage, updatedAnswers, Some(idx)))
+              } yield Redirect(navigator.nextPage(PartTimeNormalHoursPage, updatedAnswers, Some(idx)))
           )
       }
     }
@@ -83,4 +81,5 @@ class PartTimeHoursController @Inject()(
       case Some(periods) => f(periods)
       case None          => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }
+
 }

@@ -61,7 +61,7 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
       val roundedFurloughGrant = furloughBreakdown.grant.down
 
       val grant = pensionStatus match {
-        case DoesContribute => greaterThanAllowance(roundedFurloughGrant, thresholdBasedOnHours.value, PensionRate())
+        case DoesContribute    => greaterThanAllowance(roundedFurloughGrant, thresholdBasedOnHours.value, PensionRate())
         case DoesNotContribute => Amount(0.0)
       }
 

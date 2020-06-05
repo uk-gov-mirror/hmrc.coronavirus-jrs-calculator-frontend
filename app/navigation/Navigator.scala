@@ -96,6 +96,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case PayPeriodQuestionPage =>
       payPeriodQuestionRoutes
     case PartTimeQuestionPage => partTimeQuestionRoute
+    case PartTimePeriodsPage =>
+      _ =>
+        routes.PartTimeHoursController.onPageLoad(1)
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -165,11 +168,19 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     userAnswers
       .getV(PartTimePeriodsPage)
       .map { partTimePeriods =>
+        routes.PartTimeNormalHoursController.onPageLoad(previousIdx)
+      }
+      .getOrElse(routes.PartTimePeriodsController.onPageLoad())
+  }
+
+  private val partTimeNormalHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+    userAnswers
+      .getV(PartTimePeriodsPage)
+      .map { partTimePeriods =>
         if (partTimePeriods.isDefinedAt(previousIdx)) {
           routes.PartTimeHoursController.onPageLoad(previousIdx + 1)
         } else {
-          //TODO: This must redirect to /part-time-normal-hours page
-          routes.RootPageController.onPageLoad()
+          routes.NicCategoryController.onPageLoad()
         }
       }
       .getOrElse(routes.PartTimePeriodsController.onPageLoad())
@@ -193,6 +204,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case LastYearPayPage             => lastYearPayRoutes
     case TopUpAmountPage             => topUpAmountRoutes
     case PartTimeHoursPage           => partTimeHoursRoutes
+    case PartTimeNormalHoursPage     => partTimeNormalHoursRoutes
     case AdditionalPaymentAmountPage => additionalPaymentAmountRoutes
     case _ =>
       (_, _) =>

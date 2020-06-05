@@ -616,9 +616,20 @@ partTimeQuestion.error.required = Select one of the options below
 
 partTimeHours.title = What hours did this employee actually work between {0} and {1}?
 partTimeHours.heading = What hours did this employee actually work between {0} and {1}?
+partTimeHours.partial = These are the dates from in the pay period {0} to {1} that fall inside the claim period.
 partTimeHours.p1 = For example, 37.5 hours
 partTimeHours.hint = Hours
 partTimeHours.error.required = Enter the part time hours for this pay period
 partTimeHours.error.min = The part time hours cannot be negative
 partTimeHours.error.max = Enter a real part time hours
 partTimeHours.error.nonNumeric = Enter the part time hours using numbers
+
+partTimeNormalHours.title = What would this employee’s usual hours have been between {0} and {1}?
+partTimeNormalHours.heading = What would this employee’s usual hours have been between {0} and {1}?
+partTimeNormalHours.partial = These are the dates from in the pay period {0} to {1} that fall inside the claim period.
+partTimeNormalHours.p1 = For example, 37.5 hours
+partTimeNormalHours.hint = Hours
+partTimeNormalHours.error.required = Enter the usual hours for this pay period
+partTimeNormalHours.error.min = The usual hours cannot be negative
+partTimeNormalHours.error.max = Enter a real usual hours
+partTimeNormalHours.error.nonNumeric = Enter the usual hours using numbers

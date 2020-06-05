@@ -31,6 +31,14 @@ trait ModelGenerators {
       } yield PartTimeHours(period.end, Hours(hours))
     }
 
+  implicit lazy val arbUsualHours: Arbitrary[UsualHours] =
+    Arbitrary {
+      for {
+        period <- arbitrary[Period]
+        hours  <- arbitrary[Double]
+      } yield UsualHours(period.end, Hours(hours))
+    }
+
   implicit lazy val arbitraryPeriods: Arbitrary[Periods] =
     Arbitrary {
       Gen.oneOf(arbitraryFullPeriod.arbitrary, arbitraryPartialPeriod.arbitrary)

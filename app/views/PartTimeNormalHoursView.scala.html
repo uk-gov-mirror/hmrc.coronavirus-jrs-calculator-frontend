@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import pages.PartTimeHoursPage
+@import pages.PartTimeNormalHoursPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -33,27 +33,27 @@
     case pp: PartialPeriod => Seq(dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end))
 }}
 
-@govukLayout(pageTitle = Some(title(form, "partTimeHours.title", titleMessageArgs = titleAndHeadingArgs)), thisPage = PartTimeHoursPage) {
+@govukLayout(pageTitle = Some(title(form, "partTimeNormalHours.title", titleMessageArgs = titleAndHeadingArgs)), thisPage = PartTimeNormalHoursPage) {
 
-    @formHelper(action = PartTimeHoursController.onSubmit(idx)) {
+    @formHelper(action = PartTimeNormalHoursController.onSubmit(idx)) {
 
         @errorSummary(form.errors)
 
-        @h1(messages("partTimeHours.heading", titleAndHeadingArgs: _*))
+        @h1(messages("partTimeNormalHours.heading", titleAndHeadingArgs: _*))
 
         @if(period.isInstanceOf[PartialPeriod]) {
-          @p(Html(messages("partTimeHours.partial", dateToStringWithoutYear(period.period.start), dateToString(period.period.end))))
+            @p(Html(messages("partTimeNormalHours.partial", dateToStringWithoutYear(period.period.start), dateToString(period.period.end))))
         }
 
-        @p{<span class="govuk-hint">@messages("partTimeHours.p1")</span>}
+        @p{<span class="govuk-hint">@messages("partTimeNormalHours.p1")</span>}
 
         @inputNumber(
             form,
             id = "value",
             name = "value",
-            label = messages("partTimeHours.heading", titleAndHeadingArgs: _*),
+            label = messages("partTimeNormalHours.heading", titleAndHeadingArgs: _*),
             classes = Some("govuk-input--width-5"),
-            hint = Some("partTimeHours.hint")
+            hint = Some("partTimeNormalHours.hint")
         )
 
         @button("site.continue")
