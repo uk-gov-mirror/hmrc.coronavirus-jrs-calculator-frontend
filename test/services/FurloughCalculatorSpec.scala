@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{Amount, FullPeriod, FullPeriodCap, FullPeriodFurloughBreakdown, FullPeriodWithPaymentDate, FurloughCalculationResult, PartialPeriod, PartialPeriodCap, PartialPeriodFurloughBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithFullPeriod, PaymentWithPeriod, Period, PeriodSpansMonthCap}
+import models.{Amount, FullPeriod, FullPeriodCap, FullPeriodFurloughBreakdown, FullPeriodWithPaymentDate, FurloughCalculationResult, Hours, PartialPeriod, PartialPeriodCap, PartialPeriodFurloughBreakdown, PartialPeriodWithPaymentDate, PaymentDate, PaymentWithFullPeriod, PaymentWithPeriod, Period, PeriodSpansMonthCap, PhaseTwoFurloughCalculationResult, PhaseTwoPeriod, RegularPaymentWithPhaseTwoPeriod}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
@@ -207,4 +207,21 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
       PartialPeriodCap(1129.1, 14, 3, 80.65),
       Amount(722.58))
   )
+
+  "Phase Two: apply apportioned furlough cap in the case of part time" in new FurloughCalculator {
+    val payments = Seq(
+      RegularPaymentWithPhaseTwoPeriod(
+        Amount(800.0),
+        Amount(500.0),
+        PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(15.0)), Some(Hours(40.0)))),
+      RegularPaymentWithPhaseTwoPeriod(
+        Amount(800),
+        Amount(600.0),
+        PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,8", "2020,7,14", "2020,7,14"), Some(Hours(10.0)), Some(Hours(40.0)))),
+    )
+
+    val expected = 793.27
+
+    phaseTwoFurlough(Weekly, payments).total mustBe expected
+  }
 }

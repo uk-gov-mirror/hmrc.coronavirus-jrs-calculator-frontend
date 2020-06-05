@@ -84,7 +84,10 @@ class RegularPayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
   "Phase Two: assign user entered salary if partial period and part time" in new RegularPayCalculator {
     val regularPay = Amount(700.0)
     val periods = Seq(
-      PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"), Some(Hours(12.0)), Some(Hours(30.0)))
+      PhaseTwoPeriod(
+        partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"),
+        Some(Hours(12.0)),
+        Some(Hours(30.0)))
     )
     val expected = Seq(
       RegularPaymentWithPhaseTwoPeriod(Amount(700.0), Amount(300.0), periods.head)

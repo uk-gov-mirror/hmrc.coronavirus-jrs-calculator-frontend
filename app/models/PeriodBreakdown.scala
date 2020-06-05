@@ -103,3 +103,25 @@ object FurloughBreakdown {
       )
   }
 }
+
+sealed trait PhaseTwoPeriodBreakdown {
+  val grant: Amount
+  val paymentWithPeriod: PaymentWithPhaseTwoPeriod
+}
+
+final case class PhaseTwoFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithPhaseTwoPeriod, furloughCap: FurloughCap)
+    extends PhaseTwoPeriodBreakdown
+
+final case class PhaseTwoNicBreakdown(
+  grant: Amount,
+  paymentWithPeriod: PaymentWithPhaseTwoPeriod,
+  threshold: Threshold,
+  nicCategory: NicCategory)
+    extends PhaseTwoPeriodBreakdown
+
+final case class PhaseTwoPensionBreakdown(
+  grant: Amount,
+  paymentWithPeriod: PaymentWithPhaseTwoPeriod,
+  threshold: Threshold,
+  pensionStatus: PensionStatus)
+    extends PhaseTwoPeriodBreakdown

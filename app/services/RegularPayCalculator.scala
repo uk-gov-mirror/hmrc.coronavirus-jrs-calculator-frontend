@@ -37,8 +37,8 @@ trait RegularPayCalculator extends Calculators {
           partialPeriodDailyCalculation(regularPay, pp.period)
       }
 
-      val referencePay = if(phaseTwoPeriod.isPartTime) {
-        partTimeHoursCalculation(basedOnDays, phaseTwoPeriod.actual, phaseTwoPeriod.usual)
+      val referencePay = if (phaseTwoPeriod.isPartTime) {
+        partTimeHoursCalculation(basedOnDays, phaseTwoPeriod.furloughed, phaseTwoPeriod.usual)
       } else {
         basedOnDays
       }

@@ -108,7 +108,10 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val annualPay = Amount(20000.0)
     val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
     val periods = Seq(
-      PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"), Some(Hours(10.0)), Some(Hours(40.0)))
+      PhaseTwoPeriod(
+        partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"),
+        Some(Hours(10.0)),
+        Some(Hours(40.0)))
     )
     val expected = Seq(
       AveragePaymentWithPhaseTwoPeriod(Amount(323.29), Amount(20000.0), priorFurloughPeriod, periods.head)

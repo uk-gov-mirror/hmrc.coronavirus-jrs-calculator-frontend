@@ -16,7 +16,7 @@
 
 package services
 
-import models.{FullPeriodFurloughBreakdown, FurloughCalculationResult, PartialPeriodFurloughBreakdown, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod}
+import models.{Amount, FullPeriodCap, FullPeriodFurloughBreakdown, FullPeriodWithPaymentDate, FurloughCalculationResult, PartialPeriodCap, PartialPeriodFurloughBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PaymentWithPhaseTwoPeriod, PeriodSpansMonthCap, PhaseTwoFurloughBreakdown, PhaseTwoFurloughCalculationResult}
 import services.Calculators._
 import utils.TaxYearFinder
 
@@ -28,6 +28,37 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
       case pp: PaymentWithPartialPeriod => calculatePartialPeriod(pp)
     }
     FurloughCalculationResult(breakdowns.map(_.grant.value).sum, breakdowns)
+  }
+
+  def phaseTwoFurlough(frequency: PaymentFrequency, payments: Seq[PaymentWithPhaseTwoPeriod]): PhaseTwoFurloughCalculationResult = {
+    val breakdowns = payments.map { payment =>
+      val cap = payment.phaseTwoPeriod.periodWithPaymentDate match {
+        case fp: FullPeriodWithPaymentDate    => furloughCap(frequency, fp.period.period)
+        case pp: PartialPeriodWithPaymentDate => partialFurloughCap(pp.period.partial)
+      }
+
+      val capBasedOnHours = if (payment.phaseTwoPeriod.isPartTime) {
+        cap match {
+          case fpc: FullPeriodCap =>
+            fpc.copy(
+              value = partTimeHoursCalculation(Amount(fpc.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value)
+          case ppc: PartialPeriodCap =>
+            ppc.copy(
+              value = partTimeHoursCalculation(Amount(ppc.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value)
+          case psm: PeriodSpansMonthCap =>
+            psm.copy(
+              value = partTimeHoursCalculation(Amount(psm.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value)
+        }
+      } else {
+        cap
+      }
+
+      val grant = claimableAmount(payment.referencePay, capBasedOnHours.value)
+
+      PhaseTwoFurloughBreakdown(grant, payment, capBasedOnHours)
+    }
+
+    PhaseTwoFurloughCalculationResult(breakdowns.map(_.grant.value).sum, breakdowns)
   }
 
   protected def calculateFullPeriod(

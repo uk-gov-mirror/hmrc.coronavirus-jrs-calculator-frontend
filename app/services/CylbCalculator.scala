@@ -36,10 +36,11 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
     cylbsAmount(averagePayment, frequency, period, datesRequired, nfp, cylbs)
   }
 
-  def phaseTwoCylb(averagePayment: AveragePaymentWithPhaseTwoPeriod,
-                   frequency: PaymentFrequency,
-                   cylbs: Seq[LastYearPayment],
-                   phaseTwoPeriod: PhaseTwoPeriod): CylbPaymentWithPhaseTwoPeriod = {
+  def phaseTwoCylb(
+    averagePayment: AveragePaymentWithPhaseTwoPeriod,
+    frequency: PaymentFrequency,
+    cylbs: Seq[LastYearPayment],
+    phaseTwoPeriod: PhaseTwoPeriod): CylbPaymentWithPhaseTwoPeriod = {
     val datesRequired = previousYearPayDate(frequency, phaseTwoPeriod.periodWithPaymentDate)
     val cylbOps = CylbDuration(frequency, phaseTwoPeriod.periodWithPaymentDate.period)
     val cylbBreakdown = cylbBreakdownBasedOnHours(previousYearFurlough(datesRequired, cylbs, cylbOps), phaseTwoPeriod)
@@ -49,8 +50,8 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
   }
 
   private def cylbBreakdownBasedOnHours(cylbBreakdown: CylbBreakdown, phaseTwoPeriod: PhaseTwoPeriod): CylbBreakdown = {
-    val basedOnHours = if(phaseTwoPeriod.isPartTime) {
-      partTimeHoursCalculation(cylbBreakdown.referencePay, phaseTwoPeriod.actual, phaseTwoPeriod.usual)
+    val basedOnHours = if (phaseTwoPeriod.isPartTime) {
+      partTimeHoursCalculation(cylbBreakdown.referencePay, phaseTwoPeriod.furloughed, phaseTwoPeriod.usual)
     } else {
       cylbBreakdown.referencePay
     }
