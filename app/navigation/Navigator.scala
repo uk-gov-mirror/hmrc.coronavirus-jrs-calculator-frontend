@@ -22,6 +22,7 @@ import config.FrontendAppConfig
 import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.{Inject, Singleton}
+import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
 import models.PayMethod.{Regular, Variable}
 import models.{UserAnswers, _}
 import pages.{PayDatePage, _}
@@ -57,8 +58,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case PayMethodPage =>
       payMethodRoutes
     case RegularPayAmountPage =>
-      _ =>
-        routes.TopUpStatusController.onPageLoad()
+      regularPayAmountRoute
     case EmployeeStartedPage =>
       variableLengthEmployedRoutes
     case PartialPayBeforeFurloughPage =>
@@ -95,10 +95,26 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case EmployeeStartDatePage => employeeStartDateRoutes
     case PayPeriodQuestionPage =>
       payPeriodQuestionRoutes
+    case PartTimeQuestionPage => partTimeQuestionRoute
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
   }
+
+  private def regularPayAmountRoute: UserAnswers => Call = { userAnswer =>
+    if (isPhaseTwo(userAnswer)) routes.PartTimeQuestionController.onPageLoad()
+    else routes.TopUpStatusController.onPageLoad()
+  }
+
+  private def partTimeQuestionRoute: UserAnswers => Call =
+    userAnswer =>
+      userAnswer
+        .getV(PartTimeQuestionPage)
+        .map {
+          case PartTimeYes => routes.PartTimePeriodsController.onPageLoad()
+          case PartTimeNo  => routes.TopUpStatusController.onPageLoad()
+        }
+        .getOrElse(routes.PartTimeQuestionController.onPageLoad())
 
   private val payDateRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     (for {
@@ -299,4 +315,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       case None                                          => routes.PayPeriodQuestionController.onPageLoad()
     }
   }
+
+  private def isPhaseTwo: UserAnswers => Boolean =
+    userAnswer => userAnswer.getV(ClaimPeriodStartPage).exists(!_.isBefore(appConfig.phaseTwoStartDate))
 }

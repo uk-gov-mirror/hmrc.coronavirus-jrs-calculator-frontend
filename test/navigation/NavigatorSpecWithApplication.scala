@@ -19,8 +19,10 @@ package navigation
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
+import config.FrontendAppConfig
 import controllers.routes
 import models.ClaimPeriodQuestion._
+import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
 import models.PayMethod.{Regular, Variable}
 import models._
 import pages._
@@ -36,16 +38,16 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       "go to Index from a page that doesn't exist in the route map" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, UserAnswers("id")) mustBe routes.RootPageController.onPageLoad()
+        navigator.nextPage(UnknownPage, emptyUserAnswers) mustBe routes.RootPageController.onPageLoad()
       }
 
       "go to ClaimPeriodEndPage after ClaimPeriodStartPage" in {
-        navigator.nextPage(ClaimPeriodStartPage, UserAnswers("id")) mustBe routes.ClaimPeriodEndController
+        navigator.nextPage(ClaimPeriodStartPage, emptyUserAnswers) mustBe routes.ClaimPeriodEndController
           .onPageLoad()
       }
 
       "go to furloughOngoingPage after ClaimPeriodEndPage" in {
-        navigator.nextPage(ClaimPeriodEndPage, UserAnswers("id")) mustBe routes.FurloughStartDateController
+        navigator.nextPage(ClaimPeriodEndPage, emptyUserAnswers) mustBe routes.FurloughStartDateController
           .onPageLoad()
       }
 
@@ -60,7 +62,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to PaymentFrequencyPage after FurloughEndDatePage" in {
-        navigator.nextPage(FurloughEndDatePage, UserAnswers("id")) mustBe routes.PaymentFrequencyController
+        navigator.nextPage(FurloughEndDatePage, emptyUserAnswers) mustBe routes.PaymentFrequencyController
           .onPageLoad()
       }
 
@@ -76,7 +78,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           emptyUserAnswers.withPayMethod(PayMethod.Variable)
         ) mustBe routes.VariableLengthEmployedController.onPageLoad()
 
-        navigator.nextPage(PayMethodPage, UserAnswers("id")) mustBe routes.PayMethodController.onPageLoad()
+        navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
       "go to regular-pay-amount page after PayMethodPage if regular and PayDates were persisted in fast journey" in {
@@ -88,16 +90,41 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to RegularPayAmountPage after PaymentQuestionPage" in {
-        navigator.nextPage(PaymentFrequencyPage, UserAnswers("id")) mustBe routes.PayMethodController
-          .onPageLoad()
+        navigator.nextPage(PaymentFrequencyPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
       "go to TopUpStatusPage after RegularPayAmountPage" in {
-        navigator.nextPage(RegularPayAmountPage, UserAnswers("id")) mustBe routes.TopUpStatusController.onPageLoad()
+        navigator.nextPage(RegularPayAmountPage, emptyUserAnswers) mustBe routes.TopUpStatusController.onPageLoad()
+      }
+
+      "go to TopUpStatusPage after PartTimeQuestionPage if `PartTimeNo`" in {
+        navigator.nextPage(
+          PartTimeQuestionPage,
+          emptyUserAnswers
+            .withPartTimeQuestion(PartTimeNo)) mustBe routes.TopUpStatusController.onPageLoad()
+      }
+
+      "go to PartTimeQuestionPage after RegularPayAmountPage if phase two started" in {
+        val userAnswers = emptyUserAnswers.withClaimPeriodStart(LocalDate.now)
+
+        val appConf = new FrontendAppConfig(conf) {
+          override lazy val phaseTwoStartDate: LocalDate = LocalDate.now
+        }
+        val navigator = new Navigator(appConf)
+
+        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
+      }
+
+      "go to PartTimePeriodsPage after PartTimeQuestionPage if PartTimeQuestion is PartTimeYes" in {
+        val answersWithPartTime = emptyUserAnswers.withPartTimeQuestion(PartTimeYes)
+
+        navigator
+          .nextPage(PartTimeQuestionPage, answersWithPartTime.withPayDate(List("2020, 7, 1"))) mustBe routes.PartTimePeriodsController
+          .onPageLoad()
       }
 
       "loop around pay date if last pay date isn't claim end date or after" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 30))
           .get
           .set(PayDatePage, LocalDate.of(2020, 5, 29), Some(1))
@@ -107,7 +134,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "stop loop around pay date if last pay date is claim end date" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 30))
           .get
           .set(PayDatePage, LocalDate.of(2020, 5, 30), Some(1))
@@ -118,7 +145,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "stop loop around pay date if last pay date is after claim end date" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 30))
           .get
           .set(PayDatePage, LocalDate.of(2020, 5, 31), Some(1))
@@ -129,7 +156,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to NicCategoryPage after LastPayDatePage if the pay-method is Regular" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(PayMethodPage, Regular)
           .get
 
@@ -137,7 +164,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted.OnOrBefore1Feb2019" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(PayMethodPage, Variable)
           .get
           .set(EmployeeStartDatePage, LocalDate.of(2019, 1, 2))
@@ -147,7 +174,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and employee started before apr6th2019" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(PayMethodPage, Variable)
           .get
           .set(EmployeeStartDatePage, LocalDate.of(2019, 3, 4))
@@ -157,7 +184,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to AnnualPayAmountPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted on or after Apr6th" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(PayMethodPage, Variable)
           .get
           .set(EmployeeStartDatePage, LocalDate.of(2019, 6, 1))
@@ -167,7 +194,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to payMethodPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
@@ -219,7 +246,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       "go to correct page after EmployeeStartDatePage" in {
         navigator.nextPage(
           EmployeeStartDatePage,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(EmployeeStartDatePage, LocalDate.now().minusDays(2))
             .success
             .value
@@ -227,7 +254,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
         navigator.nextPage(
           EmployeeStartDatePage,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
             .success
             .value
@@ -235,7 +262,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(FurloughStartDatePage, LocalDate.of(2020, 3, 15))
           .get
           .set(PayDatePage, LocalDate.of(2020, 3, 10), Some(1))
@@ -258,7 +285,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to PartialPayAfterFurloughPage loop after variable gross pay page" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(FurloughStartDatePage, LocalDate.of(2020, 3, 10))
           .get
           .set(PayDatePage, LocalDate.of(2020, 3, 9), Some(1))
@@ -281,7 +308,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to TopUpStatusPage after variable gross pay page if there are no partial furloughs" in {
-        val userAnswers = UserAnswers("id")
+        val userAnswers = emptyUserAnswers
           .set(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
           .get
           .set(FurloughEndDatePage, LocalDate.of(2020, 4, 10))
@@ -400,7 +427,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       "go to correct page after AdditionalPaymentStatusPage" in {
         navigator.nextPage(
           AdditionalPaymentStatusPage,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(AdditionalPaymentStatusPage, AdditionalPaymentStatus.YesAdditionalPayments)
             .success
             .value
@@ -408,7 +435,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
         navigator.nextPage(
           AdditionalPaymentStatusPage,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(AdditionalPaymentStatusPage, AdditionalPaymentStatus.NoAdditionalPayments)
             .success
             .value
@@ -425,7 +452,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       "go to correct page after FurloughPeriodQuestionPage" in {
         navigator.nextPage(
           FurloughPeriodQuestionPage,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(FurloughPeriodQuestionPage, FurloughPeriodQuestion.FurloughedOnSamePeriod)
             .success
             .value
@@ -433,7 +460,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
         navigator.nextPage(
           FurloughPeriodQuestionPage,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(FurloughPeriodQuestionPage, FurloughPeriodQuestion.FurloughedOnDifferentPeriod)
             .success
             .value
@@ -443,7 +470,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       "go to correct page after PayPeriodQuestionPage" in {
         navigator.nextPage(
           PayPeriodQuestionPage,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(PayPeriodQuestionPage, PayPeriodQuestion.UseSamePayPeriod)
             .success
             .value
@@ -451,7 +478,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
         navigator.nextPage(
           PayPeriodQuestionPage,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(PayPeriodQuestionPage, PayPeriodQuestion.UseDifferentPayPeriod)
             .success
             .value
