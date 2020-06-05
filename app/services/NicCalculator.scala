@@ -19,10 +19,10 @@ package services
 import models.Amount._
 import models.NicCategory.{Nonpayable, Payable}
 import models.Period._
-import models.{AdditionalPayment, Amount, FullPeriodFurloughBreakdown, FullPeriodNicBreakdown, FurloughBreakdown, NicCalculationResult, NicCap, NicCategory, PartialPeriodFurloughBreakdown, PartialPeriodNicBreakdown, PaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PeriodWithPaymentDate, TopUpPayment}
+import models._
 import services.Calculators._
 
-trait NicCalculator extends FurloughCapCalculator with CommonCalculationService {
+trait NicCalculator extends FurloughCapCalculator with CommonCalculationService with Calculators {
 
   def calculateNicGrant(
     nicCategory: NicCategory,
@@ -51,6 +51,42 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
         )
     }
     NicCalculationResult(breakdowns.map(_.grant.value).sum, breakdowns)
+  }
+
+  def phaseTwoNic(
+    furloughBreakdowns: Seq[PhaseTwoFurloughBreakdown],
+    frequency: PaymentFrequency,
+    nicCategory: NicCategory): PhaseTwoNicCalculationResult = {
+    val breakdowns = furloughBreakdowns.map { furloughBreakdown =>
+      val phaseTwoPeriod = furloughBreakdown.paymentWithPeriod.phaseTwoPeriod
+
+      val threshold =
+        thresholdFinder(frequency, furloughBreakdown.paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.paymentDate, NiRate())
+
+      val thresholdBasedOnDays = phaseTwoPeriod.periodWithPaymentDate match {
+        case _: FullPeriodWithPaymentDate => threshold
+        case pp: PartialPeriodWithPaymentDate =>
+          threshold.copy(value = partialPeriodDailyCalculation(Amount(threshold.value), pp.period).value)
+      }
+
+      val thresholdBasedOnHours = if (phaseTwoPeriod.isPartTime) {
+        thresholdBasedOnDays.copy(
+          value = partTimeHoursCalculation(Amount(thresholdBasedOnDays.value), phaseTwoPeriod.furloughed, phaseTwoPeriod.usual).value)
+      } else {
+        thresholdBasedOnDays
+      }
+
+      val roundedFurloughGrant = furloughBreakdown.grant.down
+
+      val grant = nicCategory match {
+        case Payable    => greaterThanAllowance(roundedFurloughGrant, thresholdBasedOnHours.value, NiRate())
+        case Nonpayable => Amount(0.0)
+      }
+
+      PhaseTwoNicBreakdown(grant, furloughBreakdown.paymentWithPeriod, thresholdBasedOnHours, nicCategory)
+    }
+
+    PhaseTwoNicCalculationResult(breakdowns.map(_.grant.value).sum, breakdowns)
   }
 
   protected def calculatePartialPeriodNic(

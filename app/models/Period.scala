@@ -73,8 +73,16 @@ case class FullPeriodWithPaymentDate(period: FullPeriod, paymentDate: PaymentDat
 case class PartialPeriodWithPaymentDate(period: PartialPeriod, paymentDate: PaymentDate) extends PeriodWithPaymentDate
 
 case class PhaseTwoPeriod(periodWithPaymentDate: PeriodWithPaymentDate, actualHours: Option[Hours], usualHours: Option[Hours]) {
-  def isPartTime: Boolean = (actualHours.isDefined && usualHours.isDefined) && furloughed > 0
+  def isPartTime: Boolean = (actualHours.isDefined && usualHours.isDefined)
   def actual: BigDecimal = actualHours.defaulted.value
   def usual: BigDecimal = usualHours.defaulted.value
-  def furloughed: BigDecimal = usual - actual
+  def furloughed: BigDecimal = {
+    val furloughed = usual - actual
+    if (furloughed < 0) {
+      0.0
+    } else {
+      furloughed
+    }
+  }
+  def isFullTime: Boolean = isPartTime && furloughed == 0
 }

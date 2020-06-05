@@ -65,14 +65,14 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods) mustBe expected
   }
 
-  "Phase Two: assign user entered salary if full period and not part time but does have hours specified" in new AveragePayCalculator {
+  "Phase Two: return 0.0 if furloughed hours amount to zero, eg. employee worked full time in that period" in new AveragePayCalculator {
     val annualPay = Amount(20000.0)
     val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
     val periods = Seq(
       PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(40.0)), Some(Hours(40.0)))
     )
     val expected = Seq(
-      AveragePaymentWithPhaseTwoPeriod(Amount(603.47), Amount(20000.0), priorFurloughPeriod, periods.head)
+      AveragePaymentWithPhaseTwoPeriod(Amount(0.00), Amount(20000.0), priorFurloughPeriod, periods.head)
     )
 
     phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods) mustBe expected

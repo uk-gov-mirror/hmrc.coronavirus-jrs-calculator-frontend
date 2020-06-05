@@ -21,8 +21,8 @@ import java.time.LocalDate
 import base.{CoreTestDataBuilder, SpecBase}
 import models.Amount._
 import models.NicCategory.{Nonpayable, Payable}
-import models.PaymentFrequency.{FourWeekly, Monthly}
-import models.{AdditionalPayment, Amount, FullPeriodCap, NicCap, PartialPeriodCap, PartialPeriodNicBreakdown, TaxYearEnding2020, TaxYearEnding2021, TopUpPayment}
+import models.PaymentFrequency.{FourWeekly, Monthly, Weekly}
+import models.{AdditionalPayment, Amount, FullPeriodCap, Hours, NicCap, PartialPeriodCap, PartialPeriodNicBreakdown, PhaseTwoFurloughBreakdown, PhaseTwoPeriod, RegularPaymentWithPhaseTwoPeriod, TaxYearEnding2020, TaxYearEnding2021, TopUpPayment}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
@@ -190,5 +190,24 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
       Amount(0.00)
     )
   )
+
+  "Phase Two: calculate nic grant based on part time furlough grant" in new NicCalculator {
+    val furloughBreakdowns = Seq(
+      PhaseTwoFurloughBreakdown(
+        Amount(200.0),
+        RegularPaymentWithPhaseTwoPeriod(
+          Amount(500.00),
+          Amount(250.0),
+          PhaseTwoPeriod(
+            fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1"),
+            Some(Hours(20.0)),
+            Some(Hours(40.0))
+          )
+        ),
+        FullPeriodCap(288.46)
+      )
+    )
+    phaseTwoNic(furloughBreakdowns, Weekly, Payable).total mustBe 15.94
+  }
 
 }
