@@ -134,6 +134,45 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(AnnualPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
       }
 
+      "go to PartTimeHours after PartTimePeriods" in {
+        val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        navigator.nextPage(
+          PartTimePeriodsPage,
+          userAnswers
+        ) mustBe routes.PartTimeHoursController.onPageLoad(1)
+      }
+
+      "go to PartTimeNormalHours after PartTimeHours" in {
+        val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        navigator.nextPage(
+          PartTimeHoursPage,
+          userAnswers,
+          Some(1)
+        ) mustBe routes.PartTimeNormalHoursController.onPageLoad(1)
+      }
+
+      "loop from PartTimeHours to PartTimeNormalHours if there are more PartTimePeriods to iterate" in {
+        val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        navigator.nextPage(
+          PartTimeNormalHoursPage,
+          userAnswers,
+          Some(1)
+        ) mustBe routes.PartTimeHoursController.onPageLoad(2)
+      }
+
+      "stop loop around part time pages if there are no more PartTimePeriods to iterate" in {
+        val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        navigator.nextPage(
+          PartTimeNormalHoursPage,
+          userAnswers,
+          Some(2)
+        ) mustBe routes.NicCategoryController.onPageLoad()
+      }
+
       "loop around pay date if last pay date isn't claim end date or after" in {
         val userAnswers = emptyUserAnswers
           .set(ClaimPeriodEndPage, LocalDate.of(2020, 5, 30))
