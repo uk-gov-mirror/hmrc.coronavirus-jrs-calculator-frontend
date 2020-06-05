@@ -19,7 +19,7 @@ package services
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
-import models.{Amount, NonFurloughPay, Period, PeriodWithPaymentDate}
+import models.{Amount, AveragePaymentWithPhaseTwoPeriod, Hours, NonFurloughPay, Period, PeriodWithPaymentDate, PhaseTwoPeriod}
 
 class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
@@ -50,5 +50,70 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val periodBeforeFurlough = Period(employeeStartDate, furloughStartDate.minusDays(1))
 
     averageDailyCalculator(periodBeforeFurlough, Amount(2400.0)) mustBe Amount(26.37)
+  }
+
+  "Phase Two: assign user entered salary if full period and not part time" in new AveragePayCalculator {
+    val annualPay = Amount(20000.0)
+    val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
+    val periods = Seq(
+      PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), None, None)
+    )
+    val expected = Seq(
+      AveragePaymentWithPhaseTwoPeriod(Amount(603.47), Amount(20000.0), priorFurloughPeriod, periods.head)
+    )
+
+    phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods) mustBe expected
+  }
+
+  "Phase Two: assign user entered salary if full period and not part time but does have hours specified" in new AveragePayCalculator {
+    val annualPay = Amount(20000.0)
+    val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
+    val periods = Seq(
+      PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(40.0)), Some(Hours(40.0)))
+    )
+    val expected = Seq(
+      AveragePaymentWithPhaseTwoPeriod(Amount(603.47), Amount(20000.0), priorFurloughPeriod, periods.head)
+    )
+
+    phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods) mustBe expected
+  }
+
+  "Phase Two: assign user entered salary if partial period and not part time" in new AveragePayCalculator {
+    val annualPay = Amount(20000.0)
+    val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
+    val periods = Seq(
+      PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"), None, None)
+    )
+    val expected = Seq(
+      AveragePaymentWithPhaseTwoPeriod(Amount(431.05), Amount(20000.0), priorFurloughPeriod, periods.head)
+    )
+
+    phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods) mustBe expected
+  }
+
+  "Phase Two: assign user entered salary if full period and part time" in new AveragePayCalculator {
+    val annualPay = Amount(20000.0)
+    val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
+    val periods = Seq(
+      PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(24.0)), Some(Hours(40.0)))
+    )
+    val expected = Seq(
+      AveragePaymentWithPhaseTwoPeriod(Amount(241.39), Amount(20000.0), priorFurloughPeriod, periods.head)
+    )
+
+    phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods) mustBe expected
+  }
+
+  "Phase Two: assign user entered salary if partial period and part time" in new AveragePayCalculator {
+    val annualPay = Amount(20000.0)
+    val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
+    val periods = Seq(
+      PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"), Some(Hours(10.0)), Some(Hours(40.0)))
+    )
+    val expected = Seq(
+      AveragePaymentWithPhaseTwoPeriod(Amount(323.29), Amount(20000.0), priorFurloughPeriod, periods.head)
+    )
+
+    phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods) mustBe expected
   }
 }

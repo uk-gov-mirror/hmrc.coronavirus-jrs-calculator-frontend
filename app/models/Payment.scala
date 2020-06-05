@@ -150,3 +150,25 @@ case class CylbPaymentWithPartialPeriod(
   averagePayment: AveragePayment,
   cylbBreakdown: CylbBreakdown)
     extends PaymentWithPartialPeriod with CylbPayment
+
+sealed trait PhaseTwoPaymentWithPeriod {
+  val referencePay: Amount
+  val phaseTwoPeriod: PhaseTwoPeriod
+}
+
+case class RegularPaymentWithPhaseTwoPeriod(regularPay: Amount, referencePay: Amount, phaseTwoPeriod: PhaseTwoPeriod)
+    extends PhaseTwoPaymentWithPeriod
+
+case class AveragePaymentWithPhaseTwoPeriod(
+  referencePay: Amount,
+  annualPay: Amount,
+  priorFurloughPeriod: Period,
+  phaseTwoPeriod: PhaseTwoPeriod)
+    extends PhaseTwoPaymentWithPeriod
+
+case class CylbPaymentWithPhaseTwoPeriod(
+  referencePay: Amount,
+  phaseTwoPeriod: PhaseTwoPeriod,
+  averagePayment: AveragePaymentWithPhaseTwoPeriod,
+  cylbBreakdown: CylbBreakdown)
+    extends PhaseTwoPaymentWithPeriod

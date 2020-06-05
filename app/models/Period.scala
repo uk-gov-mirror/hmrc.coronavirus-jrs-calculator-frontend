@@ -18,7 +18,6 @@ package models
 
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-
 import play.api.libs.json.{Format, JsResult, JsValue, Json}
 
 final case class Period(start: LocalDate, end: LocalDate)
@@ -72,3 +71,9 @@ sealed trait PeriodWithPaymentDate {
 }
 case class FullPeriodWithPaymentDate(period: FullPeriod, paymentDate: PaymentDate) extends PeriodWithPaymentDate
 case class PartialPeriodWithPaymentDate(period: PartialPeriod, paymentDate: PaymentDate) extends PeriodWithPaymentDate
+
+case class PhaseTwoPeriod(periodWithPaymentDate: PeriodWithPaymentDate, actualHours: Option[Hours], usualHours: Option[Hours]) {
+  def isPartTime: Boolean = actualHours.isDefined && usualHours.isDefined
+  def actual: BigDecimal = actualHours.defaulted.value
+  def usual: BigDecimal = usualHours.defaulted.value
+}

@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.Period._
-import models.{FullPeriod, FullPeriodWithPaymentDate, FurloughWithinClaim, PartialPeriod, PartialPeriodWithPaymentDate, PaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
+import models._
 import utils.LocalDateHelpers._
 
 import scala.annotation.tailrec
@@ -109,5 +109,12 @@ trait PeriodHelper {
         }
       }
     }
+
+  def assignPartTimeHours(periods: Seq[PeriodWithPaymentDate], actuals: Seq[PartTimeHours], usuals: Seq[UsualHours]): Seq[PhaseTwoPeriod] =
+    for {
+      period <- periods
+      actual = actuals.find(_.date == period.period.period.end).map(_.hours)
+      usual = usuals.find(_.date == period.period.period.end).map(_.hours)
+    } yield PhaseTwoPeriod(period, actual, usual)
 
 }

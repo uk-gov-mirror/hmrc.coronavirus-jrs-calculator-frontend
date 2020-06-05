@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Weekly}
-import models.{Amount, AveragePaymentWithFullPeriod, AveragePaymentWithPartialPeriod, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod, FullPeriodWithPaymentDate, LastYearPayment, NonFurloughPay, OnePeriodCylb, PartialPeriodWithPaymentDate, TwoPeriodCylb}
+import models.{Amount, AveragePaymentWithFullPeriod, AveragePaymentWithPartialPeriod, AveragePaymentWithPhaseTwoPeriod, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod, CylbPaymentWithPhaseTwoPeriod, FullPeriodWithPaymentDate, Hours, LastYearPayment, NonFurloughPay, OnePeriodCylb, PartialPeriodWithPaymentDate, PhaseTwoPeriod, TwoPeriodCylb}
 
 class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
@@ -174,6 +174,72 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val expected: CylbPaymentWithPartialPeriod = cylbPaymentWithPartialPeriod(0.0, 200.00, payPeriod, averagePayment, cylbBreakdown)
 
     calculateCylb(averagePayment, nonFurloughPay, Weekly, cylbs, payPeriod) mustBe expected
+  }
+
+  "Phase Two: assign user entered salary if full period and not part time" in new CylbCalculator {
+    val phaseTwoPeriod = PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), None, None)
+    val cylbs = Seq(
+      LastYearPayment(LocalDate.of(2019, 7, 2), Amount(700.00)),
+      LastYearPayment(LocalDate.of(2019, 7, 9), Amount(350.00))
+    )
+
+    val averagePayment = AveragePaymentWithPhaseTwoPeriod(Amount(401.17), Amount(20000.0), period("2019,4,6", "2020,3,19"), phaseTwoPeriod)
+
+    val cylbBreakdown: TwoPeriodCylb =
+      TwoPeriodCylb(
+        Amount(450.0),
+        OnePeriodCylb(
+          Amount(200.00),
+          Amount(700.0),
+          7,
+          2,
+          LocalDate.of(2019, 7, 2)
+        ),
+        OnePeriodCylb(
+          Amount(250.0),
+          Amount(350.0),
+          7,
+          5,
+          LocalDate.of(2019, 7, 9)
+        )
+      )
+
+    val expected = CylbPaymentWithPhaseTwoPeriod(Amount(450.0), phaseTwoPeriod, averagePayment, cylbBreakdown)
+
+    phaseTwoCylb(averagePayment, Weekly, cylbs, phaseTwoPeriod) mustBe expected
+  }
+
+  "Phase Two: assign user entered salary if full period and part time" in new CylbCalculator {
+    val phaseTwoPeriod = PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(16.0)), Some(Hours(40.0)))
+    val cylbs = Seq(
+      LastYearPayment(LocalDate.of(2019, 7, 2), Amount(700.00)),
+      LastYearPayment(LocalDate.of(2019, 7, 9), Amount(350.00))
+    )
+
+    val averagePayment = AveragePaymentWithPhaseTwoPeriod(Amount(240.70), Amount(20000.0), period("2019,4,6", "2020,3,19"), phaseTwoPeriod)
+
+    val cylbBreakdown: TwoPeriodCylb =
+      TwoPeriodCylb(
+        Amount(270.0),
+        OnePeriodCylb(
+          Amount(200.00),
+          Amount(700.0),
+          7,
+          2,
+          LocalDate.of(2019, 7, 2)
+        ),
+        OnePeriodCylb(
+          Amount(250.0),
+          Amount(350.0),
+          7,
+          5,
+          LocalDate.of(2019, 7, 9)
+        )
+      )
+
+    val expected = CylbPaymentWithPhaseTwoPeriod(Amount(270.0), phaseTwoPeriod, averagePayment, cylbBreakdown)
+
+    phaseTwoCylb(averagePayment, Weekly, cylbs, phaseTwoPeriod) mustBe expected
   }
 
 }

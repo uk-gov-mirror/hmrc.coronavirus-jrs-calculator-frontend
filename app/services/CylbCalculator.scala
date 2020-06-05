@@ -19,10 +19,10 @@ package services
 import java.time.LocalDate
 
 import models.NonFurloughPay.determineNonFurloughPay
-import models.{Amount, AveragePayment, CylbBreakdown, CylbDuration, CylbPayment, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod, FullPeriodWithPaymentDate, LastYearPayment, NonFurloughPay, OnePeriodCylb, PartialPeriodWithPaymentDate, PaymentFrequency, PeriodWithPaymentDate, TwoPeriodCylb}
+import models.{Amount, AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbBreakdown, CylbDuration, CylbPayment, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod, CylbPaymentWithPhaseTwoPeriod, FullPeriodWithPaymentDate, LastYearPayment, NonFurloughPay, OnePeriodCylb, PartialPeriodWithPaymentDate, PaymentFrequency, PeriodWithPaymentDate, PhaseTwoPeriod, TwoPeriodCylb}
 import services.Calculators.AmountRounding
 
-trait CylbCalculator extends PreviousYearPeriod {
+trait CylbCalculator extends PreviousYearPeriod with Calculators {
 
   def calculateCylb(
     averagePayment: AveragePayment,
@@ -34,6 +34,31 @@ trait CylbCalculator extends PreviousYearPeriod {
     val nfp = determineNonFurloughPay(period.period, nonFurloughPay)
 
     cylbsAmount(averagePayment, frequency, period, datesRequired, nfp, cylbs)
+  }
+
+  def phaseTwoCylb(averagePayment: AveragePaymentWithPhaseTwoPeriod,
+                   frequency: PaymentFrequency,
+                   cylbs: Seq[LastYearPayment],
+                   phaseTwoPeriod: PhaseTwoPeriod): CylbPaymentWithPhaseTwoPeriod = {
+    val datesRequired = previousYearPayDate(frequency, phaseTwoPeriod.periodWithPaymentDate)
+    val cylbOps = CylbDuration(frequency, phaseTwoPeriod.periodWithPaymentDate.period)
+    val cylbBreakdown = cylbBreakdownBasedOnHours(previousYearFurlough(datesRequired, cylbs, cylbOps), phaseTwoPeriod)
+    val referencePay = Amount(averagePayment.referencePay.value.max(cylbBreakdown.referencePay.value))
+
+    CylbPaymentWithPhaseTwoPeriod(referencePay, phaseTwoPeriod, averagePayment, cylbBreakdown)
+  }
+
+  private def cylbBreakdownBasedOnHours(cylbBreakdown: CylbBreakdown, phaseTwoPeriod: PhaseTwoPeriod): CylbBreakdown = {
+    val basedOnHours = if(phaseTwoPeriod.isPartTime) {
+      partTimeHoursCalculation(cylbBreakdown.referencePay, phaseTwoPeriod.actual, phaseTwoPeriod.usual)
+    } else {
+      cylbBreakdown.referencePay
+    }
+
+    cylbBreakdown match {
+      case one: OnePeriodCylb => one.copy(referencePay = basedOnHours)
+      case two: TwoPeriodCylb => two.copy(referencePay = basedOnHours)
+    }
   }
 
   private def cylbsAmount(

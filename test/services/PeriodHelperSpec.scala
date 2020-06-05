@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBase}
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{FullPeriod, FurloughWithinClaim, PartialPeriod, PaymentDate, Period, Periods}
+import models.{FullPeriod, FurloughWithinClaim, Hours, PartTimeHours, PartialPeriod, PaymentDate, Period, Periods, PhaseTwoPeriod, UsualHours}
 import org.scalacheck.Gen.choose
 import org.scalacheck.Shrink
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -287,5 +287,27 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
       )
     )
   )
+
+  "assignPartTimeHours" in new PeriodHelper {
+    val periods = Seq(
+      fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"),
+      fullPeriodWithPaymentDate("2020,7,8", "2020,7,14", "2020,7,14")
+    )
+
+    val partTimeHours = Seq(
+      PartTimeHours(LocalDate.of(2020, 7, 14), Hours(20.0))
+    )
+
+    val usualHours = Seq(
+      UsualHours(LocalDate.of(2020, 7, 14), Hours(40.0))
+    )
+
+    val expected = Seq(
+      PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), None, None),
+      PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,8", "2020,7,14", "2020,7,14"), Some(Hours(20.0)), Some(Hours(40.0)))
+    )
+
+    assignPartTimeHours(periods, partTimeHours, usualHours) mustBe expected
+  }
 
 }
