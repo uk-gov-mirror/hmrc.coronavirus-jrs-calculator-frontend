@@ -133,7 +133,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
     "fail with invalid dates - if start and end are not of the same calendar month" in {
 
-      val now = LocalDate.of(2020, 6, 15)
+      val now = LocalDate.of(2020, 7, 15)
 
       val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(now)
 
