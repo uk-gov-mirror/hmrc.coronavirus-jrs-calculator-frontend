@@ -17,10 +17,10 @@
 package services
 
 import models.PensionStatus.{DoesContribute, DoesNotContribute}
-import models.{Amount, FullPeriodFurloughBreakdown, FullPeriodPensionBreakdown, FurloughBreakdown, PartialPeriodFurloughBreakdown, PartialPeriodPensionBreakdown, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionCalculationResult, PensionStatus}
+import models.{Amount, FullPeriodFurloughBreakdown, FullPeriodPensionBreakdown, FullPeriodWithPaymentDate, FurloughBreakdown, PartialPeriodFurloughBreakdown, PartialPeriodPensionBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionCalculationResult, PensionStatus, PhaseTwoFurloughBreakdown, PhaseTwoPensionBreakdown, PhaseTwoPensionCalculationResult}
 import services.Calculators._
 
-trait PensionCalculator extends FurloughCapCalculator with CommonCalculationService {
+trait PensionCalculator extends FurloughCapCalculator with CommonCalculationService with Calculators {
 
   def calculatePensionGrant(
     pensionStatus: PensionStatus,
@@ -34,6 +34,41 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
     }
 
     PensionCalculationResult(pensionBreakdowns.map(_.grant.value).sum, pensionBreakdowns)
+  }
+
+  def phaseTwoPension(
+    furloughBreakdowns: Seq[PhaseTwoFurloughBreakdown],
+    frequency: PaymentFrequency,
+    pensionStatus: PensionStatus): PhaseTwoPensionCalculationResult = {
+    val breakdowns = furloughBreakdowns.map { furloughBreakdown =>
+      val phaseTwoPeriod = furloughBreakdown.paymentWithPeriod.phaseTwoPeriod
+
+      val threshold =
+        thresholdFinder(frequency, phaseTwoPeriod.periodWithPaymentDate.paymentDate, PensionRate())
+
+      val thresholdBasedOnDays = phaseTwoPeriod.periodWithPaymentDate match {
+        case _: FullPeriodWithPaymentDate => threshold
+        case pp: PartialPeriodWithPaymentDate =>
+          threshold.copy(value = partialPeriodDailyCalculation(Amount(threshold.value), pp.period).value)
+      }
+
+      val thresholdBasedOnHours = if (phaseTwoPeriod.isPartTime) {
+        thresholdBasedOnDays.copy(
+          value = partTimeHoursCalculation(Amount(thresholdBasedOnDays.value), phaseTwoPeriod.furloughed, phaseTwoPeriod.usual).value)
+      } else {
+        thresholdBasedOnDays
+      }
+      val roundedFurloughGrant = furloughBreakdown.grant.down
+
+      val grant = pensionStatus match {
+        case DoesContribute => greaterThanAllowance(roundedFurloughGrant, thresholdBasedOnHours.value, PensionRate())
+        case DoesNotContribute => Amount(0.0)
+      }
+
+      PhaseTwoPensionBreakdown(grant, furloughBreakdown.paymentWithPeriod, thresholdBasedOnHours, pensionStatus)
+    }
+
+    PhaseTwoPensionCalculationResult(breakdowns.map(_.grant.value).sum, breakdowns)
   }
 
   protected def calculatePartialPeriodPension(

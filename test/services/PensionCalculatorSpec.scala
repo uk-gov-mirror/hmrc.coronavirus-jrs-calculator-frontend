@@ -17,9 +17,9 @@
 package services
 
 import base.{CoreTestDataBuilder, SpecBase}
-import models.PaymentFrequency.Monthly
+import models.PaymentFrequency.{Monthly, Weekly}
 import models.PensionStatus.{DoesContribute, DoesNotContribute}
-import models.{Amount, FullPeriodPensionBreakdown, PartialPeriodPensionBreakdown, TaxYearEnding2020, TaxYearEnding2021}
+import models.{Amount, FullPeriodCap, FullPeriodPensionBreakdown, Hours, PartialPeriodPensionBreakdown, PhaseTwoFurloughBreakdown, PhaseTwoPeriod, RegularPaymentWithPhaseTwoPeriod, TaxYearEnding2020, TaxYearEnding2021}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
@@ -90,5 +90,24 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
       Amount(16.20)
     )
   )
+
+  "Phase Two: calculate pension grant based on part time furlough grant" in new PensionCalculator {
+    val furloughBreakdowns = Seq(
+      PhaseTwoFurloughBreakdown(
+        Amount(200.0),
+        RegularPaymentWithPhaseTwoPeriod(
+          Amount(500.00),
+          Amount(250.0),
+          PhaseTwoPeriod(
+            fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1"),
+            Some(Hours(20.0)),
+            Some(Hours(40.0))
+          )
+        ),
+        FullPeriodCap(288.46)
+      )
+    )
+    phaseTwoPension(furloughBreakdowns, Weekly, DoesContribute).total mustBe 4.20
+  }
 
 }

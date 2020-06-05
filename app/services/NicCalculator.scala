@@ -61,7 +61,7 @@ trait NicCalculator extends FurloughCapCalculator with CommonCalculationService 
       val phaseTwoPeriod = furloughBreakdown.paymentWithPeriod.phaseTwoPeriod
 
       val threshold =
-        thresholdFinder(frequency, furloughBreakdown.paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.paymentDate, NiRate())
+        thresholdFinder(frequency, phaseTwoPeriod.periodWithPaymentDate.paymentDate, NiRate())
 
       val thresholdBasedOnDays = phaseTwoPeriod.periodWithPaymentDate match {
         case _: FullPeriodWithPaymentDate => threshold
