@@ -112,7 +112,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         .getV(PartTimeQuestionPage)
         .map {
           case PartTimeYes => routes.PartTimePeriodsController.onPageLoad()
-          case PartTimeNo  => routes.TopUpStatusController.onPageLoad()
+          case PartTimeNo  => routes.NicCategoryController.onPageLoad()
         }
         .getOrElse(routes.PartTimeQuestionController.onPageLoad())
 
@@ -283,7 +283,12 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def annualPayAmountRoutes: UserAnswers => Call = { userAnswers =>
+  private def annualPayAmountRoutes: UserAnswers => Call =
+    userAnswers =>
+      if (isPhaseTwo(userAnswers)) routes.PartTimeQuestionController.onPageLoad()
+      else phaseOneAnnualPayAmountRoute(userAnswers)
+
+  private def phaseOneAnnualPayAmountRoute(userAnswers: UserAnswers): Call =
     if (hasPartialPayBefore(userAnswers)) {
       routes.PartialPayBeforeFurloughController.onPageLoad()
     } else if (hasPartialPayAfter(userAnswers)) {
@@ -291,7 +296,6 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     } else {
       routes.TopUpStatusController.onPageLoad()
     }
-  }
 
   private def furloughPeriodQuestionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.get(FurloughPeriodQuestionPage) match {

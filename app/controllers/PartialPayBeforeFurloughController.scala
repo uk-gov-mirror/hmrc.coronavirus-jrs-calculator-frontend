@@ -38,13 +38,11 @@ class PartialPayBeforeFurloughController @Inject()(
   sessionRepository: SessionRepository,
   val navigator: Navigator,
   identify: IdentifierAction,
-  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: FurloughPartialPayFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: VariableLengthPartialPayView,
-  eh: ErrorHandler
 )(implicit ec: ExecutionContext)
     extends BaseController with I18nSupport with PartialPayExtractor {
 
