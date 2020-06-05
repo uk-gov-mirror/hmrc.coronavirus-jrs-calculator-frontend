@@ -27,7 +27,8 @@
     languageSelection: components.languageSelection,
     link: components.link,
     appConfig: config.FrontendAppConfig,
-    footerLinks: FooterLinks
+    footerLinks: FooterLinks,
+    footer: components.govukFooter
 )
 
 @(pageTitle: Option[String] = None, timeout: Boolean = true, js: Option[Html] = None, showBackButton: Boolean = true, thisPage: Page, currentIdx: Option[Int] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
@@ -91,6 +92,10 @@
 </div>
 }
 
+@footerBlock = {
+    @footer(Footer(meta = Some(Meta(items = Some(footerLinks.items)))))
+}
+
 @govukLayout(
   pageTitle = pageTitle,
   headBlock = Some(head),
@@ -98,5 +103,6 @@
   bodyEndBlock = None,
   scriptsBlock = Some(scripts),
   headerBlock = Some(siteHeader(timeout)),
-  footerItems = footerLinks.items
+  footerItems = Seq.empty,
+  footerBlock = Some(footerBlock)
 )(content)

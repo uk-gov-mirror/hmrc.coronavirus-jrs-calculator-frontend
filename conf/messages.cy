@@ -27,6 +27,11 @@ footer.privacy         = Polisi preifatrwydd
 footer.termsConditions = Telerau ac amodau
 footer.govukHelp       = Help wrth ddefnyddio GOV.UK
 
+footer.license.text1 = Mae’r holl gynnwys ar gael dan y
+footer.license.text2 = Drwydded Llywodraeth Agored, fersiwn 3.0
+footer.license.text3 = oni nodir yn wahanol
+footer.license.copyright = © Hawlfraint y Goron
+
 language.cymraeg = Cymraeg
 language.change.cymraeg = Newid yr iaith i’r Gymraeg
 language.english = English

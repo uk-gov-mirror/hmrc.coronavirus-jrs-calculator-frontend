@@ -27,6 +27,11 @@ footer.privacy         = Privacy policy
 footer.termsConditions = Terms and conditions
 footer.govukHelp       = Help using GOV.UK
 
+footer.license.text1 = All content is available under the
+footer.license.text2 = Open Government Licence v3.0
+footer.license.text3 = except where otherwise stated
+footer.license.copyright = © Crown copyright
+
 language.cymraeg = Cymraeg
 language.change.cymraeg = Newid yr iaith i’r Gymraeg
 language.english = English
