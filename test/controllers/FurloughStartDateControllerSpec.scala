@@ -22,19 +22,14 @@ import base.SpecBaseWithApplication
 import forms.FurloughStartDateFormProvider
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughStartDatePage}
+import pages.FurloughStartDatePage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
 import views.html.FurloughStartDateView
-
-import scala.concurrent.Future
 
 class FurloughStartDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
@@ -50,12 +45,8 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
   lazy val furloughStartDateRoute = routes.FurloughStartDateController.onPageLoad().url
 
   val userAnswersWithClaimStartAndEnd = emptyUserAnswers
-    .set(ClaimPeriodStartPage, claimPeriodStart)
-    .success
-    .value
-    .set(ClaimPeriodEndPage, claimPeriodEnd)
-    .success
-    .value
+    .withClaimPeriodStart(claimPeriodStart.toString)
+    .withClaimPeriodEnd(claimPeriodEnd.toString)
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, furloughStartDateRoute).withCSRFToken
@@ -85,7 +76,24 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       val dataRequest = DataRequest(getRequest, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
 
       contentAsString(result) mustEqual
-        view(form)(dataRequest, messages).toString
+        view(form, claimPeriodStart)(dataRequest, messages).toString
+
+      application.stop()
+    }
+
+    "return OK and the correct view for a GET with different heading if 1st July or after" in {
+
+      val application = applicationBuilder(
+        userAnswers = Some(
+          emptyUserAnswers
+            .withClaimPeriodStart("2020,7,1")
+            .withClaimPeriodEnd("2020,7,14")
+        )).build()
+
+      val result = route(application, getRequest).value
+
+      status(result) mustEqual OK
+      contentAsString(result) must include("When was this employee originally furloughed?")
 
       application.stop()
     }
@@ -105,7 +113,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer))(dataRequest, messages).toString
+        view(form.fill(validAnswer), claimPeriodStart)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -148,7 +156,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       val dataRequest = DataRequest(request, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
 
       contentAsString(result) mustEqual
-        view(boundForm)(dataRequest, messages).toString
+        view(boundForm, claimPeriodStart)(dataRequest, messages).toString
 
       application.stop()
     }

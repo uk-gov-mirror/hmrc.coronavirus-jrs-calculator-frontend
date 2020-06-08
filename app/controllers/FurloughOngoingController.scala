@@ -18,10 +18,11 @@ package controllers
 
 import controllers.actions._
 import forms.FurloughOngoingFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.FurloughStatus
 import navigation.Navigator
-import pages.FurloughStatusPage
+import pages.{ClaimPeriodStartPage, FurloughStatusPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -40,28 +41,31 @@ class FurloughOngoingController @Inject()(
   formProvider: FurloughOngoingFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: FurloughOngoingView
-)(implicit ec: ExecutionContext)
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController {
 
   val form: Form[FurloughStatus] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val maybeFurlough = request.userAnswers.getV(FurloughStatusPage)
-    Ok(view(maybeFurlough.map(fr => form.fill(fr)).getOrElse(form)))
+    getRequiredAnswerV(ClaimPeriodStartPage) { claimStartDate =>
+      Future.successful(Ok(view(maybeFurlough.map(fr => form.fill(fr)).getOrElse(form), claimStartDate)))
+    }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(
-                               request.userAnswers
+    getRequiredAnswerV(ClaimPeriodStartPage) { claimStartDate =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStartDate))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers
                                  .set(FurloughStatusPage, value))
-            _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(FurloughStatusPage, updatedAnswers))
-      )
+              _ <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(FurloughStatusPage, updatedAnswers))
+        )
+    }
   }
 }
