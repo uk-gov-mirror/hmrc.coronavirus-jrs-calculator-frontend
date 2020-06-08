@@ -16,6 +16,7 @@
 
 package navigation
 
+import cats.data.Validated.{Invalid, Valid}
 import controllers.routes
 import models.AdditionalPaymentStatus.YesAdditionalPayments
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
@@ -70,17 +71,17 @@ object BackLinker {
     }
 
   private def paymentFrequencyBackLink()(implicit request: DataRequest[_]): Call =
-    request.userAnswers.get(FurloughStatusPage) match {
-      case Some(FurloughEnded) => routes.FurloughEndDateController.onPageLoad()
-      case _                   => routes.FurloughOngoingController.onPageLoad()
+    request.userAnswers.getV(FurloughStatusPage) match {
+      case Valid(FurloughEnded) => routes.FurloughEndDateController.onPageLoad()
+      case _                    => routes.FurloughOngoingController.onPageLoad()
     }
 
   private def payDateBackLink(idx: Option[Int])(implicit request: DataRequest[_]): Call =
     if (idx.getOrElse(1) == 1) {
-      request.userAnswers.get(EmployeeStartedPage) match {
-        case Some(OnOrBefore1Feb2019) => routes.VariableLengthEmployedController.onPageLoad()
-        case Some(After1Feb2019)      => routes.EmployeeStartDateController.onPageLoad()
-        case None                     => routes.PayMethodController.onPageLoad()
+      request.userAnswers.getV(EmployeeStartedPage) match {
+        case Valid(OnOrBefore1Feb2019) => routes.VariableLengthEmployedController.onPageLoad()
+        case Valid(After1Feb2019)      => routes.EmployeeStartDateController.onPageLoad()
+        case Invalid(e)                => routes.PayMethodController.onPageLoad()
       }
     } else {
       routes.PayDateController.onPageLoad(idx.getOrElse(1) - 1)
@@ -108,39 +109,39 @@ object BackLinker {
   }
 
   private def partialPayAfterFurloughBackLink()(implicit request: DataRequest[_]): Call =
-    request.userAnswers.get(PartialPayBeforeFurloughPage) match {
-      case Some(_) => routes.PartialPayBeforeFurloughController.onPageLoad()
-      case _       => routes.AnnualPayAmountController.onPageLoad()
+    request.userAnswers.getV(PartialPayBeforeFurloughPage) match {
+      case Valid(_) => routes.PartialPayBeforeFurloughController.onPageLoad()
+      case _        => routes.AnnualPayAmountController.onPageLoad()
     }
 
   private def topUpStatusBackLink()(implicit request: DataRequest[_]): Call =
-    request.userAnswers.get(PartialPayAfterFurloughPage) match {
-      case Some(_) => routes.PartialPayAfterFurloughController.onPageLoad()
+    request.userAnswers.getV(PartialPayAfterFurloughPage) match {
+      case Valid(_) => routes.PartialPayAfterFurloughController.onPageLoad()
       case _ =>
-        request.userAnswers.get(PartialPayBeforeFurloughPage) match {
-          case Some(_) => routes.PartialPayBeforeFurloughController.onPageLoad()
+        request.userAnswers.getV(PartialPayBeforeFurloughPage) match {
+          case Valid(_) => routes.PartialPayBeforeFurloughController.onPageLoad()
           case _ =>
-            request.userAnswers.get(PayMethodPage) match {
-              case Some(Regular)  => routes.RegularPayAmountController.onPageLoad()
-              case Some(Variable) => routes.AnnualPayAmountController.onPageLoad()
-              case None           => routes.PayMethodController.onPageLoad()
+            request.userAnswers.getV(PayMethodPage) match {
+              case Valid(Regular)  => routes.RegularPayAmountController.onPageLoad()
+              case Valid(Variable) => routes.AnnualPayAmountController.onPageLoad()
+              case Invalid(e)      => routes.PayMethodController.onPageLoad()
             }
         }
     }
 
   private def topUpAmountBackLink(idx: Option[Int])(implicit request: DataRequest[_]): Call =
     if (idx.getOrElse(1) == 1) {
-      request.userAnswers.get(TopUpPeriodsPage) match {
-        case Some(_) => routes.TopUpPeriodsController.onPageLoad()
-        case _       => routes.TopUpStatusController.onPageLoad()
+      request.userAnswers.getV(TopUpPeriodsPage) match {
+        case Valid(_) => routes.TopUpPeriodsController.onPageLoad()
+        case _        => routes.TopUpStatusController.onPageLoad()
       }
     } else {
       routes.TopUpAmountController.onPageLoad(idx.getOrElse(1) - 1)
     }
 
   private def additionalPayStatusBackLink()(implicit request: DataRequest[_]): Call =
-    request.userAnswers.get(TopUpStatusPage) match {
-      case Some(ToppedUp) =>
+    request.userAnswers.getV(TopUpStatusPage) match {
+      case Valid(ToppedUp) =>
         val lastIdx = request.userAnswers.getList(TopUpAmountPage).length
         routes.TopUpAmountController.onPageLoad(lastIdx)
 
@@ -149,17 +150,17 @@ object BackLinker {
 
   private def additionalPayAmountPageBackLink(idx: Option[Int])(implicit request: DataRequest[_]): Call =
     if (idx.getOrElse(1) == 1) {
-      request.userAnswers.get(AdditionalPaymentPeriodsPage) match {
-        case Some(_) => routes.AdditionalPaymentPeriodsController.onPageLoad()
-        case _       => routes.AdditionalPaymentStatusController.onPageLoad()
+      request.userAnswers.getV(AdditionalPaymentPeriodsPage) match {
+        case Valid(_) => routes.AdditionalPaymentPeriodsController.onPageLoad()
+        case _        => routes.AdditionalPaymentStatusController.onPageLoad()
       }
     } else {
       routes.AdditionalPaymentAmountController.onPageLoad(idx.getOrElse(1) - 1)
     }
 
   private def nicCategoryPageBackLink()(implicit request: DataRequest[_]): Call =
-    request.userAnswers.get(AdditionalPaymentStatusPage) match {
-      case Some(YesAdditionalPayments) =>
+    request.userAnswers.getV(AdditionalPaymentStatusPage) match {
+      case Valid(YesAdditionalPayments) =>
         val lastIdx = request.userAnswers.getList(AdditionalPaymentAmountPage).length
         routes.AdditionalPaymentAmountController.onPageLoad(lastIdx)
 
