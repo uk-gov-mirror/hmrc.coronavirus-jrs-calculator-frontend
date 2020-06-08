@@ -39,6 +39,7 @@ trait ConfirmationControllerRequestHandler
       bd match {
         case Valid(one: ConfirmationViewBreakdown)         => PhaseOneConfirmationDataResult(meta, one)
         case Valid(two: PhaseTwoConfirmationViewBreakdown) => PhaseTwoConfirmationDataResult(meta, two)
+        case Invalid(e)                                    => ???
       }
     }
 

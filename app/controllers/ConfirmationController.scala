@@ -25,7 +25,7 @@ import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AuditService
-import viewmodels.{ConfirmationViewBreakdown, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
+import viewmodels.{PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
 import views.html.{ConfirmationView, ConfirmationViewWithDetailedBreakdowns, PhaseTwoConfirmationView}
 
 import scala.concurrent.{ExecutionContext, Future}

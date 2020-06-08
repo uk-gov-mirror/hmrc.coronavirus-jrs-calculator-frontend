@@ -21,7 +21,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 import com.google.inject.Inject
-import models.{FullPeriodCap, FullPeriodCapWithPartTime, FurloughCap, PartialPeriodCap, PartialPeriodCapWithPartTime, PeriodSpansMonthCap, PeriodSpansMonthCapWithPartTime, PhaseTwoPeriod}
+import models._
 import play.api.i18n.Messages
 
 class FurloughCapHelper @Inject()() {
