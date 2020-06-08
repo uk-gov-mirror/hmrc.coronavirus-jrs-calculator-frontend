@@ -39,12 +39,11 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
 
       val capBasedOnHours = if (payment.phaseTwoPeriod.isPartTime) {
         cap match {
-          case fpc: FullPeriodCap => {
+          case fpc: FullPeriodCap =>
             val adjustedCap =
               partTimeHoursCalculation(Amount(fpc.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value
             FullPeriodCapWithPartTime(adjustedCap, fpc.value, payment.phaseTwoPeriod.usual, payment.phaseTwoPeriod.furloughed)
-          }
-          case ppc: PartialPeriodCap => {
+          case ppc: PartialPeriodCap =>
             val adjustedCap =
               partTimeHoursCalculation(Amount(ppc.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value
             PartialPeriodCapWithPartTime(
@@ -55,8 +54,7 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
               ppc.value,
               payment.phaseTwoPeriod.usual,
               payment.phaseTwoPeriod.furloughed)
-          }
-          case psm: PeriodSpansMonthCap => {
+          case psm: PeriodSpansMonthCap =>
             val adjustedCap =
               partTimeHoursCalculation(Amount(psm.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value
             PeriodSpansMonthCapWithPartTime(
@@ -71,7 +69,6 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
               payment.phaseTwoPeriod.usual,
               payment.phaseTwoPeriod.furloughed
             )
-          }
         }
       } else {
         cap

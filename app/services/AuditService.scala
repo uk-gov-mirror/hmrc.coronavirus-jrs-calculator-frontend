@@ -21,8 +21,9 @@ import java.time.LocalDate
 import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import models.UserAnswers
+import models.UserAnswers.AnswerV
 import pages._
-import play.api.libs.json.{Format, JsString, Json}
+import play.api.libs.json.{Format, JsString, JsValue, Json, Writes}
 import play.api.mvc.Request
 import services.JobRetentionSchemeCalculatorEvent.JobRetentionSchemeCalculatorEvent
 import uk.gov.hmrc.http.HeaderCarrier
@@ -37,7 +38,7 @@ import scala.util.Try
 object JobRetentionSchemeCalculatorEvent extends Enumeration {
   type JobRetentionSchemeCalculatorEvent = Value
 
-  val CalculationPerformed = Value
+  val CalculationPerformed: services.JobRetentionSchemeCalculatorEvent.Value = Value
 }
 
 case class AuditPeriodBreakdown(grant: BigDecimal, payPeriodEndDate: LocalDate)
@@ -73,28 +74,36 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       )
     )
 
+  implicit class AnswerRender[A](val answer: AnswerV[A]) {
+    def render: String = answer.fold(nel => "", _.toString)
+
+    def json: JsString = JsString(render)
+  }
+
+  implicit def answerEncoder[A]: Writes[AnswerV[A]] = (o: AnswerV[A]) => JsString(o.render)
+
   private def userAnswersTransformer(userAnswers: UserAnswers) =
     Json.obj(
-      "claimPeriodStartDate"               -> JsString(userAnswers.get(ClaimPeriodStartPage).fold("")(_.toString)),
-      "claimPeriodEndDate"                 -> JsString(userAnswers.get(ClaimPeriodEndPage).fold("")(_.toString)),
-      "employeeFurloughStartDate"          -> JsString(userAnswers.get(FurloughStartDatePage).fold("")(_.toString)),
-      "hasTheEmployeeFurloughEnded"        -> JsString(userAnswers.get(FurloughStatusPage).fold("")(_.toString)),
-      "employeeFurloughEndDate"            -> JsString(userAnswers.get(FurloughEndDatePage).fold("")(_.toString)),
-      "employeePayFrequency"               -> JsString(userAnswers.get(PaymentFrequencyPage).fold("")(_.toString)),
-      "employeePayMethod"                  -> JsString(userAnswers.get(PayMethodPage).fold("")(_.toString)),
-      "employeeRegularPay"                 -> JsString(userAnswers.get(RegularPayAmountPage).fold("")(_.amount.toString)),
-      "employeeEmployedOnOrBefore1Feb2019" -> JsString(userAnswers.get(EmployeeStartedPage).fold("")(_.toString)),
-      "employeeStartDate"                  -> JsString(userAnswers.get(EmployeeStartDatePage).fold("")(_.toString)),
-      "employeeAnnualPayForYear"           -> JsString(userAnswers.get(AnnualPayAmountPage).fold("")(_.amount.toString)),
+      "claimPeriodStartDate"               -> userAnswers.getV(ClaimPeriodStartPage).json,
+      "claimPeriodEndDate"                 -> userAnswers.getV(ClaimPeriodEndPage).json,
+      "employeeFurloughStartDate"          -> userAnswers.getV(FurloughStartDatePage).json,
+      "hasTheEmployeeFurloughEnded"        -> userAnswers.getV(FurloughStatusPage).json,
+      "employeeFurloughEndDate"            -> userAnswers.getV(FurloughEndDatePage).json,
+      "employeePayFrequency"               -> userAnswers.getV(PaymentFrequencyPage).json,
+      "employeePayMethod"                  -> userAnswers.getV(PayMethodPage).json,
+      "employeeRegularPay"                 -> userAnswers.getV(RegularPayAmountPage).map(_.amount).json,
+      "employeeEmployedOnOrBefore1Feb2019" -> userAnswers.getV(EmployeeStartedPage).json,
+      "employeeStartDate"                  -> userAnswers.getV(EmployeeStartDatePage).json,
+      "employeeAnnualPayForYear"           -> userAnswers.getV(AnnualPayAmountPage).map(_.amount).json,
       "employeePayPeriodEndDates"          -> Json.toJson(userAnswers.getList(PayDatePage)),
-      "employeePayDayForLastPeriod"        -> JsString(userAnswers.get(LastPayDatePage).fold("")(_.toString)),
+      "employeePayDayForLastPeriod"        -> userAnswers.getV(LastPayDatePage).json,
       "employeeLastYearPay"                -> Json.toJson(userAnswers.getList(LastYearPayPage)),
-      "employeePartialPayBeforeFurlough"   -> JsString(userAnswers.get(PartialPayBeforeFurloughPage).fold("")(_.value.toString)),
-      "employeePartialPayAfterFurlough"    -> JsString(userAnswers.get(PartialPayAfterFurloughPage).fold("")(_.value.toString)),
+      "employeePartialPayBeforeFurlough"   -> userAnswers.getV(PartialPayBeforeFurloughPage).json,
+      "employeePartialPayAfterFurlough"    -> userAnswers.getV(PartialPayAfterFurloughPage).json,
       "employerTopUpAmounts"               -> Json.toJson(userAnswers.getList(TopUpAmountPage)),
       "employerAdditionalPayments"         -> Json.toJson(userAnswers.getList(AdditionalPaymentAmountPage)),
-      "employeeNationalInsuranceCategory"  -> JsString(userAnswers.get(NicCategoryPage).fold("")(_.toString)),
-      "employerPensionStatus"              -> JsString(userAnswers.get(PensionStatusPage).fold("")(_.toString))
+      "employeeNationalInsuranceCategory"  -> userAnswers.getV(NicCategoryPage).json,
+      "employerPensionStatus"              -> userAnswers.getV(PensionStatusPage).json
     )
 
   private def breakdownTransformer(breakdown: ConfirmationViewBreakdown) = {
