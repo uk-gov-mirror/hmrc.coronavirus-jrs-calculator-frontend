@@ -37,35 +37,19 @@
 
     @p(Html(Messages("rootPage.p1")))
     @p(Html(Messages("rootPage.p2")))
-    @p(Html(Messages("rootPage.p3.variableOn")))
+    @p(Html(Messages("rootPage.p3")))
     @p(Html(Messages("rootPage.p4")))
+    @p(Html(Messages("rootPage.p5")))
     <ul class="govuk-list govuk-list--bullet">
-       <li>@messages("rootPage.p4.l1")</li>
-       <li>@messages("rootPage.p4.l2")</li>
-        <li>@messages("rootPage.p4.l3")</li>
-        <li>@messages("rootPage.p4.l4")</li>
-        <li>@messages("rootPage.p4.l5")</li>
-        <li>@messages("rootPage.p4.l6")</li>
-        <li>@messages("rootPage.p4.l7")</li>
-        <li>@messages("rootPage.p4.l8")</li>
+       <li>@messages("rootPage.p5.l1")</li>
+       <li>@messages("rootPage.p5.l2")</li>
+        <li>@messages("rootPage.p5.l3")</li>
+        <li>@messages("rootPage.p5.l4")</li>
+        <li>@messages("rootPage.p5.l5")</li>
     </ul>
 
-    @p(Html(Messages("rootPage.p5")))
     @p(Html(Messages("rootPage.p6", link(appConfig.calculationGuidance,"rootPage.p6.link"))))
     @p(Html(Messages("rootPage.p7")))
-
-    @h2("rootPage.howItWorks.header")
-
-    @p(Html(Messages("rootPage.howItWorks.p1")))
-    @p(Html(Messages("rootPage.howItWorks.p2")))
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("rootPage.howItWorks.p2.l1")</li>
-        <li>@messages("rootPage.howItWorks.p2.l2")</li>
-        <li>@messages("rootPage.howItWorks.p2.l3")</li>
-    </ul>
-
-    @p(Html(Messages("rootPage.howItWorks.p3")))
-    @p(Html(Messages("rootPage.howItWorks.p4")))
 
     <a href="/job-retention-scheme-calculator/claim-period-start" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
         @Messages("site.startNow")
@@ -74,7 +58,7 @@
         </svg>
     </a>
 
-    @h2("rootPage.beforeYouStart.header")
+    @h2("rootPage.beforeYouStart.header", classes = Some("govuk-heading-m"))
 
     @p(Html(Messages("rootPage.beforeYouStart.p1")))
 
@@ -85,6 +69,9 @@
         <li>@messages("rootPage.beforeYouStart.p1.l4")</li>
         <li>@messages("rootPage.beforeYouStart.p1.l5")</li>
         <li>@messages("rootPage.beforeYouStart.p1.l6")</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l7")</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l8")</li>
+        <li>@messages("rootPage.beforeYouStart.p1.l9")</li>
     </ul>
 
 }
