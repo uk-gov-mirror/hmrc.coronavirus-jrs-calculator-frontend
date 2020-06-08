@@ -16,18 +16,31 @@
 
 package handlers
 
+import java.time.LocalDate
+
 import cats.data.Validated.{Invalid, Valid}
 import models.UserAnswers.AnswerV
 import models._
 import services._
-import viewmodels.{ConfirmationDataResult, ConfirmationMetadata, ConfirmationViewBreakdown}
+import viewmodels._
 import cats.syntax.apply._
 
 trait ConfirmationControllerRequestHandler
     extends FurloughCalculator with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator {
 
   def loadResultData(userAnswers: UserAnswers): AnswerV[ConfirmationDataResult] =
-    (meta(userAnswers), breakdown(userAnswers)).mapN(ConfirmationDataResult.apply)
+    meta(userAnswers).map { meta =>
+      val bd: AnswerV[ViewBreakdown] = if (meta.claimPeriod.start.isBefore(LocalDate.of(2020, 7, 1))) {
+        breakdown(userAnswers)
+      } else {
+        phaseTwoBreakdown(userAnswers)
+      }
+
+      bd match {
+        case Valid(one: ConfirmationViewBreakdown)         => PhaseOneConfirmationDataResult(meta, one)
+        case Valid(two: PhaseTwoConfirmationViewBreakdown) => PhaseTwoConfirmationDataResult(meta, two)
+      }
+    }
 
   private def breakdown(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdown] =
     extractBranchingQuestionsV(userAnswers) match {
@@ -52,6 +65,29 @@ trait ConfirmationControllerRequestHandler
 
         }
       case inv @ Invalid(e) => inv
+    }
+
+  private def phaseTwoBreakdown(userAnswers: UserAnswers): AnswerV[PhaseTwoConfirmationViewBreakdown] =
+    extractBranchingQuestionsV(userAnswers) match {
+      case Valid(questions) =>
+        phaseTwoJourneyDataV(define(questions), userAnswers) match {
+          case Valid(data) =>
+            val payments = phaseTwoReferencePay(data)
+            val furlough = phaseTwoFurlough(data.frequency, payments)
+
+            (
+              extractNicCategoryV(userAnswers),
+              extractPensionStatusV(userAnswers)
+            ).mapN { (niAnswer, pensionAnswer) =>
+              val ni = phaseTwoNic(furlough.periodBreakdowns, data.frequency, niAnswer)
+              val pension = phaseTwoPension(furlough.periodBreakdowns, data.frequency, pensionAnswer)
+
+              PhaseTwoConfirmationViewBreakdown(furlough, ni, pension)
+            }
+
+          case i @ Invalid(_) => i
+        }
+      case i @ Invalid(_) => i
     }
 
   private def meta(userAnswers: UserAnswers): AnswerV[ConfirmationMetadata] =

@@ -19,7 +19,7 @@ package handlers
 import java.time.LocalDate
 
 import models.UserAnswers.AnswerV
-import models.{AdditionalPayment, Amount, BranchingQuestions, FurloughStatus, LastYearPayment, NicCategory, NonFurloughPay, PayMethod, PayPeriodQuestion, PaymentFrequency, PensionStatus, Period, ReferencePayData, TopUpPayment, UserAnswers}
+import models.{AdditionalPayment, Amount, BranchingQuestions, FurloughStatus, LastYearPayment, NicCategory, NonFurloughPay, PayMethod, PayPeriodQuestion, PaymentFrequency, PensionStatus, Period, PhaseTwoReferencePayData, ReferencePayData, TopUpPayment, UserAnswers}
 import pages._
 import services.{FurloughPeriodExtractor, PeriodHelper}
 import cats.syntax.apply._
@@ -108,5 +108,21 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
       val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
       val assigned = assignPayDates(frequency, periods, lastPayDay)
       ReferencePayData(furloughPeriod, assigned, frequency)
+    }
+
+  def extractPhaseTwoReferencePayDataV(userAnswers: UserAnswers): AnswerV[PhaseTwoReferencePayData] =
+    (
+      extractFurloughWithinClaimV(userAnswers),
+      extractPaymentFrequencyV(userAnswers),
+      extractLastPayDateV(userAnswers)
+    ).mapN { (furloughPeriod, frequency, lastPayDay) =>
+      val payDates = userAnswers.getList(PayDatePage)
+      val actuals = userAnswers.getList(PartTimeHoursPage)
+      val usuals = userAnswers.getList(PartTimeNormalHoursPage)
+      val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
+      val assigned = assignPayDates(frequency, periods, lastPayDay)
+      val phaseTwo = assignPartTimeHours(assigned, actuals, usuals)
+
+      PhaseTwoReferencePayData(furloughPeriod, phaseTwo, frequency)
     }
 }

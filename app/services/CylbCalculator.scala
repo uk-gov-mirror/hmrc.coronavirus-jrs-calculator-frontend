@@ -43,24 +43,19 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
     phaseTwoPeriod: PhaseTwoPeriod): CylbPaymentWithPhaseTwoPeriod = {
     val datesRequired = previousYearPayDate(frequency, phaseTwoPeriod.periodWithPaymentDate)
     val cylbOps = CylbDuration(frequency, phaseTwoPeriod.periodWithPaymentDate.period)
-    val cylbBreakdown = cylbBreakdownBasedOnHours(previousYearFurlough(datesRequired, cylbs, cylbOps), phaseTwoPeriod)
-    val referencePay = Amount(averagePayment.referencePay.value.max(cylbBreakdown.referencePay.value))
+    val cylbBreakdown = previousYearFurlough(datesRequired, cylbs, cylbOps)
+
+    val referencePay = Amount(averagePayment.referencePay.value.max(cylbBasedOnHours(cylbBreakdown.referencePay, phaseTwoPeriod).value))
 
     CylbPaymentWithPhaseTwoPeriod(referencePay, phaseTwoPeriod, averagePayment, cylbBreakdown)
   }
 
-  private def cylbBreakdownBasedOnHours(cylbBreakdown: CylbBreakdown, phaseTwoPeriod: PhaseTwoPeriod): CylbBreakdown = {
-    val basedOnHours = if (phaseTwoPeriod.isPartTime) {
-      partTimeHoursCalculation(cylbBreakdown.referencePay, phaseTwoPeriod.furloughed, phaseTwoPeriod.usual)
+  private def cylbBasedOnHours(cylbReferencePay: Amount, phaseTwoPeriod: PhaseTwoPeriod): Amount =
+    if (phaseTwoPeriod.isPartTime) {
+      partTimeHoursCalculation(cylbReferencePay, phaseTwoPeriod.furloughed, phaseTwoPeriod.usual)
     } else {
-      cylbBreakdown.referencePay
+      cylbReferencePay
     }
-
-    cylbBreakdown match {
-      case one: OnePeriodCylb => one.copy(referencePay = basedOnHours)
-      case two: TwoPeriodCylb => two.copy(referencePay = basedOnHours)
-    }
-  }
 
   private def cylbsAmount(
     averagePayment: AveragePayment,

@@ -65,12 +65,12 @@ sealed trait PhaseTwoReferencePay {
 
 case class PhaseTwoRegularPayData(referencePayData: PhaseTwoReferencePayData, wage: Amount) extends PhaseTwoReferencePay
 
-case class PhaseTwoVariablePayData(referencePayData: PhaseTwoReferencePayData, grossPay: Amount, priorFurlough: Period)
+case class PhaseTwoVariablePayData(referencePayData: PhaseTwoReferencePayData, annualPay: Amount, priorFurlough: Period)
     extends PhaseTwoReferencePay
 
 case class PhaseTwoVariablePayWithCylbData(
   referencePayData: PhaseTwoReferencePayData,
-  grossPay: Amount,
+  annualPay: Amount,
   priorFurlough: Period,
   cylbPayments: Seq[LastYearPayment])
     extends PhaseTwoReferencePay

@@ -79,7 +79,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
       0.00,
       0.00,
       payment,
-      Threshold(664.0, TaxYearEnding2020),
+      Threshold(664.0, TaxYearEnding2020, FourWeekly),
       NicCap(Amount(360.0), Amount(28.66), Amount(49.68)),
       Payable)
 
@@ -161,7 +161,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
         2400.00,
         1200.00,
         partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
-      Threshold(732.0, TaxYearEnding2021),
+      Threshold(732.0, TaxYearEnding2021, Monthly),
       NicCap(Amount(960.0), Amount(98.53), Amount(132.48)),
       Amount(98.53)
     ),
@@ -173,7 +173,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
         3516.13,
         2500.0,
         partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-10", "2020-03-31", "2020-03-31")),
-      Threshold(719.0, TaxYearEnding2020),
+      Threshold(719.0, TaxYearEnding2020, Monthly),
       NicCap(Amount(1774.30), Amount(202.83), Amount(244.85)),
       Amount(202.83)
     ),
@@ -185,7 +185,7 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
         800.0,
         620.0,
         partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-10", "2020-03-31", "2020-03-31")),
-      Threshold(719.0, TaxYearEnding2020),
+      Threshold(719.0, TaxYearEnding2020, Monthly),
       NicCap(Amount(496.0), Amount(0.00), Amount(68.45)),
       Amount(0.00)
     )

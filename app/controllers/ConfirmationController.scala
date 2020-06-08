@@ -25,7 +25,8 @@ import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AuditService
-import views.html.{ConfirmationView, ConfirmationViewWithDetailedBreakdowns}
+import viewmodels.{ConfirmationViewBreakdown, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
+import views.html.{ConfirmationView, ConfirmationViewWithDetailedBreakdowns, PhaseTwoConfirmationView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +39,7 @@ class ConfirmationController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: ConfirmationView,
   viewWithDetailedBreakdowns: ConfirmationViewWithDetailedBreakdowns,
+  phaseTwoView: PhaseTwoConfirmationView,
   auditService: AuditService,
   val navigator: Navigator
 )(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
@@ -47,7 +49,7 @@ class ConfirmationController @Inject()(
     loadResultData(request.userAnswers) match {
       case Invalid(e) =>
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-      case Valid(data) =>
+      case Valid(data: PhaseOneConfirmationDataResult) =>
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
 
         if (config.confirmationWithDetailedBreakdowns) {
@@ -56,6 +58,9 @@ class ConfirmationController @Inject()(
         } else {
           Future.successful(Ok(view(data.metaData, data.confirmationViewBreakdown, config.calculatorVersion)))
         }
+      case Valid(data: PhaseTwoConfirmationDataResult) =>
+        Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, config.calculatorVersion)))
+
     }
   }
 }

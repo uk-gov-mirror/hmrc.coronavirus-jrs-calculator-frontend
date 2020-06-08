@@ -53,7 +53,7 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
       Monthly,
       Amount(1600.00),
       regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
-      Threshold(512.0, TaxYearEnding2020),
+      Threshold(512.0, TaxYearEnding2020, Monthly),
       Amount(512.0),
       Amount(32.64)
     ),
@@ -61,7 +61,7 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
       Monthly,
       Amount(600.00),
       regularPaymentWithFullPeriod(750.00, 750.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31")),
-      Threshold(512.0, TaxYearEnding2020),
+      Threshold(512.0, TaxYearEnding2020, Monthly),
       Amount(512.0),
       Amount(2.64)
     )
@@ -85,7 +85,7 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
         2000.00,
         1000.00,
         partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
-      Threshold(520.0, TaxYearEnding2021),
+      Threshold(520.0, TaxYearEnding2021, Monthly),
       Amount(260.0),
       Amount(16.20)
     )

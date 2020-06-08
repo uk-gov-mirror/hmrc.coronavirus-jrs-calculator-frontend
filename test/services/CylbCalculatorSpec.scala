@@ -220,7 +220,7 @@ class CylbCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
     val cylbBreakdown: TwoPeriodCylb =
       TwoPeriodCylb(
-        Amount(270.0),
+        Amount(450.0),
         OnePeriodCylb(
           Amount(200.00),
           Amount(700.0),

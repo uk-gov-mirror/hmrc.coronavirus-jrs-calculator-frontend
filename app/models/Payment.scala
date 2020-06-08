@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import play.api.libs.json.{Format, Json}
 import services.PeriodHelper
+import services.Calculators._
 
 case class PaymentDate(value: LocalDate)
 
@@ -74,14 +75,14 @@ sealed trait PaymentWithPeriod {
   val referencePay: Amount
   val periodWithPaymentDate: PeriodWithPaymentDate
 
-  def periodDays = periodWithPaymentDate.period.period.countDays
+  def periodDays: Int = periodWithPaymentDate.period.period.countDays
 
-  def furloughDays = periodWithPaymentDate.period match {
+  def furloughDays: Int = periodWithPaymentDate.period match {
     case fp: FullPeriod    => fp.period.countDays
     case pp: PartialPeriod => pp.partial.countDays
   }
 
-  def nonFurloughDays = periodWithPaymentDate.period match {
+  def nonFurloughDays: Int = periodWithPaymentDate.period match {
     case _: FullPeriod     => 0
     case pp: PartialPeriod => pp.period.countDays - pp.partial.countDays
   }
@@ -154,21 +155,42 @@ case class CylbPaymentWithPartialPeriod(
 sealed trait PaymentWithPhaseTwoPeriod {
   val referencePay: Amount
   val phaseTwoPeriod: PhaseTwoPeriod
+
+  def periodDays: Int = phaseTwoPeriod.periodWithPaymentDate.period.period.countDays
+
+  def furloughDays: Int = phaseTwoPeriod.periodWithPaymentDate.period match {
+    case fp: FullPeriod    => fp.period.countDays
+    case pp: PartialPeriod => pp.partial.countDays
+  }
 }
 
 case class RegularPaymentWithPhaseTwoPeriod(regularPay: Amount, referencePay: Amount, phaseTwoPeriod: PhaseTwoPeriod)
-    extends PaymentWithPhaseTwoPeriod
+    extends PaymentWithPhaseTwoPeriod {
+  def basedOnDays: String = Amount((regularPay.value / periodDays) * furloughDays).halfUp.value.formatted("%.2f")
+  def basedOnHours: String = referencePay.value.formatted("%.2f")
+}
 
 case class AveragePaymentWithPhaseTwoPeriod(
   referencePay: Amount,
   annualPay: Amount,
   priorFurloughPeriod: Period,
   phaseTwoPeriod: PhaseTwoPeriod)
-    extends PaymentWithPhaseTwoPeriod
+    extends PaymentWithPhaseTwoPeriod {
+  def basedOnDays: String = {
+    val daily = Amount(annualPay.value / priorFurloughPeriod.countDays).halfUp
+    (daily.value * furloughDays).formatted("%.2f")
+  }
+  def basedOnHours: String = referencePay.value.formatted("%.2f")
+}
 
 case class CylbPaymentWithPhaseTwoPeriod(
   referencePay: Amount,
   phaseTwoPeriod: PhaseTwoPeriod,
   averagePayment: AveragePaymentWithPhaseTwoPeriod,
   cylbBreakdown: CylbBreakdown)
-    extends PaymentWithPhaseTwoPeriod
+    extends PaymentWithPhaseTwoPeriod {
+  def basedOnDays: String = cylbBreakdown.referencePay.value.formatted("%.2f")
+  def basedOnHours: String =
+    Amount((cylbBreakdown.referencePay.value / phaseTwoPeriod.usual) * phaseTwoPeriod.furloughed).halfUp.value.formatted("%.2f")
+  def higherOfResult: String = referencePay.value.formatted("%.2f")
+}

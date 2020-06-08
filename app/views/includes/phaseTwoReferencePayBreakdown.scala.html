@@ -1,0 +1,117 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this(
+    h4: components.h4,
+    p: components.p,
+    onePeriodCylbBreakdown: cylbPeriodBreakdown,
+    twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown
+)
+
+@(payment: PaymentWithPhaseTwoPeriod)(implicit messages: Messages)
+
+  @regularPaymentBreakdown(regular: RegularPaymentWithPhaseTwoPeriod) = {
+      @p(Html(messages("phaseTwoReferencePayBreakdown.regular.p1")))
+
+      <ol class="govuk-list govuk-list--number">
+          <li>@messages("phaseTwoReferencePayBreakdown.regular.days.l1", regular.regularPay.value.formatted("%.2f"))</li>
+          <li>@messages("phaseTwoReferencePayBreakdown.regular.days.l2", regular.periodDays)</li>
+          <li>@messages("phaseTwoReferencePayBreakdown.regular.days.l3", regular.furloughDays)</li>
+      </ol>
+
+      @p(Html(messages("phaseTwoReferencePayBreakdown.regular.daysResult", regular.basedOnDays)))
+
+      @if(regular.phaseTwoPeriod.isPartTime) {
+        @p(Html(messages("phaseTwoReferencePayBreakdown.regular.then")))
+
+        <ol class="govuk-list govuk-list--number">
+            <li>@messages("phaseTwoReferencePayBreakdown.regular.hours.l1", regular.basedOnDays)</li>
+            <li>@messages("phaseTwoReferencePayBreakdown.regular.hours.l2", regular.phaseTwoPeriod.usual.formatted("%.2f"))</li>
+            <li>@messages("phaseTwoReferencePayBreakdown.regular.hours.l3", regular.phaseTwoPeriod.furloughed.formatted("%.2f"))</li>
+        </ol>
+
+        @p(Html(messages("phaseTwoReferencePayBreakdown.regular.hoursResult", regular.basedOnHours)))
+      }
+  }
+
+  @averagePaymentBreakdown(average: AveragePaymentWithPhaseTwoPeriod, partOfCylb: Boolean) = {
+      @if(partOfCylb) {
+          @p(Html(messages("phaseTwoReferencePayBreakdown.average.p1.partOfCylb")))
+      } else {
+          @p(Html(messages("phaseTwoReferencePayBreakdown.average.p1")))
+      }
+
+      <ol class="govuk-list govuk-list--number">
+          <li>@messages("phaseTwoReferencePayBreakdown.average.days.l1", average.annualPay.value.formatted("%.2f"))</li>
+          <li>@messages("phaseTwoReferencePayBreakdown.average.days.l2", average.priorFurloughPeriod.countDays)</li>
+          <li>@messages("phaseTwoReferencePayBreakdown.average.days.l3", average.furloughDays)</li>
+      </ol>
+
+      @p(Html(messages("phaseTwoReferencePayBreakdown.average.daysResult", average.basedOnDays)))
+
+    @if(average.phaseTwoPeriod.isPartTime) {
+      @p(Html(messages("phaseTwoReferencePayBreakdown.average.then")))
+
+      <ol class="govuk-list govuk-list--number">
+          <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l1", average.basedOnDays)</li>
+          <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l2", average.phaseTwoPeriod.usual.formatted("%.2f"))</li>
+          <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l3", average.phaseTwoPeriod.furloughed.formatted("%.2f"))</li>
+      </ol>
+
+      @p(Html(messages("phaseTwoReferencePayBreakdown.regular.hoursResult", average.basedOnHours)))
+    }
+  }
+
+  @cylbPaymentBreakdown(cylb: CylbPaymentWithPhaseTwoPeriod) = {
+      @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.p1")))
+
+      @{cylb.cylbBreakdown match {
+          case op: OnePeriodCylb => onePeriodCylbBreakdown(op)
+          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp)
+      }}
+
+    @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.daysResult", cylb.basedOnDays)))
+
+    @if(cylb.phaseTwoPeriod.isPartTime) {
+      @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.then")))
+
+      <ol class="govuk-list govuk-list--number">
+          <li>@messages("phaseTwoReferencePayBreakdown.cylb.hours.l1", cylb.basedOnDays)</li>
+          <li>@messages("phaseTwoReferencePayBreakdown.cylb.hours.l2", cylb.phaseTwoPeriod.usual.formatted("%.2f"))</li>
+          <li>@messages("phaseTwoReferencePayBreakdown.cylb.hours.l3", cylb.phaseTwoPeriod.furloughed.formatted("%.2f"))</li>
+      </ol>
+
+      @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.hoursResult", cylb.basedOnHours)))
+    }
+
+    @averagePaymentBreakdown(cylb.averagePayment, true)
+
+    @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.higherOf")))
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("phaseTwoReferencePayBreakdown.cylb.higherOf.cylb", cylb.basedOnHours)</li>
+        <li>@messages("phaseTwoReferencePayBreakdown.cylb.higherOf.average", cylb.averagePayment.referencePay.value.formatted("%.2f"))</li>
+    </ul>
+
+    @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.higherOf.result", cylb.higherOfResult)))
+  }
+
+@h4(messages("phaseTwoReferencePayBreakdown.h4"))
+
+  @{payment match {
+    case p: RegularPaymentWithPhaseTwoPeriod => regularPaymentBreakdown(p)
+    case p: AveragePaymentWithPhaseTwoPeriod => averagePaymentBreakdown(p, false)
+    case p: CylbPaymentWithPhaseTwoPeriod    => cylbPaymentBreakdown(p)
+  }}

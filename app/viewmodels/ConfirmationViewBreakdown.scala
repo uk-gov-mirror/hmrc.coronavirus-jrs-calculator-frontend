@@ -16,11 +16,20 @@
 
 package viewmodels
 
-import models.{AveragePayment, CylbPayment, FurloughBreakdown, FurloughCalculationResult, FurloughDates, NicBreakdown, NicCalculationResult, NicCategory, PaymentFrequency, PensionBreakdown, PensionCalculationResult, PensionStatus, Period, RegularPayment}
+import models.{AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbPayment, CylbPaymentWithPhaseTwoPeriod, FurloughBreakdown, FurloughCalculationResult, FurloughDates, NicBreakdown, NicCalculationResult, NicCategory, PaymentFrequency, PensionBreakdown, PensionCalculationResult, PensionStatus, Period, PhaseTwoFurloughBreakdown, PhaseTwoFurloughCalculationResult, PhaseTwoNicBreakdown, PhaseTwoNicCalculationResult, PhaseTwoPensionBreakdown, PhaseTwoPensionCalculationResult, RegularPayment, RegularPaymentWithPhaseTwoPeriod}
 
-case class ConfirmationDataResult(metaData: ConfirmationMetadata, confirmationViewBreakdown: ConfirmationViewBreakdown)
+sealed trait ConfirmationDataResult
 
-case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: NicCalculationResult, pension: PensionCalculationResult) {
+case class PhaseOneConfirmationDataResult(metaData: ConfirmationMetadata, confirmationViewBreakdown: ConfirmationViewBreakdown)
+    extends ConfirmationDataResult
+
+case class PhaseTwoConfirmationDataResult(metaData: ConfirmationMetadata, confirmationViewBreakdown: PhaseTwoConfirmationViewBreakdown)
+    extends ConfirmationDataResult
+
+sealed trait ViewBreakdown
+
+case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: NicCalculationResult, pension: PensionCalculationResult)
+    extends ViewBreakdown {
   def zippedBreakdowns: Seq[(FurloughBreakdown, NicBreakdown, PensionBreakdown)] =
     (furlough.periodBreakdowns, nic.periodBreakdowns, pension.periodBreakdowns).zipped.toList
 
@@ -47,6 +56,41 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
         "detailedBreakdown.p1.cylb.1",
         "detailedBreakdown.p1.cylb.2",
         "detailedBreakdown.p1.cylb.3"
+      )
+  }
+}
+
+case class PhaseTwoConfirmationViewBreakdown(
+  furlough: PhaseTwoFurloughCalculationResult,
+  nic: PhaseTwoNicCalculationResult,
+  pension: PhaseTwoPensionCalculationResult)
+    extends ViewBreakdown {
+  def zippedBreakdowns: Seq[(PhaseTwoFurloughBreakdown, PhaseTwoNicBreakdown, PhaseTwoPensionBreakdown)] =
+    (furlough.periodBreakdowns, nic.periodBreakdowns, pension.periodBreakdowns).zipped.toList
+
+  def detailedBreakdowns: Seq[PhaseTwoDetailedBreakdown] = zippedBreakdowns map { breakdowns =>
+    PhaseTwoDetailedBreakdown(
+      breakdowns._1.paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period,
+      breakdowns._1,
+      breakdowns._2,
+      breakdowns._3
+    )
+  }
+
+  def detailedBreakdownMessageKeys: Seq[String] = furlough.periodBreakdowns.head.paymentWithPeriod match {
+    case _: RegularPaymentWithPhaseTwoPeriod =>
+      Seq(
+        "phaseTwoDetailedBreakdown.p1.regular"
+      )
+    case _: AveragePaymentWithPhaseTwoPeriod =>
+      Seq(
+        "phaseTwoDetailedBreakdown.p1.average"
+      )
+    case _: CylbPaymentWithPhaseTwoPeriod =>
+      Seq(
+        "phaseTwoDetailedBreakdown.p1.cylb.1",
+        "phaseTwoDetailedBreakdown.p1.cylb.2",
+        "phaseTwoDetailedBreakdown.p1.cylb.3"
       )
   }
 }

@@ -16,7 +16,7 @@
 
 package services
 
-import models.{Amount, FullPeriodCap, FullPeriodFurloughBreakdown, FullPeriodWithPaymentDate, FurloughCalculationResult, PartialPeriodCap, PartialPeriodFurloughBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PaymentWithPhaseTwoPeriod, PeriodSpansMonthCap, PhaseTwoFurloughBreakdown, PhaseTwoFurloughCalculationResult}
+import models.{Amount, FullPeriodCap, FullPeriodCapWithPartTime, FullPeriodFurloughBreakdown, FullPeriodWithPaymentDate, FurloughCalculationResult, PartialPeriodCap, PartialPeriodCapWithPartTime, PartialPeriodFurloughBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PaymentWithPhaseTwoPeriod, PeriodSpansMonthCap, PeriodSpansMonthCapWithPartTime, PhaseTwoFurloughBreakdown, PhaseTwoFurloughCalculationResult}
 import services.Calculators._
 import utils.TaxYearFinder
 
@@ -39,15 +39,39 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
 
       val capBasedOnHours = if (payment.phaseTwoPeriod.isPartTime) {
         cap match {
-          case fpc: FullPeriodCap =>
-            fpc.copy(
-              value = partTimeHoursCalculation(Amount(fpc.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value)
-          case ppc: PartialPeriodCap =>
-            ppc.copy(
-              value = partTimeHoursCalculation(Amount(ppc.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value)
-          case psm: PeriodSpansMonthCap =>
-            psm.copy(
-              value = partTimeHoursCalculation(Amount(psm.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value)
+          case fpc: FullPeriodCap => {
+            val adjustedCap =
+              partTimeHoursCalculation(Amount(fpc.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value
+            FullPeriodCapWithPartTime(adjustedCap, fpc.value, payment.phaseTwoPeriod.usual, payment.phaseTwoPeriod.furloughed)
+          }
+          case ppc: PartialPeriodCap => {
+            val adjustedCap =
+              partTimeHoursCalculation(Amount(ppc.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value
+            PartialPeriodCapWithPartTime(
+              adjustedCap,
+              ppc.furloughDays,
+              ppc.month,
+              ppc.dailyCap,
+              ppc.value,
+              payment.phaseTwoPeriod.usual,
+              payment.phaseTwoPeriod.furloughed)
+          }
+          case psm: PeriodSpansMonthCap => {
+            val adjustedCap =
+              partTimeHoursCalculation(Amount(psm.value), payment.phaseTwoPeriod.furloughed, payment.phaseTwoPeriod.usual).value
+            PeriodSpansMonthCapWithPartTime(
+              adjustedCap,
+              psm.monthOneFurloughDays,
+              psm.monthOne,
+              psm.monthOneDaily,
+              psm.monthTwoFurloughDays,
+              psm.monthTwo,
+              psm.monthTwoDaily,
+              psm.value,
+              payment.phaseTwoPeriod.usual,
+              payment.phaseTwoPeriod.furloughed
+            )
+          }
         }
       } else {
         cap

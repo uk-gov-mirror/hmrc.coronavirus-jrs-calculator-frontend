@@ -16,10 +16,19 @@
 
 package viewmodels
 
-import models.{NicBreakdown, PensionBreakdown, Periods}
+import models.{NicBreakdown, PensionBreakdown, Periods, PhaseTwoFurloughBreakdown, PhaseTwoNicBreakdown, PhaseTwoPensionBreakdown}
 import views.ViewUtils._
 
 case class DetailedBreakdown(period: Periods, furlough: DetailedFurloughBreakdown, nic: NicBreakdown, pension: PensionBreakdown) {
+  def payPeriodStart: String = dateToStringWithoutYear(period.period.start)
+  def payPeriodEnd: String = dateToString(period.period.end)
+}
+
+case class PhaseTwoDetailedBreakdown(
+  period: Periods,
+  furlough: PhaseTwoFurloughBreakdown,
+  nic: PhaseTwoNicBreakdown,
+  pension: PhaseTwoPensionBreakdown) {
   def payPeriodStart: String = dateToStringWithoutYear(period.period.start)
   def payPeriodEnd: String = dateToString(period.period.end)
 }

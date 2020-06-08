@@ -16,7 +16,7 @@
 
 package services
 
-import models.{AveragePayment, CylbPayment, PaymentWithPeriod, ReferencePay, RegularPayData, VariablePayData, VariablePayWithCylbData}
+import models.{AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbPayment, CylbPaymentWithPhaseTwoPeriod, PaymentWithPeriod, PaymentWithPhaseTwoPeriod, PhaseTwoReferencePay, PhaseTwoRegularPayData, PhaseTwoVariablePayData, PhaseTwoVariablePayWithCylbData, ReferencePay, RegularPayData, VariablePayData, VariablePayWithCylbData}
 
 trait ReferencePayCalculator extends RegularPayCalculator with AveragePayCalculator with CylbCalculator with Calculators {
 
@@ -30,7 +30,22 @@ trait ReferencePayCalculator extends RegularPayCalculator with AveragePayCalcula
     }
   }
 
+  def phaseTwoReferencePay(data: PhaseTwoReferencePay): Seq[PaymentWithPhaseTwoPeriod] = data match {
+    case rpd: PhaseTwoRegularPayData  => phaseTwoRegularPay(rpd.wage, rpd.referencePayData.periods)
+    case vpd: PhaseTwoVariablePayData => phaseTwoAveragePay(vpd.annualPay, vpd.priorFurlough, vpd.referencePayData.periods)
+    case lbd: PhaseTwoVariablePayWithCylbData => {
+      val avg = phaseTwoAveragePay(lbd.annualPay, lbd.priorFurlough, lbd.referencePayData.periods)
+
+      phaseTwoWithCylb(avg, lbd)
+    }
+  }
+
   private def withCylb(avg: Seq[AveragePayment], data: VariablePayWithCylbData): Seq[CylbPayment] =
     avg.map(a => calculateCylb(a, data.nonFurloughPay, data.frequency, data.cylbPayments, a.periodWithPaymentDate))
+
+  private def phaseTwoWithCylb(
+    avg: Seq[AveragePaymentWithPhaseTwoPeriod],
+    data: PhaseTwoVariablePayWithCylbData): Seq[CylbPaymentWithPhaseTwoPeriod] =
+    avg.map(a => phaseTwoCylb(a, data.frequency, data.cylbPayments, a.phaseTwoPeriod))
 
 }

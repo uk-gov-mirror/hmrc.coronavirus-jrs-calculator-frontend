@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PayMethod.{Regular, Variable}
-import models.{BranchingQuestions, Journey, ReferencePay, RegularPay, RegularPayData, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
+import models.{BranchingQuestions, Journey, PhaseTwoReferencePay, PhaseTwoRegularPayData, PhaseTwoVariablePayData, PhaseTwoVariablePayWithCylbData, ReferencePay, RegularPay, RegularPayData, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import cats.syntax.apply._
 import models.UserAnswers.AnswerV
 
@@ -39,11 +39,23 @@ trait JourneyBuilder extends DataExtractor {
     case VariablePayWithCylb => variablePayWithCylbDataV(userAnswers)
   }
 
+  def phaseTwoJourneyDataV(journey: Journey, userAnswers: UserAnswers): AnswerV[PhaseTwoReferencePay] = journey match {
+    case RegularPay          => phaseTwoRegularPayDataV(userAnswers)
+    case VariablePay         => phaseTwoVariablePayDataV(userAnswers)
+    case VariablePayWithCylb => phaseTwoVariablePayWithCylbDataV(userAnswers)
+  }
+
   private def regularPayDataV(userAnswers: UserAnswers): AnswerV[RegularPayData] =
     (
       extractReferencePayDataV(userAnswers),
       extractSalaryV(userAnswers)
     ).mapN(RegularPayData.apply)
+
+  private def phaseTwoRegularPayDataV(userAnswers: UserAnswers): AnswerV[PhaseTwoRegularPayData] =
+    (
+      extractPhaseTwoReferencePayDataV(userAnswers),
+      extractSalaryV(userAnswers)
+    ).mapN(PhaseTwoRegularPayData.apply)
 
   private[this] def variablePayDataV(userAnswers: UserAnswers): AnswerV[VariablePayData] =
     (
@@ -52,6 +64,13 @@ trait JourneyBuilder extends DataExtractor {
       extractNonFurloughV(userAnswers),
       extractPriorFurloughPeriodV(userAnswers)
     ).mapN(VariablePayData.apply)
+
+  private def phaseTwoVariablePayDataV(userAnswers: UserAnswers): AnswerV[PhaseTwoVariablePayData] =
+    (
+      extractPhaseTwoReferencePayDataV(userAnswers),
+      extractAnnualPayAmountV(userAnswers),
+      extractPriorFurloughPeriodV(userAnswers)
+    ).mapN(PhaseTwoVariablePayData.apply)
 
   private def variablePayWithCylbDataV(userAnswers: UserAnswers): AnswerV[VariablePayWithCylbData] =
     (
@@ -67,6 +86,21 @@ trait JourneyBuilder extends DataExtractor {
         nonFurloughPay = nonFurlough,
         priorFurlough = priorFurlough,
         cylbPayments = cylbPayments
+      )
+    }
+
+  private def phaseTwoVariablePayWithCylbDataV(userAnswers: UserAnswers): AnswerV[PhaseTwoVariablePayWithCylbData] =
+    (
+      extractPhaseTwoReferencePayDataV(userAnswers),
+      extractAnnualPayAmountV(userAnswers),
+      extractPriorFurloughPeriodV(userAnswers)
+    ).mapN { (referencePayData, annualPay, priorFurlough) =>
+      val cylbPayments = extractCylbPayments(userAnswers)
+      PhaseTwoVariablePayWithCylbData(
+        referencePayData,
+        annualPay,
+        priorFurlough,
+        cylbPayments
       )
     }
 }

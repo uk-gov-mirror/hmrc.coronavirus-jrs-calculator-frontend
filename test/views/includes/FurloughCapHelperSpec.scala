@@ -28,9 +28,12 @@ class FurloughCapHelperSpec extends SpecBase {
     Helpers.stubMessagesApi(
       Map(
         "en" -> Map(
-          "furloughBreakdown.furloughCap.fullPeriodCap"       -> "{0}",
-          "furloughBreakdown.furloughCap.periodSpansMonthCap" -> "{0}|{1}|{2}|{3}|{4}|{5}|{6}",
-          "furloughBreakdown.furloughCap.partialPeriodCap"    -> "{0}|{1}|{2}|{3}"
+          "furloughBreakdown.furloughCap.fullPeriodCap"                        -> "{0}",
+          "phaseTwoFurloughBreakdown.furloughCap.fullPeriodCap.partTime"       -> "{0}|{1}|{2}|{3}",
+          "furloughBreakdown.furloughCap.periodSpansMonthCap"                  -> "{0}|{1}|{2}|{3}|{4}|{5}|{6}",
+          "phaseTwoFurloughBreakdown.furloughCap.periodSpansMonthCap.partTime" -> "{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}",
+          "furloughBreakdown.furloughCap.partialPeriodCap"                     -> "{0}|{1}|{2}|{3}",
+          "phaseTwoFurloughBreakdown.furloughCap.partialPeriodCap.partTime"    -> "{0}|{1}|{2}|{3}|{4}|{5}"
         ))
     )
   )
@@ -41,10 +44,20 @@ class FurloughCapHelperSpec extends SpecBase {
       instance.calculationFor(FullPeriodCap(100.00)) mustBe "100.00"
     }
 
+    "return a templated message for FullPeriodCapWithPartTime" in {
+      instance.calculationFor(FullPeriodCapWithPartTime(100.00, 200.00, 20.00, 10.00)) mustBe "200.00|20.00|10.00|100.00"
+    }
+
     "return a templated message for PeriodSpansMonthCap" in {
       val cap = PeriodSpansMonthCap(2621.15, 17, 3, 80.65, 15, 4, 83.34)
 
       instance.calculationFor(cap) mustBe "17|March|80.65|15|April|83.34|2621.15"
+    }
+
+    "return a templated message for PeriodSpansMonthCapWithPartTime" in {
+      val cap = PeriodSpansMonthCapWithPartTime(2621.15, 17, 3, 80.65, 15, 4, 83.34, 0.00, 0.00, 0.00)
+
+      instance.calculationFor(cap) mustBe "17|March|80.65|15|April|83.34|0.00|0.00|2621.15"
     }
 
     "round the values for PeriodSpansMonthCap" in {
@@ -57,6 +70,12 @@ class FurloughCapHelperSpec extends SpecBase {
       val cap = PartialPeriodCap(1774.30, 22, 3, 80.65)
 
       instance.calculationFor(cap) mustBe "22|March|80.65|1774.30"
+    }
+
+    "return a templated message for PartialPeriodCapWithPartTime" in {
+      val cap = PartialPeriodCapWithPartTime(1774.30, 22, 3, 80.65, 0.00, 0.00, 0.00)
+
+      instance.calculationFor(cap) mustBe "22|March|80.65|0.00|0.00|1774.30"
     }
 
     "round the values for PartialPeriodCap" in {

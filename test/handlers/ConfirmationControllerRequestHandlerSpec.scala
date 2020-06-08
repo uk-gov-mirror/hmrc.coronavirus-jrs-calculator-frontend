@@ -19,11 +19,12 @@ package handlers
 import base.{CoreTestDataBuilder, SpecBase}
 import cats.scalatest.ValidatedValues
 import models.NicCategory.{Nonpayable, Payable}
+import models.PaymentFrequency.Monthly
 import models.PensionStatus.{DoesContribute, DoesNotContribute}
 import models.{Amount, FullPeriodCap, FurloughCalculationResult, NicCalculationResult, NicCap, PartialPeriodCap, PensionCalculationResult, TaxYearEnding2020, TaxYearEnding2021, UserAnswers}
 import services.Threshold
 import utils.CoreTestData
-import viewmodels.ConfirmationViewBreakdown
+import viewmodels.{ConfirmationViewBreakdown, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
 
 class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestData with ValidatedValues with CoreTestDataBuilder {
 
@@ -51,7 +52,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
           0.0,
           0.0,
           regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
-          Threshold(719.0, TaxYearEnding2020),
+          Threshold(719.0, TaxYearEnding2020, Monthly),
           NicCap(Amount(1600.0), Amount(121.58), Amount(220.80)),
           Payable
         ),
@@ -60,7 +61,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
           0.0,
           0.0,
           regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
-          Threshold(732.0, TaxYearEnding2021),
+          Threshold(732.0, TaxYearEnding2021, Monthly),
           NicCap(Amount(1600.0), Amount(119.78), Amount(220.80)),
           Payable
         )
@@ -73,14 +74,14 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
         fullPeriodPensionBreakdown(
           32.64,
           regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
-          Threshold(512.0, TaxYearEnding2020),
+          Threshold(512.0, TaxYearEnding2020, Monthly),
           512.0,
           DoesContribute
         ),
         fullPeriodPensionBreakdown(
           32.40,
           regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
-          Threshold(520.0, TaxYearEnding2021),
+          Threshold(520.0, TaxYearEnding2021, Monthly),
           520.0,
           DoesContribute
         )
@@ -91,13 +92,14 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
 
     val expectedClaimPeriod = period("2020-03-01", "2020-04-30")
 
-    loadResultData(dummyUserAnswers).value.confirmationViewBreakdown mustBe expectedBreakdown
-    loadResultData(dummyUserAnswers).value.metaData.claimPeriod mustBe expectedClaimPeriod
+    (loadResultData(dummyUserAnswers).value.asInstanceOf[PhaseOneConfirmationDataResult]).confirmationViewBreakdown mustBe expectedBreakdown
+    (loadResultData(dummyUserAnswers).value.asInstanceOf[PhaseOneConfirmationDataResult]).metaData.claimPeriod mustBe expectedClaimPeriod
   }
 
   "for a given user answer calculate furlough and empty results for ni and pension if do not apply" in new ConfirmationControllerRequestHandler {
     val userAnswers = dummyUserAnswers.withNiCategory(Nonpayable).withPensionStatus(DoesNotContribute)
-    val confirmationViewBreakdown: ConfirmationViewBreakdown = loadResultData(userAnswers).value.confirmationViewBreakdown
+    val confirmationViewBreakdown: ConfirmationViewBreakdown =
+      (loadResultData(userAnswers).value.asInstanceOf[PhaseOneConfirmationDataResult]).confirmationViewBreakdown
 
     confirmationViewBreakdown.furlough.total mustBe 3200.0
     confirmationViewBreakdown.nic.total mustBe 0.0
@@ -136,7 +138,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
             3500.00,
             2483.87,
             partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31")),
-          Threshold(719.0, TaxYearEnding2020),
+          Threshold(719.0, TaxYearEnding2020, Monthly),
           NicCap(Amount(1774.30), Amount(202.83), Amount(244.85)),
           Payable
         )
@@ -153,7 +155,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
             3500.00,
             2483.87,
             partialPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 10", "2020, 3, 31", "2020, 3, 31")),
-          Threshold(512.0, TaxYearEnding2020),
+          Threshold(512.0, TaxYearEnding2020, Monthly),
           363.35,
           DoesContribute
         )
@@ -162,7 +164,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
-    loadResultData(userAnswers).value.confirmationViewBreakdown mustBe expected
+    (loadResultData(userAnswers).value.asInstanceOf[PhaseOneConfirmationDataResult]).confirmationViewBreakdown mustBe expected
   }
 
   "variable average partial period scenario" in new ConfirmationControllerRequestHandler {
@@ -199,7 +201,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
             12960.0,
             period("2019-08-01", "2020-03-04")
           ),
-          Threshold(719.0, TaxYearEnding2020),
+          Threshold(719.0, TaxYearEnding2020, Monthly),
           NicCap(Amount(1289.95), Amount(102.16), Amount(178.01)),
           Payable
         )
@@ -218,7 +220,7 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
             12960.0,
             period("2019-08-01", "2020-03-04")
           ),
-          Threshold(512.0, TaxYearEnding2020),
+          Threshold(512.0, TaxYearEnding2020, Monthly),
           445.94,
           DoesContribute
         )
@@ -227,12 +229,16 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
 
     val expected = ConfirmationViewBreakdown(furlough, nic, pension)
 
-    loadResultData(userAnswers).value.confirmationViewBreakdown mustBe expected
+    (loadResultData(userAnswers).value.asInstanceOf[PhaseOneConfirmationDataResult]).confirmationViewBreakdown mustBe expected
   }
 
   "take into account all cylb payments for weekly frequency with partial period as first period" in new ConfirmationControllerRequestHandler {
 
-    loadResultData(manyPeriods).value.confirmationViewBreakdown.furlough.total mustBe 2402.63
+    (loadResultData(manyPeriods).value.asInstanceOf[PhaseOneConfirmationDataResult]).confirmationViewBreakdown.furlough.total mustBe 2402.63
+  }
+
+  "do phase two calculation if claimStartDate is on or after 1 July 2020" in new ConfirmationControllerRequestHandler {
+    loadResultData(phaseTwoJourney()).value mustBe a[PhaseTwoConfirmationDataResult]
   }
 
 }

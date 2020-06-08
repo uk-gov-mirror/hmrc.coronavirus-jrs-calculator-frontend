@@ -19,6 +19,7 @@ package utils
 import java.util.UUID
 
 import models.FurloughStatus.FurloughEnded
+import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.TopUpStatus.NotToppedUp
@@ -52,6 +53,21 @@ trait CoreTestData extends UserAnswersBuilder {
       .withLastPayDate("2020-04-20")
       .withRegularPayAmount(2000.0)
       .withPayDate(List("2020-02-29", "2020-03-31", "2020-04-30"))
+
+  def phaseTwoJourney(): UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 7, 1")
+      .withClaimPeriodEnd("2020, 7, 31")
+      .withFurloughStartDate("2020, 3, 20")
+      .withFurloughStatus()
+      .withPaymentFrequency(Monthly)
+      .withNiCategory()
+      .withPensionStatus()
+      .withPayMethod()
+      .withPayDate(List("2020, 6, 30", "2020, 7, 31"))
+      .withLastPayDate("2020, 7, 31")
+      .withPartTimeQuestion(PartTimeNo)
+      .withRegularPayAmount(2000.00)
 
   lazy val variablePartial =
     emptyUserAnswers
