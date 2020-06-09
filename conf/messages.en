@@ -607,8 +607,9 @@ payPeriodQuestion.period.text = from {0} to {1}
 partTimePeriods.title = When did this employee work during the claim period?
 partTimePeriods.heading = When did this employee work during the claim period?
 partTimePeriods.hint = Select all that apply.
-partTimePeriods.fullPeriod = Pay period end: {0} to {1}
-partTimePeriods.partialPeriod = Pay period end: {0} to {1} (partial)
+partTimePeriods.fullPeriod = Pay period: {0} to {1}
+partTimePeriods.partialPeriod = Pay period: {0} to {1} (partial)
+partTimePeriods.singleDay = Pay period: {0} (partial)
 partTimePeriods.error.required = Select the pay periods when the employee worked
 
 partTimeQuestion.title = Has this employee done any work during the claim period?
@@ -622,7 +623,9 @@ partTimeQuestion.partTimeNo = No
 partTimeQuestion.error.required = Select one of the options below
 
 partTimeHours.title = What hours did this employee actually work between {0} and {1}?
+partTimeHours.title.singleDay = What hours did this employee actually work on {0}?
 partTimeHours.heading = What hours did this employee actually work between {0} and {1}?
+partTimeHours.heading.singleDay = What hours did this employee actually work on {0}?
 partTimeHours.partial = These are the dates from the pay period {0} to {1} that fall inside the claim period.
 partTimeHours.p1 = For example, 18.75 hours
 partTimeHours.hint = Hours
@@ -632,7 +635,9 @@ partTimeHours.error.max = Enter a real part time hours
 partTimeHours.error.nonNumeric = Enter the part time hours using numbers
 
 partTimeNormalHours.title = What would this employee’s usual hours have been between {0} and {1}?
+partTimeNormalHours.title.singleDay = What would this employee’s usual hours have been on {0}?
 partTimeNormalHours.heading = What would this employee’s usual hours have been between {0} and {1}?
+partTimeNormalHours.heading.singleDay = What would this employee’s usual hours have been on {0}?
 partTimeNormalHours.partial = These are the dates from in the pay period {0} to {1} that fall inside the claim period.
 partTimeNormalHours.p1 = For example, 37.5 hours
 partTimeNormalHours.hint = Hours

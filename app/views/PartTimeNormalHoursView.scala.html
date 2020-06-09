@@ -28,18 +28,33 @@
 
 @(form: Form[_], period: Periods, idx: Int)(implicit request: Request[_], messages: Messages)
 
-@titleAndHeadingArgs = @{period match {
-    case fp: FullPeriod => Seq(dateToStringWithoutYear(fp.period.start), dateToString(fp.period.end))
-    case pp: PartialPeriod => Seq(dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end))
+@titleKey = @{period match {
+    case pp: PartialPeriod if(pp.partial.countDays == 1) => "partTimeNormalHours.title.singleDay"
+    case _ => "partTimeNormalHours.title"
 }}
 
-@govukLayout(pageTitle = Some(title(form, "partTimeNormalHours.title", titleMessageArgs = titleAndHeadingArgs)), thisPage = PartTimeNormalHoursPage) {
+@headingKey = @{period match {
+    case pp: PartialPeriod if(pp.partial.countDays == 1) => "partTimeNormalHours.heading.singleDay"
+    case _ => "partTimeNormalHours.heading"
+}}
+
+@titleAndHeadingArgs = @{period match {
+    case fp: FullPeriod => Seq(dateToStringWithoutYear(fp.period.start), dateToString(fp.period.end))
+    case pp: PartialPeriod =>
+        if(pp.partial.countDays == 1) {
+            Seq(dateToString(pp.partial.end))
+        } else {
+            Seq(dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end))
+        }
+}}
+
+@govukLayout(pageTitle = Some(title(form, titleKey, titleMessageArgs = titleAndHeadingArgs)), thisPage = PartTimeNormalHoursPage) {
 
     @formHelper(action = PartTimeNormalHoursController.onSubmit(idx)) {
 
         @errorSummary(form.errors)
 
-        @h1(messages("partTimeNormalHours.heading", titleAndHeadingArgs: _*))
+        @h1(messages(headingKey, titleAndHeadingArgs: _*))
 
         @if(period.isInstanceOf[PartialPeriod]) {
             @p(Html(messages("partTimeNormalHours.partial", dateToStringWithoutYear(period.period.start), dateToString(period.period.end))))
@@ -51,7 +66,7 @@
             form,
             id = "value",
             name = "value",
-            label = messages("partTimeNormalHours.heading", titleAndHeadingArgs: _*),
+            label = messages(headingKey, titleAndHeadingArgs: _*),
             classes = Some("govuk-input--width-5"),
             hint = Some("partTimeNormalHours.hint")
         )

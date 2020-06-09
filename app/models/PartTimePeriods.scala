@@ -33,7 +33,11 @@ object PartTimePeriods {
       case fp: FullPeriod =>
         Text(messages("partTimePeriods.fullPeriod", dateToStringWithoutYear(fp.period.start), dateToString(fp.period.end)))
       case pp: PartialPeriod =>
-        Text(messages("partTimePeriods.partialPeriod", dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end)))
+        if(pp.partial.countDays == 1) {
+          Text(messages("partTimePeriods.singleDay", dateToString(pp.partial.end)))
+        } else {
+          Text(messages("partTimePeriods.partialPeriod", dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end)))
+        }
     }
 
     CheckboxItem(

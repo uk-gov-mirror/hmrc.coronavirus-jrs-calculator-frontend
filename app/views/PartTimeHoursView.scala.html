@@ -28,18 +28,33 @@
 
 @(form: Form[_], period: Periods, idx: Int)(implicit request: Request[_], messages: Messages)
 
-@titleAndHeadingArgs = @{period match {
-    case fp: FullPeriod => Seq(dateToStringWithoutYear(fp.period.start), dateToString(fp.period.end))
-    case pp: PartialPeriod => Seq(dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end))
+@titleKey = @{period match {
+    case pp: PartialPeriod if(pp.partial.countDays == 1) => "partTimeHours.title.singleDay"
+    case _ => "partTimeHours.title"
 }}
 
-@govukLayout(pageTitle = Some(title(form, "partTimeHours.title", titleMessageArgs = titleAndHeadingArgs)), thisPage = PartTimeHoursPage) {
+@headingKey = @{period match {
+    case pp: PartialPeriod if(pp.partial.countDays == 1) => "partTimeHours.heading.singleDay"
+    case _ => "partTimeHours.heading"
+}}
+
+@titleAndHeadingArgs = @{period match {
+    case fp: FullPeriod => Seq(dateToStringWithoutYear(fp.period.start), dateToString(fp.period.end))
+    case pp: PartialPeriod =>
+        if(pp.partial.countDays == 1) {
+            Seq(dateToString(pp.partial.end))
+        } else {
+            Seq(dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end))
+        }
+}}
+
+@govukLayout(pageTitle = Some(title(form, titleKey, titleMessageArgs = titleAndHeadingArgs)), thisPage = PartTimeHoursPage) {
 
     @formHelper(action = PartTimeHoursController.onSubmit(idx)) {
 
         @errorSummary(form.errors)
 
-        @h1(messages("partTimeHours.heading", titleAndHeadingArgs: _*))
+        @h1(messages(headingKey, titleAndHeadingArgs: _*))
 
         @if(period.isInstanceOf[PartialPeriod]) {
           @p(Html(messages("partTimeHours.partial", dateToStringWithoutYear(period.period.start), dateToString(period.period.end))))
@@ -51,7 +66,7 @@
             form,
             id = "value",
             name = "value",
-            label = messages("partTimeHours.heading", titleAndHeadingArgs: _*),
+            label = messages(headingKey, titleAndHeadingArgs: _*),
             classes = Some("govuk-input--width-5"),
             hint = Some("partTimeHours.hint")
         )
