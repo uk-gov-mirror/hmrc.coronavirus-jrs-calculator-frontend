@@ -16,11 +16,11 @@
 
 package services
 
-import models.{Amount, Hours, PartialPeriod}
+import models.{Amount, PartialPeriod}
+import services.Calculators._
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode
-import Calculators._
 
 trait Calculators extends PeriodHelper {
 

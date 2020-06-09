@@ -16,7 +16,8 @@
 
 package viewmodels
 
-import models.{AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbPayment, CylbPaymentWithPhaseTwoPeriod, FurloughBreakdown, FurloughCalculationResult, FurloughDates, NicBreakdown, NicCalculationResult, NicCategory, PaymentFrequency, PensionBreakdown, PensionCalculationResult, PensionStatus, Period, PhaseTwoFurloughBreakdown, PhaseTwoFurloughCalculationResult, PhaseTwoNicBreakdown, PhaseTwoNicCalculationResult, PhaseTwoPensionBreakdown, PhaseTwoPensionCalculationResult, RegularPayment, RegularPaymentWithPhaseTwoPeriod}
+import models._
+import services.{AuditBreakdown, AuditCalculationResult, AuditPeriodBreakdown}
 
 sealed trait ConfirmationDataResult
 
@@ -26,7 +27,9 @@ case class PhaseOneConfirmationDataResult(metaData: ConfirmationMetadata, confir
 case class PhaseTwoConfirmationDataResult(metaData: ConfirmationMetadata, confirmationViewBreakdown: PhaseTwoConfirmationViewBreakdown)
     extends ConfirmationDataResult
 
-sealed trait ViewBreakdown
+sealed trait ViewBreakdown {
+  def toAuditBreakdown: AuditBreakdown
+}
 
 case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: NicCalculationResult, pension: PensionCalculationResult)
     extends ViewBreakdown {
@@ -57,6 +60,28 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
         "detailedBreakdown.p1.cylb.2",
         "detailedBreakdown.p1.cylb.3"
       )
+  }
+
+  override def toAuditBreakdown: AuditBreakdown = {
+    val auditFurlough = AuditCalculationResult(
+      furlough.total,
+      furlough.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
+    )
+
+    val auditNic = AuditCalculationResult(
+      nic.total,
+      nic.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
+    )
+
+    val auditPension = AuditCalculationResult(
+      pension.total,
+      pension.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
+    )
+
+    AuditBreakdown(auditFurlough, auditNic, auditPension)
   }
 }
 
@@ -92,6 +117,28 @@ case class PhaseTwoConfirmationViewBreakdown(
         "phaseTwoDetailedBreakdown.p1.cylb.2",
         "phaseTwoDetailedBreakdown.p1.cylb.3"
       )
+  }
+
+  override def toAuditBreakdown: AuditBreakdown = {
+    val auditFurlough = AuditCalculationResult(
+      furlough.total,
+      furlough.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.period.end))
+    )
+
+    val auditNic = AuditCalculationResult(
+      nic.total,
+      nic.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.period.end))
+    )
+
+    val auditPension = AuditCalculationResult(
+      pension.total,
+      pension.periodBreakdowns
+        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.period.end))
+    )
+
+    AuditBreakdown(auditFurlough, auditNic, auditPension)
   }
 }
 

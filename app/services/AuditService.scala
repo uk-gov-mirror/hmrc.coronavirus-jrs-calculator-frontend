@@ -23,14 +23,14 @@ import javax.inject.{Inject, Singleton}
 import models.UserAnswers
 import models.UserAnswers.AnswerV
 import pages._
-import play.api.libs.json.{Format, JsString, JsValue, Json, Writes}
+import play.api.libs.json.{Format, JsString, Json, Writes}
 import play.api.mvc.Request
 import services.JobRetentionSchemeCalculatorEvent.JobRetentionSchemeCalculatorEvent
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import viewmodels.ConfirmationViewBreakdown
+import viewmodels.ViewBreakdown
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
@@ -64,13 +64,13 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
 
   def sendCalculationPerformed(
     userAnswers: UserAnswers,
-    breakdown: ConfirmationViewBreakdown)(implicit hc: HeaderCarrier, request: Request[Any], ec: ExecutionContext): Future[Unit] =
+    breakdown: ViewBreakdown)(implicit hc: HeaderCarrier, request: Request[Any], ec: ExecutionContext): Future[Unit] =
     auditEvent(
       JobRetentionSchemeCalculatorEvent.CalculationPerformed,
       "calculation-performed",
       Seq(
         "userAnswers"       -> userAnswersTransformer(userAnswers),
-        "calculationResult" -> breakdownTransformer(breakdown)
+        "calculationResult" -> Json.toJson(breakdown.toAuditBreakdown)
       )
     )
 
@@ -103,32 +103,11 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       "employerTopUpAmounts"               -> Json.toJson(userAnswers.getList(TopUpAmountPage)),
       "employerAdditionalPayments"         -> Json.toJson(userAnswers.getList(AdditionalPaymentAmountPage)),
       "employeeNationalInsuranceCategory"  -> userAnswers.getV(NicCategoryPage).json,
-      "employerPensionStatus"              -> userAnswers.getV(PensionStatusPage).json
+      "employerPensionStatus"              -> userAnswers.getV(PensionStatusPage).json,
+      "employeePartTimeStatus"             -> userAnswers.getV(PartTimeQuestionPage).json,
+      "employeeActualHours"                -> Json.toJson(userAnswers.getList(PartTimeHoursPage)),
+      "employeeUsualHours"                 -> Json.toJson(userAnswers.getList(PartTimeNormalHoursPage))
     )
-
-  private def breakdownTransformer(breakdown: ConfirmationViewBreakdown) = {
-    val furlough = AuditCalculationResult(
-      breakdown.furlough.total,
-      breakdown.furlough.periodBreakdowns
-        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
-    )
-
-    val nic = AuditCalculationResult(
-      breakdown.nic.total,
-      breakdown.nic.periodBreakdowns
-        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
-    )
-
-    val pension = AuditCalculationResult(
-      breakdown.pension.total,
-      breakdown.pension.periodBreakdowns
-        .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
-    )
-
-    val result = AuditBreakdown(furlough, nic, pension)
-
-    Json.toJson(result)
-  }
 
   private def auditEvent(event: JobRetentionSchemeCalculatorEvent, transactionName: String, details: Seq[(String, Any)])(
     implicit hc: HeaderCarrier,

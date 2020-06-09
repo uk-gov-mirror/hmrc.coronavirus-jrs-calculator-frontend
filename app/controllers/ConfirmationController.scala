@@ -59,6 +59,7 @@ class ConfirmationController @Inject()(
           Future.successful(Ok(view(data.metaData, data.confirmationViewBreakdown, config.calculatorVersion)))
         }
       case Valid(data: PhaseTwoConfirmationDataResult) =>
+        auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
         Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, config.calculatorVersion)))
 
     }
