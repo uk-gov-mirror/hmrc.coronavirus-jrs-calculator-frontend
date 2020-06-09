@@ -242,6 +242,7 @@ confirmation.explanation.p = You can view a detailed calculation showing the fur
 confirmation.calculated.on = Calculated on:
 confirmation.date.version = (Calculator Version v{0})
 confirmation.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.
+confirmation.print.this.page = Print or save a copy of this page
 confirmation.bullets.heading = These calculations are based on:
 confirmation.claimPeriod = Claim period: {0} to {1}
 confirmation.furloughPeriod.started = Furlough period: Started {0}

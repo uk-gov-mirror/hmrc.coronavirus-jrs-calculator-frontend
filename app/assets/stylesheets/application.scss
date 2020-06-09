@@ -5,6 +5,23 @@ $govuk-assets-path: "/job-retention-scheme-calculator/assets/lib/govuk-frontend/
 @import "language-selection";
 @import "currency-input";
 
+// -- heading stuff  --//
+.govuk-panel {
+  padding: 30px 30px 15px;
+}
+.govuk-panel--confirmation {
+  h1 {
+    font-weight: bold;
+    font-size: 27px ;
+    font-size: 1.6875rem ;
+    line-height: 1.11111 ;
+    margin-top: 0
+  }
+}
+.govuk-panel__title {
+  font-size: 19px;
+  line-height: 1.09;
+}
 .furlough-heading {
   clear: both;
   display: table;
@@ -12,8 +29,64 @@ $govuk-assets-path: "/job-retention-scheme-calculator/assets/lib/govuk-frontend/
   padding-top: 8px;
   table-layout: fixed;
   width: 100%;
-
-  .govuk-panel__title {
-    display: table-header-group;
+}
+.furlough-heading .govuk-panel__title {
+  display: table-header-group;
+  font-size: 48px;
+  font-size: 3rem;
+  line-height: 1.04167;
+}
+.furlough-heading p {
+  color: white;
+  font-size: 24px;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+@media print {
+  /* styles go here */
+  .govuk-panel {
+    text-align: left;
+    padding:0;
+    margin: 0;
   }
+  .govuk-panel--confirmation {
+    color: black;
+    background: transparent;
+    h1 {
+      font-weight: bold;
+    }
+  }
+  .govuk-panel__title {
+    font-size: 19px;
+    line-height: 1.09;
+  }
+  .furlough-heading {
+    clear: both;
+    display: block;
+    margin-top: 0.275em;
+    padding-top: 8px;
+    table-layout: fixed;
+    width: 100%;
+  }
+  .furlough-heading p {
+    color: black;
+    font-size: 19px;
+    font-size: 1.1875rem ;
+    line-height: 1.01em;
+    margin:0;
+    padding: 0 0 0.5em 0;
+  }
+  .furlough-heading .govuk-panel__title {
+    display: relative;
+    font-size: 24px ;
+    font-size: 1.5rem ;
+    line-height: 1em;
+    margin:0;
+    padding: 0;
+  }
+  .govuk-phase-banner, .lang{
+      display: none;
+    }
 }

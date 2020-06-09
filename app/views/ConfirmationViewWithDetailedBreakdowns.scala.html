@@ -43,20 +43,20 @@
 
     @confirmation {
 
-        @h1(Html(messages("confirmation.heading")), classes = Some("govuk-panel__body govuk-!-margin-bottom-4 govuk-!-margin-top-0 govuk-!-font-size-27"))
+        @h1(Html(messages("confirmation.heading")), classes = Some(""))
 
         <div class="furlough-heading">
-            <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p1")</p>
+            <p>@messages("confirmation.confirmation.p1")</p>
             <p class="govuk-panel__title">&pound;@cvb.furlough.total.formatted("%.2f")</p>
         </div>
 
         <div class="furlough-heading">
-            <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p2")</p>
+            <p>@messages("confirmation.confirmation.p2")</p>
             <p class="govuk-panel__title">&pound;@cvb.nic.total.formatted("%.2f")</p>
         </div>
 
         <div class="furlough-heading">
-            <p class="govuk-!-font-weight-regular govuk-!-font-size-24 govuk-!-margin-bottom-4 govuk-!-margin-top-0">@messages("confirmation.confirmation.p3")</p>
+            <p>@messages("confirmation.confirmation.p3")</p>
             <p class="govuk-panel__title">&pound;@cvb.pension.total.formatted("%.2f")</p>
         </div>
 
@@ -69,6 +69,10 @@
     }
 
     @p(Html(messages("confirmation.disclaimer")))
+
+    @p{
+        <a id="print-link" href="">@messages("confirmation.print.this.page")</a>
+    }
 
     @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
 
