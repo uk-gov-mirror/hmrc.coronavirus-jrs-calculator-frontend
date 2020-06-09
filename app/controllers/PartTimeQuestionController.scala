@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.PartTimeQuestionFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.PartTimeQuestionPage
+import pages.{ClaimPeriodStartPage, PartTimeQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -29,41 +29,46 @@ import views.html.PartTimeQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
+import handlers.ErrorHandler
 
 class PartTimeQuestionController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
-  navigator: Navigator,
+  val navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: PartTimeQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: PartTimeQuestionView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+    extends BaseController with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.getV(PartTimeQuestionPage) match {
-      case Invalid(e)   => form
-      case Valid(value) => form.fill(value)
-    }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+      val preparedForm = request.userAnswers.getV(PartTimeQuestionPage) match {
+        case Invalid(e)   => form
+        case Valid(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm))
+      Future.successful(Ok(view(preparedForm, claimStart)))
+    }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PartTimeQuestionPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(PartTimeQuestionPage, updatedAnswers))
-      )
+    getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStart))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(PartTimeQuestionPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(PartTimeQuestionPage, updatedAnswers))
+        )
+    }
   }
 }

@@ -31,17 +31,17 @@
 
 @(form: Form[_], claimStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "furloughOngoing.title")), thisPage = FurloughStatusPage) {
+@govukLayout(pageTitle = Some(title(form, if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.title" else "furloughOngoing.title")), thisPage = FurloughStatusPage) {
 
     @formHelper(action = FurloughOngoingController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
-        @h1(messages("furloughOngoing.heading"))
+        @h1(messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"))
         @p(Html(messages(if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.p1" else "")))
 
         @inputRadio(
             form = form,
-            legend = messages("furloughOngoing.heading"),
+            legend = messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"),
             legendAsHeading = false,
             classes = "govuk-visually-hidden",
             items = FurloughStatus.options(form, claimStartDate)

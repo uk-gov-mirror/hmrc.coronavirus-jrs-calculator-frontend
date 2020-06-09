@@ -26,7 +26,7 @@ import javax.inject.Inject
 import models.requests.DataRequest
 import models.{FurloughEnded, FurloughOngoing, FurloughPeriodQuestion, FurloughStatus}
 import navigation.Navigator
-import pages.{FurloughPeriodQuestionPage, FurloughStartDatePage, FurloughStatusPage}
+import pages.{ClaimPeriodStartPage, FurloughPeriodQuestionPage, FurloughStartDatePage, FurloughStatusPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -55,20 +55,22 @@ class FurloughPeriodQuestionController @Inject()(
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
       getRequiredAnswersV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
-        val preparedForm = request.userAnswers.getV(FurloughPeriodQuestionPage) match {
-          case Invalid(_)   => form
-          case Valid(value) => form.fill(value)
-        }
+        getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+          val preparedForm = request.userAnswers.getV(FurloughPeriodQuestionPage) match {
+            case Invalid(_)   => form
+            case Valid(value) => form.fill(value)
+          }
 
-        extractFurloughPeriodV(request.userAnswers) match {
-          case Valid(FurloughOngoing(_)) =>
-            Future.successful(Ok(view(preparedForm, furloughStart, furloughStatus, None)))
-          case Valid(FurloughEnded(_, end)) =>
-            Future.successful(Ok(view(preparedForm, furloughStart, furloughStatus, Some(end))))
-          case Invalid(errors) =>
-            logger.error("Failed to extract furlough period.")
-            logger.error(errors.toChain.toList.mkString("\n"))
-            Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          extractFurloughPeriodV(request.userAnswers) match {
+            case Valid(FurloughOngoing(_)) =>
+              Future.successful(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, None)))
+            case Valid(FurloughEnded(_, end)) =>
+              Future.successful(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, Some(end))))
+            case Invalid(errors) =>
+              logger.error("Failed to extract furlough period.")
+              logger.error(errors.toChain.toList.mkString("\n"))
+              Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          }
         }
       }
   }
@@ -76,24 +78,27 @@ class FurloughPeriodQuestionController @Inject()(
   def onSubmit(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
       getRequiredAnswersV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => processSubmissionWithErrors(furloughStart, furloughStatus, formWithErrors),
-            value => processSubmittedAnswer(request, value)
-          )
+        getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors => processSubmissionWithErrors(claimStart, furloughStart, furloughStatus, formWithErrors),
+              value => processSubmittedAnswer(request, value)
+            )
+        }
       }
   }
 
   private def processSubmissionWithErrors(
+    claimStart: LocalDate,
     furloughStart: LocalDate,
     furloughStatus: FurloughStatus,
     formWithErrors: Form[FurloughPeriodQuestion])(implicit request: DataRequest[AnyContent]): Future[Result] =
     extractFurloughPeriodV(request.userAnswers) match {
       case Valid(FurloughOngoing(_)) =>
-        Future.successful(BadRequest(view(formWithErrors, furloughStart, furloughStatus, None)))
+        Future.successful(BadRequest(view(formWithErrors, claimStart, furloughStart, furloughStatus, None)))
       case Valid(FurloughEnded(_, end)) =>
-        Future.successful(BadRequest(view(formWithErrors, furloughStart, furloughStatus, Some(end))))
+        Future.successful(BadRequest(view(formWithErrors, claimStart, furloughStart, furloughStatus, Some(end))))
       case Invalid(errors) =>
         Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
     }

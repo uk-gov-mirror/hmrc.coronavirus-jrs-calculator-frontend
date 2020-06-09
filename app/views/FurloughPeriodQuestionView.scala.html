@@ -30,15 +30,15 @@
         p: components.p
 )
 
-@(form: Form[_], furloughStart: LocalDate, furloughStatus: FurloughStatus, furloughEnd: Option[LocalDate])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], claimStart: LocalDate, furloughStart: LocalDate, furloughStatus: FurloughStatus, furloughEnd: Option[LocalDate])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "furloughPeriodQuestion.title")), thisPage = FurloughPeriodQuestionPage) {
+@govukLayout(pageTitle = Some(title(form, if (claimStart.getMonthValue > 6) "furloughPeriodQuestion.1stJuly.title" else "furloughPeriodQuestion.title")), thisPage = FurloughPeriodQuestionPage) {
 
     @formHelper(action = FurloughPeriodQuestionController.onSubmit(), 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 
-        @h1("furloughPeriodQuestion.heading")
+        @h1(if (claimStart.getMonthValue > 6) "furloughPeriodQuestion.1stJuly.heading" else "furloughPeriodQuestion.heading")
 
         @p {
             <span class="govuk-!-font-weight-bold">@messages("furloughPeriodQuestion.start")</span>

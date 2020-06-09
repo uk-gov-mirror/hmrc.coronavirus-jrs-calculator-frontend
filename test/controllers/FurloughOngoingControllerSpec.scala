@@ -65,7 +65,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       application.stop()
     }
 
-    "return OK and the correct view for a GET with <p> if 1st of July" in {
+    "return OK and the correct view for a GET if 1st of July" in {
       val userAnswers = emptyUserAnswers.withClaimPeriodStart("2020,7,2")
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,9 +73,11 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       status(result) mustEqual OK
 
-      contentAsString(result) must include(messagesApi.messages("en")("furloughOngoing.1stJuly.p1"))
-      contentAsString(result) must include(s"${messagesApi.messages("en")("furloughOngoing.1stJuly.ongoing")}")
-      contentAsString(result) must not include (s"${messagesApi.messages("en")("furloughOngoing.ongoing")}")
+      val actualContent = contentAsString(result)
+      actualContent must include(messagesApi.messages("en")("furloughOngoing.1stJuly.p1"))
+      actualContent must include(s"<title> Has this employees furlough ended?")
+      actualContent must include(s"${messagesApi.messages("en")("furloughOngoing.1stJuly.ongoing")}")
+      actualContent must not include (s"${messagesApi.messages("en")("furloughOngoing.ongoing")}")
 
       application.stop()
     }

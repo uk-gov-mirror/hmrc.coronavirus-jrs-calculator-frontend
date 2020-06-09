@@ -587,7 +587,9 @@ claimPeriodQuestion.start = Start:
 claimPeriodQuestion.end = End: 
 
 furloughPeriodQuestion.title = Has this employee furloughed for the same time?
+furloughPeriodQuestion.1stJuly.title = Are the furlough dates the same for this employee?
 furloughPeriodQuestion.heading = Has this employee furloughed for the same time?
+furloughPeriodQuestion.1stJuly.heading = Are the furlough dates the same for this employee?
 furloughPeriodQuestion.furloughedOnSamePeriod = Yes
 furloughPeriodQuestion.furloughedOnDifferentPeriod = No
 furloughPeriodQuestion.error.required = Select one of the options below
@@ -610,16 +612,19 @@ partTimePeriods.partialPeriod = Pay period end: {0} to {1} (partial)
 partTimePeriods.error.required = Select the pay periods when the employee worked
 
 partTimeQuestion.title = Has this employee done any work during the claim period?
+partTimeQuestion.1stJuly.title = Has this employee worked during this claim period?
 partTimeQuestion.heading = Has this employee done any work during the claim period?
+partTimeQuestion.1stJuly.heading = Has this employee worked during this claim period?
 partTimeQuestion.p1 = From the 1 July employees are able to alternate between furlough and employee funded work during the claim period.
+partTimeQuestion.1stJuly.p1 = From 1 July, you can bring employees back to work while their furlough is ongoing. You can claim for their usual hours minus the hours they actually worked.
 partTimeQuestion.partTimeYes = Yes
 partTimeQuestion.partTimeNo = No
 partTimeQuestion.error.required = Select one of the options below
 
 partTimeHours.title = What hours did this employee actually work between {0} and {1}?
 partTimeHours.heading = What hours did this employee actually work between {0} and {1}?
-partTimeHours.partial = These are the dates from in the pay period {0} to {1} that fall inside the claim period.
-partTimeHours.p1 = For example, 37.5 hours
+partTimeHours.partial = These are the dates from the pay period {0} to {1} that fall inside the claim period.
+partTimeHours.p1 = For example, 18.75 hours
 partTimeHours.hint = Hours
 partTimeHours.error.required = Enter the part time hours for this pay period
 partTimeHours.error.min = The part time hours cannot be negative

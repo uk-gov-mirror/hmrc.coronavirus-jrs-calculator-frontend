@@ -16,13 +16,14 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBaseWithApplication
 import forms.PartTimeQuestionFormProvider
+import models.PartTimeQuestion
 import models.requests.DataRequest
-import models.{PartTimeQuestion, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.PartTimeQuestionPage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
@@ -38,6 +39,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
   val formProvider = new PartTimeQuestionFormProvider()
   val form = formProvider()
+  val claimStart = LocalDate.of(2020, 3, 1)
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, partTimeQuestionRoute).withCSRFToken
@@ -46,8 +48,9 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
   "PartTimeQuestion Controller" must {
 
     "return OK and the correct view for a GET" in {
+      val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val result = route(application, getRequest).value
 
@@ -55,17 +58,35 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
       status(result) mustEqual OK
 
-      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
+      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form)(dataRequest, messages).toString
+        view(form, claimStart)(dataRequest, messages).toString
+
+      application.stop()
+    }
+
+    "return OK and the correct view for a GET for phase two" in {
+      val userAnswers = emptyUserAnswers.withClaimPeriodStart("2020, 7, 2")
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      val result = route(application, getRequest).value
+
+      status(result) mustEqual OK
+
+      contentAsString(result) must include(messagesApi.messages("en")("partTimeQuestion.1stJuly.title"))
+      contentAsString(result) must include(messagesApi.messages("en")("partTimeQuestion.1stJuly.heading"))
+      contentAsString(result) must include(messagesApi.messages("en")("partTimeQuestion.1stJuly.p1"))
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(PartTimeQuestionPage, PartTimeQuestion.values.head).success.value
+      val userAnswers = emptyUserAnswers
+        .withPartTimeQuestion(PartTimeQuestion.values.head)
+        .withClaimPeriodStart(claimStart.toString)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -78,15 +99,16 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form.fill(PartTimeQuestion.values.head))(dataRequest, messages).toString
+        view(form.fill(PartTimeQuestion.values.head), claimStart)(dataRequest, messages).toString
 
       application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
+      val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
           .build()
 
@@ -105,7 +127,8 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
         FakeRequest(POST, partTimeQuestionRoute).withCSRFToken
@@ -120,10 +143,10 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
       status(result) mustEqual BAD_REQUEST
 
-      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm)(dataRequest, messages).toString
+        view(boundForm, claimStart)(dataRequest, messages).toString
 
       application.stop()
     }
