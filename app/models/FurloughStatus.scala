@@ -16,6 +16,8 @@
 
 package models
 
+import java.time.LocalDate
+
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -33,13 +35,16 @@ object FurloughStatus extends Enumerable.Implicits {
     FurloughOngoing
   )
 
-  def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
+  def options(form: Form[_], claimStart: LocalDate)(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
     RadioItem(
       value = Some(value.toString),
-      content = Text(messages(s"furloughOngoing.${value.toString}")),
+      content = Text(messages(phaseTwoContent(claimStart, value))),
       checked = form("value").value.contains(value.toString)
     )
   }
+
+  private def phaseTwoContent(claimStart: LocalDate, value: FurloughStatus): String =
+    if (claimStart.getMonthValue < 7) s"furloughOngoing.${value.toString}" else s"furloughOngoing.1stJuly.${value.toString}"
 
   implicit val enumerable: Enumerable[FurloughStatus] =
     Enumerable(values.map(v => v.toString -> v): _*)

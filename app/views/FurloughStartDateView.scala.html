@@ -29,15 +29,15 @@
 
 @(form: Form[_], claimStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "furloughStartDate.title")), thisPage = FurloughStartDatePage) {
+@govukLayout(pageTitle = Some(title(form, if (claimStartDate.getMonthValue > 6) "furloughStartDate.1stJuly.title" else "furloughStartDate.title")), thisPage = FurloughStartDatePage) {
 
     @formHelper(action = FurloughStartDateController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
         @h1(messages( if (claimStartDate.getMonthValue > 6) "furloughStartDate.1stJuly.heading" else "furloughStartDate.heading"))
-        @p(Html(messages("furloughStartDate.hint")))
-        @p(Html(messages("furloughStartDate.p1")))
+        @p(Html(messages(if (claimStartDate.getMonthValue < 7) "furloughStartDate.hint")))
+        @p(Html(messages(if (claimStartDate.getMonthValue < 7) "furloughStartDate.p1")))
 
         @inputDate(
             form,

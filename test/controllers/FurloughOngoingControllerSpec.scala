@@ -74,6 +74,8 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       contentAsString(result) must include(messagesApi.messages("en")("furloughOngoing.1stJuly.p1"))
+      contentAsString(result) must include(s"${messagesApi.messages("en")("furloughOngoing.1stJuly.ongoing")}")
+      contentAsString(result) must not include (s"${messagesApi.messages("en")("furloughOngoing.ongoing")}")
 
       application.stop()
     }

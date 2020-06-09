@@ -81,7 +81,7 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       application.stop()
     }
 
-    "return OK and the correct view for a GET with different heading if 1st July or after" in {
+    "return OK and the correct view for a GET with different contents if 1st July or after" in {
 
       val application = applicationBuilder(
         userAnswers = Some(
@@ -93,7 +93,12 @@ class FurloughStartDateControllerSpec extends SpecBaseWithApplication with Mocki
       val result = route(application, getRequest).value
 
       status(result) mustEqual OK
-      contentAsString(result) must include("When was this employee originally furloughed?")
+      val actualContent = contentAsString(result)
+      actualContent must include("When was this employee originally furloughed?")
+      actualContent must include("<title> When was this employee originally furloughed?")
+      //TODO not include is not the greatest test Vs hidden
+      actualContent must not include ("This is the date this employee started furlough. It could be before or after the start date of this claim.")
+      actualContent must not include ("We’re asking because your claim could include employees who were furloughed on different dates.")
 
       application.stop()
     }

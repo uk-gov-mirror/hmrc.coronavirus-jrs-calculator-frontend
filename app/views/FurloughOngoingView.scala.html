@@ -44,7 +44,7 @@
             legend = messages("furloughOngoing.heading"),
             legendAsHeading = false,
             classes = "govuk-visually-hidden",
-            items = FurloughStatus.options(form)
+            items = FurloughStatus.options(form, claimStartDate)
         )
 
         @button("site.continue")

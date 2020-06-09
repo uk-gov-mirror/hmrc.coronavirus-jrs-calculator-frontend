@@ -320,6 +320,7 @@ furloughOngoing.title = Has the employee’s furlough ended?
 furloughOngoing.heading = Has the employee’s furlough ended?
 furloughOngoing.ended = Yes
 furloughOngoing.ongoing = No, it is ongoing
+furloughOngoing.1stJuly.ongoing = No
 furloughOngoing.error.required = Select one of the options below
 furloughOngoing.1stJuly.p1 = From 1 July, you can bring employees back to work while their furlough is ongoing. You can claim for their usual hours minus the hours they actually worked.
 
@@ -335,6 +336,7 @@ furloughEndDate.error.invalid = Enter a real furlough end date
 furloughEndDate.error.min.max = The furlough end date must be at least 3 weeks after furlough started and before the end of the claim
 
 furloughStartDate.title = When was this employee furloughed?
+furloughStartDate.1stJuly.title = When was this employee originally furloughed?
 furloughStartDate.heading = When was this employee furloughed?
 furloughStartDate.1stJuly.heading = When was this employee originally furloughed?
 furloughStartDate.hint = This is the date this employee started furlough. It could be before or after the start date of this claim.
