@@ -26,17 +26,23 @@ import views.ViewUtils._
 
 object PartTimePeriods {
 
-  def options(form: Form[_], endDates: List[LocalDate])(implicit messages: Messages): Seq[CheckboxItem] = endDates.zipWithIndex.map {
-    value =>
-      val periodEnd = value._1
+  def options(form: Form[_], periods: List[Periods])(implicit messages: Messages): Seq[CheckboxItem] = periods.zipWithIndex.map { value =>
+    val periodEnd = value._1.period.end
 
-      CheckboxItem(
-        name = Some(s"value[${value._2}]"),
-        id = Some(s"part-time-period_${value._2.toString}"),
-        value = periodEnd,
-        content = Text(messages("partTimePeriods.period", dateToString(periodEnd))),
-        checked = form.data.values.contains(periodEnd.toString)
-      )
+    val content: Text = value._1 match {
+      case fp: FullPeriod =>
+        Text(messages("partTimePeriods.fullPeriod", dateToStringWithoutYear(fp.period.start), dateToString(fp.period.end)))
+      case pp: PartialPeriod =>
+        Text(messages("partTimePeriods.partialPeriod", dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end)))
+    }
+
+    CheckboxItem(
+      name = Some(s"value[${value._2}]"),
+      id = Some(s"part-time-period_${value._2.toString}"),
+      value = periodEnd,
+      content = content,
+      checked = form.data.values.contains(periodEnd.toString)
+    )
   }
 
 }

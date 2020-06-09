@@ -604,7 +604,8 @@ payPeriodQuestion.period.text = from {0} to {1}
 partTimePeriods.title = When did this employee work during the claim period?
 partTimePeriods.heading = When did this employee work during the claim period?
 partTimePeriods.hint = Select all that apply.
-partTimePeriods.period = Pay period end: {0}
+partTimePeriods.fullPeriod = Pay period end: {0} to {1}
+partTimePeriods.partialPeriod = Pay period end: {0} to {1} (partial)
 partTimePeriods.error.required = Select the pay periods when the employee worked
 
 partTimeQuestion.title = Has this employee done any work during the claim period?

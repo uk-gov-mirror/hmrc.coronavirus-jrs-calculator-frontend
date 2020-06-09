@@ -58,8 +58,6 @@ class PartTimePeriodsControllerSpec extends SpecBaseWithApplication with Mockito
     .withPayDate(List("2020, 2, 29", "2020, 3, 31", "2020, 4, 30"))
     .withRegularPayAmount(2000)
 
-  val endDates: List[LocalDate] = validAnswer.map(_.period.end)
-
   "PartTimePeriodsController" must {
 
     "return OK and the correct view for a GET" in {
@@ -75,7 +73,7 @@ class PartTimePeriodsControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
 
       contentAsString(result) mustEqual
-        view(form, endDates)(dataRequest, messages).toString
+        view(form, validAnswer)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -124,7 +122,7 @@ class PartTimePeriodsControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer.map(_.period.end)), endDates)(dataRequest, messages).toString
+        view(form.fill(validAnswer.map(_.period.end)), validAnswer)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -141,7 +139,7 @@ class PartTimePeriodsControllerSpec extends SpecBaseWithApplication with Mockito
       val request =
         FakeRequest(POST, partTimePeriodsRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-          .withFormUrlEncodedBody("value[0]" -> endDates.head.toString)
+          .withFormUrlEncodedBody("value[0]" -> validAnswer.head.period.end.toString)
 
       val result = route(application, request).value
 
@@ -172,7 +170,7 @@ class PartTimePeriodsControllerSpec extends SpecBaseWithApplication with Mockito
       val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm, endDates)(dataRequest, messages).toString
+        view(boundForm, validAnswer)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -197,7 +195,7 @@ class PartTimePeriodsControllerSpec extends SpecBaseWithApplication with Mockito
 
       val request =
         FakeRequest(POST, partTimePeriodsRoute)
-          .withFormUrlEncodedBody("value[0]" -> endDates.head.toString)
+          .withFormUrlEncodedBody("value[0]" -> validAnswer.head.period.end.toString)
 
       val result = route(application, request).value
 

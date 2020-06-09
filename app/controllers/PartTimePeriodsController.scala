@@ -23,7 +23,7 @@ import controllers.actions._
 import forms.PartTimePeriodsFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.UserAnswers
+import models.{Periods, UserAnswers}
 import navigation.Navigator
 import pages.{PartTimePeriodsPage, PayDatePage}
 import play.api.data.Form
@@ -52,29 +52,44 @@ class PartTimePeriodsController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     request.userAnswers.getList(PayDatePage) match {
-      case _ :: date :: Nil =>
-        saveAndRedirect(request.userAnswers, List(date))
+      case Nil =>
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       case dates =>
-        val datesToDisplay = dates.drop(1).toList
-        val preparedForm = request.userAnswers.getV(PartTimePeriodsPage) match {
-          case Invalid(e)           => form
-          case Valid(selectedDates) => form.fill(selectedDates.map(_.period.end))
+        extractFurloughWithinClaimV(request.userAnswers) match {
+          case Valid(furlough) =>
+            val periods = generatePeriodsWithFurlough(dates, furlough).toList
+            val preparedForm = request.userAnswers.getV(PartTimePeriodsPage) match {
+              case Invalid(e)             => form
+              case Valid(selectedPeriods) => form.fill(selectedPeriods.map(_.period.end))
+            }
+
+            if (periods.length == 1) {
+              saveAndRedirect(request.userAnswers, periods.map(_.period.end))
+            } else {
+              Future.successful(Ok(view(preparedForm, periods)))
+            }
         }
-        Future.successful(Ok(view(preparedForm, datesToDisplay)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val endDates = request.userAnswers.getList(PayDatePage).toList
-    val datesToDisplay = endDates.drop(1)
+    request.userAnswers.getList(PayDatePage) match {
+      case Nil =>
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+      case dates =>
+        extractFurloughWithinClaimV(request.userAnswers) match {
+          case Valid(furlough) =>
+            val periods = generatePeriodsWithFurlough(dates, furlough).toList
 
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, datesToDisplay))), { selectedDates =>
-          saveAndRedirect(request.userAnswers, selectedDates)
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors => Future.successful(BadRequest(view(formWithErrors, periods))), { selectedDates =>
+                  saveAndRedirect(request.userAnswers, selectedDates)
+                }
+              )
         }
-      )
+    }
   }
 
   private def saveAndRedirect(userAnswers: UserAnswers, selectedEndDates: List[LocalDate]): Future[Result] =

@@ -27,7 +27,7 @@
     h1: components.h1
 )
 
-@(form: Form[List[LocalDate]], endDates: List[LocalDate])(implicit request: Request[_], messages: Messages)
+@(form: Form[List[LocalDate]], periods: List[Periods])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "partTimePeriods.title")), thisPage = PartTimePeriodsPage) {
 
@@ -42,7 +42,7 @@
             legend = messages("partTimePeriods.heading"),
             legendAsHeading = false,
             legendClasses = "govuk-visually-hidden",
-            items = PartTimePeriods.options(form, endDates),
+            items = PartTimePeriods.options(form, periods),
             hint = Some(Html(messages("partTimePeriods.hint")))
         )
 
