@@ -317,10 +317,13 @@ claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
 furloughOngoing.title = Has the employee’s furlough ended?
+furloughOngoing.1stJuly.title = Has this employee's furlough ended?
 furloughOngoing.heading = Has the employee’s furlough ended?
+furloughOngoing.1stJuly.heading = Has this employee's furlough ended?
 furloughOngoing.ended = Yes
 furloughOngoing.ongoing = No, it is ongoing
 furloughOngoing.1stJuly.ongoing = No
+furloughOngoing.1stJuly.ended = Yes
 furloughOngoing.error.required = Select one of the options below
 furloughOngoing.1stJuly.p1 = From 1 July, you can bring employees back to work while their furlough is ongoing. You can claim for their usual hours minus the hours they actually worked.
 

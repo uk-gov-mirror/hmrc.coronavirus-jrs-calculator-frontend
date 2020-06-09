@@ -36,8 +36,8 @@
         @errorSummary(form.errors)
 
         @h1(messages( if (claimStartDate.getMonthValue > 6) "furloughStartDate.1stJuly.heading" else "furloughStartDate.heading"))
-        @p(Html(messages(if (claimStartDate.getMonthValue < 7) "furloughStartDate.hint")))
-        @p(Html(messages(if (claimStartDate.getMonthValue < 7) "furloughStartDate.p1")))
+        @p(Html(messages(if (claimStartDate.getMonthValue < 7) "furloughStartDate.hint" else "")))
+        @p(Html(messages(if (claimStartDate.getMonthValue < 7) "furloughStartDate.p1" else "")))
 
         @inputDate(
             form,
