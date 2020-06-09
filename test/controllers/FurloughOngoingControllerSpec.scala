@@ -66,19 +66,14 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
     }
 
     "return OK and the correct view for a GET with <p> if 1st of July" in {
-      val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
+      val userAnswers = emptyUserAnswers.withClaimPeriodStart("2020,7,2")
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val result = route(application, getRequest).value
 
-      val view = application.injector.instanceOf[FurloughOngoingView]
-
       status(result) mustEqual OK
 
-      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-
-      contentAsString(result) mustEqual
-        view(form, claimStart)(dataRequest, messages).toString
+      contentAsString(result) must include(messagesApi.messages("en")("furloughOngoing.1stJuly.p1"))
 
       application.stop()
     }
