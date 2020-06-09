@@ -158,5 +158,9 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
     form.isDifferentCalendarMonth(LocalDate.of(2020, 6, 1), LocalDate.of(2020, 7, 1)) must matchPattern {
       case Invalid(_) =>
     }
+
+    form.isDifferentCalendarMonth(LocalDate.of(2020, 7, 1), LocalDate.of(2020, 8, 1)) must matchPattern {
+      case Invalid(_) =>
+    }
   }
 }
