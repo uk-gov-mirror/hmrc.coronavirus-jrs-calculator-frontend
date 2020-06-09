@@ -15,6 +15,7 @@
  *@
 
 @import pages.FurloughEndDatePage
+@import java.time.LocalDate
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -26,7 +27,7 @@
         p: components.p
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], claimStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "furloughEndDate.title")), thisPage = FurloughEndDatePage) {
 
@@ -35,7 +36,7 @@
         @errorSummary(form.errors)
 
         @h1(messages("furloughEndDate.heading"))
-        @p(Html(messages("furloughEndDate.p")))
+        @p(Html(messages(if (claimStartDate.getMonthValue > 6) "furloughEndDate.1stJuly.p" else "furloughEndDate.p")))
 
         @inputDate(
             form,
