@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import forms.PartTimePeriodsFormProvider
 import models.FurloughStatus.FurloughOngoing

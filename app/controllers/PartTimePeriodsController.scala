@@ -23,7 +23,7 @@ import controllers.actions._
 import forms.PartTimePeriodsFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.{Periods, UserAnswers}
+import models.UserAnswers
 import navigation.Navigator
 import pages.{PartTimePeriodsPage, PayDatePage}
 import play.api.data.Form
@@ -59,7 +59,7 @@ class PartTimePeriodsController @Inject()(
           case Valid(furlough) =>
             val periods = generatePeriodsWithFurlough(dates, furlough).toList
             val preparedForm = request.userAnswers.getV(PartTimePeriodsPage) match {
-              case Invalid(e)             => form
+              case Invalid(_)             => form
               case Valid(selectedPeriods) => form.fill(selectedPeriods.map(_.period.end))
             }
 
@@ -68,6 +68,7 @@ class PartTimePeriodsController @Inject()(
             } else {
               Future.successful(Ok(view(preparedForm, periods)))
             }
+          case Invalid(errors) => Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
         }
     }
   }
@@ -88,6 +89,7 @@ class PartTimePeriodsController @Inject()(
                   saveAndRedirect(request.userAnswers, selectedDates)
                 }
               )
+          case Invalid(errors) => Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
         }
     }
   }

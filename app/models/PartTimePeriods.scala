@@ -16,8 +16,6 @@
 
 package models
 
-import java.time.LocalDate
-
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
@@ -33,7 +31,7 @@ object PartTimePeriods {
       case fp: FullPeriod =>
         Text(messages("partTimePeriods.fullPeriod", dateToStringWithoutYear(fp.period.start), dateToString(fp.period.end)))
       case pp: PartialPeriod =>
-        if(pp.partial.countDays == 1) {
+        if (pp.partial.countDays == 1) {
           Text(messages("partTimePeriods.singleDay", dateToString(pp.partial.end)))
         } else {
           Text(messages("partTimePeriods.partialPeriod", dateToStringWithoutYear(pp.partial.start), dateToString(pp.partial.end)))

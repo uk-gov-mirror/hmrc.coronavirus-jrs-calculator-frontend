@@ -140,7 +140,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(
           PartTimePeriodsPage,
           userAnswers
-        ) mustBe routes.PartTimeHoursController.onPageLoad(1)
+        ) mustBe routes.PartTimeNormalHoursController.onPageLoad(1)
       }
 
       "go to PartTimeNormalHours after PartTimeHours" in {
@@ -150,7 +150,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           PartTimeHoursPage,
           userAnswers,
           Some(1)
-        ) mustBe routes.PartTimeNormalHoursController.onPageLoad(1)
+        ) mustBe routes.PartTimeNormalHoursController.onPageLoad(2)
       }
 
       "loop from PartTimeHours to PartTimeNormalHours if there are more PartTimePeriods to iterate" in {
@@ -160,14 +160,14 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           PartTimeNormalHoursPage,
           userAnswers,
           Some(1)
-        ) mustBe routes.PartTimeHoursController.onPageLoad(2)
+        ) mustBe routes.PartTimeHoursController.onPageLoad(1)
       }
 
       "stop loop around part time pages if there are no more PartTimePeriods to iterate" in {
         val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
         val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
         navigator.nextPage(
-          PartTimeNormalHoursPage,
+          PartTimeHoursPage,
           userAnswers,
           Some(2)
         ) mustBe routes.NicCategoryController.onPageLoad()
