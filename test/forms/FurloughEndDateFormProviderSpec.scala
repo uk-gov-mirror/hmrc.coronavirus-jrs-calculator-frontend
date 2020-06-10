@@ -67,5 +67,20 @@ class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
 
       result.errors shouldBe List()
     }
+
+    "be before or same as end of the claim for phase two" in {
+      val claimEnd = LocalDate.of(2020, 7, 15)
+      val form = new FurloughEndDateFormProvider(frontendAppConfig)(Period(claimStart, claimEnd), furloughStart)
+
+      val data: Int => Map[String, String] = days =>
+        Map(
+          "value.day"   -> claimEnd.plusDays(days).getDayOfMonth.toString,
+          "value.month" -> claimEnd.getMonthValue.toString,
+          "value.year"  -> claimEnd.getYear.toString
+      )
+
+      form.bind(data(1)).errors.head.message shouldBe "furloughEndDate.error.past.claim.end"
+      form.bind(data(0)).errors shouldBe List()
+    }
   }
 }
