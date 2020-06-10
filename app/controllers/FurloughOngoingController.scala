@@ -49,7 +49,7 @@ class FurloughOngoingController @Inject()(
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val maybeFurlough = request.userAnswers.getV(FurloughStatusPage)
     getRequiredAnswerV(ClaimPeriodStartPage) { claimStartDate =>
-      Future.successful(Ok(view(maybeFurlough.map(fr => form.fill(fr)).getOrElse(form), claimStartDate)))
+      Future.successful(Ok(view(maybeFurlough.map(form.fill).getOrElse(form), claimStartDate)))
     }
   }
 
