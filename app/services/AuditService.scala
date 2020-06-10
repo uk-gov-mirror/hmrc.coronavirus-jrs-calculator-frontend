@@ -23,7 +23,7 @@ import javax.inject.{Inject, Singleton}
 import models.UserAnswers
 import models.UserAnswers.AnswerV
 import pages._
-import play.api.libs.json.{Format, JsString, JsValue, Json, Writes}
+import play.api.libs.json.{Format, JsString, Json, Writes}
 import play.api.mvc.Request
 import services.JobRetentionSchemeCalculatorEvent.JobRetentionSchemeCalculatorEvent
 import uk.gov.hmrc.http.HeaderCarrier

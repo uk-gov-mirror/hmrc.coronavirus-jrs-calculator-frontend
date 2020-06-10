@@ -99,7 +99,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     case PartTimeQuestionPage => partTimeQuestionRoute
     case PartTimePeriodsPage =>
       _ =>
-        routes.PartTimeHoursController.onPageLoad(1)
+        routes.PartTimeNormalHoursController.onPageLoad(1)
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()

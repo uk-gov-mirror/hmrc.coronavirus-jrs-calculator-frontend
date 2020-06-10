@@ -140,7 +140,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(
           PartTimePeriodsPage,
           userAnswers
-        ) mustBe routes.PartTimeHoursController.onPageLoad(1)
+        ) mustBe routes.PartTimeNormalHoursController.onPageLoad(1)
       }
 
       "go to PartTimeNormalHours after PartTimeHours" in {

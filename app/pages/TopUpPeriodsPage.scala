@@ -16,7 +16,7 @@
 
 package pages
 
-import models.{AdditionalPaymentStatus, TopUpPeriod, UserAnswers}
+import models.{TopUpPeriod, UserAnswers}
 import play.api.libs.json.JsPath
 
 import scala.util.Try
