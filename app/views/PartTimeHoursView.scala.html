@@ -29,12 +29,12 @@
 @(form: Form[_], period: Periods, idx: Int)(implicit request: Request[_], messages: Messages)
 
 @titleKey = @{period match {
-    case pp: PartialPeriod if(pp.partial.countDays == 1) => "partTimeHours.title.singleDay"
+    case pp: PartialPeriod if pp.partial.countDays == 1 => "partTimeHours.title.singleDay"
     case _ => "partTimeHours.title"
 }}
 
 @headingKey = @{period match {
-    case pp: PartialPeriod if(pp.partial.countDays == 1) => "partTimeHours.heading.singleDay"
+    case pp: PartialPeriod if pp.partial.countDays == 1 => "partTimeHours.heading.singleDay"
     case _ => "partTimeHours.heading"
 }}
 
