@@ -68,7 +68,7 @@ class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
       result.errors shouldBe List()
     }
 
-    "be before or same as end of the claim for phase two" in {
+    "be before or same as end of the claim for phase two and do not show furloughEndDate.error.min.max" in {
       val claimEnd = LocalDate.of(2020, 7, 15)
       val form = new FurloughEndDateFormProvider(frontendAppConfig)(Period(claimStart, claimEnd), furloughStart)
 
@@ -79,6 +79,7 @@ class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
           "value.year"  -> claimEnd.getYear.toString
       )
 
+      form.bind(data(1)).errors.size shouldBe 1
       form.bind(data(1)).errors.head.message shouldBe "furloughEndDate.error.past.claim.end"
       form.bind(data(0)).errors shouldBe List()
     }
