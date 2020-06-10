@@ -60,13 +60,11 @@
             @p(Html(messages("partTimeNormalHours.partial", dateToStringWithoutYear(period.period.start), dateToString(period.period.end))))
         }
 
-        @p{<span class="govuk-hint">@messages("partTimeNormalHours.p1")</span>}
-
         @inputNumber(
             form,
             id = "value",
             name = "value",
-            label = messages(headingKey, titleAndHeadingArgs: _*),
+            label = messages("partTimeNormalHours.p1"),
             classes = Some("govuk-input--width-5"),
             hint = Some("partTimeNormalHours.hint")
         )
