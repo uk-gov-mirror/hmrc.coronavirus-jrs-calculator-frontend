@@ -112,12 +112,6 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       addPayDates(answersState.updated, answersState.original.getList(PayDatePage).toList).toOption
         .map(payPeriods => UserAnswersState(payPeriods, answersState.original)))
 
-  private val keepPayMethod: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
-    for {
-      method     <- extractPayMethodV(answersState.original).toOption
-      withMethod <- answersState.updated.set(PayMethodPage, method).toOption
-    } yield UserAnswersState(withMethod, answersState.original))
-
   private val keepPaymentFrequency: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
     for {
       frequency     <- extractPaymentFrequencyV(answersState.original).toOption
