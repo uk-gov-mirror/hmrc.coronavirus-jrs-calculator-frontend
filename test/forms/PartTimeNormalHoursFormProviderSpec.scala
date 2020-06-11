@@ -35,7 +35,8 @@ class PartTimeNormalHoursFormProviderSpec extends DoubleFieldBehaviours with Cor
     behave like doubleField(
       form,
       fieldName,
-      error = FormError(fieldName, invalidKey)
+      error = FormError(fieldName, invalidKey),
+      Some(fullPeriodOne.period.countHours)
     )
 
     behave like mandatoryField(
