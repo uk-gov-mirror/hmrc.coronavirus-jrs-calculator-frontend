@@ -17,22 +17,32 @@
 package forms
 
 import forms.behaviours.DoubleFieldBehaviours
+import models.{FullPeriod, Hours, UsualHours}
 import play.api.data.FormError
+import utils.CoreTestData
 
-class PartTimeHoursFormProviderSpec extends DoubleFieldBehaviours {
+class PartTimeHoursFormProviderSpec extends DoubleFieldBehaviours with CoreTestData {
 
-  val form = new PartTimeHoursFormProvider()()
+  private val fullPeriodOne: FullPeriod = fullPeriod("2020,3,1", "2020,3,31")
+  private val fullPeriodTwo: FullPeriod = fullPeriod("2020,4,1", "2020,4,30")
+
+  private val usuals: Seq[UsualHours] =
+    Seq(UsualHours(fullPeriodOne.period.end, Hours(160.0)), UsualHours(fullPeriodTwo.period.end, Hours(160.0)))
+
+  val form = new PartTimeHoursFormProvider()(usuals, fullPeriodOne)
 
   ".value" must {
 
     val fieldName = "value"
     val invalidKey = "partTimeHours.error.nonNumeric"
     val requiredKey = "partTimeHours.error.required"
+    val maxValue = usuals.head.hours.value
 
     behave like doubleField(
       form,
       fieldName,
-      error = FormError(fieldName, invalidKey)
+      error = FormError(fieldName, invalidKey),
+      Some(maxValue)
     )
 
     behave like mandatoryField(
@@ -40,5 +50,13 @@ class PartTimeHoursFormProviderSpec extends DoubleFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  "validate if part time hours is more than usual hours" in {
+    val data: Map[String, String] =
+      Map("value" -> (usuals.head.hours.value + 1).toString)
+
+    form.bind(data).errors.size shouldBe 1
+    form.bind(data).errors.head.message shouldBe "partTimeHours.error.max"
   }
 }

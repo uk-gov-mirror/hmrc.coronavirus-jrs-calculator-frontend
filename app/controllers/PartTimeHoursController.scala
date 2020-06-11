@@ -20,9 +20,9 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.PartTimeHoursFormProvider
 import javax.inject.Inject
-import models.{PartTimeHours, Periods}
+import models.{PartTimeHours, Periods, UsualHours}
 import navigation.Navigator
-import pages.{PartTimeHoursPage, PartTimePeriodsPage}
+import pages.{PartTimeHoursPage, PartTimeNormalHoursPage, PartTimePeriodsPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
@@ -43,11 +43,11 @@ class PartTimeHoursController @Inject()(
 )(implicit ec: ExecutionContext)
     extends BaseController {
 
-  val form = formProvider()
-
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerOrRedirectV(PartTimePeriodsPage) { partTimePeriods =>
       withValidPartTimePeriod(partTimePeriods, idx) { partTimePeriod =>
+        val usuals: Seq[UsualHours] = request.userAnswers.getList(PartTimeNormalHoursPage)
+        val form = formProvider(usuals, partTimePeriod)
         val preparedForm = request.userAnswers.getV(PartTimeHoursPage, Some(idx)) match {
           case Invalid(e)   => form
           case Valid(value) => form.fill(value.hours)
@@ -61,7 +61,8 @@ class PartTimeHoursController @Inject()(
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerOrRedirectV(PartTimePeriodsPage) { partTimePeriods =>
       withValidPartTimePeriod(partTimePeriods, idx) { partTimePeriod =>
-        form
+        val usuals: Seq[UsualHours] = request.userAnswers.getList(PartTimeNormalHoursPage)
+        formProvider(usuals, partTimePeriod)
           .bindFromRequest()
           .fold(
             formWithErrors => {

@@ -24,7 +24,7 @@ import models.FurloughStatus.FurloughOngoing
 import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
 import models.requests.DataRequest
-import models.{Hours, PartTimeHours, Periods}
+import models.{FullPeriod, Hours, PartTimeHours, Periods, UsualHours}
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.PartTimeHoursPage
@@ -39,12 +39,16 @@ class PartTimeHoursControllerSpec extends SpecBaseWithApplication with MockitoSu
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new PartTimeHoursFormProvider()
-  val form = formProvider()
+  private val formProvider = new PartTimeHoursFormProvider()
+  private val fullPeriodOne: FullPeriod = fullPeriod("2020,3,1", "2020,3,31")
+  private val fullPeriodTwo: FullPeriod = fullPeriod("2020,4,1", "2020,4,30")
+
+  private val usuals: Seq[UsualHours] =
+    Seq(UsualHours(fullPeriodOne.period.end, Hours(160.0)), UsualHours(fullPeriodTwo.period.end, Hours(160.0)))
+  val form = formProvider(usuals, fullPeriodOne)
 
   def partTimeHoursRoute(idx: Int) = routes.PartTimeHoursController.onPageLoad(idx).url
-
-  val partTimePeriods: List[Periods] = List(fullPeriod("2020,3,1", "2020,3,31"), fullPeriod("2020,4,1", "2020,4,30"))
+  val partTimePeriods: List[Periods] = List(fullPeriodOne, fullPeriodTwo)
 
   val userAnswers = emptyUserAnswers
     .withClaimPeriodStart("2020, 3, 1")
@@ -60,7 +64,7 @@ class PartTimeHoursControllerSpec extends SpecBaseWithApplication with MockitoSu
 
   val endDates: List[LocalDate] = partTimePeriods.map(_.period.end)
 
-  val period: Periods = fullPeriod("2020,3,1", "2020,3,31")
+  val period: Periods = fullPeriodOne
 
   def getRequest(method: String, idx: Int) =
     FakeRequest(method, partTimeHoursRoute(idx)).withCSRFToken

@@ -17,11 +17,14 @@
 package forms
 
 import forms.behaviours.DoubleFieldBehaviours
+import models.FullPeriod
 import play.api.data.FormError
+import utils.CoreTestData
 
-class PartTimeNormalHoursFormProviderSpec extends DoubleFieldBehaviours {
+class PartTimeNormalHoursFormProviderSpec extends DoubleFieldBehaviours with CoreTestData {
 
-  val form = new PartTimeNormalHoursFormProvider()()
+  private val fullPeriodOne: FullPeriod = fullPeriod("2020,7,1", "2020,7,31")
+  val form = new PartTimeNormalHoursFormProvider()(fullPeriodOne)
 
   ".value" must {
 
@@ -40,5 +43,17 @@ class PartTimeNormalHoursFormProviderSpec extends DoubleFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  "validate if normal hours is more than max allowed (eg 24*2=48) for 2 days" in {
+    val twoDaysPartTime: FullPeriod = fullPeriod("2020,7,1", "2020,7,2")
+    val form = new PartTimeNormalHoursFormProvider()(twoDaysPartTime)
+    val hours = twoDaysPartTime.period.countHours
+
+    val data: Map[String, String] =
+      Map("value" -> (hours + 1).toString)
+
+    form.bind(data).errors.size shouldBe 1
+    form.bind(data).errors.head.message shouldBe "partTimeNormalHours.error.max"
   }
 }

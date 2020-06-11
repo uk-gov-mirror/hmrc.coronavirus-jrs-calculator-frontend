@@ -18,19 +18,27 @@ package forms
 
 import forms.mappings.Mappings
 import javax.inject.Inject
-import models.Hours
+import models.{Hours, Periods}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
 class PartTimeNormalHoursFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Hours] =
+  def apply(period: Periods): Form[Hours] =
     Form(
       mapping(
         "value" -> double(
           requiredKey = "partTimeNormalHours.error.required",
           nonNumericKey = "partTimeNormalHours.error.nonNumeric"
         ).verifying(minimumValue(0.0, "partTimeNormalHours.error.min"))
-          .verifying(maximumValue(750.0, "partTimeNormalHours.error.max"))
+          .verifying(maximumValue(period))
       )(Hours.apply)(Hours.unapply))
+
+  private def maximumValue(period: Periods): Constraint[Double] = Constraint { input =>
+    if (input <= period.period.countHours)
+      Valid
+    else
+      Invalid("partTimeNormalHours.error.max")
+  }
 }
