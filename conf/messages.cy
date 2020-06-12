@@ -327,7 +327,7 @@ furloughOngoing.ongoing = Na, mae’n barhaus
 furloughOngoing.1stJuly.ended = Iawn
 furloughOngoing.1stJuly.ongoing = Na
 furloughOngoing.error.required = Dewiswch un o’r opsiynau isod
-furloughOngoing.1stJuly.p1 = O 1 Gorffennaf ymlaen, gallwch ddod â chyflogeion yn ôl i’r gwaith tra bod eu cyfnod ffyrlo’n parhau. Gallwch hawlio am eu horiau arferol llai’r oriau roeddent yn gweithio mewn gwirionedd.
+furloughOngoing.1stJuly.hint = O 1 Gorffennaf ymlaen, gallwch ddod â chyflogeion yn ôl i’r gwaith tra bo’u cyfnod ffyrlo’n parhau. Gallwch hawlio am eu horiau arferol llai’r oriau roeddent yn eu gweithio mewn gwirionedd.
 
 furloughEndDate.title = Pryd daeth ei ffyrlo i ben?
 furloughEndDate.heading = Pryd daeth ei ffyrlo i ben?
@@ -372,10 +372,10 @@ employeeStartDate.hint = Er enghraifft, 28 11 2019
 employeeStartDate.error.min = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod ar neu ar ôl {0}
 employeeStartDate.error.max = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod cyn iddo ddechrau ei ffyrlo, ar neu cyn 19 Mawrth 2020
 
-annualPayAmount.title.after1Feb2019 = Beth oedd cyfanswm yr hyn a dalwyd i’r cyflogai ers iddo ddechrau tan {0}?
-annualPayAmount.heading.after1Feb2019 = Beth oedd cyfanswm yr hyn a dalwyd i’r cyflogai ers iddo ddechrau tan {0}?
-annualPayAmount.title.onOrBefore1Feb2019 = Faint a enillodd y cyflogai hwn o 6 April 2019 i {0}?
-annualPayAmount.heading.onOrBefore1Feb2019 = Faint a enillodd y cyflogai hwn o 6 April 2019 i {0}?
+annualPayAmount.title.after1Feb2019 = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
+annualPayAmount.heading.after1Feb2019 = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
+annualPayAmount.title.onOrBefore1Feb2019 = Faint a enillodd y cyflogai hwn o 6 Ebrill 2019 i {0}?
+annualPayAmount.heading.onOrBefore1Feb2019 = Faint a enillodd y cyflogai hwn o 6 Ebrill 2019 i {0}?
 annualPayAmount.error.required = Nodwch swm dilys
 annualPayAmount.error.invalid = Nodwch swm dilys
 annualPayAmount.p1 = Dyma’r cyfanswm cyn didyniadau.
