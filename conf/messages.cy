@@ -339,7 +339,7 @@ furloughEndDate.error.required.two = Mae’n rhaid i ddyddiad dod i ben y ffyrlo
 furloughEndDate.error.required = Mae’n rhaid i ddyddiad dod i ben y ffyrlo gynnwys {0}
 furloughEndDate.error.invalid = Nodwch ddyddiad dod i ben go iawn y ffyrlo
 furloughEndDate.error.min.max = Mae’n rhaid i ddyddiad dod i ben y ffyrlo fod o leiaf 3 wythnos ar ôl i’r ffyrlo ddechrau a chyn diwedd yr hawliad
-furloughEndDate.error.past.claim.end = The furlough end date must be within the end of the claim
+furloughEndDate.error.past.claim.end = Mae’n rhaid i ddyddiad dod i ben y ffyrlo fod o fewn diwedd yr hawliad
 
 furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.1stJuly.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo’n wreiddiol?
@@ -481,7 +481,7 @@ topUpStatus.error.required = Dewiswch ‘Iawn’ os ydych wedi ychwanegu at gyfl
 
 whatToInclude.summary = Beth y dylid ei gynnwys yn y swm hwn?
 whatToInclude.include = Dylech gynnwys:
-whatToInclude.include.l1 = cyflogau rheolaidd yr ydych yn eu talu i’r cyflogai hwn
+whatToInclude.include.l1 = rheolaidd yr ydych yn eu talu i’r cyflogai hwn
 whatToInclude.include.l2 = goramser nad yw’n ddewisol
 whatToInclude.include.l3 = ffioedd nad ydynt yn ddewisol
 whatToInclude.include.l4 = taliadau comisiwn nad ydynt yn ddewisol
@@ -628,24 +628,24 @@ partTimeHours.title.singleDay = Pa oriau a wnaeth y cyflogai hwn weithio mewn gw
 partTimeHours.heading = Pa oriau wnaeth y cyflogai hwn weithio mewn gwirionedd rhwng {0} a {1}?
 partTimeHours.heading.singleDay = Pa oriau a wnaeth y cyflogai hwn weithio mewn gwirionedd ar {0}?
 partTimeHours.partial = Dyma’r dyddiadau o’r cyfnod cyflog {0} i {1} sy’n disgyn o fewn y cyfnod hawlio.
-partTimeHours.p1 = Hours
+partTimeHours.p1 = Awr
 partTimeHours.hint = Nodwch oriau mewn fformat degol
-partTimeHours.error.required = Enter the hours this employee actually worked in this pay period
-partTimeHours.error.min = Hours worked cannot be negative
-partTimeHours.error.max = Hours actually worked cannot be higher than hours usually worked
-partTimeHours.error.nonNumeric = Enter the part time hours using numbers
+partTimeHours.error.required = Nodwch yr oriau y bu’r cyflogai hwn yn gweithio mewn gwirionedd yn ystod y cyfnod cyflog hwn
+partTimeHours.error.min = Ni all yr oriau a weithiwyd fod yn negyddol
+partTimeHours.error.max = Ni all yr oriau a weithiwyd mewn gwirionedd fod yn uwch na’r oriau a weithir fel arfer
+partTimeHours.error.nonNumeric = Nodwch yr oriau rhan-amser gan ddefnyddio rhifau
 
 partTimeNormalHours.title = Beth fyddai oriau arferol y cyflogai hwn wedi bod rhwng {0} a {1}?
-partTimeNormalHours.title.singleDay = What would this employee’s usual hours have been on {0}?
+partTimeNormalHours.title.singleDay = Beth fyddai oriau arferol y cyflogai hwn wedi bod ar {0}?
 partTimeNormalHours.heading = Beth fyddai oriau arferol y cyflogai hwn wedi bod rhwng {0} a {1}?
-partTimeNormalHours.heading.singleDay = What would this employee’s usual hours have been on {0}?
+partTimeNormalHours.heading.singleDay = Beth fyddai oriau arferol y cyflogai hwn wedi bod ar {0}?
 partTimeNormalHours.partial = Dyma’r dyddiadau o’r cyfnod cyflog {0} i {1} sy’n disgyn o fewn y cyfnod hawlio.
-partTimeNormalHours.p1 = Hours
+partTimeNormalHours.p1 = Awr
 partTimeNormalHours.hint = Nodwch oriau mewn fformat degol
-partTimeNormalHours.error.required = Enter this employee’s usual hours for this pay period
-partTimeNormalHours.error.min = Hours usually worked cannot be negative
-partTimeNormalHours.error.max = Number of hours entered is higher than the maximum possible
-partTimeNormalHours.error.nonNumeric = Enter the usual hours using numbers
+partTimeNormalHours.error.required = Nodwch oriau arferol y cyflogai hwn ar gyfer y cyfnod cyflog hwn
+partTimeNormalHours.error.min = Ni all yr oriau a weithir fel arfer fod yn negyddol
+partTimeNormalHours.error.max = Mae nifer yr oriau a nodwyd yn uwch na’r uchafswm posibl
+partTimeNormalHours.error.nonNumeric = Nodwch yr oriau arferol gan ddefnyddio rhifau
 
 phaseTwoDetailedBreakdown.p1.regular = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog rheolaidd bob tro. Rydym wedi cyfrifo ei enillion dyddiol ac wedi’u lluosi â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 80% o hyn.
 phaseTwoDetailedBreakdown.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 80% o hyn.
@@ -688,10 +688,10 @@ phaseTwoReferencePayBreakdown.cylb.twoPeriods = Mae dyddiadau’r flwyddyn ddiwe
 phaseTwoReferencePayBreakdown.cylb.l1 = Dechreuwch gyda £{0} (o ddyddiad cyflog {1} y flwyddyn ddiwethaf).
 phaseTwoReferencePayBreakdown.cylb.l2 = Rhannwch â {0} (o ddiwrnodau yn ystod y cyfnod cyflog).
 phaseTwoReferencePayBreakdown.cylb.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
-phaseTwoReferencePayBreakdown.cylb.periodOneTotal = Total for period one = £{0}
+phaseTwoReferencePayBreakdown.cylb.periodOneTotal = Cyfanswm ar gyfer cyfnod un = £{0}
 phaseTwoReferencePayBreakdown.cylb.then = Yna:
 phaseTwoReferencePayBreakdown.cylb.thenPeriodTwo = Yna, yng nghyfnod dau:
-phaseTwoReferencePayBreakdown.cylb.periodTwoTotal = Total for period two = £{0}
+phaseTwoReferencePayBreakdown.cylb.periodTwoTotal = Cyfanswm ar gyfer cyfnod dau = £{0}
 phaseTwoReferencePayBreakdown.cylb.addTotals = Adiwch £{0} + £{1} (y cyfansymiau o’r ddau gyfnod cyflog).
 phaseTwoReferencePayBreakdown.cylb.daysResult = Cyfanswm y cyflog o’r un dyddiadau’r flwyddyn ddiwethaf = £{0}
 phaseTwoReferencePayBreakdown.cylb.hours.l1 = Dechreuwch gyda £{0} (Cyfanswm y cyflog o’r un dyddiadau’r flwyddyn ddiwethaf ).
@@ -706,7 +706,7 @@ phaseTwoReferencePayBreakdown.cylb.higherOf.result = Cyfanswm cyflog yn seiliedi
 
 phaseTwoFurloughBreakdown.h4 = Grant ffyrlo
 phaseTwoFurloughBreakdown.l1 = Ystyriwch £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo).
-phaseTwoFurloughBreakdown.l1.partTime = Take £{0} (pay based on hours worked in this pay period).
+phaseTwoFurloughBreakdown.l1.partTime = Cymerwch £{0} (cyflog yn seiliedig ar yr oriau a weithiwyd yn ystod y cyfnod cyflog hwn).
 phaseTwoFurloughBreakdown.l2 = Lluoswch â 80%.
 phaseTwoFurloughBreakdown.total = Cyfanswm y grant ffyrlo ar gyfer y cyfnod cyflog = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p1 = Grant ffyrlo wedi’i gyfrifo = £{0}
