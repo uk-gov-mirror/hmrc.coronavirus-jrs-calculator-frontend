@@ -22,10 +22,7 @@
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
-        inputRadio: components.inputRadio,
         button: components.button,
-        h1: components.h1,
-        p: components.p,
         yesNoRadio: components.yesNoRadio,
 )
 
@@ -39,8 +36,8 @@
 
         @yesNoRadio(
             form = form,
-            headingKey = if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading",
-            hintKey = if (claimStartDate.getMonthValue > 6) Some("furloughOngoing.1stJuly.p1") else None,
+            headingKey = if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.title" else "furloughOngoing.title",
+            hintKey = if (claimStartDate.getMonthValue > 6) Some("furloughOngoing.1stJuly.hint") else None,
         )
 
         @button("site.continue")
