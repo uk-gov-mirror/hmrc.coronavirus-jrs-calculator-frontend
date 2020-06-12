@@ -42,8 +42,8 @@
         @inputRadio(
             form = form,
             legend = messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"),
-            legendAsHeading = false,
-            classes = "govuk-visually-hidden",
+            legendAsHeading = true,
+            //classes = "govuk-visually-hidden",
             items = FurloughStatus.options(form, claimStartDate)
         )
 
