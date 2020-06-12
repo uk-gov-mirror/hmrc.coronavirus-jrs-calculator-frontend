@@ -22,7 +22,9 @@
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
         button: components.button,
-        yesNoRadio: components.yesNoRadio,
+        h1: components.h1,
+        p: components.p,
+        inputRadio: components.inputRadio,
 )
 
 @(form: Form[_], claimStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
@@ -33,11 +35,17 @@
 
         @errorSummary(form.errors)
 
-        @yesNoRadio(
+        @h1(messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"))
+        @if(claimStartDate.getMonthValue > 6) {
+          @p(Html(messages("furloughOngoing.1stJuly.hint")))
+        }
+
+        @inputRadio(
             form = form,
-            headingKey = if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.title" else "furloughOngoing.title",
-            hintKey = if (claimStartDate.getMonthValue > 6) Some("furloughOngoing.1stJuly.hint") else None,
-            isPageHeading = true
+            legend = messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"),
+            legendAsHeading = false,
+            classes = "govuk-visually-hidden",
+            items = FurloughStatus.options(form, claimStartDate)
         )
 
         @button("site.continue")
