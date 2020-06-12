@@ -319,9 +319,9 @@ claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
 furloughOngoing.title = Has the employee’s furlough ended?
-furloughOngoing.1stJuly.title = Has this employee's furlough ended permanently?
+furloughOngoing.1stJuly.title = Has the employee’s furlough ended permanently?
 furloughOngoing.heading = Has the employee’s furlough ended?
-furloughOngoing.1stJuly.heading = Has this employee's furlough ended permanently?
+furloughOngoing.1stJuly.heading = Has the employee’s furlough ended permanently?
 furloughOngoing.ended = Yes
 furloughOngoing.ongoing = No, it is ongoing
 furloughOngoing.1stJuly.ongoing = No

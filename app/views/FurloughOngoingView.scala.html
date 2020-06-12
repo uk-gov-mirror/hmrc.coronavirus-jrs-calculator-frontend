@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import controllers.routes._
 @import pages.FurloughStatusPage
 @import java.time.LocalDate
 
@@ -30,7 +29,7 @@
 
 @govukLayout(pageTitle = Some(title(form, if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.title" else "furloughOngoing.title")), thisPage = FurloughStatusPage) {
 
-    @formHelper(action = FurloughOngoingController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = controllers.routes.FurloughOngoingController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
