@@ -20,10 +20,10 @@ import play.api.data.{Form, FormError}
 
 trait DoubleFieldBehaviours extends FieldBehaviours {
 
-  def doubleField(form: Form[_], fieldName: String, error: FormError): Unit = {
+  def doubleField(form: Form[_], fieldName: String, error: FormError, maxValue: Option[Double] = None): Unit = {
 
     "bind all double values" in {
-      forAll(positiveDoubles -> "doubles") { double: Double =>
+      forAll(maxValue.fold(positiveDoubles)(positiveDoublesWithMax) -> "doubles") { double: Double =>
         val result = form.bind(Map(fieldName -> double.toString)).apply(fieldName)
         result.errors shouldEqual Seq.empty
       }

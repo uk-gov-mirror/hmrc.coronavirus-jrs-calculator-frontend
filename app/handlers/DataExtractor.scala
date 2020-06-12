@@ -118,10 +118,10 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
     ).mapN { (furloughPeriod, frequency, lastPayDay) =>
       val payDates = userAnswers.getList(PayDatePage)
       val actuals = userAnswers.getList(PartTimeHoursPage)
-      val usuals = userAnswers.getList(PartTimeNormalHoursPage)
+      val usuals: Seq[UsualHours] = userAnswers.getList(PartTimeNormalHoursPage)
       val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
       val assigned = assignPayDates(frequency, periods, lastPayDay)
-      val phaseTwo = assignPartTimeHours(assigned, actuals, usuals)
+      val phaseTwo: Seq[PhaseTwoPeriod] = assignPartTimeHours(assigned, actuals, usuals)
 
       PhaseTwoReferencePayData(furloughPeriod, phaseTwo, frequency)
     }

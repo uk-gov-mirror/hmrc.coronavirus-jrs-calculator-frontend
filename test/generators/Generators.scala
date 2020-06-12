@@ -85,6 +85,8 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
 
   def positiveDoubles: Gen[Double] = Gen.choose[Double](1.0, 750.0)
 
+  def positiveDoublesWithMax(maxValue: Double): Gen[Double] = Gen.choose[Double](1.0, maxValue)
+
   def positiveBigDecimals: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (_ >= 0)
 
   def positiveBigDecimalsWith2dp: Gen[BigDecimal] =
