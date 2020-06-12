@@ -74,9 +74,9 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
       status(result) mustEqual OK
 
       val actualContent = contentAsString(result)
-      actualContent must include(messagesApi.messages("en")("furloughOngoing.1stJuly.p1"))
-      actualContent must include(s"<title> Has this employees furlough ended?")
-      actualContent must include(s"${messagesApi.messages("en")("furloughOngoing.1stJuly.ongoing")}")
+      //actualContent must include(messagesApi.messages("en")("furloughOngoing.1stJuly.title"))
+      actualContent must include(s"Has this employees furlough ended permanently?")
+      actualContent must include(s"${messagesApi.messages("en")("furloughOngoing.1stJuly.hint")}")
       actualContent must not include (s"${messagesApi.messages("en")("furloughOngoing.ongoing")}")
 
       application.stop()

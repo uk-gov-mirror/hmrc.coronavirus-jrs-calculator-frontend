@@ -15,7 +15,6 @@
  *@
 
 @import controllers.routes._
-@import models.FurloughStatus
 @import pages.FurloughStatusPage
 @import java.time.LocalDate
 
@@ -23,10 +22,8 @@
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
-        inputRadio: components.inputRadio,
         button: components.button,
-        h1: components.h1,
-        p: components.p
+        yesNoRadio: components.yesNoRadio,
 )
 
 @(form: Form[_], claimStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
@@ -36,15 +33,12 @@
     @formHelper(action = FurloughOngoingController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
-        @h1(messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"))
-        @p(Html(messages(if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.p1" else "")))
 
-        @inputRadio(
+        @yesNoRadio(
             form = form,
-            legend = messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"),
-            legendAsHeading = false,
-            classes = "govuk-visually-hidden",
-            items = FurloughStatus.options(form, claimStartDate)
+            headingKey = if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.title" else "furloughOngoing.title",
+            hintKey = if (claimStartDate.getMonthValue > 6) Some("furloughOngoing.1stJuly.hint") else None,
+            isPageHeading = true
         )
 
         @button("site.continue")
