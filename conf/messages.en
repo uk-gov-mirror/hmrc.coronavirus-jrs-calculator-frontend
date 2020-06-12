@@ -277,7 +277,7 @@ confirmation.nextSteps.li.3.2 = Work out how much you can claim in total for emp
 confirmation.nextSteps.li.4.1 = Make a claim using {0}.
 confirmation.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens in a new window or tab).
 confirmation.startAgain = Start another calculation
-confirmation.webchat = Webchat help (opens in a new window or tab).
+confirmation.webchat = Webchat help (opens in a new tab).
 
 claimPeriodStart.title = What’s the start date of this claim?
 claimPeriodStart.heading = What’s the start date of this claim?
@@ -407,7 +407,7 @@ lastPayDate.error.required = The pay date must include {0}
 lastPayDate.error.invalid = Enter a real date
 lastPayDate.error.minimum = The pay date must be on or after {0}
 lastPayDate.p1 = This is the date this employee got paid. We’re asking because it may not be the same as the pay period end date.
-lastPayDate.p2 = This is needed to calculate National Insurance and pension contributions.
+lastPayDate.p2 = We need it to calculate National Insurance contributions.
 lastPayDate.details.title = What’s the difference between a pay date and a pay period?
 lastPayDate.details.p1 = A ‘pay date’ is the date the employee actually gets their pay. It may not be the same as the end of the ‘pay period’. For example, the pay period might be 1 February to 28 February, but the employee gets paid on 27 February.
 lastPayDate.details.p2 = A ‘pay period’ is the period of time that the employee is paid for, such as weekly or monthly.
@@ -481,7 +481,7 @@ topUpStatus.error.required = Select ‘Yes’ if you topped up this employee’s
 
 whatToInclude.summary = What should be included in this amount?
 whatToInclude.include = Include:
-whatToInclude.include.l1 = regular wages you pay to this employee
+whatToInclude.include.l1 = gross regular wages you pay to this employee
 whatToInclude.include.l2 = non-discretionary overtime
 whatToInclude.include.l3 = non-discretionary fees
 whatToInclude.include.l4 = non-discretionary commission payments
