@@ -121,5 +121,7 @@
     @button(messages("confirmation.startAgain"), href = if(featureFlag(FastTrackJourneyFlag)) Some(routes.ClaimPeriodQuestionController.onPageLoad()) else Some(routes.ClaimPeriodStartController.onPageLoad()) , classes = Some("govuk-button"))
 
     @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
+
+    @p(Html(link(routes.FeedbackSurveyController.startSurvey(), "confirmation.feedbackSurvey.label", true)))
 }
 

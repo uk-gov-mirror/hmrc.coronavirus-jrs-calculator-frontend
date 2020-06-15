@@ -48,7 +48,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   val contactStandaloneForm = s"$contactHost/contact/contact-hmrc-unauthenticated?service=$contactFormServiceIdentifier"
 
-  val feedbackUrl = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  val betaFeedbackUrl = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
   lazy val timeout: Int = configuration.get[Int]("timeout.timeout")
   lazy val countdown: Int = configuration.get[Int]("timeout.countdown")
@@ -56,6 +56,10 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val authUrl: String = configuration.get[Service]("auth").baseUrl
   lazy val loginUrl: String = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
+
+  private val feedbackSurveyFEUrl: String = configuration.get[String]("microservice.services.feedback-survey.url")
+  private val feedbackSurveyServiceId: String = configuration.get[String]("microservice.services.feedback-survey.serviceIdentifier")
+  val feedbackUrl: String = s"$feedbackSurveyFEUrl/$feedbackSurveyServiceId"
 
   lazy val languageTranslationEnabled: Boolean = configuration.get[Boolean]("features.welsh-translation")
 

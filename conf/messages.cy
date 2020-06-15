@@ -735,3 +735,6 @@ phaseTwoPensionBreakdown.l3.partTime = Didynnwch £{0} (£{1} Lefel Is o Enillio
 phaseTwoPensionBreakdown.l3.partial.partTime = Didynnwch £{0} (£{1} Lefel Is o Enillion Cymwys ar gyfer blwyddyn dreth 20/21, rhannwch â {2} o ddiwrnodau yn y cyfnod cyflog a lluoswch â {3} o ddiwrnodau ffyrlo, rhannwch â {4} o oriau arferol, lluoswch â {5} o oriau ffyrlo).
 phaseTwoPensionBreakdown.l4 = Lluoswch â 3%.
 phaseTwoPensionBreakdown.total = Cyfanswm y grant pensiwn ar gyfer y cyfnod cyflog = £{0}
+
+
+confirmation.feedbackSurvey.label = What do you think of this service?
