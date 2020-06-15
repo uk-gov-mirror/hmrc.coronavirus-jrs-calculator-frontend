@@ -80,7 +80,7 @@ class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
       )
 
       form.bind(data(1)).errors.size shouldBe 1
-      form.bind(data(1)).errors.head.message shouldBe "furloughEndDate.error.past.claim.end"
+      form.bind(data(1)).errors.head.message shouldBe "furloughEndDate.error.claimPeriod"
       form.bind(data(0)).errors shouldBe List()
     }
   }
