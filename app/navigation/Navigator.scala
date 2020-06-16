@@ -112,13 +112,11 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
 
   private def partTimeQuestionRoute: UserAnswers => Call =
     userAnswer =>
-      userAnswer
-        .getV(PartTimeQuestionPage)
-        .map {
-          case PartTimeYes => routes.PartTimePeriodsController.onPageLoad()
-          case PartTimeNo  => routes.NicCategoryController.onPageLoad()
-        }
-        .getOrElse(routes.PartTimeQuestionController.onPageLoad())
+      (userAnswer.getV(PartTimeQuestionPage), userAnswer.getV(ClaimPeriodStartPage)) match {
+        case (Valid(PartTimeYes), _)           => routes.PartTimePeriodsController.onPageLoad()
+        case (Valid(PartTimeNo), Valid(start)) => skipNicAndPensionAfterJuly(start)
+        case _                                 => routes.PartTimePeriodsController.onPageLoad()
+    }
 
   private val payDateRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     (for {
@@ -164,17 +162,16 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private val partTimeHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
-    userAnswers
-      .getV(PartTimePeriodsPage)
-      .map { partTimePeriods =>
-        if (partTimePeriods.isDefinedAt(previousIdx)) {
-          routes.PartTimeNormalHoursController.onPageLoad(previousIdx + 1)
-        } else {
-          routes.NicCategoryController.onPageLoad()
-        }
-      }
-      .getOrElse(routes.PartTimePeriodsController.onPageLoad())
+    (userAnswers.getV(PartTimePeriodsPage), userAnswers.getV(ClaimPeriodStartPage)) match {
+      case (Valid(periods), _) if periods.isDefinedAt(previousIdx) => routes.PartTimeNormalHoursController.onPageLoad(previousIdx + 1)
+      case (Valid(_), Valid(start)) =>
+        skipNicAndPensionAfterJuly(start)
+      case _ => routes.PartTimePeriodsController.onPageLoad()
+    }
   }
+
+  private def skipNicAndPensionAfterJuly(start: LocalDate): Call =
+    if (start.getMonthValue > 7) routes.ConfirmationController.onPageLoad() else routes.NicCategoryController.onPageLoad()
 
   private val partTimeNormalHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     userAnswers
@@ -185,17 +182,12 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       .getOrElse(routes.PartTimePeriodsController.onPageLoad())
   }
 
-  private val additionalPaymentAmountRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
-    userAnswers
-      .getV(AdditionalPaymentPeriodsPage)
-      .map { additionalPaymentPeriods =>
-        if (additionalPaymentPeriods.isDefinedAt(previousIdx)) {
-          routes.AdditionalPaymentAmountController.onPageLoad(previousIdx + 1)
-        } else {
-          routes.NicCategoryController.onPageLoad()
-        }
-      }
-      .getOrElse(routes.AdditionalPaymentPeriodsController.onPageLoad())
+  private val additionalPaymentAmountRoutes: (Int, UserAnswers) => Call = (previousIdx, userAnswers) =>
+    (userAnswers.getV(AdditionalPaymentPeriodsPage), userAnswers.getV(ClaimPeriodStartPage)) match {
+      case (Valid(additionalPaymentPeriods), _) if additionalPaymentPeriods.isDefinedAt(previousIdx) =>
+        routes.AdditionalPaymentAmountController.onPageLoad(previousIdx + 1)
+      case (Valid(_), Valid(start)) => skipNicAndPensionAfterJuly(start)
+      case _                        => routes.AdditionalPaymentPeriodsController.onPageLoad()
   }
 
   private val idxRoutes: Page => (Int, UserAnswers) => Call = {
@@ -270,10 +262,10 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private def additionalPaymentStatusRoutes: UserAnswers => Call = { userAnswers =>
-    userAnswers.getV(AdditionalPaymentStatusPage) match {
-      case Valid(AdditionalPaymentStatus.YesAdditionalPayments) => routes.AdditionalPaymentPeriodsController.onPageLoad()
-      case Valid(AdditionalPaymentStatus.NoAdditionalPayments)  => routes.NicCategoryController.onPageLoad()
-      case _                                                    => routes.AdditionalPaymentStatusController.onPageLoad()
+    (userAnswers.getV(AdditionalPaymentStatusPage), userAnswers.getV(ClaimPeriodStartPage)) match {
+      case (Valid(AdditionalPaymentStatus.YesAdditionalPayments), _)           => routes.AdditionalPaymentPeriodsController.onPageLoad()
+      case (Valid(AdditionalPaymentStatus.NoAdditionalPayments), Valid(start)) => skipNicAndPensionAfterJuly(start)
+      case _                                                                   => routes.AdditionalPaymentStatusController.onPageLoad()
     }
   }
 

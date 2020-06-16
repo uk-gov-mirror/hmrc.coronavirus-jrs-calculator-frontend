@@ -24,6 +24,7 @@ import controllers.routes
 import models.ClaimPeriodQuestion._
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
 import models.PayMethod.{Regular, Variable}
+import models.PaymentFrequency.Monthly
 import models._
 import pages._
 
@@ -101,7 +102,16 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(
           PartTimeQuestionPage,
           emptyUserAnswers
+            .withClaimPeriodStart("2020, 7, 31")
             .withPartTimeQuestion(PartTimeNo)) mustBe routes.NicCategoryController.onPageLoad()
+      }
+
+      "go to ConfirmationPage after PartTimeQuestionPage if `PartTimeNo` and claim started after July" in {
+        navigator.nextPage(
+          PartTimeQuestionPage,
+          emptyUserAnswers
+            .withClaimPeriodStart("2020, 8, 1")
+            .withPartTimeQuestion(PartTimeNo)) mustBe routes.ConfirmationController.onPageLoad()
       }
 
       "go to PartTimeQuestionPage after RegularPayAmountPage if phase two started" in {
@@ -151,6 +161,38 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           userAnswers,
           Some(1)
         ) mustBe routes.PartTimeNormalHoursController.onPageLoad(2)
+      }
+
+      "go to Nic after PartTimeHours if period not found" in {
+        val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
+        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        navigator.nextPage(
+          PartTimeHoursPage,
+          userAnswers,
+          Some(3)
+        ) mustBe routes.NicCategoryController.onPageLoad()
+      }
+
+      "go to ConfirmationPage after PartTimeHours if period not found and claim started after July" in {
+        val partTimePeriods: List[Periods] = List(fullPeriod("2020,8,1", "2020,8,8"), fullPeriod("2020,8,9", "2020,8,15"))
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020, 8, 1")
+          .withClaimPeriodEnd("2020, 8, 31")
+          .withFurloughStartDate("2020, 8, 1")
+          .withFurloughStatus()
+          .withPaymentFrequency(Monthly)
+          .withNiCategory()
+          .withPensionStatus()
+          .withPayMethod()
+          .withLastPayDate("2020, 8, 31")
+          .withPayDate(List("2020, 7, 29", "2020, 8, 31"))
+          .withPartTimePeriods(partTimePeriods)
+
+        navigator.nextPage(
+          PartTimeHoursPage,
+          userAnswers,
+          Some(3)
+        ) mustBe routes.ConfirmationController.onPageLoad()
       }
 
       "loop from PartTimeHours to PartTimeNormalHours if there are more PartTimePeriods to iterate" in {
@@ -459,7 +501,24 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         ) mustBe routes.NicCategoryController.onPageLoad()
       }
 
-      "go to correct page after AdditionalPaymentStatusPage" in {
+      "got to confirmation page from AdditionalPaymentAmountPage if claim started after July" in {
+        val additionalPaymentDates = List(
+          LocalDate.of(2020, 8, 15),
+          LocalDate.of(2020, 9, 15)
+        )
+
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020, 8, 2")
+          .withAdditionalPaymentPeriods(additionalPaymentDates.map(_.toString))
+
+        navigator.nextPage(
+          AdditionalPaymentAmountPage,
+          userAnswers,
+          Some(2)
+        ) mustBe routes.ConfirmationController.onPageLoad()
+      }
+
+      "go to AdditionalPaymentPeriods page after AdditionalPaymentStatusPage" in {
         navigator.nextPage(
           AdditionalPaymentStatusPage,
           emptyUserAnswers
@@ -467,14 +526,24 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
             .success
             .value
         ) mustBe routes.AdditionalPaymentPeriodsController.onPageLoad()
+      }
 
+      "go to Nic page after AdditionalPaymentStatusPage if NoAdditionalPayments" in {
         navigator.nextPage(
           AdditionalPaymentStatusPage,
           emptyUserAnswers
-            .set(AdditionalPaymentStatusPage, AdditionalPaymentStatus.NoAdditionalPayments)
-            .success
-            .value
+            .withClaimPeriodStart("2020, 7, 31")
+            .withAdditionalPaymentStatus(AdditionalPaymentStatus.NoAdditionalPayments)
         ) mustBe routes.NicCategoryController.onPageLoad()
+      }
+
+      "go to Confirmation page after AdditionalPaymentStatusPage if NoAdditionalPayments and after July" in {
+        navigator.nextPage(
+          AdditionalPaymentStatusPage,
+          emptyUserAnswers
+            .withClaimPeriodStart("2020, 8, 1")
+            .withAdditionalPaymentStatus(AdditionalPaymentStatus.NoAdditionalPayments)
+        ) mustBe routes.ConfirmationController.onPageLoad()
       }
 
       "go to TopUpStatusPage after PartialPayAfterFurloughPage if phase one" in {

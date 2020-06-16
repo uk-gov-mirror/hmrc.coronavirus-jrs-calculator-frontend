@@ -111,12 +111,6 @@ object UserAnswers {
 
   type AnswerV[A] = ValidatedNec[JsError, A]
 
-//  implicit class OptionMapper[A](val source: AnswerV[A]) extends AnyVal {
-//    def optional: AnswerV[Option[A]] = {
-//      source.bimap(_ => Option.empty[A], fa => Some(fa))
-//    }
-//  }
-
   implicit lazy val reads: Reads[UserAnswers] = {
 
     import play.api.libs.functional.syntax._
