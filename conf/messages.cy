@@ -340,6 +340,7 @@ furloughEndDate.error.required = Mae’n rhaid i ddyddiad dod i ben y ffyrlo gyn
 furloughEndDate.error.invalid = Nodwch ddyddiad dod i ben go iawn y ffyrlo
 furloughEndDate.error.min.max = Mae’n rhaid i ddyddiad dod i ben y ffyrlo fod o leiaf 3 wythnos ar ôl i’r ffyrlo ddechrau a chyn diwedd yr hawliad
 furloughEndDate.error.claimPeriod = Enter a furlough end date within the claim period.
+furloughEndDate.error.beforeStart = The furlough end date cannot be before the furlough start date
 
 furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.1stJuly.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo’n wreiddiol?

@@ -36,6 +36,7 @@ class FurloughEndDateFormProvider @Inject()(appConfig: FrontendAppConfig) extend
   private def validEndDate(claimPeriod: Period, furloughStart: LocalDate): Constraint[LocalDate] = Constraint {
     case end if claimPeriodPredicate(claimPeriod, end)                  => Invalid("furloughEndDate.error.claimPeriod")
     case end if twentyOneDaysPredicate(claimPeriod, furloughStart, end) => Invalid("furloughEndDate.error.min.max")
+    case end if furloughEndBeforeStart(furloughStart, end)              => Invalid("furloughEndDate.error.beforeStart")
     case _                                                              => Valid
   }
 
@@ -44,6 +45,9 @@ class FurloughEndDateFormProvider @Inject()(appConfig: FrontendAppConfig) extend
 
   private def twentyOneDaysPredicate(claimPeriod: Period, furloughStart: LocalDate, furloughEnd: LocalDate) =
     !isPhaseTwo(claimPeriod) && furloughEnd.isBefore(furloughStart.plusDays(20))
+
+  private def furloughEndBeforeStart(furloughStart: LocalDate, furloughEnd: LocalDate) =
+    furloughEnd.isBefore(furloughStart)
 
   private def isPhaseTwo(claimPeriod: Period): Boolean =
     claimPeriod.start.getMonthValue >= appConfig.phaseTwoStartDate.getMonthValue
