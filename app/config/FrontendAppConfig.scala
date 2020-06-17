@@ -31,10 +31,11 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val appName: String = configuration.get[String]("appName")
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
-  private val contactFormServiceIdentifier = "jrsc"
+
+  private val serviceIdentifier = "jrsc"
 
   def reportAccessibilityIssueUrl(problemPageUri: String): String =
-    s"$contactHost/contact/accessibility-unauthenticated?service=$contactFormServiceIdentifier&userAction=${SafeRedirectUrl(host + problemPageUri).encodedUrl}"
+    s"$contactHost/contact/accessibility-unauthenticated?service=$serviceIdentifier&userAction=${SafeRedirectUrl(host + problemPageUri).encodedUrl}"
 
   val gtmContainer: Option[String] = (Try {
     configuration.get[String]("gtm.container")
@@ -43,12 +44,12 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
     case "transitional" => Some("GTM-TSFTCWZ")
   }) getOrElse None
 
-  val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$serviceIdentifier"
+  val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$serviceIdentifier"
 
-  val contactStandaloneForm = s"$contactHost/contact/contact-hmrc-unauthenticated?service=$contactFormServiceIdentifier"
+  val contactStandaloneForm = s"$contactHost/contact/contact-hmrc-unauthenticated?service=$serviceIdentifier"
 
-  val betaFeedbackUrl = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  val betaFeedbackUrl = s"$contactHost/contact/beta-feedback-unauthenticated?service=$serviceIdentifier"
 
   lazy val timeout: Int = configuration.get[Int]("timeout.timeout")
   lazy val countdown: Int = configuration.get[Int]("timeout.countdown")
@@ -58,8 +59,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
 
   private val feedbackSurveyFEUrl: String = configuration.get[String]("microservice.services.feedback-survey.url")
-  private val feedbackSurveyServiceId: String = configuration.get[String]("microservice.services.feedback-survey.serviceIdentifier")
-  val feedbackUrl: String = s"$feedbackSurveyFEUrl/$feedbackSurveyServiceId"
+  val feedbackUrl: String = s"$feedbackSurveyFEUrl/$serviceIdentifier"
 
   lazy val languageTranslationEnabled: Boolean = configuration.get[Boolean]("features.welsh-translation")
 
