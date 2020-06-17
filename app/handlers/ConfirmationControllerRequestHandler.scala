@@ -22,25 +22,29 @@ import cats.data.Validated.{Invalid, Valid}
 import cats.syntax.apply._
 import models.UserAnswers.AnswerV
 import models._
+import services.Calculators._
 import services._
 import viewmodels._
-import Calculators._
 
 trait ConfirmationControllerRequestHandler
     extends FurloughCalculator with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator {
 
   def loadResultData(userAnswers: UserAnswers): AnswerV[ConfirmationDataResult] =
-    meta(userAnswers).map { meta =>
-      val bd: AnswerV[ViewBreakdown] = meta match {
-        case _: ConfirmationMetadataWithoutNicAndPension => breakdownWithoutNicAndPension(userAnswers)
-        case ConfirmationMetadata(claim, _, _, _, _) =>
-          if (claim.start.isBefore(LocalDate.of(2020, 7, 1))) breakdown(userAnswers) else phaseTwoBreakdown(userAnswers)
-      }
+    metaData(userAnswers) match {
+      case Valid(m)       => validateBreakdown(userAnswers, m)
+      case i @ Invalid(_) => i
+    }
 
-      (meta, bd) match {
-        case (metadata: Metadata, Valid(breakdown: ViewBreakdown)) => confirmationResult(metadata, breakdown)
-        case (_, Invalid(_))                                       => ???
-      }
+  private def breakDown(meta: Metadata, userAnswers: UserAnswers): AnswerV[ViewBreakdown] = meta match {
+    case _: ConfirmationMetadataWithoutNicAndPension => breakdownWithoutNicAndPension(userAnswers)
+    case ConfirmationMetadata(claim, _, _, _, _) =>
+      if (claim.start.isBefore(LocalDate.of(2020, 7, 1))) breakdown(userAnswers) else phaseTwoBreakdown(userAnswers)
+  }
+
+  private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] =
+    breakDown(m, userAnswers) match {
+      case Valid(bd)      => Valid(confirmationResult(m, bd))
+      case i @ Invalid(_) => i
     }
 
   private def confirmationResult(metadata: Metadata, breakdown: ViewBreakdown): ConfirmationDataResult =
@@ -113,7 +117,7 @@ trait ConfirmationControllerRequestHandler
       case i @ Invalid(_) => i
     }
 
-  private def meta(userAnswers: UserAnswers): AnswerV[Metadata] =
+  private def metaData(userAnswers: UserAnswers): AnswerV[Metadata] =
     extractClaimPeriodStartV(userAnswers) match {
       case Valid(start) =>
         if (start.getMonthValue > 7) metaWithoutNicAndPension(userAnswers) else metaWithNicAndPension(userAnswers)
