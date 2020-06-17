@@ -40,7 +40,7 @@ object BackLinker {
       case _ => "#"
     }
 
-  private def getBackLink(page: Page, idx: Option[Int] = None)(implicit dataRequest: DataRequest[_]): Call =
+  private def getBackLink(page: Page, idx: Option[Int])(implicit dataRequest: DataRequest[_]): Call =
     page match {
       case ClaimPeriodEndPage           => routes.ClaimPeriodStartController.onPageLoad()
       case FurloughStartDatePage        => routes.ClaimPeriodEndController.onPageLoad()
@@ -92,7 +92,7 @@ object BackLinker {
     routes.PayDateController.onPageLoad(lastIdx)
   }
 
-  private def lastYearPayBackLink(idx: Option[Int])(implicit request: DataRequest[_]): Call =
+  private def lastYearPayBackLink(idx: Option[Int]): Call =
     if (idx.getOrElse(1) == 1) {
       routes.LastPayDateController.onPageLoad()
     } else {

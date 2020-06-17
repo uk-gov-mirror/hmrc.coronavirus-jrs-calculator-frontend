@@ -17,19 +17,28 @@
 package models
 
 import play.api.libs.json.{Format, Json}
+import services.Calculators._
 
 sealed trait FurloughCap {
   val value: BigDecimal
+  def toPartTime(usual: BigDecimal, furloughed: BigDecimal): FurloughCap
 }
 
-case class FullPeriodCap(value: BigDecimal) extends FurloughCap
+case class FullPeriodCap(value: BigDecimal) extends FurloughCap {
+  override def toPartTime(usual: BigDecimal, furloughed: BigDecimal): FurloughCap = {
+    val adjustedCap = Amount((value / usual) * furloughed).halfUp.value
+    FullPeriodCapWithPartTime(adjustedCap, value, usual, furloughed)
+  }
+}
 
 object FullPeriodCap {
   implicit val defaultFormat: Format[FullPeriodCap] = Json.format
 }
 
 case class FullPeriodCapWithPartTime(value: BigDecimal, unadjusted: BigDecimal, usual: BigDecimal, furloughed: BigDecimal)
-    extends FurloughCap
+    extends FurloughCap {
+  override def toPartTime(usual: BigDecimal, furloughed: BigDecimal): FurloughCap = this
+}
 
 case class PeriodSpansMonthCap(
   value: BigDecimal,
@@ -39,7 +48,22 @@ case class PeriodSpansMonthCap(
   monthTwoFurloughDays: Int,
   monthTwo: Int,
   monthTwoDaily: BigDecimal)
-    extends FurloughCap
+    extends FurloughCap {
+  override def toPartTime(usual: BigDecimal, furloughed: BigDecimal): FurloughCap = {
+    val adjustedCap = Amount((value / usual) * furloughed).halfUp.value
+    PeriodSpansMonthCapWithPartTime(
+      adjustedCap,
+      monthOneFurloughDays,
+      monthOne,
+      monthOneDaily,
+      monthTwoFurloughDays,
+      monthTwo,
+      monthTwoDaily,
+      value,
+      usual,
+      furloughed)
+  }
+}
 
 object PeriodSpansMonthCap {
   implicit val defaultFormat: Format[PeriodSpansMonthCap] = Json.format
@@ -56,9 +80,16 @@ case class PeriodSpansMonthCapWithPartTime(
   unadjusted: BigDecimal,
   usual: BigDecimal,
   furloughed: BigDecimal)
-    extends FurloughCap
+    extends FurloughCap {
+  override def toPartTime(usual: BigDecimal, furloughed: BigDecimal): FurloughCap = this
+}
 
-case class PartialPeriodCap(value: BigDecimal, furloughDays: Int, month: Int, dailyCap: BigDecimal) extends FurloughCap
+case class PartialPeriodCap(value: BigDecimal, furloughDays: Int, month: Int, dailyCap: BigDecimal) extends FurloughCap {
+  override def toPartTime(usual: BigDecimal, furloughed: BigDecimal): FurloughCap = {
+    val adjustedCap = Amount((value / usual) * furloughed).halfUp.value
+    PartialPeriodCapWithPartTime(adjustedCap, furloughDays, month, dailyCap, value, usual, furloughed)
+  }
+}
 
 object PartialPeriodCap {
   implicit val defaultFormat: Format[PartialPeriodCap] = Json.format
@@ -72,4 +103,6 @@ case class PartialPeriodCapWithPartTime(
   unadjusted: BigDecimal,
   usual: BigDecimal,
   furloughed: BigDecimal)
-    extends FurloughCap
+    extends FurloughCap {
+  override def toPartTime(usual: BigDecimal, furloughed: BigDecimal): FurloughCap = this
+}

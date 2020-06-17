@@ -21,8 +21,6 @@ import forms.AdditionalPaymentStatusFormProvider
 import models.requests.DataRequest
 import models.{AdditionalPaymentStatus, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.AdditionalPaymentStatusPage
 import play.api.inject.bind
@@ -30,10 +28,7 @@ import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
 import views.html.AdditionalPaymentStatusView
-
-import scala.concurrent.Future
 
 class AdditionalPaymentStatusControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 

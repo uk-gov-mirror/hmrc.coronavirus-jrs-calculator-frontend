@@ -23,11 +23,10 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class FeedbackSurveyController @Inject()(identify: IdentifierAction, val controllerComponents: MessagesControllerComponents)(
-  implicit ec: ExecutionContext,
-  appConfig: FrontendAppConfig)
+  implicit appConfig: FrontendAppConfig)
     extends FrontendBaseController with I18nSupport {
 
   def startSurvey: Action[AnyContent] = identify.async { implicit request =>

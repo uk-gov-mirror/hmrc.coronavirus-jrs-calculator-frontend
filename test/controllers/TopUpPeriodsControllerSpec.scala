@@ -26,18 +26,13 @@ import models.PaymentFrequency.Monthly
 import models.requests.DataRequest
 import models.{Amount, FullPeriodCap, FurloughBreakdown, TopUpPeriod, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
 import views.html.TopUpPeriodsView
-
-import scala.concurrent.Future
 
 class TopUpPeriodsControllerSpec extends SpecBaseWithApplication with MockitoSugar with CoreTestDataBuilder {
 

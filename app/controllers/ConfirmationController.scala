@@ -16,7 +16,7 @@
 
 package controllers
 
-import cats.data.Validated.{Invalid, Valid}
+import cats.data.Validated.Valid
 import config.FrontendAppConfig
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
@@ -47,8 +47,6 @@ class ConfirmationController @Inject()(
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     loadResultData(request.userAnswers) match {
-      case Invalid(e) =>
-        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       case Valid(data: PhaseOneConfirmationDataResult) =>
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
 
@@ -61,7 +59,8 @@ class ConfirmationController @Inject()(
       case Valid(data: PhaseTwoConfirmationDataResult) =>
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
         Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, config.calculatorVersion)))
-
+      case _ =>
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }
   }
 }

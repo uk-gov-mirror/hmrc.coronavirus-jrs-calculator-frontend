@@ -22,7 +22,7 @@ import base.{CoreTestDataBuilder, SpecBaseWithApplication}
 import models.NicCategory.Payable
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.DoesContribute
-import org.scalatest.{MustMatchers, OptionValues, WordSpec}
+import org.scalatest.{MustMatchers, OptionValues}
 import services.Threshold
 
 class PeriodBreakdownSpec extends SpecBaseWithApplication with MustMatchers with OptionValues with CoreTestDataBuilder {

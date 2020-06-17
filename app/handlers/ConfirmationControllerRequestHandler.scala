@@ -22,7 +22,6 @@ import cats.data.Validated.{Invalid, Valid}
 import cats.syntax.apply._
 import models.UserAnswers.AnswerV
 import models._
-import services.Calculators._
 import services._
 import viewmodels._
 
@@ -53,6 +52,8 @@ trait ConfirmationControllerRequestHandler
       case (data: ConfirmationMetadata, b: PhaseTwoConfirmationViewBreakdown) => PhaseTwoConfirmationDataResult(data, b)
       case (m: ConfirmationMetadataWithoutNicAndPension, b: ConfirmationViewBreakdownWithoutNicAndPension) =>
         ConfirmationDataResultWithoutNicAndPension(m, b)
+      case _ =>
+        throw new Exception("ConfirmationControllerRequestHandler.confirmationResult: Unexpected combination of metadata and breakdown")
     }
 
   private def breakdown(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdown] =
@@ -80,16 +81,15 @@ trait ConfirmationControllerRequestHandler
       case inv @ Invalid(e) => inv
     }
 
-  import com.softwaremill.quicklens._
   private def breakdownWithoutNicAndPension(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdownWithoutNicAndPension] =
     extractBranchingQuestionsV(userAnswers) match {
       case Valid(questions) =>
         phaseTwoJourneyDataV(define(questions), userAnswers) match {
           case Valid(data) =>
             val payments: Seq[PaymentWithPhaseTwoPeriod] = phaseTwoReferencePay(data)
-            val furlough: PhaseTwoFurloughCalculationResult =
-              phaseTwoFurlough(data.frequency, payments.modify(_.each.referencePay).using(_.down))
+            val furlough: PhaseTwoFurloughCalculationResult = phaseTwoFurlough(data.frequency, payments)
             Valid(ConfirmationViewBreakdownWithoutNicAndPension(furlough))
+          case i @ Invalid(_) => i
         }
       case i @ Invalid(_) => i
     }
