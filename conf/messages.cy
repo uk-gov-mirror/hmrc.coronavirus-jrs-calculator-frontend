@@ -737,5 +737,14 @@ phaseTwoPensionBreakdown.l3.partial.partTime = Didynnwch £{0} (£{1} Lefel Is o
 phaseTwoPensionBreakdown.l4 = Lluoswch â 3%.
 phaseTwoPensionBreakdown.total = Cyfanswm y grant pensiwn ar gyfer y cyfnod cyflog = £{0}
 
-
 confirmation.feedbackSurvey.label = What do you think of this service?
+
+payPeriodsList.title = Are these pay periods correct?
+payPeriodsList.heading = Are these pay periods correct?
+payPeriodsList.p1 = We’ve worked them out based on your answers.
+payPeriodsList.li = From {0} to {1}
+payPeriodsList.p2 = Together they should cover your claim ({0} to {1}). They may be partly outside it.
+payPeriodsList.p3 = We’ve assumed the pay periods are regular. The calculator cannot be used for irregular pay periods.
+payPeriodsList.yes = Yes
+payPeriodsList.no = No - change details
+payPeriodsList.error.required = Select yes if these pay periods are correct

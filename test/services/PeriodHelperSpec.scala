@@ -86,6 +86,37 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
     generatePeriodsWithFurlough(endDates, furloughPeriod) mustBe expected
   }
 
+  "generate period end dates given a payment frequency, a date that represents the first end date and a furlough period" in new PeriodHelper {
+    val furloughPeriod = FurloughWithinClaim(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
+    val firstEndDate = LocalDate.of(2020, 2, 28)
+
+    val expectedWeekly = Seq(
+      LocalDate.of(2020, 2, 28),
+      LocalDate.of(2020, 3, 6),
+      LocalDate.of(2020, 3, 13),
+      LocalDate.of(2020, 3, 20),
+      LocalDate.of(2020, 3, 27),
+      LocalDate.of(2020, 4, 3)
+    )
+
+    val expectedFortnightly = Seq(
+      LocalDate.of(2020, 2, 28),
+      LocalDate.of(2020, 3, 13),
+      LocalDate.of(2020, 3, 27),
+      LocalDate.of(2020, 4, 10),
+    )
+
+    val expectedFourWeekly = Seq(
+      LocalDate.of(2020, 2, 28),
+      LocalDate.of(2020, 3, 27),
+      LocalDate.of(2020, 4, 24)
+    )
+
+    generateEndDates(Weekly, firstEndDate, furloughPeriod) mustBe expectedWeekly
+    generateEndDates(FortNightly, firstEndDate, furloughPeriod) mustBe expectedFortnightly
+    generateEndDates(FourWeekly, firstEndDate, furloughPeriod) mustBe expectedFourWeekly
+  }
+
   "determine if a period contains the start of a new tax year" in new PeriodHelper {
     periodContainsNewTaxYear(Period(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 4, 20))) mustBe true
     periodContainsNewTaxYear(Period(LocalDate.of(2020, 3, 6), LocalDate.of(2020, 4, 6))) mustBe true

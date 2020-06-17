@@ -84,7 +84,7 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData with ValidatedValues
       .get
       .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
       .get
-      .setListWithInvalidation(LastYearPayPage, LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)), 1)
+      .setListItemWithInvalidation(LastYearPayPage, LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1200.0)), 1)
       .get
 
     val expected: VariablePayWithCylbData = VariablePayWithCylbData(

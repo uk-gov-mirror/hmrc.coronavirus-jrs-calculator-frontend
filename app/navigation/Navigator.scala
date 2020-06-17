@@ -58,6 +58,8 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.PayMethodController.onPageLoad()
     case PayMethodPage =>
       payMethodRoutes
+    case PayPeriodsListPage =>
+      payPeriodsListRoute
     case RegularPayAmountPage =>
       regularPayAmountRoute
     case EmployeeStartedPage =>
@@ -130,7 +132,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         })
 
       if (lastPayDate.isAfter(endDate.minusDays(1))) {
-        routes.LastPayDateController.onPageLoad()
+        routes.PayPeriodsListController.onPageLoad()
       } else {
         routes.PayDateController.onPageLoad(previousIdx + 1)
       }
@@ -266,6 +268,14 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       case (Valid(AdditionalPaymentStatus.YesAdditionalPayments), _)           => routes.AdditionalPaymentPeriodsController.onPageLoad()
       case (Valid(AdditionalPaymentStatus.NoAdditionalPayments), Valid(start)) => skipNicAndPensionAfterJuly(start)
       case _                                                                   => routes.AdditionalPaymentStatusController.onPageLoad()
+    }
+  }
+
+  private def payPeriodsListRoute: UserAnswers => Call = { userAnswers =>
+    userAnswers.getV(PayPeriodsListPage) match {
+      case Valid(PayPeriodsList.Yes) => routes.LastPayDateController.onPageLoad()
+      case Valid(PayPeriodsList.No)  => routes.PayDateController.onPageLoad(1)
+      case Invalid(_)                => routes.PayDateController.onPageLoad(1)
     }
   }
 

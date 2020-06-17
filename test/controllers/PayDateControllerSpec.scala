@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.PayDateFormProvider
+import models.PaymentFrequency.Weekly
 import models.UserAnswers
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
@@ -47,13 +48,13 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
   val formProvider = new PayDateFormProvider()
   val claimStartDate = LocalDate.of(2020, 3, 5)
   val furloughStartDate = LocalDate.of(2020, 3, 5)
-  val userAnswersWithStartDate = UserAnswers(userAnswersId)
-    .set(ClaimPeriodStartPage, claimStartDate)
-    .success
-    .value
-    .set(FurloughStartDatePage, furloughStartDate)
-    .success
-    .value
+  val userAnswersWithStartDate = emptyUserAnswers
+    .withClaimPeriodStart("2020, 3, 5")
+    .withClaimPeriodEnd("2020, 3, 31")
+    .withFurloughStartDate("2020, 3, 5")
+    .withFurloughStatus()
+    .withPaymentFrequency(Weekly)
+
   val validAnswer = LocalDate.of(2020, 3, 3)
 
   def onwardRoute = Call("GET", "/foo")
@@ -169,6 +170,26 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual onwardRoute.url
+
+      application.stop()
+    }
+
+    "generate dates when not monthly" in {
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020, 7, 1")
+        .withClaimPeriodEnd("2020, 7, 31")
+        .withFurloughStartDate("2020, 3, 20")
+        .withFurloughStatus()
+        .withPaymentFrequency(Weekly)
+        .withPayMethod()
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      val result = route(application, postRequest(LocalDate.of(2020, 6, 26))).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.PayPeriodsListController.onPageLoad().url
 
       application.stop()
     }

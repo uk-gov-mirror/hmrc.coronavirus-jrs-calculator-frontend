@@ -53,11 +53,11 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuil
         TopUpPayment(LocalDate.of(2020, 5, 1), Amount(50.0))
       )
       val userAnswers = UserAnswers("123")
-        .setListWithInvalidation(TopUpAmountPage, payments.head, 1)
+        .setListItemWithInvalidation(TopUpAmountPage, payments.head, 1)
         .get
-        .setListWithInvalidation(TopUpAmountPage, payments.tail.head, 2)
+        .setListItemWithInvalidation(TopUpAmountPage, payments.tail.head, 2)
         .get
-        .setListWithInvalidation(TopUpAmountPage, payments.drop(2).head, 3)
+        .setListItemWithInvalidation(TopUpAmountPage, payments.drop(2).head, 3)
         .get
 
       extractTopUpPayment(userAnswers) mustBe payments
@@ -70,11 +70,11 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuil
         AdditionalPayment(LocalDate.of(2020, 5, 1), Amount(50.0))
       )
       val userAnswers = UserAnswers("123")
-        .setListWithInvalidation(AdditionalPaymentAmountPage, payments.head, 1)
+        .setListItemWithInvalidation(AdditionalPaymentAmountPage, payments.head, 1)
         .get
-        .setListWithInvalidation(AdditionalPaymentAmountPage, payments.tail.head, 2)
+        .setListItemWithInvalidation(AdditionalPaymentAmountPage, payments.tail.head, 2)
         .get
-        .setListWithInvalidation(AdditionalPaymentAmountPage, payments.drop(2).head, 3)
+        .setListItemWithInvalidation(AdditionalPaymentAmountPage, payments.drop(2).head, 3)
         .get
 
       extractAdditionalPayment(userAnswers) mustBe payments

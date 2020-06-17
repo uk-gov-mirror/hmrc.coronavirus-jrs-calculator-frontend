@@ -22,6 +22,7 @@ import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.Period._
 import models._
 import utils.LocalDateHelpers._
+import models.PaymentFrequency.paymentFrequencyDays
 
 import scala.annotation.tailrec
 
@@ -43,6 +44,17 @@ trait PeriodHelper {
     } else {
       generate(Seq.empty, sortedEndDates(endDates))
     }
+  }
+
+  def generateEndDates(frequency: PaymentFrequency, firstEndDate: LocalDate, furloughPeriod: FurloughWithinClaim): Seq[LocalDate] = {
+    def generate(acc: Seq[LocalDate], latest: LocalDate): Seq[LocalDate] =
+      if (!latest.isBefore(furloughPeriod.end)) {
+        acc ++ Seq(latest)
+      } else {
+        generate(acc ++ Seq(latest), latest.plusDays(paymentFrequencyDays(frequency)))
+      }
+
+    generate(Seq(firstEndDate), firstEndDate.plusDays(paymentFrequencyDays(frequency)))
   }
 
   def endDateOrTaxYearEnd(period: Period): Period = {

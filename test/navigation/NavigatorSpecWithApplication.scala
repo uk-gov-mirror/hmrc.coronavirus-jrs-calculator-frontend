@@ -232,7 +232,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .set(PayDatePage, LocalDate.of(2020, 5, 30), Some(1))
           .get
 
-        navigator.nextPage(PayDatePage, userAnswers, Some(1)) mustBe routes.LastPayDateController
+        navigator.nextPage(PayDatePage, userAnswers, Some(1)) mustBe routes.PayPeriodsListController
           .onPageLoad()
       }
 
@@ -243,7 +243,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .set(PayDatePage, LocalDate.of(2020, 5, 31), Some(1))
           .get
 
-        navigator.nextPage(PayDatePage, userAnswers, Some(1)) mustBe routes.LastPayDateController
+        navigator.nextPage(PayDatePage, userAnswers, Some(1)) mustBe routes.PayPeriodsListController
           .onPageLoad()
       }
 

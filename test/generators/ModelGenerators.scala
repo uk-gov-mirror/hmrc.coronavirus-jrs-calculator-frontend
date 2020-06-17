@@ -23,6 +23,11 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbitrary
 trait ModelGenerators {
 
+  implicit lazy val arbitraryPayPeriodsList: Arbitrary[PayPeriodsList] =
+    Arbitrary {
+      Gen.oneOf(PayPeriodsList.values.toSeq)
+    }
+
   implicit lazy val arbitraryPartTimeHours: Arbitrary[PartTimeHours] =
     Arbitrary {
       for {

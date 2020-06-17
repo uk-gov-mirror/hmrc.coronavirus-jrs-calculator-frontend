@@ -121,3 +121,6 @@ GET        /part-time-normal-hours/:idx                      controllers.PartTim
 POST       /part-time-normal-hours/:idx                      controllers.PartTimeNormalHoursController.onSubmit(idx: Int)
 
 GET        /start-survey                                     controllers.FeedbackSurveyController.startSurvey()
+
+GET        /pay-periods-list                                 controllers.PayPeriodsListController.onPageLoad()
+POST       /pay-periods-list                                 controllers.PayPeriodsListController.onSubmit()

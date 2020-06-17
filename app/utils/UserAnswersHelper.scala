@@ -32,7 +32,7 @@ trait UserAnswersHelper {
       dates match {
         case Nil => userAnswers
         case (d: LocalDate, idx) :: tail =>
-          userAnswers.flatMap(answers => rec(answers.setListWithInvalidation(PayDatePage, d, idx), tail))
+          userAnswers.flatMap(answers => rec(answers.setListItemWithInvalidation(PayDatePage, d, idx), tail))
       }
     rec(Try(userAnswers), zipped)
   }
