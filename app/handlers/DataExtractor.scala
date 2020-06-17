@@ -24,7 +24,6 @@ import pages._
 import services.{FurloughPeriodExtractor, PeriodHelper}
 import cats.syntax.apply._
 import cats.syntax.validated._
-import play.api.libs.json.JsError
 import cats.syntax.semigroupk._
 
 trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
@@ -34,7 +33,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
 
     (
       userAnswers.getV(FurloughStartDatePage),
-      userAnswers.getV(EmployeeStartDatePage) <+> default.validNec[JsError]
+      userAnswers.getV(EmployeeStartDatePage) <+> default.validNec[AnswerValidation]
     ).mapN { (furloughStart, employeeStartDate) =>
       endDateOrTaxYearEnd(Period(employeeStartDate, furloughStart.minusDays(1)))
     }

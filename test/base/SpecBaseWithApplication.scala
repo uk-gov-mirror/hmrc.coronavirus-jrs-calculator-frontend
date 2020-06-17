@@ -20,7 +20,7 @@ import cats.data.Chain
 import cats.data.Validated.Invalid
 import config.FrontendAppConfig
 import controllers.actions._
-import models.UserAnswers
+import models.{GenericValidationError, UserAnswers}
 import models.UserAnswers.AnswerV
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -60,7 +60,7 @@ trait SpecBaseWithApplication
 
   implicit class JsErrorValidationHelpers(source: JsError) {
     import cats.syntax.validated._
-    def invalidated[A]: AnswerV[A] = source.invalidNec[A]
+    def invalidated[A]: AnswerV[A] = GenericValidationError("Generic", source).invalidNec[A]
   }
 
   def emptyError(

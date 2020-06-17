@@ -19,6 +19,7 @@ package controllers
 import cats.data.NonEmptyChain
 import cats.data.Validated.{Invalid, Valid}
 import handlers.ErrorHandler
+import models.UserAnswers
 import models.UserAnswers.AnswerV
 import models.requests.DataRequest
 import navigation.Navigator
@@ -148,9 +149,7 @@ trait BaseController extends FrontendBaseController with I18nSupport {
       .fold(
         nel => {
           Logger.error(s"[BaseController][getRequiredAnswers] Failed to retrieve expected data for page: $pageB")
-          nel.toChain.toList.foreach { err =>
-            Logger.error(s"Found JsError: ${err.errors}")
-          }
+          UserAnswers.logErrors(nel)
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
         },
         identity

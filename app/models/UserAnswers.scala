@@ -32,8 +32,6 @@ final case class UserAnswers(
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
-  type Answer[A] = ValidatedNec[JsError, A]
-
   private def path[T <: Query](page: T, idx: Option[Int]): JsPath = idx.fold(page.path)(idx => page.path \ (idx - 1))
 
   def getV[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): AnswerV[A] =
@@ -41,7 +39,7 @@ final case class UserAnswers(
       case JsSuccess(value, _) => value.validNec
       case error @ JsError(_) =>
         NonEmptyChain
-          .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(error)))
+          .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(AnswerValidation(error))))
           .invalid[A]
     }
 
@@ -121,9 +119,27 @@ final case class UserAnswers(
   }
 }
 
+trait AnswerValidation {
+  def underlying: JsError
+}
+
+object AnswerValidation {
+  def apply(error: JsError): AnswerValidation =
+    GenericValidationError("Generic exception", error)
+}
+
+case class DateParsingException(source: String, underlying: JsError) extends AnswerValidation
+case class GenericValidationError(exception: String, underlying: JsError) extends AnswerValidation
+
+object GenericValidationError {
+  def apply(exception: String, answers: JsObject): GenericValidationError = new GenericValidationError(exception, null)
+}
+
 object UserAnswers {
 
-  type AnswerV[A] = ValidatedNec[JsError, A]
+  type AnswerV[A] = ValidatedNec[AnswerValidation, A]
+
+  def logErrors(nec: NonEmptyChain[AnswerValidation]): Unit = {}
 
   implicit lazy val reads: Reads[UserAnswers] = {
 
