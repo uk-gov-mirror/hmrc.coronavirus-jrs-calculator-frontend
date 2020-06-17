@@ -103,8 +103,9 @@ trait Constraints {
         Invalid(errorKey)
     }
 
-  protected def positiveValue(errorKey: Option[String] = None): Constraint[BigDecimal] = Constraint { value =>
-    if (value > 0) Valid else Invalid(errorKey.getOrElse("amount.error.must.be.positive"))
+  protected def greaterThan[A](minimum: A, errorKey: String)(implicit ev: Ordering[A]): Constraint[A] = Constraint { value =>
+    import ev._
+    if (value > minimum) Valid else Invalid(errorKey)
   }
 
   protected def maxTwoDecimals(errorKey: Option[String] = None): Constraint[BigDecimal] = Constraint { value =>

@@ -31,7 +31,7 @@ class PartTimeHoursFormProvider @Inject() extends Mappings {
         "value" -> double(
           requiredKey = "partTimeHours.error.required",
           nonNumericKey = "partTimeHours.error.nonNumeric"
-        ).verifying(minimumValue(0.0, "partTimeHours.error.min"))
+        ).verifying(greaterThan(0.0, "partTimeHours.error.min"))
           .verifying(moreThanUsualHours(usuals, partTimePeriod))
       )(Hours.apply)(Hours.unapply))
 

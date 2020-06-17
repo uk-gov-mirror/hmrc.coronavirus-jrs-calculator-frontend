@@ -632,7 +632,7 @@ partTimeHours.partial = Dyma’r dyddiadau o’r cyfnod cyflog {0} i {1} sy’n 
 partTimeHours.p1 = Awr
 partTimeHours.hint = Nodwch oriau mewn fformat degol
 partTimeHours.error.required = Nodwch yr oriau y bu’r cyflogai hwn yn gweithio mewn gwirionedd yn ystod y cyfnod cyflog hwn
-partTimeHours.error.min = Ni all yr oriau a weithiwyd fod yn negyddol
+partTimeHours.error.min = Hours actually worked must be more than 0
 partTimeHours.error.max = Ni all yr oriau a weithiwyd mewn gwirionedd fod yn uwch na’r oriau a weithir fel arfer
 partTimeHours.error.nonNumeric = Nodwch yr oriau rhan-amser gan ddefnyddio rhifau
 
@@ -644,7 +644,7 @@ partTimeNormalHours.partial = Dyma’r dyddiadau o’r cyfnod cyflog {0} i {1} s
 partTimeNormalHours.p1 = Awr
 partTimeNormalHours.hint = Nodwch oriau mewn fformat degol
 partTimeNormalHours.error.required = Nodwch oriau arferol y cyflogai hwn ar gyfer y cyfnod cyflog hwn
-partTimeNormalHours.error.min = Ni all yr oriau a weithir fel arfer fod yn negyddol
+partTimeNormalHours.error.min = Employee’s usual hours must be more than 0
 partTimeNormalHours.error.max = Mae nifer yr oriau a nodwyd yn uwch na’r uchafswm posibl
 partTimeNormalHours.error.nonNumeric = Nodwch yr oriau arferol gan ddefnyddio rhifau
 

@@ -30,7 +30,7 @@ class AnnualPayAmountFormProvider @Inject() extends Mappings {
         "value" -> bigDecimal(
           requiredKey = "annualPayAmount.error.required",
           nonNumericKey = "annualPayAmount.error.invalid"
-        ).verifying(positiveValue())
+        ).verifying(greaterThan(BigDecimal(0.0), "amount.error.must.be.positive"))
           .verifying(maxTwoDecimals())
       )(AnnualPayAmount.apply)(AnnualPayAmount.unapply)
     )

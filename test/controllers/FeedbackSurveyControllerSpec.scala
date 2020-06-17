@@ -35,7 +35,7 @@ class FeedbackSurveyControllerSpec extends SpecBaseWithApplication {
       val result = route(application, getSurveyRequest).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual "http://localhost:9514/feedback/coronavirus-jrs-calculator"
+      redirectLocation(result).value mustEqual "http://localhost:9514/feedback/jrsc"
 
       application.stop()
     }

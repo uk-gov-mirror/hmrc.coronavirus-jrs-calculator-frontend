@@ -632,7 +632,7 @@ partTimeHours.partial = These are the dates from the pay period {0} to {1} that 
 partTimeHours.p1 = Hours
 partTimeHours.hint = Enter hours in decimal format
 partTimeHours.error.required = Enter the hours this employee actually worked in this pay period
-partTimeHours.error.min = Hours worked cannot be negative
+partTimeHours.error.min = Hours actually worked must be more than 0
 partTimeHours.error.max = Hours actually worked cannot be higher than hours usually worked
 partTimeHours.error.nonNumeric = Enter the part time hours using numbers
 
@@ -644,7 +644,7 @@ partTimeNormalHours.partial = These are the dates from the pay period {0} to {1}
 partTimeNormalHours.p1 = Hours
 partTimeNormalHours.hint = Enter hours in decimal format
 partTimeNormalHours.error.required = Enter this employee’s usual hours for this pay period
-partTimeNormalHours.error.min = Hours usually worked cannot be negative
+partTimeNormalHours.error.min = Employee’s usual hours must be more than 0
 partTimeNormalHours.error.max = Number of hours entered is higher than the maximum possible
 partTimeNormalHours.error.nonNumeric = Enter the usual hours using numbers
 

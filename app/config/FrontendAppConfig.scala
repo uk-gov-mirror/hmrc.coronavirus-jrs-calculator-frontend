@@ -89,7 +89,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
       "/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme" +
       "#work-out-how-much-you-can-claim-for-employer-national-insurance-contributions-nics"
 
-  val webchatHelpUrl: String = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/get-help-with-the-coronavirus-job-retention-scheme"
+  val webchatHelpUrl: String =
+    "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/get-help-with-the-coronavirus-job-retention-scheme"
 
   val jobRetentionScheme: String = "https://www.gov.uk/guidance/claim-for-wages-through-the-coronavirus-job-retention-scheme"
 
