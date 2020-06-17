@@ -191,6 +191,10 @@ case class CylbPaymentWithPhaseTwoPeriod(
     extends PaymentWithPhaseTwoPeriod {
   def basedOnDays: String = cylbBreakdown.referencePay.value.formatted("%.2f")
   def basedOnHours: String =
-    Amount((cylbBreakdown.referencePay.value / phaseTwoPeriod.usual) * phaseTwoPeriod.furloughed).halfUp.value.formatted("%.2f")
+    if (phaseTwoPeriod.isPartTime) {
+      Amount((cylbBreakdown.referencePay.value / phaseTwoPeriod.usual) * phaseTwoPeriod.furloughed).halfUp.value.formatted("%.2f")
+    } else {
+      cylbBreakdown.referencePay.value.formatted("%.2f")
+    }
   def higherOfResult: String = referencePay.value.formatted("%.2f")
 }
