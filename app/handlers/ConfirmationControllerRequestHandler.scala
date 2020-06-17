@@ -19,28 +19,36 @@ package handlers
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
+import cats.syntax.apply._
 import models.UserAnswers.AnswerV
 import models._
 import services._
 import viewmodels._
-import cats.syntax.apply._
+import Calculators._
 
 trait ConfirmationControllerRequestHandler
     extends FurloughCalculator with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator {
 
   def loadResultData(userAnswers: UserAnswers): AnswerV[ConfirmationDataResult] =
     meta(userAnswers).map { meta =>
-      val bd: AnswerV[ViewBreakdown] = if (meta.claimPeriod.start.isBefore(LocalDate.of(2020, 7, 1))) {
-        breakdown(userAnswers)
-      } else {
-        phaseTwoBreakdown(userAnswers)
+      val bd: AnswerV[ViewBreakdown] = meta match {
+        case _: ConfirmationMetadataWithoutNicAndPension => breakdownWithoutNicAndPension(userAnswers)
+        case ConfirmationMetadata(claim, _, _, _, _) =>
+          if (claim.start.isBefore(LocalDate.of(2020, 7, 1))) breakdown(userAnswers) else phaseTwoBreakdown(userAnswers)
       }
 
-      bd match {
-        case Valid(one: ConfirmationViewBreakdown)         => PhaseOneConfirmationDataResult(meta, one)
-        case Valid(two: PhaseTwoConfirmationViewBreakdown) => PhaseTwoConfirmationDataResult(meta, two)
-        case Invalid(e)                                    => ???
+      (meta, bd) match {
+        case (metadata: Metadata, Valid(breakdown: ViewBreakdown)) => confirmationResult(metadata, breakdown)
+        case (_, Invalid(_))                                       => ???
       }
+    }
+
+  private def confirmationResult(metadata: Metadata, breakdown: ViewBreakdown): ConfirmationDataResult =
+    (metadata, breakdown) match {
+      case (data: ConfirmationMetadata, b: ConfirmationViewBreakdown)         => PhaseOneConfirmationDataResult(data, b)
+      case (data: ConfirmationMetadata, b: PhaseTwoConfirmationViewBreakdown) => PhaseTwoConfirmationDataResult(data, b)
+      case (m: ConfirmationMetadataWithoutNicAndPension, b: ConfirmationViewBreakdownWithoutNicAndPension) =>
+        ConfirmationDataResultWithoutNicAndPension(m, b)
     }
 
   private def breakdown(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdown] =
@@ -68,6 +76,20 @@ trait ConfirmationControllerRequestHandler
       case inv @ Invalid(e) => inv
     }
 
+  import com.softwaremill.quicklens._
+  private def breakdownWithoutNicAndPension(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdownWithoutNicAndPension] =
+    extractBranchingQuestionsV(userAnswers) match {
+      case Valid(questions) =>
+        phaseTwoJourneyDataV(define(questions), userAnswers) match {
+          case Valid(data) =>
+            val payments: Seq[PaymentWithPhaseTwoPeriod] = phaseTwoReferencePay(data)
+            val furlough: PhaseTwoFurloughCalculationResult =
+              phaseTwoFurlough(data.frequency, payments.modify(_.each.referencePay).using(_.down))
+            Valid(ConfirmationViewBreakdownWithoutNicAndPension(furlough))
+        }
+      case i @ Invalid(_) => i
+    }
+
   private def phaseTwoBreakdown(userAnswers: UserAnswers): AnswerV[PhaseTwoConfirmationViewBreakdown] =
     extractBranchingQuestionsV(userAnswers) match {
       case Valid(questions) =>
@@ -91,7 +113,14 @@ trait ConfirmationControllerRequestHandler
       case i @ Invalid(_) => i
     }
 
-  private def meta(userAnswers: UserAnswers): AnswerV[ConfirmationMetadata] =
+  private def meta(userAnswers: UserAnswers): AnswerV[Metadata] =
+    extractClaimPeriodStartV(userAnswers) match {
+      case Valid(start) =>
+        if (start.getMonthValue > 7) metaWithoutNicAndPension(userAnswers) else metaWithNicAndPension(userAnswers)
+      case i @ Invalid(_) => i
+    }
+
+  private def metaWithNicAndPension(userAnswers: UserAnswers): AnswerV[ConfirmationMetadata] =
     (
       extractFurloughPeriodV(userAnswers),
       extractClaimPeriodStartV(userAnswers),
@@ -102,6 +131,17 @@ trait ConfirmationControllerRequestHandler
     ).mapN {
       case (furloughPeriod, claimStart, claimEnd, frequency, nicCategory, pensionStatus) =>
         ConfirmationMetadata(Period(claimStart, claimEnd), furloughPeriod, frequency, nicCategory, pensionStatus)
+    }
+
+  private def metaWithoutNicAndPension(userAnswers: UserAnswers): AnswerV[ConfirmationMetadataWithoutNicAndPension] =
+    (
+      extractFurloughPeriodV(userAnswers),
+      extractClaimPeriodStartV(userAnswers),
+      extractClaimPeriodEndV(userAnswers),
+      extractPaymentFrequencyV(userAnswers)
+    ).mapN {
+      case (furloughPeriod, claimStart, claimEnd, frequency) =>
+        ConfirmationMetadataWithoutNicAndPension(Period(claimStart, claimEnd), furloughPeriod, frequency)
     }
 
   private def calculateNi(
