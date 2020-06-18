@@ -39,13 +39,9 @@ final case class UserAnswers(
       case JsSuccess(value, _) => value.validNec
       case error @ JsError(_) =>
         NonEmptyChain
-          .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(AnswerValidation(error, data))))
+          .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(AnswerValidation(error, data, idx))))
           .invalid[A]
     }
-
-  @deprecated("Use validated API instead", "1.0.0")
-  def get[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): Option[A] =
-    Reads.optionNoError(Reads.at(path(page, idx))).reads(data).getOrElse(None)
 
   def getList[A](page: Gettable[A])(implicit rds: Reads[A]): Seq[A] =
     page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
@@ -131,13 +127,13 @@ trait AnswerValidation {
 object AnswerValidation {
   def apply(
     jsError: JsError,
-    data: JsObject = JsObject(Seq.empty)
+    data: JsObject = JsObject(Seq.empty),
+    idx: Option[Int] = None
   ): AnswerValidation =
     if (jsError.errors.size == 1) {
       jsError.errors.head match {
         case (path, error) if error == Seq(JsonValidationError(Seq("error.path.missing"))) =>
           EmptyAnswerError(path, jsError, data)
-
         case (path, error) =>
           GenericValidationError("Generic exception", jsError, data)
       }
