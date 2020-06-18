@@ -655,7 +655,7 @@ phaseTwoDetailedBreakdown.p1.cylb.2 = Dull 1: rydym wedi ystyried y symiau a dal
 phaseTwoDetailedBreakdown.p1.cylb.3 = Dull 2: rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn ystod y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog.
 phaseTwoDetailedBreakdown.p2 = Mae yna uchafswm y gallwch ei hawlio am grant ffyrlo a chyfraniadau Yswiriant Gwladol y cyflogwr. Os yw hyn yn effeithio ar eich hawliad, rydym wedi addasu’r cyfrifiadau.
 phaseTwoDetailedBreakdown.p2.a = Cyfrifwch yr uchafswm cyflog y gallwch ei hawlio (yn agor tab newydd).
-phaseTwoDetailedBreakdown.p2.a.href = https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme#eighty-percent
+phaseTwoDetailedBreakdown.p2.a.href = https://www.gov.uk/guidance/calculate-how-much-you-can-claim-using-the-coronavirus-job-retention-scheme#eighty-percent
 phaseTwoDetailedBreakdown.p3 = Mae cyfrifiadau’n cael eu talgrynnu i’r geiniog agosaf, oni nodir yn wahanol.
 phaseTwoDetailedBreakdown.h3 = Ar gyfer cyfnod cyflog {0} i {1}
 

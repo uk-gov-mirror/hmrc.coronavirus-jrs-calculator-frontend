@@ -655,7 +655,7 @@ phaseTwoDetailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they w
 phaseTwoDetailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period.
 phaseTwoDetailedBreakdown.p2 = There’s a maximum amount you can claim for furlough grant and Employer National Insurance contributions. If this affects your claim, we’ve adjusted the calculations. 
 phaseTwoDetailedBreakdown.p2.a = Work out the maximum wage amount you can claim (opens in new tab).
-phaseTwoDetailedBreakdown.p2.a.href = https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme#eighty-percent
+phaseTwoDetailedBreakdown.p2.a.href = https://www.gov.uk/guidance/calculate-how-much-you-can-claim-using-the-coronavirus-job-retention-scheme#eighty-percent
 phaseTwoDetailedBreakdown.p3 = Calculations are rounded to the nearest penny unless otherwise stated.
 phaseTwoDetailedBreakdown.h3 = For pay period {0} to {1}
 
