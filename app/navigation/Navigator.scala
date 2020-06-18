@@ -26,6 +26,8 @@ import javax.inject.{Inject, Singleton}
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
 import models.PayMethod.{Regular, Variable}
 import models.{UserAnswers, _}
+import org.slf4j
+import org.slf4j.LoggerFactory
 import pages.{PayDatePage, _}
 import play.api.Logger
 import play.api.mvc.Call
@@ -36,9 +38,11 @@ import utils.LocalDateHelpers
 class Navigator @Inject()(appConfig: FrontendAppConfig)
     extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor {
 
-  val apr6th2019: LocalDate = LocalDate.of(2019, 4, 6)
+  implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  final val apr6th2019: LocalDate = LocalDate.of(2019, 4, 6)
+
+  private[this] val normalRoutes: Page => UserAnswers => Call = {
     case ClaimPeriodStartPage =>
       _ =>
         routes.ClaimPeriodEndController.onPageLoad()
@@ -107,12 +111,15 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.RootPageController.onPageLoad()
   }
 
-  private def regularPayAmountRoute: UserAnswers => Call = { userAnswer =>
-    if (isPhaseTwo(userAnswer)) routes.PartTimeQuestionController.onPageLoad()
-    else routes.TopUpStatusController.onPageLoad()
+  private[this] def regularPayAmountRoute: UserAnswers => Call = { userAnswer =>
+    if (isPhaseTwo(userAnswer)) {
+      routes.PartTimeQuestionController.onPageLoad()
+    } else {
+      routes.TopUpStatusController.onPageLoad()
+    }
   }
 
-  private def partTimeQuestionRoute: UserAnswers => Call =
+  private[this] def partTimeQuestionRoute: UserAnswers => Call =
     userAnswer =>
       (userAnswer.getV(PartTimeQuestionPage), userAnswer.getV(ClaimPeriodStartPage)) match {
         case (Valid(PartTimeYes), _)           => routes.PartTimePeriodsController.onPageLoad()
@@ -120,14 +127,17 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         case _                                 => routes.PartTimePeriodsController.onPageLoad()
     }
 
-  private val payDateRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+  private[this] val payDateRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     (for {
       claimEndDate <- userAnswers.getV(ClaimPeriodEndPage).toOption
       lastPayDate  <- userAnswers.getList(PayDatePage).lastOption
     } yield {
       val endDate = userAnswers
         .getV(FurloughEndDatePage)
-        .fold(_ => claimEndDate, { furloughEndDate =>
+        .fold(nel => {
+          UserAnswers.logWarnings(nel)
+          claimEndDate
+        }, { furloughEndDate =>
           earliestOf(claimEndDate, furloughEndDate)
         })
 
@@ -139,9 +149,12 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }).getOrElse(routes.ErrorController.internalServerError())
   }
 
-  private val lastYearPayRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+  private[this] val lastYearPayRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     getPayDatesV(userAnswers).fold(
-      nel => routes.ErrorController.somethingWentWrong(), { payDates =>
+      nel => {
+        UserAnswers.logErrors(nel)
+        routes.ErrorController.somethingWentWrong()
+      }, { payDates =>
         payDates.lift.apply(previousIdx) match {
           case Some(_) => routes.LastYearPayController.onPageLoad(previousIdx + 1)
           case None    => routes.AnnualPayAmountController.onPageLoad()
@@ -150,7 +163,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     )
   }
 
-  private val topUpAmountRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+  private[this] val topUpAmountRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     userAnswers
       .getV(TopUpPeriodsPage)
       .map { topUpPeriods =>
@@ -163,7 +176,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       .getOrElse(routes.TopUpPeriodsController.onPageLoad())
   }
 
-  private val partTimeHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+  private[this] val partTimeHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     (userAnswers.getV(PartTimePeriodsPage), userAnswers.getV(ClaimPeriodStartPage)) match {
       case (Valid(periods), _) if periods.isDefinedAt(previousIdx) => routes.PartTimeNormalHoursController.onPageLoad(previousIdx + 1)
       case (Valid(_), Valid(start)) =>
@@ -175,7 +188,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   private def skipNicAndPensionAfterJuly(start: LocalDate): Call =
     if (start.getMonthValue > 7) routes.ConfirmationController.onPageLoad() else routes.NicCategoryController.onPageLoad()
 
-  private val partTimeNormalHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
+  private[this] val partTimeNormalHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     userAnswers
       .getV(PartTimePeriodsPage)
       .map { _ =>
@@ -184,7 +197,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       .getOrElse(routes.PartTimePeriodsController.onPageLoad())
   }
 
-  private val additionalPaymentAmountRoutes: (Int, UserAnswers) => Call = (previousIdx, userAnswers) =>
+  private[this] val additionalPaymentAmountRoutes: (Int, UserAnswers) => Call = (previousIdx, userAnswers) =>
     (userAnswers.getV(AdditionalPaymentPeriodsPage), userAnswers.getV(ClaimPeriodStartPage)) match {
       case (Valid(additionalPaymentPeriods), _) if additionalPaymentPeriods.isDefinedAt(previousIdx) =>
         routes.AdditionalPaymentAmountController.onPageLoad(previousIdx + 1)
@@ -213,7 +226,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
         routes.ErrorController.internalServerError()
     }
 
-  private def partialPayBeforeFurloughRoutes: UserAnswers => Call = { userAnswers =>
+  private[this] def partialPayBeforeFurloughRoutes: UserAnswers => Call = { userAnswers =>
     if (hasPartialPayAfter(userAnswers)) {
       routes.PartialPayAfterFurloughController.onPageLoad()
     } else {
@@ -224,20 +237,25 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   def nextPage(page: Page, userAnswers: UserAnswers, idx: Option[Int] = None): Call =
     idx.fold(normalRoutes(page)(userAnswers))(idx => idxRoutes(page)(idx, userAnswers))
 
-  private def furloughOngoingRoutes: UserAnswers => Call = { userAnswers =>
+  private[this] def furloughOngoingRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(FurloughStatusPage) match {
       case Valid(FurloughStatus.FurloughEnded)   => routes.FurloughEndDateController.onPageLoad()
       case Valid(FurloughStatus.FurloughOngoing) => routes.PaymentFrequencyController.onPageLoad()
-      case Invalid(_)                            => routes.FurloughOngoingController.onPageLoad()
+      case Invalid(err) =>
+        UserAnswers.logWarnings(err)
+        routes.FurloughOngoingController.onPageLoad()
     }
   }
 
-  private def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
-    if (userAnswers.getList(PayDatePage).isEmpty) routes.PayDateController.onPageLoad(1)
-    else routes.AnnualPayAmountController.onPageLoad()
+  private[this] def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
+    if (userAnswers.getList(PayDatePage).isEmpty) {
+      routes.PayDateController.onPageLoad(1)
+    } else {
+      routes.AnnualPayAmountController.onPageLoad()
+    }
   }
 
-  private def payMethodRoutes: UserAnswers => Call = { userAnswers =>
+  private[this] def payMethodRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getV(PayMethodPage), userAnswers.getList(PayDatePage)) match {
       case (Valid(Regular), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
       case (Valid(Regular), _)                      => routes.RegularPayAmountController.onPageLoad()
@@ -246,7 +264,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
+  private[this] def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getV(EmployeeStartedPage), userAnswers.getList(PayDatePage)) match {
       case (Valid(EmployeeStarted.OnOrBefore1Feb2019), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
       case (Valid(EmployeeStarted.OnOrBefore1Feb2019), _)                      => routes.LastYearPayController.onPageLoad(1)
@@ -255,7 +273,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def topUpStatusRoutes: UserAnswers => Call = { userAnswers =>
+  private[this] def topUpStatusRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(TopUpStatusPage) match {
       case Valid(TopUpStatus.ToppedUp)    => routes.TopUpPeriodsController.onPageLoad()
       case Valid(TopUpStatus.NotToppedUp) => routes.AdditionalPaymentStatusController.onPageLoad()
@@ -263,7 +281,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def additionalPaymentStatusRoutes: UserAnswers => Call = { userAnswers =>
+  private[this] def additionalPaymentStatusRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getV(AdditionalPaymentStatusPage), userAnswers.getV(ClaimPeriodStartPage)) match {
       case (Valid(AdditionalPaymentStatus.YesAdditionalPayments), _)           => routes.AdditionalPaymentPeriodsController.onPageLoad()
       case (Valid(AdditionalPaymentStatus.NoAdditionalPayments), Valid(start)) => skipNicAndPensionAfterJuly(start)
@@ -271,7 +289,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def payPeriodsListRoute: UserAnswers => Call = { userAnswers =>
+  private[this] def payPeriodsListRoute: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(PayPeriodsListPage) match {
       case Valid(PayPeriodsList.Yes) => routes.LastPayDateController.onPageLoad()
       case Valid(PayPeriodsList.No)  => routes.PayDateController.onPageLoad(1)
@@ -279,7 +297,7 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     }
   }
 
-  private def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
+  private[this] def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(PayMethodPage) match {
       case Valid(Regular) => routes.RegularPayAmountController.onPageLoad()
       case Valid(Variable) =>
@@ -292,14 +310,19 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
               case _                                        => routes.AnnualPayAmountController.onPageLoad()
             }
         }
-      case Invalid(_) => routes.PayMethodController.onPageLoad()
+      case Invalid(err) =>
+        UserAnswers.logErrors(err)
+        routes.PayMethodController.onPageLoad()
     }
   }
 
   private def annualPayAmountRoutes: UserAnswers => Call =
     userAnswers =>
-      if (isPhaseTwo(userAnswers)) routes.PartTimeQuestionController.onPageLoad()
-      else phaseOneAnnualPayAmountRoute(userAnswers)
+      if (isPhaseTwo(userAnswers)) {
+        routes.PartTimeQuestionController.onPageLoad()
+      } else {
+        phaseOneAnnualPayAmountRoute(userAnswers)
+    }
 
   private def phaseOneAnnualPayAmountRoute(userAnswers: UserAnswers): Call =
     if (hasPartialPayBefore(userAnswers)) {
@@ -314,7 +337,9 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
     userAnswers.getV(FurloughPeriodQuestionPage) match {
       case Valid(FurloughPeriodQuestion.FurloughedOnSamePeriod)      => routes.PayPeriodQuestionController.onPageLoad()
       case Valid(FurloughPeriodQuestion.FurloughedOnDifferentPeriod) => routes.FurloughStartDateController.onPageLoad()
-      case Invalid(e)                                                => routes.FurloughPeriodQuestionController.onPageLoad()
+      case Invalid(e) =>
+        UserAnswers.logErrors(e)
+        routes.FurloughPeriodQuestionController.onPageLoad()
     }
   }
 
@@ -323,7 +348,10 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
       userAnswers
         .getV(ClaimPeriodQuestionPage)
         .fold(
-          nel => routes.ClaimPeriodQuestionController.onPageLoad(), {
+          nel => {
+            UserAnswers.logErrors(nel)
+            routes.ClaimPeriodQuestionController.onPageLoad()
+          }, {
             case ClaimPeriodQuestion.ClaimOnSamePeriod      => routes.FurloughPeriodQuestionController.onPageLoad()
             case ClaimPeriodQuestion.ClaimOnDifferentPeriod => routes.ClaimPeriodStartController.onPageLoad()
           }

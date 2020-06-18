@@ -16,16 +16,17 @@
 
 package controllers
 
-import cats.data.Validated.Valid
+import cats.data.Validated.{Invalid, Valid}
 import config.FrontendAppConfig
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
+import models.UserAnswers
 import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AuditService
-import viewmodels.{PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
+import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
 import views.html.{ConfirmationView, ConfirmationViewWithDetailedBreakdowns, PhaseTwoConfirmationView}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -59,7 +60,14 @@ class ConfirmationController @Inject()(
       case Valid(data: PhaseTwoConfirmationDataResult) =>
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
         Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, config.calculatorVersion)))
-      case _ =>
+
+      case Valid(_: ConfirmationDataResultWithoutNicAndPension) =>
+        logger.error(
+          "Expected to find a PhaseOneConfirmationDataResult or a PhaseTwoConfirmationDataResult, found ConfirmationDataResultWithoutNicAndPension instead. ")
+        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+
+      case Invalid(e) =>
+        UserAnswers.logErrors(e)(logger)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }
   }

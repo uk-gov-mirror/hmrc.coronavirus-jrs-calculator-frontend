@@ -17,9 +17,12 @@
 package services
 
 import models.{PartialPeriod, Period, UserAnswers}
+import org.slf4j.Logger
 import pages.PayDatePage
 
 trait PartialPayExtractor extends PeriodHelper with FurloughPeriodExtractor {
+
+  def logger: Logger
 
   def hasPartialPayBefore(userAnswers: UserAnswers): Boolean =
     getPartialPeriods(userAnswers).exists(isFurloughStart)
@@ -30,6 +33,7 @@ trait PartialPayExtractor extends PeriodHelper with FurloughPeriodExtractor {
   def getPartialPeriods(userAnswers: UserAnswers): Seq[PartialPeriod] =
     extractFurloughWithinClaimV(userAnswers).fold(
       nel => {
+        UserAnswers.logWarnings(nel)(logger)
         Seq.empty[PartialPeriod]
       }, { furloughPeriod =>
         val payDates = userAnswers.getList(PayDatePage)

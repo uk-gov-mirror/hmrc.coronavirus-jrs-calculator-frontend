@@ -28,7 +28,7 @@ class FurloughStatusSpec extends WordSpec with MustMatchers with ScalaCheckPrope
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(FurloughStatus.values.toSeq)
+      val gen = Gen.oneOf(FurloughStatus.values)
 
       forAll(gen) { furloughOngoing =>
         JsString(furloughOngoing.toString).validate[FurloughStatus].asOpt.value mustEqual furloughOngoing
@@ -46,7 +46,7 @@ class FurloughStatusSpec extends WordSpec with MustMatchers with ScalaCheckPrope
 
     "serialise" in {
 
-      val gen = Gen.oneOf(FurloughStatus.values.toSeq)
+      val gen = Gen.oneOf(FurloughStatus.values)
 
       forAll(gen) { furloughOngoing =>
         Json.toJson(furloughOngoing) mustEqual JsString(furloughOngoing.toString)

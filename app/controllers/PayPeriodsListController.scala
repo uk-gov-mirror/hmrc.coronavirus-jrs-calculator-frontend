@@ -30,6 +30,7 @@ import views.html.PayPeriodsListView
 import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
 import handlers.PayPeriodsListHandler
+import models.UserAnswers
 
 class PayPeriodsListController @Inject()(
   override val messagesApi: MessagesApi,
@@ -51,15 +52,18 @@ class PayPeriodsListController @Inject()(
       case Nil => Redirect(routes.ErrorController.somethingWentWrong())
       case periods =>
         extractClaimPeriod(request.userAnswers) match {
-          case Valid(claimPeriod) => {
+          case Valid(claimPeriod) =>
             val preparedForm = request.userAnswers.getV(PayPeriodsListPage) match {
-              case Invalid(e)   => form
+              case Invalid(e) =>
+                UserAnswers.logErrors(e)(logger)
+                form
               case Valid(value) => form.fill(value)
             }
 
             Ok(view(preparedForm, periods, claimPeriod))
-          }
-          case Invalid(_) => Redirect(routes.ErrorController.somethingWentWrong())
+          case Invalid(err) =>
+            UserAnswers.logErrors(err)(logger)
+            Redirect(routes.ErrorController.somethingWentWrong())
         }
     }
   }
@@ -80,7 +84,9 @@ class PayPeriodsListController @Inject()(
                     _              <- sessionRepository.set(updatedAnswers)
                   } yield Redirect(navigator.nextPage(PayPeriodsListPage, updatedAnswers))
               )
-          case Invalid(_) => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+          case Invalid(err) =>
+            UserAnswers.logErrors(err)(logger)
+            Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
     }
 

@@ -63,7 +63,9 @@ class PayDateController @Inject()(
           Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         } { messageDate =>
           val preparedForm = request.userAnswers.getV(PayDatePage, Some(idx)) match {
-            case Invalid(_)   => form
+            case Invalid(err) =>
+              UserAnswers.logWarnings(err)(logger)
+              form
             case Valid(value) => form.fill(value)
           }
 
@@ -108,14 +110,14 @@ class PayDateController @Inject()(
     }
   }
 
-  private def messageDateFrom(claimStartDate: LocalDate, userAnswers: UserAnswers, idx: Int): Option[LocalDate] =
+  private[this] def messageDateFrom(claimStartDate: LocalDate, userAnswers: UserAnswers, idx: Int): Option[LocalDate] =
     if (idx == 1) {
       Some(claimStartDate)
     } else {
       userAnswers.getList(PayDatePage).lift.apply(idx - 2)
     }
 
-  private def saveAndRedirect(userAnswers: UserAnswers, payDate: LocalDate, idx: Int): Future[Result] =
+  private[this] def saveAndRedirect(userAnswers: UserAnswers, payDate: LocalDate, idx: Int): Future[Result] =
     shouldGenerate(userAnswers, idx) match {
       case (true, freq) =>
         extractFurloughWithinClaimV(userAnswers) match {
@@ -136,7 +138,7 @@ class PayDateController @Inject()(
         } yield Redirect(navigator.nextPage(PayDatePage, updatedAnswers, Some(idx)))
     }
 
-  private def shouldGenerate(userAnswers: UserAnswers, idx: Int): (Boolean, PaymentFrequency) =
+  private[this] def shouldGenerate(userAnswers: UserAnswers, idx: Int): (Boolean, PaymentFrequency) =
     if (idx != 1) {
       false -> Monthly
     } else {
@@ -147,7 +149,7 @@ class PayDateController @Inject()(
       }
     }
 
-  private def shouldRedirect(userAnswers: UserAnswers, idx: Int): Boolean =
+  private[this] def shouldRedirect(userAnswers: UserAnswers, idx: Int): Boolean =
     extractPaymentFrequencyV(userAnswers) match {
       case Valid(Monthly)       => false
       case Valid(_) if idx != 1 => true

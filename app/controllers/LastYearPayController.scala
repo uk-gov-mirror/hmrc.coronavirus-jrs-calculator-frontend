@@ -23,8 +23,9 @@ import controllers.actions._
 import forms.LastYearPayFormProvider
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.Inject
-import models.{Amount, LastYearPayment, PaymentFrequency}
+import models.{Amount, LastYearPayment, PaymentFrequency, UserAnswers}
 import navigation.Navigator
+import org.slf4j.{Logger, LoggerFactory}
 import pages.{LastYearPayPage, PaymentFrequencyPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -40,7 +41,6 @@ class LastYearPayController @Inject()(
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: LastYearPayFormProvider,
@@ -49,16 +49,21 @@ class LastYearPayController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with LastYearPayControllerRequestHandler {
 
+  implicit val logger: Logger = LoggerFactory.getLogger(getClass)
+
   val form: Form[Amount] = formProvider()
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getPayDatesV(request.userAnswers).fold(
       nel => {
+        UserAnswers.logErrors(nel)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       }, { payDates =>
         withValidPayDate(payDates, idx) { date =>
           val preparedForm = request.userAnswers.getV(LastYearPayPage) match {
-            case Invalid(e)   => form
+            case Invalid(e)   =>
+              UserAnswers.logWarnings(e)
+              form
             case Valid(value) => form.fill(value.amount)
           }
 
@@ -81,6 +86,7 @@ class LastYearPayController @Inject()(
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getPayDatesV(request.userAnswers).fold(
       nel => {
+        UserAnswers.logErrors(nel)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       }, { payDates =>
         withValidPayDate(payDates, idx) {

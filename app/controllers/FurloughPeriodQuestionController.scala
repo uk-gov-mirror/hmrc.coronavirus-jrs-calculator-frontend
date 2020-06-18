@@ -24,8 +24,9 @@ import forms.FurloughPeriodQuestionFormProvider
 import handlers.{ErrorHandler, FastJourneyUserAnswersHandler}
 import javax.inject.Inject
 import models.requests.DataRequest
-import models.{FurloughEnded, FurloughOngoing, FurloughPeriodQuestion, FurloughStatus}
+import models.{FurloughEnded, FurloughOngoing, FurloughPeriodQuestion, FurloughStatus, UserAnswers}
 import navigation.Navigator
+import org.slf4j.{Logger, LoggerFactory}
 import pages.{ClaimPeriodStartPage, FurloughPeriodQuestionPage, FurloughStartDatePage, FurloughStatusPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -52,12 +53,16 @@ class FurloughPeriodQuestionController @Inject()(
 
   val form: Form[FurloughPeriodQuestion] = formProvider()
 
+  override implicit val logger: Logger = LoggerFactory.getLogger(getClass)
+
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
       getRequiredAnswersV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
         getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
           val preparedForm = request.userAnswers.getV(FurloughPeriodQuestionPage) match {
-            case Invalid(_)   => form
+            case Invalid(err) =>
+              UserAnswers.logWarnings(err)
+              form
             case Valid(value) => form.fill(value)
           }
 
@@ -68,7 +73,7 @@ class FurloughPeriodQuestionController @Inject()(
               Future.successful(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, Some(end))))
             case Invalid(errors) =>
               logger.error("Failed to extract furlough period.")
-              logger.error(errors.toChain.toList.mkString("\n"))
+              UserAnswers.logErrors(errors)
               Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
           }
         }
@@ -100,6 +105,7 @@ class FurloughPeriodQuestionController @Inject()(
       case Valid(FurloughEnded(_, end)) =>
         Future.successful(BadRequest(view(formWithErrors, claimStart, furloughStart, furloughStatus, Some(end))))
       case Invalid(errors) =>
+        UserAnswers.logErrors(errors)
         Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
     }
 
@@ -118,6 +124,7 @@ class FurloughPeriodQuestionController @Inject()(
               Redirect(call)
             }
           case Invalid(e) =>
+            UserAnswers.logErrors(e)
             Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate(request)))
         }
       }

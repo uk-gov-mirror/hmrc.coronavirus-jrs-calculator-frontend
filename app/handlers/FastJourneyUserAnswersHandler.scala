@@ -25,11 +25,14 @@ import models.FurloughPeriodQuestion.{FurloughedOnDifferentPeriod, FurloughedOnS
 import models.PayPeriodQuestion.{UseDifferentPayPeriod, UseSamePayPeriod}
 import models.UserAnswers.AnswerV
 import models.{GenericValidationError, UserAnswers}
+import org.slf4j.{Logger, LoggerFactory}
 import pages._
 import play.api.libs.json.{JsError, Json}
 import utils.UserAnswersHelper
 
 trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper {
+
+  implicit def logger: Logger = LoggerFactory.getLogger(getClass)
 
   def claimQuestion(userAnswer: UserAnswers): AnswerV[UserAnswersState] =
     userAnswer.getV(ClaimPeriodQuestionPage) map {
@@ -41,7 +44,9 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
     userAnswer.getV(ClaimPeriodQuestionPage) match {
       case Valid(ClaimOnSamePeriod)      => processFurloughQuestion(UserAnswersState(userAnswer, userAnswer))
       case Valid(ClaimOnDifferentPeriod) => UserAnswersState(userAnswer.copy(data = Json.obj()), userAnswer).validNec
-      case inv @ Invalid(_)              => inv
+      case inv @ Invalid(err) =>
+        UserAnswers.logWarnings(err)
+        inv
     }
 
   def furloughQuestionV(answer: UserAnswers): AnswerV[UserAnswersState] =
@@ -58,7 +63,9 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
             )
           )
 
-      case inv @ Invalid(_) => inv
+      case inv @ Invalid(err) =>
+        UserAnswers.logWarnings(err)
+        inv
     }
 
   private[this] def processFurloughQuestion(answer: UserAnswersState): AnswerV[UserAnswersState] =
@@ -75,7 +82,9 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
             )
           )
 
-      case Invalid(_) => Valid(answer)
+      case Invalid(err) =>
+        UserAnswers.logWarnings(err)
+        Valid(answer)
     }
 
   def payQuestion(answer: UserAnswers): AnswerV[UserAnswersState] =
@@ -101,7 +110,9 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
               answer.data
             )
           )
-      case inv @ Invalid(_) => inv
+      case inv @ Invalid(err) =>
+        UserAnswers.logWarnings(err)
+        inv
     }
 
   private[this] def processPayQuestionV(answer: UserAnswersState): AnswerV[UserAnswersState] =
@@ -128,7 +139,9 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
             )
           )
 
-      case Invalid(_) => Valid(answer)
+      case Invalid(err) =>
+        UserAnswers.logWarnings(err)
+        Valid(answer)
     }
 
   private val keepClaimPeriod: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>

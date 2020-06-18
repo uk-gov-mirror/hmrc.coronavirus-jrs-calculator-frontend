@@ -25,6 +25,8 @@ import handlers.FurloughCalculationHandler
 import javax.inject.Inject
 import models.UserAnswers
 import navigation.Navigator
+import org.slf4j
+import org.slf4j.LoggerFactory
 import pages.AdditionalPaymentPeriodsPage
 import play.Logger
 import play.api.data.Form
@@ -52,6 +54,8 @@ class AdditionalPaymentPeriodsController @Inject()(
 
   val form: Form[List[LocalDate]] = formProvider()
 
+  implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
+
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     handleCalculationFurloughV(request.userAnswers)
       .map { furlough =>
@@ -61,15 +65,18 @@ class AdditionalPaymentPeriodsController @Inject()(
             saveAndRedirect(request.userAnswers, List(period.end))
           case _ =>
             val preparedForm = request.userAnswers.getV(AdditionalPaymentPeriodsPage) match {
-              case Invalid(e)           => form
+              case Invalid(e) =>
+                UserAnswers.logWarnings(e)
+                form
               case Valid(selectedDates) => form.fill(selectedDates)
             }
             Future.successful(Ok(view(preparedForm, furlough.periodBreakdowns)))
         }
       }
-      .getOrElse(
+      .fold(nel => {
+        UserAnswers.logErrors(nel)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-      )
+      }, identity)
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
@@ -93,10 +100,10 @@ class AdditionalPaymentPeriodsController @Inject()(
               }
             }
           )
-      }
-      .getOrElse(
-        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-      )
+      } fold (nel => {
+      UserAnswers.logErrors(nel)
+      Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+    }, identity)
   }
 
   private def saveAndRedirect(userAnswers: UserAnswers, additionalPaymentPeriods: List[LocalDate]) =

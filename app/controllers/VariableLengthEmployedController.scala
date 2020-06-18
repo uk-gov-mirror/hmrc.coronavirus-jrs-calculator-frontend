@@ -20,8 +20,9 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
 import javax.inject.Inject
-import models.EmployeeStarted
+import models.{EmployeeStarted, UserAnswers}
 import navigation.Navigator
+import org.slf4j.{Logger, LoggerFactory}
 import pages.EmployeeStartedPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -46,11 +47,15 @@ class VariableLengthEmployedController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
+  implicit val logger: Logger = LoggerFactory.getLogger(getClass)
+
   val form: Form[EmployeeStarted] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(EmployeeStartedPage) match {
-      case Invalid(e)   => form
+      case Invalid(e) =>
+        UserAnswers.logWarnings(e)
+        form
       case Valid(value) => form.fill(value)
     }
 

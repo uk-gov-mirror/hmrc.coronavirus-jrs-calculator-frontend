@@ -20,7 +20,9 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.FurloughPartialPayFormProvider
 import javax.inject.Inject
+import models.UserAnswers
 import navigation.Navigator
+import org.slf4j.{Logger, LoggerFactory}
 import pages._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -55,8 +57,10 @@ class PartialPayAfterFurloughController @Inject()(
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       ) { afterFurlough =>
         val preparedForm = request.userAnswers.getV(PartialPayAfterFurloughPage) match {
-          case Invalid(errors) => form
-          case Valid(value)    => form.fill(value)
+          case Invalid(errors) =>
+            UserAnswers.logWarnings(errors)(logger)
+            form
+          case Valid(value) => form.fill(value)
         }
 
         Future.successful(
@@ -99,4 +103,6 @@ class PartialPayAfterFurloughController @Inject()(
           )
       }
   }
+
+  override val logger: Logger = LoggerFactory.getLogger(getClass)
 }

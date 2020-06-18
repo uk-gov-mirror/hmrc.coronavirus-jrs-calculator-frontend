@@ -18,14 +18,19 @@ package services
 
 import base.{CoreTestDataBuilder, SpecBase}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.slf4j.{Logger, LoggerFactory}
 
 class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreTestDataBuilder {
+
+  val partialPayExtactor: PartialPayExtractor = new PartialPayExtractor {
+    override val logger: Logger = LoggerFactory.getLogger(getClass)
+  }
 
   "PartialPayHelper" when {
 
     "getPeriodRemainder" must {
 
-      "return remainders with multiple days before the partial" in new PartialPayExtractor {
+      "return remainders with multiple days before the partial" in {
 
         val partial = partialPeriod(
           "2020,4,5"  -> "2020,4,25",
@@ -36,10 +41,10 @@ class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with C
           "2020,4,9"
         )
 
-        getBeforeFurloughPeriodRemainder(partial) mustBe expected
+        partialPayExtactor.getBeforeFurloughPeriodRemainder(partial) mustBe expected
       }
 
-      "return remainders with multiple days after the partial" in new PartialPayExtractor {
+      "return remainders with multiple days after the partial" in {
 
         val partial = partialPeriod(
           "2020,4,5" -> "2020,4,25",
@@ -50,10 +55,10 @@ class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with C
           "2020,4,25"
         )
 
-        getAfterFurloughPeriodRemainder(partial) mustBe expected
+        partialPayExtactor.getAfterFurloughPeriodRemainder(partial) mustBe expected
       }
 
-      "return remainders with a single day before the partial" in new PartialPayExtractor {
+      "return remainders with a single day before the partial" in {
 
         val partial = partialPeriod(
           "2020,4,5" -> "2020,4,25",
@@ -64,10 +69,10 @@ class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with C
           "2020,4,5"
         )
 
-        getBeforeFurloughPeriodRemainder(partial) mustBe expected
+        partialPayExtactor.getBeforeFurloughPeriodRemainder(partial) mustBe expected
       }
 
-      "return remainders with a single day after the partial" in new PartialPayExtractor {
+      "return remainders with a single day after the partial" in {
 
         val partial = partialPeriod(
           "2020,4,5" -> "2020,4,25",
@@ -78,9 +83,8 @@ class PartialPayHelperSpec extends SpecBase with ScalaCheckPropertyChecks with C
           "2020,4,25"
         )
 
-        getAfterFurloughPeriodRemainder(partial) mustBe expected
+        partialPayExtactor.getAfterFurloughPeriodRemainder(partial) mustBe expected
       }
-
     }
 
   }

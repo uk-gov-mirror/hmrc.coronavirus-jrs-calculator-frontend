@@ -20,8 +20,10 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.RegularPayAmountFormProvider
 import javax.inject.Inject
-import models.Salary
+import models.{Salary, UserAnswers}
 import navigation.Navigator
+import org.slf4j
+import org.slf4j.LoggerFactory
 import pages.RegularPayAmountPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -45,14 +47,18 @@ class RegularPayAmountController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
+  implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
+
   val form: Form[Salary] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybeSalary = request.userAnswers.getV(RegularPayAmountPage)
 
     maybeSalary match {
-      case Valid(sq)  => Ok(view(form.fill(sq)))
-      case Invalid(e) => Ok(view(form))
+      case Valid(sq) => Ok(view(form.fill(sq)))
+      case Invalid(e) =>
+        UserAnswers.logWarnings(e)
+        Ok(view(form))
     }
   }
 

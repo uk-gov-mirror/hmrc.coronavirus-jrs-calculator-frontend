@@ -25,6 +25,8 @@ import handlers.FurloughCalculationHandler
 import javax.inject.Inject
 import models.{TopUpPeriod, UserAnswers}
 import navigation.Navigator
+import org.slf4j
+import org.slf4j.LoggerFactory
 import pages.TopUpPeriodsPage
 import play.Logger
 import play.api.data.Form
@@ -50,6 +52,8 @@ class TopUpPeriodsController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with FurloughCalculationHandler {
 
+  implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
+
   val form: Form[List[LocalDate]] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
@@ -61,15 +65,22 @@ class TopUpPeriodsController @Inject()(
             saveAndRedirect(request.userAnswers, List(TopUpPeriod(period.end, breakdown.grant)))
           case _ =>
             val preparedForm = request.userAnswers.getV(TopUpPeriodsPage) match {
-              case Invalid(e) => form
+              case Invalid(e) =>
+                UserAnswers.logWarnings(e)
+                form
               case Valid(selectedDates) =>
                 form.fill(selectedDates.map(_.date))
             }
             Future.successful(Ok(view(preparedForm, furlough.periodBreakdowns)))
         }
       }
-      .getOrElse(
-        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+      .fold(
+        nel => {
+          logger.error("Failed handleCalculationFurloughV")
+          UserAnswers.logErrors(nel)
+          Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+        },
+        identity
       )
   }
 

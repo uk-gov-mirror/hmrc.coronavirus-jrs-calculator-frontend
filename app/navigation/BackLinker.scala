@@ -23,12 +23,16 @@ import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.FurloughStatus.FurloughEnded
 import models.PayMethod.{Regular, Variable}
 import models.TopUpStatus.ToppedUp
+import models.UserAnswers
 import models.requests.DataRequest
+import org.slf4j.{Logger, LoggerFactory}
 import pages._
 import pages.info.InfoPage
 import play.api.mvc.{Call, Request}
 
 object BackLinker {
+
+  implicit val logger: Logger = LoggerFactory.getLogger(getClass)
 
   def getFor(currentPage: Page, idx: Option[Int] = None)(implicit request: Request[_]): String =
     request match {
@@ -81,7 +85,9 @@ object BackLinker {
       request.userAnswers.getV(EmployeeStartedPage) match {
         case Valid(OnOrBefore1Feb2019) => routes.VariableLengthEmployedController.onPageLoad()
         case Valid(After1Feb2019)      => routes.EmployeeStartDateController.onPageLoad()
-        case Invalid(e)                => routes.PayMethodController.onPageLoad()
+        case Invalid(e) =>
+          UserAnswers.logWarnings(e)
+          routes.PayMethodController.onPageLoad()
       }
     } else {
       routes.PayDateController.onPageLoad(idx.getOrElse(1) - 1)

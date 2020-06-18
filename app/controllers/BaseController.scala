@@ -16,7 +16,6 @@
 
 package controllers
 
-import cats.data.NonEmptyChain
 import cats.data.Validated.{Invalid, Valid}
 import handlers.ErrorHandler
 import models.UserAnswers
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory
 import pages.QuestionPage
 import play.api.Logger
 import play.api.i18n.I18nSupport
-import play.api.libs.json.{JsError, Reads}
+import play.api.libs.json.Reads
 import play.api.mvc.Result
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
@@ -39,11 +38,6 @@ trait BaseController extends FrontendBaseController with I18nSupport {
   def logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
 
   def navigator: Navigator
-
-  def logErrors(msg: String, source: NonEmptyChain[JsError]) = {
-    logger.error(s"$msg. Validation errors:")
-    logger.error(source.toChain.toList.mkString("\n"))
-  }
 
   def getAnswerV[A](page: QuestionPage[A], idx: Int)(implicit request: DataRequest[_], reads: Reads[A]): AnswerV[A] =
     getAnswerV(page, Some(idx))
@@ -61,8 +55,8 @@ trait BaseController extends FrontendBaseController with I18nSupport {
       case Valid(ans)      => f(ans)
       case Invalid(errors) =>
         // TODO (flav): Discuss with team if we want to display errors on the page.
-        Logger.error(s"[BaseController][getRequiredAnswer] Failed to retrieve expected data for page: $page")
-        Logger.error(errors.toNonEmptyList.toList.mkString("\n"))
+        logger.error(s"[BaseController][getRequiredAnswer] Failed to retrieve expected data for page: $page")
+        UserAnswers.logWarnings(errors)(logger)
         Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
     }
 
@@ -94,8 +88,8 @@ trait BaseController extends FrontendBaseController with I18nSupport {
       }
       .fold(
         nel => {
-          Logger.error(s"[BaseController][getRequiredAnswers] Failed to retrieve expected data for page: $pageB")
-          UserAnswers.logErrors(nel)
+          logger.error(s"[BaseController][getRequiredAnswers] Failed to retrieve expected data for page: $pageB")
+          UserAnswers.logErrors(nel)(logger)
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
         },
         identity

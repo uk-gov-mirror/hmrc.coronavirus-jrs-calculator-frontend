@@ -29,6 +29,8 @@ import views.html.PartTimeQuestionView
 import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
 import handlers.ErrorHandler
+import models.{PartTimeQuestion, UserAnswers}
+import play.api.data.Form
 
 class PartTimeQuestionController @Inject()(
   override val messagesApi: MessagesApi,
@@ -43,12 +45,14 @@ class PartTimeQuestionController @Inject()(
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[PartTimeQuestion] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
       val preparedForm = request.userAnswers.getV(PartTimeQuestionPage) match {
-        case Invalid(e)   => form
+        case Invalid(e) =>
+          UserAnswers.logWarnings(e)(logger)
+          form
         case Valid(value) => form.fill(value)
       }
 

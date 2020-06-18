@@ -20,9 +20,10 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.TopUpAmountFormProvider
 import javax.inject.Inject
-import models.{TopUpPayment, TopUpPeriod}
+import models.{Amount, TopUpPayment, TopUpPeriod, UserAnswers}
 import navigation.Navigator
 import pages.{TopUpAmountPage, TopUpPeriodsPage}
+import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
@@ -35,7 +36,6 @@ class TopUpAmountController @Inject()(
   sessionRepository: SessionRepository,
   val navigator: Navigator,
   identify: IdentifierAction,
-  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: TopUpAmountFormProvider,
@@ -44,13 +44,15 @@ class TopUpAmountController @Inject()(
 )(implicit ec: ExecutionContext)
     extends BaseController {
 
-  val form = formProvider()
+  val form: Form[Amount] = formProvider()
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerOrRedirectV(TopUpPeriodsPage) { topUpPeriods =>
       withValidTopUpDate(topUpPeriods, idx) { topUpPeriod =>
         val preparedForm = request.userAnswers.getV(TopUpAmountPage, Some(idx)) match {
-          case Invalid(e)   => form
+          case Invalid(e) =>
+            UserAnswers.logWarnings(e)(logger)
+            form
           case Valid(value) => form.fill(value.amount)
         }
 

@@ -25,6 +25,7 @@ import javax.inject.Inject
 import models.ClaimPeriodQuestion
 import models.requests.DataRequest
 import navigation.Navigator
+import org.slf4j.{Logger, LoggerFactory}
 import pages.{ClaimPeriodEndPage, ClaimPeriodQuestionPage, ClaimPeriodStartPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -47,6 +48,8 @@ class ClaimPeriodQuestionController @Inject()(
   view: ClaimPeriodQuestionView,
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with FastJourneyUserAnswersHandler {
+
+  override implicit val logger: Logger = LoggerFactory.getLogger(getClass)
 
   val form: Form[ClaimPeriodQuestion] = formProvider()
 
