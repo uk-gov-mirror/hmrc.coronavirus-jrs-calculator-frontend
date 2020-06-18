@@ -120,20 +120,48 @@ final case class UserAnswers(
 }
 
 trait AnswerValidation {
+
+  def message: String
+
   def underlying: JsError
+
+  def data: JsObject
 }
 
 object AnswerValidation {
-  def apply(error: JsError): AnswerValidation =
-    GenericValidationError("Generic exception", error)
+  def apply(
+    jsError: JsError,
+    data: JsObject = JsObject(Seq.empty)
+  ): AnswerValidation =
+    if (jsError.errors.size == 1) {
+      jsError.errors.head match {
+        case (path, error) if error == JsonValidationError(Seq("error.path.missing")) =>
+          EmptyAnswerError(s"${path.toJsonString} was empty", jsError, data)
+
+        case _ => GenericValidationError("Generic exception", jsError, data)
+      }
+    } else {
+      GenericValidationError("Generic exception", jsError, data)
+    }
 }
 
-case class DateParsingException(source: String, underlying: JsError) extends AnswerValidation
-case class GenericValidationError(exception: String, underlying: JsError) extends AnswerValidation
+case class EmptyAnswerError(
+  message: String,
+  underlying: JsError,
+  data: JsObject = JsObject(Seq.empty)
+) extends AnswerValidation
 
-object GenericValidationError {
-  def apply(exception: String, answers: JsObject): GenericValidationError = new GenericValidationError(exception, null)
-}
+case class DateParsingException(
+  message: String,
+  underlying: JsError,
+  data: JsObject = JsObject(Seq.empty)
+) extends AnswerValidation
+
+case class GenericValidationError(
+  message: String,
+  underlying: JsError,
+  data: JsObject = JsObject(Seq.empty)
+) extends AnswerValidation
 
 object UserAnswers {
 

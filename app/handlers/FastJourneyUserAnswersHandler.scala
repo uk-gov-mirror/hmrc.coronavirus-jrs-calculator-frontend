@@ -26,7 +26,7 @@ import models.PayPeriodQuestion.{UseDifferentPayPeriod, UseSamePayPeriod}
 import models.UserAnswers.AnswerV
 import models.{GenericValidationError, UserAnswers}
 import pages._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsError, Json}
 import utils.UserAnswersHelper
 
 trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper {
@@ -50,7 +50,13 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       case Valid(FurloughedOnDifferentPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod)
           .run(UserAnswersState(answer, answer))
-          .toValidNec(GenericValidationError(s"Unable to clear answers while keeping pay period for $answer", answer.data))
+          .toValidNec(
+            GenericValidationError(
+              s"Unable to clear answers while keeping pay period for $answer",
+              JsError(),
+              answer.data
+            )
+          )
 
       case inv @ Invalid(_) => inv
     }
@@ -62,8 +68,13 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
         (clearAllAnswers andThen keepClaimPeriod)
           .run(answer)
           .toValidNec(
-            GenericValidationError(s"Unable to clear answers while keeping pay period for ${answer.original}", answer.original.data)
+            GenericValidationError(
+              s"Unable to clear answers while keeping pay period for ${answer.original}",
+              JsError(),
+              answer.original.data
+            )
           )
+
       case Invalid(_) => Valid(answer)
     }
 
@@ -73,13 +84,22 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
         (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData)
           .run(UserAnswersState(answer, answer))
           .toValidNec(
-            GenericValidationError(s"""Unable to clear answers while keeping pay period for $answer""", answer.data)
+            GenericValidationError(
+              s"""Unable to clear answers while keeping pay period for $answer""",
+              JsError(),
+              answer.data
+            )
           )
+
       case Valid(UseDifferentPayPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod)
           .run(UserAnswersState(answer, answer))
           .toValidNec(
-            GenericValidationError(s"""Failed to run Kleisi composition for UseDifferentPayPeriod for $answer""", answer.data)
+            GenericValidationError(
+              s"Failed to run Kleisi composition for UseDifferentPayPeriod for $answer",
+              JsError(),
+              answer.data
+            )
           )
       case inv @ Invalid(_) => inv
     }
@@ -90,15 +110,24 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
         (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData)
           .run(answer)
           .toValidNec(
-            GenericValidationError(s"Unable to clear answers using same pay period ${answer.original}", answer.original.data)
+            GenericValidationError(
+              s"Unable to clear answers using same pay period ${answer.original}",
+              JsError(),
+              answer.original.data
+            )
           )
 
       case Valid(UseDifferentPayPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod)
           .run(answer)
           .toValidNec(
-            GenericValidationError(s"Unable to clear answers using different pay period ${answer.original}", answer.original.data)
+            GenericValidationError(
+              s"Unable to clear answers using different pay period ${answer.original}",
+              JsError(),
+              answer.original.data
+            )
           )
+
       case Invalid(_) => Valid(answer)
     }
 
