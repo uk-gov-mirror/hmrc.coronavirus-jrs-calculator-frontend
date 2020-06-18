@@ -39,7 +39,7 @@ final case class UserAnswers(
       case JsSuccess(value, _) => value.validNec
       case error @ JsError(_) =>
         NonEmptyChain
-          .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(AnswerValidation(error))))
+          .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(AnswerValidation(error, data))))
           .invalid[A]
     }
 
@@ -135,10 +135,11 @@ object AnswerValidation {
   ): AnswerValidation =
     if (jsError.errors.size == 1) {
       jsError.errors.head match {
-        case (path, error) if error == JsonValidationError(Seq("error.path.missing")) =>
-          EmptyAnswerError(s"${path.toJsonString} was empty", jsError, data)
+        case (path, error) if error == Seq(JsonValidationError(Seq("error.path.missing"))) =>
+          EmptyAnswerError(path, jsError, data)
 
-        case _ => GenericValidationError("Generic exception", jsError, data)
+        case (path, error) =>
+          GenericValidationError("Generic exception", jsError, data)
       }
     } else {
       GenericValidationError("Generic exception", jsError, data)
@@ -148,8 +149,21 @@ object AnswerValidation {
 case class EmptyAnswerError(
   message: String,
   underlying: JsError,
-  data: JsObject = JsObject(Seq.empty)
+  data: JsObject
 ) extends AnswerValidation
+
+object EmptyAnswerError {
+  def apply(
+    path: JsPath,
+    jsError: JsError = JsError(),
+    data: JsObject = JsObject(Seq.empty)
+  ): EmptyAnswerError =
+    EmptyAnswerError(
+      s"${path.toJsonString} was empty",
+      jsError,
+      data
+    )
+}
 
 case class DateParsingException(
   message: String,
