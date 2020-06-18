@@ -27,8 +27,6 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AuditService
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
-import views.html.{ConfirmationView, ConfirmationViewWithDetailedBreakdowns, PhaseTwoConfirmationView}
-import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
 import views.html.{ConfirmationView, ConfirmationViewWithDetailedBreakdowns, NoNicAndPensionConfirmationView, PhaseTwoConfirmationView}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -66,7 +64,6 @@ class ConfirmationController @Inject()(
 
       case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
         Future.successful(Ok(noNicAndPensionView(data, data.metaData.claimPeriod, config.calculatorVersion)))
-      case _ =>
 
       case Valid(_: ConfirmationDataResultWithoutNicAndPension) =>
         logger.error(
