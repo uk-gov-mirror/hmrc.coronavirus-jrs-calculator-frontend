@@ -32,3 +32,8 @@ case class PhaseTwoDetailedBreakdown(
   def payPeriodStart: String = dateToStringWithoutYear(period.period.start)
   def payPeriodEnd: String = dateToString(period.period.end)
 }
+
+case class NoNicAndPensionDetailedBreakdown(period: Periods, furlough: PhaseTwoFurloughBreakdown) {
+  def payPeriodStart: String = dateToStringWithoutYear(period.period.start)
+  def payPeriodEnd: String = dateToString(period.period.end)
+}

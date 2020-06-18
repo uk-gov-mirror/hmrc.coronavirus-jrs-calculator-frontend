@@ -30,7 +30,36 @@ case class PhaseTwoConfirmationDataResult(metaData: ConfirmationMetadata, confir
 case class ConfirmationDataResultWithoutNicAndPension(
   metaData: ConfirmationMetadataWithoutNicAndPension,
   confirmationViewBreakdown: ConfirmationViewBreakdownWithoutNicAndPension)
-    extends ConfirmationDataResult
+    extends ConfirmationDataResult {
+
+  def detailedBreakdowns: Seq[NoNicAndPensionDetailedBreakdown] = confirmationViewBreakdown.furlough.periodBreakdowns map { breakdowns =>
+    import breakdowns._
+    NoNicAndPensionDetailedBreakdown(
+      paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period,
+      PhaseTwoFurloughBreakdown(grant, paymentWithPeriod, furloughCap)
+    )
+  }
+
+  def detailedBreakdownMessageKeys: Seq[String] =
+    confirmationViewBreakdown.furlough.periodBreakdowns flatMap {
+      _.paymentWithPeriod match {
+        case _: RegularPaymentWithPhaseTwoPeriod =>
+          Seq(
+            "phaseTwoDetailedBreakdown.p1.regular"
+          )
+        case _: AveragePaymentWithPhaseTwoPeriod =>
+          Seq(
+            "phaseTwoDetailedBreakdown.p1.average"
+          )
+        case _: CylbPaymentWithPhaseTwoPeriod =>
+          Seq(
+            "phaseTwoDetailedBreakdown.p1.cylb.1",
+            "phaseTwoDetailedBreakdown.p1.cylb.2",
+            "phaseTwoDetailedBreakdown.p1.cylb.3"
+          )
+      }
+    }
+}
 
 sealed trait ViewBreakdown {
   def toAuditBreakdown: AuditBreakdown
@@ -50,21 +79,23 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
     )
   }
 
-  def detailedBreakdownMessageKeys: Seq[String] = furlough.periodBreakdowns.head.paymentWithPeriod match {
-    case _: RegularPayment =>
-      Seq(
-        "detailedBreakdown.p1.regular"
-      )
-    case _: AveragePayment =>
-      Seq(
-        "detailedBreakdown.p1.average"
-      )
-    case _: CylbPayment =>
-      Seq(
-        "detailedBreakdown.p1.cylb.1",
-        "detailedBreakdown.p1.cylb.2",
-        "detailedBreakdown.p1.cylb.3"
-      )
+  def detailedBreakdownMessageKeys: Seq[String] = furlough.periodBreakdowns.flatMap {
+    _.paymentWithPeriod match {
+      case _: RegularPayment =>
+        Seq(
+          "detailedBreakdown.p1.regular"
+        )
+      case _: AveragePayment =>
+        Seq(
+          "detailedBreakdown.p1.average"
+        )
+      case _: CylbPayment =>
+        Seq(
+          "detailedBreakdown.p1.cylb.1",
+          "detailedBreakdown.p1.cylb.2",
+          "detailedBreakdown.p1.cylb.3"
+        )
+    }
   }
 
   override def toAuditBreakdown: AuditBreakdown = {
@@ -107,21 +138,23 @@ case class PhaseTwoConfirmationViewBreakdown(
     )
   }
 
-  def detailedBreakdownMessageKeys: Seq[String] = furlough.periodBreakdowns.head.paymentWithPeriod match {
-    case _: RegularPaymentWithPhaseTwoPeriod =>
-      Seq(
-        "phaseTwoDetailedBreakdown.p1.regular"
-      )
-    case _: AveragePaymentWithPhaseTwoPeriod =>
-      Seq(
-        "phaseTwoDetailedBreakdown.p1.average"
-      )
-    case _: CylbPaymentWithPhaseTwoPeriod =>
-      Seq(
-        "phaseTwoDetailedBreakdown.p1.cylb.1",
-        "phaseTwoDetailedBreakdown.p1.cylb.2",
-        "phaseTwoDetailedBreakdown.p1.cylb.3"
-      )
+  def detailedBreakdownMessageKeys: Seq[String] = furlough.periodBreakdowns.flatMap {
+    _.paymentWithPeriod match {
+      case _: RegularPaymentWithPhaseTwoPeriod =>
+        Seq(
+          "phaseTwoDetailedBreakdown.p1.regular"
+        )
+      case _: AveragePaymentWithPhaseTwoPeriod =>
+        Seq(
+          "phaseTwoDetailedBreakdown.p1.average"
+        )
+      case _: CylbPaymentWithPhaseTwoPeriod =>
+        Seq(
+          "phaseTwoDetailedBreakdown.p1.cylb.1",
+          "phaseTwoDetailedBreakdown.p1.cylb.2",
+          "phaseTwoDetailedBreakdown.p1.cylb.3"
+        )
+    }
   }
 
   override def toAuditBreakdown: AuditBreakdown = {

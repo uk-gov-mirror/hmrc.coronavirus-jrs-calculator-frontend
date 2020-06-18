@@ -1,0 +1,129 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import java.time.LocalDate
+@import viewmodels.ConfirmationDataResultWithoutNicAndPension
+@import controllers.actions.FeatureFlagHelper
+@import controllers.actions.FeatureFlag.FastTrackJourneyFlag
+@import pages.info.ConfirmationPage
+
+@this(
+govukLayout: templates.GovukLayoutWrapper,
+h1: components.h1,
+h2: components.h2,
+h3: components.h3,
+p: components.p,
+confirmation: components.confirmation,
+furloughBreakdown: includes.phaseTwoDetailedFurloughBreakdown,
+nicBreakdown: includes.phaseTwoDetailedNicBreakdown,
+pensionBreakdown: includes.phaseTwoDetailedPensionBreakdown,
+button: components.button,
+details: components.details,
+link: components.link,
+appConfig: config.FrontendAppConfig,
+featureFlag: FeatureFlagHelper
+)
+
+@(cvb: ConfirmationDataResultWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false, thisPage = ConfirmationPage) {
+
+@confirmation {
+
+@h1(Html(messages("confirmation.heading")), classes = Some(""))
+
+<div class="furlough-heading">
+    <p>@messages("confirmation.confirmation.p1")</p>
+    <p class="govuk-panel__title">&pound;@cvb.confirmationViewBreakdown.furlough.total.formatted("%.2f")</p>
+</div>
+
+}
+
+@p {
+<span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
+@dateToString(LocalDate.now())
+@Html(messages("confirmation.date.version", version))
+}
+
+@p(Html(messages("confirmation.disclaimer")))
+
+@p{
+<a id="print-link" class="govuk-link" href="">@messages("confirmation.print.this.page")</a>
+}
+
+@h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
+
+@p(Html(messages("confirmation.explanation.p")))
+
+@details(
+summaryText = Messages("confirmation.breakdown.summary")
+) {
+@for(messageKey <- cvb.detailedBreakdownMessageKeys) {
+@p(Html(messages(messageKey)))
+}
+
+<p class="govuk-body">
+    @messages("phaseTwoDetailedBreakdown.p2")
+    <a class="govuk-link" href="@messages("phaseTwoDetailedBreakdown.p2.a.href")" target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
+</p>
+
+@p(Html(messages("phaseTwoDetailedBreakdown.p3")))
+
+@for(detailedBreakdown <- cvb.detailedBreakdowns) {
+@h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
+@furloughBreakdown(detailedBreakdown.furlough)
+}
+}
+
+
+<p class="govuk-body">
+    @messages("phaseTwoDetailedBreakdown.p2")
+    <a class="govuk-link" href="@messages(" phaseTwoDetailedBreakdown.p2.a.href")"
+    target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
+</p>
+
+@p(Html(messages("phaseTwoDetailedBreakdown.p3")))
+
+@h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
+
+<ul class="govuk-list govuk-list--number">
+    <li>
+        @messages("confirmation.nextSteps.li.1", dateToStringWithoutYear(claimPeriod.start),
+        dateToStringWithoutYear(claimPeriod.end))
+        <span class="govuk-!-font-weight-bold">@messages("confirmation.nextSteps.li.1.2")</span>
+    </li>
+    <li>@messages("confirmation.nextSteps.li.2")
+        <ul class="govuk-list--list">
+            <li>@messages("confirmation.nextSteps.li.2.1")</li>
+            <li>@messages("confirmation.nextSteps.li.2.2")</li>
+            <li>@messages("confirmation.nextSteps.li.2.3")</li>
+        </ul>
+    </li>
+    <li>@messages("confirmation.nextSteps.li.3.1") @link(appConfig.workOutHowMuch, "confirmation.nextSteps.li.3.2",
+        true)
+    </li>
+    <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,
+        "confirmation.nextSteps.li.4.2", true)))
+    </li>
+</ul>
+
+@button(messages("confirmation.startAgain"), href = if(featureFlag(FastTrackJourneyFlag)) Some(routes.ClaimPeriodQuestionController.onPageLoad()) else Some(routes.ClaimPeriodStartController.onPageLoad()) , classes = Some("govuk-button"))
+
+@p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
+
+@p(Html(link(routes.FeedbackSurveyController.startSurvey(), "confirmation.feedbackSurvey.label", true)))
+}
+
