@@ -63,16 +63,8 @@ class ConfirmationController @Inject()(
       case Valid(data: PhaseTwoConfirmationDataResult) =>
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
         Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, config.calculatorVersion)))
-
       case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
         Future.successful(Ok(noNicAndPensionView(data, data.metaData.claimPeriod, config.calculatorVersion)))
-      case _ =>
-
-      case Valid(_: ConfirmationDataResultWithoutNicAndPension) =>
-        logger.error(
-          "Expected to find a PhaseOneConfirmationDataResult or a PhaseTwoConfirmationDataResult, found ConfirmationDataResultWithoutNicAndPension instead. ")
-        Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-
       case Invalid(e) =>
         UserAnswers.logErrors(e)(logger)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))

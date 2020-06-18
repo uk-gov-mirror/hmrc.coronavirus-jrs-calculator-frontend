@@ -26,11 +26,11 @@ import models.UserAnswers.AnswerV
 
 trait JourneyBuilder extends DataExtractor {
 
-  def define(data: BranchingQuestions): Journey = data match {
-    case BranchingQuestions(Regular, _, _)                                                                  => RegularPay
-    case BranchingQuestions(Variable, Some(After1Feb2019), Some(d)) if d.isAfter(LocalDate.of(2019, 4, 5))  => VariablePay
-    case BranchingQuestions(Variable, Some(After1Feb2019), Some(d)) if d.isBefore(LocalDate.of(2019, 4, 6)) => VariablePayWithCylb
-    case BranchingQuestions(Variable, Some(OnOrBefore1Feb2019), _)                                          => VariablePayWithCylb
+  def define(data: BranchingQuestions, cylbCutoff: LocalDate): Journey = data match {
+    case BranchingQuestions(Regular, _, _)                                                     => RegularPay
+    case BranchingQuestions(Variable, Some(After1Feb2019), Some(d)) if !d.isBefore(cylbCutoff) => VariablePay
+    case BranchingQuestions(Variable, Some(After1Feb2019), Some(d)) if d.isBefore(cylbCutoff)  => VariablePayWithCylb
+    case BranchingQuestions(Variable, Some(OnOrBefore1Feb2019), _)                             => VariablePayWithCylb
   }
 
   def journeyDataV(journey: Journey, userAnswers: UserAnswers): AnswerV[ReferencePay] = journey match {

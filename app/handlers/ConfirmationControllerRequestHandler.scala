@@ -26,7 +26,8 @@ import services._
 import viewmodels._
 
 trait ConfirmationControllerRequestHandler
-    extends FurloughCalculator with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator {
+    extends FurloughCalculator with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator
+    with LastYearPayControllerRequestHandler {
 
   def loadResultData(userAnswers: UserAnswers): AnswerV[ConfirmationDataResult] =
     metaData(userAnswers) match {
@@ -59,7 +60,7 @@ trait ConfirmationControllerRequestHandler
   private def breakdown(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdown] =
     extractBranchingQuestionsV(userAnswers) match {
       case Valid(questions) =>
-        journeyDataV(define(questions), userAnswers) match {
+        journeyDataV(define(questions, cylbCutoff(userAnswers)), userAnswers) match {
 
           case Valid(data) =>
             val payments = calculateReferencePay(data)
@@ -84,7 +85,7 @@ trait ConfirmationControllerRequestHandler
   private def breakdownWithoutNicAndPension(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdownWithoutNicAndPension] =
     extractBranchingQuestionsV(userAnswers) match {
       case Valid(questions) =>
-        phaseTwoJourneyDataV(define(questions), userAnswers) match {
+        phaseTwoJourneyDataV(define(questions, cylbCutoff(userAnswers)), userAnswers) match {
           case Valid(data) =>
             val payments: Seq[PaymentWithPhaseTwoPeriod] = phaseTwoReferencePay(data)
             val furlough: PhaseTwoFurloughCalculationResult = phaseTwoFurlough(data.frequency, payments)
@@ -97,7 +98,7 @@ trait ConfirmationControllerRequestHandler
   private def phaseTwoBreakdown(userAnswers: UserAnswers): AnswerV[PhaseTwoConfirmationViewBreakdown] =
     extractBranchingQuestionsV(userAnswers) match {
       case Valid(questions) =>
-        phaseTwoJourneyDataV(define(questions), userAnswers) match {
+        phaseTwoJourneyDataV(define(questions, cylbCutoff(userAnswers)), userAnswers) match {
           case Valid(data) =>
             val payments = phaseTwoReferencePay(data)
             val furlough = phaseTwoFurlough(data.frequency, payments)

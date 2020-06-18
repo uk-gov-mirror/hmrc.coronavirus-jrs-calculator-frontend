@@ -183,14 +183,13 @@ object UserAnswers {
     nec.toNonEmptyList.toList.foreach { validation =>
       val err = validation.underlying.errors.headOption match {
         case Some((path, errors)) => s"${path.toJsonString}; JSON error: ${errors.map(_.toString)}"
-        case None => ""
+        case None                 => ""
       }
       logger.error(s"""
-        | Encountered validation error: ${validation.message};
-        | Underlying error: $err;
-        | Answer data: ${Json.prettyPrint(validation.data)}
-        | """
-      )
+      | Encountered validation error: ${validation.message};
+      | Underlying error: $err;
+      | Answer data: ${Json.prettyPrint(validation.data)}
+      | """)
     }
   }
   def logWarnings(nec: NonEmptyChain[AnswerValidation])(implicit logger: Logger): Unit = {
@@ -198,14 +197,13 @@ object UserAnswers {
     nec.toNonEmptyList.toList.foreach { validation =>
       val err = validation.underlying.errors.headOption match {
         case Some((path, errors)) => s"${path.toJsonString}; JSON error: ${errors.map(_.toString)}"
-        case None => ""
+        case None                 => ""
       }
       logger.warn(s"""
-                      | Encountered validation error: ${validation.message};
-                      | Underlying error: $err;
-                      | Answer data: ${Json.prettyPrint(validation.data)}
-                      | """
-      )
+      | Encountered validation error: ${validation.message};
+      | Underlying error: $err;
+      | Answer data: ${Json.prettyPrint(validation.data)}
+      | """)
     }
   }
 

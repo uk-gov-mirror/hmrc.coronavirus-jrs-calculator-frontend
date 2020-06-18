@@ -18,6 +18,7 @@ package handlers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import models.UserAnswers
 import models.UserAnswers.AnswerV
 import pages._
@@ -40,5 +41,11 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
       datesWithDuplicates.distinct
     }
   }
+
+  def cylbCutoff(userAnswers: UserAnswers): LocalDate =
+    getPayDatesV(userAnswers) match {
+      case Valid(dates) => dates.head
+      case Invalid(_)   => LocalDate.of(2019, 4, 6)
+    }
 
 }

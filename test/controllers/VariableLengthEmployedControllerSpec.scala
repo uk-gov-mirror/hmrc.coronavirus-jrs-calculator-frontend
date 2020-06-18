@@ -16,6 +16,8 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBaseWithApplication
 import forms.VariableLengthEmployedFormProvider
 import models.requests.DataRequest
@@ -47,7 +49,10 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020,3,1")
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .build()
 
       val result = route(application, getRequest).value
@@ -59,14 +64,16 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
 
       contentAsString(result) mustEqual
-        view(form)(dataRequest, messages).toString
+        view(form, LocalDate.of(2019, 2, 1))(dataRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(EmployeeStartedPage, EmployeeStarted.values.head).success.value
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020,3,1")
+        .withEmployeeStartedOnOrBefore1Feb2019()
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -79,15 +86,17 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form.fill(EmployeeStarted.values.head))(dataRequest, messages).toString
+        view(form.fill(EmployeeStarted.values.head), LocalDate.of(2019, 2, 1))(dataRequest, messages).toString
 
       application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020,3,1")
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
@@ -107,8 +116,10 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020,3,1")
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
         FakeRequest(POST, variableLengthEmployedRoute).withCSRFToken
@@ -126,7 +137,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm)(dataRequest, messages).toString
+        view(boundForm, LocalDate.of(2019, 2, 1))(dataRequest, messages).toString
 
       application.stop()
     }

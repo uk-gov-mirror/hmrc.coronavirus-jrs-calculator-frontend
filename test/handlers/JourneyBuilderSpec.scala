@@ -30,21 +30,21 @@ class JourneyBuilderSpec extends SpecBase with CoreTestData with ValidatedValues
   "return regular journey if pay question is Regularly" in new JourneyBuilder {
     val questions = BranchingQuestions(Regular, None, None)
 
-    define(questions) mustBe RegularPay
+    define(questions, LocalDate.of(2019, 4, 6)) mustBe RegularPay
   }
 
   "return variable journey if pay question is Varies and no Cylb eligible" in new JourneyBuilder {
     val questions = BranchingQuestions(Variable, Some(EmployeeStarted.After1Feb2019), Some(LocalDate.of(2019, 4, 6)))
 
-    define(questions) mustBe VariablePay
+    define(questions, LocalDate.of(2019, 4, 6)) mustBe VariablePay
   }
 
   "return variable journey if pay question is Variable and Cylb eligible" in new JourneyBuilder {
     val questionsOne = BranchingQuestions(Variable, Some(EmployeeStarted.OnOrBefore1Feb2019), None)
     val questionsTwo = BranchingQuestions(Variable, Some(EmployeeStarted.After1Feb2019), Some(LocalDate.of(2019, 4, 5)))
 
-    define(questionsOne) mustBe VariablePayWithCylb
-    define(questionsTwo) mustBe VariablePayWithCylb
+    define(questionsOne, LocalDate.of(2019, 4, 6)) mustBe VariablePayWithCylb
+    define(questionsTwo, LocalDate.of(2019, 4, 6)) mustBe VariablePayWithCylb
   }
 
   "build a RegularPayData for a RegularPay journey" in new JourneyBuilder {

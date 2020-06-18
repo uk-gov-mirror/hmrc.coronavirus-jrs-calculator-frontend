@@ -19,16 +19,17 @@ package controllers
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.{EmployeeStarted, UserAnswers}
 import navigation.Navigator
+import pages.{ClaimPeriodStartPage, EmployeeStartedPage}
 import org.slf4j.{Logger, LoggerFactory}
 import pages.EmployeeStartedPage
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.VariableLengthEmployedView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class VariableLengthEmployedController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
-  navigator: Navigator,
+  override val navigator: Navigator,
   identify: IdentifierAction,
   feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
@@ -44,34 +45,38 @@ class VariableLengthEmployedController @Inject()(
   formProvider: VariableLengthEmployedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: VariableLengthEmployedView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+    extends BaseController {
 
-  implicit val logger: Logger = LoggerFactory.getLogger(getClass)
+  override implicit val logger: Logger = LoggerFactory.getLogger(getClass)
 
   val form: Form[EmployeeStarted] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.getV(EmployeeStartedPage) match {
-      case Invalid(e) =>
-        UserAnswers.logWarnings(e)
-        form
-      case Valid(value) => form.fill(value)
-    }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+      val preparedForm = request.userAnswers.getV(EmployeeStartedPage) match {
+        case Invalid(e) =>
+          UserAnswers.logWarnings(e)
+          form
+        case Valid(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm))
+      Future.successful(Ok(view(preparedForm, claimStart.minusMonths(13))))
+    }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(EmployeeStartedPage, updatedAnswers))
-      )
+    getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStart.minusMonths(13)))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(EmployeeStartedPage, updatedAnswers))
+        )
+    }
   }
 }

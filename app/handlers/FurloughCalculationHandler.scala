@@ -21,12 +21,13 @@ import models.UserAnswers.AnswerV
 import models.{FurloughCalculationResult, UserAnswers}
 import services.{FurloughCalculator, ReferencePayCalculator}
 
-trait FurloughCalculationHandler extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder {
+trait FurloughCalculationHandler
+    extends FurloughCalculator with ReferencePayCalculator with JourneyBuilder with LastYearPayControllerRequestHandler {
 
   def handleCalculationFurloughV(userAnswers: UserAnswers): AnswerV[FurloughCalculationResult] =
     extractBranchingQuestionsV(userAnswers) match {
       case Valid(questions) =>
-        journeyDataV(define(questions), userAnswers).map { data =>
+        journeyDataV(define(questions, cylbCutoff(userAnswers)), userAnswers).map { data =>
           val payments = calculateReferencePay(data)
           calculateFurloughGrant(data.frequency, payments)
         }
