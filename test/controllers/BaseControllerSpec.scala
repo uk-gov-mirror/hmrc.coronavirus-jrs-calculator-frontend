@@ -20,27 +20,28 @@ import java.time.LocalDate
 
 import akka.util.Timeout
 import base.SpecBaseWithApplication
-import cats.data.Validated.Valid
+import cats.scalatest.ValidatedValues
 import handlers.ErrorHandler
-import models.Salary
+import models.{AnswerValidation, EmptyAnswerError, Salary}
 import models.requests.DataRequest
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{PayDatePage, RegularPayAmountPage}
 import play.api.http.Status._
 import play.api.mvc.Results._
-import play.api.mvc.{MessagesControllerComponents, Result}
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.Helpers.{contentAsString, status}
+import cats.syntax.validated._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
-  lazy val fakeDataRequest = DataRequest(fakeRequest, "id", emptyUserAnswers)
+class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar with ValidatedValues {
+  lazy val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = DataRequest(fakeRequest, "id", emptyUserAnswers)
 
   def futureResult[A]: A => Future[Result] = x => Future.successful(Ok(s"Answer: $x"))
-  implicit lazy val errorHandler = injector.instanceOf[ErrorHandler]
+  implicit lazy val errorHandler: ErrorHandler = injector.instanceOf[ErrorHandler]
 
   object BaseController extends BaseController {
     override protected def controllerComponents: MessagesControllerComponents = injector.instanceOf[MessagesControllerComponents]
@@ -49,16 +50,9 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   implicit val duration: Timeout = 5 seconds
 
+  final val JanuaryFirst2001 = LocalDate.of(2000, 1, 1)
+
   "getAnswer without index" when {
-
-    "answer is not found" must {
-
-      "return None" in {
-        val result = BaseController.getAnswer(RegularPayAmountPage)(DataRequest(fakeRequest, "id", emptyUserAnswers), implicitly)
-
-        result mustBe None
-      }
-    }
 
     "valid answer is not found" must {
 
@@ -67,29 +61,24 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
           RegularPayAmountPage
         )(DataRequest(fakeRequest, "id", emptyUserAnswers), implicitly)
 
-        result mustBe emptyError(RegularPayAmountPage.path)
+        val error = EmptyAnswerError(
+          RegularPayAmountPage.path,
+          emptyError(RegularPayAmountPage.path),
+          emptyUserAnswers.data
+        )
+
+        result mustBe error.invalidNec[AnswerValidation]
       }
     }
 
     "answer is found" must {
 
-      "return Some(A)" in {
-        val userAnswers = emptyUserAnswers.set(RegularPayAmountPage, Salary(100))(implicitly).success.value
-
-        val result = BaseController.getAnswer(RegularPayAmountPage)(DataRequest(fakeRequest, "id", userAnswers), implicitly)
-
-        result mustBe Some(Salary(100))
-      }
-    }
-
-    "valid answer is found" must {
-
-      "return Some(A)" in {
+      "return Valid(A)" in {
         val userAnswers = emptyUserAnswers.set(RegularPayAmountPage, Salary(100))(implicitly).success.value
 
         val result = BaseController.getAnswerV(RegularPayAmountPage)(DataRequest(fakeRequest, "id", userAnswers), implicitly)
 
-        result mustBe Valid(Salary(100))
+        result.value mustBe Salary(100)
       }
     }
   }
@@ -97,43 +86,31 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
   "getAnswer with index" when {
 
     "answer is not found" must {
-
-      "return None" in {
-        val result = BaseController.getAnswer(PayDatePage, 1)(DataRequest(fakeRequest, "id", emptyUserAnswers), implicitly)
-
-        result mustBe None
-      }
-
       "return Invalid" in {
         val result = BaseController.getAnswerV(
           PayDatePage,
           1
         )(DataRequest(fakeRequest, "id", emptyUserAnswers), implicitly)
 
-        result mustBe emptyError(PayDatePage.path, 1, "error.path.missing")
+        val error = EmptyAnswerError(
+          PayDatePage.path \ 0,
+          emptyError(PayDatePage.path, 1, "error.path.missing"),
+          emptyUserAnswers.data
+        )
+
+        result mustEqual error.invalidNec[AnswerValidation]
       }
     }
 
     "answer is found" must {
-
-      "return Some(A)" in {
-        val userAnswers = emptyUserAnswers.set(PayDatePage, LocalDate.of(2000, 1, 1), Some(1))(implicitly).success.value
-
-        val result = BaseController.getAnswer(PayDatePage, 1)(DataRequest(fakeRequest, "id", userAnswers), implicitly)
-
-        result mustBe Some(LocalDate.of(2000, 1, 1))
-      }
-
       "return Valid(A)" in {
-        val userAnswers = emptyUserAnswers.set(PayDatePage, LocalDate.of(2000, 1, 1), Some(1))(implicitly).success.value
+        val userAnswers = emptyUserAnswers.set(PayDatePage, JanuaryFirst2001, Some(1))(implicitly).success.value
 
         val result = BaseController.getAnswerV(PayDatePage, 1)(DataRequest(fakeRequest, "id", userAnswers), implicitly)
 
-        result mustBe Valid(LocalDate.of(2000, 1, 1))
+        result.value mustBe JanuaryFirst2001
       }
-
     }
-
   }
 
   "getRequiredAnswer without index" when {
@@ -141,7 +118,7 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     "answer is not found" must {
 
       "return internal server error" in {
-        val result = BaseController.getRequiredAnswer(RegularPayAmountPage)(futureResult)(
+        val result = BaseController.getRequiredAnswerV(RegularPayAmountPage)(futureResult)(
           DataRequest(fakeRequest, "id", emptyUserAnswers),
           implicitly,
           errorHandler)
@@ -167,7 +144,7 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
       "execute provided function" in {
         val userAnswers = emptyUserAnswers.set(RegularPayAmountPage, Salary(123.45))(implicitly).success.value
 
-        val result = BaseController.getRequiredAnswer(RegularPayAmountPage)(futureResult)(
+        val result = BaseController.getRequiredAnswerV(RegularPayAmountPage)(futureResult)(
           DataRequest(fakeRequest, "id", userAnswers),
           implicitly,
           errorHandler)
@@ -199,7 +176,7 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     "answer is not found" must {
 
       "return internal server error" in {
-        val result = BaseController.getRequiredAnswer(PayDatePage, 1)(futureResult)(
+        val result = BaseController.getRequiredAnswerV(PayDatePage, 1)(futureResult)(
           DataRequest(fakeRequest, "id", emptyUserAnswers),
           implicitly,
           errorHandler)
@@ -224,9 +201,9 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
     "answer is found" must {
 
       "execute provided function" in {
-        val userAnswers = emptyUserAnswers.set(PayDatePage, LocalDate.of(2000, 1, 1), Some(1))(implicitly).success.value
+        val userAnswers = emptyUserAnswers.set(PayDatePage, JanuaryFirst2001, Some(1))(implicitly).success.value
 
-        val result = BaseController.getRequiredAnswer(PayDatePage, 1)(futureResult)(
+        val result = BaseController.getRequiredAnswerV(PayDatePage, 1)(futureResult)(
           DataRequest(fakeRequest, "id", userAnswers),
           implicitly,
           errorHandler)
@@ -238,7 +215,14 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
     "valid answer is found" must {
       "execute provided function" in {
-        val userAnswers = emptyUserAnswers.set(PayDatePage, LocalDate.of(2000, 1, 1), Some(1))(implicitly).success.value
+        val userAnswers = emptyUserAnswers
+          .set(
+            PayDatePage,
+            JanuaryFirst2001,
+            Some(1)
+          )(implicitly)
+          .success
+          .value
 
         val result = BaseController.getRequiredAnswerV(PayDatePage, 1)(futureResult)(
           DataRequest(fakeRequest, "id", userAnswers),

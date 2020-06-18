@@ -32,8 +32,6 @@ final case class UserAnswers(
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
-  type Answer[A] = ValidatedNec[JsError, A]
-
   private def path[T <: Query](page: T, idx: Option[Int]): JsPath = idx.fold(page.path)(idx => page.path \ (idx - 1))
 
   def getV[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): AnswerV[A] =
@@ -41,13 +39,9 @@ final case class UserAnswers(
       case JsSuccess(value, _) => value.validNec
       case error @ JsError(_) =>
         NonEmptyChain
-          .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(error)))
+          .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(AnswerValidation(error, data, idx))))
           .invalid[A]
     }
-
-  @deprecated("Use validated API instead", "1.0.0")
-  def get[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): Option[A] =
-    Reads.optionNoError(Reads.at(path(page, idx))).reads(data).getOrElse(None)
 
   def getList[A](page: Gettable[A])(implicit rds: Reads[A]): Seq[A] =
     page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
@@ -121,9 +115,69 @@ final case class UserAnswers(
   }
 }
 
+trait AnswerValidation {
+
+  def message: String
+
+  def underlying: JsError
+
+  def data: JsObject
+}
+
+object AnswerValidation {
+  def apply(
+    jsError: JsError,
+    data: JsObject = JsObject(Seq.empty),
+    idx: Option[Int] = None
+  ): AnswerValidation =
+    if (jsError.errors.size == 1) {
+      jsError.errors.head match {
+        case (path, error) if error == Seq(JsonValidationError(Seq("error.path.missing"))) =>
+          EmptyAnswerError(path, jsError, data)
+        case (path, error) =>
+          GenericValidationError("Generic exception", jsError, data)
+      }
+    } else {
+      GenericValidationError("Generic exception", jsError, data)
+    }
+}
+
+case class EmptyAnswerError(
+  message: String,
+  underlying: JsError,
+  data: JsObject
+) extends AnswerValidation
+
+object EmptyAnswerError {
+  def apply(
+    path: JsPath,
+    jsError: JsError = JsError(),
+    data: JsObject = JsObject(Seq.empty)
+  ): EmptyAnswerError =
+    EmptyAnswerError(
+      s"${path.toJsonString} was empty",
+      jsError,
+      data
+    )
+}
+
+case class DateParsingException(
+  message: String,
+  underlying: JsError,
+  data: JsObject = JsObject(Seq.empty)
+) extends AnswerValidation
+
+case class GenericValidationError(
+  message: String,
+  underlying: JsError,
+  data: JsObject = JsObject(Seq.empty)
+) extends AnswerValidation
+
 object UserAnswers {
 
-  type AnswerV[A] = ValidatedNec[JsError, A]
+  type AnswerV[A] = ValidatedNec[AnswerValidation, A]
+
+  def logErrors(nec: NonEmptyChain[AnswerValidation]): Unit = {}
 
   implicit lazy val reads: Reads[UserAnswers] = {
 

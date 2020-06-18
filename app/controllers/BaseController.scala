@@ -19,6 +19,7 @@ package controllers
 import cats.data.NonEmptyChain
 import cats.data.Validated.{Invalid, Valid}
 import handlers.ErrorHandler
+import models.UserAnswers
 import models.UserAnswers.AnswerV
 import models.requests.DataRequest
 import navigation.Navigator
@@ -44,38 +45,15 @@ trait BaseController extends FrontendBaseController with I18nSupport {
     logger.error(source.toChain.toList.mkString("\n"))
   }
 
-  @deprecated("User validated API", "1.0.0")
-  def getAnswer[A](page: QuestionPage[A], idx: Int)(implicit request: DataRequest[_], reads: Reads[A]): Option[A] =
-    getAnswer(page, Some(idx))
-
   def getAnswerV[A](page: QuestionPage[A], idx: Int)(implicit request: DataRequest[_], reads: Reads[A]): AnswerV[A] =
     getAnswerV(page, Some(idx))
-
-  @deprecated("User validated API", "1.0.0")
-  def getAnswer[A](page: QuestionPage[A], idx: Option[Int] = None)(implicit request: DataRequest[_], reads: Reads[A]): Option[A] =
-    request.userAnswers.get(page, idx)
 
   def getAnswerV[A](page: QuestionPage[A], idx: Option[Int] = None)(implicit request: DataRequest[_], reads: Reads[A]): AnswerV[A] =
     request.userAnswers.getV(page, idx)
 
-  @deprecated("User validated API", "1.0.0")
-  def getRequiredAnswer[A](page: QuestionPage[A], idx: Int)(
-    f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
-    getRequiredAnswer(page, Some(idx))(f)
-
   def getRequiredAnswerV[A](page: QuestionPage[A], idx: Int)(
     f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
     getRequiredAnswerV(page, Some(idx))(f)
-
-  @deprecated("User validated API", "1.0.0")
-  def getRequiredAnswer[A](page: QuestionPage[A], idx: Option[Int] = None)(
-    f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
-    getAnswer(page, idx) match {
-      case Some(ans) => f(ans)
-      case _ =>
-        Logger.error(s"[BaseController][getRequiredAnswer] Failed to retrieve expected data for page: $page")
-        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
-    }
 
   def getRequiredAnswerV[A](page: QuestionPage[A], idx: Option[Int] = None)(
     f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A], errorHandler: ErrorHandler): Future[Result] =
@@ -99,37 +77,6 @@ trait BaseController extends FrontendBaseController with I18nSupport {
         Future.successful(Redirect(requiredPage))
     }
 
-  @deprecated("User validated API", "1.0.0")
-  def getRequiredAnswerOrRedirect[A](page: QuestionPage[A], idx: Option[Int] = None)(
-    f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A]): Future[Result] =
-    getAnswer(page, idx) match {
-      case Some(ans) => f(ans)
-      case _ =>
-        val requiredPage = navigator.routeFor(page)
-        Logger.error(s"Failed to retrieve expected data for page: $page, redirecting to $requiredPage")
-        Future.successful(Redirect(requiredPage))
-    }
-
-  @deprecated("User validated API", "1.0.0")
-  def getRequiredAnswers[A, B](pageA: QuestionPage[A], pageB: QuestionPage[B], idxA: Option[Int] = None, idxB: Option[Int] = None)(
-    f: (A, B) => Future[Result])(
-    implicit request: DataRequest[_],
-    readsA: Reads[A],
-    readsB: Reads[B],
-    errorHandler: ErrorHandler): Future[Result] =
-    getAnswer(pageA, idxA) match {
-      case Some(ansA) =>
-        getAnswer(pageB, idxB) match {
-          case Some(ansB) => f(ansA, ansB)
-          case _ =>
-            Logger.error(s"[BaseController][getRequiredAnswers] Failed to retrieve expected data for page: $pageB")
-            Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
-        }
-      case _ =>
-        Logger.error(s"[BaseController][getRequiredAnswers] Failed to retrieve expected data for page: $pageA")
-        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
-    }
-
   def getRequiredAnswersV[A, B](
     pageA: QuestionPage[A],
     pageB: QuestionPage[B],
@@ -148,9 +95,7 @@ trait BaseController extends FrontendBaseController with I18nSupport {
       .fold(
         nel => {
           Logger.error(s"[BaseController][getRequiredAnswers] Failed to retrieve expected data for page: $pageB")
-          nel.toChain.toList.foreach { err =>
-            Logger.error(s"Found JsError: ${err.errors}")
-          }
+          UserAnswers.logErrors(nel)
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
         },
         identity

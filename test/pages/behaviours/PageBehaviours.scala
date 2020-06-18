@@ -16,11 +16,10 @@
 
 package pages.behaviours
 
-import cats.data.Chain
-import cats.data.Validated.{Invalid, Valid}
+import cats.data.Validated.Valid
 import cats.scalatest.{ValidatedMatchers, ValidatedValues}
 import generators.Generators
-import models.UserAnswers
+import models.{EmptyAnswerError, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.{MustMatchers, OptionValues, TryValues, WordSpec}
@@ -33,8 +32,8 @@ trait PageBehaviours
     extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with Generators with OptionValues with ValidatedValues
     with ValidatedMatchers with TryValues {
 
-  def emptyError(path: JsPath, error: String = "error.path.missing"): Invalid[Chain[JsError]] =
-    Invalid(Chain(JsError(path -> JsonValidationError(List(error)))))
+  def emptyError(path: JsPath, error: String = "error.path.missing"): JsError =
+    JsError(path -> JsonValidationError(List(error)))
 
   class BeRetrievable[A] {
     def apply[P <: Gettable[A]](genP: Gen[P])(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit = {
@@ -75,7 +74,8 @@ trait PageBehaviours
 
             forAll(gen) {
               case (page, userAnswers) =>
-                userAnswers.getV(page) mustBe emptyError(page.path)
+                val error = userAnswers.getV(page).invalidValue.toNonEmptyList.head
+                error mustBe EmptyAnswerError(page.path, emptyError(page.path), userAnswers.data)
             }
           }
         }
@@ -159,7 +159,11 @@ trait PageBehaviours
         forAll(gen) {
           case (page, userAnswers) =>
             val updatedAnswers = userAnswers.remove(page).success.value
-            updatedAnswers.getV(page) mustEqual emptyError(page.path)
+
+            val error = EmptyAnswerError(page.path, emptyError(page.path), updatedAnswers.data)
+            val foundError = updatedAnswers.getV(page).invalidValue.toNonEmptyList.head
+
+            foundError mustEqual error
         }
       }
   }

@@ -19,15 +19,15 @@ package handlers
 import cats.data.Kleisli
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
+import com.softwaremill.quicklens._
 import models.ClaimPeriodQuestion.{ClaimOnDifferentPeriod, ClaimOnSamePeriod}
 import models.FurloughPeriodQuestion.{FurloughedOnDifferentPeriod, FurloughedOnSamePeriod}
 import models.PayPeriodQuestion.{UseDifferentPayPeriod, UseSamePayPeriod}
-import models.UserAnswers
+import models.UserAnswers.AnswerV
+import models.{GenericValidationError, UserAnswers}
 import pages._
 import play.api.libs.json.{JsError, Json}
 import utils.UserAnswersHelper
-import com.softwaremill.quicklens._
-import models.UserAnswers.AnswerV
 
 trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper {
 
@@ -50,7 +50,13 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       case Valid(FurloughedOnDifferentPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod)
           .run(UserAnswersState(answer, answer))
-          .toValidNec(JsError(s"Unable to clear answers while keeping pay period for $answer"))
+          .toValidNec(
+            GenericValidationError(
+              s"Unable to clear answers while keeping pay period for $answer",
+              JsError(),
+              answer.data
+            )
+          )
 
       case inv @ Invalid(_) => inv
     }
@@ -61,7 +67,14 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       case Valid(FurloughedOnDifferentPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod)
           .run(answer)
-          .toValidNec(JsError(s"Unable to clear answers while keeping pay period for ${answer.original}"))
+          .toValidNec(
+            GenericValidationError(
+              s"Unable to clear answers while keeping pay period for ${answer.original}",
+              JsError(),
+              answer.original.data
+            )
+          )
+
       case Invalid(_) => Valid(answer)
     }
 
@@ -70,11 +83,24 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       case Valid(UseSamePayPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData)
           .run(UserAnswersState(answer, answer))
-          .toValidNec(JsError("Failed to run Kleisi composition for UseSamePayPeriod"))
+          .toValidNec(
+            GenericValidationError(
+              s"""Unable to clear answers while keeping pay period for $answer""",
+              JsError(),
+              answer.data
+            )
+          )
+
       case Valid(UseDifferentPayPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod)
           .run(UserAnswersState(answer, answer))
-          .toValidNec(JsError("Failed to run Kleisi composition for UseDifferentPayPeriod"))
+          .toValidNec(
+            GenericValidationError(
+              s"Failed to run Kleisi composition for UseDifferentPayPeriod for $answer",
+              JsError(),
+              answer.data
+            )
+          )
       case inv @ Invalid(_) => inv
     }
 
@@ -83,12 +109,25 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
       case Valid(UseSamePayPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData)
           .run(answer)
-          .toValidNec(JsError(s"Unable to clear answers using same pay period: ${answer.original}"))
+          .toValidNec(
+            GenericValidationError(
+              s"Unable to clear answers using same pay period ${answer.original}",
+              JsError(),
+              answer.original.data
+            )
+          )
 
       case Valid(UseDifferentPayPeriod) =>
         (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod)
           .run(answer)
-          .toValidNec(JsError(s"Unable to clear answers using different pay period: ${answer.original}"))
+          .toValidNec(
+            GenericValidationError(
+              s"Unable to clear answers using different pay period ${answer.original}",
+              JsError(),
+              answer.original.data
+            )
+          )
+
       case Invalid(_) => Valid(answer)
     }
 
