@@ -15,7 +15,7 @@
  *@
 
 @import java.time.LocalDate
-@import viewmodels.ConfirmationDataResultWithoutNicAndPension
+@import viewmodels.ConfirmationViewBreakdownWithoutNicAndPension
 @import controllers.actions.FeatureFlagHelper
 @import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 @import pages.info.ConfirmationPage
@@ -37,7 +37,7 @@ appConfig: config.FrontendAppConfig,
 featureFlag: FeatureFlagHelper
 )
 
-@(cvb: ConfirmationDataResultWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
+@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
@@ -47,7 +47,7 @@ featureFlag: FeatureFlagHelper
 
 <div class="furlough-heading">
     <p>@messages("confirmation.confirmation.p1")</p>
-    <p class="govuk-panel__title">&pound;@cvb.confirmationViewBreakdown.furlough.total.formatted("%.2f")</p>
+    <p class="govuk-panel__title">&pound;@cvb.furlough.total.formatted("%.2f")</p>
 </div>
 
 }
@@ -68,32 +68,32 @@ featureFlag: FeatureFlagHelper
 
 @p(Html(messages("confirmation.explanation.p")))
 
-@details(
-summaryText = Messages("confirmation.breakdown.summary")
-) {
-@for(messageKey <- cvb.detailedBreakdownMessageKeys) {
-@p(Html(messages(messageKey)))
-}
+    @details(
+        summaryText = Messages("confirmation.breakdown.summary")
+        ) {
+            @for(messageKey <- cvb.detailedBreakdownMessageKeys) {
+            @p(Html(messages(messageKey)))
+        }
 
-<p class="govuk-body">
-    @messages("phaseTwoDetailedBreakdown.p2")
-    <a class="govuk-link" href="@messages("phaseTwoDetailedBreakdown.p2.a.href")" target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
-</p>
+        <p class="govuk-body">
+            @messages("phaseTwoDetailedBreakdown.p2")
+            <a class="govuk-link" href="@messages("phaseTwoDetailedBreakdown.p2.a.href")" target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
+        </p>
 
-@p(Html(messages("phaseTwoDetailedBreakdown.p3")))
+        @p(Html(messages("phaseTwoDetailedBreakdown.p3")))
 
-@for(detailedBreakdown <- cvb.detailedBreakdowns) {
-@h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-@furloughBreakdown(detailedBreakdown.furlough)
-}
-}
+        @for(detailedBreakdown <- cvb.detailedBreakdowns) {
+            @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
+            @furloughBreakdown(detailedBreakdown.furlough)
+        }
+    }
 
 
-<p class="govuk-body">
-    @messages("phaseTwoDetailedBreakdown.p2")
-    <a class="govuk-link" href="@messages(" phaseTwoDetailedBreakdown.p2.a.href")"
-    target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
-</p>
+    <p class="govuk-body">
+        @messages("phaseTwoDetailedBreakdown.p2")
+        <a class="govuk-link" href="@messages(" phaseTwoDetailedBreakdown.p2.a.href")"
+        target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
+    </p>
 
 @p(Html(messages("phaseTwoDetailedBreakdown.p3")))
 
