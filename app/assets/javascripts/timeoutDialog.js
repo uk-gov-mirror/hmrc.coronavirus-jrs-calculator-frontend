@@ -201,7 +201,7 @@ function timeoutDialog(options) {
                 .append($countdownElement)
                 .append('.'))
             .append($('<button id="timeout-keep-signin-btn" class="govuk-button govuk-!-margin-right-1">').text(settings.keepAliveButtonText))
-            .append($('<button id="timeout-sign-out-btn" class="govuk-button govuk-button--secondary">').text(settings.signOutButtonText))
+            .append($('<a id="timeout-sign-out-btn" class="link">').text(settings.signOutButtonText))
 
         $element.find('#timeout-keep-signin-btn').on('click', keepAliveAndClose)
         $element.find('#timeout-sign-out-btn').on('click', signOut)

@@ -54,9 +54,10 @@ html.noScroll {
   }
 
   .link {
-    display: inline-block;
-    line-height: 1.25;
-    padding: .526315em .789473em .263157em;
-  }
-
+      display: inline-block;
+      line-height: 1.25;
+      padding: .526315em .789473em .263157em;
+      text-decoration: underline;
+      color: $govuk-link-colour;
+    }
 }
