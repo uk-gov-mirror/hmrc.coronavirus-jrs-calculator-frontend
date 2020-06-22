@@ -53,7 +53,7 @@ object AuditCalculationResult {
   implicit val defaultFormat: Format[AuditCalculationResult] = Json.format
 }
 
-case class AuditBreakdown(furlough: AuditCalculationResult, nic: AuditCalculationResult, pension: AuditCalculationResult)
+case class AuditBreakdown(furlough: AuditCalculationResult, nic: Option[AuditCalculationResult], pension: Option[AuditCalculationResult])
 
 object AuditBreakdown {
   implicit val defaultFormat: Format[AuditBreakdown] = Json.format

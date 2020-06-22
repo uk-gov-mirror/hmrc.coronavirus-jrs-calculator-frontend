@@ -91,7 +91,7 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
         .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.periodWithPaymentDate.period.period.end))
     )
 
-    AuditBreakdown(auditFurlough, auditNic, auditPension)
+    AuditBreakdown(auditFurlough, Some(auditNic), Some(auditPension))
   }
 }
 
@@ -153,12 +153,19 @@ case class PhaseTwoConfirmationViewBreakdown(
         .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.period.end))
     )
 
-    AuditBreakdown(auditFurlough, auditNic, auditPension)
+    AuditBreakdown(auditFurlough, Some(auditNic), Some(auditPension))
   }
 }
 
 case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurloughCalculationResult) extends ViewBreakdown {
-  override def toAuditBreakdown: AuditBreakdown = ??? //TODO
+
+  val auditFurlough = AuditCalculationResult(
+    furlough.total,
+    furlough.periodBreakdowns
+      .map(ppb => AuditPeriodBreakdown(ppb.grant.value, ppb.paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.period.end))
+  )
+
+  override def toAuditBreakdown: AuditBreakdown = AuditBreakdown(auditFurlough, None, None)
 
   def detailedBreakdowns: Seq[NoNicAndPensionDetailedBreakdown] = furlough.periodBreakdowns map { breakdowns =>
     import breakdowns._
