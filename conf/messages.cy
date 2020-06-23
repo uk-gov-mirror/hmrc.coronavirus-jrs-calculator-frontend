@@ -356,8 +356,8 @@ furloughStartDate.error.invalid = Nodwch ddyddiad dechrau go iawn y ffyrlo
 furloughStartDate.error.minimum = Mae’n rhaid i ddyddiad dechrau’r ffyrlo fod ar neu ar ôl {0}
 furloughStartDate.error.maximum = Mae’n rhaid i ddyddiad dechrau’r ffyrlo fod cyn {0}
 
-variableLengthEmployed.title = A oedd y cyflogai hwn yn gweithio i chi ar {0} neu cyn hynny?
-variableLengthEmployed.heading = A oedd y cyflogai hwn yn gweithio i chi ar {0} neu cyn hynny?
+variableLengthEmployed.title = A oedd y cyflogai hwn yn gweithio i chi ar 1 Chwefror 2019 neu cyn hynny?
+variableLengthEmployed.heading = A oedd y cyflogai hwn yn gweithio i chi ar 1 Chwefror 2019 neu cyn hynny?
 variableLengthEmployed.onOrBefore1Feb2019 = Iawn
 variableLengthEmployed.after1Feb2019 = Na
 variableLengthEmployed.error.required = Dewiswch un o’r opsiynau isod

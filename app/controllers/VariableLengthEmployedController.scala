@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
@@ -25,7 +23,6 @@ import handlers.ErrorHandler
 import javax.inject.Inject
 import models.{EmployeeStarted, UserAnswers}
 import navigation.Navigator
-import pages.{ClaimPeriodStartPage, EmployeeStartedPage}
 import org.slf4j.{Logger, LoggerFactory}
 import pages.EmployeeStartedPage
 import play.api.data.Form
@@ -47,45 +44,34 @@ class VariableLengthEmployedController @Inject()(
   formProvider: VariableLengthEmployedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: VariableLengthEmployedView
-)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+)(implicit ec: ExecutionContext)
     extends BaseController {
 
   override implicit val logger: Logger = LoggerFactory.getLogger(getClass)
 
   val form: Form[EmployeeStarted] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
-      val preparedForm = request.userAnswers.getV(EmployeeStartedPage) match {
-        case Invalid(e) =>
-          UserAnswers.logWarnings(e)
-          form
-        case Valid(value) => form.fill(value)
-      }
-
-      Future.successful(Ok(view(preparedForm, dateToDisplay(claimStart))))
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.getV(EmployeeStartedPage) match {
+      case Invalid(e) =>
+        UserAnswers.logWarnings(e)
+        form
+      case Valid(value) => form.fill(value)
     }
+
+    Ok(view(preparedForm))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, dateToDisplay(claimStart)))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(EmployeeStartedPage, updatedAnswers))
-        )
-    }
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(EmployeeStartedPage, updatedAnswers))
+      )
   }
-
-  private def dateToDisplay(claimStart: LocalDate): LocalDate =
-    if (claimStart.isBefore(LocalDate.of(2020, 7, 1))) {
-      LocalDate.of(2019, 2, 1)
-    } else {
-      claimStart.minusMonths(13)
-    }
 }

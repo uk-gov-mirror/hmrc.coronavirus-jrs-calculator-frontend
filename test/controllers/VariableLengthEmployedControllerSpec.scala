@@ -16,15 +16,12 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.SpecBaseWithApplication
 import forms.VariableLengthEmployedFormProvider
+import models.EmployeeStarted
 import models.requests.DataRequest
-import models.{EmployeeStarted, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.EmployeeStartedPage
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
@@ -64,7 +61,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
 
       contentAsString(result) mustEqual
-        view(form, LocalDate.of(2019, 2, 1))(dataRequest, messages).toString
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -86,7 +83,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form.fill(EmployeeStarted.values.head), LocalDate.of(2019, 2, 1))(dataRequest, messages).toString
+        view(form.fill(EmployeeStarted.values.head))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -137,7 +134,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseWithApplication with 
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm, LocalDate.of(2019, 2, 1))(dataRequest, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }
