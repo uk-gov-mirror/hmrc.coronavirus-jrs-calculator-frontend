@@ -16,6 +16,8 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
@@ -61,7 +63,7 @@ class VariableLengthEmployedController @Inject()(
         case Valid(value) => form.fill(value)
       }
 
-      Future.successful(Ok(view(preparedForm, claimStart.minusMonths(13))))
+      Future.successful(Ok(view(preparedForm, dateToDisplay(claimStart))))
     }
   }
 
@@ -70,7 +72,7 @@ class VariableLengthEmployedController @Inject()(
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStart.minusMonths(13)))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, dateToDisplay(claimStart)))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
@@ -79,4 +81,11 @@ class VariableLengthEmployedController @Inject()(
         )
     }
   }
+
+  private def dateToDisplay(claimStart: LocalDate): LocalDate =
+    if (claimStart.isBefore(LocalDate.of(2020, 7, 1))) {
+      LocalDate.of(2019, 2, 1)
+    } else {
+      claimStart.minusMonths(13)
+    }
 }
