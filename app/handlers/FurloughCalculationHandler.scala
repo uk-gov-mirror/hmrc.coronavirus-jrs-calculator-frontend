@@ -27,7 +27,7 @@ trait FurloughCalculationHandler
   def handleCalculationFurloughV(userAnswers: UserAnswers): AnswerV[FurloughCalculationResult] =
     extractBranchingQuestionsV(userAnswers) match {
       case Valid(questions) =>
-        journeyDataV(define(questions, cylbCutoff(userAnswers)), userAnswers).map { data =>
+        journeyDataV(define(questions, dynamicCylbCutoff(userAnswers)), userAnswers).map { data =>
           val payments = calculateReferencePay(data)
           calculateFurloughGrant(data.frequency, payments)
         }

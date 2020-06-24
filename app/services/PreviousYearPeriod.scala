@@ -19,7 +19,7 @@ package services
 import java.time.LocalDate
 
 import models.PaymentFrequency.{Monthly, _}
-import models.{CylbDuration, PaymentFrequency, PeriodWithPaymentDate}
+import models.{CylbDuration, FullPeriodWithPaymentDate, PartialPeriodWithPaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate}
 
 trait PreviousYearPeriod {
 
@@ -31,6 +31,17 @@ trait PreviousYearPeriod {
       case (_, 0) =>
         Seq(lastYear(paymentFrequency, withPaymentDate.paymentDate.value).minusDays(paymentFrequencyDays(paymentFrequency)))
       case _ => calculateDatesForPreviousYear(paymentFrequency, withPaymentDate.paymentDate.value)
+    }
+  }
+
+  def cylbCutoff(frequency: PaymentFrequency, periods: Seq[PeriodWithPaymentDate]): LocalDate = {
+    val periodWithPaymentDate = periods.head
+
+    val cylbDuration = CylbDuration(frequency, periodWithPaymentDate.period)
+
+    (cylbDuration.previousPeriodDays, cylbDuration.equivalentPeriodDays) match {
+      case (0, _) => lastYear(frequency, periodWithPaymentDate.period.period.start).plusDays(1)
+      case _      => calculateDatesForPreviousYear(frequency, periodWithPaymentDate.period.period.start).head.plusDays(2)
     }
   }
 

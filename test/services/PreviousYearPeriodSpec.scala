@@ -113,4 +113,13 @@ class PreviousYearPeriodSpec extends SpecBase with CoreTestDataBuilder {
       Tuple3(31, 29, 0)
   }
 
+  "determine cylbCutoff date" in new PreviousYearPeriod {
+
+    cylbCutoff(Weekly, Seq(partialPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 7", "2020, 7, 3", "2020, 7, 7", "2020, 7, 7"))) mustBe LocalDate
+      .of(2019, 7, 4)
+    cylbCutoff(Weekly, Seq(partialPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 7", "2020, 7, 3", "2020, 7, 7", "2020, 7, 14"))) mustBe LocalDate
+      .of(2019, 7, 4)
+    cylbCutoff(Weekly, Seq(fullPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 7", "2020, 7, 7"))) mustBe LocalDate.of(2019, 6, 28)
+  }
+
 }

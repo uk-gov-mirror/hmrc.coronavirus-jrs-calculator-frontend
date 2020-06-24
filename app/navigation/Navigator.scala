@@ -306,8 +306,8 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
             routes.LastYearPayController.onPageLoad(1)
           case _ =>
             userAnswers.getV(EmployeeStartDatePage) match {
-              case Valid(date) if date.isBefore(cylbCutoff(userAnswers)) => routes.LastYearPayController.onPageLoad(1)
-              case _                                                     => routes.AnnualPayAmountController.onPageLoad()
+              case Valid(date) if date.isBefore(dynamicCylbCutoff(userAnswers)) => routes.LastYearPayController.onPageLoad(1)
+              case _                                                            => routes.AnnualPayAmountController.onPageLoad()
             }
         }
       case Invalid(err) =>
