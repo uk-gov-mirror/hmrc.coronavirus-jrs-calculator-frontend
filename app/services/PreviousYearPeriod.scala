@@ -41,7 +41,7 @@ trait PreviousYearPeriod {
 
     (cylbDuration.previousPeriodDays, cylbDuration.equivalentPeriodDays) match {
       case (0, _) => lastYear(frequency, periodWithPaymentDate.period.period.start).plusDays(1)
-      case _      => calculateDatesForPreviousYear(frequency, periodWithPaymentDate.period.period.start).head.plusDays(2)
+      case _      => calculateDatesForPreviousYear(frequency, periodWithPaymentDate.period.period.start).head.plusDays(1)
     }
   }
 
