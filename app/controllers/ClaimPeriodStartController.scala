@@ -40,7 +40,6 @@ class ClaimPeriodStartController @Inject()(
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   formProvider: ClaimPeriodStartFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ClaimPeriodStartView

@@ -59,7 +59,7 @@ class ClaimPeriodQuestionController @Inject()(
         val filledForm: Form[ClaimPeriodQuestion] =
           request.userAnswers.getV(ClaimPeriodQuestionPage).fold(_ => form, form.fill)
 
-        Future.successful(Ok(view(filledForm, claimStart, claimEnd)))
+        Future.successful(previousPageOrRedirect(Ok(view(filledForm, claimStart, claimEnd))))
       }
   }
 

@@ -16,8 +16,7 @@
 
 @import java.time.LocalDate
 @import controllers.routes._
-@import models.FurloughPeriodQuestion
-@import models.FurloughStatus
+@import models._
 @import pages.FurloughPeriodQuestionPage
 
 @this(
@@ -32,7 +31,8 @@
 
 @(form: Form[_], claimStart: LocalDate, furloughStart: LocalDate, furloughStatus: FurloughStatus, furloughEnd: Option[LocalDate])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, if (claimStart.getMonthValue > 6) "furloughPeriodQuestion.1stJuly.title" else "furloughPeriodQuestion.title")), thisPage = FurloughPeriodQuestionPage) {
+@govukLayout(pageTitle = Some(title(form, if (claimStart.getMonthValue > 6) "furloughPeriodQuestion.1stJuly.title" else "furloughPeriodQuestion.title")),
+            showBackButton = true, thisPage = FurloughPeriodQuestionPage) {
 
     @formHelper(action = FurloughPeriodQuestionController.onSubmit(), 'autoComplete -> "off") {
 

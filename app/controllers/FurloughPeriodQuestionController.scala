@@ -57,7 +57,7 @@ class FurloughPeriodQuestionController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
     implicit request =>
-      getRequiredAnswersV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
+      getRequiredAnswersOrRestartJourneyV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
         getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
           val preparedForm = request.userAnswers.getV(FurloughPeriodQuestionPage) match {
             case Invalid(err) =>
@@ -68,9 +68,9 @@ class FurloughPeriodQuestionController @Inject()(
 
           extractFurloughPeriodV(request.userAnswers) match {
             case Valid(FurloughOngoing(_)) =>
-              Future.successful(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, None)))
+              Future.successful(previousPageOrRedirect(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, None))))
             case Valid(FurloughEnded(_, end)) =>
-              Future.successful(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, Some(end))))
+              Future.successful(previousPageOrRedirect(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, Some(end)))))
             case Invalid(errors) =>
               logger.error("Failed to extract furlough period.")
               UserAnswers.logErrors(errors)

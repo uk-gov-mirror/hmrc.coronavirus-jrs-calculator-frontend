@@ -84,9 +84,11 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
     "return OK and the correct view for a GET when Furlough is Ended" in {
       val userAnswersUpdated = emptyUserAnswers
         .withClaimPeriodStart(claimStart.toString)
+        .withClaimPeriodEnd(furloughEnd.toString)
         .withFurloughStartDate(furloughStart.toString)
-        .withFurloughStatus(FurloughEnded)
         .withFurloughEndDate(furloughEnd.toString)
+        .withFurloughStatus(FurloughEnded)
+        .withPayDate(List(furloughEnd.toString))
 
       val application = applicationBuilder(userAnswers = Some(userAnswersUpdated)).build()
 
@@ -107,9 +109,11 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseWithApplication with 
     "return OK and the correct view for a GET with phase two content" in {
       val userAnswersUpdated = emptyUserAnswers
         .withClaimPeriodStart("2020,7,1")
+        .withClaimPeriodEnd("2020,7,30")
         .withFurloughStartDate("2020,7,1")
-        .withFurloughStatus(FurloughEnded)
         .withFurloughEndDate("2020,7,30")
+        .withFurloughStatus(FurloughEnded)
+        .withPayDate(List(furloughEnd.toString))
 
       val application = applicationBuilder(userAnswers = Some(userAnswersUpdated)).build()
 
