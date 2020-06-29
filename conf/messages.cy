@@ -279,6 +279,21 @@ confirmation.nextSteps.li.4.2 = gwasanaeth hawlio ar-lein y Cynllun Cadw Swyddi 
 confirmation.startAgain = Dechrau cyfrifiad arall
 confirmation.webchat = Help drwy gael sgwrs dros y we (yn agor ffenestr neu dab newydd)
 
+confirmation.no.nic.pension.insert.t1 = From 1 August, you can no longer claim employer National Insurance and pension contributions for the time the employee is on furlough.
+confirmation.no.nic.pension.title = What you can claim for this employee
+confirmation.no.nic.pension.heading = What you can claim for this employee
+confirmation.no.nic.pension.p1 = Furlough grant
+confirmation.no.nic.pension.nextSteps.li.1 = for your records
+confirmation.no.nic.pension.nextSteps.li.2 = Make a note of the result above.
+confirmation.no.nic.pension.nextSteps.li.3 = Use the calculator again for any other employees furloughed within this claim period ({0} {1} to {2} {3}) and make a note of the results.
+confirmation.no.nic.pension.nextSteps.li.3.2 = Work out how much you can claim in total for employer National Insurance contributions (opens in a new window or tab).
+confirmation.no.nic.pension.nextSteps.li.4 = Add all the results together to get the total amount you can claim.
+confirmation.no.nic.pension.nextSteps.li.4.1 = Make a claim using {0}.
+confirmation.no.nic.pension.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens in a new window or tab).
+confirmation.no.nic.pension.breakdown.summary = Breakdown of calculations
+confirmation.no.nic.pension.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.
+
+
 claimPeriodStart.title = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.heading = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.p1 = Os mai dyma’ch hawliad cyntaf, mae’r cyfnod hawlio’n dechrau o’r dyddiad y dechreuodd y cyflogai cyntaf ei gyfnod ffyrlo.
@@ -654,6 +669,7 @@ phaseTwoDetailedBreakdown.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn c
 phaseTwoDetailedBreakdown.p1.cylb.2 = Dull 1: rydym wedi ystyried y symiau a dalwyd iddo ar gyfer cyfnodau cyflog cyfatebol yn 2019, ac wedi defnyddio’r rhain wrth ystyried nifer y diwrnodau ffyrlo a’r oriau ffyrlo ym mhob cyfnod cyflog.
 phaseTwoDetailedBreakdown.p1.cylb.3 = Dull 2: rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn ystod y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog.
 phaseTwoDetailedBreakdown.p2 = Mae yna uchafswm y gallwch ei hawlio am grant ffyrlo a chyfraniadau Yswiriant Gwladol y cyflogwr. Os yw hyn yn effeithio ar eich hawliad, rydym wedi addasu’r cyfrifiadau.
+phaseTwoDetailedBreakdown.no.nic.pension.p2 = There’s a maximum amount you can claim. If this affects your claim, we’ve adjusted the calculations.
 phaseTwoDetailedBreakdown.p2.a = Cyfrifwch yr uchafswm cyflog y gallwch ei hawlio (yn agor tab newydd).
 phaseTwoDetailedBreakdown.p2.a.href = https://www.gov.uk/guidance/calculate-how-much-you-can-claim-using-the-coronavirus-job-retention-scheme#eighty-percent
 phaseTwoDetailedBreakdown.p3 = Mae cyfrifiadau’n cael eu talgrynnu i’r geiniog agosaf, oni nodir yn wahanol.

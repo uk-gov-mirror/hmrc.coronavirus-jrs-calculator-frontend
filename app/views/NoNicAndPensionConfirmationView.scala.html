@@ -15,6 +15,7 @@
  *@
 
 @import java.time.LocalDate
+@import org.apache.commons.lang3.StringUtils._
 @import viewmodels.ConfirmationViewBreakdownWithoutNicAndPension
 @import controllers.actions.FeatureFlagHelper
 @import controllers.actions.FeatureFlag.FastTrackJourneyFlag
@@ -39,18 +40,20 @@ featureFlag: FeatureFlagHelper
 
 @(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false, thisPage = ConfirmationPage) {
+@govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
 @confirmation {
 
-@h1(Html(messages("confirmation.heading")), classes = Some(""))
+@h1(Html(messages("confirmation.no.nic.pension.heading")), classes = Some(""))
 
 <div class="furlough-heading">
-    <p>@messages("confirmation.confirmation.p1")</p>
+    <p>@messages("confirmation.no.nic.pension.p1")</p>
     <p class="govuk-panel__title">&pound;@cvb.furlough.total.formatted("%.2f")</p>
 </div>
 
 }
+
+<div class="govuk-inset-text">@messages("confirmation.no.nic.pension.insert.t1")</div>
 
 @p {
 <span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
@@ -60,67 +63,44 @@ featureFlag: FeatureFlagHelper
 
 @p(Html(messages("confirmation.disclaimer")))
 
-@p{
-<a id="print-link" class="govuk-link" href="">@messages("confirmation.print.this.page")</a>
-}
-
-@h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
-
-@p(Html(messages("confirmation.explanation.p")))
-
-    @details(
-        summaryText = Messages("confirmation.breakdown.summary")
-        ) {
-            @for(messageKey <- cvb.detailedBreakdownMessageKeys) {
-            @p(Html(messages(messageKey)))
-        }
-
-        <p class="govuk-body">
-            @messages("phaseTwoDetailedBreakdown.p2")
-            <a class="govuk-link" href="@messages("phaseTwoDetailedBreakdown.p2.a.href")" target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
-        </p>
-
-        @p(Html(messages("phaseTwoDetailedBreakdown.p3")))
-
-        @for(detailedBreakdown <- cvb.detailedBreakdowns) {
-            @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-            @furloughBreakdown(detailedBreakdown.furlough)
-        }
-    }
-
-
-    <p class="govuk-body">
-        @messages("phaseTwoDetailedBreakdown.p2")
-        <a class="govuk-link" href="@messages(" phaseTwoDetailedBreakdown.p2.a.href")"
-        target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
-    </p>
-
-@p(Html(messages("phaseTwoDetailedBreakdown.p3")))
-
 @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
 
 <ul class="govuk-list govuk-list--number">
-    <li>
-        @messages("confirmation.nextSteps.li.1", dateToStringWithoutYear(claimPeriod.start),
-        dateToStringWithoutYear(claimPeriod.end))
-        <span class="govuk-!-font-weight-bold">@messages("confirmation.nextSteps.li.1.2")</span>
-    </li>
-    <li>@messages("confirmation.nextSteps.li.2")
-        <ul class="govuk-list--list">
-            <li>@messages("confirmation.nextSteps.li.2.1")</li>
-            <li>@messages("confirmation.nextSteps.li.2.2")</li>
-            <li>@messages("confirmation.nextSteps.li.2.3")</li>
-        </ul>
-    </li>
-    <li>@messages("confirmation.nextSteps.li.3.1") @link(appConfig.workOutHowMuch, "confirmation.nextSteps.li.3.2",
-        true)
-    </li>
-    <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,
-        "confirmation.nextSteps.li.4.2", true)))
+    <li><a id="print-link" class="govuk-link" href="">@messages("confirmation.print.this.page")</a> @messages("confirmation.no.nic.pension.nextSteps.li.1")</li>
+    <li>@messages("confirmation.no.nic.pension.nextSteps.li.2")</li>
+    <li>@messages("confirmation.no.nic.pension.nextSteps.li.3",
+        claimPeriod.start.getDayOfMonth, capitalize(claimPeriod.start.getMonth.toString.toLowerCase),
+        claimPeriod.end.getDayOfMonth, capitalize(claimPeriod.end.getMonth.toString.toLowerCase))</li>
+    <li>@messages("confirmation.no.nic.pension.nextSteps.li.4")</li>
+    <li>@Html(messages("confirmation.no.nic.pension.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,
+        "confirmation.no.nic.pension.nextSteps.li.4.2", true)))
     </li>
 </ul>
 
 @button(messages("confirmation.startAgain"), href = if(featureFlag(FastTrackJourneyFlag)) Some(routes.ClaimPeriodQuestionController.onPageLoad()) else Some(routes.ClaimPeriodStartController.onPageLoad()) , classes = Some("govuk-button"))
+
+@h2(Html(messages("confirmation.no.nic.pension.breakdown.summary")), classes = Some("govuk-heading-m"))
+
+
+
+@for(messageKey <- cvb.detailedBreakdownMessageKeys) {
+    @p(Html(messages(messageKey)))
+}
+
+<p class="govuk-body">
+    @messages("phaseTwoDetailedBreakdown.no.nic.pension.p2")
+</p>
+
+@p(Html(messages("phaseTwoDetailedBreakdown.p3")))
+
+@for(detailedBreakdown <- cvb.detailedBreakdowns) {
+    @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
+    @furloughBreakdown(detailedBreakdown.furlough)
+}
+<hr>
+<br>
+
+<p class="govuk-body">@messages("confirmation.no.nic.pension.disclaimer")</p>
 
 @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
 

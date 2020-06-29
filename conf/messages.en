@@ -279,6 +279,23 @@ confirmation.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens
 confirmation.startAgain = Start another calculation
 confirmation.webchat = Webchat help (opens in a new tab).
 
+
+confirmation.no.nic.pension.insert.t1 = From 1 August, you can no longer claim employer National Insurance and pension contributions for the time the employee is on furlough.
+confirmation.no.nic.pension.title = What you can claim for this employee
+confirmation.no.nic.pension.heading = What you can claim for this employee
+confirmation.no.nic.pension.p1 = Furlough grant
+confirmation.no.nic.pension.nextSteps.li.1 = for your records
+confirmation.no.nic.pension.nextSteps.li.2 = Make a note of the result above.
+confirmation.no.nic.pension.nextSteps.li.3 = Use the calculator again for any other employees furloughed within this claim period ({0} {1} to {2} {3}) and make a note of the results.
+confirmation.no.nic.pension.nextSteps.li.3.2 = Work out how much you can claim in total for employer National Insurance contributions (opens in a new window or tab).
+confirmation.no.nic.pension.nextSteps.li.4 = Add all the results together to get the total amount you can claim.
+confirmation.no.nic.pension.nextSteps.li.4.1 = Make a claim using {0}.
+confirmation.no.nic.pension.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens in a new window or tab).
+confirmation.no.nic.pension.breakdown.summary = Breakdown of calculations
+confirmation.no.nic.pension.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.
+
+
+
 claimPeriodStart.title = What’s the start date of this claim?
 claimPeriodStart.heading = What’s the start date of this claim?
 claimPeriodStart.p1 = If it’s your first claim, the claim period starts from the date the first employee started furlough.
@@ -654,6 +671,7 @@ phaseTwoDetailedBreakdown.p1.cylb.1 = You told us your employee gets paid a vari
 phaseTwoDetailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in 2019 and applied this to the number of furlough days and furlough hours in each pay period.
 phaseTwoDetailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period.
 phaseTwoDetailedBreakdown.p2 = There’s a maximum amount you can claim for furlough grant and Employer National Insurance contributions. If this affects your claim, we’ve adjusted the calculations. 
+phaseTwoDetailedBreakdown.no.nic.pension.p2 = There’s a maximum amount you can claim. If this affects your claim, we’ve adjusted the calculations.
 phaseTwoDetailedBreakdown.p2.a = Work out the maximum wage amount you can claim (opens in new tab).
 phaseTwoDetailedBreakdown.p2.a.href = https://www.gov.uk/guidance/calculate-how-much-you-can-claim-using-the-coronavirus-job-retention-scheme#eighty-percent
 phaseTwoDetailedBreakdown.p3 = Calculations are rounded to the nearest penny unless otherwise stated.
