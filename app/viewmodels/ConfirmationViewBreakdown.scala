@@ -189,9 +189,9 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
             )
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.p1.cylb.1",
-              "phaseTwoDetailedBreakdown.p1.cylb.2",
-              "phaseTwoDetailedBreakdown.p1.cylb.3"
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1",
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
             )
         }
       }

@@ -66,7 +66,7 @@ featureFlag: FeatureFlagHelper
 @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
 
 <ul class="govuk-list govuk-list--number">
-    <li><a id="print-link" class="govuk-link" href="">@messages("confirmation.print.this.page")</a> @messages("confirmation.no.nic.pension.nextSteps.li.1")</li>
+    <li><a class="govuk-link" onClick="window.print()" href="">@messages("confirmation.print.this.page")</a> @messages("confirmation.no.nic.pension.nextSteps.li.1")</li>
     <li>@messages("confirmation.no.nic.pension.nextSteps.li.2")</li>
     <li>@messages("confirmation.no.nic.pension.nextSteps.li.3",
         claimPeriod.start.getDayOfMonth, capitalize(claimPeriod.start.getMonth.toString.toLowerCase),
@@ -101,6 +101,8 @@ featureFlag: FeatureFlagHelper
 <br>
 
 <p class="govuk-body">@messages("confirmation.no.nic.pension.disclaimer")</p>
+
+<p class="govuk-body"><a class="govuk-link" onClick="window.print()" href="">@messages("confirmation.print.this.page")</a></p>
 
 @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
 
