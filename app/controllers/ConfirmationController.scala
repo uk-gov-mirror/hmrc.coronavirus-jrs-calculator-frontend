@@ -64,6 +64,7 @@ class ConfirmationController @Inject()(
       case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
         Future.successful(Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, config.calculatorVersion)))
       case Invalid(e) =>
+        auditService.sendCalculationFailed(request.userAnswers)
         UserAnswers.logErrors(e)(logger)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }

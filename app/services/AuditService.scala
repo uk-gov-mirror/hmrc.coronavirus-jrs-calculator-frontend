@@ -38,7 +38,7 @@ import scala.util.Try
 object JobRetentionSchemeCalculatorEvent extends Enumeration {
   type JobRetentionSchemeCalculatorEvent = Value
 
-  val CalculationPerformed: services.JobRetentionSchemeCalculatorEvent.Value = Value
+  val CalculationPerformed, CalculationFailed = Value
 }
 
 case class AuditPeriodBreakdown(grant: BigDecimal, payPeriodEndDate: LocalDate)
@@ -71,6 +71,16 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
       Seq(
         "userAnswers"       -> userAnswersTransformer(userAnswers),
         "calculationResult" -> Json.toJson(breakdown.toAuditBreakdown)
+      )
+    )
+
+  def sendCalculationFailed(
+    userAnswers: UserAnswers)(implicit hc: HeaderCarrier, request: Request[Any], ec: ExecutionContext): Future[Unit] =
+    auditEvent(
+      JobRetentionSchemeCalculatorEvent.CalculationFailed,
+      "calculation-failed",
+      Seq(
+        "userAnswers" -> userAnswersTransformer(userAnswers)
       )
     )
 
