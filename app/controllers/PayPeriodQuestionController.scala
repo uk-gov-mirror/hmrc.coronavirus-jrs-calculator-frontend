@@ -17,7 +17,6 @@
 package controllers
 
 import cats.data.Validated.{Invalid, Valid}
-import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.PayPeriodQuestionFormProvider
 import handlers.{ErrorHandler, FastJourneyUserAnswersHandler}
@@ -39,7 +38,6 @@ class PayPeriodQuestionController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   val navigator: Navigator,
-  feature: FeatureFlagActionProvider,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -52,24 +50,22 @@ class PayPeriodQuestionController @Inject()(
   override val logger: Logger = LoggerFactory.getLogger(getClass)
   val form: Form[PayPeriodQuestion] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.getV(PayPeriodQuestionPage) match {
-        case Invalid(e)   => form
-        case Valid(value) => form.fill(value)
-      }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.getV(PayPeriodQuestionPage) match {
+      case Invalid(e)   => form
+      case Valid(value) => form.fill(value)
+    }
 
-      previousPageOrRedirect(Ok(view(preparedForm, generatePeriods(request.userAnswers.getList(PayDatePage)))))
+    previousPageOrRedirect(Ok(view(preparedForm, generatePeriods(request.userAnswers.getList(PayDatePage)))))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, generatePeriods(request.userAnswers.getList(PayDatePage))))),
-          value => processSubmittedAnswer(request, value)
-        )
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, generatePeriods(request.userAnswers.getList(PayDatePage))))),
+        value => processSubmittedAnswer(request, value)
+      )
   }
 
   private def processSubmittedAnswer(request: DataRequest[AnyContent], value: PayPeriodQuestion): Future[Result] =

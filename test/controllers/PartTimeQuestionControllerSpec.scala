@@ -20,10 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseWithApplication
 import forms.PartTimeQuestionFormProvider
-import models.{FurloughStatus, PartTimeQuestion}
-import models.PartTimeQuestion.PartTimeNo
-import models.PayMethod.Regular
-import models.PaymentFrequency.Monthly
+import models.PartTimeQuestion
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar

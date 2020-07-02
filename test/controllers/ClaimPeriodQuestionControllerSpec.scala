@@ -19,7 +19,6 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseWithApplication
-import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import forms.ClaimPeriodQuestionFormProvider
 import models.ClaimPeriodQuestion.ClaimOnSamePeriod
 import navigation.{FakeNavigator, Navigator}
@@ -79,29 +78,6 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
 
       contentAsString(result) mustEqual
         view(form.fill(ClaimOnSamePeriod), claimStart, claimEnd)(getRequest, messages).toString
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a GET if FastTrackJourneyFlag is disabled" in {
-      val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
-      val request = FakeRequest(GET, claimPeriodQuestionRoute)
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
-
-      application.stop()
-    }
-
-    "redirect to 404 page for a POST if FastTrackJourneyFlag is disabled" in {
-      val application = applicationBuilder(config = Map(FastTrackJourneyFlag.key -> false), userAnswers = Some(emptyUserAnswers)).build()
-      val request =
-        FakeRequest(POST, claimPeriodQuestionRoute)
-          .withFormUrlEncodedBody(("value", ClaimOnSamePeriod.toString))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
 
       application.stop()
     }

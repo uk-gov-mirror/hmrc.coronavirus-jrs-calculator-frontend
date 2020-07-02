@@ -19,6 +19,7 @@ package controllers
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseWithApplication}
+import config.CalculatorVersionConfiguration
 import models.NicCategory.Payable
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.DoesContribute
@@ -27,31 +28,13 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.Threshold
 import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown, PhaseTwoConfirmationViewBreakdown}
-import views.html.{ConfirmationView, ConfirmationViewWithDetailedBreakdowns, PhaseTwoConfirmationView}
+import views.html.{ConfirmationViewWithDetailedBreakdowns, PhaseTwoConfirmationView}
 
 class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDataBuilder {
 
   "Confirmation Controller" must {
 
-    "return OK and the confirmation view without detailed breakdowns for a GET" in {
-      val application =
-        applicationBuilder(config = Map("confirmationWithDetailedBreakdowns.enabled" -> "false"), userAnswers = Some(dummyUserAnswers))
-          .build()
-
-      val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[ConfirmationView]
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual view(meta, breakdown, frontendAppConfig.calculatorVersion)(request, messages).toString
-
-      application.stop()
-    }
-
-    "return OK and the confirmation view with detailed breakdowns for a GET" in {
+    "return OK and the confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
       val application =
         applicationBuilder(config = Map("confirmationWithDetailedBreakdowns.enabled" -> "true"), userAnswers = Some(dummyUserAnswers))
           .build()
@@ -64,12 +47,12 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDa
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(breakdown, meta.claimPeriod, frontendAppConfig.calculatorVersion)(request, messages).toString
+      contentAsString(result) mustEqual view(breakdown, meta.claimPeriod, calculatorVersionConf)(request, messages).toString
 
       application.stop()
     }
 
-    "return OK and the phase two confirmation view with detailed breakdowns for a GET" in {
+    "return OK and the phase two confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
       val application =
         applicationBuilder(userAnswers = Some(phaseTwoJourney())).build()
 
@@ -101,9 +84,7 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDa
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(breakdown, period("2020, 7, 1", "2020, 7, 31"), frontendAppConfig.calculatorVersion)(
-        request,
-        messages).toString
+      contentAsString(result) mustEqual view(breakdown, period("2020, 7, 1", "2020, 7, 31"), calculatorVersionConf)(request, messages).toString
 
       application.stop()
     }

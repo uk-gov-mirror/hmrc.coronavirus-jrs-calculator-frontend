@@ -23,7 +23,7 @@ import play.api.data.FormError
 
 class ClaimPeriodStartFormProviderSpec extends SpecBaseWithApplication {
 
-  val form = new ClaimPeriodStartFormProvider(frontendAppConfig)()
+  val form = new ClaimPeriodStartFormProvider()()
   val dateBehaviours = new DateBehaviours
   import dateBehaviours._
 

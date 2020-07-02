@@ -5,15 +5,16 @@ object AppDependencies {
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
-    "org.reactivemongo" %% "play2-reactivemongo"            % "0.18.6-play26",
-    "uk.gov.hmrc"       %% "logback-json-logger"            % "4.8.0",
-    "uk.gov.hmrc"       %% "play-health"                    % "3.14.0-play-26",
-    "uk.gov.hmrc"       %% "play-conditional-form-mapping"  % "1.2.0-play-26",
-    "uk.gov.hmrc"       %% "bootstrap-play-26"              % "1.6.0",
-    "uk.gov.hmrc"       %% "play-whitelist-filter"          % "3.1.0-play-26",
-    "uk.gov.hmrc"       %% "play-frontend-govuk"            % "0.41.0-play-26",
-    "org.typelevel"     %% "cats-core"                      % "2.1.1",
-    "com.softwaremill.quicklens" %% "quicklens"             % "1.5.0"
+    "org.reactivemongo"          %% "play2-reactivemongo"            % "0.18.6-play26",
+    "uk.gov.hmrc"                %% "logback-json-logger"            % "4.8.0",
+    "uk.gov.hmrc"                %% "play-health"                    % "3.14.0-play-26",
+    "uk.gov.hmrc"                %% "play-conditional-form-mapping"  % "1.2.0-play-26",
+    "uk.gov.hmrc"                %% "bootstrap-play-26"              % "1.6.0",
+    "uk.gov.hmrc"                %% "play-whitelist-filter"          % "3.1.0-play-26",
+    "uk.gov.hmrc"                %% "play-frontend-govuk"            % "0.41.0-play-26",
+    "org.typelevel"              %% "cats-core"                      % "2.1.1",
+    "com.softwaremill.quicklens" %% "quicklens"                      % "1.5.0",
+    "com.github.pureconfig"      %% "pureconfig"                     % "0.13.0"
   )
 
   val test = Seq(

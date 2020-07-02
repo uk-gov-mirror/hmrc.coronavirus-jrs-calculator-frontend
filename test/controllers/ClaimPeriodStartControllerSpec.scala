@@ -24,6 +24,7 @@ import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
@@ -34,8 +35,8 @@ import views.html.ClaimPeriodStartView
 
 class ClaimPeriodStartControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
-  val formProvider = new ClaimPeriodStartFormProvider(frontendAppConfig)
-  private def form = formProvider()
+  val formProvider = new ClaimPeriodStartFormProvider()
+  private def form: Form[LocalDate] = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 

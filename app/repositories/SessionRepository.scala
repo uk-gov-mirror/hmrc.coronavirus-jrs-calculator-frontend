@@ -18,9 +18,9 @@ package repositories
 
 import java.time.LocalDateTime
 
+import config.MongoConfiguration
 import javax.inject.Inject
 import models.UserAnswers
-import play.api.Configuration
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.indexes.{Index, IndexType}
@@ -32,13 +32,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultSessionRepository @Inject()(
   mongo: ReactiveMongoApi,
-  config: Configuration
 )(implicit ec: ExecutionContext)
-    extends SessionRepository {
+    extends SessionRepository with MongoConfiguration {
 
   private val collectionName: String = "user-answers"
-
-  private val cacheTtl = config.get[Int]("mongodb.timeToLiveInSeconds")
 
   private def collection: Future[JSONCollection] =
     mongo.database.map(_.collection[JSONCollection](collectionName))
@@ -46,7 +43,7 @@ class DefaultSessionRepository @Inject()(
   private val lastUpdatedIndex = Index(
     key = Seq("lastUpdated" -> IndexType.Ascending),
     name = Some("user-answers-last-updated-index"),
-    options = BSONDocument("expireAfterSeconds" -> cacheTtl)
+    options = BSONDocument("expireAfterSeconds" -> mongoConf.timeToLiveInSeconds)
   )
 
   val started: Future[Unit] =

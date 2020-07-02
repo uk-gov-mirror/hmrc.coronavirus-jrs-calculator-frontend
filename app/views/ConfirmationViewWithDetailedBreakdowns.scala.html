@@ -16,8 +16,6 @@
 
 @import java.time.LocalDate
 @import viewmodels.ConfirmationViewBreakdown
-@import controllers.actions.FeatureFlagHelper
-@import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 @import pages.info.ConfirmationPage
 
 @this(
@@ -33,8 +31,7 @@
         detailedNicBreakdown: includes.detailedNicBreakdown,
         detailedPensionBreakdown: includes.detailedPensionBreakdown,
         link: components.link,
-        appConfig: config.FrontendAppConfig,
-        featureFlag: FeatureFlagHelper
+        appConfig: config.FrontendAppConfig
 )
 
 @(cvb: ConfirmationViewBreakdown, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
@@ -118,7 +115,7 @@
         <li>@Html(messages("confirmation.nextSteps.li.4.1", link(appConfig.jobRetentionScheme, "confirmation.nextSteps.li.4.2", true)))</li>
     </ul>
 
-    @button(messages("confirmation.startAgain"), href = if(featureFlag(FastTrackJourneyFlag)) Some(routes.ClaimPeriodQuestionController.onPageLoad()) else Some(routes.ClaimPeriodStartController.onPageLoad()) , classes = Some("govuk-button"))
+    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
 
     @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
 

@@ -17,7 +17,6 @@
 package controllers
 
 import cats.data.Validated.{Invalid, Valid}
-import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.ClaimPeriodQuestionFormProvider
 import handlers.{ErrorHandler, FastJourneyUserAnswersHandler}
@@ -39,7 +38,6 @@ class ClaimPeriodQuestionController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   val navigator: Navigator,
-  feature: FeatureFlagActionProvider,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -53,26 +51,24 @@ class ClaimPeriodQuestionController @Inject()(
 
   val form: Form[ClaimPeriodQuestion] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
-        val filledForm: Form[ClaimPeriodQuestion] =
-          request.userAnswers.getV(ClaimPeriodQuestionPage).fold(_ => form, form.fill)
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
+      val filledForm: Form[ClaimPeriodQuestion] =
+        request.userAnswers.getV(ClaimPeriodQuestionPage).fold(_ => form, form.fill)
 
-        Future.successful(previousPageOrRedirect(Ok(view(filledForm, claimStart, claimEnd))))
-      }
+      Future.successful(previousPageOrRedirect(Ok(view(filledForm, claimStart, claimEnd))))
+    }
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStart, claimEnd))),
-            value => processSubmittedAnswer(request, value)
-          )
-      }
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStart, claimEnd) =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStart, claimEnd))),
+          value => processSubmittedAnswer(request, value)
+        )
+    }
   }
 
   private def processSubmittedAnswer(request: DataRequest[AnyContent], value: ClaimPeriodQuestion): Future[Result] =

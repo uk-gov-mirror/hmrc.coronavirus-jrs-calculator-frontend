@@ -18,7 +18,6 @@ package controllers
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
-import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 import controllers.actions._
 import forms.FurloughPeriodQuestionFormProvider
 import handlers.{ErrorHandler, FastJourneyUserAnswersHandler}
@@ -41,7 +40,6 @@ class FurloughPeriodQuestionController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   val navigator: Navigator,
-  feature: FeatureFlagActionProvider,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -55,43 +53,41 @@ class FurloughPeriodQuestionController @Inject()(
 
   override implicit val logger: Logger = LoggerFactory.getLogger(getClass)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      getRequiredAnswersOrRestartJourneyV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
-        getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
-          val preparedForm = request.userAnswers.getV(FurloughPeriodQuestionPage) match {
-            case Invalid(err) =>
-              UserAnswers.logWarnings(err)
-              form
-            case Valid(value) => form.fill(value)
-          }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswersOrRestartJourneyV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
+      getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+        val preparedForm = request.userAnswers.getV(FurloughPeriodQuestionPage) match {
+          case Invalid(err) =>
+            UserAnswers.logWarnings(err)
+            form
+          case Valid(value) => form.fill(value)
+        }
 
-          extractFurloughPeriodV(request.userAnswers) match {
-            case Valid(FurloughOngoing(_)) =>
-              Future.successful(previousPageOrRedirect(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, None))))
-            case Valid(FurloughEnded(_, end)) =>
-              Future.successful(previousPageOrRedirect(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, Some(end)))))
-            case Invalid(errors) =>
-              logger.error("Failed to extract furlough period.")
-              UserAnswers.logErrors(errors)
-              Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
-          }
+        extractFurloughPeriodV(request.userAnswers) match {
+          case Valid(FurloughOngoing(_)) =>
+            Future.successful(previousPageOrRedirect(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, None))))
+          case Valid(FurloughEnded(_, end)) =>
+            Future.successful(previousPageOrRedirect(Ok(view(preparedForm, claimStart, furloughStart, furloughStatus, Some(end)))))
+          case Invalid(errors) =>
+            logger.error("Failed to extract furlough period.")
+            UserAnswers.logErrors(errors)
+            Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
         }
       }
+    }
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen feature(FastTrackJourneyFlag) andThen getData andThen requireData).async {
-    implicit request =>
-      getRequiredAnswersV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
-        getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors => processSubmissionWithErrors(claimStart, furloughStart, furloughStatus, formWithErrors),
-              value => processSubmittedAnswer(request, value)
-            )
-        }
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswersV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
+      getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => processSubmissionWithErrors(claimStart, furloughStart, furloughStatus, formWithErrors),
+            value => processSubmittedAnswer(request, value)
+          )
       }
+    }
   }
 
   private def processSubmissionWithErrors(

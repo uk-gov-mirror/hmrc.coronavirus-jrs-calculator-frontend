@@ -66,8 +66,6 @@ final case class FeatureFlagKeyWithRedirect(key: String, redirectRoute: Call) ex
 final case class FeatureFlagWith404(key: String) extends FeatureFlag
 
 object FeatureFlag {
-  lazy val FastTrackJourneyFlag: FeatureFlagWith404 = FeatureFlagWith404("fastTrackJourney.enabled")
-
   def isEnabled(flag: FeatureFlag, configuration: Configuration): Boolean =
     configuration.getOptional[Boolean](flag.key).getOrElse(false)
 }

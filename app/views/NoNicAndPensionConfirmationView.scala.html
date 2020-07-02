@@ -17,8 +17,6 @@
 @import java.time.LocalDate
 @import org.apache.commons.lang3.StringUtils._
 @import viewmodels.ConfirmationViewBreakdownWithoutNicAndPension
-@import controllers.actions.FeatureFlagHelper
-@import controllers.actions.FeatureFlag.FastTrackJourneyFlag
 @import pages.info.ConfirmationPage
 
 @this(
@@ -34,8 +32,7 @@ pensionBreakdown: includes.phaseTwoDetailedPensionBreakdown,
 button: components.button,
 details: components.details,
 link: components.link,
-appConfig: config.FrontendAppConfig,
-featureFlag: FeatureFlagHelper
+appConfig: config.FrontendAppConfig
 )
 
 @(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
@@ -77,7 +74,7 @@ featureFlag: FeatureFlagHelper
     </li>
 </ul>
 
-@button(messages("confirmation.startAgain"), href = if(featureFlag(FastTrackJourneyFlag)) Some(routes.ClaimPeriodQuestionController.onPageLoad()) else Some(routes.ClaimPeriodStartController.onPageLoad()) , classes = Some("govuk-button"))
+@button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
 
 @h2(Html(messages("confirmation.no.nic.pension.breakdown.summary")), classes = Some("govuk-heading-m"))
 

@@ -21,11 +21,11 @@ import java.time.LocalDate
 import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
-
 import scala.util.Try
 
 @Singleton
-class FrontendAppConfig @Inject()(val configuration: Configuration) {
+class FrontendAppConfig @Inject()(val configuration: Configuration)
+    extends UrlConfiguration with SchemeConfiguration with MongoConfiguration {
 
   lazy val host: String = configuration.get[String]("host")
   lazy val appName: String = configuration.get[String]("appName")
@@ -67,29 +67,26 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val privacy: String = host + configuration.get[String]("urls.footer.privacy")
   lazy val termsConditions: String = host + configuration.get[String]("urls.footer.termsConditions")
   lazy val govukHelp: String = configuration.get[String]("urls.footer.govukHelp")
-
-  lazy val schemeStartDate: LocalDate = LocalDate.parse(configuration.get[String]("scheme.startDate"))
-  lazy val schemeEndDate: LocalDate = LocalDate.parse(configuration.get[String]("scheme.endDate"))
-
-  lazy val phaseTwoStartDate: LocalDate = LocalDate.parse(configuration.get[String]("scheme.phaseTwoStartDate"))
-
-  lazy val calculatorVersion: String = configuration.get[String]("calculator.version")
-
-  val confirmationWithDetailedBreakdowns: Boolean = configuration.get[Boolean]("confirmationWithDetailedBreakdowns.enabled")
-
-  val fastTrackJourneyEnabled: Boolean = configuration.get[Boolean]("fastTrackJourney.enabled")
-
-  val calculationGuidance: String =
-    "https://www.gov.uk/guidance/work-out-80-of-your-employees-wages-to-claim-through-the-coronavirus-job-retention-scheme"
-
-  val ninoCatLetter: String = "https://www.gov.uk/national-insurance-rates-letters/category-letters"
-
-  val workOutHowMuch: String =
-    "https://www.gov.uk/guidance/calculate-how-much-you-can-claim-using-the-coronavirus-job-retention-scheme#work-out-how-much-you-can-claim-for-employer-national-insurance-contributions-nics"
-
-  val webchatHelpUrl: String =
-    "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/get-help-with-the-coronavirus-job-retention-scheme"
-
-  val jobRetentionScheme: String = "https://www.gov.uk/guidance/claim-for-wages-through-the-coronavirus-job-retention-scheme"
-
 }
+
+import pureconfig.ConfigSource
+import pureconfig.generic.auto._ // Do not remove this
+
+trait SchemeConfiguration extends CamelCaseConf {
+  lazy val schemeConf: SchemeConf = ConfigSource.default.at("scheme").loadOrThrow[SchemeConf]
+
+  lazy val schemeStartDate = LocalDate.parse(schemeConf.startDate)
+  lazy val schemeEndDate = LocalDate.parse(schemeConf.endDate)
+  lazy val phaseTwoStartDate = LocalDate.parse(schemeConf.phaseTwoStartDate)
+}
+
+trait MongoConfiguration extends CamelCaseConf {
+  lazy val mongoConf: MongoConf = ConfigSource.default.at("mongodb").loadOrThrow[MongoConf]
+}
+
+trait CalculatorVersionConfiguration extends CamelCaseConf {
+  lazy val calculatorVersionConf: String = ConfigSource.default.at("calculator.version").loadOrThrow[String]
+}
+
+final case class SchemeConf(startDate: String, endDate: String, phaseTwoStartDate: String)
+final case class MongoConf(uri: String, timeToLiveInSeconds: String)
