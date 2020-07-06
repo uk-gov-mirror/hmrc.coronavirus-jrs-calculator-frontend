@@ -19,7 +19,6 @@ package controllers
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
-import config.FrontendAppConfig
 import controllers.actions._
 import forms.AdditionalPaymentAmountFormProvider
 import handlers.ErrorHandler
@@ -45,7 +44,7 @@ class AdditionalPaymentAmountController @Inject()(
   formProvider: AdditionalPaymentAmountFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: AdditionalPaymentAmountView,
-)(implicit ec: ExecutionContext, appConf: FrontendAppConfig, eh: ErrorHandler)
+)(implicit ec: ExecutionContext, eh: ErrorHandler)
     extends BaseController {
 
   val form: Form[Amount] = formProvider()

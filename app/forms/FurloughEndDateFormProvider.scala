@@ -18,14 +18,14 @@ package forms
 
 import java.time.LocalDate
 
-import config.FrontendAppConfig
+import config.SchemeConfiguration
 import forms.mappings.Mappings
 import javax.inject.Inject
 import models.Period
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
-class FurloughEndDateFormProvider @Inject()(appConfig: FrontendAppConfig) extends Mappings {
+class FurloughEndDateFormProvider @Inject()() extends Mappings with SchemeConfiguration {
 
   def apply(claimPeriod: Period, furloughStart: LocalDate): Form[LocalDate] =
     Form(
@@ -50,5 +50,5 @@ class FurloughEndDateFormProvider @Inject()(appConfig: FrontendAppConfig) extend
     furloughEnd.isBefore(furloughStart)
 
   private def isPhaseTwo(claimPeriod: Period): Boolean =
-    claimPeriod.start.getMonthValue >= appConfig.phaseTwoStartDate.getMonthValue
+    claimPeriod.start.getMonthValue >= phaseTwoStartDate.getMonthValue
 }

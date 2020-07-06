@@ -32,7 +32,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
   val claimStart = LocalDate.of(2020, 3, 1)
 
-  val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(claimStart)
+  val form = new ClaimPeriodEndFormProvider()(claimStart)
 
   ".endDate" should {
 
@@ -80,7 +80,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
     "fail with invalid dates -  after policy end" in {
 
-      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(LocalDate.of(2020, 8, 1))
+      val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2020, 8, 1))
 
       val data = Map(
         "endDate.day"   -> "7",
@@ -100,7 +100,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
     "fail with invalid dates -  less than 7 days after phase two start date and not at the start or end of a month" in {
 
-      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(LocalDate.of(2020, 7, 2))
+      val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2020, 7, 2))
 
       val now = frontendAppConfig.phaseTwoStartDate.plusDays(5)
 
@@ -116,7 +116,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
     }
 
     "fail with invalid dates - claim can be less than 7 days in phase two if end date is last day of month" in {
-      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(LocalDate.of(2020, 7, 27))
+      val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2020, 7, 27))
 
       val end = LocalDate.of(2020, 7, 31)
 
@@ -135,7 +135,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
       val now = LocalDate.of(2020, 7, 15)
 
-      val form = new ClaimPeriodEndFormProvider(frontendAppConfig)(now)
+      val form = new ClaimPeriodEndFormProvider()(now)
 
       val data = Map(
         "endDate.day"   -> now.getDayOfMonth.toString,
@@ -150,7 +150,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
   }
 
   "start and end should be of the same calendar month starting from June 2020" in {
-    val form = new ClaimPeriodEndFormProvider(frontendAppConfig)
+    val form = new ClaimPeriodEndFormProvider()
 
     form.isDifferentCalendarMonth(LocalDate.of(2020, 7, 1), LocalDate.of(2020, 7, 31)) mustBe Valid
     form.isDifferentCalendarMonth(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 5, 31)) mustBe Valid

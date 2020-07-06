@@ -17,25 +17,23 @@
 package controllers.actions
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import handlers.ErrorHandler
 import models.requests.IdentifierRequest
-import play.api.Configuration
 import play.api.mvc.Results.{Redirect, _}
 import play.api.mvc.{ActionFilter, Call, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class FeatureFlagAction(
   maybeFlag: Option[FeatureFlag],
-  configuration: Configuration,
   eh: ErrorHandler,
   implicit protected val executionContext: ExecutionContext
 ) extends ActionFilter[IdentifierRequest] {
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] =
     maybeFlag
       .map(flag =>
-        Future.successful(if (FeatureFlag.isEnabled(flag, configuration)) {
+        Future.successful(if (FeatureFlag.isEnabled(flag)) {
           None
         } else {
           flag match {
@@ -52,10 +50,9 @@ trait FeatureFlagActionProvider {
   def apply(flag: FeatureFlag): ActionFilter[IdentifierRequest] = apply(Some(flag))
 }
 
-class FeatureFlagActionProviderImpl @Inject()(implicit appConf: FrontendAppConfig, ec: ExecutionContext, eh: ErrorHandler)
-    extends FeatureFlagActionProvider {
+class FeatureFlagActionProviderImpl @Inject()(implicit ec: ExecutionContext, eh: ErrorHandler) extends FeatureFlagActionProvider {
   override def apply(flag: Option[FeatureFlag] = None): ActionFilter[IdentifierRequest] =
-    new FeatureFlagAction(flag, appConf.configuration, eh, ec)
+    new FeatureFlagAction(flag, eh, ec)
 }
 
 sealed trait FeatureFlag {
@@ -66,13 +63,13 @@ final case class FeatureFlagKeyWithRedirect(key: String, redirectRoute: Call) ex
 final case class FeatureFlagWith404(key: String) extends FeatureFlag
 
 object FeatureFlag {
-  def isEnabled(flag: FeatureFlag, configuration: Configuration): Boolean =
-    configuration.getOptional[Boolean](flag.key).getOrElse(false)
+  import pureconfig.ConfigSource
+  import pureconfig.generic.auto._ // Do not remove this
+  def isEnabled(flag: FeatureFlag): Boolean =
+    Try(ConfigSource.default.at(flag.key).loadOrThrow[Boolean]).getOrElse(false) //TODO try passing flag instead of retrieving it.
 }
 
 @Singleton
-class FeatureFlagHelper @Inject()(configuration: Configuration) {
-
-  def apply(flag: FeatureFlag): Boolean = FeatureFlag.isEnabled(flag, configuration)
-
+class FeatureFlagHelper() {
+  def apply(flag: FeatureFlag): Boolean = FeatureFlag.isEnabled(flag)
 }

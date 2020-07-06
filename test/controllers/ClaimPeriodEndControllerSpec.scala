@@ -36,7 +36,7 @@ import views.html.ClaimPeriodEndView
 
 class ClaimPeriodEndControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
-  val formProvider = new ClaimPeriodEndFormProvider(frontendAppConfig)
+  val formProvider = new ClaimPeriodEndFormProvider()
 
   def onwardRoute = Call("GET", "/foo")
 

@@ -34,7 +34,7 @@ import views.html.FurloughEndDateView
 
 class FurloughEndDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
-  val formProvider = new FurloughEndDateFormProvider(frontendAppConfig)
+  val formProvider = new FurloughEndDateFormProvider()
   private val claimPeriodStart = LocalDate.of(2020, 3, 1)
   private val claimPeriodEnd = LocalDate.of(2020, 5, 1)
   private val furloughStart = LocalDate.of(2020, 4, 1)

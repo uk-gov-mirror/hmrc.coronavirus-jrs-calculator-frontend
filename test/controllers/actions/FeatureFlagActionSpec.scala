@@ -38,7 +38,7 @@ class FeatureFlagActionSpec extends SpecBaseWithApplication {
     "Allow requests when no feature flag is provided" in {
       val application = applicationBuilder().build()
 
-      val action = new FeatureFlagAction(None, application.configuration, eh, implicitly)
+      val action = new FeatureFlagAction(None, eh, implicitly)
 
       val identify = application.injector.instanceOf[IdentifierAction]
 

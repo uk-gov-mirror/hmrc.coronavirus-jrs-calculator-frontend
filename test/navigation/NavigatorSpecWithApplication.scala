@@ -19,7 +19,6 @@ package navigation
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
-import config.FrontendAppConfig
 import controllers.routes
 import models.ClaimPeriodQuestion._
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
@@ -30,7 +29,7 @@ import pages._
 
 class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
-  override val navigator = new Navigator(appConf)
+  override val navigator = new Navigator()
 
   "Navigator" when {
 
@@ -117,10 +116,9 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       "go to PartTimeQuestionPage after RegularPayAmountPage if phase two started" in {
         val userAnswers = emptyUserAnswers.withClaimPeriodStart(LocalDate.now)
 
-        val appConf = new FrontendAppConfig(conf) {
+        val navigator = new Navigator() {
           override lazy val phaseTwoStartDate: LocalDate = LocalDate.now
         }
-        val navigator = new Navigator(appConf)
 
         navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
       }
@@ -136,10 +134,9 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       "go to PartTimeQuestionPage after AnnualPayAmountPage if phase two started" in {
         val userAnswers = emptyUserAnswers.withClaimPeriodStart(LocalDate.now)
 
-        val appConf = new FrontendAppConfig(conf) {
+        val navigator = new Navigator() {
           override lazy val phaseTwoStartDate: LocalDate = LocalDate.now
         }
-        val navigator = new Navigator(appConf)
 
         navigator.nextPage(AnnualPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
       }

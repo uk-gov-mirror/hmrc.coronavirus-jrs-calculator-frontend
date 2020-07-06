@@ -34,7 +34,7 @@ class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
 
   ".value" should {
 
-    val form = new FurloughEndDateFormProvider(frontendAppConfig)(Period(startDate, endDate), furloughStart)
+    val form = new FurloughEndDateFormProvider()(Period(startDate, endDate), furloughStart)
 
     val validData = datesBetween(
       min = startDate.plusDays(20),
@@ -55,7 +55,7 @@ class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
     val furloughEnd = furloughStart.plusDays(6)
 
     "not enforce 21 day minimum if claim start is on or after 1 July 2020" in {
-      val form = new FurloughEndDateFormProvider(frontendAppConfig)(Period(claimStart, claimEnd), furloughStart)
+      val form = new FurloughEndDateFormProvider()(Period(claimStart, claimEnd), furloughStart)
 
       val data = Map(
         "value.day"   -> furloughEnd.getDayOfMonth.toString,
@@ -70,7 +70,7 @@ class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
 
     "be before or same as end of the claim for phase two and do not show furloughEndDate.error.min.max" in {
       val claimEnd = LocalDate.of(2020, 7, 15)
-      val form = new FurloughEndDateFormProvider(frontendAppConfig)(Period(claimStart, claimEnd), furloughStart)
+      val form = new FurloughEndDateFormProvider()(Period(claimStart, claimEnd), furloughStart)
 
       val data: Int => Map[String, String] = days =>
         Map(

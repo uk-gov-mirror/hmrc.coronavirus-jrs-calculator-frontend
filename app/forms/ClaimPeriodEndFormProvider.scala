@@ -18,7 +18,7 @@ package forms
 
 import java.time.LocalDate
 
-import config.FrontendAppConfig
+import config.SchemeConfiguration
 import forms.mappings.Mappings
 import javax.inject.Inject
 import models.Period
@@ -27,7 +27,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationResult}
 import utils.ImplicitDateFormatter
 import views.ViewUtils
 
-class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends Mappings with ImplicitDateFormatter {
+class ClaimPeriodEndFormProvider @Inject()() extends Mappings with ImplicitDateFormatter with SchemeConfiguration {
 
   def apply(claimStart: LocalDate): Form[LocalDate] =
     Form("endDate" -> localDate(invalidKey = "claimPeriodEnd.error.invalid").verifying(validEndDate(claimStart)))
@@ -49,7 +49,7 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
   }
 
   val isMoreThan14daysInFuture: (LocalDate, LocalDate) => ValidationResult = (start, end) => {
-    if (start.isBefore(appConfig.phaseTwoStartDate) && end.isAfter(LocalDate.now().plusDays(14))) {
+    if (start.isBefore(phaseTwoStartDate) && end.isAfter(LocalDate.now().plusDays(14))) {
       Invalid("claimPeriodEnd.cannot.be.after.14days")
     } else {
       Valid
@@ -57,7 +57,7 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
   }
 
   val isDifferentCalendarMonth: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
-    if (start.isBefore(appConfig.phaseTwoStartDate) && !end.isBefore(appConfig.phaseTwoStartDate)) {
+    if (start.isBefore(phaseTwoStartDate) && !end.isBefore(phaseTwoStartDate)) {
       Invalid("claimPeriodEnd.cannot.be.after.july")
     } else if (start.getMonthValue >= 7 && start.getMonthValue != end.getMonthValue)
       Invalid("claimPeriodEnd.cannot.be.of.same.month")
@@ -67,14 +67,14 @@ class ClaimPeriodEndFormProvider @Inject()(appConfig: FrontendAppConfig) extends
     if (end.isBefore(start)) Invalid("claimPeriodEnd.cannot.be.before.claimStart") else Valid
 
   private val isAfterPolicyEnd: LocalDate => ValidationResult = end => {
-    val schemaEndDate = appConfig.schemeEndDate
+    val schemaEndDate = schemeEndDate
     if (end.isAfter(schemaEndDate)) {
       Invalid("claimPeriodEnd.cannot.be.after.policyEnd", ViewUtils.dateToString(schemaEndDate))
     } else Valid
   }
 
   private val isClaimLessThan7Days: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
-    if (start.isAfter(appConfig.phaseTwoStartDate.minusDays(1))) {
+    if (start.isAfter(phaseTwoStartDate.minusDays(1))) {
       if (end.getDayOfMonth != end.getMonth.maxLength() && Period(start, end).countDays < 7) {
         Invalid("claimPeriodEnd.cannot.be.lessThan.7days")
       } else {

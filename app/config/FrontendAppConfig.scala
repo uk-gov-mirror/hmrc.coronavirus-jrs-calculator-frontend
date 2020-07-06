@@ -18,27 +18,29 @@ package config
 
 import java.time.LocalDate
 
-import com.google.inject.{Inject, Singleton}
-import play.api.Configuration
+import com.google.inject.Singleton
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import scala.util.Try
+import pureconfig.ConfigSource
+import pureconfig.generic.auto._ // Do not remove this
 
 @Singleton
-class FrontendAppConfig @Inject()(val configuration: Configuration)
-    extends UrlConfiguration with SchemeConfiguration with MongoConfiguration {
+class FrontendAppConfig() extends UrlConfiguration with SchemeConfiguration with MongoConfiguration {
 
-  lazy val host: String = configuration.get[String]("host")
-  lazy val appName: String = configuration.get[String]("appName")
-
-  private val contactHost = configuration.get[String]("contact-frontend.host")
-
+  private val configSource: String => ConfigSource = ConfigSource.default.at _
   private val serviceIdentifier = "jrsc"
+
+  private val contactHost = configSource("contact-frontend.host").loadOrThrow[String]
+
+  lazy val host: String = configSource("host").loadOrThrow[String]
+
+  lazy val appName: String = configSource("appName").loadOrThrow[String]
 
   def reportAccessibilityIssueUrl(problemPageUri: String): String =
     s"$contactHost/contact/accessibility-unauthenticated?service=$serviceIdentifier&userAction=${SafeRedirectUrl(host + problemPageUri).encodedUrl}"
 
   val gtmContainer: Option[String] = (Try {
-    configuration.get[String]("gtm.container")
+    configSource("gtm.container").loadOrThrow[String]
   } map {
     case "main"         => Some("GTM-NDJKHWK")
     case "transitional" => Some("GTM-TSFTCWZ")
@@ -46,31 +48,26 @@ class FrontendAppConfig @Inject()(val configuration: Configuration)
 
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$serviceIdentifier"
   val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$serviceIdentifier"
-
   val contactStandaloneForm = s"$contactHost/contact/contact-hmrc-unauthenticated?service=$serviceIdentifier"
-
   val betaFeedbackUrl = s"$contactHost/contact/beta-feedback-unauthenticated?service=$serviceIdentifier"
 
-  lazy val timeout: Int = configuration.get[Int]("timeout.timeout")
-  lazy val countdown: Int = configuration.get[Int]("timeout.countdown")
+  lazy val timeout: Int = configSource("timeout.timeout").loadOrThrow[Int]
+  lazy val countdown: Int = configSource("timeout.countdown").loadOrThrow[Int]
 
-  lazy val authUrl: String = configuration.get[Service]("auth").baseUrl
-  lazy val loginUrl: String = configuration.get[String]("urls.login")
-  lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
+  lazy val authUrl: String = configSource("auth").loadOrThrow[Service].baseUrl
+  lazy val loginUrl: String = configSource("urls.login").loadOrThrow[String]
+  lazy val loginContinueUrl: String = configSource("urls.loginContinue").loadOrThrow[String]
 
-  private val feedbackSurveyFEUrl: String = configuration.get[String]("microservice.services.feedback-survey.url")
+  private val feedbackSurveyFEUrl: String = configSource("microservice.services.feedback-survey.url").loadOrThrow[String]
   val feedbackUrl: String = s"$feedbackSurveyFEUrl/$serviceIdentifier"
 
-  lazy val languageTranslationEnabled: Boolean = configuration.get[Boolean]("features.welsh-translation")
+  lazy val languageTranslationEnabled: Boolean = configSource("features.welsh-translation").loadOrThrow[Boolean]
 
-  lazy val cookies: String = host + configuration.get[String]("urls.footer.cookies")
-  lazy val privacy: String = host + configuration.get[String]("urls.footer.privacy")
-  lazy val termsConditions: String = host + configuration.get[String]("urls.footer.termsConditions")
-  lazy val govukHelp: String = configuration.get[String]("urls.footer.govukHelp")
+  lazy val cookies: String = host + configSource("urls.footer.cookies").loadOrThrow[String]
+  lazy val privacy: String = host + configSource("urls.footer.privacy").loadOrThrow[String]
+  lazy val termsConditions: String = host + configSource("urls.footer.termsConditions").loadOrThrow[String]
+  lazy val govukHelp: String = configSource("urls.footer.govukHelp").loadOrThrow[String]
 }
-
-import pureconfig.ConfigSource
-import pureconfig.generic.auto._ // Do not remove this
 
 trait SchemeConfiguration extends CamelCaseConf {
   lazy val schemeConf: SchemeConf = ConfigSource.default.at("scheme").loadOrThrow[SchemeConf]

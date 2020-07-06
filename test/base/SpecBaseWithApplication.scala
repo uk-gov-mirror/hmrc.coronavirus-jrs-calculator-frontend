@@ -74,7 +74,7 @@ trait SpecBaseWithApplication
   ): JsError =
     JsError((path \ (idx - 1)) -> JsonValidationError(List(error)))
 
-  implicit def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+  implicit def frontendAppConfig: FrontendAppConfig = new FrontendAppConfig
 
   def messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
 

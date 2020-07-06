@@ -41,8 +41,7 @@ trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with Cor
   val dataRequired = app.injector.instanceOf[DataRequiredActionImpl]
   val navigator = app.injector.instanceOf[Navigator]
   implicit val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
-  implicit val conf: Configuration = app.injector.instanceOf[Configuration]
-  implicit val appConf: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
+  implicit val appConf: FrontendAppConfig = new FrontendAppConfig
 
   implicit class AnswerHelpers[A](val answer: AnswerV[A]) {}
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =

@@ -19,10 +19,10 @@ package navigation
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
-import config.FrontendAppConfig
+import config.SchemeConfiguration
 import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
-import javax.inject.{Inject, Singleton}
+import javax.inject.Singleton
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
 import models.PayMethod.{Regular, Variable}
 import models.{UserAnswers, _}
@@ -35,8 +35,7 @@ import services.PartialPayExtractor
 import utils.LocalDateHelpers
 
 @Singleton
-class Navigator @Inject()(appConfig: FrontendAppConfig)
-    extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor {
+class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor with SchemeConfiguration {
 
   implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
 
@@ -366,5 +365,5 @@ class Navigator @Inject()(appConfig: FrontendAppConfig)
   }
 
   private def isPhaseTwo: UserAnswers => Boolean =
-    userAnswer => userAnswer.getV(ClaimPeriodStartPage).exists(!_.isBefore(appConfig.phaseTwoStartDate))
+    userAnswer => userAnswer.getV(ClaimPeriodStartPage).exists(!_.isBefore(phaseTwoStartDate))
 }
