@@ -30,7 +30,14 @@
     footer: components.govukFooter
 )
 
-@(pageTitle: Option[String] = None, timeout: Boolean = true, js: Option[Html] = None, showBackButton: Boolean = true, thisPage: Page, currentIdx: Option[Int] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+@(
+    pageTitle: Option[String] = None,
+    timeout: Boolean = true,
+    js: Option[Html] = None,
+    showBackButton: Boolean = true,
+    showResearch: Boolean = false,
+    thisPage: Page, currentIdx: Option[Int] = None
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
     <script src='@controllers.routes.Assets.versioned("javascripts/gtm.js")'></script>
@@ -69,7 +76,6 @@
 }
 
 @beforeContentBlock = {
-
     @phaseBanner("beta")
 
     @if(showBackButton) {
@@ -95,13 +101,30 @@
     @footer(Footer(meta = Some(Meta(items = Some(footerLinks.items)))))
 }
 
+@headerblock = {
+  @if(showResearch) {
+    @siteHeader(timeout, hasGlobalBar = true)
+    <div id="global-bar" class="global-bar dont-print" data-module="global-bar">
+      <div class="global-bar-message-container govuk-width-container">
+          <p class="global-bar-message">@messages("site.service_banner.top")</p>
+          <a rel="external noreferrer" target="_blank" class="js-call-to-action" href=@{Messages("site.service_banner.href")}>@messages("site.service_banner.content")</a>
+          <button href="#hide-message" class="dismiss" role="button" aria-controls="global-bar">
+            @messages("site.service_banner.dismiss")
+          </button>
+      </div>
+    </div>
+  } else {
+      @siteHeader(timeout, hasGlobalBar = false)
+  }
+}
+
 @govukLayout(
   pageTitle = pageTitle,
   headBlock = Some(head),
   beforeContentBlock = Some(beforeContentBlock),
   bodyEndBlock = None,
   scriptsBlock = Some(scripts),
-  headerBlock = Some(siteHeader(timeout)),
+  headerBlock = Some(headerblock),
   footerItems = Seq.empty,
   footerBlock = Some(footerBlock)
 )(content)

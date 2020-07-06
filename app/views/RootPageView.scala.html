@@ -30,7 +30,12 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(titleNoForm("rootPage.title")), showBackButton = false, thisPage = RootPage) {
+@govukLayout(
+  pageTitle = Some(titleNoForm("rootPage.title")),
+  showBackButton = false,
+  showResearch = true,
+  thisPage = RootPage
+) {
 
     @h1("rootPage.heading")
 

@@ -21,6 +21,11 @@ site.getHelpWithThisPage = Get help with this page
 site.notProvided = Not Provided
 site.incomplete = Incomplete
 
+site.service_banner.top=Help improve GOV.UK
+site.service_banner.content=Help improve digital services by joining the HMRC user panel (opens in a new window).
+site.service_banner.href=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=JRSCalc&utm_source=Other&utm_medium=other&t=HMRC&id=248
+site.service_banner.dismiss=No thanks
+
 footer.accessibility   = Accessibility Statement
 footer.cookies         = Cookies
 footer.privacy         = Privacy policy

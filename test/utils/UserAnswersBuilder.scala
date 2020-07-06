@@ -139,6 +139,7 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
             rec(userAnswers.setValue(LastYearPayPage, LastYearPayment(d.toLocalDate, amount.toAmount), Some(idx)), tail)
           case ((d: String, idx) :: tail, PayDatePage) =>
             rec(userAnswers.setValue(PayDatePage, d.toLocalDate, Some(idx)), tail)
+          case (_, _) => userAnswers
         }
       rec(userAnswers, zipped)
     }

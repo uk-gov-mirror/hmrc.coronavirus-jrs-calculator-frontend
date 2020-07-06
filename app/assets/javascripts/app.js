@@ -63,3 +63,10 @@ function numberInputs() {
             e.preventDefault();
     });
 }
+
+
+$("button.dismiss").click(function($event) {
+    $($event.target).parent().parent().hide();
+
+    $(".govuk-header > .govuk-width-container").removeClass("no-border");
+});
