@@ -21,17 +21,17 @@ import java.time.LocalDate
 import akka.util.Timeout
 import base.SpecBaseWithApplication
 import cats.scalatest.ValidatedValues
+import cats.syntax.validated._
 import handlers.ErrorHandler
-import models.{AnswerValidation, EmptyAnswerError, Salary}
 import models.requests.DataRequest
+import models.{AnswerValidation, BackFirstPage, BackJourneyValidation, EmptyAnswerError, Salary, UserAnswers}
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{PayDatePage, RegularPayAmountPage}
 import play.api.http.Status._
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
-import play.api.test.Helpers.{contentAsString, status}
-import cats.syntax.validated._
+import play.api.test.Helpers.{contentAsString, redirectLocation, status}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -234,6 +234,18 @@ class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar with 
       }
     }
 
+    "redirect to fast-journey-reset if unable to go back" in {
+      val controller = new BaseController {
+        override def navigator: Navigator = ???
+        override protected def controllerComponents: MessagesControllerComponents = ???
+        override def validateBackJourney(userAnswers: UserAnswers): BackJourneyValidation = BackFirstPage
+      }
+      implicit val req = DataRequest(fakeRequest, "id", emptyUserAnswers)
+      val result = Future.successful(controller.previousPageOrRedirect(Ok(""))(req))
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some("/job-retention-scheme-calculator/fast-journey-reset")
+    }
   }
 
 }

@@ -1,0 +1,48 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import pages.ResetCalculationPage
+
+@this(
+govukLayout: templates.GovukLayoutWrapper,
+h1: components.h1,
+h2: components.h2,
+h3: components.h3,
+p: components.p,
+confirmation: components.confirmation,
+button: components.button,
+details: components.details,
+link: components.link
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@govukLayout(pageTitle = Some(titleNoForm("resetCalculation.title")), showBackButton = false,  thisPage = ResetCalculationPage) {
+
+
+@h1(Html(messages("resetCalculation.h1")), classes = Some("govuk-heading-xl"))
+
+@p(Html(messages("resetCalculation.p1")))
+
+
+@h2(Html(messages("resetCalculation.p2")), classes = Some("govuk-heading-m"))
+
+@p(Html(messages("resetCalculation.p3")))
+
+@button(messages("resetCalculation.button"), href = Some(routes.ClaimPeriodStartController.onPageLoad()), classes = Some("govuk-button"))
+
+}
+

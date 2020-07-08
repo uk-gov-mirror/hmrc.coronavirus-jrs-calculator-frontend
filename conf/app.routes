@@ -124,3 +124,6 @@ GET        /start-survey                                     controllers.Feedbac
 
 GET        /pay-periods-list                                 controllers.PayPeriodsListController.onPageLoad()
 POST       /pay-periods-list                                 controllers.PayPeriodsListController.onSubmit()
+
+GET        /fast-journey-reset                               controllers.ResetCalculationController.onPageLoad()
+POST       /fast-journey-reset                               controllers.ResetCalculationController.onSubmit()

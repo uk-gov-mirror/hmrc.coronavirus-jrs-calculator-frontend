@@ -124,6 +124,6 @@ trait BaseController extends FrontendBaseController with I18nSupport with BackJo
 
   def previousPageOrRedirect(view: Result)(implicit request: DataRequest[_]): Result = validateBackJourney(request.userAnswers) match {
     case BackToPreviousPage => view
-    case BackFirstPage      => Redirect(routes.ClaimPeriodStartController.onPageLoad())
+    case BackFirstPage      => Redirect(routes.ResetCalculationController.onPageLoad())
   }
 }
