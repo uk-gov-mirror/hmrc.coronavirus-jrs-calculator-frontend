@@ -121,7 +121,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       val dataRequest = DataRequest(request, variableMonthlyUserAnswers.id, variableMonthlyUserAnswers)
 
-      val expectedView = view(form, 1, LocalDate.of(2019, 3, 20), true)(dataRequest, messages).toString
+      val expectedView = view(form, 1, period("2019, 3, 1", "2019, 3, 31"))(dataRequest, messages).toString
 
       status(result) mustEqual OK
 
@@ -147,7 +147,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), 1, LocalDate.of(2019, 3, 20), true)(dataRequest, messages).toString
+        view(form.fill(validAnswer), 1, period("2019, 3, 1", "2019, 3, 31"))(dataRequest, messages).toString
 
       application.stop()
     }
@@ -245,7 +245,7 @@ class LastYearPayControllerSpec extends SpecBaseWithApplication with MockitoSuga
       val dataRequest = DataRequest(request, variableMonthlyUserAnswers.id, variableMonthlyUserAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm, 1, LocalDate.of(2019, 3, 20), true)(dataRequest, messages).toString
+        view(boundForm, 1, period("2019, 3, 1", "2019, 3, 31"))(dataRequest, messages).toString
 
       application.stop()
     }

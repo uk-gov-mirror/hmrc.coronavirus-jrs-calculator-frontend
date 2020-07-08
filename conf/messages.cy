@@ -430,10 +430,8 @@ lastPayDate.details.p2 = ‘Cyfnod cyflog’ yw’r cyfnod o amser y caiff y cyf
 
 somethingWentWrong.button = Dechrau eto
 
-lastYearPay.title = Yn 2019, beth gafodd y cyflogai hwn ei dalu ar {0}?
-lastYearPay.heading = Yn 2019, beth gafodd y cyflogai hwn ei dalu ar {0}?
-lastYearPay.title.monthly = IYn 2019, faint a dalwyd i’r cyflogai hwn yn {0}?
-lastYearPay.heading.monthly = Yn 2019, faint a dalwyd i’r cyflogai hwn yn {0}?
+lastYearPay.title = In 2019, what did this employee earn in the pay period {0} to {1}?
+lastYearPay.heading = In 2019, what did this employee earn in the pay period {0} to {1}?
 lastYearPay.p1 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 lastYearPay.p2 = Mae angen hwn arnom er mwyn cyfrifo’i gyflog cyfartalog yn seiliedig ar swm y llynedd.
 lastYearPay.error.nonNumeric = Nodwch y cyflog gan ddefnyddio rhifau

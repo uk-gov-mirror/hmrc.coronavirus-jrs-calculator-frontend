@@ -437,10 +437,8 @@ lastPayDate.details.p2 = A ‘pay period’ is the period of time that the emplo
 
 somethingWentWrong.button = Start again
 
-lastYearPay.title = In 2019, what did this employee get paid on {0}?
-lastYearPay.heading = In 2019, what did this employee get paid on {0}?
-lastYearPay.title.monthly = In 2019, what did this employee get paid in {0}?
-lastYearPay.heading.monthly = In 2019, what did this employee get paid in {0}?
+lastYearPay.title = In 2019, what did this employee earn in the pay period {0} to {1}?
+lastYearPay.heading = In 2019, what did this employee earn in the pay period {0} to {1}?
 lastYearPay.p1 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 lastYearPay.p2 = We need this to work out their average pay based on last year’s amount.
 lastYearPay.error.nonNumeric = Enter the salary using numbers

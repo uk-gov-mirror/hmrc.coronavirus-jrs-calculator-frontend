@@ -30,7 +30,7 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
     frequency: PaymentFrequency,
     cylbs: Seq[LastYearPayment],
     period: PeriodWithPaymentDate): CylbPayment = {
-    val datesRequired = previousYearPayDate(frequency, period)
+    val datesRequired = previousYearPeriod(frequency, period.period).map(_.end)
     val nfp = determineNonFurloughPay(period.period, nonFurloughPay)
 
     cylbsAmount(averagePayment, frequency, period, datesRequired, nfp, cylbs)
@@ -41,7 +41,7 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
     frequency: PaymentFrequency,
     cylbs: Seq[LastYearPayment],
     phaseTwoPeriod: PhaseTwoPeriod): CylbPaymentWithPhaseTwoPeriod = {
-    val datesRequired = previousYearPayDate(frequency, phaseTwoPeriod.periodWithPaymentDate)
+    val datesRequired = previousYearPeriod(frequency, phaseTwoPeriod.periodWithPaymentDate.period).map(_.end)
     val cylbOps = CylbDuration(frequency, phaseTwoPeriod.periodWithPaymentDate.period)
     val cylbBreakdown = previousYearFurlough(datesRequired, cylbs, cylbOps)
 

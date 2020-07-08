@@ -149,12 +149,12 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   }
 
   private[this] val lastYearPayRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
-    getPayDatesV(userAnswers).fold(
+    getLastYearPeriods(userAnswers).fold(
       nel => {
         UserAnswers.logErrors(nel)
         routes.ErrorController.somethingWentWrong()
-      }, { payDates =>
-        payDates.lift.apply(previousIdx) match {
+      }, { periods =>
+        periods.lift.apply(previousIdx) match {
           case Some(_) => routes.LastYearPayController.onPageLoad(previousIdx + 1)
           case None    => routes.AnnualPayAmountController.onPageLoad()
         }

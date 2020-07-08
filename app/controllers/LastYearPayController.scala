@@ -16,17 +16,15 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.LastYearPayFormProvider
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.Inject
-import models.{Amount, LastYearPayment, PaymentFrequency, UserAnswers}
+import models.{Amount, LastYearPayment, Period, UserAnswers}
 import navigation.Navigator
 import org.slf4j.{Logger, LoggerFactory}
-import pages.{LastYearPayPage, PaymentFrequencyPage}
+import pages.LastYearPayPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -54,12 +52,12 @@ class LastYearPayController @Inject()(
   val form: Form[Amount] = formProvider()
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getPayDatesV(request.userAnswers).fold(
+    getLastYearPeriods(request.userAnswers).fold(
       nel => {
         UserAnswers.logErrors(nel)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-      }, { payDates =>
-        withValidPayDate(payDates, idx) { date =>
+      }, { periods =>
+        withValidPeriod(periods, idx) { period =>
           val preparedForm = request.userAnswers.getV(LastYearPayPage) match {
             case Invalid(e) =>
               UserAnswers.logWarnings(e)
@@ -67,45 +65,35 @@ class LastYearPayController @Inject()(
             case Valid(value) => form.fill(value.amount)
           }
 
-          val isMonthlyFrequency = request.userAnswers.getV(PaymentFrequencyPage) match {
-            case Valid(PaymentFrequency.Monthly) => true
-            case _                               => false
-          }
-          Future.successful(Ok(view(preparedForm, idx, date, isMonthlyFrequency)))
+          Future.successful(Ok(view(preparedForm, idx, period)))
         }
       }
     )
   }
 
-  def withValidPayDate(payDates: Seq[LocalDate], idx: Int)(f: LocalDate => Future[Result]): Future[Result] =
-    payDates.lift(idx - 1) match {
-      case Some(date) => f(date)
-      case None       => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+  def withValidPeriod(periods: Seq[Period], idx: Int)(f: Period => Future[Result]): Future[Result] =
+    periods.lift(idx - 1) match {
+      case Some(period) => f(period)
+      case None         => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }
 
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getPayDatesV(request.userAnswers).fold(
+    getLastYearPeriods(request.userAnswers).fold(
       nel => {
         UserAnswers.logErrors(nel)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-      }, { payDates =>
-        withValidPayDate(payDates, idx) {
-          date =>
-            val isMonthlyFrequency = request.userAnswers.getV(PaymentFrequencyPage) match {
-              case Valid(PaymentFrequency.Monthly) => true
-              case _                               => false
-            }
-
-            form
-              .bindFromRequest()
-              .fold(
-                formWithErrors => Future.successful(BadRequest(view(formWithErrors, idx, date, isMonthlyFrequency))),
-                value =>
-                  for {
-                    updatedAnswers <- Future.fromTry(request.userAnswers.set(LastYearPayPage, LastYearPayment(date, value), Some(idx)))
-                    _              <- sessionRepository.set(updatedAnswers)
-                  } yield Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
-              )
+      }, { periods =>
+        withValidPeriod(periods, idx) { period =>
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors => Future.successful(BadRequest(view(formWithErrors, idx, period))),
+              value =>
+                for {
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(LastYearPayPage, LastYearPayment(period.end, value), Some(idx)))
+                  _              <- sessionRepository.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
+            )
         }
       }
     )

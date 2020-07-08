@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import java.time.LocalDate
 @import pages.LastYearPayPage
 
 @this(
@@ -28,19 +27,15 @@
         whatToInclude: includes.whatToInclude
 )
 
-@(form: Form[_], idx: Int, payDate: LocalDate, isMonthly: Boolean)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], idx: Int, period: Period)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToStringWithoutYear(payDate)))), thisPage = LastYearPayPage, currentIdx = Some(idx)) {
+@govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)))), thisPage = LastYearPayPage, currentIdx = Some(idx)) {
 
     @formHelper(action = LastYearPayController.onSubmit(idx), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @if(isMonthly) {
-            @h1(messages("lastYearPay.heading.monthly", dateToStringOnlyMonth(payDate)))
-        } else {
-            @h1(messages("lastYearPay.heading", dateToStringWithoutYear(payDate)))
-        }
+        @h1(messages("lastYearPay.heading", dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)))
 
         @p(Html(messages("lastYearPay.p1")))
 
@@ -52,7 +47,7 @@
             form,
             id = "value",
             name = "value",
-            label = if(isMonthly){messages("lastYearPay.heading.monthly", dateToStringOnlyMonth(payDate))} else {messages("lastYearPay.heading", dateToStringWithoutYear(payDate))},
+            label = messages("lastYearPay.heading", dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)),
             isPageHeading = false,
             labelClasses = Some("govuk-visually-hidden"),
             classes = Some("govuk-input--width-10")
