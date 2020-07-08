@@ -19,28 +19,22 @@ package services
 import java.time.LocalDate
 
 import models.PaymentFrequency.{Monthly, _}
-import models.{CylbDuration, FullPeriodWithPaymentDate, PartialPeriodWithPaymentDate, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
+import models.{CylbDuration, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
 
 trait PreviousYearPeriod {
+
+  private val leapYear = LocalDate.of(2019, 3, 1)
 
   def previousYearPeriod(frequency: PaymentFrequency, period: Periods): Seq[Period] = {
     val cylbDuration = CylbDuration(frequency, period)
 
     (cylbDuration.previousPeriodDays, cylbDuration.equivalentPeriodDays) match {
-      case (0, _) => Seq(lastYearPeriod(frequency, period.period))
+      case (0, _) if frequency != Monthly =>
+        lastYearPeriods(frequency, period.period).tail
       case (_, 0) =>
-        val lastYear = lastYearPeriod(frequency, period.period)
-        val start = lastYear.start.minusDays(paymentFrequencyDays(frequency))
-        val end = lastYear.end.minusDays(paymentFrequencyDays(frequency))
-        Seq(Period(start, end))
+        lastYearPeriods(frequency, period.period).take(1)
       case _ =>
-        val lastYear = lastYearPeriod(frequency, period.period)
-        val start = lastYear.start.minusDays(paymentFrequencyDays(frequency))
-        val end = lastYear.end.minusDays(paymentFrequencyDays(frequency))
-        Seq(
-          Period(start, end),
-          lastYear
-        )
+        lastYearPeriods(frequency, period.period)
     }
   }
 
@@ -51,18 +45,25 @@ trait PreviousYearPeriod {
 
     (cylbDuration.previousPeriodDays, cylbDuration.equivalentPeriodDays) match {
       case (0, _) =>
-        lastYearPeriod(frequency, periodWithPaymentDate.period.period).start.plusDays(1)
+        lastYearPeriods(frequency, periodWithPaymentDate.period.period).last.start.plusDays(1)
       case _ =>
-        lastYearPeriod(frequency, periodWithPaymentDate.period.period).start.minusDays(paymentFrequencyDays(frequency)).plusDays(1)
+        lastYearPeriods(frequency, periodWithPaymentDate.period.period).head.start.plusDays(1)
     }
   }
 
-  private def lastYearPeriod(frequency: PaymentFrequency, period: Period): Period = frequency match {
-    case Monthly => Period(period.start.minusYears(1), period.end.minusYears(1))
+  private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] = frequency match {
+    case Monthly => Seq(Period(period.start.minusYears(1), period.end.minusYears(1)))
     case _ =>
-      val start =
-        if (period.start.minusDays(364).isBefore(LocalDate.of(2019, 3, 1))) period.start.minusDays(363) else period.start.minusDays(364)
-      val end = if (period.end.minusDays(364).isBefore(LocalDate.of(2019, 3, 1))) period.end.minusDays(363) else period.end.minusDays(364)
-      Period(start, end)
+      val eqStart =
+        if (period.start.minusDays(364).isBefore(leapYear)) period.start.minusDays(363) else period.start.minusDays(364)
+      val eqEnd = if (period.end.minusDays(364).isBefore(leapYear)) period.end.minusDays(363) else period.end.minusDays(364)
+      val equivalent = Period(eqStart, eqEnd)
+
+      val prStart = eqStart.minusDays(paymentFrequencyDays(frequency))
+      val prEnd = eqEnd.minusDays(paymentFrequencyDays(frequency))
+
+      val previous = Period(prStart, prEnd)
+
+      Seq(previous, equivalent)
   }
 }
