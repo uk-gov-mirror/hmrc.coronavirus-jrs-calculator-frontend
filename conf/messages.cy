@@ -432,7 +432,7 @@ somethingWentWrong.button = Dechrau eto
 
 lastYearPay.title = In 2019, what did this employee earn in the pay period {0} to {1}?
 lastYearPay.heading = In 2019, what did this employee earn in the pay period {0} to {1}?
-lastYearPay.p1 = We need this to work out their average pay based on last year‘s amount.
+lastYearPay.p1 = We need this to work out their entitlement based on last year’s amount.
 lastYearPay.p2 = Only include payments for work done in this pay period, even if the payslip includes payments for other work.
 lastYearPay.p3 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 lastYearPay.error.nonNumeric = Nodwch y cyflog gan ddefnyddio rhifau
@@ -496,6 +496,7 @@ topUpStatus.error.required = Dewiswch ‘Iawn’ os ydych wedi ychwanegu at gyfl
 
 whatToInclude.summary = Beth y dylid ei gynnwys yn y swm hwn?
 whatToInclude.include = Dylech gynnwys:
+whatToInclude.include.cylb = gross amount the employee earned in this pay period, even if paid in a different pay period
 whatToInclude.include.l1 = gross amount this employee earned
 whatToInclude.include.l2 = goramser nad yw’n ddewisol
 whatToInclude.include.l3 = ffioedd nad ydynt yn ddewisol

@@ -26,7 +26,11 @@ summaryText = Messages("whatToInclude.summary")
     <p>@Messages("whatToInclude.include")</p>
 
     <ul>
-        <li>@Messages("whatToInclude.include.l1")</li>
+        @if(cylb) {
+            <li>@Messages("whatToInclude.include.cylb")</li>
+        } else {
+            <li>@Messages("whatToInclude.include.l1")</li>
+        }
         <li>@Messages("whatToInclude.include.l2")</li>
         <li>@Messages("whatToInclude.include.l3")</li>
         <li>@Messages("whatToInclude.include.l4")</li>
