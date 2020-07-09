@@ -432,8 +432,9 @@ somethingWentWrong.button = Dechrau eto
 
 lastYearPay.title = In 2019, what did this employee earn in the pay period {0} to {1}?
 lastYearPay.heading = In 2019, what did this employee earn in the pay period {0} to {1}?
-lastYearPay.p1 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
-lastYearPay.p2 = Mae angen hwn arnom er mwyn cyfrifo’i gyflog cyfartalog yn seiliedig ar swm y llynedd.
+lastYearPay.p1 = We need this to work out their average pay based on last year‘s amount.
+lastYearPay.p2 = Only include payments for work done in this pay period, even if the payslip includes payments for other work.
+lastYearPay.p3 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 lastYearPay.error.nonNumeric = Nodwch y cyflog gan ddefnyddio rhifau
 lastYearPay.error.required = Nodwch y cyflog
 
@@ -495,12 +496,13 @@ topUpStatus.error.required = Dewiswch ‘Iawn’ os ydych wedi ychwanegu at gyfl
 
 whatToInclude.summary = Beth y dylid ei gynnwys yn y swm hwn?
 whatToInclude.include = Dylech gynnwys:
-whatToInclude.include.l1 = rheolaidd yr ydych yn eu talu i’r cyflogai hwn
+whatToInclude.include.l1 = gross amount this employee earned
 whatToInclude.include.l2 = goramser nad yw’n ddewisol
 whatToInclude.include.l3 = ffioedd nad ydynt yn ddewisol
 whatToInclude.include.l4 = taliadau comisiwn nad ydynt yn ddewisol
 whatToInclude.include.l5 = taliadau yn ôl y gwaith
 whatToInclude.doNotInclude = Peidiwch â chynnwys:
+whatToInclude.doNotInclude.cylb = payments earned in a different pay period, even if they appear on the payslip for this pay period
 whatToInclude.doNotInclude.l1 = taliadau dewisol nad oes rheidrwydd contractiol arnoch i’w talu, gan gynnwys:
 whatToInclude.doNotInclude.l1.l1 = cildyrnau
 whatToInclude.doNotInclude.l1.l2 = bonysau dewisol

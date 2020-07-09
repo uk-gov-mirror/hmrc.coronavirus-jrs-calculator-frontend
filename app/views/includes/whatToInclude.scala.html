@@ -16,7 +16,7 @@
 
 @this(details: components.details)
 
-@()(implicit messages: Messages)
+@(cylb: Boolean = false)(implicit messages: Messages)
 
 
 @details(
@@ -36,6 +36,9 @@ summaryText = Messages("whatToInclude.summary")
     <p>@Messages("whatToInclude.doNotInclude")</p>
 
     <ul>
+        @if(cylb) {
+          <li>@Messages("whatToInclude.doNotInclude.cylb")</li>
+        }
         <li>@Messages("whatToInclude.doNotInclude.l1")</li>
         <ul>
             <li>@Messages("whatToInclude.doNotInclude.l1.l1")</li>

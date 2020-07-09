@@ -439,8 +439,9 @@ somethingWentWrong.button = Start again
 
 lastYearPay.title = In 2019, what did this employee earn in the pay period {0} to {1}?
 lastYearPay.heading = In 2019, what did this employee earn in the pay period {0} to {1}?
-lastYearPay.p1 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
-lastYearPay.p2 = We need this to work out their average pay based on last year’s amount.
+lastYearPay.p1 = We need this to work out their average pay based on last year‘s amount.
+lastYearPay.p2 = Only include payments for work done in this pay period, even if the payslip includes payments for other work.
+lastYearPay.p3 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 lastYearPay.error.nonNumeric = Enter the salary using numbers
 lastYearPay.error.required = Enter the salary
 
@@ -502,12 +503,13 @@ topUpStatus.error.required = Select ‘Yes’ if you topped up this employee’s
 
 whatToInclude.summary = What should be included in this amount?
 whatToInclude.include = Include:
-whatToInclude.include.l1 = gross regular wages you pay to this employee
+whatToInclude.include.l1 = gross amount this employee earned
 whatToInclude.include.l2 = non-discretionary overtime
 whatToInclude.include.l3 = non-discretionary fees
 whatToInclude.include.l4 = non-discretionary commission payments
 whatToInclude.include.l5 = piece rate payments
 whatToInclude.doNotInclude = Do not include:
+whatToInclude.doNotInclude.cylb = payments earned in a different pay period, even if they appear on the payslip for this pay period
 whatToInclude.doNotInclude.l1 = discretionary payments you’re not contractually obliged to pay, including:
 whatToInclude.doNotInclude.l1.l1 = tips
 whatToInclude.doNotInclude.l1.l2 = discretionary bonuses
