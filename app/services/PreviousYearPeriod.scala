@@ -54,9 +54,8 @@ trait PreviousYearPeriod {
   private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] = frequency match {
     case Monthly => Seq(Period(period.start.minusYears(1), period.end.minusYears(1)))
     case _ =>
-      val eqStart =
-        if (period.start.minusDays(364).isBefore(leapYear)) period.start.minusDays(363) else period.start.minusDays(364)
-      val eqEnd = if (period.end.minusDays(364).isBefore(leapYear)) period.end.minusDays(363) else period.end.minusDays(364)
+      val eqStart = period.start.minusDays(364)
+      val eqEnd = period.end.minusDays(364)
       val equivalent = Period(eqStart, eqEnd)
 
       val prStart = eqStart.minusDays(paymentFrequencyDays(frequency))
