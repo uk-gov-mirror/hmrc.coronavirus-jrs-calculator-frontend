@@ -59,9 +59,7 @@ class LastYearPayController @Inject()(
       }, { periods =>
         withValidPeriod(periods, idx) { period =>
           val preparedForm = request.userAnswers.getV(LastYearPayPage) match {
-            case Invalid(e) =>
-              UserAnswers.logWarnings(e)
-              form
+            case Invalid(e)   => form
             case Valid(value) => form.fill(value.amount)
           }
 

@@ -63,9 +63,7 @@ class PayDateController @Inject()(
           Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         } { messageDate =>
           val preparedForm = request.userAnswers.getV(PayDatePage, Some(idx)) match {
-            case Invalid(err) =>
-              UserAnswers.logWarnings(err)(logger)
-              form
+            case Invalid(err) => form
             case Valid(value) => form.fill(value)
           }
 

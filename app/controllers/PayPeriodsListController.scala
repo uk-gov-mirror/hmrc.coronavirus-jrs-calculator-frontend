@@ -54,9 +54,7 @@ class PayPeriodsListController @Inject()(
         extractClaimPeriod(request.userAnswers) match {
           case Valid(claimPeriod) =>
             val preparedForm = request.userAnswers.getV(PayPeriodsListPage) match {
-              case Invalid(e) =>
-                UserAnswers.logErrors(e)(logger)
-                form
+              case Invalid(e)   => form
               case Valid(value) => form.fill(value)
             }
 

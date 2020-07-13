@@ -55,10 +55,8 @@ class RegularPayAmountController @Inject()(
     val maybeSalary = request.userAnswers.getV(RegularPayAmountPage)
 
     maybeSalary match {
-      case Valid(sq) => Ok(view(form.fill(sq)))
-      case Invalid(e) =>
-        UserAnswers.logWarnings(e)
-        Ok(view(form))
+      case Valid(sq)  => Ok(view(form.fill(sq)))
+      case Invalid(e) => Ok(view(form))
     }
   }
 

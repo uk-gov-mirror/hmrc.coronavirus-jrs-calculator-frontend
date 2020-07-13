@@ -52,9 +52,7 @@ class VariableLengthEmployedController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(EmployeeStartedPage) match {
-      case Invalid(e) =>
-        UserAnswers.logWarnings(e)
-        form
+      case Invalid(e)   => form
       case Valid(value) => form.fill(value)
     }
 

@@ -57,10 +57,8 @@ class PartialPayAfterFurloughController @Inject()(
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       ) { afterFurlough =>
         val preparedForm = request.userAnswers.getV(PartialPayAfterFurloughPage) match {
-          case Invalid(errors) =>
-            UserAnswers.logWarnings(errors)(logger)
-            form
-          case Valid(value) => form.fill(value)
+          case Invalid(errors) => form
+          case Valid(value)    => form.fill(value)
         }
 
         Future.successful(
