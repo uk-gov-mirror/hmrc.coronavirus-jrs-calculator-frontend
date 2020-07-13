@@ -65,9 +65,7 @@ class TopUpPeriodsController @Inject()(
             saveAndRedirect(request.userAnswers, List(TopUpPeriod(period.end, breakdown.grant)))
           case _ =>
             val preparedForm = request.userAnswers.getV(TopUpPeriodsPage) match {
-              case Invalid(e) =>
-                UserAnswers.logWarnings(e)
-                form
+              case Invalid(e) => form
               case Valid(selectedDates) =>
                 form.fill(selectedDates.map(_.date))
             }

@@ -50,9 +50,7 @@ class TopUpAmountController @Inject()(
     getRequiredAnswerOrRedirectV(TopUpPeriodsPage) { topUpPeriods =>
       withValidTopUpDate(topUpPeriods, idx) { topUpPeriod =>
         val preparedForm = request.userAnswers.getV(TopUpAmountPage, Some(idx)) match {
-          case Invalid(e) =>
-            UserAnswers.logWarnings(e)(logger)
-            form
+          case Invalid(e)   => form
           case Valid(value) => form.fill(value.amount)
         }
 

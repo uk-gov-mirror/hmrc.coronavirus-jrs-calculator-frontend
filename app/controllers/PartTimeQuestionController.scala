@@ -48,8 +48,7 @@ class PartTimeQuestionController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(PartTimeQuestionPage) match {
-      case Invalid(e) =>
-        form
+      case Invalid(e)   => form
       case Valid(value) => form.fill(value)
     }
 

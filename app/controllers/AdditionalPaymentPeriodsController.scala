@@ -65,9 +65,7 @@ class AdditionalPaymentPeriodsController @Inject()(
             saveAndRedirect(request.userAnswers, List(period.end))
           case _ =>
             val preparedForm = request.userAnswers.getV(AdditionalPaymentPeriodsPage) match {
-              case Invalid(e) =>
-                UserAnswers.logWarnings(e)
-                form
+              case Invalid(e)           => form
               case Valid(selectedDates) => form.fill(selectedDates)
             }
             Future.successful(Ok(view(preparedForm, furlough.periodBreakdowns)))

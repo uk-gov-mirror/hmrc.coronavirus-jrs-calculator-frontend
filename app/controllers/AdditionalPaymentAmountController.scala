@@ -54,9 +54,7 @@ class AdditionalPaymentAmountController @Inject()(
     getRequiredAnswerOrRedirectV(AdditionalPaymentPeriodsPage) { additionalPaymentPeriods =>
       withValidAdditionalPaymentDate(additionalPaymentPeriods, idx) { paymentDate =>
         val preparedForm = request.userAnswers.getV(AdditionalPaymentAmountPage, Some(idx)) match {
-          case Invalid(e) =>
-            UserAnswers.logWarnings(e)(logger)
-            form
+          case Invalid(e)   => form
           case Valid(value) => form.fill(value.amount)
         }
 
