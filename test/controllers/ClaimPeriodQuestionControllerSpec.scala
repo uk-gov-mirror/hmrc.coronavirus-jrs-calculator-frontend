@@ -18,19 +18,24 @@ package controllers
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.ClaimPeriodQuestionFormProvider
 import models.ClaimPeriodQuestion.ClaimOnSamePeriod
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigator
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
+import play.api.libs.json.JsObject
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.ClaimPeriodQuestionView
 
-class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+class ClaimPeriodQuestionControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -41,6 +46,18 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
 
   lazy val claimPeriodQuestionRoute = routes.ClaimPeriodQuestionController.onPageLoad().url
 
+  val view = app.injector.instanceOf[ClaimPeriodQuestionView]
+  val controller = new ClaimPeriodQuestionController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
+
   "ClaimPeriodQuestion Controller" must {
 
     "return OK and the correct view for a GET" in {
@@ -49,15 +66,12 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
         FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-      val application = applicationBuilder(config = Map("fastTrackJourney.enabled" -> "true"), userAnswers = Some(userAnswers)).build()
-      val result = route(application, getRequest).value
-      val view = application.injector.instanceOf[ClaimPeriodQuestionView]
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
-
       contentAsString(result) mustEqual view(form, claimStart, claimEnd)(getRequest, messages).toString
-
-      application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
@@ -66,48 +80,42 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
         .withClaimPeriodEnd(claimEnd.toString)
         .withClaimPeriodQuestion(ClaimOnSamePeriod)
 
-      val application = applicationBuilder(config = Map("fastTrackJourney.enabled" -> "true"), userAnswers = Some(userAnswers)).build()
-      val view = application.injector.instanceOf[ClaimPeriodQuestionView]
       val getRequest: FakeRequest[AnyContentAsEmpty.type] =
         FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-      val result = route(application, getRequest).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
-
       contentAsString(result) mustEqual
         view(form.fill(ClaimOnSamePeriod), claimStart, claimEnd)(getRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(dummyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
+      val controller = new ClaimPeriodQuestionController(
+        messagesApi,
+        mockSessionRepository,
+        new FakeNavigator(onwardRoute),
+        identifier,
+        dataRetrieval,
+        dataRequired,
+        formProvider,
+        component,
+        view)
 
       val request =
         FakeRequest(POST, claimPeriodQuestionRoute)
           .withFormUrlEncodedBody(("value", ClaimOnSamePeriod.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      val userAnswers = dummyUserAnswers.withClaimPeriodStart(claimStart.toString).withClaimPeriodEnd(claimEnd.toString)
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
       val request =
         FakeRequest(POST, claimPeriodQuestionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -115,44 +123,58 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseWithApplication with Moc
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[ClaimPeriodQuestionView]
-
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
-
       contentAsString(result) mustEqual
         view(boundForm, claimStart, claimEnd)(request, messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-      val application = applicationBuilder(userAnswers = None).build()
       val request = FakeRequest(GET, claimPeriodQuestionRoute)
-      val result = route(application, request).value
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
+
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-      val application = applicationBuilder(userAnswers = None).build()
-
       val request =
         FakeRequest(POST, claimPeriodQuestionRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
+    }
 
-      application.stop()
+    "redirect to fast-journey-reset if going back from fast journey" in {
+      val controller = new ClaimPeriodQuestionController(
+        messagesApi,
+        mockSessionRepository,
+        navigator,
+        identifier,
+        dataRetrieval,
+        dataRequired,
+        formProvider,
+        component,
+        view) {
+        override protected val didNotReuseDates: (Option[String], JsObject) => Boolean = (_, _) => true
+      }
+
+      val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, claimPeriodQuestionRoute).withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+      val result = controller.onPageLoad()(getRequest)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.ResetCalculationController.onPageLoad().url
     }
   }
 }

@@ -766,3 +766,10 @@ payPeriodsList.p3 = Rydym wedi tybio bod y cyfnodau cyflog yn rheolaidd. Ni elli
 payPeriodsList.yes = Iawn
 payPeriodsList.no = Na – newid manylion
 payPeriodsList.error.required = Dewiswch ‘Iawn’ os yw’r cyfnodau cyflog hyn yn gywir
+
+resetCalculation.title = Mae’ch cyfrifiad wedi’i ailosod
+resetCalculation.h1 = Mae’ch cyfrifiad wedi’i ailosod
+resetCalculation.p1 = Bydd angen i chi ddechrau’r cyfrifiad hwn eto
+resetCalculation.p2 = Pam wnaeth hyn ddigwydd?
+resetCalculation.p3 = Dyddiadau o’ch cyfrifiad diwethaf eu colli pan wnaethoch ddefnyddio botwm ‘yn ôl’ y porwr
+resetCalculation.button = Dechrau’r cyfrifiad eto
