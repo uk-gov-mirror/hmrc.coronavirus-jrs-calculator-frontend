@@ -622,20 +622,17 @@ payPeriodQuestion.useDifferentPayPeriod = Na
 payPeriodQuestion.error.required = Dewiswch un o’r opsiynau isod
 payPeriodQuestion.period.text = o {0} i {1}
 
-partTimePeriods.title = Pryd dechreuodd y cyflogai hwn weithio yn ystod y cyfnod hawlio?
-partTimePeriods.heading = Pryd dechreuodd y cyflogai hwn weithio yn ystod y cyfnod hawlio?
+partTimePeriods.title = When was this employee flexibly furloughed during the claim period?
+partTimePeriods.heading = When was this employee flexibly furloughed during the claim period?
 partTimePeriods.hint = Dewiswch bob un sy’n berthnasol.
 partTimePeriods.fullPeriod = Cyfnod cyflog: {0} i {1}
 partTimePeriods.partialPeriod = Cyfnod cyflog: {0} to {1} (rhannol)
 partTimePeriods.singleDay = Cyfnod cyflog: {0} (rhannol)
 partTimePeriods.error.required = dewiswch y cyfnodau cyflog pan oedd y cyflogai’n gweithio
 
-partTimeQuestion.title = A yw’r cyflogai hwn wedi gweithio yn ystod y cyfnod hawlio hwn?
-partTimeQuestion.1stJuly.title = A yw’r cyflogai hwn wedi gweithio yn ystod y cyfnod hawlio hwn?
-partTimeQuestion.heading = A yw’r cyflogai hwn wedi gweithio yn ystod y cyfnod hawlio hwn?
-partTimeQuestion.1stJuly.heading = A yw’r cyflogai hwn wedi gweithio yn ystod y cyfnod hawlio hwn?
-partTimeQuestion.p1 = O 1 Gorffennaf ymlaen, gallwch ddod â chyflogeion yn ôl i’r gwaith tra bo’u cyfnod ffyrlo’n parhau. Gallwch hawlio am eu horiau arferol llai’r oriau roeddent yn eu gweithio mewn gwirionedd.
-partTimeQuestion.1stJuly.p1 = O 1 Gorffennaf ymlaen, gallwch ddod â chyflogeion yn ôl i’r gwaith tra bod eu cyfnod ffyrlo’n parhau. Gallwch hawlio am eu horiau arferol llai’r oriau roeddent yn gweithio mewn gwirionedd.
+partTimeQuestion.title = Has this employee been flexibly furloughed during this claim period?
+partTimeQuestion.heading = Has this employee been flexibly furloughed during this claim period?
+partTimeQuestion.p1 = ‘Flexible furlough’ means bringing an employee back to work part time while their furlough is ongoing.
 partTimeQuestion.partTimeYes = Iawn
 partTimeQuestion.partTimeNo = Na
 partTimeQuestion.error.required = Dewiswch un o’r opsiynau isod

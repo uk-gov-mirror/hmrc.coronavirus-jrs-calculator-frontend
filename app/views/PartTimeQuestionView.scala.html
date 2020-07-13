@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import java.time.LocalDate
 @import controllers.routes._
 @import models.PartTimeQuestion
 @import pages.PartTimeQuestionPage
@@ -29,21 +28,21 @@
         p: components.p
 )
 
-@(form: Form[_], claimStart: LocalDate)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, if (claimStart.getMonthValue > 6) "partTimeQuestion.1stJuly.title" else "partTimeQuestion.title")), thisPage = PartTimeQuestionPage) {
+@govukLayout(pageTitle = Some(title(form, "partTimeQuestion.title")), thisPage = PartTimeQuestionPage) {
 
     @formHelper(action = PartTimeQuestionController.onSubmit(), 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 
-        @h1(if (claimStart.getMonthValue > 6) "partTimeQuestion.1stJuly.heading" else "partTimeQuestion.heading")
+        @h1("partTimeQuestion.heading")
 
-        @p(Html(messages(if (claimStart.getMonthValue > 6) "partTimeQuestion.1stJuly.p1" else "partTimeQuestion.p1")))
+        @p(Html(messages("partTimeQuestion.p1")))
 
         @inputRadio(
             form = form,
-            legend = messages(if (claimStart.getMonthValue > 6) "partTimeQuestion.1stJuly.heading" else "partTimeQuestion.heading"),
+            legend = messages("partTimeQuestion.heading"),
             legendAsHeading = false,
             classes = "govuk-visually-hidden",
             items = PartTimeQuestion.options(form)

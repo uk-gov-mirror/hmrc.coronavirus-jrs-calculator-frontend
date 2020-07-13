@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.SpecBaseWithApplication
 import forms.PartTimeQuestionFormProvider
 import models.PartTimeQuestion
@@ -39,7 +37,6 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
   val formProvider = new PartTimeQuestionFormProvider()
   val form = formProvider()
-  val claimStart = LocalDate.of(2020, 3, 1)
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, partTimeQuestionRoute).withCSRFToken
@@ -48,7 +45,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
   "PartTimeQuestion Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
+      val userAnswers = emptyUserAnswers
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -61,23 +58,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
       val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form, claimStart)(dataRequest, messages).toString
-
-      application.stop()
-    }
-
-    "return OK and the correct view for a GET for phase two" in {
-      val userAnswers = emptyUserAnswers.withClaimPeriodStart("2020, 7, 2")
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val result = route(application, getRequest).value
-
-      status(result) mustEqual OK
-
-      contentAsString(result) must include(messagesApi.messages("en")("partTimeQuestion.1stJuly.title"))
-      contentAsString(result) must include(messagesApi.messages("en")("partTimeQuestion.1stJuly.heading"))
-      contentAsString(result) must include(messagesApi.messages("en")("partTimeQuestion.1stJuly.p1"))
+        view(form)(dataRequest, messages).toString
 
       application.stop()
     }
@@ -86,7 +67,6 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
       val userAnswers = emptyUserAnswers
         .withPartTimeQuestion(PartTimeQuestion.values.head)
-        .withClaimPeriodStart(claimStart.toString)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -99,13 +79,13 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(form.fill(PartTimeQuestion.values.head), claimStart)(dataRequest, messages).toString
+        view(form.fill(PartTimeQuestion.values.head))(dataRequest, messages).toString
 
       application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
-      val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
+      val userAnswers = emptyUserAnswers
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -127,7 +107,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
+      val userAnswers = emptyUserAnswers
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
@@ -146,7 +126,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
-        view(boundForm, claimStart)(dataRequest, messages).toString
+        view(boundForm)(dataRequest, messages).toString
 
       application.stop()
     }
