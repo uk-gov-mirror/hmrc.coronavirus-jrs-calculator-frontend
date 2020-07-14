@@ -777,6 +777,4 @@ payPeriodsList.error.required = Select yes if these pay periods are correct
 resetCalculation.title = Your calculation has been reset
 resetCalculation.h1 = Your calculation has been reset
 resetCalculation.p1 = You’ll need to start this calculation again
-resetCalculation.p2 = Why did this happen?
-resetCalculation.p3 = Dates from your last calculation were lost when you used the browser ‘back’ button
 resetCalculation.button = Start calculation again
