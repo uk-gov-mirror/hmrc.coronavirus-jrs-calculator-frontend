@@ -336,7 +336,7 @@ claimPeriodEnd.cannot.be.of.same.month = From 1 July, claims must start and end 
 claimPeriodEnd.cannot.be.before.claimStart = The end date cannot be before the start date
 claimPeriodEnd.cannot.be.lessThan.7days = The claim period must be at least 7 days
 claimPeriodEnd.cannot.be.after.14days = The end date cannot be more than 14 days after today’s date
-claimPeriodEnd.cannot.be.after.july = The claim must start and end before the 1st of July.
+claimPeriodEnd.cannot.be.after.july = Enter an end date before 1 July. (From July, claims must start and end in the same calendar month).
 claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
