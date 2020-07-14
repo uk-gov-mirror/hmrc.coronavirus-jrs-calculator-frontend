@@ -430,11 +430,11 @@ lastPayDate.details.p2 = ‘Cyfnod cyflog’ yw’r cyfnod o amser y caiff y cyf
 
 somethingWentWrong.button = Dechrau eto
 
-lastYearPay.title = In 2019, what did this employee earn in the pay period {0} to {1}?
-lastYearPay.heading = In 2019, what did this employee earn in the pay period {0} to {1}?
-lastYearPay.p1 = We need this to work out their entitlement based on last year’s amount.
-lastYearPay.p2 = Only include payments for work done in this pay period, even if the payslip includes payments for other work.
-lastYearPay.p3 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
+lastYearPay.title = Yn 2019, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
+lastYearPay.heading = Yn 2019, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
+lastYearPay.p1 = Mae angen hwn arnom er mwyn cyfrifo’i hawl yn seiliedig ar swm y llynedd.
+lastYearPay.p2 = Dylech ond cynnwys taliadau ar gyfer gwaith a wnaed yn y cyfnod cyflog hwn, hyd yn oed os yw’r slip cyflog yn cynnwys taliadau ar gyfer gwaith arall.
+lastYearPay.p3 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 lastYearPay.error.nonNumeric = Nodwch y cyflog gan ddefnyddio rhifau
 lastYearPay.error.required = Nodwch y cyflog
 
@@ -496,14 +496,14 @@ topUpStatus.error.required = Dewiswch ‘Iawn’ os ydych wedi ychwanegu at gyfl
 
 whatToInclude.summary = Beth y dylid ei gynnwys yn y swm hwn?
 whatToInclude.include = Dylech gynnwys:
-whatToInclude.include.cylb = gross amount the employee earned in this pay period, even if paid in a different pay period
-whatToInclude.include.l1 = gross amount this employee earned
+whatToInclude.include.cylb = y swm gros a enillodd y cyflogai yn y cyfnod cyflog hwn, hyd yn oed os cafodd ei dalu mewn cyfnod cyflog gwahanol
+whatToInclude.include.l1 = y swm gros a enillodd y cyflogai hwn
 whatToInclude.include.l2 = goramser nad yw’n ddewisol
 whatToInclude.include.l3 = ffioedd nad ydynt yn ddewisol
 whatToInclude.include.l4 = taliadau comisiwn nad ydynt yn ddewisol
 whatToInclude.include.l5 = taliadau yn ôl y gwaith
 whatToInclude.doNotInclude = Peidiwch â chynnwys:
-whatToInclude.doNotInclude.cylb = payments earned in a different pay period, even if they appear on the payslip for this pay period
+whatToInclude.doNotInclude.cylb = taliadau a enillwyd mewn cyfnod cyflog gwahanol, hyd yn oed os ydynt i’w gweld ar y slip cyflog ar gyfer y cyfnod cyflog hwn
 whatToInclude.doNotInclude.l1 = taliadau dewisol nad oes rheidrwydd contractiol arnoch i’w talu, gan gynnwys:
 whatToInclude.doNotInclude.l1.l1 = cildyrnau
 whatToInclude.doNotInclude.l1.l2 = bonysau dewisol
@@ -622,17 +622,17 @@ payPeriodQuestion.useDifferentPayPeriod = Na
 payPeriodQuestion.error.required = Dewiswch un o’r opsiynau isod
 payPeriodQuestion.period.text = o {0} i {1}
 
-partTimePeriods.title = When was this employee flexibly furloughed during the claim period?
-partTimePeriods.heading = When was this employee flexibly furloughed during the claim period?
+partTimePeriods.title = Pryd roedd y cyflogai hwn ar ffyrlo hyblyg yn ystod y cyfnod hawlio?
+partTimePeriods.heading = Pryd roedd y cyflogai hwn ar ffyrlo hyblyg yn ystod y cyfnod hawlio?
 partTimePeriods.hint = Dewiswch bob un sy’n berthnasol.
 partTimePeriods.fullPeriod = Cyfnod cyflog: {0} i {1}
 partTimePeriods.partialPeriod = Cyfnod cyflog: {0} to {1} (rhannol)
 partTimePeriods.singleDay = Cyfnod cyflog: {0} (rhannol)
 partTimePeriods.error.required = dewiswch y cyfnodau cyflog pan oedd y cyflogai’n gweithio
 
-partTimeQuestion.title = Has this employee been flexibly furloughed during this claim period?
-partTimeQuestion.heading = Has this employee been flexibly furloughed during this claim period?
-partTimeQuestion.p1 = ‘Flexible furlough’ means bringing an employee back to work part time while their furlough is ongoing.
+partTimeQuestion.title = A yw’r cyflogai hwn wedi bod ar ffyrlo hyblyg yn ystod y cyfnod hawlio hwn?
+partTimeQuestion.heading = A yw’r cyflogai hwn wedi bod ar ffyrlo hyblyg yn ystod y cyfnod hawlio hwn?
+partTimeQuestion.p1 = Mae ‘ffyrlo hyblyg’ yn golygu dod â chyflogai yn ôl i’r gwaith yn rhan amser wrth i’w ffyrlo barhau.
 partTimeQuestion.partTimeYes = Iawn
 partTimeQuestion.partTimeNo = Na
 partTimeQuestion.error.required = Dewiswch un o’r opsiynau isod
