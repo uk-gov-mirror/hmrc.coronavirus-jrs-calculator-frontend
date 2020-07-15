@@ -18,47 +18,59 @@ package controllers
 
 import java.time.LocalDate
 
-import base.{CoreTestDataBuilder, SpecBaseWithApplication}
+import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
 import config.CalculatorVersionConfiguration
 import models.NicCategory.Payable
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.DoesContribute
-import models.{Amount, FullPeriodCap, FurloughCalculationResult, FurloughOngoing, NicCalculationResult, NicCap, PensionCalculationResult, Period, PhaseTwoFurloughBreakdown, PhaseTwoFurloughCalculationResult, PhaseTwoNicBreakdown, PhaseTwoNicCalculationResult, PhaseTwoPensionBreakdown, PhaseTwoPensionCalculationResult, PhaseTwoPeriod, RegularPaymentWithPhaseTwoPeriod, TaxYearEnding2020, TaxYearEnding2021}
+import models._
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.Threshold
+import services.{AuditService, Threshold}
 import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown, PhaseTwoConfirmationViewBreakdown}
-import views.html.{ConfirmationViewWithDetailedBreakdowns, PhaseTwoConfirmationView}
+import views.html.{ConfirmationViewWithDetailedBreakdowns, NoNicAndPensionConfirmationView, PhaseTwoConfirmationView}
 
-class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDataBuilder {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDataBuilder {
+
+  val view = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
+  val noNicView = app.injector.instanceOf[NoNicAndPensionConfirmationView]
+  val phaseTwoView = app.injector.instanceOf[PhaseTwoConfirmationView]
+  val audit = app.injector.instanceOf[AuditService]
+
+  val controller = new ConfirmationController(
+    messagesApi,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    component,
+    view,
+    phaseTwoView,
+    noNicView,
+    audit,
+    navigator)
 
   "Confirmation Controller" must {
 
     "return OK and the confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
-      val application =
-        applicationBuilder(config = Map("confirmationWithDetailedBreakdowns.enabled" -> "true"), userAnswers = Some(dummyUserAnswers))
-          .build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(dummyUserAnswers))
       val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
 
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
-
       contentAsString(result) mustEqual view(breakdown, meta.claimPeriod, calculatorVersionConf)(request, messages).toString
-
-      application.stop()
     }
 
     "return OK and the phase two confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
-      val application =
-        applicationBuilder(userAnswers = Some(phaseTwoJourney())).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(phaseTwoJourney()))
       val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
 
-      val result = route(application, request).value
+      val result = controller.onPageLoad()(request)
 
       val payment = RegularPaymentWithPhaseTwoPeriod(
         Amount(2000.00),
@@ -80,13 +92,10 @@ class ConfirmationControllerSpec extends SpecBaseWithApplication with CoreTestDa
         )
       )
 
-      val view = application.injector.instanceOf[PhaseTwoConfirmationView]
-
       status(result) mustEqual OK
-
-      contentAsString(result) mustEqual view(breakdown, period("2020, 7, 1", "2020, 7, 31"), calculatorVersionConf)(request, messages).toString
-
-      application.stop()
+      contentAsString(result) mustEqual phaseTwoView(breakdown, period("2020, 7, 1", "2020, 7, 31"), calculatorVersionConf)(
+        request,
+        messages).toString
     }
   }
 

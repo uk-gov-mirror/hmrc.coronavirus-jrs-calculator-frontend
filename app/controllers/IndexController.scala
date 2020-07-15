@@ -31,7 +31,6 @@ class IndexController @Inject()(
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   sessionRepository: SessionRepository,
-  view: IndexView,
   val controllerComponents: MessagesControllerComponents)(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 

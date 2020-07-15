@@ -37,7 +37,6 @@ class EmployeeStartDateController @Inject()(
   sessionRepository: SessionRepository,
   val navigator: Navigator,
   identify: IdentifierAction,
-  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: EmployeeStartDateFormProvider,

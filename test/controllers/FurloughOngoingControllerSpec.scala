@@ -18,22 +18,23 @@ package controllers
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.FurloughOngoingFormProvider
 import models.FurloughStatus
 import models.requests.DataRequest
-import navigation.{FakeNavigator, Navigator}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.FurloughOngoingView
 
-class FurloughOngoingControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-  def onwardRoute = Call("GET", "/foo")
+class FurloughOngoingControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   lazy val furloughOngoingRoute = routes.FurloughOngoingController.onPageLoad().url
 
@@ -45,53 +46,54 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
     FakeRequest(GET, furloughOngoingRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
+  val view = app.injector.instanceOf[FurloughOngoingView]
+
+  val controller = new FurloughOngoingController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
+
   "furloughOngoing Controller" must {
 
     "return OK and the correct view for a GET" in {
       val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
-      val result = route(application, getRequest).value
-
-      val view = application.injector.instanceOf[FurloughOngoingView]
-
-      status(result) mustEqual OK
-
+      val result = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
+      status(result) mustEqual OK
       contentAsString(result) mustEqual
         view(form, claimStart)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "return OK and the correct view for a GET if 1st of July" in {
       val userAnswers = emptyUserAnswers.withClaimPeriodStart("2020,7,2")
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
-      val result = route(application, getRequest).value
-
+      val result = controller.onPageLoad()(getRequest)
       status(result) mustEqual OK
 
       val actualContent = contentAsString(result)
       actualContent must include(messagesApi.messages("en")("furloughOngoing.1stJuly.title"))
       actualContent must include(s"${messagesApi.messages("en")("furloughOngoing.1stJuly.hint")}")
       actualContent must not include (s"${messagesApi.messages("en")("furloughOngoing.ongoing")}")
-
-      application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-
       val userAnswers = emptyUserAnswers
         .withFurloughStatus(FurloughStatus.values.head)
         .withClaimPeriodStart(claimStart.toString)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
-      val view = application.injector.instanceOf[FurloughOngoingView]
-
-      val result = route(application, getRequest).value
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
@@ -99,35 +101,25 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       contentAsString(result) mustEqual
         view(form.fill(FurloughStatus.values.head), claimStart)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
       val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
       val request =
         FakeRequest(POST, furloughOngoingRoute)
           .withFormUrlEncodedBody(("value", FurloughStatus.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/furlough-end"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
       val userAnswers = emptyUserAnswers.withClaimPeriodStart(claimStart.toString)
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
       val request =
         FakeRequest(POST, furloughOngoingRoute).withCSRFToken
@@ -136,9 +128,7 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[FurloughOngoingView]
-
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
 
@@ -146,39 +136,26 @@ class FurloughOngoingControllerSpec extends SpecBaseWithApplication with Mockito
 
       contentAsString(result) mustEqual
         view(boundForm, claimStart)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      val request = FakeRequest(GET, furloughOngoingRoute)
-
-      val result = route(application, request).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request =
         FakeRequest(POST, furloughOngoingRoute)
           .withFormUrlEncodedBody(("value", FurloughStatus.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
   }
 }

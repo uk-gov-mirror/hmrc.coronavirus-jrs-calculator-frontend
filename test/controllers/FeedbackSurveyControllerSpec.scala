@@ -16,28 +16,31 @@
 
 package controllers
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, route, status, _}
+import play.api.test.Helpers.{GET, status, _}
 
-class FeedbackSurveyControllerSpec extends SpecBaseWithApplication {
+import scala.concurrent.Future
+
+class FeedbackSurveyControllerSpec extends SpecBaseControllerSpecs {
 
   lazy val surveyRoute = routes.FeedbackSurveyController.startSurvey().url
 
   lazy val getSurveyRequest = FakeRequest(GET, surveyRoute)
 
+  val controller = new FeedbackSurveyController(identifier, component)
+
   "FeedbackSurveyController" must {
 
     "redirect users to /feedback service" in {
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      val result = route(application, getSurveyRequest).value
+      val result = controller.startSurvey()(getSurveyRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual "http://localhost:9514/feedback/jrsc"
-
-      application.stop()
     }
   }
 }

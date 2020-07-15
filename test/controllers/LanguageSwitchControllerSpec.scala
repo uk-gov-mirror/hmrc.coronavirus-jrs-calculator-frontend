@@ -18,63 +18,43 @@ package controllers
 
 import base.SpecBaseControllerSpecs
 import config.FrontendAppConfig
-import controllers.actions._
-import models.{Language, UserAnswers}
+import models.Language
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{MustMatchers, OptionValues}
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
 
 class LanguageSwitchControllerSpec extends SpecBaseControllerSpecs with MustMatchers with OptionValues with ScalaFutures with MockitoSugar {
 
-  def applicationBuilder(): GuiceApplicationBuilder =
-    new GuiceApplicationBuilder()
-      .overrides(
-        bind[SessionRepository].toInstance(mock[SessionRepository]),
-        bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(Some(new UserAnswers("id"))))
-      )
+  def languageSwitchController(appConf: FrontendAppConfig) = new LanguageSwitchController(appConf, messagesApi, component)
 
   "switching language when translation is enabled" should {
     "should set the language to Cymraeg" in {
 
-      val application = applicationBuilder()
-        .configure(
-          "features.welsh-translation" -> true
-        )
-        .build()
+      val controller = languageSwitchController(new FrontendAppConfig() {
+        override lazy val languageTranslationEnabled: Boolean = true
+      })
 
-      running(application) {
-        val request = FakeRequest(GET, routes.LanguageSwitchController.switchToLanguage(Language.Cymraeg).url)
+      val request = FakeRequest(GET, routes.LanguageSwitchController.switchToLanguage(Language.Cymraeg).url)
 
-        val result = route(application, request).value
+      val result = controller.switchToLanguage(Language.Cymraeg)(request)
 
-        status(result) mustEqual SEE_OTHER
-        cookies(result).get("PLAY_LANG").value.value mustEqual "cy"
-      }
+      status(result) mustEqual SEE_OTHER
+      cookies(result).get("PLAY_LANG").value.value mustEqual "cy"
     }
 
     "set the language to English" in {
+      val controller = languageSwitchController(new FrontendAppConfig() {
+        override lazy val languageTranslationEnabled: Boolean = true
+      })
 
-      val application = applicationBuilder()
-        .configure(
-          "features.welsh-translation" -> true
-        )
-        .build()
+      val request = FakeRequest(GET, routes.LanguageSwitchController.switchToLanguage(Language.English).url)
 
-      running(application) {
-        val request = FakeRequest(GET, routes.LanguageSwitchController.switchToLanguage(Language.English).url)
+      val result = controller.switchToLanguage(Language.English)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        cookies(result).get("PLAY_LANG").value.value mustEqual "en"
-      }
+      status(result) mustEqual SEE_OTHER
+      cookies(result).get("PLAY_LANG").value.value mustEqual "en"
     }
   }
 

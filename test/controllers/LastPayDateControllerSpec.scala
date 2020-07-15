@@ -18,21 +18,24 @@ package controllers
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.LastPayDateFormProvider
 import models.UserAnswers
 import models.requests.DataRequest
-import navigation.{FakeNavigator, Navigator}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{LastPayDatePage, PayDatePage}
-import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.LastPayDateView
 
-class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+class LastPayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   val formProvider = new LastPayDateFormProvider()
   //TODO This should be a date from user answers based on pay date loop
@@ -59,15 +62,25 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
         "value.year"  -> validAnswer.getYear.toString
       )
 
+  val view = app.injector.instanceOf[LastPayDateView]
+
+  val controller = new LastPayDateController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
+
   "LastPayDate Controller" must {
 
     "return OK and the correct view for a GET" in {
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val result = route(application, getRequest).value
-
-      val view = application.injector.instanceOf[LastPayDateView]
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
@@ -75,19 +88,14 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       contentAsString(result) mustEqual
         view(form, validAnswer)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-
       val userAnswersUpdated = userAnswers.set(LastPayDatePage, LocalDate.now()).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswersUpdated)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersUpdated))
 
-      val view = application.injector.instanceOf[LastPayDateView]
-
-      val result = route(application, getRequest).value
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
@@ -95,49 +103,28 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       contentAsString(result) mustEqual
         view(form.fill(validAnswer), validAnswer)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-      val result = route(application, postRequest).value
+      val result = controller.onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/pay-method"
     }
 
     "redirect to the /pay-date/1 when there is no pay-dates saved already in mongo" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(UserAnswers(userAnswersId)))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-      val result = route(application, postRequest).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+      val result = controller.onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.PayDateController.onPageLoad(1).url
-
-      application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
       val request =
         FakeRequest(POST, lastPayDateRoute).withCSRFToken
@@ -146,9 +133,7 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[LastPayDateView]
-
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
 
@@ -156,33 +141,26 @@ class LastPayDateControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       contentAsString(result) mustEqual
         view(boundForm, validAnswer)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
 
-      val result = route(application, getRequest).value
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      val result = route(application, postRequest).value
+      val result = controller.onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
   }
 }
