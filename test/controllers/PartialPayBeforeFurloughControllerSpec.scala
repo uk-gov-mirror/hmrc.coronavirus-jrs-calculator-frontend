@@ -18,24 +18,25 @@ package controllers
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.FurloughPartialPayFormProvider
 import models.PaymentFrequency.Weekly
 import models.requests.DataRequest
 import models.{FurloughPartialPay, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages._
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.VariableLengthPartialPayView
 
-class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-  def onwardRoute = Call("GET", "/foo")
+class PartialPayBeforeFurloughControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   val formProvider = new FurloughPartialPayFormProvider()
   val form = formProvider()
@@ -61,67 +62,48 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
   val claimPeriodStart = LocalDate.of(2020, 3, 27)
 
   val userAnswers = UserAnswers(userAnswersId)
-    .set(PayDatePage, payPeriod1, Some(1))
-    .success
-    .value
-    .set(PayDatePage, payPeriod2, Some(2))
-    .success
-    .value
-    .set(PayDatePage, payPeriod3, Some(3))
-    .success
-    .value
-    .set(ClaimPeriodStartPage, claimPeriodStart)
-    .success
-    .value
-    .set(ClaimPeriodEndPage, claimPeriodEnd)
-    .success
-    .value
-    .set(FurloughStartDatePage, furloughStartDate)
-    .success
-    .value
-    .set(PaymentFrequencyPage, Weekly)
-    .success
-    .value
+    .withPayDate(List(payPeriod1, payPeriod2, payPeriod3).map(_.toString))
+    .withClaimPeriodStart(claimPeriodStart.toString)
+    .withClaimPeriodEnd(claimPeriodEnd.toString)
+    .withFurloughStartDate(furloughStartDate.toString)
+    .withPaymentFrequency(Weekly)
+
+  val view = app.injector.instanceOf[VariableLengthPartialPayView]
+
+  val controller = new PartialPayBeforeFurloughController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
 
   "PartialPayBeforeFurloughController" must {
 
     "return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val r = getRequest(pageLoadBeforeFurloughRoute)
-
-      val result = route(application, r).value
-
-      val view = application.injector.instanceOf[VariableLengthPartialPayView]
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      val request = getRequest(pageLoadBeforeFurloughRoute)
+      val result = controller.onPageLoad()(request)
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
-
-      val dataRequest = DataRequest(r, userAnswers.id, userAnswers)
-
       contentAsString(result) mustEqual
         view(form, LocalDate.of(2020, 3, 23), LocalDate.of(2020, 3, 26), routes.PartialPayBeforeFurloughController.onSubmit())(
           dataRequest,
           messages).toString
-
-      application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers1 = userAnswers.set(PartialPayBeforeFurloughPage, FurloughPartialPay(111)).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers1)).build()
-
-      val view = application.injector.instanceOf[VariableLengthPartialPayView]
-
-      val r = getRequest(pageLoadBeforeFurloughRoute)
-
-      val result = route(application, r).value
+      val answers = userAnswers.withPartialPayBeforeFurlough(111)
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(answers))
+      val request = getRequest(pageLoadBeforeFurloughRoute)
+      val result = controller.onPageLoad()(request)
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
-
-      val dataRequest = DataRequest(r, userAnswers.id, userAnswers)
 
       contentAsString(result) mustEqual
         view(
@@ -130,160 +112,88 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseWithApplication wit
           LocalDate.of(2020, 3, 26),
           routes.PartialPayBeforeFurloughController.onSubmit()
         )(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to something went wrong when there no saved data for PayDatePage in mongo for GET" in {
-
       val modifiedUserAnswers = userAnswers.remove(PayDatePage).success.value
-
-      val application =
-        applicationBuilder(userAnswers = Some(modifiedUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-      val result = route(application, getRequest(submitBeforeFurloughRoute)).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
+      val result = controller.onPageLoad()(getRequest(submitBeforeFurloughRoute))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
-
-      application.stop()
     }
 
     "redirect to something went wrong when there no saved data for FurloughStartDate in mongo for GET" in {
-
       val modifiedUserAnswers = userAnswers.remove(FurloughStartDatePage).success.value
-
-      val application =
-        applicationBuilder(userAnswers = Some(modifiedUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-      val result = route(application, getRequest(submitBeforeFurloughRoute)).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
+      val result = controller.onPageLoad()(getRequest(submitBeforeFurloughRoute))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-      val result = route(application, postRequest(submitBeforeFurloughRoute)).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      val result = controller.onSubmit()(postRequest(submitBeforeFurloughRoute))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/variable-pay-partial-pay-after-furlough"
     }
 
     "redirect to something went wrong when there no saved data for PayDatePage in mongo for POST" in {
-
       val modifiedUserAnswers = userAnswers.remove(PayDatePage).success.value
-
-      val application =
-        applicationBuilder(userAnswers = Some(modifiedUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-      val result = route(application, postRequest(submitBeforeFurloughRoute)).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
+      val result = controller.onSubmit()(postRequest(submitBeforeFurloughRoute))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
-
-      application.stop()
     }
 
     "redirect to something went wrong when there no saved data for FurloughStartDate in mongo for POST" in {
-
       val modifiedUserAnswers = userAnswers.remove(FurloughStartDatePage).success.value
-
-      val application =
-        applicationBuilder(userAnswers = Some(modifiedUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-      val result = route(application, postRequest(submitBeforeFurloughRoute)).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
+      val result = controller.onSubmit()(postRequest(submitBeforeFurloughRoute))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
-
-      application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request =
         FakeRequest(POST, submitBeforeFurloughRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
-
-      val view = application.injector.instanceOf[VariableLengthPartialPayView]
-
-      val result = route(application, request).value
-
-      status(result) mustEqual BAD_REQUEST
-
+      val result = controller.onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
+      status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
         view(boundForm, LocalDate.of(2020, 3, 23), LocalDate.of(2020, 3, 26), routes.PartialPayBeforeFurloughController.onSubmit())(
           dataRequest,
           messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      val request = FakeRequest(GET, pageLoadBeforeFurloughRoute)
-
-      val result = route(application, request).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
+      val result = controller.onPageLoad()(FakeRequest(GET, pageLoadBeforeFurloughRoute))
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request =
         FakeRequest(POST, submitBeforeFurloughRoute)
           .withFormUrlEncodedBody(("value", "answer"))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
   }
 }

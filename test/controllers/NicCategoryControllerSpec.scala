@@ -16,42 +16,53 @@
 
 package controllers
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.NicCategoryFormProvider
 import models.requests.DataRequest
 import models.{NicCategory, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.NicCategoryPage
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.NicCategoryView
 
-class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-  def onwardRoute = Call("GET", "/foo")
+class NicCategoryControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   lazy val nicCategoryRoute = routes.NicCategoryController.onPageLoad().url
 
   val formProvider = new NicCategoryFormProvider()
   val form = formProvider()
 
+  val view = app.injector.instanceOf[NicCategoryView]
+
+  val controller = new NicCategoryController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
+
   "NicCategory Controller" must {
 
     "return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
 
       val request = FakeRequest(GET, nicCategoryRoute).withCSRFToken
         .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[NicCategoryView]
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
 
@@ -59,22 +70,18 @@ class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       contentAsString(result) mustEqual
         view(form)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = UserAnswers(userAnswersId).set(NicCategoryPage, NicCategory.values.head).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
       val request = FakeRequest(GET, nicCategoryRoute).withCSRFToken
         .asInstanceOf[test.FakeRequest[AnyContentAsEmpty.type]]
 
-      val view = application.injector.instanceOf[NicCategoryView]
-
-      val result = route(application, request).value
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
 
@@ -82,35 +89,23 @@ class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       contentAsString(result) mustEqual
         view(form.fill(NicCategory.values.head))(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
 
       val request =
         FakeRequest(POST, nicCategoryRoute)
           .withFormUrlEncodedBody(("value", NicCategory.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/pension"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
 
       val request =
         FakeRequest(POST, nicCategoryRoute).withCSRFToken
@@ -119,9 +114,7 @@ class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[NicCategoryView]
-
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
 
@@ -129,39 +122,29 @@ class NicCategoryControllerSpec extends SpecBaseWithApplication with MockitoSuga
 
       contentAsString(result) mustEqual
         view(boundForm)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, nicCategoryRoute)
 
-      val result = route(application, request).value
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
 
       val request =
         FakeRequest(POST, nicCategoryRoute)
           .withFormUrlEncodedBody(("value", NicCategory.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
   }
 }
