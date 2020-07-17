@@ -16,22 +16,23 @@
 
 package controllers
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.PartTimeQuestionFormProvider
 import models.PartTimeQuestion
 import models.requests.DataRequest
-import navigation.{FakeNavigator, Navigator}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.PartTimeQuestionView
 
-class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-  def onwardRoute = Call("GET", "/foo")
+class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   lazy val partTimeQuestionRoute = routes.PartTimeQuestionController.onPageLoad().url
 
@@ -42,124 +43,95 @@ class PartTimeQuestionControllerSpec extends SpecBaseWithApplication with Mockit
     FakeRequest(GET, partTimeQuestionRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
+  val view = app.injector.instanceOf[PartTimeQuestionView]
+
+  val controller = new PartTimeQuestionController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
+
   "PartTimeQuestion Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val userAnswers = emptyUserAnswers
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val result = route(application, getRequest).value
-
-      val view = application.injector.instanceOf[PartTimeQuestionView]
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+      val result = controller.onPageLoad()(getRequest)
+      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual OK
-
-      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, userAnswers)
-
       contentAsString(result) mustEqual
         view(form)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-
       val userAnswers = emptyUserAnswers
         .withPartTimeQuestion(PartTimeQuestion.values.head)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val view = application.injector.instanceOf[PartTimeQuestionView]
-
-      val result = route(application, getRequest).value
-
-      status(result) mustEqual OK
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
+      val result = controller.onPageLoad()(getRequest)
+
+      status(result) mustEqual OK
       contentAsString(result) mustEqual
         view(form.fill(PartTimeQuestion.values.head))(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
       val userAnswers = emptyUserAnswers
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
-          .build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request =
-        FakeRequest(POST, partTimeQuestionRoute)
+        FakeRequest(POST, partTimeQuestionRoute).withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", PartTimeQuestion.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/part-time-periods"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-
       val userAnswers = emptyUserAnswers
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request =
         FakeRequest(POST, partTimeQuestionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
-
-      val view = application.injector.instanceOf[PartTimeQuestionView]
-
-      val result = route(application, request).value
-
-      status(result) mustEqual BAD_REQUEST
-
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
+      val result = controller.onSubmit()(request)
+
+      status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
         view(boundForm)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, partTimeQuestionRoute)
-
-      val result = route(application, request).value
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request =
         FakeRequest(POST, partTimeQuestionRoute)
           .withFormUrlEncodedBody(("value", PartTimeQuestion.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
   }
 }
