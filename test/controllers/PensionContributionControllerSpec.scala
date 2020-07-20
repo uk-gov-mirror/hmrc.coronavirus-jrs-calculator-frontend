@@ -16,152 +16,116 @@
 
 package controllers
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.PensionContributionFormProvider
 import models.PensionStatus.DoesContribute
 import models.UserAnswers
 import models.requests.DataRequest
-import navigation.{FakeNavigator, Navigator}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.PensionStatusPage
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.PensionContributionView
 
-class PensionContributionControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-  def onwardRoute = Call("GET", "/foo")
+class PensionContributionControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   val formProvider = new PensionContributionFormProvider()
   val form = formProvider()
-
   lazy val pensionContributionRoute = routes.PensionContributionController.onPageLoad().url
+
+  val view = app.injector.instanceOf[PensionContributionView]
+
+  val controller = new PensionContributionController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
 
   "PensionContributionController" must {
 
     "return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request = FakeRequest(GET, pensionContributionRoute).withCSRFToken
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[PensionContributionView]
-
-      status(result) mustEqual OK
-
+        .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+      val result = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
-      contentAsString(result) mustEqual
-        view(form)(dataRequest, messages).toString
-
-      application.stop()
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form)(dataRequest, messages).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(PensionStatusPage, DoesContribute).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+      val userAnswers = UserAnswers(userAnswersId).withPensionStatus(DoesContribute)
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request = FakeRequest(GET, pensionContributionRoute).withCSRFToken
-
-      val view = application.injector.instanceOf[PensionContributionView]
-
-      val result = route(application, request).value
-
-      status(result) mustEqual OK
-
+        .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+      val result = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
+      status(result) mustEqual OK
       contentAsString(result) mustEqual
         view(form.fill(DoesContribute))(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request =
         FakeRequest(POST, pensionContributionRoute)
           .withFormUrlEncodedBody(("value", "doesContribute"))
-          .withCSRFToken
+          .withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/confirmation"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request =
         FakeRequest(POST, pensionContributionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
-
-      val view = application.injector.instanceOf[PensionContributionView]
-
-      val result = route(application, request).value
-
-      status(result) mustEqual BAD_REQUEST
-
+      val result = controller.onSubmit()(request)
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
+      status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
         view(boundForm)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, pensionContributionRoute)
-
-      val result = route(application, request).value
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request =
         FakeRequest(POST, pensionContributionRoute)
           .withFormUrlEncodedBody(("value", "optedIn"))
 
-      val result = route(application, request).value
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
   }
 }
