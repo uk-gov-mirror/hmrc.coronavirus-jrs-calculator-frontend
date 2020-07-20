@@ -16,31 +16,29 @@
 
 package controllers
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.RootPageView
 
-class RootPageControllerSpec extends SpecBaseWithApplication {
+import scala.concurrent.Future
+
+class RootPageControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   "RootPage Controller" must {
 
     "return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      val view = app.injector.instanceOf[RootPageView]
+      val controller = new RootPageController(messagesApi, component, view)
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request = FakeRequest(GET, routes.RootPageController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[RootPageView]
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view()(request, messages).toString
-
-      application.stop()
+      contentAsString(result) mustEqual view()(request, messages).toString
     }
   }
 }
