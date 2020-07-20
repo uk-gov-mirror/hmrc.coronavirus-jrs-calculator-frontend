@@ -33,9 +33,7 @@ class SessionExpiredControllerSpecWithApplication extends SpecBaseControllerSpec
     "return OK and the correct view for a GET" in {
       val view = app.injector.instanceOf[SessionExpiredView]
 
-      val controller = new SessionExpiredController(
-        component,
-        view)
+      val controller = new SessionExpiredController(component, view)
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, routes.SessionExpiredController.onPageLoad().url)

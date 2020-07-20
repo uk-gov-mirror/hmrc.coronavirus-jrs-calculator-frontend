@@ -83,7 +83,8 @@ class PensionContributionControllerSpec extends SpecBaseControllerSpecs with Moc
       val request =
         FakeRequest(POST, pensionContributionRoute)
           .withFormUrlEncodedBody(("value", "doesContribute"))
-          .withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+          .withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
       val result = controller.onSubmit()(request)
 
