@@ -43,7 +43,6 @@ class TopUpPeriodsController @Inject()(
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: TopUpPeriodsFormProvider,
