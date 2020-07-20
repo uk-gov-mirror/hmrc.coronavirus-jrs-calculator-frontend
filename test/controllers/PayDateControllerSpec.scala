@@ -22,13 +22,11 @@ import base.SpecBaseControllerSpecs
 import forms.PayDateFormProvider
 import models.PaymentFrequency.Weekly
 import models.requests.DataRequest
-import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
+import pages.PayDatePage
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
