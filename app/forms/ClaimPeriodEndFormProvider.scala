@@ -73,8 +73,16 @@ class ClaimPeriodEndFormProvider @Inject()() extends Mappings with ImplicitDateF
     } else Valid
   }
 
-  private val isClaimLessThan7Days: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
-    if (start.isAfter(phaseTwoStartDate.minusDays(1))) {
+  private val isClaimLessThan7Days: (LocalDate, LocalDate) => ValidationResult = (start, end) => {
+    val refDate = phaseTwoStartDate.minusDays(1)
+    if ((
+          // Allow claims that are less than 7 days long if they start at the beginning of the month.
+          start.getDayOfMonth == 1 ||
+          // Allow claims that are less than 7 days long if they start on the last day of the month.
+          start.getDayOfMonth == start.getMonth.maxLength()
+        ) && Period(start, end).countDays < 7) {
+      Valid
+    } else if (start.isAfter(refDate)) {
       if (end.getDayOfMonth != end.getMonth.maxLength() && Period(start, end).countDays < 7) {
         Invalid("claimPeriodEnd.cannot.be.lessThan.7days")
       } else {
@@ -82,5 +90,6 @@ class ClaimPeriodEndFormProvider @Inject()() extends Mappings with ImplicitDateF
       }
     } else {
       Valid
+    }
   }
 }
