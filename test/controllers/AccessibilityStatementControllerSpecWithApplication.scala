@@ -30,9 +30,7 @@ class AccessibilityStatementControllerSpecWithApplication extends SpecBaseContro
 
   val view = app.injector.instanceOf[AccessibilityStatementView]
 
-  val controller = new AccessibilityStatementController(
-    component,
-    view)
+  val controller = new AccessibilityStatementController(component, view)
 
   "Accessibility Statement Controller" must {
     "return OK and the correct view for a GET" in {
@@ -40,7 +38,7 @@ class AccessibilityStatementControllerSpecWithApplication extends SpecBaseContro
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, routes.AccessibilityStatementController.onPageLoad(problemUri).url)
 
-      val result =  controller.onPageLoad(problemUri)(request)
+      val result = controller.onPageLoad(problemUri)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual

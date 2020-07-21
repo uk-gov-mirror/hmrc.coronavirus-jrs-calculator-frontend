@@ -22,7 +22,6 @@ import akka.util.Timeout
 import base.SpecBaseControllerSpecs
 import cats.scalatest.ValidatedValues
 import cats.syntax.validated._
-import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.{AnswerValidation, BackFirstPage, BackJourneyValidation, EmptyAnswerError, Salary, UserAnswers}
 import navigation.Navigator
