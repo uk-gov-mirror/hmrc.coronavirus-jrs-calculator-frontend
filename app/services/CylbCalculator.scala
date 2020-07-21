@@ -81,6 +81,9 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
     lastYearPayments match {
       case amount :: Nil                          => previousOrCurrent(amount, ops)
       case previousAmount :: currentAmount :: Nil => previousAndCurrent(ops, previousAmount, currentAmount)
+      case _ =>
+        throw new RuntimeException(
+          s"CylbCalculator.previousYearFurlough Unexpected lastYearPayments: datesRequired: $datesRequired, cylbs: $cylbs, ops: $ops")
     }
   }
 
