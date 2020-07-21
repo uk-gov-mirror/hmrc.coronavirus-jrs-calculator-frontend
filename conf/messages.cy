@@ -346,9 +346,12 @@ furloughOngoing.error.required = Dewiswch un o’r opsiynau isod
 furloughOngoing.phaseTwo.hint = Employees can now be flexibly furloughed. You can claim for their usual working hours minus the hours they actually worked.
 
 furloughEndDate.title = Pryd daeth ei ffyrlo i ben?
+furloughEndDate.phaseTwo.title = What’s the last date this employee worked for you?
 furloughEndDate.heading = Pryd daeth ei ffyrlo i ben?
+furloughEndDate.phaseTwo.heading = What’s the last date this employee worked for you?
 furloughEndDate.hint = Er enghraifft, 30 4 2020
 furloughEndDate.p = Er mwyn hawlio o dan y cynllun, rhaid i gyflogai fod ar ffyrlo am o leiaf 3 wythnos.
+furloughEndDate.phaseTwo.p = This is the last date you can claim the furlough grant for.
 furloughEndDate.1stJuly.p = O 1 Gorffennaf ymlaen, gallwch ddod â chyflogeion yn ôl i’r gwaith tra bod eu cyfnod ffyrlo’n parhau. Gallwch hawlio am eu horiau arferol llai’r oriau roeddent yn gweithio mewn gwirionedd.
 furloughEndDate.error.required.all = Nodwch ddyddiad dod i ben y ffyrlo
 furloughEndDate.error.required.two = Mae’n rhaid i ddyddiad dod i ben y ffyrlo gynnwys {0} a {1}

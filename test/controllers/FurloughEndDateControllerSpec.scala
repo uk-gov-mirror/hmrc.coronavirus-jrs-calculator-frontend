@@ -89,7 +89,7 @@ class FurloughEndDateControllerSpec extends SpecBaseControllerSpecs with Mockito
       contentAsString(result) mustEqual view(form, claimPeriodStart)(dataRequest, messages).toString
     }
 
-    "return OK and the correct view for a GET with <p> if 1st of July" in {
+    "return OK and the correct view for a GET if phaseTwo" in {
       val userAnswers = emptyUserAnswers
         .withClaimPeriodStart("2020,7,1")
         .withClaimPeriodEnd("2020, 7,14")
@@ -98,9 +98,10 @@ class FurloughEndDateControllerSpec extends SpecBaseControllerSpecs with Mockito
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
       val result = controller.onPageLoad()(getRequest)
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
-      contentAsString(result) must include(messagesApi.messages("en")("furloughEndDate.1stJuly.p"))
+      contentAsString(result) mustEqual view(form, LocalDate.of(2020, 7, 1))(dataRequest, messages).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {

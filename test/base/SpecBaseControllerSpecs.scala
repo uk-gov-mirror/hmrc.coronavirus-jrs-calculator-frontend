@@ -70,15 +70,15 @@ trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with Cor
   }
 
   def emptyError(
-                  path: JsPath,
-                  error: String = "error.path.missing"
-                ): JsError =
+    path: JsPath,
+    error: String = "error.path.missing"
+  ): JsError =
     JsError(path -> JsonValidationError(List(error)))
 
   def emptyError(
-                  path: JsPath,
-                  idx: Int,
-                  error: String
-                ): JsError =
+    path: JsPath,
+    idx: Int,
+    error: String
+  ): JsError =
     JsError((path \ (idx - 1)) -> JsonValidationError(List(error)))
 }

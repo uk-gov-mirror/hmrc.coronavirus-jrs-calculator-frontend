@@ -353,10 +353,12 @@ furloughOngoing.error.required = Select one of the options below
 furloughOngoing.phaseTwo.hint = Employees can now be flexibly furloughed. You can claim for their usual working hours minus the hours they actually worked.
 
 furloughEndDate.title = When did their furlough end?
+furloughEndDate.phaseTwo.title = What’s the last date this employee worked for you?
 furloughEndDate.heading = When did their furlough end?
+furloughEndDate.phaseTwo.heading = What’s the last date this employee worked for you?
 furloughEndDate.hint = For example, 30 4 2020
 furloughEndDate.p = To claim under the scheme an employee must be furloughed for at least 3 weeks.
-furloughEndDate.1stJuly.p = From 1 July, you can bring employees back to work while their furlough is ongoing. You can claim for their usual hours minus the hours they actually worked.
+furloughEndDate.phaseTwo.p = This is the last date you can claim the furlough grant for.
 furloughEndDate.error.required.all = Enter the furlough end date
 furloughEndDate.error.required.two = The furlough end date must include {0} and {1}
 furloughEndDate.error.required = The furlough end date must include {0}
