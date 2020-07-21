@@ -33,8 +33,8 @@ class AccessibilityStatementControllerSpecWithApplication extends SpecBaseContro
   val controller = new AccessibilityStatementController(
     component,
     view)
-  "Accessibility Statement Controller" must {
 
+  "Accessibility Statement Controller" must {
     "return OK and the correct view for a GET" in {
       val problemUri = "foo"
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
