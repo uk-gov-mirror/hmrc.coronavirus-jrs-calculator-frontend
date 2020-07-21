@@ -20,7 +20,7 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.RegularPayAmountFormProvider
 import javax.inject.Inject
-import models.{Salary, UserAnswers}
+import models.Salary
 import navigation.Navigator
 import org.slf4j
 import org.slf4j.LoggerFactory

@@ -341,15 +341,16 @@ claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
 furloughOngoing.title = Has the employee’s furlough ended?
-furloughOngoing.1stJuly.title = Has the employee’s furlough ended permanently?
+furloughOngoing.phaseTwo.title = On {0}, is this employee still fully furloughed?
 furloughOngoing.heading = Has the employee’s furlough ended?
-furloughOngoing.1stJuly.heading = Has the employee’s furlough ended permanently?
+furloughOngoing.phaseTwo.heading = On {0}, is this employee still fully furloughed?
 furloughOngoing.ended = Yes
+furloughOngoing.phaseTwo.ended = No, they are no longer an employee
 furloughOngoing.ongoing = No, it is ongoing
-furloughOngoing.1stJuly.ongoing = No
-furloughOngoing.1stJuly.ended = Yes
+furloughOngoing.phaseTwo.ongoing = Yes
+furloughOngoing.phaseTwo.flexible = No, they worked during the claim period (flexibly furloughed)
 furloughOngoing.error.required = Select one of the options below
-furloughOngoing.1stJuly.hint = From 1 July, you can bring employees back to work while their furlough is ongoing. You can claim for their usual hours minus the hours they actually worked.
+furloughOngoing.phaseTwo.hint = Employees can now be flexibly furloughed. You can claim for their usual working hours minus the hours they actually worked.
 
 furloughEndDate.title = When did their furlough end?
 furloughEndDate.heading = When did their furlough end?

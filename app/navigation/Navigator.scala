@@ -238,8 +238,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def furloughOngoingRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(FurloughStatusPage) match {
-      case Valid(FurloughStatus.FurloughEnded)   => routes.FurloughEndDateController.onPageLoad()
-      case Valid(FurloughStatus.FurloughOngoing) => routes.PaymentFrequencyController.onPageLoad()
+      case Valid(FurloughStatus.FurloughEnded)                                            => routes.FurloughEndDateController.onPageLoad()
+      case Valid(FurloughStatus.FurloughOngoing) | Valid(FurloughStatus.FlexibleFurlough) => routes.PaymentFrequencyController.onPageLoad()
       case Invalid(err) =>
         UserAnswers.logWarnings(err)
         routes.FurloughOngoingController.onPageLoad()

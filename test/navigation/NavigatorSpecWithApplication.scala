@@ -57,6 +57,10 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .onPageLoad()
 
         navigator
+          .nextPage(FurloughStatusPage, emptyUserAnswers.withFurloughStatus(FurloughStatus.FlexibleFurlough)) mustBe routes.PaymentFrequencyController
+          .onPageLoad()
+
+        navigator
           .nextPage(FurloughStatusPage, emptyUserAnswers.withFurloughStatus(FurloughStatus.FurloughEnded)) mustBe routes.FurloughEndDateController
           .onPageLoad()
       }

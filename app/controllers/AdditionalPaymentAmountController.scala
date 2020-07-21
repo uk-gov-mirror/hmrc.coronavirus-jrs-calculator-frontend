@@ -23,7 +23,7 @@ import controllers.actions._
 import forms.AdditionalPaymentAmountFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.{AdditionalPayment, Amount, UserAnswers}
+import models.{AdditionalPayment, Amount}
 import navigation.Navigator
 import pages.{AdditionalPaymentAmountPage, AdditionalPaymentPeriodsPage}
 import play.api.data.Form

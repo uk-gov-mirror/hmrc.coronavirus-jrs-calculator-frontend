@@ -28,23 +28,44 @@ sealed trait FurloughStatus
 object FurloughStatus extends Enumerable.Implicits {
 
   case object FurloughEnded extends WithName("ended") with FurloughStatus
+  case object FlexibleFurlough extends WithName("flexible") with FurloughStatus
   case object FurloughOngoing extends WithName("ongoing") with FurloughStatus
 
   val values: Seq[FurloughStatus] = Seq(
     FurloughEnded,
+    FlexibleFurlough,
     FurloughOngoing
   )
 
-  def options(form: Form[_], claimStart: LocalDate)(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
-    RadioItem(
-      value = Some(value.toString),
-      content = Text(messages(phaseTwoContent(claimStart, value))),
-      checked = form("value").value.contains(value.toString)
-    )
+  def conditionalValues(claimStart: LocalDate): Seq[FurloughStatus] =
+    if (claimStart.getMonthValue < 7) {
+      Seq(
+        FurloughEnded,
+        FurloughOngoing
+      )
+    } else {
+      Seq(
+        FurloughOngoing,
+        FlexibleFurlough,
+        FurloughEnded
+      )
+    }
+
+  def options(form: Form[_], claimStart: LocalDate)(implicit messages: Messages): Seq[RadioItem] = conditionalValues(claimStart).map {
+    value =>
+      RadioItem(
+        value = Some(value.toString),
+        content = Text(messages(conditionalContent(claimStart, value))),
+        checked = form("value").value.contains(value.toString)
+      )
   }
 
-  private def phaseTwoContent(claimStart: LocalDate, value: FurloughStatus): String =
-    if (claimStart.getMonthValue < 7) s"furloughOngoing.${value.toString}" else s"furloughOngoing.1stJuly.${value.toString}"
+  private def conditionalContent(claimStart: LocalDate, value: FurloughStatus): String =
+    if (claimStart.getMonthValue < 7) {
+      s"furloughOngoing.${value.toString}"
+    } else {
+      s"furloughOngoing.phaseTwo.${value.toString}"
+    }
 
   implicit val enumerable: Enumerable[FurloughStatus] =
     Enumerable(values.map(v => v.toString -> v): _*)

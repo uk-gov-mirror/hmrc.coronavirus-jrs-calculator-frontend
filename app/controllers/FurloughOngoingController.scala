@@ -22,7 +22,7 @@ import handlers.ErrorHandler
 import javax.inject.Inject
 import models.FurloughStatus
 import navigation.Navigator
-import pages.{ClaimPeriodStartPage, FurloughStatusPage}
+import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughStatusPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -48,17 +48,17 @@ class FurloughOngoingController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val maybeFurlough = request.userAnswers.getV(FurloughStatusPage)
-    getRequiredAnswerV(ClaimPeriodStartPage) { claimStartDate =>
-      Future.successful(Ok(view(maybeFurlough.map(form.fill).getOrElse(form), claimStartDate)))
+    getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
+      Future.successful(Ok(view(maybeFurlough.map(form.fill).getOrElse(form), claimStartDate, claimEndDate)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswerV(ClaimPeriodStartPage) { claimStartDate =>
+    getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStartDate))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStartDate, claimEndDate))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers

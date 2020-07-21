@@ -334,15 +334,16 @@ claimPeriodEnd.legend = Dyddiad dod i ben
 claimPeriodEnd.hint = Er enghraifft, 31 3 2020
 
 furloughOngoing.title = A yw cyfnod ffyrlo’r cyflogai hwn wedi dod i ben?
-furloughOngoing.1stJuly.title = A yw cyfnod ffyrlo’r cyflogai hwn wedi dod i ben yn barhaol?
+furloughOngoing.phaseTwo.title = On {0}, is this employee still fully furloughed?
 furloughOngoing.heading = A yw cyfnod ffyrlo’r cyflogai hwn wedi dod i ben?
-furloughOngoing.1stJuly.heading = A yw cyfnod ffyrlo’r cyflogai hwn wedi dod i ben yn barhaol?
+furloughOngoing.phaseTwo.heading = On {0}, is this employee still fully furloughed?
 furloughOngoing.ended = Iawn
+furloughOngoing.phaseTwo.ended = No, they are no longer an employee
 furloughOngoing.ongoing = Na, mae’n barhaus
-furloughOngoing.1stJuly.ended = Iawn
-furloughOngoing.1stJuly.ongoing = Na
+furloughOngoing.phaseTwo.ongoing = Iawn
+furloughOngoing.phaseTwo.flexible = No, they worked during the claim period (flexibly furloughed
 furloughOngoing.error.required = Dewiswch un o’r opsiynau isod
-furloughOngoing.1stJuly.hint = O 1 Gorffennaf ymlaen, gallwch ddod â chyflogeion yn ôl i’r gwaith tra bo’u cyfnod ffyrlo’n parhau. Gallwch hawlio am eu horiau arferol llai’r oriau roeddent yn eu gweithio mewn gwirionedd.
+furloughOngoing.phaseTwo.hint = Employees can now be flexibly furloughed. You can claim for their usual working hours minus the hours they actually worked.
 
 furloughEndDate.title = Pryd daeth ei ffyrlo i ben?
 furloughEndDate.heading = Pryd daeth ei ffyrlo i ben?

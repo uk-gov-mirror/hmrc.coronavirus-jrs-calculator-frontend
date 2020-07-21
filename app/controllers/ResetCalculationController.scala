@@ -36,7 +36,7 @@ class ResetCalculationController @Inject()(
     Ok(view())
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     Redirect(routes.ClaimPeriodStartController.onPageLoad())
   }
 }

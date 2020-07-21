@@ -20,7 +20,7 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.TopUpAmountFormProvider
 import javax.inject.Inject
-import models.{Amount, TopUpPayment, TopUpPeriod, UserAnswers}
+import models.{Amount, TopUpPayment, TopUpPeriod}
 import navigation.Navigator
 import pages.{TopUpAmountPage, TopUpPeriodsPage}
 import play.api.data.Form

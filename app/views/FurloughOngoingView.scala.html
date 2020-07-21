@@ -27,22 +27,38 @@
         inputRadio: components.inputRadio,
 )
 
-@(form: Form[_], claimStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], claimStartDate: LocalDate, claimEndDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.title" else "furloughOngoing.title")), thisPage = FurloughStatusPage) {
+@titleContent= @{
+  if(claimStartDate.getMonthValue < 7) {
+    title(form, "furloughOngoing.title")
+  } else {
+    title(form, "furloughOngoing.phaseTwo.title", titleMessageArgs = Seq(dateToStringWithoutYear(claimEndDate)))
+  }
+}
+
+@headingContent = @{
+  if(claimStartDate.getMonthValue < 7) {
+    messages("furloughOngoing.heading")
+  } else {
+    messages("furloughOngoing.phaseTwo.heading", dateToStringWithoutYear(claimEndDate))
+  }
+}
+
+@govukLayout(pageTitle = Some(titleContent), thisPage = FurloughStatusPage) {
 
     @formHelper(action = controllers.routes.FurloughOngoingController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"))
+        @h1(headingContent)
         @if(claimStartDate.getMonthValue > 6) {
-          @p(Html(messages("furloughOngoing.1stJuly.hint")))
+          @p(Html(messages("furloughOngoing.phaseTwo.hint")))
         }
 
         @inputRadio(
             form = form,
-            legend = messages( if (claimStartDate.getMonthValue > 6) "furloughOngoing.1stJuly.heading" else "furloughOngoing.heading"),
+            legend = headingContent,
             legendAsHeading = false,
             classes = "govuk-visually-hidden",
             items = FurloughStatus.options(form, claimStartDate)

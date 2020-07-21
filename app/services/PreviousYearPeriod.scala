@@ -23,8 +23,6 @@ import models.{CylbDuration, PaymentFrequency, Period, PeriodWithPaymentDate, Pe
 
 trait PreviousYearPeriod {
 
-  private val leapYear = LocalDate.of(2019, 3, 1)
-
   def previousYearPeriod(frequency: PaymentFrequency, period: Periods): Seq[Period] = {
     val cylbDuration = CylbDuration(frequency, period)
 

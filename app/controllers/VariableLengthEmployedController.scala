@@ -20,7 +20,7 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.VariableLengthEmployedFormProvider
 import javax.inject.Inject
-import models.{EmployeeStarted, UserAnswers}
+import models.EmployeeStarted
 import navigation.Navigator
 import org.slf4j.{Logger, LoggerFactory}
 import pages.EmployeeStartedPage

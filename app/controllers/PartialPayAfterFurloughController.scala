@@ -20,7 +20,6 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.FurloughPartialPayFormProvider
 import javax.inject.Inject
-import models.UserAnswers
 import navigation.Navigator
 import org.slf4j.{Logger, LoggerFactory}
 import pages._
