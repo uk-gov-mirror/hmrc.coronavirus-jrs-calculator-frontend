@@ -18,21 +18,24 @@ package controllers
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.PayDateFormProvider
 import models.PaymentFrequency.Weekly
 import models.requests.DataRequest
-import navigation.{FakeNavigator, Navigator}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
+import pages.PayDatePage
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.PayDateView
 
-class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   lazy val payDateRoute = routes.PayDateController.onPageLoad(1).url
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
@@ -51,8 +54,6 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   val validAnswer = LocalDate.of(2020, 3, 3)
 
-  def onwardRoute = Call("GET", "/foo")
-
   def postRequest(date: LocalDate, route: String = payDateRoute): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, route).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -64,108 +65,78 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
 
   private def form = formProvider()
 
+  val view = app.injector.instanceOf[PayDateView]
+
+  val controller = new PayDateController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
+
   "PayDate Controller" must {
 
     "return OK and the correct view for a GET" when {
 
       "furlough start date is the same as claim start date" in {
-        val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
-
-        val result = route(application, getRequest).value
-
-        val view = application.injector.instanceOf[PayDateView]
-
-        status(result) mustEqual OK
-
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithStartDate))
+        val result = controller.onPageLoad(1)(getRequest)
         val dataRequest = DataRequest(getRequest, userAnswersWithStartDate.id, userAnswersWithStartDate)
 
+        status(result) mustEqual OK
         contentAsString(result) mustEqual
           view(form, 1, claimStartDate)(dataRequest, messages).toString
-
-        application.stop()
       }
 
       "furlough start date is before the claim start date" in {
         val modifiedUserAnswers = userAnswersWithStartDate
-          .set(FurloughStartDatePage, claimStartDate.minusDays(1))
-          .success
-          .value
+          .withFurloughStartDate(claimStartDate.minusDays(1).toString)
 
-        val application = applicationBuilder(userAnswers = Some(modifiedUserAnswers)).build()
-
-        val result = route(application, getRequest).value
-
-        val view = application.injector.instanceOf[PayDateView]
-
-        status(result) mustEqual OK
-
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
+        val result = controller.onPageLoad(1)(getRequest)
         val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
 
+        status(result) mustEqual OK
         contentAsString(result) mustEqual
           view(form, 1, claimStartDate)(dataRequest, messages).toString
-
-        application.stop()
       }
 
       "furlough start date is after the claim start date" in {
         val modifiedUserAnswers = userAnswersWithStartDate
-          .set(FurloughStartDatePage, claimStartDate.plusDays(1))
-          .success
-          .value
+          .withFurloughStartDate(claimStartDate.plusDays(1).toString)
 
-        val application = applicationBuilder(userAnswers = Some(modifiedUserAnswers)).build()
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
 
-        val result = route(application, getRequest).value
-
-        val view = application.injector.instanceOf[PayDateView]
-
-        status(result) mustEqual OK
-
+        val result = controller.onPageLoad(1)(getRequest)
         val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
 
+        status(result) mustEqual OK
         contentAsString(result) mustEqual
           view(form, 1, claimStartDate.plusDays(1))(dataRequest, messages).toString
-
-        application.stop()
       }
-
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = userAnswersWithStartDate.set(PayDatePage, validAnswer, Some(1)).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val view = application.injector.instanceOf[PayDateView]
-
-      val result = route(application, getRequest).value
-
-      status(result) mustEqual OK
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      val result = controller.onPageLoad(1)(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
+      status(result) mustEqual OK
       contentAsString(result) mustEqual
         view(form.fill(validAnswer), 1, claimStartDate)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersWithStartDate))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-      val result = route(application, postRequest(validAnswer)).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithStartDate))
+      val result = controller.onSubmit(1)(postRequest(validAnswer))
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/pay-periods-list"
     }
 
     "generate dates when not monthly" in {
@@ -177,145 +148,91 @@ class PayDateControllerSpec extends SpecBaseWithApplication with MockitoSugar {
         .withPaymentFrequency(Weekly)
         .withPayMethod()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val result = route(application, postRequest(LocalDate.of(2020, 6, 26))).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      val result = controller.onSubmit(1)(postRequest(LocalDate.of(2020, 6, 26)))
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.PayPeriodsListController.onPageLoad().url
-
-      application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" when {
 
       "data does not bind" in {
-        val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
-
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithStartDate))
         val request =
           FakeRequest(POST, payDateRoute).withCSRFToken
             .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
-
-        val view = application.injector.instanceOf[PayDateView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-
+        val result = controller.onSubmit(1)(request)
         val dataRequest = DataRequest(request, userAnswersWithStartDate.id, userAnswersWithStartDate)
 
+        status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual
           view(boundForm, 1, claimStartDate)(dataRequest, messages).toString
-
-        application.stop()
       }
 
       "first date is not before effective start date (claim start date = furlough start date)" in {
         val dateBeforeStart = claimStartDate.plusDays(1)
-
-        val application = applicationBuilder(userAnswers = Some(userAnswersWithStartDate)).build()
-
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithStartDate))
         val request = postRequest(dateBeforeStart)
-
-        val result = route(application, request).value
+        val result = controller.onSubmit(1)(request)
 
         status(result) mustEqual BAD_REQUEST
-
-        application.stop()
       }
 
       "first date is not before effective start date (claim start date is before furlough start date)" in {
         val dateBeforeStart = LocalDate.of(2020, 3, 2).plusDays(1)
-
         val modifiedUserAnswers = userAnswersWithStartDate
-          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 1))
-          .success
-          .value
-          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 2))
-          .success
-          .value
-
-        val application = applicationBuilder(userAnswers = Some(modifiedUserAnswers)).build()
-
+          .withClaimPeriodStart(LocalDate.of(2020, 3, 1).toString)
+          .withFurloughStartDate(LocalDate.of(2020, 3, 2).toString)
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
         val request = postRequest(dateBeforeStart)
-
-        val result = route(application, request).value
+        val result = controller.onSubmit(1)(request)
 
         status(result) mustEqual BAD_REQUEST
-
-        application.stop()
       }
 
       "first date is not before effective start date (claim start date is after furlough start date)" in {
         val dateBeforeStart = LocalDate.of(2020, 3, 2).plusDays(1)
-
         val modifiedUserAnswers = userAnswersWithStartDate
-          .set(ClaimPeriodStartPage, LocalDate.of(2020, 3, 2))
-          .success
-          .value
-          .set(FurloughStartDatePage, LocalDate.of(2020, 3, 1))
-          .success
-          .value
+          .withClaimPeriodStart(LocalDate.of(2020, 3, 2).toString)
+          .withFurloughStartDate(LocalDate.of(2020, 3, 1).toString)
 
-        val application = applicationBuilder(userAnswers = Some(modifiedUserAnswers)).build()
-
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
         val request = postRequest(dateBeforeStart)
-
-        val result = route(application, request).value
+        val result = controller.onSubmit(1)(request)
 
         status(result) mustEqual BAD_REQUEST
-
-        application.stop()
       }
 
       "second date is not in claim period" in {
         val dateBeforePrevious = LocalDate.of(2020, 3, 2)
-
         val userAnswers = userAnswersWithStartDate
-          .set(PayDatePage, LocalDate.of(2020, 3, 3), Some(1))
-          .success
-          .value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+          .withPayDate(List(LocalDate.of(2020, 3, 3).toString))
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val request = postRequest(dateBeforePrevious, routes.PayDateController.onPageLoad(2).url)
-
-        val result = route(application, request).value
+        val result = controller.onSubmit(2)(request)
 
         status(result) mustEqual BAD_REQUEST
-
-        application.stop()
       }
-
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      val result = route(application, getRequest).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
+      val result = controller.onPageLoad(1)(getRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      val result = route(application, postRequest(validAnswer)).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
+      val result = controller.onSubmit(1)(postRequest(validAnswer))
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
   }
 }

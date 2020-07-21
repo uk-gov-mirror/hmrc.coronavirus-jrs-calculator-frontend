@@ -38,7 +38,6 @@ class AnnualPayAmountController @Inject()(
   sessionRepository: SessionRepository,
   val navigator: Navigator,
   identify: IdentifierAction,
-  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: AnnualPayAmountFormProvider,

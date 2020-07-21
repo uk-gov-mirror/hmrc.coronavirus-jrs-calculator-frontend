@@ -16,14 +16,14 @@
 
 package controllers.actions
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import handlers.ErrorHandler
 import play.api.mvc.Results
 import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class FeatureFlagActionSpec extends SpecBaseWithApplication {
+class FeatureFlagActionSpec extends SpecBaseControllerSpecs {
 
   class Harness(identify: IdentifierAction, flagAction: FeatureFlagAction) {
     def onPageLoad() = (identify andThen flagAction) {
@@ -36,15 +36,13 @@ class FeatureFlagActionSpec extends SpecBaseWithApplication {
   "FeatureFlagAction" must {
 
     "Allow requests when no feature flag is provided" in {
-      val application = applicationBuilder().build()
-
       val action = new FeatureFlagAction(None, eh, implicitly)
 
-      val identify = application.injector.instanceOf[IdentifierAction]
+      val identify = app.injector.instanceOf[IdentifierAction]
 
       val controller = new Harness(identify, action)
 
-      val result = controller.onPageLoad()(fakeRequest)
+      val result = controller.onPageLoad()(fakeRequest.withSession(("sessionId", "123")))
 
       status(result) mustBe OK
     }

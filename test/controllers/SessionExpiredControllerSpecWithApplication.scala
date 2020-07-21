@@ -16,31 +16,32 @@
 
 package controllers
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.SessionExpiredView
 
-class SessionExpiredControllerSpecWithApplication extends SpecBaseWithApplication {
+import scala.concurrent.Future
+
+class SessionExpiredControllerSpecWithApplication extends SpecBaseControllerSpecs with MockitoSugar {
 
   "SessionExpired Controller" must {
 
     "return OK and the correct view for a GET" in {
+      val view = app.injector.instanceOf[SessionExpiredView]
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val controller = new SessionExpiredController(component, view)
 
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, routes.SessionExpiredController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[SessionExpiredView]
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
-
       contentAsString(result) mustEqual
         view()(request, messages).toString
-
-      application.stop()
     }
   }
 }

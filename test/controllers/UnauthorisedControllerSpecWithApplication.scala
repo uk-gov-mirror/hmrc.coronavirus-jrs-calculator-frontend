@@ -16,31 +16,29 @@
 
 package controllers
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.UnauthorisedView
 
-class UnauthorisedControllerSpecWithApplication extends SpecBaseWithApplication {
+import scala.concurrent.Future
+
+class UnauthorisedControllerSpecWithApplication extends SpecBaseControllerSpecs {
+
+  val view = app.injector.instanceOf[UnauthorisedView]
+  val controller = new UnauthorisedController(component, view)
 
   "Unauthorised Controller" must {
 
     "return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request = FakeRequest(GET, routes.UnauthorisedController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[UnauthorisedView]
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view()(request, messages).toString
-
-      application.stop()
+      contentAsString(result) mustEqual view()(request, messages).toString
     }
   }
 }

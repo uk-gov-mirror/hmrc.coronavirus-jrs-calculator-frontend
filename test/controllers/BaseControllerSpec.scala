@@ -19,7 +19,7 @@ package controllers
 import java.time.LocalDate
 
 import akka.util.Timeout
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import cats.scalatest.ValidatedValues
 import cats.syntax.validated._
 import handlers.ErrorHandler
@@ -37,11 +37,10 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class BaseControllerSpec extends SpecBaseWithApplication with MockitoSugar with ValidatedValues {
+class BaseControllerSpec extends SpecBaseControllerSpecs with MockitoSugar with ValidatedValues {
   lazy val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = DataRequest(fakeRequest, "id", emptyUserAnswers)
 
   def futureResult[A]: A => Future[Result] = x => Future.successful(Ok(s"Answer: $x"))
-  implicit lazy val errorHandler: ErrorHandler = injector.instanceOf[ErrorHandler]
 
   object BaseController extends BaseController {
     override protected def controllerComponents: MessagesControllerComponents = injector.instanceOf[MessagesControllerComponents]

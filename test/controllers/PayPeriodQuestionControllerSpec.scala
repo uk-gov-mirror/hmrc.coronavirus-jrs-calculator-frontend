@@ -18,7 +18,7 @@ package controllers
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.PayPeriodQuestionFormProvider
 import models.ClaimPeriodQuestion.ClaimOnSamePeriod
 import models.FurloughPeriodQuestion.FurloughedOnSamePeriod
@@ -27,18 +27,19 @@ import models.PayMethod.Regular
 import models.PaymentFrequency.Monthly
 import models.requests.DataRequest
 import models.{PayPeriodQuestion, Period}
-import navigation.{FakeNavigator, Navigator}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.PayPeriodQuestionView
 
-class PayPeriodQuestionControllerSpec extends SpecBaseWithApplication with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-  def onwardRoute = Call("GET", "/foo")
+class PayPeriodQuestionControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   private lazy val payPeriodQuestionRoute = routes.PayPeriodQuestionController.onPageLoad().url
   private lazy val payPeriodQuestionRoutePost = routes.PayPeriodQuestionController.onSubmit().url
@@ -63,27 +64,32 @@ class PayPeriodQuestionControllerSpec extends SpecBaseWithApplication with Mocki
     Period(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30))
   )
 
+  val view = app.injector.instanceOf[PayPeriodQuestionView]
+
+  val controller = new PayPeriodQuestionController(
+    messagesApi,
+    mockSessionRepository,
+    navigator,
+    identifier,
+    dataRetrieval,
+    dataRequired,
+    formProvider,
+    component,
+    view)
+
   "PayPeriodQuestion Controller" must {
 
     "return OK and the correct view for a GET" in {
       val getRequest: FakeRequest[AnyContentAsEmpty.type] =
         FakeRequest(GET, payPeriodQuestionRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-
-      val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
-
-      val result = route(application, getRequest).value
-
-      val view = application.injector.instanceOf[PayPeriodQuestionView]
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(baseUserAnswers))
+      val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
-
-      val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
-
       contentAsString(result) mustEqual
         view(form, payPeriods)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
@@ -92,97 +98,62 @@ class PayPeriodQuestionControllerSpec extends SpecBaseWithApplication with Mocki
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
       val userAnswersUpdated = baseUserAnswers.withPayPeriodQuestion(PayPeriodQuestion.values.head)
-      val application = applicationBuilder(userAnswers = Some(userAnswersUpdated)).build()
-
-      val view = application.injector.instanceOf[PayPeriodQuestionView]
-
-      val result = route(application, getRequest).value
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersUpdated))
+      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+      val result = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
-
-      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
-
       contentAsString(result) mustEqual
         view(form.fill(PayPeriodQuestion.values.head), payPeriods)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(baseUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(baseUserAnswers))
       val request =
         FakeRequest(POST, payPeriodQuestionRoutePost)
           .withFormUrlEncodedBody(("value", PayPeriodQuestion.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/pay-method"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(baseUserAnswers))
       val request =
         FakeRequest(POST, payPeriodQuestionRoutePost).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
-
-      val view = application.injector.instanceOf[PayPeriodQuestionView]
-
-      val result = route(application, request).value
+      val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
-
-      val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
-
       contentAsString(result) mustEqual
         view(boundForm, payPeriods)(dataRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, payPeriodQuestionRoute)
-
-      val result = route(application, request).value
+      val result = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request =
         FakeRequest(POST, payPeriodQuestionRoute)
           .withFormUrlEncodedBody(("value", PayPeriodQuestion.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
     }
   }
 }

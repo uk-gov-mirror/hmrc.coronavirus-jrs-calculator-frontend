@@ -37,7 +37,6 @@ class VariableLengthEmployedController @Inject()(
   sessionRepository: SessionRepository,
   override val navigator: Navigator,
   identify: IdentifierAction,
-  feature: FeatureFlagActionProvider,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: VariableLengthEmployedFormProvider,
