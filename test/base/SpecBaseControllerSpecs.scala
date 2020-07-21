@@ -30,13 +30,14 @@ import org.scalatestplus.play.guice._
 import play.api.Configuration
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
+import play.api.libs.json.{JsError, JsPath, JsonValidationError}
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import repositories.SessionRepository
 import utils.CoreTestData
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with CoreTestData with MockitoSugar {
@@ -67,4 +68,17 @@ trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with Cor
     when(mockSession.set(any())) thenReturn Future.successful(true)
     mockSession
   }
+
+  def emptyError(
+                  path: JsPath,
+                  error: String = "error.path.missing"
+                ): JsError =
+    JsError(path -> JsonValidationError(List(error)))
+
+  def emptyError(
+                  path: JsPath,
+                  idx: Int,
+                  error: String
+                ): JsError =
+    JsError((path \ (idx - 1)) -> JsonValidationError(List(error)))
 }
