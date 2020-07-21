@@ -254,30 +254,26 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted.OnOrBefore1Feb2019" in {
         val userAnswers = emptyUserAnswers
-          .set(PayMethodPage, Variable)
-          .get
-          .set(EmployeeStartDatePage, LocalDate.of(2019, 1, 2))
-          .get
+          .withPayMethod(Variable)
+          .withEmployeeStartedOnOrBefore1Feb2019()
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
       "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and employee started before apr6th2019" in {
         val userAnswers = emptyUserAnswers
-          .set(PayMethodPage, Variable)
-          .get
-          .set(EmployeeStartDatePage, LocalDate.of(2019, 3, 4))
-          .get
+          .withPayMethod(Variable)
+          .withEmployeeStartedAfter1Feb2019()
+          .withEmployeeStartDate("2019,3,4")
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
       "go to AnnualPayAmountPage after LastPayDatePage if the pay-method is Variable and EmployeeStarted on or after Apr6th" in {
         val userAnswers = emptyUserAnswers
-          .set(PayMethodPage, Variable)
-          .get
-          .set(EmployeeStartDatePage, LocalDate.of(2019, 6, 1))
-          .get
+          .withPayMethod(Variable)
+          .withEmployeeStartedAfter1Feb2019()
+          .withEmployeeStartDate("2019,5,10")
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.AnnualPayAmountController.onPageLoad()
       }
