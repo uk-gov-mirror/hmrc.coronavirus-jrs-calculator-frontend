@@ -18,12 +18,12 @@ package forms
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.behaviours.DateBehaviours
 import models.Period
 import play.api.data.FormError
 
-class FurloughEndDateFormProviderSpec extends SpecBaseWithApplication {
+class FurloughEndDateFormProviderSpec extends SpecBaseControllerSpecs {
 
   val dateBehaviours = new DateBehaviours
   import dateBehaviours._

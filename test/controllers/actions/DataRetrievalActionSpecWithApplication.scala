@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.Mockito._
@@ -27,7 +27,7 @@ import repositories.SessionRepository
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DataRetrievalActionSpecWithApplication extends SpecBaseWithApplication with MockitoSugar with ScalaFutures {
+class DataRetrievalActionSpecWithApplication extends SpecBaseControllerSpecs with MockitoSugar with ScalaFutures {
 
   class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)

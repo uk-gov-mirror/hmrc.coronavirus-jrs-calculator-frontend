@@ -18,14 +18,14 @@ package forms
 
 import java.time.LocalDate
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.behaviours.DateBehaviours
 import forms.mappings.LocalDateFormatter
 import play.api.data.FormError
 import play.api.data.validation.{Invalid, Valid}
 import views.ViewUtils
 
-class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
+class ClaimPeriodEndFormProviderSpec extends SpecBaseControllerSpecs {
 
   val dateBehaviours = new DateBehaviours
   import dateBehaviours._
@@ -94,7 +94,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
         FormError(
           "endDate",
           "claimPeriodEnd.cannot.be.after.policyEnd",
-          Seq(ViewUtils.dateToString(frontendAppConfig.schemeEndDate))
+          Seq(ViewUtils.dateToString(appConf.schemeEndDate))
         ))
     }
 
@@ -102,7 +102,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseWithApplication {
 
       val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2020, 7, 2))
 
-      val now = frontendAppConfig.phaseTwoStartDate.plusDays(5)
+      val now = appConf.phaseTwoStartDate.plusDays(5)
 
       val data = Map(
         "endDate.day"   -> now.getDayOfMonth.toString,

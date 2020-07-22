@@ -16,17 +16,17 @@
 
 package controllers.actions
 
-import base.SpecBaseWithApplication
-import play.api.mvc.{BodyParsers, Results}
+import base.SpecBaseControllerSpecs
+import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class SessionActionSpecWithApplication extends SpecBaseWithApplication {
+class SessionActionSpecWithApplication extends SpecBaseControllerSpecs {
 
   class Harness(action: IdentifierAction) {
-    def onPageLoad() = action { request =>
+    def onPageLoad(): Action[AnyContent] = action { _ =>
       Results.Ok
     }
   }
@@ -36,12 +36,9 @@ class SessionActionSpecWithApplication extends SpecBaseWithApplication {
     "there's no active session" must {
 
       "redirect to the session expired page" in {
+        val bodyParsers = app.injector.instanceOf[BodyParsers.Default]
 
-        val application = applicationBuilder(userAnswers = None).build()
-
-        val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-
-        val sessionAction = new SessionIdentifierAction(frontendAppConfig, bodyParsers)
+        val sessionAction = new SessionIdentifierAction(appConf, bodyParsers)
 
         val controller = new Harness(sessionAction)
 
@@ -55,12 +52,9 @@ class SessionActionSpecWithApplication extends SpecBaseWithApplication {
     "there's an active session" must {
 
       "perform the action" in {
+        val bodyParsers = app.injector.instanceOf[BodyParsers.Default]
 
-        val application = applicationBuilder(userAnswers = None).build()
-
-        val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-
-        val sessionAction = new SessionIdentifierAction(frontendAppConfig, bodyParsers)
+        val sessionAction = new SessionIdentifierAction(appConf, bodyParsers)
 
         val controller = new Harness(sessionAction)
 

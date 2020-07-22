@@ -16,12 +16,12 @@
 
 package forms
 
-import base.SpecBaseWithApplication
+import base.SpecBaseControllerSpecs
 import forms.behaviours.DateBehaviours
 import forms.mappings.LocalDateFormatter
 import play.api.data.FormError
 
-class ClaimPeriodStartFormProviderSpec extends SpecBaseWithApplication {
+class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
 
   val form = new ClaimPeriodStartFormProvider()()
   val dateBehaviours = new DateBehaviours
