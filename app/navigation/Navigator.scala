@@ -250,7 +250,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     if (userAnswers.getList(PayDatePage).isEmpty) {
       routes.PayDateController.onPageLoad(1)
     } else {
-      routes.AnnualPayAmountController.onPageLoad()
+      routes.LastPayDateController.onPageLoad()
     }
   }
 
