@@ -634,9 +634,8 @@ partTimePeriods.partialPeriod = Cyfnod cyflog: {0} to {1} (rhannol)
 partTimePeriods.singleDay = Cyfnod cyflog: {0} (rhannol)
 partTimePeriods.error.required = dewiswch y cyfnodau cyflog pan oedd y cyflogai’n gweithio
 
-partTimeQuestion.title = A yw’r cyflogai hwn wedi bod ar ffyrlo hyblyg yn ystod y cyfnod hawlio hwn?
-partTimeQuestion.heading = A yw’r cyflogai hwn wedi bod ar ffyrlo hyblyg yn ystod y cyfnod hawlio hwn?
-partTimeQuestion.p1 = Mae ‘ffyrlo hyblyg’ yn golygu dod â chyflogai yn ôl i’r gwaith yn rhan amser wrth i’w ffyrlo barhau.
+partTimeQuestion.title = Did this employee do any work between {0} and {1}?
+partTimeQuestion.heading = Did this employee do any work between {0} and {1}?
 partTimeQuestion.partTimeYes = Iawn
 partTimeQuestion.partTimeNo = Na
 partTimeQuestion.error.required = Dewiswch un o’r opsiynau isod

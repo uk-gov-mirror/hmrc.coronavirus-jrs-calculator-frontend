@@ -19,35 +19,28 @@
 @import pages.PartTimeQuestionPage
 
 @this(
-        govukLayout: templates.GovukLayoutWrapper,
-        formHelper: FormWithCSRF,
-        errorSummary: components.errorSummary,
-        inputRadio: components.inputRadio,
-        button: components.button,
-        h1: components.h1,
-        p: components.p
+govukLayout: templates.GovukLayoutWrapper,
+formHelper: FormWithCSRF,
+errorSummary: components.errorSummary,
+inputRadio: components.inputRadio,
+button: components.button,
+p: components.p
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], furlough: FurloughWithinClaim)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "partTimeQuestion.title")), thisPage = PartTimeQuestionPage) {
+@govukLayout(pageTitle = Some(title(form, "partTimeQuestion.title", titleMessageArgs = Seq(dateToStringWithoutYear(furlough.start), dateToStringWithoutYear(furlough.end)))), thisPage = PartTimeQuestionPage) {
 
     @formHelper(action = PartTimeQuestionController.onSubmit(), 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 
-        @h1("partTimeQuestion.heading")
-
-        @p(Html(messages("partTimeQuestion.p1")))
-
         @inputRadio(
             form = form,
-            legend = messages("partTimeQuestion.heading"),
-            legendAsHeading = false,
-            classes = "govuk-visually-hidden",
+            legend = messages("partTimeQuestion.heading", dateToStringWithoutYear(furlough.start), dateToStringWithoutYear(furlough.end)),
             items = PartTimeQuestion.options(form)
         )
 
-        @button("site.saveAndContinue")
+        @button("site.continue")
     }
 }

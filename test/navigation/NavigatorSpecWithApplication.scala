@@ -117,14 +117,44 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
             .withPartTimeQuestion(PartTimeNo)) mustBe routes.ConfirmationController.onPageLoad()
       }
 
-      "go to PartTimeQuestionPage after RegularPayAmountPage if phase two started" in {
-        val userAnswers = emptyUserAnswers.withClaimPeriodStart(LocalDate.now)
+      "go to PartTimeQuestionPage after RegularPayAmountPage if phase two started and furlough has ended" in {
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020,7,1")
+          .withFurloughStatus(FurloughStatus.FurloughEnded)
 
-        val navigator = new Navigator() {
-          override lazy val phaseTwoStartDate: LocalDate = LocalDate.now
-        }
+        val navigator = new Navigator()
 
         navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
+      }
+
+      "go to PartTimePeriodsPage after RegularPayAmountPage if phase two started and furlough is flexible" in {
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020,7,1")
+          .withFurloughStatus(FurloughStatus.FlexibleFurlough)
+
+        val navigator = new Navigator()
+
+        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.PartTimePeriodsController.onPageLoad()
+      }
+
+      "go to NicCategoryPage after RegularPayAmountPage if phase two started and furlough is ongoing" in {
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020,7,1")
+          .withFurloughStatus(FurloughStatus.FurloughOngoing)
+
+        val navigator = new Navigator()
+
+        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.NicCategoryController.onPageLoad()
+      }
+
+      "go to ConfirmationPage after RegularPayAmountPage if phase two started and furlough is ongoing and claim start Aug onwards" in {
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020,8,1")
+          .withFurloughStatus(FurloughStatus.FurloughOngoing)
+
+        val navigator = new Navigator()
+
+        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.ConfirmationController.onPageLoad()
       }
 
       "go to PartTimePeriodsPage after PartTimeQuestionPage if PartTimeQuestion is PartTimeYes" in {
@@ -135,8 +165,10 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .onPageLoad()
       }
 
-      "go to PartTimeQuestionPage after AnnualPayAmountPage if phase two started" in {
-        val userAnswers = emptyUserAnswers.withClaimPeriodStart(LocalDate.now)
+      "go to PartTimeQuestionPage after AnnualPayAmountPage if phase two started and furlough has ended" in {
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart(LocalDate.now)
+          .withFurloughStatus(FurloughStatus.FurloughEnded)
 
         val navigator = new Navigator() {
           override lazy val phaseTwoStartDate: LocalDate = LocalDate.now
@@ -336,18 +368,44 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
-            .set(EmployeeStartDatePage, LocalDate.now().minusDays(2))
-            .success
-            .value
+            .withEmployeeStartDate("2019,8,1")
         ) mustBe routes.PayDateController.onPageLoad(1)
 
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
-            .set(EmployeeStartDatePage, LocalDate.of(2019, 4, 5))
-            .success
-            .value
-        ) mustBe routes.PayDateController.onPageLoad(1)
+            .withEmployeeStartDate("2019,8,1")
+            .withPayDate(List("2020,3,1", "2020,3,7"))
+        ) mustBe routes.LastPayDateController.onPageLoad()
+
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          emptyUserAnswers
+            .withPayMethod()
+            .withEmployeeStartDate("2019, 8, 1")
+            .withPayDate(List("2020,3,1", "2020,3,7"))
+            .withLastPayDate("2020,3,7")
+        ) mustBe routes.RegularPayAmountController.onPageLoad()
+
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          emptyUserAnswers
+            .withPayMethod(PayMethod.Variable)
+            .withEmployeeStartedAfter1Feb2019()
+            .withEmployeeStartDate("2019, 8, 1")
+            .withPayDate(List("2020,3,1", "2020,3,7"))
+            .withLastPayDate("2020,3,7")
+        ) mustBe routes.AnnualPayAmountController.onPageLoad()
+
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          emptyUserAnswers
+            .withPayMethod(PayMethod.Variable)
+            .withEmployeeStartedAfter1Feb2019()
+            .withEmployeeStartDate("2019, 3, 30")
+            .withPayDate(List("2020,3,1", "2020,3,7"))
+            .withLastPayDate("2020,3,7")
+        ) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 
       "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {

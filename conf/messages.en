@@ -640,9 +640,8 @@ partTimePeriods.partialPeriod = Pay period: {0} to {1} (partial)
 partTimePeriods.singleDay = Pay period: {0} (partial)
 partTimePeriods.error.required = Select the pay periods when the employee worked
 
-partTimeQuestion.title = Has this employee been flexibly furloughed during this claim period?
-partTimeQuestion.heading = Has this employee been flexibly furloughed during this claim period?
-partTimeQuestion.p1 = ‘Flexible furlough’ means bringing an employee back to work part time while their furlough is ongoing.
+partTimeQuestion.title = Did this employee do any work between {0} and {1}?
+partTimeQuestion.heading = Did this employee do any work between {0} and {1}?
 partTimeQuestion.partTimeYes = Yes
 partTimeQuestion.partTimeNo = No
 partTimeQuestion.error.required = Select one of the options below

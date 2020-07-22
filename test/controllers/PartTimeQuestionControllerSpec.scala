@@ -16,9 +16,11 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBaseControllerSpecs
 import forms.PartTimeQuestionFormProvider
-import models.PartTimeQuestion
+import models.{FurloughStatus, FurloughWithinClaim, PartTimeQuestion}
 import models.requests.DataRequest
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -59,17 +61,28 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
   "PartTimeQuestion Controller" must {
 
     "return OK and the correct view for a GET" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020,7,1")
+        .withClaimPeriodEnd("2020,7,31")
+        .withFurloughStartDate("2020,3,20")
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2020,7,15")
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val result = controller.onPageLoad()(getRequest)
-      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form)(dataRequest, messages).toString
+        view(form, FurloughWithinClaim(LocalDate.of(2020, 7, 1), LocalDate.of(2020, 7, 15)))(dataRequest, messages).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020,7,1")
+        .withClaimPeriodEnd("2020,7,31")
+        .withFurloughStartDate("2020,3,20")
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2020,7,15")
         .withPartTimeQuestion(PartTimeQuestion.values.head)
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
@@ -78,11 +91,18 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill(PartTimeQuestion.values.head))(dataRequest, messages).toString
+        view(form.fill(PartTimeQuestion.values.head), FurloughWithinClaim(LocalDate.of(2020, 7, 1), LocalDate.of(2020, 7, 15)))(
+          dataRequest,
+          messages).toString
     }
 
     "redirect to the next page when valid data is submitted" in {
       val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020,7,1")
+        .withClaimPeriodEnd("2020,7,31")
+        .withFurloughStartDate("2020,3,20")
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2020,7,15")
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request =
         FakeRequest(POST, partTimeQuestionRoute).withCSRFToken
@@ -97,6 +117,11 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
 
     "return a Bad Request and errors when invalid data is submitted" in {
       val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart("2020,7,1")
+        .withClaimPeriodEnd("2020,7,31")
+        .withFurloughStartDate("2020,3,20")
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2020,7,15")
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request =
         FakeRequest(POST, partTimeQuestionRoute).withCSRFToken
@@ -110,7 +135,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
-        view(boundForm)(dataRequest, messages).toString
+        view(boundForm, FurloughWithinClaim(LocalDate.of(2020, 7, 1), LocalDate.of(2020, 7, 15)))(dataRequest, messages).toString
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
