@@ -57,8 +57,7 @@ class FurloughPeriodQuestionController @Inject()(
     getRequiredAnswersOrRestartJourneyV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
       getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
         val preparedForm = request.userAnswers.getV(FurloughPeriodQuestionPage) match {
-          case Invalid(err) =>
-            UserAnswers.logWarnings(err)
+          case Invalid(_) =>
             form
           case Valid(value) => form.fill(value)
         }

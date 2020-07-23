@@ -46,9 +46,14 @@
             @if(furloughStatus == FurloughStatus.FurloughEnded) {
                 <span class="govuk-!-font-weight-bold">@messages("furloughPeriodQuestion.end")</span>
                 @furloughEnd.map(dateToString).getOrElse("")
-            } else {
+            }
+            @if(furloughStatus == FurloughStatus.FurloughOngoing){
                 <span class="govuk-!-font-weight-bold">@messages("furloughPeriodQuestion.end")</span>
                 @messages("furloughPeriodQuestion.ongoing")
+            }
+            @if(furloughStatus == FurloughStatus.FlexibleFurlough){
+                <span class="govuk-!-font-weight-bold">@messages("furloughPeriodQuestion.end")</span>
+                @messages("furloughPeriodQuestion.flexible")
             }
         }
 

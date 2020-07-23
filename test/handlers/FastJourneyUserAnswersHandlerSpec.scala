@@ -22,7 +22,7 @@ import models.ClaimPeriodQuestion.{ClaimOnDifferentPeriod, ClaimOnSamePeriod}
 import models.FurloughPeriodQuestion.{FurloughedOnDifferentPeriod, FurloughedOnSamePeriod}
 import models.PayPeriodQuestion.{UseDifferentPayPeriod, UseSamePayPeriod}
 import models.PaymentFrequency.Monthly
-import models.UserAnswers
+import models.{FurloughStatus, UserAnswers}
 import pages._
 import play.api.libs.json.{JsObject, Json}
 import utils.CoreTestData
@@ -83,6 +83,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData with 
 
   "delete all from the DB if answer is `No` to pay period, keeping claim and furlough period" in new FastJourneyUserAnswersHandler {
     val userAnswers: UserAnswers = dummyUserAnswers
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withFurloughEndDate("2020-3-31")
       .withClaimPeriodQuestion(ClaimOnSamePeriod)
       .withFurloughPeriodQuestion(FurloughedOnSamePeriod)
@@ -94,6 +95,7 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData with 
       .withClaimPeriodEnd(userAnswers.getV(ClaimPeriodEndPage).value.toString)
       .withFurloughStartDate(userAnswers.getV(FurloughStartDatePage).value.toString)
       .withFurloughEndDate(userAnswers.getV(FurloughEndDatePage).value.toString)
+      .withFurloughStatus(userAnswers.getV(FurloughStatusPage).value)
       .data
 
     val actualUserAnswer: UserAnswersState = updateJourney(userAnswers).toOption.value

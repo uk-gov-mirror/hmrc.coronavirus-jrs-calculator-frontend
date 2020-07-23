@@ -618,6 +618,7 @@ furloughPeriodQuestion.error.required = SDewiswch un o’r opsiynau isod
 furloughPeriodQuestion.start = Dechrau:
 furloughPeriodQuestion.end = Diwedd:
 furloughPeriodQuestion.ongoing = yn barhaus
+furloughPeriodQuestion.flexible = Hyblyg
 
 payPeriodQuestion.title = A ydych am ddefnyddio’r un cyfnodau cyflog?
 payPeriodQuestion.heading = A ydych am ddefnyddio’r un cyfnodau cyflog?

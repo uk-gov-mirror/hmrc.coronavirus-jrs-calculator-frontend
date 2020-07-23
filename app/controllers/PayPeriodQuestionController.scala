@@ -52,7 +52,7 @@ class PayPeriodQuestionController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(PayPeriodQuestionPage) match {
-      case Invalid(e)   => form
+      case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
 

@@ -90,7 +90,7 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
   def payQuestion(answer: UserAnswers): AnswerV[UserAnswersState] =
     answer.getV(PayPeriodQuestionPage) match {
       case Valid(UseSamePayPeriod) =>
-        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData)
+        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepFurloughStatus andThen keepPayPeriodData)
           .run(UserAnswersState(answer, answer))
           .toValidNec(
             GenericValidationError(
@@ -101,7 +101,7 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
           )
 
       case Valid(UseDifferentPayPeriod) =>
-        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod)
+        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepFurloughStatus)
           .run(UserAnswersState(answer, answer))
           .toValidNec(
             GenericValidationError(
@@ -118,7 +118,7 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
   private[this] def processPayQuestionV(answer: UserAnswersState): AnswerV[UserAnswersState] =
     answer.original.getV(PayPeriodQuestionPage) match {
       case Valid(UseSamePayPeriod) =>
-        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepPayPeriodData)
+        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepFurloughStatus andThen keepPayPeriodData)
           .run(answer)
           .toValidNec(
             GenericValidationError(
@@ -129,7 +129,7 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
           )
 
       case Valid(UseDifferentPayPeriod) =>
-        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod)
+        (clearAllAnswers andThen keepClaimPeriod andThen keepFurloughPeriod andThen keepFurloughStatus)
           .run(answer)
           .toValidNec(
             GenericValidationError(
@@ -172,17 +172,17 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
 
   private val keepLastPayDate: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
     for {
-      frequency       <- extractLastPayDateV(answersState.original).toOption
-      withLastPayDate <- answersState.updated.set(LastPayDatePage, frequency).toOption
+      date            <- extractLastPayDateV(answersState.original).toOption
+      withLastPayDate <- answersState.updated.set(LastPayDatePage, date).toOption
     } yield UserAnswersState(withLastPayDate, answersState.original))
 
   private val keepFurloughStatus: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
     for {
-      frequency  <- extractFurloughStatusV(answersState.original).toOption
-      withStatus <- answersState.updated.set(FurloughStatusPage, frequency).toOption
+      status     <- extractFurloughStatusV(answersState.original).toOption
+      withStatus <- answersState.updated.set(FurloughStatusPage, status).toOption
     } yield UserAnswersState(withStatus, answersState.original))
 
-  private val keepPayPeriodData = keepPayPeriod andThen keepPaymentFrequency andThen keepLastPayDate andThen keepFurloughStatus
+  private val keepPayPeriodData = keepPayPeriod andThen keepPaymentFrequency andThen keepLastPayDate
 
   private val clearAllAnswers: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(
     answersState => Option(answersState.modify(_.updated.data).setTo(Json.obj())))

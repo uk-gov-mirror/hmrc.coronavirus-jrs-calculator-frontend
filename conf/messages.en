@@ -647,6 +647,7 @@ furloughPeriodQuestion.error.required = Select one of the options below
 furloughPeriodQuestion.start = Start: 
 furloughPeriodQuestion.end = End: 
 furloughPeriodQuestion.ongoing = Ongoing
+furloughPeriodQuestion.flexible = Flexible
 
 payPeriodQuestion.title = Do you want to use the same pay periods?
 payPeriodQuestion.heading = Do you want to use the same pay periods?
