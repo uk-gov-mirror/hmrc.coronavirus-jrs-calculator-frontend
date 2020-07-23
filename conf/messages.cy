@@ -293,6 +293,27 @@ confirmation.no.nic.pension.nextSteps.li.4.2 = Job Retention Scheme online claim
 confirmation.no.nic.pension.breakdown.summary = Dadansoddiad o gyfrifiadau
 confirmation.no.nic.pension.disclaimer = Mae canlyniadau’r cyfrifiad yn dibynnu ar gywirdeb yr wybodaeth a nodwyd gennych, yr ydych yn gyfrifol amdani. Ni allwch hawlio am fwy o arian nag yr ydych yn mynd i’w dalu allan o dan y cynllun.
 
+confirmation.september.title = What you can claim for this employee
+confirmation.september.heading = What you can claim for this employee
+confirmation.september.p1 = Furlough grant
+confirmation.september.p2 = (September rate: 70% of wages)
+confirmation.september.inset.p1 = To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to.
+confirmation.september.inset.p2.1 = The amount you must pay this employee is
+confirmation.september.inset.p2.2 = . This is made up of the furlough grant,
+confirmation.september.inset.p2.3 = plus
+confirmation.september.inset.p2.4 = to make a total of 80% of their wages.
+confirmation.september.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
+
+confirmation.october.title = What you can claim for this employee
+confirmation.october.heading = What you can claim for this employee
+confirmation.october.p1 = Furlough grant
+confirmation.october.p2 = (October rate: 60% of wages)
+confirmation.october.inset.p1 = To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to.
+confirmation.october.inset.p2.1 = The amount you must pay this employee is
+confirmation.october.inset.p2.2 = . This is made up of the furlough grant,
+confirmation.october.inset.p2.3 = plus
+confirmation.october.inset.p2.4 = to make a total of 80% of their wages.
+confirmation.october.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
 claimPeriodStart.title = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.heading = Beth yw dyddiad dechrau’r hawliad hwn?
@@ -334,24 +355,24 @@ claimPeriodEnd.legend = Dyddiad dod i ben
 claimPeriodEnd.hint = Er enghraifft, 31 3 2020
 
 furloughOngoing.title = A yw cyfnod ffyrlo’r cyflogai hwn wedi dod i ben?
-furloughOngoing.phaseTwo.title = On {0}, is this employee still fully furloughed?
+furloughOngoing.phaseTwo.title = Ar {0}, a yw’r cyflogai hwn yn dal i fod ar ffyrlo llawn?
 furloughOngoing.heading = A yw cyfnod ffyrlo’r cyflogai hwn wedi dod i ben?
-furloughOngoing.phaseTwo.heading = On {0}, is this employee still fully furloughed?
+furloughOngoing.phaseTwo.heading = Ar {0}, a yw’r cyflogai hwn yn dal i fod ar ffyrlo llawn?
 furloughOngoing.ended = Iawn
-furloughOngoing.phaseTwo.ended = No, they are no longer an employee
+furloughOngoing.phaseTwo.ended = Nac ydy, nid yw’n gyflogai mwyach
 furloughOngoing.ongoing = Na, mae’n barhaus
 furloughOngoing.phaseTwo.ongoing = Iawn
-furloughOngoing.phaseTwo.flexible = No, they worked during the claim period (flexibly furloughed
+furloughOngoing.phaseTwo.flexible = Nac ydy, gweithiodd yn ystod y cyfnod hawlio (ffyrlo hyblyg)
 furloughOngoing.error.required = Dewiswch un o’r opsiynau isod
-furloughOngoing.phaseTwo.hint = Employees can now be flexibly furloughed. You can claim for their usual working hours minus the hours they actually worked.
+furloughOngoing.phaseTwo.hint = Gall cyflogeion gael eu rhoi ar ffyrlo hyblyg erbyn hyn. Gallwch hawlio am eu horiau gwaith arferol, llai’r oriau roeddent yn gweithio mewn gwirionedd.
 
 furloughEndDate.title = Pryd daeth ei ffyrlo i ben?
-furloughEndDate.phaseTwo.title = What’s the last date this employee worked for you?
+furloughEndDate.phaseTwo.title = Beth oedd y dyddiad olaf i’r cyflogai hwn weithio i chi?
 furloughEndDate.heading = Pryd daeth ei ffyrlo i ben?
-furloughEndDate.phaseTwo.heading = What’s the last date this employee worked for you?
+furloughEndDate.phaseTwo.heading = Beth oedd y dyddiad olaf i’r cyflogai hwn weithio i chi?
 furloughEndDate.hint = Er enghraifft, 30 4 2020
 furloughEndDate.p = Er mwyn hawlio o dan y cynllun, rhaid i gyflogai fod ar ffyrlo am o leiaf 3 wythnos.
-furloughEndDate.phaseTwo.p = This is the last date you can claim the furlough grant for.
+furloughEndDate.phaseTwo.p = Dyma’r dyddiad olaf y gallwch hawlio’r grant ffyrlo ar ei gyfer.
 furloughEndDate.1stJuly.p = O 1 Gorffennaf ymlaen, gallwch ddod â chyflogeion yn ôl i’r gwaith tra bod eu cyfnod ffyrlo’n parhau. Gallwch hawlio am eu horiau arferol llai’r oriau roeddent yn gweithio mewn gwirionedd.
 furloughEndDate.error.required.all = Nodwch ddyddiad dod i ben y ffyrlo
 furloughEndDate.error.required.two = Mae’n rhaid i ddyddiad dod i ben y ffyrlo gynnwys {0} a {1}
@@ -567,6 +588,8 @@ furloughBreakdown.total = Cyfanswm y grant ffyrlo ar gyfer y cyfnod cyflog = £{
 furloughBreakdown.furloughCap.p1 = Grant ffyrlo wedi’i gyfrifo = £{0}
 furloughBreakdown.furloughCap.p2 = Mae hyn yn fwy na’r uchafswm grant ffyrlo ar gyfer y cyfnod cyflog hwn, sef:
 furloughBreakdown.furloughCap.fullPeriodCap = £{0}
+furloughBreakdown.september.furloughCap.fullPeriodCap = £{0} (September cap).
+furloughBreakdown.october.furloughCap.fullPeriodCap = £{0} (October cap).
 furloughBreakdown.furloughCap.periodSpansMonthCap = {0} o ddiwrnodau ffyrlo ym mis {1} ar £{2} + {3} o ddiwrnodau ffyrlo ym mis {4} ar £{5} = £{6}.
 furloughBreakdown.furloughCap.partialPeriodCap ={0} o ddiwrnodau ffyrlo ym mis {1} ar £{2} = £{3}
 furloughBreakdown.furloughCap.p3 = Felly, rydym yn defnyddio’r uchafswm grant ffyrlo.
@@ -635,8 +658,8 @@ partTimePeriods.partialPeriod = Cyfnod cyflog: {0} to {1} (rhannol)
 partTimePeriods.singleDay = Cyfnod cyflog: {0} (rhannol)
 partTimePeriods.error.required = dewiswch y cyfnodau cyflog pan oedd y cyflogai’n gweithio
 
-partTimeQuestion.title = Did this employee do any work between {0} and {1}?
-partTimeQuestion.heading = Did this employee do any work between {0} and {1}?
+partTimeQuestion.title = A wnaeth y cyflogai hwn unrhyw waith rhwng {0} a {1}?
+partTimeQuestion.heading = A wnaeth y cyflogai hwn unrhyw waith rhwng {0} a {1}?
 partTimeQuestion.partTimeYes = Iawn
 partTimeQuestion.partTimeNo = Na
 partTimeQuestion.error.required = Dewiswch un o’r opsiynau isod
@@ -666,12 +689,17 @@ partTimeNormalHours.error.max = Mae nifer yr oriau a nodwyd yn uwch na’r uchaf
 partTimeNormalHours.error.nonNumeric = Nodwch yr oriau arferol gan ddefnyddio rhifau
 
 phaseTwoDetailedBreakdown.p1.regular = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog rheolaidd bob tro. Rydym wedi cyfrifo ei enillion dyddiol ac wedi’u lluosi â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 80% o hyn.
+phaseTwoDetailedBreakdown.september.p1.regular = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog rheolaidd bob tro. Rydym wedi cyfrifo ei enillion dyddiol ac wedi’u lluosi â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 70% o hyn.
+phaseTwoDetailedBreakdown.october.p1.regular = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog rheolaidd bob tro. Rydym wedi cyfrifo ei enillion dyddiol ac wedi’u lluosi â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 60% o hyn.
 phaseTwoDetailedBreakdown.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 80% o hyn.
+phaseTwoDetailedBreakdown.september.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 70% o hyn.
+phaseTwoDetailedBreakdown.october.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 60% o hyn.
 phaseTwoDetailedBreakdown.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 80% o hyn.
 phaseTwoDetailedBreakdown.p1.cylb.2 = Dull 1: rydym wedi ystyried y symiau a dalwyd iddo ar gyfer cyfnodau cyflog cyfatebol yn 2019, ac wedi defnyddio’r rhain wrth ystyried nifer y diwrnodau ffyrlo a’r oriau ffyrlo ym mhob cyfnod cyflog.
 phaseTwoDetailedBreakdown.p1.cylb.3 = Dull 2: rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn ystod y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog.
-phaseTwoDetailedBreakdown.no.nic.pension.p1.regular = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog rheolaidd bob tro. Rydym wedi cyfrifo ei enillion dyddiol ac wedi’u lluosi â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 80% o hyn.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 80% o hyn.
+phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 70% o hyn.
+phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 60% o hyn.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2 = Dull 1: rydym wedi ystyried y symiau a dalwyd iddo ar gyfer cyfnodau cyflog cyfatebol yn 2019, ac wedi defnyddio’r rhain wrth ystyried nifer y diwrnodau ffyrlo a’r oriau ffyrlo ym mhob cyfnod cyflog.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Dull 2: rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn ystod y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog.
 phaseTwoDetailedBreakdown.p2 = Mae yna uchafswm y gallwch ei hawlio am grant ffyrlo a chyfraniadau Yswiriant Gwladol y cyflogwr. Os yw hyn yn effeithio ar eich hawliad, rydym wedi addasu’r cyfrifiadau.
@@ -731,6 +759,8 @@ phaseTwoFurloughBreakdown.h4 = Grant ffyrlo
 phaseTwoFurloughBreakdown.l1 = Ystyriwch £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo).
 phaseTwoFurloughBreakdown.l1.partTime = Cymerwch £{0} (cyflog yn seiliedig ar yr oriau a weithiwyd yn ystod y cyfnod cyflog hwn).
 phaseTwoFurloughBreakdown.l2 = Lluoswch â 80%.
+phaseTwoFurloughBreakdown.september.l2 = Multiply by 70% (September rate).
+phaseTwoFurloughBreakdown.october.l2 = Multiply by 60% (October rate).
 phaseTwoFurloughBreakdown.total = Cyfanswm y grant ffyrlo ar gyfer y cyfnod cyflog = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p1 = Grant ffyrlo wedi’i gyfrifo = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p2 = Mae hyn yn fwy na’r uchafswm grant ffyrlo ar gyfer y cyfnod cyflog hwn, sef:
