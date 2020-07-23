@@ -1,0 +1,50 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import views.includes.FurloughCapHelper
+
+@this(h4: components.h4,
+        p: components.p,
+      helper: FurloughCapHelper,
+      referencePayBreakdown: phaseTwoReferencePayBreakdown)
+
+@(breakdown: PhaseTwoFurloughBreakdown)(implicit messages: Messages)
+
+    @referencePayBreakdown(breakdown.paymentWithPeriod)
+
+    @h4(messages("phaseTwoFurloughBreakdown.h4"))
+
+    <ol class="govuk-list govuk-list--number">
+        @if(breakdown.paymentWithPeriod.phaseTwoPeriod.isPartTime) {
+            <li>@messages("phaseTwoFurloughBreakdown.l1.partTime", breakdown.paymentWithPeriod.referencePay.value.formatted("%.2f"))</li>
+        } else {
+            <li>@messages("phaseTwoFurloughBreakdown.l1", breakdown.paymentWithPeriod.referencePay.value.formatted("%.2f"))</li>
+        }
+        <li>@messages("phaseTwoFurloughBreakdown.september.l2")</li>
+    </ol>
+
+    @if(breakdown.isCapped) {
+        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p1", breakdown.calculatedSeventy)))
+        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p2")))
+        <ul class="govuk-list--bullet">
+            <li class="govuk-body">@helper.calculationForSept(breakdown.furloughCap)</li>
+        </ul>
+        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p3")))
+    }
+
+    <div class="govuk-inset-text govuk-!-font-size-24">
+        @messages("phaseTwoFurloughBreakdown.total", breakdown.seventy.formatted("%.2f"))
+    </div>

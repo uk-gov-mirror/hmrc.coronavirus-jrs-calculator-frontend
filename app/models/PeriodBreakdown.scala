@@ -115,6 +115,10 @@ final case class PhaseTwoFurloughBreakdown(grant: Amount, paymentWithPeriod: Pay
     extends PhaseTwoPeriodBreakdown {
   def isCapped: Boolean = (paymentWithPeriod.referencePay.value * 0.8) > furloughCap.value
   def calculatedFurlough: String = Amount(paymentWithPeriod.referencePay.value * 0.8).halfUp.value.formatted("%.2f")
+  def calculatedSeventy: String = Amount(paymentWithPeriod.referencePay.value * 0.7).halfUp.value.formatted("%.2f")
+  def calculatedSixty: String = Amount(paymentWithPeriod.referencePay.value * 0.6).halfUp.value.formatted("%.2f")
+  def seventy = Amount((grant.value / 80) * 70).halfUp.value
+  def sixty = Amount((grant.value / 80) * 60).halfUp.value
 }
 
 final case class PhaseTwoNicBreakdown(

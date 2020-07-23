@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{AuditService, Threshold}
 import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown, PhaseTwoConfirmationViewBreakdown}
-import views.html.{ConfirmationViewWithDetailedBreakdowns, NoNicAndPensionConfirmationView, PhaseTwoConfirmationView}
+import views.html.{ConfirmationViewWithDetailedBreakdowns, NoNicAndPensionConfirmationView, OctoberConfirmationView, PhaseTwoConfirmationView, SeptemberConfirmationView}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,6 +40,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
   val view = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
   val noNicView = app.injector.instanceOf[NoNicAndPensionConfirmationView]
   val phaseTwoView = app.injector.instanceOf[PhaseTwoConfirmationView]
+  val septView = app.injector.instanceOf[SeptemberConfirmationView]
+  val octView = app.injector.instanceOf[OctoberConfirmationView]
   val audit = app.injector.instanceOf[AuditService]
 
   val controller = new ConfirmationController(
@@ -51,6 +53,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
     view,
     phaseTwoView,
     noNicView,
+    septView,
+    octView,
     audit,
     navigator)
 

@@ -291,7 +291,7 @@ confirmation.no.nic.pension.heading = What you can claim for this employee
 confirmation.no.nic.pension.p1 = Furlough grant
 confirmation.no.nic.pension.nextSteps.li.1 = for your records
 confirmation.no.nic.pension.nextSteps.li.2 = Make a note of the result above.
-confirmation.no.nic.pension.nextSteps.li.3 = Use the calculator again for any other employees furloughed within this claim period ({0} {1} to {2} {3}) and make a note of the results.
+confirmation.no.nic.pension.nextSteps.li.3 = Use the calculator again for any other employees furloughed within this claim period ({0} to {1}) and make a note of the results.
 confirmation.no.nic.pension.nextSteps.li.3.2 = Work out how much you can claim in total for employer National Insurance contributions (opens in a new window or tab).
 confirmation.no.nic.pension.nextSteps.li.4 = Add all the results together to get the total amount you can claim.
 confirmation.no.nic.pension.nextSteps.li.4.1 = Make a claim using {0}.
@@ -299,7 +299,28 @@ confirmation.no.nic.pension.nextSteps.li.4.2 = Job Retention Scheme online claim
 confirmation.no.nic.pension.breakdown.summary = Breakdown of calculations
 confirmation.no.nic.pension.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.
 
+confirmation.september.title = What you can claim for this employee
+confirmation.september.heading = What you can claim for this employee
+confirmation.september.p1 = Furlough grant
+confirmation.september.p2 = (September rate: 70% of wages)
+confirmation.september.inset.p1 = To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to.
+confirmation.september.inset.p2.1 = The amount you must pay this employee is
+confirmation.september.inset.p2.2 = . This is made up of the furlough grant,
+confirmation.september.inset.p2.3 = plus
+confirmation.september.inset.p2.4 = to make a total of 80% of their wages.
+confirmation.september.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
+
+confirmation.october.title = What you can claim for this employee
+confirmation.october.heading = What you can claim for this employee
+confirmation.october.p1 = Furlough grant
+confirmation.october.p2 = (October rate: 60% of wages)
+confirmation.october.inset.p1 = To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to.
+confirmation.october.inset.p2.1 = The amount you must pay this employee is
+confirmation.october.inset.p2.2 = . This is made up of the furlough grant,
+confirmation.october.inset.p2.3 = plus
+confirmation.october.inset.p2.4 = to make a total of 80% of their wages.
+confirmation.october.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
 claimPeriodStart.title = What’s the start date of this claim?
 claimPeriodStart.heading = What’s the start date of this claim?
@@ -573,6 +594,8 @@ furloughBreakdown.total = Total furlough grant for pay period = £{0}
 furloughBreakdown.furloughCap.p1 = Calculated furlough grant = £{0}
 furloughBreakdown.furloughCap.p2 = This exceeds the maximum furlough grant for this pay period, which is:
 furloughBreakdown.furloughCap.fullPeriodCap = £{0}
+furloughBreakdown.september.furloughCap.fullPeriodCap = £{0} (September cap).
+furloughBreakdown.october.furloughCap.fullPeriodCap = £{0} (October cap).
 furloughBreakdown.furloughCap.periodSpansMonthCap = {0} furlough days in {1} at £{2} + {3} furlough days in {4} at £{5} = £{6}.
 furloughBreakdown.furloughCap.partialPeriodCap ={0} furlough days in {1} at £{2} = £{3}
 furloughBreakdown.furloughCap.p3 = Therefore we use the maximum furlough grant amount.
@@ -671,12 +694,17 @@ partTimeNormalHours.error.max = Number of hours entered is higher than the maxim
 partTimeNormalHours.error.nonNumeric = Enter the usual hours using numbers
 
 phaseTwoDetailedBreakdown.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
+phaseTwoDetailedBreakdown.september.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days and furlough hours in each pay period. The furlough grant is 70% of this.
+phaseTwoDetailedBreakdown.october.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days and furlough hours in each pay period. The furlough grant is 60% of this.
 phaseTwoDetailedBreakdown.p1.average = You told us this employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
+phaseTwoDetailedBreakdown.september.p1.average = You told us this employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 70% of this.
+phaseTwoDetailedBreakdown.october.p1.average = You told us this employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 60% of this.
 phaseTwoDetailedBreakdown.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. They have worked during the claim period. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 80% of this.
 phaseTwoDetailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in 2019 and applied this to the number of furlough days and furlough hours in each pay period.
 phaseTwoDetailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period.
-phaseTwoDetailedBreakdown.no.nic.pension.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days in each pay period. The furlough grant is 80% of this.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 80% of this.
+phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 70% of this.
+phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 60% of this.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in 2019 and applied this to the number of furlough days in each pay period.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days in each pay period.
 phaseTwoDetailedBreakdown.p2 = There’s a maximum amount you can claim for furlough grant and Employer National Insurance contributions. If this affects your claim, we’ve adjusted the calculations.
@@ -736,6 +764,8 @@ phaseTwoFurloughBreakdown.h4 = Furlough grant
 phaseTwoFurloughBreakdown.l1 = Take £{0} (pay based on furlough days).
 phaseTwoFurloughBreakdown.l1.partTime = Take £{0} (pay based on hours worked in this pay period).
 phaseTwoFurloughBreakdown.l2 = Multiply by 80%
+phaseTwoFurloughBreakdown.september.l2 = Multiply by 70% (September rate).
+phaseTwoFurloughBreakdown.october.l2 = Multiply by 60% (October rate).
 phaseTwoFurloughBreakdown.total = Total furlough grant for pay period = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p1 = Calculated furlough grant = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p2 = This exceeds the maximum furlough grant for this pay period, which is:

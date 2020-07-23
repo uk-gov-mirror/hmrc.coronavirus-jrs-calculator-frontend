@@ -196,6 +196,50 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
         }
       }
       .getOrElse(Seq())
+
+  def detailedBreakdownMessageKeysSept: Seq[String] =
+    furlough.periodBreakdowns.headOption
+      .map {
+        _.paymentWithPeriod match {
+          case _: RegularPaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.september.p1.regular"
+            )
+          case _: AveragePaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.september.p1.average"
+            )
+          case _: CylbPaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1",
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
+            )
+        }
+      }
+      .getOrElse(Seq())
+
+  def detailedBreakdownMessageKeysOct: Seq[String] =
+    furlough.periodBreakdowns.headOption
+      .map {
+        _.paymentWithPeriod match {
+          case _: RegularPaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.october.p1.regular"
+            )
+          case _: AveragePaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.october.p1.average"
+            )
+          case _: CylbPaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1",
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
+            )
+        }
+      }
+      .getOrElse(Seq())
 }
 
 sealed trait Metadata

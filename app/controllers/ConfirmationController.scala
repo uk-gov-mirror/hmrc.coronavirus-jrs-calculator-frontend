@@ -27,7 +27,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AuditService
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
-import views.html.{ConfirmationViewWithDetailedBreakdowns, NoNicAndPensionConfirmationView, PhaseTwoConfirmationView}
+import views.html.{ConfirmationViewWithDetailedBreakdowns, NoNicAndPensionConfirmationView, OctoberConfirmationView, PhaseTwoConfirmationView, SeptemberConfirmationView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +40,8 @@ class ConfirmationController @Inject()(
   viewWithDetailedBreakdowns: ConfirmationViewWithDetailedBreakdowns,
   phaseTwoView: PhaseTwoConfirmationView,
   noNicAndPensionView: NoNicAndPensionConfirmationView,
+  septemberConfirmationView: SeptemberConfirmationView,
+  octoberConfirmationView: OctoberConfirmationView,
   auditService: AuditService,
   val navigator: Navigator
 )(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
@@ -54,7 +56,16 @@ class ConfirmationController @Inject()(
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
         Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
       case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
-        Future.successful(Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
+        data.metaData.claimPeriod.start.getMonthValue match {
+          case 8 =>
+            Future.successful(Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
+          case 9 =>
+            Future.successful(
+              Ok(septemberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
+          case 10 =>
+            Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
+          case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+        }
       case Invalid(e) =>
         auditService.sendCalculationFailed(request.userAnswers)
         UserAnswers.logErrors(e)(logger)

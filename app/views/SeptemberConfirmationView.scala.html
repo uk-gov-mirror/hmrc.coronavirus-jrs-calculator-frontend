@@ -26,7 +26,7 @@ h2: components.h2,
 h3: components.h3,
 p: components.p,
 confirmation: components.confirmation,
-furloughBreakdown: includes.phaseTwoDetailedFurloughBreakdown,
+furloughBreakdown: includes.phaseTwoDetailedFurloughBreakdownSeptember,
 nicBreakdown: includes.phaseTwoDetailedNicBreakdown,
 pensionBreakdown: includes.phaseTwoDetailedPensionBreakdown,
 button: components.button,
@@ -37,20 +37,35 @@ appConfig: config.FrontendAppConfig
 
 @(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
+@govukLayout(pageTitle = Some(titleNoForm("confirmation.september.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
 @confirmation {
 
-@h1(Html(messages("confirmation.no.nic.pension.heading")), classes = Some(""))
+@h1(Html(messages("confirmation.september.heading")), classes = Some(""))
 
 <div class="furlough-heading">
-    <p>@messages("confirmation.no.nic.pension.p1")</p>
-    <p class="govuk-panel__title">&pound;@cvb.furlough.total.formatted("%.2f")</p>
+    <p>
+        @messages("confirmation.september.p1")
+        <br>
+        @messages("confirmation.september.p2")
+    </p>
+    <p class="govuk-panel__title">&pound;@cvb.furlough.seventy.formatted("%.2f")</p>
 </div>
 
 }
 
-<div class="govuk-inset-text">@messages("confirmation.no.nic.pension.insert.t1")</div>
+<div class="govuk-inset-text">
+    @p(Html(messages("confirmation.september.inset.p1")))
+    @p {
+      @messages("confirmation.september.inset.p2.1")
+      <span class="govuk-!-font-weight-bold">£@cvb.furlough.total.formatted("%.2f")</span>
+      @messages("confirmation.september.inset.p2.2")
+      <span class="govuk-!-font-weight-bold">£@cvb.furlough.seventy.formatted("%.2f")</span>
+      @messages("confirmation.september.inset.p2.3")
+      <span class="govuk-!-font-weight-bold">£@cvb.furlough.seventyDiff.formatted("%.2f")</span>
+      @messages("confirmation.september.inset.p2.4")
+    }
+</div>
 
 @p {
 <span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
@@ -80,7 +95,7 @@ appConfig: config.FrontendAppConfig
 
 
 
-@for(messageKey <- cvb.detailedBreakdownMessageKeys) {
+@for(messageKey <- cvb.detailedBreakdownMessageKeysSept) {
     @p(Html(messages(messageKey)))
 }
 
@@ -98,7 +113,11 @@ appConfig: config.FrontendAppConfig
 <hr>
 <br>
 
-<p class="govuk-body">@messages("confirmation.no.nic.pension.disclaimer")</p>
+    <p class="govuk-body">
+        @messages("confirmation.september.eligibility")
+        <span class="govuk-!-font-weight-bold">£@cvb.furlough.seventyDiff.formatted("%.2f.")</span>
+    </p>
+    <p class="govuk-body">@messages("confirmation.disclaimer")</p>
 
 <p class="govuk-body"><a class="govuk-link" onClick="window.print()" href="">@messages("confirmation.print.this.page")</a></p>
 
