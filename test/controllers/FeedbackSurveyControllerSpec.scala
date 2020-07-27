@@ -17,12 +17,8 @@
 package controllers
 
 import base.SpecBaseControllerSpecs
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, status, _}
-
-import scala.concurrent.Future
 
 class FeedbackSurveyControllerSpec extends SpecBaseControllerSpecs {
 
@@ -35,8 +31,6 @@ class FeedbackSurveyControllerSpec extends SpecBaseControllerSpecs {
   "FeedbackSurveyController" must {
 
     "redirect users to /feedback service" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
-
       val result = controller.startSurvey()(getSurveyRequest)
 
       status(result) mustEqual SEE_OTHER

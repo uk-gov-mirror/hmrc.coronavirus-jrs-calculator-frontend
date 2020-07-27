@@ -28,6 +28,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import views.html.EmployeeStartDateView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,6 +47,7 @@ class EmployeeStartDateController @Inject()(
     extends BaseController with I18nSupport {
 
   def form: LocalDate => Form[LocalDate] = formProvider(_)
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
@@ -64,10 +66,11 @@ class EmployeeStartDateController @Inject()(
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
           value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartDatePage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(EmployeeStartDatePage, updatedAnswers))
+            userAnswerPersistence
+              .persistAnswer(request.userAnswers, EmployeeStartDatePage, value, None)
+              .map { updatedAnswers =>
+                Redirect(navigator.nextPage(EmployeeStartDatePage, updatedAnswers, None))
+            }
         )
     }
   }

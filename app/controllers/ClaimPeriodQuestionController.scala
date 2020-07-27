@@ -31,6 +31,7 @@ import play.api.i18n.MessagesApi
 import play.api.libs.json.JsObject
 import play.api.mvc._
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import views.html.ClaimPeriodQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -51,6 +52,7 @@ class ClaimPeriodQuestionController @Inject()(
   override implicit val logger: Logger = LoggerFactory.getLogger(getClass)
 
   val form: Form[ClaimPeriodQuestion] = formProvider()
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request: DataRequest[AnyContent] =>
     if (didNotReuseDates(request.headers.toSimpleMap.get("Referer"), request.userAnswers.data))
@@ -78,19 +80,21 @@ class ClaimPeriodQuestionController @Inject()(
     }
 
   private def processSubmittedAnswer(request: DataRequest[AnyContent], value: ClaimPeriodQuestion): Future[Result] =
-    for {
-      updatedAnswers <- Future.fromTry(request.userAnswers.set(ClaimPeriodQuestionPage, value))
-      call = navigator.nextPage(ClaimPeriodQuestionPage, updatedAnswers)
-    } yield {
-
-      updateJourney(updatedAnswers) match {
-        case Valid(updatedJourney) =>
-          sessionRepository.set(updatedJourney.updated)
-          Redirect(call)
-        case Invalid(_) =>
-          InternalServerError(errorHandler.internalServerErrorTemplate(request))
+    userAnswerPersistence
+      .persistAnswer(request.userAnswers, ClaimPeriodQuestionPage, value, None)
+      .map { updatedAnswers =>
+        {
+          Redirect(navigator.nextPage(ClaimPeriodQuestionPage, updatedAnswers, None))
+          val call = navigator.nextPage(ClaimPeriodQuestionPage, updatedAnswers)
+          updateJourney(updatedAnswers) match {
+            case Valid(updatedJourney) =>
+              sessionRepository.set(updatedJourney.updated)
+              Redirect(call)
+            case Invalid(_) =>
+              InternalServerError(errorHandler.internalServerErrorTemplate(request))
+          }
+        }
       }
-    }
 
   protected val didNotReuseDates: (Option[String], JsObject) => Boolean =
     (referer, data) => referer.isDefined && referer.getOrElse("").endsWith("/confirmation") && data.keys.isEmpty

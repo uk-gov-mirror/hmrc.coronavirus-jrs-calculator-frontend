@@ -17,23 +17,22 @@
 package controllers
 
 import base.SpecBaseControllerSpecs
+import controllers.actions.DataRetrievalActionImpl
 import forms.AdditionalPaymentStatusFormProvider
 import models.requests.DataRequest
 import models.{AdditionalPaymentStatus, UserAnswers}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.AdditionalPaymentStatusPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.UserAnswerPersistence
 import views.html.AdditionalPaymentStatusView
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs {
 
   lazy val additionalPaymentStatusRoute = routes.AdditionalPaymentStatusController.onPageLoad().url
   lazy val additionalPaymentStatusRoutePost = routes.AdditionalPaymentStatusController.onSubmit().url
@@ -49,23 +48,29 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs with
 
   val view = app.injector.instanceOf[AdditionalPaymentStatusView]
 
-  val controller = new AdditionalPaymentStatusController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) =
+    new AdditionalPaymentStatusController(
+      messagesApi,
+      mockSessionRepository,
+      navigator,
+      identifier,
+      new DataRetrievalActionImpl(mockSessionRepository) {
+        override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
+          _ => Future.successful(stubbedAnswers)
+      },
+      dataRequired,
+      formProvider,
+      component,
+      view
+    ) {
+      override val userAnswerPersistence = new UserAnswerPersistence(_ => Future.successful(true))
+    }
 
   "AdditionalPaymentStatusController" must {
 
     "return OK and the correct view for a GET" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller().onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -74,9 +79,8 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs with
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val modifiedUserAnswers = UserAnswers("id").set(AdditionalPaymentStatusPage, validAnswer).success.value
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
       val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller(Some(modifiedUserAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -84,19 +88,17 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs with
     }
 
     "redirect to the next page when valid data is submitted" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request =
         FakeRequest(POST, additionalPaymentStatusRoutePost)
           .withFormUrlEncodedBody(("value", validAnswer))
 
-      val result = controller.onSubmit()(request)
+      val result = controller().onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/additional-pay-periods"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request =
         FakeRequest(POST, additionalPaymentStatusRoutePost).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -104,7 +106,7 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs with
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
-      val result = controller.onSubmit()(request)
+      val result = controller().onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -112,21 +114,19 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs with
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, additionalPaymentStatusRoute)
-      val result = controller.onPageLoad()(request)
+      val result = controller(None).onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request =
         FakeRequest(POST, additionalPaymentStatusRoute)
           .withFormUrlEncodedBody(("value", validAnswer))
 
-      val result = controller.onSubmit()(request)
+      val result = controller(None).onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

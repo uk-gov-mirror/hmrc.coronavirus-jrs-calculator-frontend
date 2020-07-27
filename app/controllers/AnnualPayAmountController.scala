@@ -28,6 +28,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import utils.LocalDateHelpers._
 import views.html.AnnualPayAmountView
 
@@ -47,6 +48,7 @@ class AnnualPayAmountController @Inject()(
     extends BaseController with I18nSupport {
 
   val form: Form[AnnualPayAmount] = formProvider()
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
@@ -72,10 +74,11 @@ class AnnualPayAmountController @Inject()(
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, uiDate, employeeStarted))),
             value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(AnnualPayAmountPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(AnnualPayAmountPage, updatedAnswers))
+              userAnswerPersistence
+                .persistAnswer(request.userAnswers, AnnualPayAmountPage, value, None)
+                .map { updatedAnswers =>
+                  Redirect(navigator.nextPage(AnnualPayAmountPage, updatedAnswers, None))
+              }
           )
       }
     }

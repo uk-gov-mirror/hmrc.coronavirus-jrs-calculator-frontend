@@ -23,21 +23,17 @@ import controllers.actions._
 import forms.AdditionalPaymentAmountFormProvider
 import models.requests.{DataRequest, OptionalDataRequest}
 import models.{AdditionalPayment, Amount, UserAnswers}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import repositories.SessionRepository
+import services.UserAnswerPersistence
 import views.html.AdditionalPaymentAmountView
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new AdditionalPaymentAmountFormProvider()
   val form = formProvider()
@@ -47,7 +43,6 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs with
     FakeRequest(method, additionalPaymentAmountRoute(idx)).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
   val view = app.injector.instanceOf[AdditionalPaymentAmountView]
 
-  val mockRepository = mock[SessionRepository]
   val stubDataRetrieval: Option[UserAnswers] => FakeDataRetrievalAction = stubbedAnswer => new FakeDataRetrievalAction(stubbedAnswer)
 
   def controller(stubbedAnswer: UserAnswers = emptyUserAnswers) = {
@@ -55,7 +50,7 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs with
 
     new AdditionalPaymentAmountController(
       messagesApi,
-      mockRepository,
+      mockSessionRepository,
       navigator,
       identifier,
       stubDataRetrieval(Some(stubbedAnswer)),
@@ -64,6 +59,7 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs with
       component,
       view) {
       override val feature: FeatureFlagActionProvider = flagProvider()
+      override val userAnswerPersistence = new UserAnswerPersistence(_ => Future.successful(true))
     }
   }
 
@@ -123,10 +119,7 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs with
 
     "redirect to the next page when valid data is submitted" in {
       val additionalPaymentPeriod = LocalDate.of(2020, 3, 31)
-
       val userAnswers = mandatoryAnswersOnRegularMonthly.withAdditionalPaymentPeriods(List(additionalPaymentPeriod.toString))
-
-      when(mockRepository.set(any())) thenReturn Future.successful(true)
 
       val request =
         getRequest(POST, 1)
@@ -166,7 +159,7 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs with
 
       val controller = new AdditionalPaymentAmountController(
         messagesApi,
-        mockRepository,
+        mockSessionRepository,
         navigator,
         identifier,
         stubDataRetrieval(Some(emptyUserAnswers)),
@@ -192,7 +185,7 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs with
 
       val controller = new AdditionalPaymentAmountController(
         messagesApi,
-        mockRepository,
+        mockSessionRepository,
         navigator,
         identifier,
         stubDataRetrieval(Some(emptyUserAnswers)),
@@ -207,7 +200,6 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs with
       val result = controller.onSubmit(1)(request)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
     }
   }

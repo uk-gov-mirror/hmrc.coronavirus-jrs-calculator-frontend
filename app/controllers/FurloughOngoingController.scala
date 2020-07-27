@@ -27,6 +27,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import views.html.FurloughOngoingView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,6 +46,7 @@ class FurloughOngoingController @Inject()(
     extends BaseController {
 
   val form: Form[FurloughStatus] = formProvider()
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val maybeFurlough = request.userAnswers.getV(FurloughStatusPage)
@@ -60,11 +62,11 @@ class FurloughOngoingController @Inject()(
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStartDate, claimEndDate))),
           value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers
-                                 .set(FurloughStatusPage, value))
-              _ <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(FurloughStatusPage, updatedAnswers))
+            userAnswerPersistence
+              .persistAnswer(request.userAnswers, FurloughStatusPage, value, None)
+              .map { updatedAnswers =>
+                Redirect(navigator.nextPage(FurloughStatusPage, updatedAnswers, None))
+            }
         )
     }
   }

@@ -29,9 +29,9 @@ import org.slf4j.{Logger, LoggerFactory}
 import pages.{ClaimPeriodStartPage, FurloughPeriodQuestionPage, FurloughStartDatePage, FurloughStatusPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
 import repositories.SessionRepository
-import services.FurloughPeriodExtractor
+import services.{FurloughPeriodExtractor, UserAnswerPersistence}
 import views.html.FurloughPeriodQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -52,6 +52,7 @@ class FurloughPeriodQuestionController @Inject()(
   val form: Form[FurloughPeriodQuestion] = formProvider()
 
   override implicit val logger: Logger = LoggerFactory.getLogger(getClass)
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswersOrRestartJourneyV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>
@@ -109,19 +110,19 @@ class FurloughPeriodQuestionController @Inject()(
     value: FurloughPeriodQuestion
   ): Future[Result] =
     for {
-      updatedAnswers <- Future.fromTry(request.userAnswers.set(FurloughPeriodQuestionPage, value))
-      _              <- sessionRepository.set(updatedAnswers)
-      call = navigator.nextPage(FurloughPeriodQuestionPage, updatedAnswers)
-      result <- {
-        furloughQuestionV(updatedAnswers) match {
-          case Valid(updatedJourney) =>
-            sessionRepository.set(updatedJourney.updated).map { _ =>
-              Redirect(call)
-            }
-          case Invalid(e) =>
-            UserAnswers.logErrors(e)
-            Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate(request)))
-        }
-      }
+      updatedAnswers <- userAnswerPersistence.persistAnswer(request.userAnswers, FurloughPeriodQuestionPage, value, None)
+      call = navigator.nextPage(FurloughPeriodQuestionPage, updatedAnswers, None)
+      result <- evaluate(request, updatedAnswers, call)
     } yield result
+
+  private def evaluate(request: DataRequest[AnyContent], updatedAnswers: UserAnswers, call: Call): Future[Result] =
+    furloughQuestionV(updatedAnswers) match {
+      case Valid(updatedJourney) =>
+        sessionRepository.set(updatedJourney.updated).map { _ =>
+          Redirect(call)
+        }
+      case Invalid(e) =>
+        UserAnswers.logErrors(e)
+        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate(request)))
+    }
 }

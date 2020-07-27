@@ -19,11 +19,9 @@ package controllers
 import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBaseControllerSpecs
+import controllers.actions.DataRetrievalActionImpl
 import forms.ClaimPeriodStartFormProvider
 import models.UserAnswers
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage}
 import play.api.data.Form
 import play.api.libs.json.{JsString, Json}
@@ -36,13 +34,10 @@ import views.html.ClaimPeriodStartView
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ClaimPeriodStartControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class ClaimPeriodStartControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new ClaimPeriodStartFormProvider()
   private def form: Form[LocalDate] = formProvider()
-
-  def onwardRoute = Call("GET", "/foo")
-
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
   lazy val claimPeriodStartRoute = routes.ClaimPeriodStartController.onPageLoad().url
@@ -64,14 +59,25 @@ class ClaimPeriodStartControllerSpec extends SpecBaseControllerSpecs with Mockit
 
   val view = app.injector.instanceOf[ClaimPeriodStartView]
 
-  val controller =
-    new ClaimPeriodStartController(messagesApi, mockSessionRepository, navigator, identifier, dataRetrieval, formProvider, component, view)
+  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) =
+    new ClaimPeriodStartController(
+      messagesApi,
+      mockSessionRepository,
+      navigator,
+      identifier,
+      new DataRetrievalActionImpl(mockSessionRepository) {
+        override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
+          _ => Future.successful(stubbedAnswers)
+      },
+      formProvider,
+      component,
+      view
+    )
 
   "ClaimPeriodStart Controller" must {
 
     "return OK and the correct view for a GET" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller().onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form)(getRequest, messages).toString
@@ -79,24 +85,18 @@ class ClaimPeriodStartControllerSpec extends SpecBaseControllerSpecs with Mockit
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = UserAnswers(userAnswersId).set(ClaimPeriodStartPage, validAnswer).success.value
-
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
-
       contentAsString(result) mustEqual
         view(form.fill(validAnswer))(getRequest, messages).toString
     }
 
     "redirect to the next page when valid data is submitted and delete any existing mongo cache" in {
       val existingUserAnswers = emptyUserAnswers.copy(data = Json.obj(ClaimPeriodEndPage.toString -> JsString(validAnswer.toString)))
-
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(existingUserAnswers))
-      val result = controller.onSubmit()(postRequest)
+      val result = controller(Some(existingUserAnswers)).onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/claim-period-end"
     }
 
@@ -108,10 +108,9 @@ class ClaimPeriodStartControllerSpec extends SpecBaseControllerSpecs with Mockit
 
       val boundForm = form.bind(Map("startDate" -> "invalid value"))
 
-      val result = controller.onSubmit()(request)
+      val result = controller().onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
-
       contentAsString(result) mustEqual
         view(boundForm)(request, messages).toString
     }

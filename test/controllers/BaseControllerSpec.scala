@@ -22,11 +22,9 @@ import akka.util.Timeout
 import base.SpecBaseControllerSpecs
 import cats.scalatest.ValidatedValues
 import cats.syntax.validated._
-import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.{AnswerValidation, BackFirstPage, BackJourneyValidation, EmptyAnswerError, Salary, UserAnswers}
 import navigation.Navigator
-import org.scalatestplus.mockito.MockitoSugar
 import pages.{PayDatePage, RegularPayAmountPage}
 import play.api.http.Status._
 import play.api.mvc.Results._
@@ -37,7 +35,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class BaseControllerSpec extends SpecBaseControllerSpecs with MockitoSugar with ValidatedValues {
+class BaseControllerSpec extends SpecBaseControllerSpecs with ValidatedValues {
   lazy val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = DataRequest(fakeRequest, "id", emptyUserAnswers)
 
   def futureResult[A]: A => Future[Result] = x => Future.successful(Ok(s"Answer: $x"))

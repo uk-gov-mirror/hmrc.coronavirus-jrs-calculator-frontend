@@ -19,25 +19,24 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseControllerSpecs
+import controllers.actions.DataRetrievalActionImpl
 import forms.AnnualPayAmountFormProvider
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.requests.DataRequest
 import models.{AnnualPayAmount, UserAnswers}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.{AnnualPayAmountPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.UserAnswerPersistence
 import views.html.AnnualPayAmountView
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new AnnualPayAmountFormProvider()
   val form = formProvider()
@@ -68,22 +67,28 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockito
 
   val view = app.injector.instanceOf[AnnualPayAmountView]
 
-  val controller = new AnnualPayAmountController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) =
+    new AnnualPayAmountController(
+      messagesApi,
+      mockSessionRepository,
+      navigator,
+      identifier,
+      new DataRetrievalActionImpl(mockSessionRepository) {
+        override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
+          _ => Future.successful(stubbedAnswers)
+      },
+      dataRequired,
+      formProvider,
+      component,
+      view
+    ) {
+      override val userAnswerPersistence = new UserAnswerPersistence(_ => Future.successful(true))
+    }
 
   "AnnualPayAmountController" must {
 
     "return OK and the correct view for a GET" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -93,10 +98,8 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockito
 
     "return OK and the correct view for a GET if the EmployeeStarted is OnOrBefore1Feb2019" in {
       val updatedAnswers = userAnswers.set(EmployeeStartedPage, OnOrBefore1Feb2019).success.value
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(updatedAnswers))
-
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller(Some(updatedAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -105,9 +108,8 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockito
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswersUpdated = userAnswers.set(AnnualPayAmountPage, AnnualPayAmount(111)).success.value
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersUpdated))
       val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -115,15 +117,13 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockito
     }
 
     "redirect to the next page when valid data is submitted" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onSubmit()(postRequest)
+      val result = controller(Some(userAnswers)).onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/topup-question"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request =
         FakeRequest(POST, annualPayAmountRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -132,7 +132,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockito
       val boundForm = form.bind(Map("value" -> ""))
 
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
-      val result = controller.onSubmit()(request)
+      val result = controller(Some(userAnswers)).onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -140,21 +140,19 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockito
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, annualPayAmountRoute)
-      val result = controller.onPageLoad()(request)
+      val result = controller(None).onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request =
         FakeRequest(POST, annualPayAmountRoute)
           .withFormUrlEncodedBody(("value", "answer"))
 
-      val result = controller.onSubmit()(request)
+      val result = controller(None).onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

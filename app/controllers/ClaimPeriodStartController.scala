@@ -29,6 +29,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.ClaimPeriodStartView
 
@@ -47,6 +48,7 @@ class ClaimPeriodStartController @Inject()(
     extends FrontendBaseController with I18nSupport {
 
   def form: Form[LocalDate] = formProvider()
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
     val preparedForm = request.userAnswers
@@ -65,10 +67,11 @@ class ClaimPeriodStartController @Inject()(
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
-          for {
-            updatedAnswers <- Future.fromTry(UserAnswers(request.internalId).set(ClaimPeriodStartPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ClaimPeriodStartPage, updatedAnswers))
+          userAnswerPersistence
+            .persistAnswer(UserAnswers(request.internalId), ClaimPeriodStartPage, value, None)
+            .map { updatedAnswers =>
+              Redirect(navigator.nextPage(ClaimPeriodStartPage, updatedAnswers, None))
+          }
       )
   }
 }

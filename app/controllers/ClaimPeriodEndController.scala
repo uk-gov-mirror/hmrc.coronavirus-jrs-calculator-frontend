@@ -28,6 +28,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.ClaimPeriodEndView
 
@@ -47,6 +48,7 @@ class ClaimPeriodEndController @Inject()(
     extends FrontendBaseController with I18nSupport {
 
   def form(claimStart: LocalDate): Form[LocalDate] = formProvider(claimStart)
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybeClaimStart = request.userAnswers.getV(ClaimPeriodStartPage)
@@ -66,12 +68,12 @@ class ClaimPeriodEndController @Inject()(
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-            value => {
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(ClaimPeriodEndPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(ClaimPeriodEndPage, updatedAnswers))
-            }
+            value =>
+              userAnswerPersistence
+                .persistAnswer(request.userAnswers, ClaimPeriodEndPage, value, None)
+                .map { updatedAnswers =>
+                  Redirect(navigator.nextPage(ClaimPeriodEndPage, updatedAnswers, None))
+              }
           )
       case Invalid(_) => Future.successful(Redirect(routes.ClaimPeriodStartController.onPageLoad()))
     }

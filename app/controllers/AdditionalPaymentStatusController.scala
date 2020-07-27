@@ -28,6 +28,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.AdditionalPaymentStatusView
 
@@ -47,6 +48,7 @@ class AdditionalPaymentStatusController @Inject()(
     extends FrontendBaseController with I18nSupport with FurloughCalculationHandler {
 
   val form: Form[AdditionalPaymentStatus] = formProvider()
+  val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(AdditionalPaymentStatusPage) match {
@@ -63,10 +65,11 @@ class AdditionalPaymentStatusController @Inject()(
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdditionalPaymentStatusPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AdditionalPaymentStatusPage, updatedAnswers))
+          userAnswerPersistence
+            .persistAnswer(request.userAnswers, AdditionalPaymentStatusPage, value, None)
+            .map { updatedAnswers =>
+              Redirect(navigator.nextPage(AdditionalPaymentStatusPage, updatedAnswers, None))
+          }
       )
   }
 }

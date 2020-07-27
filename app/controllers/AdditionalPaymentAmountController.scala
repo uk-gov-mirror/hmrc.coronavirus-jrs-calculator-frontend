@@ -30,6 +30,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import views.html.AdditionalPaymentAmountView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,6 +50,7 @@ class AdditionalPaymentAmountController @Inject()(
 
   val form: Form[Amount] = formProvider()
   val feature: FeatureFlagActionProvider = new FeatureFlagActionProviderImpl()
+  val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerOrRedirectV(AdditionalPaymentPeriodsPage) { additionalPaymentPeriods =>
@@ -72,10 +74,11 @@ class AdditionalPaymentAmountController @Inject()(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, paymentDate, idx))),
             value => {
               val additionalPayment = AdditionalPayment(paymentDate, value)
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(AdditionalPaymentAmountPage, additionalPayment, Some(idx)))
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(AdditionalPaymentAmountPage, updatedAnswers, Some(idx)))
+              userAnswerPersistence
+                .persistAnswer(request.userAnswers, AdditionalPaymentAmountPage, additionalPayment, Some(idx))
+                .map { updatedAnswers =>
+                  Redirect(navigator.nextPage(AdditionalPaymentAmountPage, updatedAnswers, Some(idx)))
+                }
             }
           )
       }

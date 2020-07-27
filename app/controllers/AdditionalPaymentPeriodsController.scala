@@ -33,6 +33,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.AdditionalPaymentPeriodsView
 
@@ -54,6 +55,7 @@ class AdditionalPaymentPeriodsController @Inject()(
   val form: Form[List[LocalDate]] = formProvider()
 
   implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
+  val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     handleCalculationFurloughV(request.userAnswers)
@@ -104,8 +106,9 @@ class AdditionalPaymentPeriodsController @Inject()(
   }
 
   private def saveAndRedirect(userAnswers: UserAnswers, additionalPaymentPeriods: List[LocalDate]) =
-    for {
-      updatedAnswers <- Future.fromTry(userAnswers.set(AdditionalPaymentPeriodsPage, additionalPaymentPeriods))
-      _              <- sessionRepository.set(updatedAnswers)
-    } yield Redirect(navigator.nextPage(AdditionalPaymentPeriodsPage, updatedAnswers))
+    userAnswerPersistence
+      .persistAnswer(userAnswers, AdditionalPaymentPeriodsPage, additionalPaymentPeriods, None)
+      .map { updatedAnswers =>
+        Redirect(navigator.nextPage(AdditionalPaymentPeriodsPage, updatedAnswers, None))
+      }
 }
