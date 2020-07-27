@@ -55,16 +55,12 @@ appConfig: config.FrontendAppConfig
 }
 
 <div class="govuk-inset-text">
-    @p(Html(messages("confirmation.september.inset.p1")))
-    @p {
-      @messages("confirmation.september.inset.p2.1")
-      <span class="govuk-!-font-weight-bold">£@cvb.furlough.total.formatted("%.2f")</span>
-      @messages("confirmation.september.inset.p2.2")
-      <span class="govuk-!-font-weight-bold">£@cvb.furlough.seventy.formatted("%.2f")</span>
-      @messages("confirmation.september.inset.p2.3")
+    @p{
+      @messages("confirmation.september.inset.p1.1")
       <span class="govuk-!-font-weight-bold">£@cvb.furlough.seventyDiff.formatted("%.2f")</span>
-      @messages("confirmation.september.inset.p2.4")
+      @messages("confirmation.september.inset.p1.2", cvb.furlough.seventy.formatted("%.2f"), cvb.furlough.total.formatted("%.2f"))
     }
+    @p(Html(messages("confirmation.september.inset.p2")))
 </div>
 
 @p {
