@@ -280,6 +280,27 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .onPageLoad()
       }
 
+      "display LastPayDatePage only when relevant" in {
+        navigator.nextPage(
+          PayPeriodsListPage,
+          emptyUserAnswers
+            .withClaimPeriodStart("2020,4,1")
+            .withClaimPeriodEnd("2020,4,30")
+            .withPayDate(List("2020,3,31", "2020,4,30"))
+            .withPayPeriodsList()
+        ) mustBe routes.LastPayDateController.onPageLoad()
+
+        navigator.nextPage(
+          PayPeriodsListPage,
+          emptyUserAnswers
+            .withClaimPeriodStart("2020,5,1")
+            .withClaimPeriodEnd("2020,5,31")
+            .withPayDate(List("2020,4,30", "2020,5,31"))
+            .withPayMethod()
+            .withPayPeriodsList()
+        ) mustBe routes.RegularPayAmountController.onPageLoad()
+      }
+
       "go to NicCategoryPage after LastPayDatePage if the pay-method is Regular" in {
         val userAnswers = emptyUserAnswers
           .set(PayMethodPage, Regular)
@@ -375,7 +396,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           EmployeeStartDatePage,
           emptyUserAnswers
             .withEmployeeStartDate("2019,8,1")
-            .withPayDate(List("2020,3,1", "2020,3,7"))
+            .withPayDate(List("2020,4,1", "2020,4,30"))
         ) mustBe routes.LastPayDateController.onPageLoad()
 
         navigator.nextPage(

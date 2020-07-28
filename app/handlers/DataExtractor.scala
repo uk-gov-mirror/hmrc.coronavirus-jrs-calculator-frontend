@@ -18,6 +18,7 @@ package handlers
 
 import java.time.LocalDate
 
+import cats.data.Validated.{Invalid, Valid}
 import models.UserAnswers.AnswerV
 import models._
 import pages._
@@ -100,11 +101,11 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
   def extractReferencePayDataV(userAnswers: UserAnswers): AnswerV[ReferencePayData] =
     (
       extractFurloughWithinClaimV(userAnswers),
-      extractPaymentFrequencyV(userAnswers),
-      userAnswers.getV(LastPayDatePage)
-    ).mapN { (furloughPeriod, frequency, lastPayDay) =>
+      extractPaymentFrequencyV(userAnswers)
+    ).mapN { (furloughPeriod, frequency) =>
       val payDates = userAnswers.getList(PayDatePage)
       val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
+      val lastPayDay = determineLastPayDay(userAnswers, periods)
       val assigned = assignPayDates(frequency, periods, lastPayDay)
       ReferencePayData(furloughPeriod, assigned, frequency)
     }
@@ -112,16 +113,22 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
   def extractPhaseTwoReferencePayDataV(userAnswers: UserAnswers): AnswerV[PhaseTwoReferencePayData] =
     (
       extractFurloughWithinClaimV(userAnswers),
-      extractPaymentFrequencyV(userAnswers),
-      extractLastPayDateV(userAnswers)
-    ).mapN { (furloughPeriod, frequency, lastPayDay) =>
+      extractPaymentFrequencyV(userAnswers)
+    ).mapN { (furloughPeriod, frequency) =>
       val payDates = userAnswers.getList(PayDatePage)
       val actuals = userAnswers.getList(PartTimeHoursPage)
       val usuals: Seq[UsualHours] = userAnswers.getList(PartTimeNormalHoursPage)
       val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
+      val lastPayDay = determineLastPayDay(userAnswers, periods)
       val assigned = assignPayDates(frequency, periods, lastPayDay)
       val phaseTwo: Seq[PhaseTwoPeriod] = assignPartTimeHours(assigned, actuals, usuals)
 
       PhaseTwoReferencePayData(furloughPeriod, phaseTwo, frequency)
+    }
+
+  def determineLastPayDay(userAnswers: UserAnswers, periods: Seq[Periods]): LocalDate =
+    extractLastPayDateV(userAnswers) match {
+      case Valid(date) => date
+      case Invalid(_)  => periods.last.period.end
     }
 }
