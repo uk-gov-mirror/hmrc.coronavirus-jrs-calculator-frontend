@@ -260,7 +260,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   private[this] def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getList(PayDatePage).isEmpty, userAnswers.getV(LastPayDatePage)) match {
       case (true, _)           => routes.PayDateController.onPageLoad(1)
-      case (false, Invalid(_)) => routes.LastPayDateController.onPageLoad()
+      case (false, Invalid(_)) => requireLastPayDateRoutes(userAnswers)
       case _                   => lastPayDateRoutes(userAnswers)
     }
   }
@@ -270,7 +270,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       case (Valid(Regular), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
       case (Valid(Regular), _)                      => routes.RegularPayAmountController.onPageLoad()
       case (Valid(Variable), _)                     => routes.VariableLengthEmployedController.onPageLoad()
-      case (Invalid(errors), _)                     => routes.PayMethodController.onPageLoad()
+      case (Invalid(_), _)                          => routes.PayMethodController.onPageLoad()
     }
   }
 
@@ -301,7 +301,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def payPeriodsListRoute: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(PayPeriodsListPage) match {
-      case Valid(PayPeriodsList.Yes) => routes.LastPayDateController.onPageLoad()
+      case Valid(PayPeriodsList.Yes) => requireLastPayDateRoutes(userAnswers)
       case Valid(PayPeriodsList.No)  => routes.PayDateController.onPageLoad(1)
       case Invalid(_)                => routes.PayDateController.onPageLoad(1)
     }
@@ -378,6 +378,16 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       case Valid(PayPeriodQuestion.UseSamePayPeriod)      => routes.PayMethodController.onPageLoad()
       case Valid(PayPeriodQuestion.UseDifferentPayPeriod) => routes.PaymentFrequencyController.onPageLoad()
       case Invalid(e)                                     => routes.PayPeriodQuestionController.onPageLoad()
+    }
+  }
+
+  private def requireLastPayDateRoutes: UserAnswers => Call = { userAnswers =>
+    val endDates = sortedEndDates(userAnswers.getList(PayDatePage))
+    val period = Period(endDates.head.plusDays(1), endDates.last)
+    if (periodContainsNewTaxYear(period)) {
+      routes.LastPayDateController.onPageLoad()
+    } else {
+      lastPayDateRoutes(userAnswers)
     }
   }
 
