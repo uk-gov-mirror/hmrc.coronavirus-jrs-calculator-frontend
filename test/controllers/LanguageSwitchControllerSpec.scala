@@ -19,13 +19,10 @@ package controllers
 import base.SpecBaseControllerSpecs
 import config.FrontendAppConfig
 import models.Language
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{MustMatchers, OptionValues}
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class LanguageSwitchControllerSpec extends SpecBaseControllerSpecs with MustMatchers with OptionValues with ScalaFutures with MockitoSugar {
+class LanguageSwitchControllerSpec extends SpecBaseControllerSpecs {
 
   def languageSwitchController(appConf: FrontendAppConfig) = new LanguageSwitchController(appConf, messagesApi, component)
 

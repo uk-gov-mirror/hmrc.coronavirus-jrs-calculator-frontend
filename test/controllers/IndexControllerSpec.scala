@@ -17,29 +17,30 @@
 package controllers
 
 import base.SpecBaseControllerSpecs
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import controllers.actions.DataRetrievalActionImpl
+import models.UserAnswers
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class IndexControllerSpec extends SpecBaseControllerSpecs {
 
   lazy val keepAliveRoute = routes.IndexController.keepalive().url
 
   lazy val getKeepAliveRequest = FakeRequest(GET, keepAliveRoute)
 
-  val controller = new IndexController(identifier, dataRetrieval, mockSessionRepository, component)
+  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) =
+    new IndexController(identifier, new DataRetrievalActionImpl(mockSessionRepository) {
+      override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
+        _ => Future.successful(stubbedAnswers)
+      }, mockSessionRepository, component)
 
   "StartAgainController Controller" must {
 
     "keepAlive request should return 204 as expected" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
-
-      val result = controller.keepalive()(getKeepAliveRequest)
+      val result = controller().keepalive()(getKeepAliveRequest)
 
       status(result) mustEqual NO_CONTENT
     }

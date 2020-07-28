@@ -22,9 +22,9 @@ import base.SpecBaseControllerSpecs
 import controllers.actions.DataRetrievalActionImpl
 import forms.FurloughPeriodQuestionFormProvider
 import models.ClaimPeriodQuestion.ClaimOnSamePeriod
-import models.{FurloughPeriodQuestion, UserAnswers}
 import models.FurloughStatus.{FurloughEnded, FurloughOngoing}
 import models.requests.DataRequest
+import models.{FurloughPeriodQuestion, UserAnswers}
 import pages.FurloughPeriodQuestionPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._

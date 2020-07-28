@@ -19,11 +19,10 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseControllerSpecs
+import controllers.actions.DataRetrievalActionImpl
 import forms.FurloughStartDateFormProvider
+import models.UserAnswers
 import models.requests.DataRequest
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.FurloughStartDatePage
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.CSRFTokenHelper._
@@ -34,7 +33,7 @@ import views.html.FurloughStartDateView
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new FurloughStartDateFormProvider()
   private val claimPeriodStart = LocalDate.of(2020, 3, 1)
@@ -64,12 +63,15 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs with Mocki
 
   val view = app.injector.instanceOf[FurloughStartDateView]
 
-  val controller = new FurloughStartDateController(
+  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) = new FurloughStartDateController(
     messagesApi,
     mockSessionRepository,
     navigator,
     identifier,
-    dataRetrieval,
+    new DataRetrievalActionImpl(mockSessionRepository) {
+      override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
+        _ => Future.successful(stubbedAnswers)
+    },
     dataRequired,
     formProvider,
     component,
@@ -78,24 +80,16 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs with Mocki
   "FurloughStartDate Controller" must {
 
     "return OK and the correct view for a GET" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithClaimStartAndEnd))
-
-      val result = controller.onPageLoad()(getRequest)
-
-      status(result) mustEqual OK
-
       val dataRequest = DataRequest(getRequest, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
 
-      contentAsString(result) mustEqual
-        view(form, claimPeriodStart)(dataRequest, messages).toString
+      val result = controller(Some(userAnswersWithClaimStartAndEnd)).onPageLoad()(getRequest)
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, claimPeriodStart)(dataRequest, messages).toString
     }
 
     "return OK and the correct view for a GET with different contents if 1st July or after" in {
       val userAnswers = emptyUserAnswers.withClaimPeriodStart("2020,7,1").withClaimPeriodEnd("2020,7,14")
-
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       val actualContent = contentAsString(result)
@@ -107,32 +101,23 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs with Mocki
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-
       val userAnswers = userAnswersWithClaimStartAndEnd.set(FurloughStartDatePage, validAnswer).success.value
-
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-
-      val result = controller.onPageLoad()(getRequest)
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
-
-      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-
       contentAsString(result) mustEqual
         view(form.fill(validAnswer), claimPeriodStart)(dataRequest, messages).toString
     }
 
     "redirect to the next page when valid data is submitted" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithClaimStartAndEnd))
-
-      val result = controller.onSubmit()(postRequest)
+      val result = controller(Some(userAnswersWithClaimStartAndEnd)).onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/furlough-ongoing"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithClaimStartAndEnd))
       val request =
         FakeRequest(POST, furloughStartDateRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -140,27 +125,23 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs with Mocki
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller.onSubmit()(request)
+      val dataRequest = DataRequest(request, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
+      val result = controller(Some(userAnswersWithClaimStartAndEnd)).onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
-
-      val dataRequest = DataRequest(request, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
-
       contentAsString(result) mustEqual
         view(boundForm, claimPeriodStart)(dataRequest, messages).toString
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
-      val result = controller.onPageLoad()(getRequest)
+      val result = controller(None).onPageLoad()(getRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
-      val result = controller.onSubmit()(postRequest)
+      val result = controller(None).onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

@@ -29,6 +29,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
+import services.UserAnswerPersistence
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.LastYearPayView
 
@@ -50,6 +51,7 @@ class LastYearPayController @Inject()(
   implicit val logger: Logger = LoggerFactory.getLogger(getClass)
 
   val form: Form[Amount] = formProvider()
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getLastYearPeriods(request.userAnswers).fold(
@@ -87,10 +89,10 @@ class LastYearPayController @Inject()(
             .fold(
               formWithErrors => Future.successful(BadRequest(view(formWithErrors, idx, period))),
               value =>
-                for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(LastYearPayPage, LastYearPayment(period.end, value), Some(idx)))
-                  _              <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
+                userAnswerPersistence
+                  .persistAnswer(request.userAnswers, LastYearPayPage, LastYearPayment(period.end, value), Some(idx))
+                  .map { updatedAnswers => Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
+                }
             )
         }
       }
