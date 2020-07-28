@@ -132,4 +132,27 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData with 
     actual.updated.id mustBe userAnswers.id
     actual.updated.data mustBe expectedUserAnswersData
   }
+
+  "handle scenario where lastPayDate is empty" in new FastJourneyUserAnswersHandler {
+    val userAnswers: UserAnswers = dummyUserAnswersNoLastPayDate
+      .withClaimPeriodQuestion(ClaimOnSamePeriod)
+      .withFurloughPeriodQuestion(FurloughedOnSamePeriod)
+      .withPayPeriodQuestion(UseSamePayPeriod)
+
+    val expectedUserAnswersData: JsObject = emptyUserAnswers
+      .copy(data = Json.obj())
+      .withClaimPeriodStart(userAnswers.getV(ClaimPeriodStartPage).value.toString)
+      .withClaimPeriodEnd(userAnswers.getV(ClaimPeriodEndPage).value.toString)
+      .withFurloughStartDate(userAnswers.getV(FurloughStartDatePage).value.toString)
+      .withPayDate(userAnswers.getList(PayDatePage).map(_.toString).toList)
+      .withPaymentFrequency(Monthly)
+      .withFurloughStatus()
+      .data
+
+    val actual: UserAnswersState = updateJourney(userAnswers).toOption.value
+
+    userAnswers.data.value.values.size must be > 2
+    actual.updated.id mustBe userAnswers.id
+    actual.updated.data mustBe expectedUserAnswersData
+  }
 }

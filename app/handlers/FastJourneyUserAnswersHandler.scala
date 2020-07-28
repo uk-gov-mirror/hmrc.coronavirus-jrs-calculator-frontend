@@ -171,10 +171,13 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
     } yield UserAnswersState(withFrequency, answersState.original))
 
   private val keepLastPayDate: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
-    for {
-      date            <- extractLastPayDateV(answersState.original).toOption
-      withLastPayDate <- answersState.updated.set(LastPayDatePage, date).toOption
-    } yield UserAnswersState(withLastPayDate, answersState.original))
+    extractLastPayDateV(answersState.original).toOption match {
+      case Some(date) =>
+        for {
+          withLastPayDate <- answersState.updated.set(LastPayDatePage, date).toOption
+        } yield UserAnswersState(withLastPayDate, answersState.original)
+      case None => Some(UserAnswersState(answersState.updated, answersState.original))
+  })
 
   private val keepFurloughStatus: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
     for {

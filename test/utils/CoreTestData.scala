@@ -30,6 +30,7 @@ trait CoreTestData extends UserAnswersBuilder {
 
   def userAnswersId: String = UUID.randomUUID().toString
   def dummyUserAnswers = regularJourney()
+  def dummyUserAnswersNoLastPayDate = regularJourneyNoLastPayDate()
   def emptyUserAnswers = UserAnswers(userAnswersId, Json.obj())
 
   def mandatoryAnswersOnRegularMonthly =
@@ -53,6 +54,19 @@ trait CoreTestData extends UserAnswersBuilder {
       .withLastPayDate("2020-04-20")
       .withRegularPayAmount(2000.0)
       .withPayDate(List("2020-02-29", "2020-03-31", "2020-04-30"))
+
+  private def regularJourneyNoLastPayDate(): UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2020-05-01")
+      .withClaimPeriodEnd("2020-05-31")
+      .withFurloughStartDate("2020-05-01")
+      .withFurloughStatus()
+      .withPaymentFrequency(Monthly)
+      .withNiCategory()
+      .withPensionStatus()
+      .withPayMethod()
+      .withRegularPayAmount(2000.0)
+      .withPayDate(List("2020-04-30", "2020-05-31"))
 
   def phaseTwoJourney(): UserAnswers =
     emptyUserAnswers
