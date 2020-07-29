@@ -57,19 +57,21 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
 
   val view = app.injector.instanceOf[LastYearPayView]
 
-  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) = new LastYearPayController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    new DataRetrievalActionImpl(mockSessionRepository) {
-      override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
-        _ => Future.successful(stubbedAnswers)
-    },
-    dataRequired,
-    formProvider,
-    component,
-    view) {
+  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) =
+    new LastYearPayController(
+      messagesApi,
+      mockSessionRepository,
+      navigator,
+      identifier,
+      new DataRetrievalActionImpl(mockSessionRepository) {
+        override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
+          _ => Future.successful(stubbedAnswers)
+      },
+      dataRequired,
+      formProvider,
+      component,
+      view
+    ) {
       override val userAnswerPersistence = new UserAnswerPersistence(_ => Future.successful(true))
     }
 

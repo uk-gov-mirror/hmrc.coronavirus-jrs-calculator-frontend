@@ -63,19 +63,21 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs {
 
   val view = app.injector.instanceOf[FurloughStartDateView]
 
-  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) = new FurloughStartDateController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    new DataRetrievalActionImpl(mockSessionRepository) {
-      override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
-        _ => Future.successful(stubbedAnswers)
-    },
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) =
+    new FurloughStartDateController(
+      messagesApi,
+      mockSessionRepository,
+      navigator,
+      identifier,
+      new DataRetrievalActionImpl(mockSessionRepository) {
+        override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
+          _ => Future.successful(stubbedAnswers)
+      },
+      dataRequired,
+      formProvider,
+      component,
+      view
+    )
 
   "FurloughStartDate Controller" must {
 

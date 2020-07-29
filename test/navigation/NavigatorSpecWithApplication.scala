@@ -284,6 +284,16 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(
           PayPeriodsListPage,
           emptyUserAnswers
+            .withClaimPeriodStart("2020,3,1")
+            .withClaimPeriodEnd("2020,3,31")
+            .withPayDate(List("2020,2,29", "2020,3,31"))
+            .withPayMethod()
+            .withPayPeriodsList()
+        ) mustBe routes.LastPayDateController.onPageLoad()
+
+        navigator.nextPage(
+          PayPeriodsListPage,
+          emptyUserAnswers
             .withClaimPeriodStart("2020,4,1")
             .withClaimPeriodEnd("2020,4,30")
             .withPayDate(List("2020,3,31", "2020,4,30"))

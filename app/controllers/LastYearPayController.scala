@@ -91,7 +91,8 @@ class LastYearPayController @Inject()(
               value =>
                 userAnswerPersistence
                   .persistAnswer(request.userAnswers, LastYearPayPage, LastYearPayment(period.end, value), Some(idx))
-                  .map { updatedAnswers => Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
+                  .map { updatedAnswers =>
+                    Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
                 }
             )
         }

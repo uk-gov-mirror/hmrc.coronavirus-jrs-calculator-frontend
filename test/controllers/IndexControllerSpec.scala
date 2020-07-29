@@ -32,10 +32,15 @@ class IndexControllerSpec extends SpecBaseControllerSpecs {
   lazy val getKeepAliveRequest = FakeRequest(GET, keepAliveRoute)
 
   def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) =
-    new IndexController(identifier, new DataRetrievalActionImpl(mockSessionRepository) {
-      override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
-        _ => Future.successful(stubbedAnswers)
-      }, mockSessionRepository, component)
+    new IndexController(
+      identifier,
+      new DataRetrievalActionImpl(mockSessionRepository) {
+        override protected val identifierRetrieval: String => Future[Option[UserAnswers]] =
+          _ => Future.successful(stubbedAnswers)
+      },
+      mockSessionRepository,
+      component
+    )
 
   "StartAgainController Controller" must {
 
