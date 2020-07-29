@@ -96,7 +96,8 @@ trait PeriodHelper {
   }
 
   def periodContainsNewTaxYear(period: Period): Boolean =
-    dateExistsInPayPeriod(LocalDate.of(period.start.getYear, 4, 6), period)
+    dateExistsInPayPeriod(LocalDate.of(period.start.getYear, 4, 5), period) &&
+      dateExistsInPayPeriod(LocalDate.of(period.start.getYear, 4, 6), period)
 
   def dateExistsInPayPeriod(date: LocalDate, period: Period): Boolean =
     (date.isAfter(period.start) || date.isEqual(period.start)) &&
