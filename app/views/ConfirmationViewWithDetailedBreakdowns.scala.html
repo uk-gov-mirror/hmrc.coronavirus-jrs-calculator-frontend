@@ -75,28 +75,6 @@
 
     @p(Html(messages("confirmation.explanation.p")))
 
-    @details(
-        summaryText = Messages("confirmation.breakdown.summary")
-    ) {
-        @for(messageKey <- cvb.detailedBreakdownMessageKeys) {
-            @p(Html(messages(messageKey)))
-        }
-
-        <p class="govuk-body">
-            @messages("detailedBreakdown.p2")
-            <a class="govuk-link" href="@messages("detailedBreakdown.p2.a.href")" target="_blank">@messages("detailedBreakdown.p2.a")</a>
-        </p>
-
-        @p(Html(messages("detailedBreakdown.p3")))
-
-        @for(detailedBreakdown <- cvb.detailedBreakdowns) {
-            @h3(Messages("detailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-            @detailedFurloughBreakdown(detailedBreakdown.furlough)
-            @detailedNicBreakdown(detailedBreakdown.nic)
-            @detailedPensionBreakdown(detailedBreakdown.pension, detailedBreakdown.furlough.furloughGrant)
-        }
-    }
-
     @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
 
     <ul class="govuk-list govuk-list--number">
@@ -116,6 +94,25 @@
     </ul>
 
     @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
+
+    @h3(Messages("confirmation.breakdown.summary"))
+        @for(messageKey <- cvb.detailedBreakdownMessageKeys) {
+    @p(Html(messages(messageKey)))
+    }
+
+    <p class="govuk-body">
+        @messages("detailedBreakdown.p2")
+        <a class="govuk-link" href="@messages("detailedBreakdown.p2.a.href")" target="_blank">@messages("detailedBreakdown.p2.a")</a>
+    </p>
+
+    @p(Html(messages("detailedBreakdown.p3")))
+
+    @for(detailedBreakdown <- cvb.detailedBreakdowns) {
+    @h3(Messages("detailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
+    @detailedFurloughBreakdown(detailedBreakdown.furlough)
+    @detailedNicBreakdown(detailedBreakdown.nic)
+    @detailedPensionBreakdown(detailedBreakdown.pension, detailedBreakdown.furlough.furloughGrant)
+    }
 
     @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
 
