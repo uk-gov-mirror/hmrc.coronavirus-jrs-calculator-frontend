@@ -58,11 +58,11 @@
 
             @inputDate(
                 form = form,
-                legendContent = "",
+                legendContent = messages("claimPeriodStart.heading"),
                 id = "startDate",
                 hintText = Some("claimPeriodStart.hint"),
                 legendAsPageHeading = false,
-                legendClasses = "govuk-label--m"
+                legendClasses = "govuk-visually-hidden"
             )
 
             @button("site.continue")
