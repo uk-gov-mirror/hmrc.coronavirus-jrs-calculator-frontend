@@ -67,6 +67,10 @@ class FrontendAppConfig() extends UrlConfiguration with SchemeConfiguration with
   lazy val privacy: String = host + configSource("urls.footer.privacy").loadOrThrow[String]
   lazy val termsConditions: String = host + configSource("urls.footer.termsConditions").loadOrThrow[String]
   lazy val govukHelp: String = configSource("urls.footer.govukHelp").loadOrThrow[String]
+
+  lazy val usualHours: String = configSource("usualHours").loadOrThrow[String]
+  lazy val stepsBeforeCalculation: String = configSource("stepsBeforeCalculation").loadOrThrow[String]
+  lazy val exampleWages: String = configSource("exampleWages").loadOrThrow[String]
 }
 
 trait SchemeConfiguration extends CamelCaseConf {

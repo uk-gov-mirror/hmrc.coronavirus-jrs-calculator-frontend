@@ -56,10 +56,6 @@
 
         @h1(messages(headingKey, titleAndHeadingArgs: _*))
 
-        @if(period.isInstanceOf[PartialPeriod]) {
-          @p(Html(messages("partTimeHours.partial", dateToStringWithoutYear(period.period.start), dateToString(period.period.end))))
-        }
-
         @inputNumber(
             form,
             id = "value",

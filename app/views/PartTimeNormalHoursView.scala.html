@@ -23,7 +23,11 @@
         button: components.button,
         h1: components.h1,
         p: components.p,
-        inputNumber: components.inputNumber
+        inputNumber: components.inputNumber,
+        whatToInclude: includes.whatToInclude,
+        details: components.details,
+        link: components.link,
+        appConfig: config.FrontendAppConfig
 )
 
 @(form: Form[_], period: Periods, idx: Int)(implicit request: Request[_], messages: Messages)
@@ -58,6 +62,20 @@
 
         @if(period.isInstanceOf[PartialPeriod]) {
             @p(Html(messages("partTimeNormalHours.partial", dateToStringWithoutYear(period.period.start), dateToString(period.period.end))))
+
+            @details(
+            summaryText = Messages("partTimeNormalHours.whatToInclude.summary")
+            ) {
+                @p(Html(messages("partTimeNormalHours.whatToInclude.p")))
+                <ol>
+                    <li>@Messages("partTimeNormalHours.whatToInclude.ol.1")</li>
+                    <li>@Messages("partTimeNormalHours.whatToInclude.ol.2")</li>
+                    <li>@Messages("partTimeNormalHours.whatToInclude.ol.3")</li>
+                    <li>@Messages("partTimeNormalHours.whatToInclude.ol.4")</li>
+                </ol>
+                @p(Html(messages("partTimeNormalHours.whatToInclude.p2")))
+                @Html(Messages("partTimeNormalHours.whatToInclude.text", link(appConfig.exampleWages,"partTimeNormalHours.whatToInclude.link", "target", Some("_blank"))))
+            }
         }
 
         @inputNumber(
