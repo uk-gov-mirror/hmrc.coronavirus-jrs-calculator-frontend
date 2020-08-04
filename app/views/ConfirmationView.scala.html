@@ -55,8 +55,6 @@
 
     }
 
-    @h2(Html(messages("confirmation.explanation.heading")), classes = Some("govuk-heading-m"))
-
     @p {
         <span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
         @dateToString(LocalDate.now())
