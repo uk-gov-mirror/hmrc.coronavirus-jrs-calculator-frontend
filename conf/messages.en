@@ -161,6 +161,7 @@ payMethod.heading = How was this employee paid before their furlough started?
 payMethod.regular= A regular amount each time
 payMethod.variable = A variable amount each time
 payMethod.error.required = Select one of the options below
+payMethod.hint = This is the basic amount. Exclude extra payments such as overtime.
 
 payFrequency.title = How often do you pay this employee?
 payFrequency.heading = How often do you pay this employee?

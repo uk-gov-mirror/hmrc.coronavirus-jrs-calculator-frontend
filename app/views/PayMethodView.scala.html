@@ -37,7 +37,8 @@
         @inputRadio(
             form = form,
             legend = messages("payMethod.heading"),
-            items = PayMethod.options(form)
+            items = PayMethod.options(form),
+            hintKey = Some("payMethod.hint")
         )
 
         @button("site.continue")
