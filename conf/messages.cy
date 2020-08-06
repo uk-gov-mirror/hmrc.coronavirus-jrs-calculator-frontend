@@ -161,6 +161,7 @@ payMethod.heading = Sut oedd y cyflogai hwn yn cael ei dalu cyn i’w gyfnod ffy
 payMethod.regular= Swm rheolaidd bob tro
 payMethod.variable = Swm amrywiol bob tro
 payMethod.error.required = Dewiswch un o’r opsiynau isod
+payMethod.hint = Dyma’r swm sylfaenol. Peidiwch â chynnwys taliadau ychwanegol, megis goramser.
 
 payFrequency.title = Pa mor aml yr ydych yn talu’r cyflogai hwn?
 payFrequency.heading = Pa mor aml yr ydych yn talu’r cyflogai hwn?
@@ -228,7 +229,7 @@ reviewPayDates.error.required = Dewiswch ‘Iawn’ os reviewPayDates
 
 regularPayAmount.title = Ar 19 Mawrth 2020, beth oedd swm cyflog diweddaraf y cyflogai hwn?
 regularPayAmount.heading = Ar 19 Mawrth 2020, beth oedd swm cyflog diweddaraf y cyflogai hwn?
-regularPayAmount.p1 = Dyma’r taliad diweddaraf a oedd yn ddyledus ar neu cyn 19 Mawrth, a hynny cyn gwneud unrhyw ddidyniadau.
+regularPayAmount.p1 = Dyma’r taliad gros diweddaraf a oedd yn ddyledus ar neu cyn 19 Mawrth, a hynny cyn gwneud didyniadau.
 regularPayAmount.p2 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 regularPayAmount.inset = Os dechreuodd y cyflogai hwn weithio rhwng 1 ac 18 Mawrth 2020, nodwch y swm y bydd yn cael ei dalu o hyn ymlaen.
 regularPayAmount.salary.error.required = Nodwch swm dilys
@@ -468,7 +469,7 @@ somethingWentWrong.button = Dechrau eto
 
 lastYearPay.title = Yn 2019, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
 lastYearPay.heading = Yn 2019, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
-lastYearPay.p1 = Mae angen hwn arnom er mwyn cyfrifo’i hawl yn seiliedig ar swm y llynedd.
+lastYearPay.p1 = Dyma’r swm gros cyn didyniadau. Mae angen hwn arnom er mwyn cyfrifo’i hawl, yn seiliedig ar swm y llynedd.
 lastYearPay.p2 = Dylech ond cynnwys taliadau ar gyfer gwaith a wnaed yn y cyfnod cyflog hwn, hyd yn oed os yw’r slip cyflog yn cynnwys taliadau ar gyfer gwaith arall.
 lastYearPay.p3 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 lastYearPay.error.nonNumeric = Nodwch y cyflog gan ddefnyddio rhifau
