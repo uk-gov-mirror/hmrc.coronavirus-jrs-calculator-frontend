@@ -58,11 +58,14 @@ class ConfirmationController @Inject()(
       case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
         data.metaData.claimPeriod.start.getMonthValue match {
           case 8 =>
+            auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case 9 =>
+            auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(
               Ok(septemberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case 10 =>
+            auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
