@@ -377,6 +377,7 @@ furloughOngoing.phaseTwo.ongoing = Iawn
 furloughOngoing.phaseTwo.flexible = Nac ydy, gweithiodd yn ystod y cyfnod hawlio (ffyrlo hyblyg)
 furloughOngoing.error.required = Dewiswch un o’r opsiynau isod
 furloughOngoing.phaseTwo.hint = Gall cyflogeion gael eu rhoi ar ffyrlo hyblyg erbyn hyn. Gallwch hawlio am eu horiau gwaith arferol, llai’r oriau roeddent yn gweithio mewn gwirionedd.
+furloughOngoing.phaseTwo.hint2 = If an employee has returned to work full time during the claim period you must also tell us how many hours they worked.
 
 furloughEndDate.title = Pryd daeth ei ffyrlo i ben?
 furloughEndDate.phaseTwo.title = Beth oedd y dyddiad olaf i’r cyflogai hwn weithio i chi?
@@ -662,8 +663,8 @@ payPeriodQuestion.useDifferentPayPeriod = Na
 payPeriodQuestion.error.required = Dewiswch un o’r opsiynau isod
 payPeriodQuestion.period.text = o {0} i {1}
 
-partTimePeriods.title = Pryd roedd y cyflogai hwn ar ffyrlo hyblyg yn ystod y cyfnod hawlio?
-partTimePeriods.heading = Pryd roedd y cyflogai hwn ar ffyrlo hyblyg yn ystod y cyfnod hawlio?
+partTimePeriods.title = When did this employee work during the claim period?
+partTimePeriods.heading = When did this employee work during the claim period?
 partTimePeriods.hint = Dewiswch bob un sy’n berthnasol.
 partTimePeriods.fullPeriod = Cyfnod cyflog: {0} i {1}
 partTimePeriods.partialPeriod = Cyfnod cyflog: {0} to {1} (rhannol)
