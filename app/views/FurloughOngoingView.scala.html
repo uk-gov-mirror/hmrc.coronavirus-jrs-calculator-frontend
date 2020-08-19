@@ -54,6 +54,7 @@
         @h1(headingContent)
         @if(claimStartDate.getMonthValue > 6) {
           @p(Html(messages("furloughOngoing.phaseTwo.hint")))
+          @p(Html(messages("furloughOngoing.phaseTwo.hint2")))
         }
 
         @inputRadio(
