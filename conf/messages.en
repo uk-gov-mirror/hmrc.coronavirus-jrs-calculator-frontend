@@ -387,11 +387,10 @@ furloughEndDate.error.claimPeriod = Enter a furlough end date within the claim p
 furloughEndDate.error.beforeStart = The furlough end date cannot be before the furlough start date
 
 furloughStartDate.title = When was this employee furloughed?
-furloughStartDate.1stJuly.title = When was this employee originally furloughed?
 furloughStartDate.heading = When was this employee furloughed?
-furloughStartDate.1stJuly.heading = When was this employee originally furloughed?
+furloughStartDate.p1 = If this employee has been furloughed more than once it is the date they were most recently furloughed.
 furloughStartDate.hint = This is the date this employee started furlough. It could be before or after the start date of this claim.
-furloughStartDate.p1 = We’re asking because your claim could include employees who were furloughed on different dates.
+furloughStartDate.p2 = We’re asking because your claim could include employees who were furloughed on different dates.
 
 furloughStartDate.error.required.all = Enter the furlough start date
 furloughStartDate.error.required.two = The furlough start date must include {0} and {1}

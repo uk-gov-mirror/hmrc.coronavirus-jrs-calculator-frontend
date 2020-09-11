@@ -95,8 +95,6 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual OK
       val actualContent = contentAsString(result)
-      actualContent must include("When was this employee originally furloughed?")
-      actualContent must include("<title> When was this employee originally furloughed?")
       //TODO not include is not the greatest test Vs hidden
       actualContent must not include ("This is the date this employee started furlough. It could be before or after the start date of this claim.")
       actualContent must not include ("We’re asking because your claim could include employees who were furloughed on different dates.")

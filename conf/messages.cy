@@ -390,11 +390,10 @@ furloughEndDate.error.claimPeriod = Nodwch ddyddiad dod i ben y ffyrlo sydd o fe
 furloughEndDate.error.beforeStart = Ni all dyddiad dod i ben y ffyrlo fod cyn dyddiad dechrau’r ffyrlo
 
 furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo’n wreiddiol?
-furloughStartDate.1stJuly.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo’n wreiddiol?
 furloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo’n wreiddiol?
-furloughStartDate.1stJuly.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo’n wreiddiol?
+furloughStartDate.p1 = If this employee has been furloughed more than once it is the date they were most recently furloughed.
 furloughStartDate.hint = Dyma’r dyddiad y dechreuodd y cyflogai ei ffyrlo. Gall hyn fod cyn neu ar ôl dyddiad dechrau’r hawliad hwn.
-furloughStartDate.p1 = Rydym yn gofyn hyn oherwydd gallai’ch hawliad gynnwys cyflogeion a gafodd eu rhoi ar ffyrlo ar wahanol ddyddiadau.
+furloughStartDate.p2 = Rydym yn gofyn hyn oherwydd gallai’ch hawliad gynnwys cyflogeion a gafodd eu rhoi ar ffyrlo ar wahanol ddyddiadau.
 
 furloughStartDate.error.required.all = Nodwch ddyddiad dechrau’r ffyrlo
 furloughStartDate.error.required.two = Mae’n rhaid i ddyddiad dechrau’r ffyrlo gynnwys {0} a {1}
