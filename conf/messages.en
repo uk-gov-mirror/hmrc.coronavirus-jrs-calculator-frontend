@@ -374,9 +374,7 @@ furloughOngoing.phaseTwo.hint = If an employee is flexibly furloughed the furlou
 furloughOngoing.phaseTwo.hint2 = If an employee’s furlough has ended they can be furloughed again at a later date.
 
 furloughEndDate.title = When did their furlough end?
-furloughEndDate.phaseTwo.title = What’s the last date this employee worked for you?
 furloughEndDate.heading = When did their furlough end?
-furloughEndDate.phaseTwo.heading = What’s the last date this employee worked for you?
 furloughEndDate.hint = For example, 30 4 2020
 furloughEndDate.p = To claim under the scheme an employee must be furloughed for at least 3 weeks.
 furloughEndDate.phaseTwo.p = This is the last date you can claim the furlough grant for.

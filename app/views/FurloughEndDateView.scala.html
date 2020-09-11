@@ -29,35 +29,18 @@
 
 @(form: Form[_], claimStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@titleContent = @{
-  if(claimStartDate.getMonthValue < 7) {
-    title(form, "furloughEndDate.title")
-  } else {
-    title(form, "furloughEndDate.phaseTwo.title")
-  }
-}
-
-@headingContent = @{
-  if(claimStartDate.getMonthValue < 7) {
-    messages("furloughEndDate.heading")
-  } else {
-    messages("furloughEndDate.phaseTwo.heading")
-  }
-}
-
-
-@govukLayout(pageTitle = Some(titleContent), thisPage = FurloughEndDatePage) {
+@govukLayout(pageTitle = Some(title(form, "furloughEndDate.title")), thisPage = FurloughEndDatePage) {
 
     @formHelper(action = FurloughEndDateController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(headingContent)
+        @h1(messages("furloughEndDate.heading"))
         @p(Html(messages(if (claimStartDate.getMonthValue < 7) "furloughEndDate.p" else "furloughEndDate.phaseTwo.p")))
 
         @inputDate(
             form,
-            legendContent = headingContent,
+            legendContent = messages("furloughEndDate.heading"),
             legendClasses = "govuk-visually-hidden",
             legendAsPageHeading = false,
             hintText = Some("furloughEndDate.hint")

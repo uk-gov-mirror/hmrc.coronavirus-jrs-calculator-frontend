@@ -376,9 +376,7 @@ furloughOngoing.phaseTwo.hint = If an employee is flexibly furloughed the furlou
 furloughOngoing.phaseTwo.hint2 = If an employee’s furlough has ended they can be furloughed again at a later date.
 
 furloughEndDate.title = Pryd daeth ei ffyrlo i ben?
-furloughEndDate.phaseTwo.title = Beth oedd y dyddiad olaf i’r cyflogai hwn weithio i chi?
 furloughEndDate.heading = Pryd daeth ei ffyrlo i ben?
-furloughEndDate.phaseTwo.heading = Beth oedd y dyddiad olaf i’r cyflogai hwn weithio i chi?
 furloughEndDate.hint = Er enghraifft, 30 4 2020
 furloughEndDate.p = Er mwyn hawlio o dan y cynllun, rhaid i gyflogai fod ar ffyrlo am o leiaf 3 wythnos.
 furloughEndDate.phaseTwo.p = Dyma’r dyddiad olaf y gallwch hawlio’r grant ffyrlo ar ei gyfer.
