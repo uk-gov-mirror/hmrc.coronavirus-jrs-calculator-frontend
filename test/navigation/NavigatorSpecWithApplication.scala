@@ -57,10 +57,6 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .onPageLoad()
 
         navigator
-          .nextPage(FurloughStatusPage, emptyUserAnswers.withFurloughStatus(FurloughStatus.FlexibleFurlough)) mustBe routes.PaymentFrequencyController
-          .onPageLoad()
-
-        navigator
           .nextPage(FurloughStatusPage, emptyUserAnswers.withFurloughStatus(FurloughStatus.FurloughEnded)) mustBe routes.FurloughEndDateController
           .onPageLoad()
       }
@@ -127,34 +123,24 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
       }
 
-      "go to PartTimePeriodsPage after RegularPayAmountPage if phase two started and furlough is flexible" in {
-        val userAnswers = emptyUserAnswers
-          .withClaimPeriodStart("2020,7,1")
-          .withFurloughStatus(FurloughStatus.FlexibleFurlough)
-
-        val navigator = new Navigator()
-
-        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.PartTimePeriodsController.onPageLoad()
-      }
-
-      "go to NicCategoryPage after RegularPayAmountPage if phase two started and furlough is ongoing" in {
+      "go to PartTimeQuestionPage after RegularPayAmountPage if phase two started and furlough is ongoing" in {
         val userAnswers = emptyUserAnswers
           .withClaimPeriodStart("2020,7,1")
           .withFurloughStatus(FurloughStatus.FurloughOngoing)
 
         val navigator = new Navigator()
 
-        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.NicCategoryController.onPageLoad()
+        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
       }
 
-      "go to ConfirmationPage after RegularPayAmountPage if phase two started and furlough is ongoing and claim start Aug onwards" in {
+      "go to PartTimeQuestionPage after RegularPayAmountPage if phase two started and furlough is ongoing and claim start Aug onwards" in {
         val userAnswers = emptyUserAnswers
           .withClaimPeriodStart("2020,8,1")
           .withFurloughStatus(FurloughStatus.FurloughOngoing)
 
         val navigator = new Navigator()
 
-        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.ConfirmationController.onPageLoad()
+        navigator.nextPage(RegularPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
       }
 
       "go to PartTimePeriodsPage after PartTimeQuestionPage if PartTimeQuestion is PartTimeYes" in {

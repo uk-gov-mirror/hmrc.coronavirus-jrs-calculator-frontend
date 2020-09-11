@@ -365,18 +365,13 @@ claimPeriodEnd.cannot.be.after.july = Enter an end date before 1 July. (From Jul
 claimPeriodEnd.legend = End date
 claimPeriodEnd.hint = For example, 31 3 2020
 
-furloughOngoing.title = Has the employee’s furlough ended?
-furloughOngoing.phaseTwo.title = On {0}, is this employee still fully furloughed?
-furloughOngoing.heading = Has the employee’s furlough ended?
-furloughOngoing.phaseTwo.heading = On {0}, is this employee still fully furloughed?
+furloughOngoing.title = Has the employee’s furlough ended during this claim period?
+furloughOngoing.heading = Has the employee’s furlough ended during this claim period?
 furloughOngoing.ended = Yes
-furloughOngoing.phaseTwo.ended = No, they are no longer an employee
 furloughOngoing.ongoing = No, it is ongoing
-furloughOngoing.phaseTwo.ongoing = Yes
-furloughOngoing.phaseTwo.flexible = No, they worked during the claim period
 furloughOngoing.error.required = Select one of the options below
-furloughOngoing.phaseTwo.hint = Employees can now be flexibly furloughed. You can claim for their usual working hours minus the hours they actually worked.
-furloughOngoing.phaseTwo.hint2 = If an employee has returned to work full time during the claim period you must also tell us how many hours they worked.
+furloughOngoing.phaseTwo.hint = If an employee is flexibly furloughed the furlough is ongoing and you can claim for their usual working hours minus the hours they actually worked.
+furloughOngoing.phaseTwo.hint2 = If an employee’s furlough has ended they can be furloughed again at a later date.
 
 furloughEndDate.title = When did their furlough end?
 furloughEndDate.phaseTwo.title = What’s the last date this employee worked for you?
@@ -652,7 +647,6 @@ furloughPeriodQuestion.error.required = Select one of the options below
 furloughPeriodQuestion.start = Start:
 furloughPeriodQuestion.end = End:
 furloughPeriodQuestion.ongoing = Ongoing
-furloughPeriodQuestion.flexible = Flexible
 
 payPeriodQuestion.title = Do you want to use the same pay periods?
 payPeriodQuestion.heading = Do you want to use the same pay periods?

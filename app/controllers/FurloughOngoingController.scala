@@ -22,7 +22,7 @@ import handlers.ErrorHandler
 import javax.inject.Inject
 import models.FurloughStatus
 import navigation.Navigator
-import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughStatusPage}
+import pages.{ClaimPeriodStartPage, FurloughStatusPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -50,17 +50,17 @@ class FurloughOngoingController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val maybeFurlough = request.userAnswers.getV(FurloughStatusPage)
-    getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
-      Future.successful(Ok(view(maybeFurlough.map(form.fill).getOrElse(form), claimStartDate, claimEndDate)))
+    getRequiredAnswerV(ClaimPeriodStartPage) { claimStartDate =>
+      Future.successful(Ok(view(maybeFurlough.map(form.fill).getOrElse(form), claimStartDate)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
+    getRequiredAnswerV(ClaimPeriodStartPage) { claimStartDate =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStartDate, claimEndDate))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, claimStartDate))),
           value =>
             userAnswerPersistence
               .persistAnswer(request.userAnswers, FurloughStatusPage, value, None)

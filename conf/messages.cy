@@ -367,18 +367,13 @@ claimPeriodEnd.cannot.be.lessThan.7days = Mae’n rhaid i’r cyfnod hawlio fod 
 claimPeriodEnd.legend = Dyddiad dod i ben
 claimPeriodEnd.hint = Er enghraifft, 31 3 2020
 
-furloughOngoing.title = A yw cyfnod ffyrlo’r cyflogai hwn wedi dod i ben?
-furloughOngoing.phaseTwo.title = Ar {0}, a yw’r cyflogai hwn yn dal i fod ar ffyrlo llawn?
-furloughOngoing.heading = A yw cyfnod ffyrlo’r cyflogai hwn wedi dod i ben?
-furloughOngoing.phaseTwo.heading = Ar {0}, a yw’r cyflogai hwn yn dal i fod ar ffyrlo llawn?
+furloughOngoing.title = Has the employee’s furlough ended during this claim period?
+furloughOngoing.heading = Has the employee’s furlough ended during this claim period?
 furloughOngoing.ended = Iawn
-furloughOngoing.phaseTwo.ended = Nac ydy, nid yw’n gyflogai mwyach
 furloughOngoing.ongoing = Na, mae’n barhaus
-furloughOngoing.phaseTwo.ongoing = Iawn
-furloughOngoing.phaseTwo.flexible = Nac ydy, gweithiodd yn ystod y cyfnod hawlio
 furloughOngoing.error.required = Dewiswch un o’r opsiynau isod
-furloughOngoing.phaseTwo.hint = Gall cyflogeion gael eu rhoi ar ffyrlo hyblyg erbyn hyn. Gallwch hawlio am eu horiau gwaith arferol, llai’r oriau roeddent yn gweithio mewn gwirionedd.
-furloughOngoing.phaseTwo.hint2 = If an employee has returned to work full time during the claim period you must also tell us how many hours they worked.
+furloughOngoing.phaseTwo.hint = If an employee is flexibly furloughed the furlough is ongoing and you can claim for their usual working hours minus the hours they actually worked.
+furloughOngoing.phaseTwo.hint2 = If an employee’s furlough has ended they can be furloughed again at a later date.
 
 furloughEndDate.title = Pryd daeth ei ffyrlo i ben?
 furloughEndDate.phaseTwo.title = Beth oedd y dyddiad olaf i’r cyflogai hwn weithio i chi?
@@ -655,7 +650,6 @@ furloughPeriodQuestion.error.required = SDewiswch un o’r opsiynau isod
 furloughPeriodQuestion.start = Dechrau:
 furloughPeriodQuestion.end = Diwedd:
 furloughPeriodQuestion.ongoing = yn barhaus
-furloughPeriodQuestion.flexible = Hyblyg
 
 payPeriodQuestion.title = A ydych am ddefnyddio’r un cyfnodau cyflog?
 payPeriodQuestion.heading = A ydych am ddefnyddio’r un cyfnodau cyflog?

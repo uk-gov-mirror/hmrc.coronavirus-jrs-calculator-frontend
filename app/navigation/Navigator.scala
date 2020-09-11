@@ -112,19 +112,11 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def regularPayAmountRoute: UserAnswers => Call = { userAnswer =>
     if (isPhaseTwo(userAnswer)) {
-      flexibleFurloughRoute(userAnswer)
+      routes.PartTimeQuestionController.onPageLoad()
     } else {
       routes.TopUpStatusController.onPageLoad()
     }
   }
-
-  private[this] def flexibleFurloughRoute(userAnswers: UserAnswers): Call =
-    userAnswers.getV(FurloughStatusPage) match {
-      case Valid(FurloughStatus.FurloughOngoing)  => skipNicAndPensionAfterJuly(userAnswers)
-      case Valid(FurloughStatus.FlexibleFurlough) => routes.PartTimePeriodsController.onPageLoad()
-      case Valid(FurloughStatus.FurloughEnded)    => routes.PartTimeQuestionController.onPageLoad()
-      case _                                      => routes.FurloughOngoingController.onPageLoad()
-    }
 
   private[this] def partTimeQuestionRoute: UserAnswers => Call =
     userAnswer =>
@@ -249,8 +241,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def furloughOngoingRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(FurloughStatusPage) match {
-      case Valid(FurloughStatus.FurloughEnded)                                            => routes.FurloughEndDateController.onPageLoad()
-      case Valid(FurloughStatus.FurloughOngoing) | Valid(FurloughStatus.FlexibleFurlough) => routes.PaymentFrequencyController.onPageLoad()
+      case Valid(FurloughStatus.FurloughEnded)   => routes.FurloughEndDateController.onPageLoad()
+      case Valid(FurloughStatus.FurloughOngoing) => routes.PaymentFrequencyController.onPageLoad()
       case Invalid(err) =>
         UserAnswers.logWarnings(err)
         routes.FurloughOngoingController.onPageLoad()
@@ -335,7 +327,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   private def annualPayAmountRoutes: UserAnswers => Call =
     userAnswers =>
       if (isPhaseTwo(userAnswers)) {
-        flexibleFurloughRoute(userAnswers)
+        routes.PartTimeQuestionController.onPageLoad()
       } else {
         phaseOneAnnualPayAmountRoute(userAnswers)
     }
@@ -377,7 +369,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     userAnswers.getV(PayPeriodQuestionPage) match {
       case Valid(PayPeriodQuestion.UseSamePayPeriod)      => routes.PayMethodController.onPageLoad()
       case Valid(PayPeriodQuestion.UseDifferentPayPeriod) => routes.PaymentFrequencyController.onPageLoad()
-      case Invalid(e)                                     => routes.PayPeriodQuestionController.onPageLoad()
+      case Invalid(_)                                     => routes.PayPeriodQuestionController.onPageLoad()
     }
   }
 
