@@ -663,8 +663,9 @@ partTimePeriods.partialPeriod = Cyfnod cyflog: {0} to {1} (rhannol)
 partTimePeriods.singleDay = Cyfnod cyflog: {0} (rhannol)
 partTimePeriods.error.required = dewiswch y cyfnodau cyflog pan oedd y cyflogai’n gweithio
 
-partTimeQuestion.title = A wnaeth y cyflogai hwn unrhyw waith rhwng {0} a {1}?
-partTimeQuestion.heading = A wnaeth y cyflogai hwn unrhyw waith rhwng {0} a {1}?
+partTimeQuestion.title = Has this employee done any work during this claim period?
+partTimeQuestion.heading = Has this employee done any work during this claim period?
+partTimeQuestion.hint = For the claim period {0} to {1}.
 partTimeQuestion.partTimeYes = Iawn
 partTimeQuestion.partTimeNo = Na
 partTimeQuestion.error.required = Dewiswch un o’r opsiynau isod
