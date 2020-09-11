@@ -183,6 +183,7 @@ rootPage.p5.l2 = have been transferred under TUPE
 rootPage.p5.l3 = were not employed continuously before their furlough started
 rootPage.p5.l4 = returned from statutory leave such as maternity leave in the last 3 months (if the claim period is in July or earlier)
 rootPage.p5.l5 = receive employer pension contributions outside of an auto-enrolment pension scheme
+rootPage.p5.l6 = ended furlough then began again during the same claim period
 rootPage.p6 = In these cases, work out what you can claim manually using the {0} or seek professional advice.
 rootPage.p6.link = calculation guidance
 rootPage.p7 = It’s your responsibility to check that the amount you’re claiming for is correct.

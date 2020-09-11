@@ -183,6 +183,7 @@ rootPage.p5.l2 = wedi’u trosglwyddo o dan TUPE
 rootPage.p5.l3 = - heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
 rootPage.p5.l4 = - wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
 rootPage.p5.l5 = yn cael cyfraniadau pensiwn y cyflogwr y tu allan i gynllun pensiwn cofrestru awtomatig
+rootPage.p5.l6 = ended furlough then began again during the same claim period
 rootPage.p6 = Yn yr achosion hyn, cyfrifwch yr hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
 rootPage.p6.link = arweiniad cyfrifo
 rootPage.p7 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y swm rydych yn ei hawlio yn gywir.
