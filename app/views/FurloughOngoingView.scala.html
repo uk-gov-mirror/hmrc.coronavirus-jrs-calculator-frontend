@@ -14,8 +14,9 @@
  * limitations under the License.
  *@
 
-@import pages.FurloughStatusPage
 @import java.time.LocalDate
+
+@import pages.FurloughStatusPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -27,31 +28,15 @@
         inputRadio: components.inputRadio,
 )
 
-@(form: Form[_], claimStartDate: LocalDate, claimEndDate: LocalDate)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], claimStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@titleContent= @{
-  if(claimStartDate.getMonthValue < 7) {
-    title(form, "furloughOngoing.title")
-  } else {
-    title(form, "furloughOngoing.phaseTwo.title", titleMessageArgs = Seq(dateToStringWithoutYear(claimEndDate)))
-  }
-}
-
-@headingContent = @{
-  if(claimStartDate.getMonthValue < 7) {
-    messages("furloughOngoing.heading")
-  } else {
-    messages("furloughOngoing.phaseTwo.heading", dateToStringWithoutYear(claimEndDate))
-  }
-}
-
-@govukLayout(pageTitle = Some(titleContent), thisPage = FurloughStatusPage) {
+@govukLayout(pageTitle = Some(title(form, "furloughOngoing.title")), thisPage = FurloughStatusPage) {
 
     @formHelper(action = controllers.routes.FurloughOngoingController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(headingContent)
+        @h1(messages("furloughOngoing.heading"))
         @if(claimStartDate.getMonthValue > 6) {
           @p(Html(messages("furloughOngoing.phaseTwo.hint")))
           @p(Html(messages("furloughOngoing.phaseTwo.hint2")))
@@ -59,10 +44,10 @@
 
         @inputRadio(
             form = form,
-            legend = headingContent,
+            legend = messages("furloughOngoing.heading"),
             legendAsHeading = false,
             classes = "govuk-visually-hidden",
-            items = FurloughStatus.options(form, claimStartDate)
+            items = FurloughStatus.options(form)
         )
 
         @button("site.continue")

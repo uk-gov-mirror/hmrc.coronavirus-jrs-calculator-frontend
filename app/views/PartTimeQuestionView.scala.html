@@ -23,21 +23,28 @@ govukLayout: templates.GovukLayoutWrapper,
 formHelper: FormWithCSRF,
 errorSummary: components.errorSummary,
 inputRadio: components.inputRadio,
+h1: components.h1,
 button: components.button,
 p: components.p
 )
 
 @(form: Form[_], furlough: FurloughWithinClaim)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "partTimeQuestion.title", titleMessageArgs = Seq(dateToStringWithoutYear(furlough.start), dateToStringWithoutYear(furlough.end)))), thisPage = PartTimeQuestionPage) {
+@govukLayout(pageTitle = Some(title(form, "partTimeQuestion.title")), thisPage = PartTimeQuestionPage) {
 
     @formHelper(action = PartTimeQuestionController.onSubmit(), 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 
+        @h1(messages("partTimeQuestion.heading"))
+
+        @p(Html(messages("partTimeQuestion.hint", dateToStringWithoutYear(furlough.start), dateToString(furlough.end))))
+
         @inputRadio(
             form = form,
-            legend = messages("partTimeQuestion.heading", dateToStringWithoutYear(furlough.start), dateToStringWithoutYear(furlough.end)),
+            legend = messages("partTimeQuestion.heading"),
+            legendAsHeading = false,
+            classes = "govuk-visually-hidden",
             items = PartTimeQuestion.options(form)
         )
 
