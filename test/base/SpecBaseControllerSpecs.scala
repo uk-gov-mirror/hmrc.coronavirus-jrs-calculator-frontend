@@ -55,7 +55,7 @@ trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with Cor
   implicit class AnswerHelpers[A](val answer: AnswerV[A]) {}
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-  implicit def messages: Messages = messagesApi.preferred(fakeRequest)
+  implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
   private val configKeyValues: Set[(String, ConfigValue)] = app.injector.instanceOf[Configuration].entrySet
 

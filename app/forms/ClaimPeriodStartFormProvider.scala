@@ -23,18 +23,19 @@ import config.SchemeConfiguration
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
-import utils.ImplicitDateFormatter
+import play.api.i18n.Messages
+import views.ViewUtils
 
-class ClaimPeriodStartFormProvider @Inject() extends Mappings with ImplicitDateFormatter with SchemeConfiguration {
+class ClaimPeriodStartFormProvider @Inject() extends Mappings with SchemeConfiguration {
 
-  def apply(): Form[LocalDate] =
+  def apply()(implicit messages: Messages): Form[LocalDate] =
     Form("startDate" -> localDate(invalidKey = "claimPeriodStart.error.invalid").verifying(validStartDate))
 
-  private def validStartDate: Constraint[LocalDate] = Constraint { claimStartDate =>
+  private def validStartDate(implicit messages: Messages): Constraint[LocalDate] = Constraint { claimStartDate =>
     if (!claimStartDate.isBefore(schemeStartDate) && !claimStartDate.isAfter(schemeEndDate)) {
       Valid
     } else {
-      Invalid("claimPeriodStart.error.outofrange", dateToString(schemeStartDate), dateToString(schemeEndDate))
+      Invalid("claimPeriodStart.error.outofrange", ViewUtils.dateToString(schemeStartDate), ViewUtils.dateToString(schemeEndDate))
     }
   }
 }

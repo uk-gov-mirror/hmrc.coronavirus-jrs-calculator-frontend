@@ -25,7 +25,7 @@ import javax.inject.Inject
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage}
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.UserAnswerPersistence
@@ -47,7 +47,7 @@ class ClaimPeriodEndController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  def form(claimStart: LocalDate): Form[LocalDate] = formProvider(claimStart)
+  def form(claimStart: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(claimStart)
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
