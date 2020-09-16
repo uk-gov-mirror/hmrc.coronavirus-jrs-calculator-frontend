@@ -183,7 +183,7 @@ rootPage.p5.l2 = wedi’u trosglwyddo o dan TUPE
 rootPage.p5.l3 = - heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
 rootPage.p5.l4 = - wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
 rootPage.p5.l5 = yn cael cyfraniadau pensiwn y cyflogwr y tu allan i gynllun pensiwn cofrestru awtomatig
-rootPage.p5.l6 = ended furlough then began again during the same claim period
+rootPage.p5.l6 = daeth ei ffyrlo i ben ac yna dechreuodd ei ffyrlo eto yn ystod yr un cyfnod hawlio
 rootPage.p6 = Yn yr achosion hyn, cyfrifwch yr hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
 rootPage.p6.link = arweiniad cyfrifo
 rootPage.p7 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y swm rydych yn ei hawlio yn gywir.
@@ -367,13 +367,13 @@ claimPeriodEnd.cannot.be.lessThan.7days = Mae’n rhaid i’r cyfnod hawlio fod 
 claimPeriodEnd.legend = Dyddiad dod i ben
 claimPeriodEnd.hint = Er enghraifft, 31 3 2020
 
-furloughOngoing.title = Has the employee’s furlough ended during this claim period?
-furloughOngoing.heading = Has the employee’s furlough ended during this claim period?
+furloughOngoing.title = A yw ffyrlo y cyflogai wedi dod i ben yn ystod y cyfnod hawlio hwn?
+furloughOngoing.heading = A yw ffyrlo y cyflogai wedi dod i ben yn ystod y cyfnod hawlio hwn?
 furloughOngoing.ended = Iawn
 furloughOngoing.ongoing = Na, mae’n barhaus
 furloughOngoing.error.required = Dewiswch un o’r opsiynau isod
-furloughOngoing.phaseTwo.hint = If an employee is flexibly furloughed the furlough is ongoing and you can claim for their usual working hours minus the hours they actually worked.
-furloughOngoing.phaseTwo.hint2 = If an employee’s furlough has ended they can be furloughed again at a later date.
+furloughOngoing.phaseTwo.hint = Os yw cyflogai ar ffyrlo hyblyg, mae’r ffyrlo’n barhaus a gallwch hawlio am ei oriau gweithio arferol llai’r oriau yr oedd yn gweithio mewn gwirionedd.
+furloughOngoing.phaseTwo.hint2 = Os yw ffyrlo y cyflogai wedi dod i ben, gall gael ei roi ar ffyrlo eto yn nes ymlaen.
 
 furloughEndDate.title = Pryd daeth ei ffyrlo i ben?
 furloughEndDate.heading = Pryd daeth ei ffyrlo i ben?
@@ -389,9 +389,9 @@ furloughEndDate.error.min.max = Mae’n rhaid i ddyddiad dod i ben y ffyrlo fod 
 furloughEndDate.error.claimPeriod = Nodwch ddyddiad dod i ben y ffyrlo sydd o fewn y cyfnod hawlio.
 furloughEndDate.error.beforeStart = Ni all dyddiad dod i ben y ffyrlo fod cyn dyddiad dechrau’r ffyrlo
 
-furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo’n wreiddiol?
-furloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo’n wreiddiol?
-furloughStartDate.p1 = If this employee has been furloughed more than once it is the date they were most recently furloughed.
+furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
+furloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
+furloughStartDate.p1 = Os yw’r cyflogai hwn wedi’i roi ar ffyrlo fwy nag unwaith, dyma’r dyddiad diweddaraf y cafodd ei roi ar ffyrlo.
 furloughStartDate.hint = Dyma’r dyddiad y dechreuodd y cyflogai ei ffyrlo. Gall hyn fod cyn neu ar ôl dyddiad dechrau’r hawliad hwn.
 furloughStartDate.p2 = Rydym yn gofyn hyn oherwydd gallai’ch hawliad gynnwys cyflogeion a gafodd eu rhoi ar ffyrlo ar wahanol ddyddiadau.
 
@@ -663,9 +663,9 @@ partTimePeriods.partialPeriod = Cyfnod cyflog: {0} to {1} (rhannol)
 partTimePeriods.singleDay = Cyfnod cyflog: {0} (rhannol)
 partTimePeriods.error.required = dewiswch y cyfnodau cyflog pan oedd y cyflogai’n gweithio
 
-partTimeQuestion.title = Has this employee done any work during this claim period?
-partTimeQuestion.heading = Has this employee done any work during this claim period?
-partTimeQuestion.hint = For the claim period {0} to {1}.
+partTimeQuestion.title = A yw’r cyflogai hwn wedi gweithio o gwbl yn ystod y cyfnod hawlio hwn?
+partTimeQuestion.heading = A yw’r cyflogai hwn wedi gweithio o gwbl yn ystod y cyfnod hawlio hwn?
+partTimeQuestion.hint = Ar gyfer y cyfnod hawlio {0} i {1}.
 partTimeQuestion.partTimeYes = Iawn
 partTimeQuestion.partTimeNo = Na
 partTimeQuestion.error.required = Dewiswch un o’r opsiynau isod
