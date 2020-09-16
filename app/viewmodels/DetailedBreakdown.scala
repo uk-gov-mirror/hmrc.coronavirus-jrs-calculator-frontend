@@ -17,11 +17,12 @@
 package viewmodels
 
 import models.{NicBreakdown, PensionBreakdown, Periods, PhaseTwoFurloughBreakdown, PhaseTwoNicBreakdown, PhaseTwoPensionBreakdown}
+import play.api.i18n.Messages
 import views.ViewUtils._
 
 case class DetailedBreakdown(period: Periods, furlough: DetailedFurloughBreakdown, nic: NicBreakdown, pension: PensionBreakdown) {
-  def payPeriodStart: String = dateToStringWithoutYear(period.period.start)
-  def payPeriodEnd: String = dateToString(period.period.end)
+  def payPeriodStart(implicit messages: Messages): String = dateToStringWithoutYear(period.period.start)
+  def payPeriodEnd(implicit messages: Messages): String = dateToString(period.period.end)
 }
 
 case class PhaseTwoDetailedBreakdown(
@@ -29,11 +30,11 @@ case class PhaseTwoDetailedBreakdown(
   furlough: PhaseTwoFurloughBreakdown,
   nic: PhaseTwoNicBreakdown,
   pension: PhaseTwoPensionBreakdown) {
-  def payPeriodStart: String = dateToStringWithoutYear(period.period.start)
-  def payPeriodEnd: String = dateToString(period.period.end)
+  def payPeriodStart(implicit messages: Messages): String = dateToStringWithoutYear(period.period.start)
+  def payPeriodEnd(implicit messages: Messages): String = dateToString(period.period.end)
 }
 
 case class NoNicAndPensionDetailedBreakdown(period: Periods, furlough: PhaseTwoFurloughBreakdown) {
-  def payPeriodStart: String = dateToStringWithoutYear(period.period.start)
-  def payPeriodEnd: String = dateToString(period.period.end)
+  def payPeriodStart(implicit messages: Messages): String = dateToStringWithoutYear(period.period.start)
+  def payPeriodEnd(implicit messages: Messages): String = dateToString(period.period.end)
 }

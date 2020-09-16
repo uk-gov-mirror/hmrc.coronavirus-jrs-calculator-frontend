@@ -18,11 +18,21 @@ package forms
 
 import java.time.{LocalDate, ZoneOffset}
 
+import play.api.test.CSRFTokenHelper._
 import forms.behaviours.DateBehaviours
 import org.scalacheck.Gen
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 import views.ViewUtils
 
-class PayDateFormProviderSpec extends DateBehaviours {
+class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
+
+  def messagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+  implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
   val form = new PayDateFormProvider()()
 

@@ -830,3 +830,16 @@ resetCalculation.title = Mae’ch cyfrifiad wedi’i ailosod
 resetCalculation.h1 = Mae’ch cyfrifiad wedi’i ailosod
 resetCalculation.p1 = Bydd angen i chi ddechrau’r cyfrifiad hwn eto
 resetCalculation.button = Dechrau’r cyfrifiad eto
+
+month.1 = Ionawr
+month.2 = Chwefror
+month.3 = Mawrth
+month.4 = Ebrill
+month.5 = Mai
+month.6 = Mehefin
+month.7 = Gorffennaf
+month.8 = Awst
+month.9 = Medi
+month.10 = Hydref
+month.11 = Tachwedd
+month.12 = Rhagfyr

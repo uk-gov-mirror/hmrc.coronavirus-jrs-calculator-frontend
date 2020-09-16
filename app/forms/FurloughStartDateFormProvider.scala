@@ -22,11 +22,12 @@ import config.SchemeConfiguration
 import forms.mappings.Mappings
 import javax.inject.Inject
 import play.api.data.Form
+import play.api.i18n.Messages
 import views.ViewUtils._
 
 class FurloughStartDateFormProvider @Inject()() extends Mappings with SchemeConfiguration {
 
-  def apply(claimPeriodEnd: LocalDate): Form[LocalDate] =
+  def apply(claimPeriodEnd: LocalDate)(implicit messages: Messages): Form[LocalDate] =
     Form(
       "value" -> localDate(invalidKey = "furloughStartDate.error.invalid")
         .verifying(minDate(schemeStartDate, "furloughStartDate.error.minimum", dateToString(schemeStartDate)))

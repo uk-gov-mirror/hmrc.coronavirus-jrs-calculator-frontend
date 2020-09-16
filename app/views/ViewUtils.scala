@@ -17,7 +17,6 @@
 package views
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 import play.api.data.Form
 import play.api.i18n.Messages
@@ -35,10 +34,10 @@ object ViewUtils {
   def errorPrefix(form: Form[_])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
 
-  private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-  private val dateFormatterWithoutYear = DateTimeFormatter.ofPattern("d MMMM")
-  private val dateFormatterOnlyMonth = DateTimeFormatter.ofPattern("MMMM")
-  def dateToString(date: LocalDate): String = dateFormatter.format(date)
-  def dateToStringWithoutYear(date: LocalDate): String = dateFormatterWithoutYear.format(date)
-  def dateToStringOnlyMonth(date: LocalDate): String = dateFormatterOnlyMonth.format(date)
+  def dateToString(date: LocalDate)(implicit messages: Messages): String =
+    s"${date.getDayOfMonth} ${messages(s"month.${date.getMonthValue}")} ${date.getYear}"
+  def dateToStringWithoutYear(date: LocalDate)(implicit messages: Messages): String =
+    s"${date.getDayOfMonth} ${messages(s"month.${date.getMonthValue}")}"
+  def dateToStringOnlyMonth(date: LocalDate)(implicit messages: Messages): String =
+    messages(s"month.${date.getMonthValue}")
 }

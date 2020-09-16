@@ -25,7 +25,7 @@ import javax.inject.Inject
 import navigation.Navigator
 import pages.{LastPayDatePage, PayDatePage}
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -46,7 +46,7 @@ class LastPayDateController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  def form(latestPayDate: LocalDate): Form[LocalDate] = formProvider(latestPayDate)
+  def form(latestPayDate: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(latestPayDate)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.getList(PayDatePage).lastOption match {

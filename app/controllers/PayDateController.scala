@@ -29,7 +29,7 @@ import navigation.Navigator
 import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
 import play.api.Logger
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import services.PeriodHelper
@@ -73,7 +73,7 @@ class PayDateController @Inject()(
     }
   }
 
-  def form: Form[LocalDate] = formProvider()
+  def form(implicit messages: Messages): Form[LocalDate] = formProvider()
 
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswersV(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>

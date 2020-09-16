@@ -26,7 +26,7 @@ import javax.inject.Inject
 import navigation.Navigator
 import pages.{ClaimPeriodEndPage, ClaimPeriodStartPage, FurloughStartDatePage}
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.UserAnswerPersistence
@@ -47,7 +47,7 @@ class FurloughStartDateController @Inject()(
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with I18nSupport {
 
-  def form(claimEndDate: LocalDate): Form[LocalDate] = formProvider(claimEndDate)
+  def form(claimEndDate: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(claimEndDate)
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
