@@ -42,9 +42,12 @@
 
         @h1(messages(if(idx == 1) { "payDate.heading.firstDate" } else { "payDate.heading" }, dateToString(messageDate)))
 
-        @p(Html(messages(if(idx == 1) { "payDate.firstP" } else { "payDate.p" })))
-
-        @p(Html(messages(if(idx == 1) { "payDate.firstP2" } else { "payDate.p" })))
+        @if(idx == 1) {
+          @p(Html(messages("payDate.first.p")))
+          @p(Html(messages("payDate.first.p2")))
+        } else {
+          @p(Html(messages("payDate.p")))
+        }
 
         @details(
           summaryText = Messages("payDate.details.title")
