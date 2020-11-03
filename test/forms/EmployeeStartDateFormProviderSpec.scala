@@ -50,7 +50,11 @@ class EmployeeStartDateFormProviderSpec extends DateBehaviours with GuiceOneAppP
 
     behave like dateField(form, "value", validData)
 
-    behave like dateFieldWithMax(form, "value", furloughStart.minusDays(1), FormError("value", "employeeStartDate.error.max", Seq("19 March 2020")))
+    behave like dateFieldWithMax(
+      form,
+      "value",
+      furloughStart.minusDays(1),
+      FormError("value", "employeeStartDate.error.max", Seq("19 March 2020")))
 
     behave like dateFieldWithMin(
       form,

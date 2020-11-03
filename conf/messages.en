@@ -226,8 +226,11 @@ reviewPayDates.addMore = Do you need to add another pay date for this claim peri
 reviewPayDates.error.required = Select yes if reviewPayDates
 
 regularPayAmount.title = On 19 March 2020, what was this employee’s most recent pay amount?
+regularPayAmount.title.ext = On 30 October 2020, what was this employee’s most recent pay amount?
 regularPayAmount.heading = On 19 March 2020, what was this employee’s most recent pay amount?
+regularPayAmount.heading.ext = On 30 October 2020, what was this employee’s most recent pay amount?
 regularPayAmount.p1 = This is the latest gross payment that was due on or before 19 March, before deductions.
+regularPayAmount.p1.ext = This is the latest gross payment that was due on or before 30 October, before deductions.
 regularPayAmount.p2 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 regularPayAmount.inset = If this employee started work between 1 and 18 March 2020, enter the amount they’ll get paid from now on.
 regularPayAmount.salary.error.required = Enter a valid amount

@@ -229,8 +229,11 @@ reviewPayDates.addMore = A oes angen i chi ychwanegu dyddiad cyflog arall ar gyf
 reviewPayDates.error.required = Dewiswch ‘Iawn’ os reviewPayDates
 
 regularPayAmount.title = Ar 19 Mawrth 2020, beth oedd swm cyflog diweddaraf y cyflogai hwn?
+regularPayAmount.title.ext = Ar 30 Hydref 2020, beth oedd swm cyflog diweddaraf y cyflogai hwn?
 regularPayAmount.heading = Ar 19 Mawrth 2020, beth oedd swm cyflog diweddaraf y cyflogai hwn?
+regularPayAmount.heading.ext = Ar 30 Hydref 2020, beth oedd swm cyflog diweddaraf y cyflogai hwn?
 regularPayAmount.p1 = Dyma’r taliad gros diweddaraf a oedd yn ddyledus ar neu cyn 19 Mawrth, a hynny cyn gwneud didyniadau.
+regularPayAmount.p1.ext = Dyma’r taliad gros diweddaraf a oedd yn ddyledus ar neu cyn 30 Hydref, a hynny cyn gwneud didyniadau.
 regularPayAmount.p2 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 regularPayAmount.inset = Os dechreuodd y cyflogai hwn weithio rhwng 1 ac 18 Mawrth 2020, nodwch y swm y bydd yn cael ei dalu o hyn ymlaen.
 regularPayAmount.salary.error.required = Nodwch swm dilys
@@ -417,7 +420,7 @@ employeeStartDate.error.required = Mae’n rhaid i ddyddiad dechrau’r cyflogai
 employeeStartDate.error.invalid = Nodwch ddyddiad go iawn
 employeeStartDate.hint = Er enghraifft, 28 11 2019
 employeeStartDate.error.min = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod ar neu ar ôl {0}
-employeeStartDate.error.max = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod cyn iddo ddechrau ei ffyrlo, ar neu cyn 19 Mawrth 2020
+employeeStartDate.error.max = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod cyn iddo ddechrau ei ffyrlo, ar neu cyn {0}
 
 annualPayAmount.title.after1Feb2019 = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
 annualPayAmount.heading.after1Feb2019 = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?

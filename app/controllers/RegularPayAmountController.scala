@@ -20,17 +20,17 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.RegularPayAmountFormProvider
 import javax.inject.Inject
-import models.Salary
+import models.{RegularLengthEmployed, Salary}
 import navigation.Navigator
 import org.slf4j
 import org.slf4j.LoggerFactory
-import pages.RegularPayAmountPage
+import pages.{RegularLengthEmployedPage, RegularPayAmountPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.RegularPayAmountView
+import views.html.{RegularPayAmountExtView, RegularPayAmountView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,7 +43,8 @@ class RegularPayAmountController @Inject()(
   requireData: DataRequiredAction,
   formProvider: RegularPayAmountFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: RegularPayAmountView
+  view: RegularPayAmountView,
+  extView: RegularPayAmountExtView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
@@ -54,9 +55,14 @@ class RegularPayAmountController @Inject()(
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybeSalary = request.userAnswers.getV(RegularPayAmountPage)
 
-    maybeSalary match {
-      case Valid(sq)  => Ok(view(form.fill(sq)))
-      case Invalid(e) => Ok(view(form))
+    val preparedForm = maybeSalary match {
+      case Valid(sq)  => form.fill(sq)
+      case Invalid(e) => form
+    }
+
+    request.userAnswers.getV(RegularLengthEmployedPage) match {
+      case Valid(RegularLengthEmployed.No) => Ok(extView(preparedForm))
+      case _                               => Ok(view(preparedForm))
     }
   }
 
@@ -65,7 +71,10 @@ class RegularPayAmountController @Inject()(
       .bindFromRequest()
       .fold(
         formWithErrors => {
-          Future.successful(BadRequest(view(formWithErrors)))
+          request.userAnswers.getV(RegularLengthEmployedPage) match {
+            case Valid(RegularLengthEmployed.No) => Future.successful(BadRequest(extView(formWithErrors)))
+            case _                               => Future.successful(BadRequest(view(formWithErrors)))
+          }
         },
         value =>
           for {
