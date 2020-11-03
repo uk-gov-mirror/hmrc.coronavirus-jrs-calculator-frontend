@@ -21,6 +21,7 @@
         govukLayout: templates.GovukLayoutWrapper,
         h1: components.h1,
         h2: components.h2,
+        h3: components.h3,
         p: components.p,
         button: components.button,
         link: components.link,
@@ -41,27 +42,26 @@
 
     @p(Html(Messages("rootPage.p1")))
     @p(Html(Messages("rootPage.p2")))
-    @p(Html(Messages("rootPage.p3")))
-    @p(Html(Messages("rootPage.p4")))
-    @p(Html(Messages("rootPage.p5")))
+
+    @h3("rootPage.h3.who.can.use.heading")
     <ul class="govuk-list govuk-list--bullet">
-       <li>@messages("rootPage.p5.l1")</li>
-       <li>@messages("rootPage.p5.l2")</li>
-        <li>@messages("rootPage.p5.l3")</li>
-        <li>@messages("rootPage.p5.l4")</li>
-        <li>@messages("rootPage.p5.l5")</li>
-        <li>@messages("rootPage.p5.l6")</li>
+       <li>@messages("rootPage.h3.who.can.use.l1")</li>
+       <li>@messages("rootPage.h3.who.can.use.l2")</li>
+        <li>@messages("rootPage.h3.who.can.use.l3")</li>
     </ul>
 
-    @p(Html(Messages("rootPage.p6", link(appConfig.calculationGuidance,"rootPage.p6.link"))))
-    @p(Html(Messages("rootPage.p7")))
+    @h3("rootPage.h3.who.can.not.use.heading")
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("rootPage.h3.who.can.not.use.l1")</li>
+        <li>@messages("rootPage.h3.who.can.not.use.l2")</li>
+        <li>@messages("rootPage.h3.who.can.not.use.l3")</li>
+        <li>@messages("rootPage.h3.who.can.not.use.l4")</li>
+        <li>@messages("rootPage.h3.who.can.not.use.l5")</li>
+        <li>@messages("rootPage.h3.who.can.not.use.l6")</li>
+    </ul>
 
-    <a href="/job-retention-scheme-calculator/claim-period-start" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
-        @Messages("site.startNow")
-        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
-            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"/>
-        </svg>
-    </a>
+    @p(Html(Messages("rootPage.p3", link(appConfig.calculationGuidance,"rootPage.p3.link"))))
+    @p(Html(Messages("rootPage.p4")))
 
     @h2("rootPage.beforeYouStart.header", classes = Some("govuk-heading-m"))
 
@@ -87,4 +87,10 @@
 
     @p(Html(Messages("rootPage.beforeYouStart.p3", link(appConfig.stepsBeforeCalculation, "rootPage.beforeYouStart.p3.link", "target", Some("_blank")))))
 
+    <a href="/job-retention-scheme-calculator/claim-period-start" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
+        @Messages("site.startNow")
+        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"/>
+        </svg>
+    </a>
 }

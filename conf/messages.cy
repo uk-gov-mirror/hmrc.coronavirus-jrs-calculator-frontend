@@ -173,20 +173,25 @@ payFrequency.error.required = Dewiswch un o’r opsiynau isod
 
 rootPage.title = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 rootPage.heading = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
-rootPage.p1 = Defnyddiwch y gyfrifiannell hon i gyfrifo’r ffigurau sydd eu hangen arnoch pan fyddwch yn llenwi hawliad drwy’r cynllun. Mae hefyd yn rhoi dadansoddiad o’r cyfrifiadau ar gyfer pob cyfnod cyflog ar gyfer eich cofnodion.
-rootPage.p2 = Mae’r ffigurau ar gyfer un cyflogai, ar gyfer y cyfnod hawlio a nodir gennych. Defnyddiwch y gyfrifiannell eto ar gyfer unrhyw gyflogeion eraill rydych yn hawlio ar eu cyfer ac adiwch y canlyniadau at ei gilydd.
-rootPage.p3 = O 1 Gorffennaf ymlaen, gellir dod â chyflogeion yn ôl i’r gwaith am rai o’u horiau arferol. Gall y gyfrifiannell ystyried hyn.
-rootPage.p4 = Mae’r gyfrifiannell yn gweithio i’r mwyafrif o gyflogeion sy’n cael eu talu bob wythnos, bob 2 wythnos, bob 4 wythnos neu bob mis. O 1 Awst ymlaen, mae hyn yn cynnwys cyflogeion sydd wedi dychwelyd o absenoldeb statudol, megis absenoldeb mamolaeth.
-rootPage.p5 = Nid yw’n gweithio ar hyn o bryd i gyflogeion sydd:
-rootPage.p5.l1 = wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
-rootPage.p5.l2 = wedi’u trosglwyddo o dan TUPE
-rootPage.p5.l3 = - heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
-rootPage.p5.l4 = - wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
-rootPage.p5.l5 = yn cael cyfraniadau pensiwn y cyflogwr y tu allan i gynllun pensiwn cofrestru awtomatig
-rootPage.p5.l6 = daeth ei ffyrlo i ben ac yna dechreuodd ei ffyrlo eto yn ystod yr un cyfnod hawlio
-rootPage.p6 = Yn yr achosion hyn, cyfrifwch yr hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
-rootPage.p6.link = arweiniad cyfrifo
-rootPage.p7 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y swm rydych yn ei hawlio yn gywir.
+rootPage.p1 = Use this calculator to work out the figures you’ll need when you complete a claim through the scheme.
+rootPage.p2 = It also breakdowns calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
+
+rootPage.h3.who.can.use.heading = You can use this calculator to claim for:
+rootPage.h3.who.can.use.l1 = employees brought back to work for some of their normal hours from 1 July
+rootPage.h3.who.can.use.l2 = most employees who are paid weekly, two weekly, four weekly or monthly in fixed pay periods
+rootPage.h3.who.can.use.l3 = employees from 1 August who have returned from statutory leave such as maternity leave
+
+rootPage.h3.who.can.not.use.heading = The calculator cannot be used for employees if they:
+rootPage.h3.who.can.not.use.l1 = receive directors’ payments outside PAYE
+rootPage.h3.who.can.not.use.l2 = have been transferred under Transfer of Undertakings (Protection of Employment) Regulations 2006 (TUPE)
+rootPage.h3.who.can.not.use.l3 = heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
+rootPage.h3.who.can.not.use.l4 = wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
+rootPage.h3.who.can.not.use.l5 = yn cael cyfraniadau pensiwn y cyflogwr y tu allan i gynllun pensiwn cofrestru awtomatig
+rootPage.h3.who.can.not.use.l6 = daeth ei ffyrlo i ben ac yna dechreuodd ei ffyrlo eto yn ystod yr un cyfnod hawlio
+
+rootPage.p3 = Yn yr achosion hyn, cyfrifwch yr hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
+rootPage.p3.link = arweiniad cyfrifo
+rootPage.p4 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y swm rydych yn ei hawlio yn gywir.
 rootPage.beforeYouStart.header = Cyn i chi ddechrau
 rootPage.beforeYouStart.p1 = Bydd angen y canlynol arnoch:
 rootPage.beforeYouStart.p1.l1 = dyddiad dechrau’r hawliad (ar gyfer eich hawliad cyntaf, dyma pryd y dechreuodd y cyflogai cyntaf ei gyfnod ffyrlo)

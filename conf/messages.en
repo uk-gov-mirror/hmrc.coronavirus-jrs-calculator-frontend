@@ -173,20 +173,25 @@ payFrequency.error.required = Select one of the options below
 
 rootPage.title = Coronavirus Job Retention Scheme calculator
 rootPage.heading = Coronavirus Job Retention Scheme calculator
-rootPage.p1 = Use this calculator to work out the figures you’ll need when you complete a claim through the scheme. It also gives a detailed breakdown of calculations for each pay period for your records.
-rootPage.p2 = The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
-rootPage.p3 = From 1 July, employees can be brought back to work for some of their normal hours. The calculator can take this into account.
-rootPage.p4 = The calculator works for most employees paid weekly, 2 weekly, 4 weekly or monthly. From 1 August, this includes employees who have returned from statutory leave such as maternity leave.
-rootPage.p5 = It doesn’t work for employees who:
-rootPage.p5.l1 = get director’s payments outside PAYE
-rootPage.p5.l2 = have been transferred under TUPE
-rootPage.p5.l3 = were not employed continuously before their furlough started
-rootPage.p5.l4 = returned from statutory leave such as maternity leave in the last 3 months (if the claim period is in July or earlier)
-rootPage.p5.l5 = receive employer pension contributions outside of an auto-enrolment pension scheme
-rootPage.p5.l6 = ended furlough then began again during the same claim period
-rootPage.p6 = In these cases, work out what you can claim manually using the {0} or seek professional advice.
-rootPage.p6.link = calculation guidance
-rootPage.p7 = It’s your responsibility to check that the amount you’re claiming for is correct.
+rootPage.p1 = Use this calculator to work out the figures you’ll need when you complete a claim through the scheme.
+rootPage.p2 = It also breakdowns calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
+
+rootPage.h3.who.can.use.heading = You can use this calculator to claim for:
+rootPage.h3.who.can.use.l1 = employees brought back to work for some of their normal hours from 1 July
+rootPage.h3.who.can.use.l2 = most employees who are paid weekly, two weekly, four weekly or monthly in fixed pay periods
+rootPage.h3.who.can.use.l3 = employees from 1 August who have returned from statutory leave such as maternity leave
+
+rootPage.h3.who.can.not.use.heading = The calculator cannot be used for employees if they:
+rootPage.h3.who.can.not.use.l1 = receive directors’ payments outside PAYE
+rootPage.h3.who.can.not.use.l2 = have been transferred under Transfer of Undertakings (Protection of Employment) Regulations 2006 (TUPE)
+rootPage.h3.who.can.not.use.l3 = were not employed continuously before their furlough started
+rootPage.h3.who.can.not.use.l4 = returned from statutory leave such as maternity leave in the last 3 months (if the claim period is in July or earlier)
+rootPage.h3.who.can.not.use.l5 = receive employer pension contributions outside of an auto-enrolment pension scheme
+rootPage.h3.who.can.not.use.l6 = ended furlough then began again during the same claim period
+
+rootPage.p3 = In these cases, work out what you can claim manually using the {0} or seek professional advice.
+rootPage.p3.link = calculation guidance
+rootPage.p4 = It’s your responsibility to check that the amount you’re claiming for is correct.
 rootPage.beforeYouStart.header = Before you start
 rootPage.beforeYouStart.p1 = You will need:
 rootPage.beforeYouStart.p1.l1 = claim start date (for your first claim, it’s when the first employee started furlough)
