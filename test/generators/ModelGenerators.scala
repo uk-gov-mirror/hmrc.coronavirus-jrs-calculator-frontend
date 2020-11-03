@@ -23,9 +23,14 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbitrary
 trait ModelGenerators {
 
+  implicit lazy val arbitraryRegularLengthEmployed: Arbitrary[RegularLengthEmployed] =
+    Arbitrary {
+      Gen.oneOf(RegularLengthEmployed.values)
+    }
+
   implicit lazy val arbitraryPayPeriodsList: Arbitrary[PayPeriodsList] =
     Arbitrary {
-      Gen.oneOf(PayPeriodsList.values.toSeq)
+      Gen.oneOf(PayPeriodsList.values)
     }
 
   implicit lazy val arbitraryPartTimeHours: Arbitrary[PartTimeHours] =

@@ -66,11 +66,12 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .onPageLoad()
       }
 
-      "go to pay dates page after PayMethodPage" in {
+      "go to pay dates page after PayMethodPage for claims starting before 01/11/2020" in {
         navigator.nextPage(
           PayMethodPage,
           emptyUserAnswers
             .withPayMethod(Regular)
+            .withClaimPeriodStart("2020-10-01")
             .withPayDate(List())) mustBe routes.PayDateController.onPageLoad(1)
 
         navigator.nextPage(
@@ -87,6 +88,31 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           dummyUserAnswers
             .withPayMethod(Regular)
             .withPayDate(List("2020-1-1"))) mustBe routes.RegularPayAmountController.onPageLoad()
+      }
+
+      "go to RegularLengthEmployedPage after PayMethodPage for claims starting on or after 01/11/2020 for Regular payMethods" in {
+        navigator.nextPage(
+          PayMethodPage,
+          emptyUserAnswers
+            .withPayMethod(Regular)
+            .withClaimPeriodStart("2020-11-01")
+            .withPayDate(List())) mustBe routes.RegularLengthEmployedController.onPageLoad()
+
+        navigator.nextPage(
+          PayMethodPage,
+          emptyUserAnswers.withPayMethod(PayMethod.Variable)
+        ) mustBe routes.VariableLengthEmployedController.onPageLoad()
+
+        navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
+      }
+
+      "go to PayDatesPage after RegularLengthEmployedPage for claims starting on or after 01/11/2020 for Regular payMethods" in {
+        navigator.nextPage(
+          RegularLengthEmployedPage,
+          emptyUserAnswers
+            .withPayMethod(Regular)
+            .withClaimPeriodStart("2020-11-01")
+            .withRegularLengthEmployed())
       }
 
       "go to RegularPayAmountPage after PaymentQuestionPage" in {

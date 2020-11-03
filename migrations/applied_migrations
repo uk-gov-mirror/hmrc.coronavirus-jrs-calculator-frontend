@@ -1,35 +1,33 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration PayPeriodsList"
+echo "Applying migration resetCalculation"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /payPeriodsList                        controllers.PayPeriodsListController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /payPeriodsList                        controllers.PayPeriodsListController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /resetCalculation                        controllers.resetCalculationController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /resetCalculation                        controllers.resetCalculationController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changePayPeriodsList                  controllers.PayPeriodsListController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changePayPeriodsList                  controllers.PayPeriodsListController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeresetCalculation                  controllers.resetCalculationController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeresetCalculation                  controllers.resetCalculationController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "payPeriodsList.title = payPeriodsList" >> ../conf/messages.en
-echo "payPeriodsList.heading = payPeriodsList" >> ../conf/messages.en
-echo "payPeriodsList.yes = Yes" >> ../conf/messages.en
-echo "payPeriodsList.no = Option 2" >> ../conf/messages.en
-echo "payPeriodsList.checkYourAnswersLabel = payPeriodsList" >> ../conf/messages.en
-echo "payPeriodsList.error.required = Select payPeriodsList" >> ../conf/messages.en
+echo "resetCalculation.title = resetCalculation" >> ../conf/messages.en
+echo "resetCalculation.heading = resetCalculation" >> ../conf/messages.en
+echo "resetCalculation.checkYourAnswersLabel = resetCalculation" >> ../conf/messages.en
+echo "resetCalculation.error.required = Select yes if resetCalculation" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryPayPeriodsListUserAnswersEntry: Arbitrary[(PayPeriodsListPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryresetCalculationUserAnswersEntry: Arbitrary[(resetCalculationPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[PayPeriodsListPage.type]";\
-    print "        value <- arbitrary[PayPeriodsList].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[resetCalculationPage.type]";\
+    print "        value <- arbitrary[Boolean].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -38,24 +36,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryPayPeriodsListPage: Arbitrary[PayPeriodsListPage.type] =";\
-    print "    Arbitrary(PayPeriodsListPage)";\
+    print "  implicit lazy val arbitraryresetCalculationPage: Arbitrary[resetCalculationPage.type] =";\
+    print "    Arbitrary(resetCalculationPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
-
-echo "Adding to ModelGenerators"
-awk '/trait ModelGenerators/ {\
-    print;\
-    print "";\
-    print "  implicit lazy val arbitraryPayPeriodsList: Arbitrary[PayPeriodsList] =";\
-    print "    Arbitrary {";\
-    print "      Gen.oneOf(PayPeriodsList.values.toSeq)";\
-    print "    }";\
-    next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(PayPeriodsListPage.type, JsValue)] ::";\
+    print "    arbitrary[(resetCalculationPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration PayPeriodsList completed"
+echo "Migration resetCalculation completed"

@@ -33,6 +33,7 @@ import play.api.Logger
 import play.api.mvc.Call
 import services.PartialPayExtractor
 import utils.LocalDateHelpers
+import utils.LocalDateHelpers.LocalDateHelper
 
 @Singleton
 class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor with SchemeConfiguration {
@@ -61,6 +62,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
         routes.PayMethodController.onPageLoad()
     case PayMethodPage =>
       payMethodRoutes
+    case RegularLengthEmployedPage =>
+      regularLengthEmployedRoutes
     case PayPeriodsListPage =>
       payPeriodsListRoute
     case RegularPayAmountPage =>
@@ -258,11 +261,29 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   }
 
   private[this] def payMethodRoutes: UserAnswers => Call = { userAnswers =>
-    (userAnswers.getV(PayMethodPage), userAnswers.getList(PayDatePage)) match {
-      case (Valid(Regular), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
-      case (Valid(Regular), _)                      => routes.RegularPayAmountController.onPageLoad()
-      case (Valid(Variable), _)                     => routes.VariableLengthEmployedController.onPageLoad()
-      case (Invalid(_), _)                          => routes.PayMethodController.onPageLoad()
+    (userAnswers.getV(PayMethodPage), userAnswers.getV(ClaimPeriodStartPage), userAnswers.getList(PayDatePage)) match {
+      case (Valid(Regular), Valid(claimStartDate), _) if claimStartDate.isEqualOrAfter(extensionStartDate) =>
+        routes.RegularLengthEmployedController.onPageLoad()
+      case (Valid(Regular), Valid(claimStartDate), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
+      case (Valid(Regular), Valid(claimStartDate), _)                      => routes.RegularPayAmountController.onPageLoad()
+      case (Valid(Variable), _, _)                                         => routes.VariableLengthEmployedController.onPageLoad()
+      case (Invalid(_), _, _)                                              => routes.PayMethodController.onPageLoad()
+    }
+  }
+
+  private[this] def regularLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
+    (userAnswers.getV(RegularLengthEmployedPage), userAnswers.getV(ClaimPeriodStartPage), userAnswers.getList(PayDatePage)) match {
+      case (Valid(_), Valid(claimStartDate), dates) if claimStartDate.isEqualOrAfter(extensionStartDate) =>
+        if (dates.isEmpty) {
+          routes.PayDateController.onPageLoad(1)
+        } else {
+          routes.RegularPayAmountController.onPageLoad()
+        }
+      case (Valid(_), Valid(claimStartDate), _) =>
+        //if claim is not on or after 1/11/2020, then users should not have seen RegularLengthEmployedPage
+        //something must have gone wrong
+        routes.RootPageController.onPageLoad()
+      case (Invalid(_), _, _) => routes.RegularLengthEmployedController.onPageLoad()
     }
   }
 

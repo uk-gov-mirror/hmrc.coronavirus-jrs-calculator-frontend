@@ -16,44 +16,33 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBaseControllerSpecs
-import forms.PayMethodFormProvider
+import forms.RegularLengthEmployedFormProvider
 import models.requests.DataRequest
-import models.{PayMethod, UserAnswers}
+import models.{RegularLengthEmployed, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import pages.{ClaimPeriodStartPage, RegularLengthEmployedPage}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.PayMethodView
+import views.html.RegularLengthEmployedView
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PayMethodControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class RegularLengthEmployedControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-  lazy val payMethodRoute = routes.PayMethodController.onPageLoad().url
-  lazy val payMethodRoutePost = routes.PayMethodController.onSubmit().url
+  val view = app.injector.instanceOf[RegularLengthEmployedView]
 
-  val formProvider = new PayMethodFormProvider()
+  val formProvider = new RegularLengthEmployedFormProvider()
   val form = formProvider()
 
-  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, payMethodRoute).withCSRFToken
-      .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-
-  val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, payMethodRoutePost).withCSRFToken
-      .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-      .withFormUrlEncodedBody(
-        "value" -> "regular"
-      )
-
-  val view = app.injector.instanceOf[PayMethodView]
-
-  val controller = new PayMethodController(
+  val controller = new RegularLengthEmployedController(
     messagesApi,
     mockSessionRepository,
     navigator,
@@ -62,51 +51,71 @@ class PayMethodControllerSpec extends SpecBaseControllerSpecs with MockitoSugar 
     dataRequired,
     formProvider,
     component,
-    view)
+    view
+  )
 
-  "payMethod Controller" must {
+  lazy val regularLengthEmployedRouteGet = routes.RegularLengthEmployedController.onPageLoad().url
+  lazy val regularLengthEmployedRoutePost = routes.RegularLengthEmployedController.onSubmit().url
+
+  "RegularLengthEmployed Controller" must {
 
     "return OK and the correct view for a GET" in {
+
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
-      val result = controller.onPageLoad()(getRequest)
-      val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
+      val request = FakeRequest(GET, regularLengthEmployedRouteGet).withCSRFToken
+        .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+      val result = controller.onPageLoad()(request)
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual
-        view(form)(dataRequest, messages).toString
+      contentAsString(result) mustEqual view(form)(dataRequest, messages).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers = UserAnswers(userAnswersId).withPayMethod(PayMethod.values.head)
+      val userAnswers =
+        UserAnswers(userAnswersId).set(RegularLengthEmployedPage, RegularLengthEmployed.Yes).success.value
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller.onPageLoad()(getRequest)
+      val request = FakeRequest(GET, regularLengthEmployedRouteGet).withCSRFToken
+        .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+      val result = controller.onPageLoad()(request)
+      val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill(PayMethod.values.head))(dataRequest, messages).toString
+        view(form.fill(RegularLengthEmployed.Yes))(dataRequest, messages).toString
     }
 
     "redirect to the next page when valid data is submitted" in {
-      val userAnswers = UserAnswers(userAnswersId).withClaimPeriodStart("2020-10-01")
+
+      val userAnswers = emptyUserAnswers.set(ClaimPeriodStartPage, LocalDate.of(2020, 11, 1)).success.value
+
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onSubmit()(postRequest)
+      val request =
+        FakeRequest(POST, regularLengthEmployedRoutePost)
+          .withFormUrlEncodedBody(("value", "yes"))
+          .withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/pay-date/1"
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      val userAnswers = UserAnswers(userAnswersId).withClaimPeriodStart("2020-10-01")
+
+      val userAnswers = emptyUserAnswers.set(ClaimPeriodStartPage, LocalDate.of(2020, 11, 1)).success.value
+
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request =
-        FakeRequest(POST, payMethodRoutePost).withCSRFToken
-          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+        FakeRequest(POST, regularLengthEmployedRoutePost)
           .withFormUrlEncodedBody(("value", "invalid value"))
+          .withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
-      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
       val result = controller.onSubmit()(request)
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -114,8 +123,12 @@ class PayMethodControllerSpec extends SpecBaseControllerSpecs with MockitoSugar 
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
+
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
-      val result = controller.onPageLoad()(getRequest)
+      val request = FakeRequest(GET, regularLengthEmployedRouteGet).withCSRFToken
+        .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+      val result = controller.onPageLoad()(request)
+      val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
@@ -123,9 +136,16 @@ class PayMethodControllerSpec extends SpecBaseControllerSpecs with MockitoSugar 
 
     "redirect to Session Expired for a POST if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
-      val result = controller.onSubmit()(postRequest)
+      val request =
+        FakeRequest(POST, regularLengthEmployedRoutePost)
+          .withFormUrlEncodedBody(("value", "yes"))
+          .withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+      val result = controller.onSubmit()(request)
 
       status(result) mustEqual SEE_OTHER
+
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
     }
   }

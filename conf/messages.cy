@@ -843,3 +843,9 @@ month.9 = Medi
 month.10 = Hydref
 month.11 = Tachwedd
 month.12 = Rhagfyr
+
+regularLengthEmployed.title = Was this employee working for you on or before 19 March 2020?
+regularLengthEmployed.heading = Was this employee working for you on or before 19 March 2020?
+regularLengthEmployed.yes = Yes
+regularLengthEmployed.no = No
+regularLengthEmployed.error.required = Select one of the options below

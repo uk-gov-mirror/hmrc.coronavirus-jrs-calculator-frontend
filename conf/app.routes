@@ -105,25 +105,28 @@ POST        /furlough-period-question                        controllers.Furloug
 GET         /pay-period-question                             controllers.PayPeriodQuestionController.onPageLoad()
 POST        /pay-period-question                             controllers.PayPeriodQuestionController.onSubmit()
 
-GET        /claim-period-question                            controllers.ClaimPeriodQuestionController.onPageLoad()
-POST       /claim-period-question                            controllers.ClaimPeriodQuestionController.onSubmit()
+GET         /claim-period-question                           controllers.ClaimPeriodQuestionController.onPageLoad()
+POST        /claim-period-question                           controllers.ClaimPeriodQuestionController.onSubmit()
 
-GET        /part-time-periods                                controllers.PartTimePeriodsController.onPageLoad()
-POST       /part-time-periods                                controllers.PartTimePeriodsController.onSubmit()
+GET         /part-time-periods                               controllers.PartTimePeriodsController.onPageLoad()
+POST        /part-time-periods                               controllers.PartTimePeriodsController.onSubmit()
 
-GET        /part-time-question                               controllers.PartTimeQuestionController.onPageLoad()
-POST       /part-time-question                               controllers.PartTimeQuestionController.onSubmit()
+GET         /part-time-question                              controllers.PartTimeQuestionController.onPageLoad()
+POST        /part-time-question                              controllers.PartTimeQuestionController.onSubmit()
 
-GET        /part-time-hours/:idx                             controllers.PartTimeHoursController.onPageLoad(idx: Int)
-POST       /part-time-hours/:idx                             controllers.PartTimeHoursController.onSubmit(idx: Int)
+GET         /part-time-hours/:idx                            controllers.PartTimeHoursController.onPageLoad(idx: Int)
+POST        /part-time-hours/:idx                            controllers.PartTimeHoursController.onSubmit(idx: Int)
 
-GET        /part-time-normal-hours/:idx                      controllers.PartTimeNormalHoursController.onPageLoad(idx: Int)
-POST       /part-time-normal-hours/:idx                      controllers.PartTimeNormalHoursController.onSubmit(idx: Int)
+GET         /part-time-normal-hours/:idx                     controllers.PartTimeNormalHoursController.onPageLoad(idx: Int)
+POST        /part-time-normal-hours/:idx                     controllers.PartTimeNormalHoursController.onSubmit(idx: Int)
 
-GET        /start-survey                                     controllers.FeedbackSurveyController.startSurvey()
+GET         /start-survey                                    controllers.FeedbackSurveyController.startSurvey()
 
-GET        /pay-periods-list                                 controllers.PayPeriodsListController.onPageLoad()
-POST       /pay-periods-list                                 controllers.PayPeriodsListController.onSubmit()
+GET         /pay-periods-list                                controllers.PayPeriodsListController.onPageLoad()
+POST        /pay-periods-list                                controllers.PayPeriodsListController.onSubmit()
 
-GET        /fast-journey-reset                               controllers.ResetCalculationController.onPageLoad()
-POST       /fast-journey-reset                               controllers.ResetCalculationController.onSubmit()
+GET         /fast-journey-reset                              controllers.ResetCalculationController.onPageLoad()
+POST        /fast-journey-reset                              controllers.ResetCalculationController.onSubmit()
+
+GET         /regular-length-employed                         controllers.RegularLengthEmployedController.onPageLoad()
+POST        /regular-length-employed                         controllers.RegularLengthEmployedController.onSubmit()

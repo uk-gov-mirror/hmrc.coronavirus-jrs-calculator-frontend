@@ -829,3 +829,9 @@ month.9 = September
 month.10 = October
 month.11 = November
 month.12 = December
+
+regularLengthEmployed.title = Was this employee working for you on or before 19 March 2020?
+regularLengthEmployed.heading = Was this employee working for you on or before 19 March 2020?
+regularLengthEmployed.yes = Yes
+regularLengthEmployed.no = No
+regularLengthEmployed.error.required = Select one of the options below
