@@ -414,7 +414,7 @@ employeeStartDate.error.required = The employee start date must include {0}
 employeeStartDate.error.invalid = Enter a real date
 employeeStartDate.hint = For example, 28 11 2019
 employeeStartDate.error.min = The employee start date must be on or after {0}
-employeeStartDate.error.max = The employee start date must be before they started furlough or on or before 19th March 2020
+employeeStartDate.error.max = The employee start date must be before they started furlough or on or before {0}
 
 annualPayAmount.title.after1Feb2019 = What has this employee earned since they started until {0}?
 annualPayAmount.heading.after1Feb2019 = What has this employee earned since they started until {0}?

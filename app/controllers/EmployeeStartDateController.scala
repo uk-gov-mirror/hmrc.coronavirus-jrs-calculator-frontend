@@ -21,9 +21,10 @@ import java.time.LocalDate
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.EmployeeStartDateFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import navigation.Navigator
-import pages.{EmployeeStartDatePage, FurloughStartDatePage}
+import pages.{ClaimPeriodStartPage, EmployeeStartDatePage, FurloughStartDatePage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -43,25 +44,26 @@ class EmployeeStartDateController @Inject()(
   formProvider: EmployeeStartDateFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: EmployeeStartDateView
-)(implicit ec: ExecutionContext)
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with I18nSupport {
 
-  def form(furloughStart: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(furloughStart)
+  def form(furloughStart: LocalDate, claimStart: LocalDate)(implicit messages: Messages): Form[LocalDate] =
+    formProvider(furloughStart, claimStart)
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
+    getRequiredAnswersV(FurloughStartDatePage, ClaimPeriodStartPage) { (furloughStart, claimStart) =>
       val preparedForm = request.userAnswers.getV(EmployeeStartDatePage) match {
-        case Invalid(_)   => form(furloughStart)
-        case Valid(value) => form(furloughStart).fill(value)
+        case Invalid(_)   => form(furloughStart, claimStart)
+        case Valid(value) => form(furloughStart, claimStart).fill(value)
       }
       Future.successful(Ok(view(preparedForm)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getRequiredAnswerOrRedirectV(FurloughStartDatePage) { furloughStart =>
-      form(furloughStart)
+    getRequiredAnswersV(FurloughStartDatePage, ClaimPeriodStartPage) { (furloughStart, claimStart) =>
+      form(furloughStart, claimStart)
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
