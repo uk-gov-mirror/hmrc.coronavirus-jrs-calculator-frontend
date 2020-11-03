@@ -79,6 +79,7 @@ trait SchemeConfiguration extends CamelCaseConf {
   lazy val schemeStartDate = LocalDate.parse(schemeConf.startDate)
   lazy val schemeEndDate = LocalDate.parse(schemeConf.endDate)
   lazy val phaseTwoStartDate = LocalDate.parse(schemeConf.phaseTwoStartDate)
+  lazy val extensionStartDate = LocalDate.parse(schemeConf.extensionStartDate)
 }
 
 trait MongoConfiguration extends CamelCaseConf {
@@ -89,5 +90,5 @@ trait CalculatorVersionConfiguration extends CamelCaseConf {
   lazy val calculatorVersionConf: String = ConfigSource.default.at("calculator.version").loadOrThrow[String]
 }
 
-final case class SchemeConf(startDate: String, endDate: String, phaseTwoStartDate: String)
+final case class SchemeConf(startDate: String, endDate: String, phaseTwoStartDate: String, extensionStartDate: String)
 final case class MongoConf(uri: String, timeToLiveInSeconds: String)

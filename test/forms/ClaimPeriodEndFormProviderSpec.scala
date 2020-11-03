@@ -80,11 +80,11 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseControllerSpecs {
 
     "fail with invalid dates -  after policy end" in {
 
-      val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2020, 11, 1))
+      val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2020, 12, 3))
 
       val data = Map(
-        "endDate.day"   -> "7",
-        "endDate.month" -> "11",
+        "endDate.day"   -> "10",
+        "endDate.month" -> "12",
         "endDate.year"  -> "2020",
       )
 
