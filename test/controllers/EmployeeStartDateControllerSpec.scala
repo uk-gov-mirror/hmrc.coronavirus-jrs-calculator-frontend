@@ -37,14 +37,15 @@ class EmployeeStartDateControllerSpec extends SpecBaseControllerSpecs {
 
   val validAnswer = LocalDate.of(2020, 2, 1)
   val furloughStart = LocalDate.of(2020, 3, 18)
+  val claimStart = LocalDate.of(2020, 3, 1)
 
   val formProvider = new EmployeeStartDateFormProvider()
-  private def form = formProvider(furloughStart)
+  private def form = formProvider(furloughStart, claimStart)
 
   lazy val employeeStartDateRoute = routes.EmployeeStartDateController.onPageLoad().url
 
   val userAnswers =
-    UserAnswers(userAnswersId).withFurloughStartDate(furloughStart.toString)
+    UserAnswers(userAnswersId).withFurloughStartDate(furloughStart.toString).withClaimPeriodStart(claimStart.toString)
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, employeeStartDateRoute).withCSRFToken
@@ -87,13 +88,6 @@ class EmployeeStartDateControllerSpec extends SpecBaseControllerSpecs {
       contentAsString(result) mustEqual view(form)(dataRequest, messages).toString
     }
 
-    "redirect to /furlough-start if its already not found in userAnswers" in {
-      val result = controller().onPageLoad()(getRequest)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.FurloughStartDateController.onPageLoad().url
-    }
-
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers1 = userAnswers.set(EmployeeStartDatePage, validAnswer).success.value
       val result = controller(Some(userAnswers1)).onPageLoad()(getRequest)
@@ -108,13 +102,6 @@ class EmployeeStartDateControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/pay-date/1"
-    }
-
-    "redirect POST to /furlough-start if its already not found in userAnswers" in {
-      val result = controller().onSubmit()(postRequest)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.FurloughStartDateController.onPageLoad().url
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {

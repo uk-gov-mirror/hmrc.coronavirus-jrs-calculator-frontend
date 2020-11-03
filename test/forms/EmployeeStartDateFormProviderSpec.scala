@@ -35,10 +35,11 @@ class EmployeeStartDateFormProviderSpec extends DateBehaviours with GuiceOneAppP
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
   val furloughStart = LocalDate.of(2020, 3, 10)
+  val claimStart = LocalDate.of(2020, 3, 1)
 
   val formProvider = new EmployeeStartDateFormProvider()
 
-  val form = formProvider(furloughStart)
+  val form = formProvider(furloughStart, claimStart)
 
   ".value" should {
 
@@ -49,7 +50,7 @@ class EmployeeStartDateFormProviderSpec extends DateBehaviours with GuiceOneAppP
 
     behave like dateField(form, "value", validData)
 
-    behave like dateFieldWithMax(form, "value", furloughStart.minusDays(1), FormError("value", "employeeStartDate.error.max"))
+    behave like dateFieldWithMax(form, "value", furloughStart.minusDays(1), FormError("value", "employeeStartDate.error.max", Seq("19 March 2020")))
 
     behave like dateFieldWithMin(
       form,
