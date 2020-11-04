@@ -337,7 +337,7 @@ confirmation.october.eligibility = To be eligible for the grant you must pay fur
 
 claimPeriodStart.title = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.heading = Beth yw dyddiad dechrau’r hawliad hwn?
-claimPeriodStart.p1 = From 1 November, claims can span calendar months. Claims from 1 July to 31 October must start and end in the same calendar month.
+claimPeriodStart.p1 = O 1 Gorffennaf ymlaen, mae’n rhaid i hawliadau ddechrau a dod i ben yn ystod yr un mis calendr.
 claimPeriodStart.p2 = Os yw’n hawliad dilynol, gwnewch yn siŵr nad yw’r cyfnod hawlio yn gorgyffwrdd â’ch hawliad blaenorol.
 claimPeriodStart.error.required.all = Nodwch ddyddiad dechrau’r hawliad hwn
 claimPeriodStart.error.required.two = Mae’n rhaid i’r dyddiad dechrau gynnwys {0} a {1}

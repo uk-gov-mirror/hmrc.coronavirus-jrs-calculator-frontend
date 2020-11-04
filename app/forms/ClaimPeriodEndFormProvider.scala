@@ -56,12 +56,10 @@ class ClaimPeriodEndFormProvider @Inject()() extends Mappings with SchemeConfigu
     }
   }
 
-  private val noStraddleMonths: Seq[Int] = Seq(7, 8, 9, 10)
-
   val isDifferentCalendarMonth: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
     if (start.isBefore(phaseTwoStartDate) && !end.isBefore(phaseTwoStartDate)) {
       Invalid("claimPeriodEnd.cannot.be.after.july")
-    } else if (noStraddleMonths.contains(start.getMonthValue) && start.getMonthValue != end.getMonthValue) {
+    } else if (start.getMonthValue >= 7 && start.getMonthValue != end.getMonthValue) {
       Invalid("claimPeriodEnd.cannot.be.of.same.month")
     } else {
       Valid
