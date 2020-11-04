@@ -24,7 +24,7 @@ import forms.AnnualPayAmountFormProvider
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.requests.DataRequest
 import models.{AnnualPayAmount, UserAnswers}
-import pages.{AnnualPayAmountPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
+import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.CSRFTokenHelper._
@@ -43,6 +43,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
   lazy val annualPayAmountRoute = routes.AnnualPayAmountController.onPageLoad().url
 
+  val claimStart = LocalDate.parse("2020-04-01")
   val furloughStart = LocalDate.parse("2020-04-01")
   val uiDateToShow = furloughStart.minusDays(1)
   val empStart = LocalDate.parse("2020-02-01")
@@ -59,6 +60,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
+      ClaimPeriodStartPage.toString  -> JsString(claimStart.toString),
       FurloughStartDatePage.toString -> JsString(furloughStart.toString),
       EmployeeStartDatePage.toString -> JsString(empStart.toString),
       EmployeeStartedPage.toString   -> JsString(After1Feb2019.toString)
@@ -93,7 +95,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, uiDateToShow, After1Feb2019)(dataRequest, messages).toString
+        view(form, "since", Seq("31 March 2020"))(dataRequest, messages).toString
     }
 
     "return OK and the correct view for a GET if the EmployeeStarted is OnOrBefore1Feb2019" in {
@@ -103,7 +105,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, uiDateToShow, OnOrBefore1Feb2019)(dataRequest, messages).toString
+        view(form, "from", Seq("6 April 2019", "31 March 2020"))(dataRequest, messages).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
@@ -113,7 +115,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill(AnnualPayAmount(111)), uiDateToShow, After1Feb2019)(dataRequest, messages).toString
+        view(form.fill(AnnualPayAmount(111)), "since", Seq("31 March 2020"))(dataRequest, messages).toString
     }
 
     "redirect to the next page when valid data is submitted" in {
@@ -136,7 +138,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
-        view(boundForm, uiDateToShow, After1Feb2019)(dataRequest, messages).toString
+        view(boundForm, "since", Seq("31 March 2020"))(dataRequest, messages).toString
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {

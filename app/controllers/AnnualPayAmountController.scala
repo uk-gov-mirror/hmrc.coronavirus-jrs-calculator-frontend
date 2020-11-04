@@ -16,21 +16,26 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import cats.data.Validated.{Invalid, Valid}
+import config.SchemeConfiguration
 import controllers.actions._
 import forms.AnnualPayAmountFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.AnnualPayAmount
+import models.{AnnualPayAmount, EmployeeStarted, UserAnswers}
+import models.EmployeeStarted._
 import navigation.Navigator
-import pages.{AnnualPayAmountPage, EmployeeStartedPage, FurloughStartDatePage}
+import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.UserAnswerPersistence
 import utils.LocalDateHelpers._
 import views.html.AnnualPayAmountView
+import views.ViewUtils._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,7 +50,7 @@ class AnnualPayAmountController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   view: AnnualPayAmountView
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
-    extends BaseController with I18nSupport {
+    extends BaseController with SchemeConfiguration with I18nSupport {
 
   val form: Form[AnnualPayAmount] = formProvider()
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
@@ -53,33 +58,62 @@ class AnnualPayAmountController @Inject()(
   def onPageLoad(): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       getRequiredAnswersV(FurloughStartDatePage, EmployeeStartedPage) { (furloughStart, employeeStarted) =>
-        val preparedForm = request.userAnswers.getV(AnnualPayAmountPage) match {
-          case Invalid(e)   => form
-          case Valid(value) => form.fill(value)
+        getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+          val preparedForm = request.userAnswers.getV(AnnualPayAmountPage) match {
+            case Invalid(e)   => form
+            case Valid(value) => form.fill(value)
+          }
+
+          val (keySwitch, args) = titleHeading(claimStart, employeeStarted, furloughStart, request.userAnswers)
+
+          Future.successful(Ok(view(preparedForm, keySwitch, args)))
         }
-
-        val uiDate = earliestOf(apr5th2020, furloughStart.minusDays(1))
-
-        Future.successful(Ok(view(preparedForm, uiDate, employeeStarted)))
       }
     }
 
   def onSubmit(): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       getRequiredAnswersV(FurloughStartDatePage, EmployeeStartedPage) { (furloughStart, employeeStarted) =>
-        val uiDate = earliestOf(apr5th2020, furloughStart.minusDays(1))
+        getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+          val (keySwitch, args) = titleHeading(claimStart, employeeStarted, furloughStart, request.userAnswers)
 
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, uiDate, employeeStarted))),
-            value =>
-              userAnswerPersistence
-                .persistAnswer(request.userAnswers, AnnualPayAmountPage, value, None)
-                .map { updatedAnswers =>
-                  Redirect(navigator.nextPage(AnnualPayAmountPage, updatedAnswers, None))
-              }
-          )
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors => Future.successful(BadRequest(view(formWithErrors, keySwitch, args))),
+              value =>
+                userAnswerPersistence
+                  .persistAnswer(request.userAnswers, AnnualPayAmountPage, value, None)
+                  .map { updatedAnswers =>
+                    Redirect(navigator.nextPage(AnnualPayAmountPage, updatedAnswers, None))
+                }
+            )
+        }
       }
     }
+
+  private def titleHeading(claimStart: LocalDate, employeeStarted: EmployeeStarted, furloughStart: LocalDate, userAnswers: UserAnswers)(
+    implicit message: Messages): (String, Seq[String]) = {
+    val isExt: Boolean = claimStart.isEqualOrAfter(extensionStartDate)
+
+    val employeeStartDate = userAnswers.getV(EmployeeStartDatePage)
+
+    if (isExt) {
+      (employeeStarted, employeeStartDate) match {
+        case (OnOrBefore1Feb2019, _) =>
+          ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+        case (After1Feb2019, Valid(esd)) if esd.isAfter(apr5th2020) =>
+          ("since", Seq(dateToString(furloughStart.minusDays(1))))
+        case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2020) =>
+          ("from", Seq(dateToString(apr6th2020), dateToString(furloughStart.minusDays(1))))
+      }
+    } else {
+      employeeStarted match {
+        case OnOrBefore1Feb2019 =>
+          ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+        case After1Feb2019 =>
+          ("since", Seq(dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+      }
+    }
+  }
 }

@@ -428,10 +428,10 @@ employeeStartDate.hint = Er enghraifft, 28 11 2019
 employeeStartDate.error.min = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod ar neu ar ôl {0}
 employeeStartDate.error.max = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod cyn iddo ddechrau ei ffyrlo, ar neu cyn {0}
 
-annualPayAmount.title.after1Feb2019 = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
-annualPayAmount.heading.after1Feb2019 = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
-annualPayAmount.title.onOrBefore1Feb2019 = Faint a enillodd y cyflogai hwn o 6 Ebrill 2019 i {0}?
-annualPayAmount.heading.onOrBefore1Feb2019 = Faint a enillodd y cyflogai hwn o 6 Ebrill 2019 i {0}?
+annualPayAmount.title.since = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
+annualPayAmount.heading.since = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
+annualPayAmount.title.from = Faint a enillodd y cyflogai hwn o {0} i {1}?
+annualPayAmount.heading.from = Faint a enillodd y cyflogai hwn o 6 {0} i {1}?
 annualPayAmount.error.required = Nodwch swm dilys
 annualPayAmount.error.invalid = Nodwch swm dilys
 annualPayAmount.p1 = Dyma’r swm gros y mae wedi’i ennill.

@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import java.time.LocalDate
 @import pages.AnnualPayAmountPage
 
 @this(
@@ -29,15 +28,15 @@
         whatToInclude: includes.whatToInclude
 )
 
-@(form: Form[_], cappedFurloughStart: LocalDate, employeeStarted: EmployeeStarted)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], keySwitch: String, args: Seq[String])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, s"annualPayAmount.title.$employeeStarted", titleMessageArgs = Seq(dateToString(cappedFurloughStart)))), thisPage = AnnualPayAmountPage) {
+@govukLayout(pageTitle = Some(title(form, s"annualPayAmount.title.$keySwitch", titleMessageArgs = args)), thisPage = AnnualPayAmountPage) {
 
     @formHelper(action = AnnualPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages(s"annualPayAmount.heading.$employeeStarted", dateToString(cappedFurloughStart)))
+        @h1(messages(s"annualPayAmount.heading.$keySwitch", args: _*))
         @p(Html(messages("annualPayAmount.p1")))
         @p(Html(messages("annualPayAmount.p2")))
 
@@ -47,7 +46,7 @@
             form,
             id = "value",
             name = "value",
-            label = messages(s"annualPayAmount.heading.$employeeStarted", dateToString(cappedFurloughStart)),
+            label = messages(s"annualPayAmount.heading.$keySwitch", args: _*),
             labelClasses = Some("govuk-visually-hidden"),
             isPageHeading = false,
             classes = Some("govuk-input--width-10")
