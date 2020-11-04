@@ -60,7 +60,9 @@ trait PeriodHelper {
   def endDateOrTaxYearEnd(period: Period, claimStart: LocalDate): Period = {
     val taxYearStart = LocalDate.of(2019, 4, 6)
     val start =
-      if (claimStart.isEqualOrAfter(LocalDate.of(2020, 11, 1)) && period.start.isEqual(taxYearStart)) {
+      if (claimStart.isEqualOrAfter(LocalDate.of(2020, 11, 1))
+          && period.start.isAfter(LocalDate.of(2020, 3, 19))
+          && period.start.isBefore(LocalDate.of(2020, 4, 6))) {
         LocalDate.of(2020, 4, 6)
       } else if (period.start.isBefore(taxYearStart)) {
         taxYearStart
@@ -69,7 +71,15 @@ trait PeriodHelper {
       }
 
     val taxYearEnd = LocalDate.of(2020, 4, 5)
-    val end = if (claimStart.isBefore(LocalDate.of(2020, 11, 1)) && taxYearEnd.isBefore(period.end)) taxYearEnd else period.end
+    val end =
+      if (claimStart.isEqualOrAfter(LocalDate.of(2020, 11, 1))
+          && start.isAfter(taxYearEnd)) {
+        period.end
+      } else if (period.end.isAfter(taxYearEnd)) {
+        taxYearEnd
+      } else {
+        period.end
+      }
 
     Period(start, end)
   }
