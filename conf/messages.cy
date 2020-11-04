@@ -173,8 +173,9 @@ payFrequency.error.required = Dewiswch un o’r opsiynau isod
 
 rootPage.title = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 rootPage.heading = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
-rootPage.p1 = Use this calculator to work out the figures you’ll need when you complete a claim through the scheme.
-rootPage.p2 = It also breakdowns calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
+rootPage.p1 = The Job Retention Scheme has now been extended until December, with employees receiving 80% of their current salary for hours not worked.
+rootPage.p2 = Use this calculator to work out the figures you will need when you complete a claim through the scheme.
+rootPage.p3 = It also breakdowns calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
 
 rootPage.h3.who.can.use.heading = You can use this calculator to claim for:
 rootPage.h3.who.can.use.l1 = employees brought back to work for some of their normal hours from 1 July
@@ -189,9 +190,9 @@ rootPage.h3.who.can.not.use.l4 = wedi dychwelyd o absenoldeb megis absenoldeb ma
 rootPage.h3.who.can.not.use.l5 = yn cael cyfraniadau pensiwn y cyflogwr y tu allan i gynllun pensiwn cofrestru awtomatig
 rootPage.h3.who.can.not.use.l6 = daeth ei ffyrlo i ben ac yna dechreuodd ei ffyrlo eto yn ystod yr un cyfnod hawlio
 
-rootPage.p3 = Yn yr achosion hyn, cyfrifwch yr hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
-rootPage.p3.link = arweiniad cyfrifo
-rootPage.p4 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y swm rydych yn ei hawlio yn gywir.
+rootPage.p4 = Yn yr achosion hyn, cyfrifwch yr hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
+rootPage.p4.link = arweiniad cyfrifo
+rootPage.p5 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y swm rydych yn ei hawlio yn gywir.
 rootPage.beforeYouStart.header = Cyn i chi ddechrau
 rootPage.beforeYouStart.p1 = Bydd angen y canlynol arnoch:
 rootPage.beforeYouStart.p1.l1 = dyddiad dechrau’r hawliad (ar gyfer eich hawliad cyntaf, dyma pryd y dechreuodd y cyflogai cyntaf ei gyfnod ffyrlo)

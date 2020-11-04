@@ -35,7 +35,7 @@ class RootPageControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
       val controller = new RootPageController(messagesApi, component, view)
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request = FakeRequest(GET, routes.RootPageController.onPageLoad().url)
-      val result = controller.onPageLoad()(request)
+      val result = controller.start()(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view()(request, messages).toString

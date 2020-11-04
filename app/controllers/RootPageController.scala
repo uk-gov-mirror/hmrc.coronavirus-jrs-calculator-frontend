@@ -29,6 +29,10 @@ class RootPageController @Inject()(
 ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
+    Redirect(routes.RootPageController.start())
+  }
+
+  def start: Action[AnyContent] = Action { implicit request =>
     Ok(view())
   }
 }
