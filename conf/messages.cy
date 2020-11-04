@@ -240,7 +240,7 @@ regularPayAmount.heading.ext = Ar 30 Hydref 2020, beth oedd swm cyflog diweddara
 regularPayAmount.p1 = Dyma’r taliad gros diweddaraf a oedd yn ddyledus ar neu cyn 19 Mawrth, a hynny cyn gwneud didyniadau.
 regularPayAmount.p1.ext = Dyma’r taliad gros diweddaraf a oedd yn ddyledus ar neu cyn 30 Hydref, a hynny cyn gwneud didyniadau.
 regularPayAmount.p2 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
-regularPayAmount.inset = Os dechreuodd y cyflogai hwn weithio rhwng 1 ac 18 Mawrth 2020, nodwch y swm y bydd yn cael ei dalu o hyn ymlaen.
+regularPayAmount.inset = If this employee started their employment with you during the pay period, enter the amount they would have received if it was a full pay period.
 regularPayAmount.salary.error.required = Nodwch swm dilys
 regularPayAmount.salary.error.invalid = Nodwch swm dilys
 
