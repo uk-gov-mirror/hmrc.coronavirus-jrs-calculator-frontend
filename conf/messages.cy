@@ -336,6 +336,8 @@ confirmation.october.inset.p1.2 = in addition to the furlough grant of £{0}. Th
 confirmation.october.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
 confirmation.october.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
+confirmation.extension.p2 = (JRS Extension rate: 80% of wages)
+
 claimPeriodStart.title = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.heading = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.p1 = O 1 Gorffennaf ymlaen, mae’n rhaid i hawliadau ddechrau a dod i ben yn ystod yr un mis calendr.
