@@ -34,9 +34,10 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
 
     (
       userAnswers.getV(FurloughStartDatePage),
-      userAnswers.getV(EmployeeStartDatePage) <+> default.validNec[AnswerValidation]
-    ).mapN { (furloughStart, employeeStartDate) =>
-      endDateOrTaxYearEnd(Period(employeeStartDate, furloughStart.minusDays(1)))
+      userAnswers.getV(EmployeeStartDatePage) <+> default.validNec[AnswerValidation],
+      userAnswers.getV(ClaimPeriodStartPage)
+    ).mapN { (furloughStart, employeeStartDate, claimStart) =>
+      endDateOrTaxYearEnd(Period(employeeStartDate, furloughStart.minusDays(1)), claimStart)
     }
   }
 

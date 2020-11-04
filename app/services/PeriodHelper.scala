@@ -57,12 +57,19 @@ trait PeriodHelper {
     generate(Seq(firstEndDate), firstEndDate.plusDays(paymentFrequencyDays(frequency)))
   }
 
-  def endDateOrTaxYearEnd(period: Period): Period = {
+  def endDateOrTaxYearEnd(period: Period, claimStart: LocalDate): Period = {
     val taxYearStart = LocalDate.of(2019, 4, 6)
-    val start = if (period.start.isBefore(taxYearStart)) taxYearStart else period.start
+    val start =
+      if (claimStart.isEqualOrAfter(LocalDate.of(2020, 11, 1)) && period.start.isEqual(taxYearStart)) {
+        LocalDate.of(2020, 4, 6)
+      } else if (period.start.isBefore(taxYearStart)) {
+        taxYearStart
+      } else {
+        period.start
+      }
 
     val taxYearEnd = LocalDate.of(2020, 4, 5)
-    val end = if (taxYearEnd.isBefore(period.end)) taxYearEnd else period.end
+    val end = if (claimStart.isBefore(LocalDate.of(2020, 11, 1)) && taxYearEnd.isBefore(period.end)) taxYearEnd else period.end
 
     Period(start, end)
   }

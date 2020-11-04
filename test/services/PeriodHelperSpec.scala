@@ -139,8 +139,8 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
     val expectedOne = periodOne
     val expectedTwo = Period(LocalDate.of(2019, 12, 1), LocalDate.of(2020, 4, 5))
 
-    endDateOrTaxYearEnd(periodOne) mustBe expectedOne
-    endDateOrTaxYearEnd(periodTwo) mustBe expectedTwo
+    endDateOrTaxYearEnd(periodOne, LocalDate.of(2020, 3, 1)) mustBe expectedOne
+    endDateOrTaxYearEnd(periodTwo, LocalDate.of(2020, 3, 1)) mustBe expectedTwo
   }
 
   "counts days in a given period" in new PeriodHelper {

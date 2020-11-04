@@ -57,7 +57,7 @@ class ConfirmationController @Inject()(
         Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
       case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
         data.metaData.claimPeriod.start.getMonthValue match {
-          case 8 =>
+          case 8 | 11 | 12 =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case 9 =>
