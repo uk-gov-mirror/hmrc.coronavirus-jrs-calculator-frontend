@@ -337,7 +337,7 @@ confirmation.breakdown.p2 = You told us your employee gets paid a {0}
 
 claimPeriodStart.title = What’s the start date of this claim?
 claimPeriodStart.heading = What’s the start date of this claim?
-claimPeriodStart.p1 = From 1 November, claims can span calendar months. Claims from 1 July to 31 October must start and end in the same calendar month.
+claimPeriodStart.p1 = From 1 July, claims must start and end in the same calendar month.
 claimPeriodStart.p2 = Make sure the claim periods do not overlap.
 claimPeriodStart.error.required.all = Enter the start date of this claim
 claimPeriodStart.error.required.two = The start date must include {0} and {1}
