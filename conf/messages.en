@@ -336,6 +336,8 @@ confirmation.october.eligibility = To be eligible for the grant you must pay fur
 confirmation.breakdown.heading = Breakdown of calculations
 confirmation.breakdown.p2 = You told us your employee gets paid a {0}
 
+confirmation.extension.p2 = (JRS Extension rate: 80% of wages)
+
 claimPeriodStart.title = What’s the start date of this claim?
 claimPeriodStart.heading = What’s the start date of this claim?
 claimPeriodStart.p1 = From 1 July, claims must start and end in the same calendar month.
