@@ -36,7 +36,7 @@
     @if(breakdown.isCapped) {
         @p(Html(messages("furloughBreakdown.furloughCap.p1", breakdown.calculatedFurlough)))
         @p(Html(messages("furloughBreakdown.furloughCap.p2")))
-        <ul>
+        <ul class="govuk-list govuk-list--bullet">
             <li>@helper.calculationFor(breakdown.furloughCap)</li>
         </ul>
         @p(Html(messages("furloughBreakdown.furloughCap.p3")))
