@@ -38,7 +38,8 @@
             form = form,
             legend = messages("regularLengthEmployed.heading"),
             legendAsHeading = true,
-            items = RegularLengthEmployed.options(form)
+            items = RegularLengthEmployed.options(form),
+            hintKey = Some("regularLengthEmployed.hint")
         )
 
         @button("site.saveAndContinue")

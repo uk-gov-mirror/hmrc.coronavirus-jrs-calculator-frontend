@@ -855,8 +855,9 @@ month.10 = Hydref
 month.11 = Tachwedd
 month.12 = Rhagfyr
 
-regularLengthEmployed.title = Was this employee working for you on or before 19 March 2020?
-regularLengthEmployed.heading = Was this employee working for you on or before 19 March 2020?
+regularLengthEmployed.title = Was this employee on your payroll on or before 19 March 2020?
+regularLengthEmployed.heading = Was this employee on your payroll on or before 19 March 2020?
+regularLengthEmployed.hint = Enter yes if you made a payment of earnings to them in the tax year 2019/2020, which was reported to HMRC on a Real Time Information (RTI) Full Payment Submission (FPS) on or before 19 March 2020.
 regularLengthEmployed.yes = Yes
 regularLengthEmployed.no = No
 regularLengthEmployed.error.required = Select one of the options below
