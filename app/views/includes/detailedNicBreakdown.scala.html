@@ -49,7 +49,7 @@ p: components.p)
         @if(breakdown.nicCap.isCapped) {
             @p(Html(messages("nicBreakdown.nicCap.p1", breakdown.nicCap.nicGrant.value.formatted("%.2f"))))
             @p(Html(messages("nicBreakdown.nicCap.p2")))
-            <ul>
+            <ul class="govuk-list govuk-list--bullet">
                 <li>@messages("nicBreakdown.nicCap.l1", breakdown.nicCap.furloughGrant.value.formatted("%.2f"), breakdown.nicCap.cappedGrant.value.formatted("%.2f"))</li>
             </ul>
         @p(Html(messages("nicBreakdown.nicCap.p3")))

@@ -596,7 +596,7 @@ referencePayBreakdown.cylb.higherOf.average = £{0} (method 2: average pay last 
 
 furloughBreakdown.h4 = Furlough grant
 furloughBreakdown.l1 = Take £{0} (pay based on furlough days).
-furloughBreakdown.l2 = Multiply by 80%
+furloughBreakdown.l2 = Multiply by 80%.
 furloughBreakdown.total = Total furlough grant for pay period = £{0}
 furloughBreakdown.furloughCap.p1 = Calculated furlough grant = £{0}
 furloughBreakdown.furloughCap.p2 = This exceeds the maximum furlough grant for this pay period, which is:
