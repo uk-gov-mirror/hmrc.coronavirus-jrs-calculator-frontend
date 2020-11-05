@@ -173,7 +173,7 @@ payFrequency.error.required = Dewiswch un o’r opsiynau isod
 
 rootPage.title = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 rootPage.heading = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
-rootPage.p1 = The Job Retention Scheme has now been extended until December, with employees receiving 80% of their current salary for hours not worked.
+rootPage.p1 = The Job Retention Scheme will remain open until 31 March 2021. For claim periods running until 31 January 2021, employees will receive 80% of their usual salary for hours not worked.
 rootPage.p2 = Use this calculator to work out the figures you will need when you complete a claim through the scheme.
 rootPage.p3 = It also breakdowns calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
 
@@ -183,7 +183,7 @@ rootPage.h3.who.can.use.l2 = most employees who are paid weekly, two weekly, fou
 rootPage.h3.who.can.use.l3 = employees from 1 August who have returned from statutory leave such as maternity leave
 
 rootPage.h3.who.can.not.use.heading = The calculator cannot be used for employees if they:
-rootPage.h3.who.can.not.use.l1 = receive directors’ payments outside PAYE
+rootPage.h3.who.can.not.use.l1 = have an annual pay period
 rootPage.h3.who.can.not.use.l2 = have been transferred under Transfer of Undertakings (Protection of Employment) Regulations 2006 (TUPE)
 rootPage.h3.who.can.not.use.l3 = heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
 rootPage.h3.who.can.not.use.l4 = wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
