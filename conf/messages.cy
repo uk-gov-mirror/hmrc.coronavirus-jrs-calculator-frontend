@@ -403,8 +403,7 @@ furloughEndDate.error.beforeStart = Ni all dyddiad dod i ben y ffyrlo fod cyn dy
 furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.p1 = Os yw’r cyflogai hwn wedi’i roi ar ffyrlo fwy nag unwaith, dyma’r dyddiad diweddaraf y cafodd ei roi ar ffyrlo.
-furloughStartDate.hint = Dyma’r dyddiad y dechreuodd y cyflogai ei ffyrlo. Gall hyn fod cyn neu ar ôl dyddiad dechrau’r hawliad hwn.
-furloughStartDate.p2 = Rydym yn gofyn hyn oherwydd gallai’ch hawliad gynnwys cyflogeion a gafodd eu rhoi ar ffyrlo ar wahanol ddyddiadau.
+furloughStartDate.p2 = If the employee was not on your payroll on 19 March 2020, in relation to Real Time Information (RTI) Full Payment Submission (FPS), and was furloughed before 1 November 2020, then use the date 1 November 2020.
 
 furloughStartDate.error.required.all = Nodwch ddyddiad dechrau’r ffyrlo
 furloughStartDate.error.required.two = Mae’n rhaid i ddyddiad dechrau’r ffyrlo gynnwys {0} a {1}

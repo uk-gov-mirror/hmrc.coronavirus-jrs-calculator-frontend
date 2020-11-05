@@ -39,9 +39,8 @@
 
         @p(Html(messages("furloughStartDate.p1")))
 
-        @if(claimStartDate.getMonthValue < 7) {
-          @p(Html(messages("furloughStartDate.hint")))
-          @p(Html(messages("furloughStartDate.p2")))
+        @if(claimStartDate.getMonthValue >= 11) {
+            @p(Html(messages("furloughStartDate.p2")))
         }
 
         @inputDate(
