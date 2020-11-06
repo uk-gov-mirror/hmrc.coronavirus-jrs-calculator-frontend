@@ -174,17 +174,17 @@ payFrequency.error.required = Dewiswch un o’r opsiynau isod
 rootPage.title = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 rootPage.heading = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 rootPage.p1 = The Job Retention Scheme will remain open until 31 March 2021. For claim periods running until 31 January 2021, employees will receive 80% of their usual salary for hours not worked.
-rootPage.p2 = Use this calculator to work out the figures you will need when you complete a claim through the scheme.
-rootPage.p3 = It also breakdowns calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
+rootPage.p2 = Defnyddiwch y gyfrifiannell hon i gyfrifo’r ffigurau sydd eu hangen arnoch pan fyddwch yn llenwi hawliad drwy’r cynllun.
+rootPage.p3 = Mae hefyd yn dadansoddi’r cyfrifiadau ar gyfer pob cyfnod cyflog ar gyfer eich cofnodion. Mae’r ffigurau ar gyfer un cyflogai, ar gyfer y cyfnod hawlio a nodir gennych. Defnyddiwch y gyfrifiannell eto ar gyfer unrhyw gyflogeion eraill rydych yn hawlio ar eu cyfer ac adiwch y canlyniadau at ei gilydd.
 
-rootPage.h3.who.can.use.heading = You can use this calculator to claim for:
-rootPage.h3.who.can.use.l1 = employees brought back to work for some of their normal hours from 1 July
-rootPage.h3.who.can.use.l2 = most employees who are paid weekly, two weekly, four weekly or monthly in fixed pay periods
-rootPage.h3.who.can.use.l3 = employees from 1 August who have returned from statutory leave such as maternity leave
+rootPage.h3.who.can.use.heading = Gallwch ddefnyddio’r gyfrifiannell hon i hawlio am y canlynol:
+rootPage.h3.who.can.use.l1 = cyflogeion a ddaeth yn ôl i’r gwaith am rai o’u horiau arferol o 1 Gorffennaf ymlaen
+rootPage.h3.who.can.use.l2 = y mwyafrif o gyflogeion sy’n cael eu talu’n wythnosol, bob pythefnos, bob pedair wythnos neu’n fisol mewn cyfnodau cyflog sefydlog
+rootPage.h3.who.can.use.l3 = cyflogeion sydd wedi dychwelyd o absenoldeb statudol, megis absenoldeb mamolaeth, o 1 Awst ymlaen
 
-rootPage.h3.who.can.not.use.heading = The calculator cannot be used for employees if they:
+rootPage.h3.who.can.not.use.heading = Ni ellir defnyddio’r gyfrifiannell ar gyfer cyflogeion os yw’r canlynol yn wir:
 rootPage.h3.who.can.not.use.l1 = have an annual pay period
-rootPage.h3.who.can.not.use.l2 = have been transferred under Transfer of Undertakings (Protection of Employment) Regulations 2006 (TUPE)
+rootPage.h3.who.can.not.use.l2 = maent wedi’u trosglwyddo o dan reoliadau Trosglwyddo Ymgymeriadau Diogelu Cyflogaeth (TUPE)
 rootPage.h3.who.can.not.use.l3 = heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
 rootPage.h3.who.can.not.use.l4 = wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
 rootPage.h3.who.can.not.use.l5 = yn cael cyfraniadau pensiwn y cyflogwr y tu allan i gynllun pensiwn cofrestru awtomatig
@@ -241,7 +241,7 @@ regularPayAmount.heading.ext = Ar 30 Hydref 2020, beth oedd swm cyflog diweddara
 regularPayAmount.p1 = Dyma’r taliad gros diweddaraf a oedd yn ddyledus ar neu cyn 19 Mawrth, a hynny cyn gwneud didyniadau.
 regularPayAmount.p1.ext = Dyma’r taliad gros diweddaraf a oedd yn ddyledus ar neu cyn 30 Hydref, a hynny cyn gwneud didyniadau.
 regularPayAmount.p2 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
-regularPayAmount.inset = If this employee started their employment with you during the pay period, enter the amount they would have received if it was a full pay period.
+regularPayAmount.inset = Os dechreuodd y cyflogai hwn ei gyflogaeth gyda chi yn ystod y cyfnod cyflog hwn, nodwch y swm y byddai wedi’i gael pe bai’n gyfnod cyflog llawn.
 regularPayAmount.salary.error.required = Nodwch swm dilys
 regularPayAmount.salary.error.invalid = Nodwch swm dilys
 
@@ -336,7 +336,7 @@ confirmation.october.inset.p1.2 = in addition to the furlough grant of £{0}. Th
 confirmation.october.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
 confirmation.october.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
-confirmation.extension.p2 = (JRS Extension rate: 80% of wages)
+confirmation.extension.p2 = (Cyfradd yr Estyniad i’r Cynllun Cadw Swyddi yn sgil Coronafeirws: 80% o gyflogau)
 
 claimPeriodStart.title = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.heading = Beth yw dyddiad dechrau’r hawliad hwn?
@@ -403,7 +403,7 @@ furloughEndDate.error.beforeStart = Ni all dyddiad dod i ben y ffyrlo fod cyn dy
 furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.p1 = Os yw’r cyflogai hwn wedi’i roi ar ffyrlo fwy nag unwaith, dyma’r dyddiad diweddaraf y cafodd ei roi ar ffyrlo.
-furloughStartDate.p2 = If the employee was not on your payroll on 19 March 2020, in relation to Real Time Information (RTI) Full Payment Submission (FPS), and was furloughed before 1 November 2020, then use the date 1 November 2020.
+furloughStartDate.p2 = Os nad oedd y cyflogai ar eich cyflogres ar 19 Mawrth 2020, mewn perthynas â Chyflwyniad Taliad Llawn (FPS) Gwybodaeth Amser Real (RTI), a chafodd ei roi ar ffyrlo cyn 1 Tachwedd 2020, defnyddiwch y dyddiad 1 Tachwedd 2020.
 
 furloughStartDate.error.required.all = Nodwch ddyddiad dechrau’r ffyrlo
 furloughStartDate.error.required.two = Mae’n rhaid i ddyddiad dechrau’r ffyrlo gynnwys {0} a {1}
@@ -854,9 +854,9 @@ month.10 = Hydref
 month.11 = Tachwedd
 month.12 = Rhagfyr
 
-regularLengthEmployed.title = Was this employee on your payroll on or before 19 March 2020?
-regularLengthEmployed.heading = Was this employee on your payroll on or before 19 March 2020?
-regularLengthEmployed.hint = Enter yes if you made a payment of earnings to them in the tax year 2019/2020, which was reported to HMRC on a Real Time Information (RTI) Full Payment Submission (FPS) on or before 19 March 2020.
-regularLengthEmployed.yes = Yes
-regularLengthEmployed.no = No
-regularLengthEmployed.error.required = Select one of the options below
+regularLengthEmployed.title = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 19 Mawrth 2020?
+regularLengthEmployed.heading = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 19 Mawrth 2020?
+regularLengthEmployed.hint = Nodwch ‘Iawn’ os gwnaethoch daliad o enillion iddo yn ystod blwyddyn dreth 2019/2020, a rhoddwyd gwybod am hynny i CThEM ar Gyflwyniad Taliadau Llawn (FPS) Gwybodaeth Amser Real (RTI) ar neu cyn 19 Mawrth 2020.
+regularLengthEmployed.yes = Iawn
+regularLengthEmployed.no = Na
+regularLengthEmployed.error.required = Dewiswch un o’r opsiynau isod
