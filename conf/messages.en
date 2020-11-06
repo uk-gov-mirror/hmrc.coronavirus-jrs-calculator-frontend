@@ -178,9 +178,10 @@ rootPage.p2 = Use this calculator to work out the figures you’ll need when you
 rootPage.p3 = It also breakdowns calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
 
 rootPage.h3.who.can.use.heading = You can use this calculator to claim for:
-rootPage.h3.who.can.use.l1 = employees brought back to work for some of their normal hours from 1 July
-rootPage.h3.who.can.use.l2 = most employees who are paid weekly, two weekly, four weekly or monthly in fixed pay periods
-rootPage.h3.who.can.use.l3 = employees from 1 August who have returned from statutory leave such as maternity leave
+rootPage.h3.who.can.use.l1 = employees who are fully furloughed and therefore not working any hours
+rootPage.h3.who.can.use.l2 = employees brought back to work for some of their normal hours from 1 July
+rootPage.h3.who.can.use.l3 = most employees who are paid weekly, two weekly, four weekly or monthly in fixed pay periods
+rootPage.h3.who.can.use.l4 = employees from 1 August who have returned from statutory leave such as maternity leave
 
 rootPage.h3.who.can.not.use.heading = The calculator cannot be used for employees if they:
 rootPage.h3.who.can.not.use.l1 = have an annual pay period

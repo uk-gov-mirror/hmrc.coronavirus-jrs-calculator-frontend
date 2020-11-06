@@ -32,10 +32,10 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @govukLayout(
-  pageTitle = Some(titleNoForm("rootPage.title")),
-  showBackButton = false,
-  showResearch = true,
-  thisPage = RootPage
+    pageTitle = Some(titleNoForm("rootPage.title")),
+    showBackButton = false,
+    showResearch = true,
+    thisPage = RootPage
 ) {
 
     @h1("rootPage.heading")
@@ -46,9 +46,10 @@
 
     @h3("rootPage.h3.who.can.use.heading")
     <ul class="govuk-list govuk-list--bullet">
-       <li>@messages("rootPage.h3.who.can.use.l1")</li>
-       <li>@messages("rootPage.h3.who.can.use.l2")</li>
+        <li>@messages("rootPage.h3.who.can.use.l1")</li>
+        <li>@messages("rootPage.h3.who.can.use.l2")</li>
         <li>@messages("rootPage.h3.who.can.use.l3")</li>
+        <li>@messages("rootPage.h3.who.can.use.l4")</li>
     </ul>
 
     @h3("rootPage.h3.who.can.not.use.heading")
@@ -61,7 +62,7 @@
         <li>@messages("rootPage.h3.who.can.not.use.l6")</li>
     </ul>
 
-    @p(Html(Messages("rootPage.p4", link(appConfig.calculationGuidance,"rootPage.p4.link"))))
+    @p(Html(Messages("rootPage.p4", link(appConfig.calculationGuidance, "rootPage.p4.link"))))
     @p(Html(Messages("rootPage.p5")))
 
     @h2("rootPage.beforeYouStart.header", classes = Some("govuk-heading-m"))
@@ -81,7 +82,7 @@
     @p(Html(Messages("rootPage.beforeYouStart.p2")))
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@Html(Messages("rootPage.beforeYouStart.p2.l1", link(appConfig.usualHours,"rootPage.beforeYouStart.p2.l1.link", "target", Some("_blank"))))</li>
+        <li>@Html(Messages("rootPage.beforeYouStart.p2.l1", link(appConfig.usualHours, "rootPage.beforeYouStart.p2.l1.link", "target", Some("_blank"))))</li>
         <li>@messages("rootPage.beforeYouStart.p2.l2")</li>
         <li>@messages("rootPage.beforeYouStart.p2.l3")</li>
     </ul>

@@ -178,9 +178,10 @@ rootPage.p2 = Defnyddiwch y gyfrifiannell hon i gyfrifo’r ffigurau sydd eu han
 rootPage.p3 = Mae hefyd yn dadansoddi’r cyfrifiadau ar gyfer pob cyfnod cyflog ar gyfer eich cofnodion. Mae’r ffigurau ar gyfer un cyflogai, ar gyfer y cyfnod hawlio a nodir gennych. Defnyddiwch y gyfrifiannell eto ar gyfer unrhyw gyflogeion eraill rydych yn hawlio ar eu cyfer ac adiwch y canlyniadau at ei gilydd.
 
 rootPage.h3.who.can.use.heading = Gallwch ddefnyddio’r gyfrifiannell hon i hawlio am y canlynol:
-rootPage.h3.who.can.use.l1 = cyflogeion a ddaeth yn ôl i’r gwaith am rai o’u horiau arferol o 1 Gorffennaf ymlaen
-rootPage.h3.who.can.use.l2 = y mwyafrif o gyflogeion sy’n cael eu talu’n wythnosol, bob pythefnos, bob pedair wythnos neu’n fisol mewn cyfnodau cyflog sefydlog
-rootPage.h3.who.can.use.l3 = cyflogeion sydd wedi dychwelyd o absenoldeb statudol, megis absenoldeb mamolaeth, o 1 Awst ymlaen
+rootPage.h3.who.can.use.l1 = employees who are fully furloughed and therefore not working any hours
+rootPage.h3.who.can.use.l2 = cyflogeion a ddaeth yn ôl i’r gwaith am rai o’u horiau arferol o 1 Gorffennaf ymlaen
+rootPage.h3.who.can.use.l3 = y mwyafrif o gyflogeion sy’n cael eu talu’n wythnosol, bob pythefnos, bob pedair wythnos neu’n fisol mewn cyfnodau cyflog sefydlog
+rootPage.h3.who.can.use.l4 = cyflogeion sydd wedi dychwelyd o absenoldeb statudol, megis absenoldeb mamolaeth, o 1 Awst ymlaen
 
 rootPage.h3.who.can.not.use.heading = Ni ellir defnyddio’r gyfrifiannell ar gyfer cyflogeion os yw’r canlynol yn wir:
 rootPage.h3.who.can.not.use.l1 = have an annual pay period
