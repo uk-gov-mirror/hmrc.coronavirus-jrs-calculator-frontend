@@ -175,7 +175,7 @@ rootPage.title = Job Retention Scheme calculator
 rootPage.heading = Job Retention Scheme calculator
 rootPage.p1 = The Job Retention Scheme will remain open until 31 March 2021. For claim periods running until 31 January 2021, employees will receive 80% of their usual salary for hours not worked.
 rootPage.p2 = Use this calculator to work out the figures you’ll need when you complete a claim through the scheme.
-rootPage.p3 = It also breakdowns calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
+rootPage.p3 = It also breaks down calculations for each pay period for your records. The figures are for one employee, for the claim period you specify. Run the calculator again for any other employees you’re claiming for and add up the results.
 
 rootPage.h3.who.can.use.heading = You can use this calculator to claim for:
 rootPage.h3.who.can.use.l1 = employees who are fully furloughed and therefore not working any hours
