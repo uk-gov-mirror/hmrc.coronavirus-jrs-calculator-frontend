@@ -104,7 +104,7 @@ class AnnualPayAmountController @Inject()(
           ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
         case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2019) =>
           ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-        case (After1Feb2019, Valid(esd)) if esd.isEqualOrAfter(apr6th2019) && esd.isBefore(apr6th2020) =>
+        case (After1Feb2019, Valid(esd)) if esd.isEqualOrAfter(apr6th2019) && esd.isBefore(mar20th2020) =>
           ("since", Seq(dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
         case (After1Feb2019, Valid(esd)) if esd.isAfter(apr5th2020) =>
           ("since", Seq(dateToString(furloughStart.minusDays(1))))
