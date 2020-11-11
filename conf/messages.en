@@ -205,11 +205,11 @@ rootPage.beforeYouStart.p1.l6 = additional payments (such as tips, discretionary
 rootPage.beforeYouStart.p1.l7 = date furlough ended, if not ongoing
 rootPage.beforeYouStart.p2 = From 1 July, if the employee is flexibly furloughed, you will also need:
 rootPage.beforeYouStart.p2.l1 = {0}
-rootPage.beforeYouStart.p2.l1.link = employee’s usual hours (opens in new tab)
+rootPage.beforeYouStart.p2.l1.link = employee’s usual hours
 rootPage.beforeYouStart.p2.l2 = actual hours worked
 rootPage.beforeYouStart.p2.l3 = hours furloughed
 rootPage.beforeYouStart.p3 = {0}
-rootPage.beforeYouStart.p3.link = Steps to take before calculating your claim (opens in new tab)
+rootPage.beforeYouStart.p3.link = Steps to take before calculating your claim
 
 payDate.title = What’s the end of the next pay period after {0}?
 payDate.heading = What’s the end of the next pay period after {0}?

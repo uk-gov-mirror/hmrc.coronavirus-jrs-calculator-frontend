@@ -207,12 +207,11 @@ rootPage.beforeYouStart.p1.l8 = taliadau ychwanegol (megis cildyrnau, bonysau de
 rootPage.beforeYouStart.p1.l9 = dyddiad dod i ben y ffyrlo, os nad yw’n barhaus
 rootPage.beforeYouStart.p2 = O 1 Gorffennaf ymlaen, os yw’r cyflogai ar ffyrlo hyblyg, bydd hefyd angen y canlynol arnoch:
 rootPage.beforeYouStart.p2.l1 = {0}
-rootPage.beforeYouStart.p2.l1.link = oriau arferol y cyflogai (yn agor tab newydd)
+rootPage.beforeYouStart.p2.l1.link = oriau arferol y cyflogai
 rootPage.beforeYouStart.p2.l2 = yr oriau gwirioneddol a weithiwyd
 rootPage.beforeYouStart.p2.l3 = yr oriau ar ffyrlo
 rootPage.beforeYouStart.p3 = {0}
-rootPage.beforeYouStart.p3.link = Camau i’w cymryd cyn cyfrifo’ch hawliad (yn agor tab newydd)
-rootPage.beforeYouStart.p3.link = Camau i’w cymryd cyn cyfrifo’ch hawliad (yn agor tab newydd)
+rootPage.beforeYouStart.p3.link = Camau i’w cymryd cyn cyfrifo’ch hawliad
 
 payDate.title = Beth yw diwedd y cyfnod cyflog nesaf ar ôl {0}?
 payDate.heading = Beth yw diwedd y cyfnod cyflog nesaf ar ôl {0}?

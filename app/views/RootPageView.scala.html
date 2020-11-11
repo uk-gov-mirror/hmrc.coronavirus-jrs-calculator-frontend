@@ -82,12 +82,12 @@
     @p(Html(Messages("rootPage.beforeYouStart.p2")))
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@Html(Messages("rootPage.beforeYouStart.p2.l1", link(appConfig.usualHours, "rootPage.beforeYouStart.p2.l1.link", "target", Some("_blank"))))</li>
+        <li>@Html(Messages("rootPage.beforeYouStart.p2.l1", link(appConfig.usualHours, "rootPage.beforeYouStart.p2.l1.link", false, Some("_blank"))))</li>
         <li>@messages("rootPage.beforeYouStart.p2.l2")</li>
         <li>@messages("rootPage.beforeYouStart.p2.l3")</li>
     </ul>
 
-    @p(Html(Messages("rootPage.beforeYouStart.p3", link(appConfig.stepsBeforeCalculation, "rootPage.beforeYouStart.p3.link", "target", Some("_blank")))))
+    @p(Html(Messages("rootPage.beforeYouStart.p3", link(appConfig.stepsBeforeCalculation, "rootPage.beforeYouStart.p3.link", false, Some("_blank")))))
 
     <a href="/job-retention-scheme-calculator/claim-period-start" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
         @Messages("site.startNow")
