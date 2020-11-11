@@ -226,6 +226,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     page match {
       case FurloughStartDatePage => routes.FurloughStartDateController.onPageLoad()
       case TopUpPeriodsPage      => routes.TopUpPeriodsController.onPageLoad()
+      case PartTimePeriodsPage   => routes.PartTimePeriodsController.onPageLoad()
       case p =>
         Logger.warn(s"can't find the route for the page: $p")
         routes.ErrorController.internalServerError()
