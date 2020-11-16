@@ -221,6 +221,7 @@ payDate.error.required = The date must include {0}
 payDate.error.invalid = Enter a real date
 payDate.error.mustBeBefore = The date must be before {0}
 payDate.error.mustBeAfter = The date must be after {0}
+payDate.error.must.be.as.per.paymentFrequency = The pay period for the date entered is outside of the claim period. Enter the end date of the last pay period before {0} and on or after {1}.
 payDate.first.p = This is the end of the last pay period before the claim started.
 payDate.first.p2 = We’ll use this date to work out all the pay periods that cover your claim.
 payDate.p = This is the last day in the pay period, not the date they received their pay.

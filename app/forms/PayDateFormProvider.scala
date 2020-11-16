@@ -20,25 +20,51 @@ import java.time.LocalDate
 
 import forms.mappings.Mappings
 import javax.inject.Inject
+import models.PaymentFrequency
+import models.PaymentFrequency.Monthly
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import play.api.i18n.Messages
-import views.ViewUtils
+import utils.LocalDateHelpers.LocalDateHelper
+import views.ViewUtils.dateToString
 
 class PayDateFormProvider @Inject()() extends Mappings {
 
-  def apply(beforeDate: Option[LocalDate] = None, afterDate: Option[LocalDate] = None)(implicit messages: Messages): Form[LocalDate] =
+  def apply(beforeDate: Option[LocalDate] = None, afterDate: Option[LocalDate] = None, paymentFrequency: Option[PaymentFrequency] = None)(
+    implicit messages: Messages): Form[LocalDate] =
     Form(
       "value" -> localDate(invalidKey = "payDate.error.invalid")
         .verifying(isBeforeIfDefined(beforeDate))
         .verifying(isAfterIfDefined(afterDate))
+        .verifying(isValidAsPerPayFrequency(paymentFrequency, beforeDate))
     )
 
   private def isBeforeIfDefined(beforeDate: Option[LocalDate])(implicit messages: Messages): Constraint[LocalDate] = Constraint { date =>
-    if (beforeDate.forall(date.isBefore(_))) Valid else Invalid("payDate.error.mustBeBefore", ViewUtils.dateToString(beforeDate.get))
+    if (beforeDate.forall(date.isBefore(_))) Valid else Invalid("payDate.error.mustBeBefore", dateToString(beforeDate.get))
   }
 
   private def isAfterIfDefined(afterDate: Option[LocalDate])(implicit messages: Messages): Constraint[LocalDate] = Constraint { date =>
-    if (afterDate.forall(date.isAfter(_))) Valid else Invalid("payDate.error.mustBeAfter", ViewUtils.dateToString(afterDate.get))
+    if (afterDate.forall(date.isAfter(_))) Valid else Invalid("payDate.error.mustBeAfter", dateToString(afterDate.get))
   }
+
+  def isValidAsPerPayFrequency(paymentFrequency: Option[PaymentFrequency], beforeDate: Option[LocalDate])(
+    implicit messages: Messages): Constraint[LocalDate] =
+    Constraint { inputDate =>
+      (beforeDate, paymentFrequency) match {
+        case (Some(effectiveStartDate), Some(pf)) => //beforeDate exists meaning we are on pay-date/1 page, so validate the date for meaningful value as per lookback
+
+          val daysToLookBack = pf match {
+            case Monthly => 31
+            case _ =>
+              PaymentFrequency.paymentFrequencyDays(pf)
+          }
+
+          val minDate = effectiveStartDate.minusDays(daysToLookBack)
+
+          if (inputDate.isEqualOrAfter(minDate)) Valid
+          else Invalid("payDate.error.must.be.as.per.paymentFrequency", dateToString(effectiveStartDate), dateToString(minDate))
+
+        case _ => Valid
+      }
+    }
 }

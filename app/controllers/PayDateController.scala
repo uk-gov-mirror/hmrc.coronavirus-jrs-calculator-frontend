@@ -91,7 +91,8 @@ class PayDateController @Inject()(
 
       formProvider(
         beforeDate = if (idx == 1) Some(effectiveStartDate) else None,
-        afterDate = if (idx != 1) Some(latestDate) else None
+        afterDate = if (idx != 1) Some(latestDate) else None,
+        paymentFrequency(request.userAnswers)
       ).bindFromRequest()
         .fold(
           formWithErrors => {
@@ -154,4 +155,9 @@ class PayDateController @Inject()(
       case _                    => false
     }
 
+  private[this] def paymentFrequency(userAnswers: UserAnswers): Option[PaymentFrequency] =
+    extractPaymentFrequencyV(userAnswers) match {
+      case Valid(freq) => Some(freq)
+      case Invalid(e)  => None
+    }
 }

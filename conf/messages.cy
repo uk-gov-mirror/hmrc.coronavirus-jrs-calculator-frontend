@@ -223,6 +223,7 @@ payDate.error.required = Mae’n rhaid i’r dyddiad gynnwys {0}
 payDate.error.invalid = Nodwch ddyddiad go iawn
 payDate.error.mustBeBefore = Mae’n rhaid i’r dyddiad fod cyn {0}
 payDate.error.mustBeAfter = Mae’n rhaid i’r dyddiad fod ar ôl {0}
+payDate.error.must.be.as.per.paymentFrequency = The pay period for the date entered is outside of the claim period. Enter the end date of the last pay period before {0} and on or after {1}.
 payDate.first.p = Dyma ddiwedd y cyfnod cyflog diwethaf cyn naill ai dyddiad dechrau’r hawliad neu ddyddiad dechrau’r ffyrlo, p’un bynnag yw’r hwyraf.
 payDate.first.p2 = Byddwn yn defnyddio’r dyddiad hwn i gyfrifo pob cyfnod cyflog sy’n ymwneud â’ch hawliad.
 payDate.p = Dyma’r diwrnod olaf yn y cyfnod cyflog, nid y dyddiad y cafodd ei gyflog.

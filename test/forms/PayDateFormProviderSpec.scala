@@ -18,14 +18,15 @@ package forms
 
 import java.time.{LocalDate, ZoneOffset}
 
-import play.api.test.CSRFTokenHelper._
 import forms.behaviours.DateBehaviours
+import models.PaymentFrequency
 import org.scalacheck.Gen
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
+import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
-import views.ViewUtils
+import views.ViewUtils.dateToString
 
 class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
 
@@ -101,7 +102,7 @@ class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
 
             result.errors.head.key shouldBe "value"
             result.errors.head.message shouldBe "payDate.error.mustBeBefore"
-            result.errors.head.args should contain only ViewUtils.dateToString(date)
+            result.errors.head.args should contain only dateToString(date)
         }
       }
     }
@@ -157,11 +158,51 @@ class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
 
             result.errors.head.key shouldBe "value"
             result.errors.head.message shouldBe "payDate.error.mustBeAfter"
-            result.errors.head.args should contain only ViewUtils.dateToString(date)
+            result.errors.head.args should contain only dateToString(date)
         }
       }
     }
 
+    "validate /pay-date/1 date as per paymentFrequency" must {
+
+      "return Valid if date is on or after lookback date as per paymentFrequency" in {
+        val dateBefore = LocalDate.of(2020, 11, 1)
+        val pf = PaymentFrequency.Weekly
+
+        val formData = dateBefore.minusDays(7)
+
+        val data = Map(
+          "value.day"   -> formData.getDayOfMonth.toString,
+          "value.month" -> formData.getMonthValue.toString,
+          "value.year"  -> formData.getYear.toString
+        )
+
+        val result = new PayDateFormProvider().apply(beforeDate = Some(dateBefore), paymentFrequency = Some(pf)).bind(data)
+
+        result.errors shouldBe empty
+        result.value.value shouldEqual formData
+      }
+
+      "return InValid if date is before expected lookback date as per paymentFrequency" in {
+        val dateBefore = LocalDate.of(2020, 11, 1)
+        val pf = PaymentFrequency.Weekly
+
+        val formData = dateBefore.minusDays(8)
+        val lookBackDateAsPerPF = dateBefore.minusDays(7)
+
+        val data = Map(
+          "value.day"   -> formData.getDayOfMonth.toString,
+          "value.month" -> formData.getMonthValue.toString,
+          "value.year"  -> formData.getYear.toString
+        )
+
+        val result = new PayDateFormProvider().apply(beforeDate = Some(dateBefore), paymentFrequency = Some(pf)).bind(data)
+
+        result.errors.head.key shouldBe "value"
+        result.errors.head.message shouldBe "payDate.error.must.be.as.per.paymentFrequency"
+        result.errors.head.args shouldBe Seq(dateToString(dateBefore), dateToString(lookBackDateAsPerPF))
+      }
+    }
   }
 
 }
