@@ -83,8 +83,8 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseControllerSpecs {
       val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2021, 1, 3))
 
       val data = Map(
-        "endDate.day"   -> "10",
-        "endDate.month" -> "01",
+        "endDate.day"   -> "01",
+        "endDate.month" -> "02",
         "endDate.year"  -> "2021",
       )
 
