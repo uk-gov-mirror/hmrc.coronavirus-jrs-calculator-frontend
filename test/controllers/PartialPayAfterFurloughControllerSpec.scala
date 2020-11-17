@@ -51,12 +51,12 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseControllerSpecs with
   val claimPeriodStart = LocalDate.of(2020, 3, 27)
   val claimPeriodEnd = LocalDate.of(2020, 4, 6)
   val userAnswers = UserAnswers(userAnswersId)
+    .withPaymentFrequency(Weekly)
     .withPayDate(List(payPeriod1, payPeriod2, payPeriod2, payPeriod4).map(_.toString))
     .withClaimPeriodStart(claimPeriodStart.toString)
     .withClaimPeriodEnd(claimPeriodEnd.toString)
     .withFurloughStartDate(furloughStartDate.toString)
     .withFurloughEndDate(furloughEndDate.toString)
-    .withPaymentFrequency(Weekly)
 
   def getRequest(url: String): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, url).withCSRFToken

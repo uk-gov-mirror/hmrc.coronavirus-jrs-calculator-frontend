@@ -62,11 +62,11 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseControllerSpecs wit
   val claimPeriodStart = LocalDate.of(2020, 3, 27)
 
   val userAnswers = UserAnswers(userAnswersId)
+    .withPaymentFrequency(Weekly)
     .withPayDate(List(payPeriod1, payPeriod2, payPeriod3).map(_.toString))
     .withClaimPeriodStart(claimPeriodStart.toString)
     .withClaimPeriodEnd(claimPeriodEnd.toString)
     .withFurloughStartDate(furloughStartDate.toString)
-    .withPaymentFrequency(Weekly)
 
   val view = app.injector.instanceOf[VariableLengthPartialPayView]
 
