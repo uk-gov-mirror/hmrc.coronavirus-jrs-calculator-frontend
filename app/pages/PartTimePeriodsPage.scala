@@ -30,8 +30,10 @@ case object PartTimePeriodsPage extends QuestionPage[List[Periods]] {
   override def cleanup(value: Option[List[Periods]], userAnswers: UserAnswers): Try[UserAnswers] =
     value match {
       case Some(_) =>
-        //TODO cleanup hours and amounts pages when they are implemented
-        super.cleanup(value, userAnswers)
+        userAnswers
+          .remove(PartTimeNormalHoursPage)
+          .get
+          .remove(PartTimeHoursPage)
       case _ =>
         super.cleanup(value, userAnswers)
     }
