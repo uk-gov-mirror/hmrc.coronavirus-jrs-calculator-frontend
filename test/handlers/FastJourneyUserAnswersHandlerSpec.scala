@@ -116,12 +116,12 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData with 
 
     val expectedUserAnswersData: JsObject = emptyUserAnswers
       .copy(data = Json.obj())
+      .withPaymentFrequency(Monthly)
       .withClaimPeriodStart(userAnswers.getV(ClaimPeriodStartPage).value.toString)
       .withClaimPeriodEnd(userAnswers.getV(ClaimPeriodEndPage).value.toString)
       .withFurloughStartDate(userAnswers.getV(FurloughStartDatePage).value.toString)
       .withFurloughEndDate(userAnswers.getV(FurloughEndDatePage).value.toString)
       .withPayDate(userAnswers.getList(PayDatePage).map(_.toString).toList)
-      .withPaymentFrequency(Monthly)
       .withFurloughStatus()
       .withLastPayDate(dummyUserAnswers.getV(LastPayDatePage).value.toString)
       .data
@@ -141,11 +141,11 @@ class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData with 
 
     val expectedUserAnswersData: JsObject = emptyUserAnswers
       .copy(data = Json.obj())
+      .withPaymentFrequency(Monthly)
       .withClaimPeriodStart(userAnswers.getV(ClaimPeriodStartPage).value.toString)
       .withClaimPeriodEnd(userAnswers.getV(ClaimPeriodEndPage).value.toString)
       .withFurloughStartDate(userAnswers.getV(FurloughStartDatePage).value.toString)
       .withPayDate(userAnswers.getList(PayDatePage).map(_.toString).toList)
-      .withPaymentFrequency(Monthly)
       .withFurloughStatus()
       .data
 
