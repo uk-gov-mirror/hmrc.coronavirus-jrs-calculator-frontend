@@ -26,6 +26,7 @@ import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationResult}
 import play.api.i18n.Messages
 import views.ViewUtils
+import utils.LocalDateHelpers._
 
 class ClaimPeriodEndFormProvider @Inject()() extends Mappings with SchemeConfiguration {
 
@@ -59,7 +60,7 @@ class ClaimPeriodEndFormProvider @Inject()() extends Mappings with SchemeConfigu
   val isDifferentCalendarMonth: (LocalDate, LocalDate) => ValidationResult = (start, end) =>
     if (start.isBefore(phaseTwoStartDate) && !end.isBefore(phaseTwoStartDate)) {
       Invalid("claimPeriodEnd.cannot.be.after.july")
-    } else if (start.getMonthValue >= 7 && start.getMonthValue != end.getMonthValue) {
+    } else if (start.isEqualOrAfter(july1st2020) && start.getMonthValue != end.getMonthValue) {
       Invalid("claimPeriodEnd.cannot.be.of.same.month")
     } else {
       Valid

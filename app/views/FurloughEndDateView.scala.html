@@ -16,6 +16,7 @@
 
 @import pages.FurloughEndDatePage
 @import java.time.LocalDate
+@import utils.LocalDateHelpers._
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -36,7 +37,7 @@
         @errorSummary(form.errors)
 
         @h1(messages("furloughEndDate.heading"))
-        @p(Html(messages(if (claimStartDate.getMonthValue < 7) "furloughEndDate.p" else "furloughEndDate.phaseTwo.p")))
+        @p(Html(messages(if (claimStartDate.isEqualOrAfter(july1st2020)) "furloughEndDate.phaseTwo.p" else "furloughEndDate.p")))
 
         @inputDate(
             form,

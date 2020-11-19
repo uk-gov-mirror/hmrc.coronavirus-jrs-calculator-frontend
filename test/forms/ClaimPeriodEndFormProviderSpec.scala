@@ -80,10 +80,10 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseControllerSpecs {
 
     "fail with invalid dates -  after policy end" in {
 
-      val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2021, 1, 3))
+      val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2021, 2, 1))
 
       val data = Map(
-        "endDate.day"   -> "01",
+        "endDate.day"   -> "28",
         "endDate.month" -> "02",
         "endDate.year"  -> "2021",
       )
@@ -133,7 +133,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseControllerSpecs {
 
     "fail with invalid dates - if start and end are not of the same calendar month" in {
 
-      val now = LocalDate.of(2020, 7, 15)
+      val now = LocalDate.of(2020, 8, 15)
 
       val form = new ClaimPeriodEndFormProvider()(now)
 
@@ -159,7 +159,7 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseControllerSpecs {
       case Invalid(_) =>
     }
 
-    form.isDifferentCalendarMonth(LocalDate.of(2020, 7, 1), LocalDate.of(2020, 8, 1)) must matchPattern {
+    form.isDifferentCalendarMonth(LocalDate.of(2020, 8, 1), LocalDate.of(2020, 9, 1)) must matchPattern {
       case Invalid(_) =>
     }
   }

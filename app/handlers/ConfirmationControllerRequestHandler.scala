@@ -24,6 +24,7 @@ import models.UserAnswers.AnswerV
 import models._
 import services._
 import viewmodels._
+import utils.LocalDateHelpers._
 
 trait ConfirmationControllerRequestHandler
     extends FurloughCalculator with NicCalculator with PensionCalculator with JourneyBuilder with ReferencePayCalculator
@@ -121,7 +122,7 @@ trait ConfirmationControllerRequestHandler
   private def metaData(userAnswers: UserAnswers): AnswerV[Metadata] =
     extractClaimPeriodStartV(userAnswers) match {
       case Valid(start) =>
-        if (start.getMonthValue > 7) metaWithoutNicAndPension(userAnswers) else metaWithNicAndPension(userAnswers)
+        if (start.isEqualOrAfter(aug1st2020)) metaWithoutNicAndPension(userAnswers) else metaWithNicAndPension(userAnswers)
       case i @ Invalid(_) => i
     }
 

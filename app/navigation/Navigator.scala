@@ -33,14 +33,12 @@ import play.api.Logger
 import play.api.mvc.Call
 import services.PartialPayExtractor
 import utils.LocalDateHelpers
-import utils.LocalDateHelpers.LocalDateHelper
+import utils.LocalDateHelpers._
 
 @Singleton
 class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor with SchemeConfiguration {
 
   implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
-
-  final val apr6th2019: LocalDate = LocalDate.of(2019, 4, 6)
 
   private[this] val normalRoutes: Page => UserAnswers => Call = {
     case ClaimPeriodStartPage =>
@@ -125,7 +123,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     userAnswer =>
       userAnswer.getV(PartTimeQuestionPage) match {
         case Valid(PartTimeYes) => routes.PartTimePeriodsController.onPageLoad()
-        case Valid(PartTimeNo)  => skipNicAndPensionAfterJuly(userAnswer)
+        case Valid(PartTimeNo)  => skipNicAndPensionFromAug2020(userAnswer)
         case _                  => routes.PartTimePeriodsController.onPageLoad()
     }
 
@@ -181,16 +179,16 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   private[this] val partTimeHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     userAnswers.getV(PartTimePeriodsPage) match {
       case Valid(periods) if periods.isDefinedAt(previousIdx) => routes.PartTimeNormalHoursController.onPageLoad(previousIdx + 1)
-      case Valid(_)                                           => skipNicAndPensionAfterJuly(userAnswers)
+      case Valid(_)                                           => skipNicAndPensionFromAug2020(userAnswers)
       case _                                                  => routes.PartTimePeriodsController.onPageLoad()
     }
   }
 
-  private def skipNicAndPensionAfterJuly(userAnswers: UserAnswers): Call =
+  private def skipNicAndPensionFromAug2020(userAnswers: UserAnswers): Call =
     userAnswers.getV(ClaimPeriodStartPage) match {
-      case Valid(date) if date.getMonthValue > 7 => routes.ConfirmationController.onPageLoad()
-      case Valid(_)                              => routes.NicCategoryController.onPageLoad()
-      case _                                     => routes.ClaimPeriodStartController.onPageLoad()
+      case Valid(date) if date.isEqualOrAfter(aug1st2020) => routes.ConfirmationController.onPageLoad()
+      case Valid(_)                                       => routes.NicCategoryController.onPageLoad()
+      case _                                              => routes.ClaimPeriodStartController.onPageLoad()
     }
 
   private[this] val partTimeNormalHoursRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
@@ -206,7 +204,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     userAnswers.getV(AdditionalPaymentPeriodsPage) match {
       case Valid(additionalPaymentPeriods) if additionalPaymentPeriods.isDefinedAt(previousIdx) =>
         routes.AdditionalPaymentAmountController.onPageLoad(previousIdx + 1)
-      case Valid(_) => skipNicAndPensionAfterJuly(userAnswers)
+      case Valid(_) => skipNicAndPensionFromAug2020(userAnswers)
       case _        => routes.AdditionalPaymentPeriodsController.onPageLoad()
   }
 
@@ -308,7 +306,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   private[this] def additionalPaymentStatusRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(AdditionalPaymentStatusPage) match {
       case Valid(AdditionalPaymentStatus.YesAdditionalPayments) => routes.AdditionalPaymentPeriodsController.onPageLoad()
-      case Valid(AdditionalPaymentStatus.NoAdditionalPayments)  => skipNicAndPensionAfterJuly(userAnswers)
+      case Valid(AdditionalPaymentStatus.NoAdditionalPayments)  => skipNicAndPensionFromAug2020(userAnswers)
       case _                                                    => routes.AdditionalPaymentStatusController.onPageLoad()
     }
   }
