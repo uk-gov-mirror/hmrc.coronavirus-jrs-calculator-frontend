@@ -24,6 +24,7 @@ import javax.inject.Inject
 import models.Period
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
+import utils.LocalDateHelpers._
 
 class FurloughEndDateFormProvider @Inject()() extends Mappings with SchemeConfiguration {
 
@@ -50,5 +51,5 @@ class FurloughEndDateFormProvider @Inject()() extends Mappings with SchemeConfig
     furloughEnd.isBefore(furloughStart)
 
   private def isPhaseTwo(claimPeriod: Period): Boolean =
-    claimPeriod.start.getMonthValue >= phaseTwoStartDate.getMonthValue
+    claimPeriod.start.isEqualOrAfter(phaseTwoStartDate)
 }
