@@ -99,7 +99,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
     case ClaimPeriodQuestionPage =>
       claimPeriodQuestionRoutes
-    case EmployeeStartDatePage => employeeStartDateRoutes
+    case EmployeeStartDatePage     => employeeStartDateRoutes
+    case EmployeeRTISubmissionPage => employeeRTISubmissionRoutes
     case PayPeriodQuestionPage =>
       payPeriodQuestionRoutes
     case PartTimeQuestionPage => partTimeQuestionRoute
@@ -252,11 +253,36 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   }
 
   private[this] def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
+    val payDateRoutes = handlePayDateRoutes(userAnswers)
+
+    userAnswers.getV(ClaimPeriodStartPage) match {
+      case Valid(claimPeriodStart) if claimPeriodStart.isEqualOrAfter(nov1st2020) =>
+        userAnswers.getV(EmployeeStartDatePage) match {
+          case Valid(empStartDate) if empStartDate.isBefore(feb1st2019) => payDateRoutes
+          case Valid(empStartDate)
+              if empStartDate.isEqualOrAfter(feb1st2019) && (empStartDate.isBefore(feb1st2020) || empStartDate.isAfter(mar19th2020)) =>
+            payDateRoutes
+          case Valid(empStartDate) if empStartDate.isEqualOrAfter(feb1st2020) && empStartDate.isEqualOrBefore(mar19th2020) =>
+            routes.EmployeeRTISubmissionController.onPageLoad()
+          case Invalid(e) => routes.EmployeeStartDateController.onPageLoad()
+        }
+
+      case Valid(_) => payDateRoutes
+
+      case Invalid(e) => routes.ClaimPeriodStartController.onPageLoad()
+    }
+  }
+
+  private[this] val handlePayDateRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getList(PayDatePage).isEmpty, userAnswers.getV(LastPayDatePage)) match {
       case (true, _)           => routes.PayDateController.onPageLoad(1)
       case (false, Invalid(_)) => requireLastPayDateRoutes(userAnswers)
       case _                   => lastPayDateRoutes(userAnswers)
     }
+  }
+
+  private[this] def employeeRTISubmissionRoutes: UserAnswers => Call = { userAnswers =>
+    handlePayDateRoutes(userAnswers)
   }
 
   private[this] def payMethodRoutes: UserAnswers => Call = { userAnswers =>

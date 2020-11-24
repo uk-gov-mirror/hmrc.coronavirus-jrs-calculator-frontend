@@ -412,19 +412,29 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           EmployeeStartDatePage,
           emptyUserAnswers
             .withEmployeeStartDate("2019,8,1")
+            .withClaimPeriodStart("2020,11,1")
         ) mustBe routes.PayDateController.onPageLoad(1)
+
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          emptyUserAnswers
+            .withEmployeeStartDate("2020,2,3")
+            .withClaimPeriodStart("2020,11,1")
+        ) mustBe routes.EmployeeRTISubmissionController.onPageLoad()
 
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
             .withEmployeeStartDate("2019,8,1")
             .withPayDate(List("2020,4,1", "2020,4,30"))
+            .withClaimPeriodStart("2020,11,1")
         ) mustBe routes.LastPayDateController.onPageLoad()
 
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
             .withPayMethod()
+            .withClaimPeriodStart("2020,11,1")
             .withEmployeeStartDate("2019, 8, 1")
             .withPayDate(List("2020,3,1", "2020,3,7"))
             .withLastPayDate("2020,3,7")
@@ -435,6 +445,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           emptyUserAnswers
             .withPayMethod(PayMethod.Variable)
             .withEmployeeStartedAfter1Feb2019()
+            .withClaimPeriodStart("2020,11,1")
             .withEmployeeStartDate("2019, 8, 1")
             .withPayDate(List("2020,3,1", "2020,3,7"))
             .withLastPayDate("2020,3,7")
@@ -445,10 +456,23 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           emptyUserAnswers
             .withPayMethod(PayMethod.Variable)
             .withEmployeeStartedAfter1Feb2019()
+            .withClaimPeriodStart("2020,11,1")
             .withEmployeeStartDate("2019, 3, 30")
             .withPayDate(List("2020,3,1", "2020,3,7"))
             .withLastPayDate("2020,3,7")
         ) mustBe routes.LastYearPayController.onPageLoad(1)
+      }
+
+      "go to correct page after EmployeeSRTISubmissionPage" in {
+        navigator.nextPage(
+          EmployeeRTISubmissionPage,
+          emptyUserAnswers.withRtiSubmission(EmployeeRTISubmission.Yes)
+        ) mustBe routes.PayDateController.onPageLoad(1)
+
+        navigator.nextPage(
+          EmployeeRTISubmissionPage,
+          emptyUserAnswers.withRtiSubmission(EmployeeRTISubmission.No)
+        ) mustBe routes.PayDateController.onPageLoad(1)
       }
 
       "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {

@@ -23,6 +23,11 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbitrary
 trait ModelGenerators {
 
+  implicit lazy val arbitraryEmployeeRTISubmission: Arbitrary[EmployeeRTISubmission] =
+    Arbitrary {
+      Gen.oneOf(EmployeeRTISubmission.values.toSeq)
+    }
+
   implicit lazy val arbitraryRegularLengthEmployed: Arbitrary[RegularLengthEmployed] =
     Arbitrary {
       Gen.oneOf(RegularLengthEmployed.values)

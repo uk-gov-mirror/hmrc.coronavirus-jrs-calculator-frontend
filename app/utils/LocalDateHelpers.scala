@@ -30,6 +30,11 @@ trait LocalDateHelpers {
 
 object LocalDateHelpers extends LocalDateHelpers {
 
+  val feb1st2019 = LocalDate.of(2019, 2, 1)
+  val feb1st2020 = LocalDate.of(2020, 2, 1)
+
+  val mar19th2020 = LocalDate.of(2020, 3, 19)
+
   val apr6th2019 = LocalDate.of(2019, 4, 6)
   val mar20th2020 = LocalDate.of(2020, 3, 20)
   val apr5th2020 = LocalDate.of(2020, 4, 5)

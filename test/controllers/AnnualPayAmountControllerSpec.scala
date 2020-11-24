@@ -23,8 +23,8 @@ import controllers.actions.DataRetrievalActionImpl
 import forms.AnnualPayAmountFormProvider
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.requests.DataRequest
-import models.{AnnualPayAmount, UserAnswers}
-import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
+import models.{AnnualPayAmount, EmployeeRTISubmission, UserAnswers}
+import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.CSRFTokenHelper._
@@ -106,6 +106,33 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
       status(result) mustEqual OK
       contentAsString(result) mustEqual
         view(form, "from", Seq("6 April 2019", "31 March 2020"))(dataRequest, messages).toString
+    }
+
+    "return OK and the correct view for a GET if the EmployeeRTISubmission is No and EmployeeStartDate is inside 1/2/20 - 19/3/20" in {
+      val updatedAnswers = userAnswers
+        .set(ClaimPeriodStartPage, LocalDate.of(2020, 11, 1))
+        .success
+        .value
+        .set(FurloughStartDatePage, LocalDate.of(2020, 11, 1))
+        .success
+        .value
+        .set(EmployeeStartedPage, OnOrBefore1Feb2019)
+        .success
+        .value
+        .set(EmployeeStartDatePage, LocalDate.of(2020, 2, 3))
+        .success
+        .value
+        .set(EmployeeRTISubmissionPage, EmployeeRTISubmission.No)
+        .success
+        .value
+
+      val dataRequest = DataRequest(getRequest, updatedAnswers.id, updatedAnswers)
+
+      val result = controller(Some(updatedAnswers)).onPageLoad()(getRequest)
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form, "from", Seq("6 April 2020", "31 October 2020"))(dataRequest, messages).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {

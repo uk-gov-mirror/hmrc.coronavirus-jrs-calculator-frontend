@@ -865,3 +865,9 @@ regularLengthEmployed.hint = Nodwch ‘Iawn’ os gwnaethoch daliad o enillion i
 regularLengthEmployed.yes = Iawn
 regularLengthEmployed.no = Na
 regularLengthEmployed.error.required = Dewiswch un o’r opsiynau isod
+
+employeeRTISubmission.title = Was an RTI submission made for this employee on or before 19 March?
+employeeRTISubmission.heading = Was an RTI submission made for this employee on or before 19 March?
+employeeRTISubmission.yes = Yes
+employeeRTISubmission.no = No
+employeeRTISubmission.error.required = Select one of the options below

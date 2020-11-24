@@ -24,10 +24,10 @@ import controllers.actions._
 import forms.AnnualPayAmountFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.{AnnualPayAmount, EmployeeStarted, UserAnswers}
+import models.{AnnualPayAmount, EmployeeRTISubmission, EmployeeStarted, UserAnswers}
 import models.EmployeeStarted._
 import navigation.Navigator
-import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
+import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -97,19 +97,26 @@ class AnnualPayAmountController @Inject()(
     val isExt: Boolean = claimStart.isEqualOrAfter(extensionStartDate)
 
     val employeeStartDate = userAnswers.getV(EmployeeStartDatePage)
+    val isRTISubmissionRequired = rtiSubmissionRequired(userAnswers)
+    val rtiSubmission = userAnswers.getV(EmployeeRTISubmissionPage)
 
     if (isExt) {
-      (employeeStarted, employeeStartDate) match {
-        case (OnOrBefore1Feb2019, _) =>
-          ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-        case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2019) =>
-          ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-        case (After1Feb2019, Valid(esd)) if esd.isEqualOrAfter(apr6th2019) && esd.isBefore(mar20th2020) =>
-          ("since", Seq(dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-        case (After1Feb2019, Valid(esd)) if esd.isAfter(apr5th2020) =>
-          ("since", Seq(dateToString(furloughStart.minusDays(1))))
-        case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2020) =>
-          ("from", Seq(dateToString(apr6th2020), dateToString(furloughStart.minusDays(1))))
+
+      if (isRTISubmissionRequired && rtiSubmission.exists(_ == EmployeeRTISubmission.No)) {
+        ("from", Seq(dateToString(apr6th2020), dateToString(furloughStart.minusDays(1))))
+      } else {
+        (employeeStarted, employeeStartDate) match {
+          case (OnOrBefore1Feb2019, _) =>
+            ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+          case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2019) =>
+            ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+          case (After1Feb2019, Valid(esd)) if esd.isEqualOrAfter(apr6th2019) && esd.isBefore(mar20th2020) =>
+            ("since", Seq(dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+          case (After1Feb2019, Valid(esd)) if esd.isAfter(apr5th2020) =>
+            ("since", Seq(dateToString(furloughStart.minusDays(1))))
+          case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2020) =>
+            ("from", Seq(dateToString(apr6th2020), dateToString(furloughStart.minusDays(1))))
+        }
       }
     } else {
       (employeeStarted, employeeStartDate) match {
@@ -122,4 +129,15 @@ class AnnualPayAmountController @Inject()(
       }
     }
   }
+
+  private def rtiSubmissionRequired(userAnswers: UserAnswers) =
+    (userAnswers.getV(ClaimPeriodStartPage), userAnswers.getV(EmployeeStartDatePage)) match {
+      case (Valid(claimPeriodStart), Valid(empStartDate))
+          if (claimPeriodStart.isEqualOrAfter(nov1st2020) && empStartDate.isEqualOrAfter(feb1st2020) && empStartDate.isEqualOrBefore(
+            mar19th2020)) =>
+        true
+
+      case _ => false
+    }
+
 }

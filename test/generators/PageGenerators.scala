@@ -21,6 +21,9 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryEmployeeRTISubmissionPage: Arbitrary[EmployeeRTISubmissionPage.type] =
+    Arbitrary(EmployeeRTISubmissionPage)
+
   implicit lazy val arbitraryRegularLengthEmployedPage: Arbitrary[RegularLengthEmployedPage.type] =
     Arbitrary(RegularLengthEmployedPage)
 

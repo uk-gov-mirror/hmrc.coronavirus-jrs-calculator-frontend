@@ -852,3 +852,9 @@ regularLengthEmployed.hint = Enter yes if you made a payment of earnings to them
 regularLengthEmployed.yes = Yes
 regularLengthEmployed.no = No
 regularLengthEmployed.error.required = Select one of the options below
+
+employeeRTISubmission.title = Was an RTI submission made for this employee on or before 19 March?
+employeeRTISubmission.heading = Was an RTI submission made for this employee on or before 19 March?
+employeeRTISubmission.yes = Yes
+employeeRTISubmission.no = No
+employeeRTISubmission.error.required = Select one of the options below

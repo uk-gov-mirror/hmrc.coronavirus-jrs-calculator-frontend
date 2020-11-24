@@ -132,3 +132,6 @@ POST        /fast-journey-reset                              controllers.ResetCa
 
 GET         /regular-length-employed                         controllers.RegularLengthEmployedController.onPageLoad()
 POST        /regular-length-employed                         controllers.RegularLengthEmployedController.onSubmit()
+
+GET         /employee-rti-submission                         controllers.EmployeeRTISubmissionController.onPageLoad()
+POST        /employee-rti-submission                         controllers.EmployeeRTISubmissionController.onSubmit()

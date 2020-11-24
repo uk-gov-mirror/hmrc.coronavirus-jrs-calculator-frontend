@@ -83,6 +83,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withAnnualPayAmount(gross: BigDecimal): UserAnswers =
       userAnswers.setValue(AnnualPayAmountPage, AnnualPayAmount(gross))
 
+    def withRtiSubmission(value: EmployeeRTISubmission): UserAnswers =
+      userAnswers.setValue(EmployeeRTISubmissionPage, value)
+
     def withEmployeeStartedOnOrBefore1Feb2019(): UserAnswers =
       userAnswers.setValue(EmployeeStartedPage, OnOrBefore1Feb2019)
 
