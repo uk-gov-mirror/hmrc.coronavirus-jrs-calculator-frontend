@@ -866,8 +866,8 @@ regularLengthEmployed.yes = Iawn
 regularLengthEmployed.no = Na
 regularLengthEmployed.error.required = Dewiswch un o’r opsiynau isod
 
-employeeRTISubmission.title = Was an RTI submission made for this employee on or before 19 March?
-employeeRTISubmission.heading = Was an RTI submission made for this employee on or before 19 March?
-employeeRTISubmission.yes = Yes
-employeeRTISubmission.no = No
-employeeRTISubmission.error.required = Select one of the options below
+employeeRTISubmission.title = A wnaed cyflwyniad RTI ar gyfer y cyflogai hwn ar neu cyn 19 Mawrth?
+employeeRTISubmission.heading = A wnaed cyflwyniad RTI ar gyfer y cyflogai hwn ar neu cyn 19 Mawrth?
+employeeRTISubmission.yes = Iawn
+employeeRTISubmission.no = Na
+employeeRTISubmission.error.required = Dewiswch un o’r opsiynau isod
