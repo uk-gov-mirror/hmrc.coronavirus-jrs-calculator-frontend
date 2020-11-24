@@ -173,19 +173,19 @@ payFrequency.error.required = Dewiswch un o’r opsiynau isod
 
 rootPage.title = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 rootPage.heading = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
-rootPage.p1 = The Job Retention Scheme will remain open until 31 March 2021. For claim periods running until 31 January 2021, employees will receive 80% of their usual salary for hours not worked.
+rootPage.p1 = Bydd y Cynllun Cadw Swyddi yn aros ar agor tan 31 Mawrth 2021. Ar gyfer cyfnodau hawlio yn rhedeg hyd at 31 Ionawr 2021, bydd cyflogeion yn cael 80% o’u cyflog arferol am yr oriau na chânt eu gweithio.
 rootPage.p2 = Defnyddiwch y gyfrifiannell hon i gyfrifo’r ffigurau sydd eu hangen arnoch pan fyddwch yn llenwi hawliad drwy’r cynllun.
 rootPage.p3 = Mae hefyd yn dadansoddi’r cyfrifiadau ar gyfer pob cyfnod cyflog ar gyfer eich cofnodion. Mae’r ffigurau ar gyfer un cyflogai, ar gyfer y cyfnod hawlio a nodir gennych. Defnyddiwch y gyfrifiannell eto ar gyfer unrhyw gyflogeion eraill rydych yn hawlio ar eu cyfer ac adiwch y canlyniadau at ei gilydd.
 
 rootPage.h3.who.can.use.heading = Gallwch ddefnyddio’r gyfrifiannell hon i hawlio am y canlynol:
-rootPage.h3.who.can.use.l1 = employees who are fully furloughed and therefore not working any hours
+rootPage.h3.who.can.use.l1 = cyflogeion sydd ar ffyrlo llawn ac felly sydd heb weithio unrhyw oriau
 rootPage.h3.who.can.use.l2 = cyflogeion a ddaeth yn ôl i’r gwaith am rai o’u horiau arferol o 1 Gorffennaf ymlaen
 rootPage.h3.who.can.use.l3 = y mwyafrif o gyflogeion sy’n cael eu talu’n wythnosol, bob pythefnos, bob pedair wythnos neu’n fisol mewn cyfnodau cyflog sefydlog
 rootPage.h3.who.can.use.l4 = cyflogeion sydd wedi dychwelyd o absenoldeb statudol, megis absenoldeb mamolaeth, o 1 Awst ymlaen
 
 rootPage.h3.who.can.not.use.heading = Ni ellir defnyddio’r gyfrifiannell ar gyfer cyflogeion os yw’r canlynol yn wir:
 rootPage.h3.who.can.not.use.l1 = gwnaethant ddechrau cyfnod rhybudd neu roedd yn ofynnol iddynt ddychwelyd i’r gwaith yn ystod cyfnod rhybudd i weithio yn yr un cyfnod hawlio, ar neu ar ôl 1 Rhagfyr 2020
-rootPage.h3.who.can.not.use.l2 = have an annual pay period
+rootPage.h3.who.can.not.use.l2 = mae ganddynt gyfnod cyflog blynyddol
 rootPage.h3.who.can.not.use.l3 = maent wedi’u trosglwyddo o dan reoliadau Trosglwyddo Ymgymeriadau Diogelu Cyflogaeth (TUPE)
 rootPage.h3.who.can.not.use.l4 = heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
 rootPage.h3.who.can.not.use.l5 = wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
