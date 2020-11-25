@@ -192,8 +192,8 @@ rootPage.h3.who.can.not.use.l5 = returned from statutory leave such as maternity
 rootPage.h3.who.can.not.use.l6 = receive employer pension contributions outside of an auto-enrolment pension scheme
 rootPage.h3.who.can.not.use.l7 = ended furlough then began again during the same claim period
 rootPage.h3.who.can.not.use.l8 = were variably paid, and have been on more than one period of furlough where any part of any of the periods of furlough was in the 2019/20 tax year
-rootPage.h3.who.can.not.use.l9 = were employed before 6 April 2020 and were not eligible for CJRS1 because of the Real Time Information condition
-rootPage.h3.who.can.not.use.l10 = had a start date that was part way through the corresponding pay period in the previous year
+rootPage.h3.who.can.not.use.l9 = have variable pay, started employment before 6 April 2020 and were not on their employer’s payroll on or before 19 March 2020
+rootPage.h3.who.can.not.use.l10 = started employment with their employer during a calendar period in the 2019-20 tax year which corresponds with part or all of the period being claimed for
 
 rootPage.p4 = In these cases, work out what you can claim manually using the {0} or seek professional advice.
 rootPage.p4.link = calculation guidance
