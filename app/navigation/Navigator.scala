@@ -60,6 +60,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
         routes.PayMethodController.onPageLoad()
     case PayMethodPage =>
       payMethodRoutes
+    case FurloughInLastTaxYearPage =>
+      furloughInLastTaxYearRoutes
     case RegularLengthEmployedPage =>
       regularLengthEmployedRoutes
     case PayPeriodsListPage =>
@@ -291,8 +293,22 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
         routes.RegularLengthEmployedController.onPageLoad()
       case (Valid(Regular), Valid(claimStartDate), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
       case (Valid(Regular), Valid(claimStartDate), _)                      => routes.RegularPayAmountController.onPageLoad()
-      case (Valid(Variable), _, _)                                         => routes.VariableLengthEmployedController.onPageLoad()
-      case (Invalid(_), _, _)                                              => routes.PayMethodController.onPageLoad()
+      case (Valid(Variable), Valid(claimStartDate), _) => {
+        if (claimStartDate.isBefore(LocalDate.of(2020, 11, 1))) {
+          routes.VariableLengthEmployedController.onPageLoad()
+        } else {
+          routes.FurloughInLastTaxYearController.onPageLoad()
+        }
+      }
+      case (Invalid(_), _, _) => routes.PayMethodController.onPageLoad()
+    }
+  }
+
+  private[this] def furloughInLastTaxYearRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.getV(FurloughInLastTaxYearPage) match {
+      case Valid(true)  => routes.CalculationUnsupportedController.multipleFurlough()
+      case Valid(false) => routes.VariableLengthEmployedController.onPageLoad()
+      case Invalid(_)   => routes.FurloughInLastTaxYearController.onPageLoad()
     }
   }
 

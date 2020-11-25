@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package pages.info
+package pages
 
-import pages.Page
+import pages.behaviours.PageBehaviours
 
-trait InfoPage extends Page
+class FurloughInLastTaxYearPageSpec extends PageBehaviours {
 
-case object AccessibilityStatementPage extends InfoPage
+  "FurloughInLastTaxYearPage" must {
 
-case object ComingSoonViewPage extends InfoPage
+    beRetrievable[Boolean](FurloughInLastTaxYearPage)
 
-case object CalculationUnsupportedPage extends InfoPage
+    beSettable[Boolean](FurloughInLastTaxYearPage)
 
-case object ConfirmationPage extends InfoPage
-
-case object ErrorPage extends InfoPage
-
-case object RootPage extends InfoPage
-
-case object SessionExpiredPage extends InfoPage
-
-case object UnauthorisedPage extends InfoPage
-
-case object IndexPage extends InfoPage
+    beRemovable[Boolean](FurloughInLastTaxYearPage)
+  }
+}

@@ -74,12 +74,46 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
             .withClaimPeriodStart("2020-10-01")
             .withPayDate(List())) mustBe routes.PayDateController.onPageLoad(1)
 
+        navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
+      }
+
+      "go to furlough in last tax year page after PayMethodPage for claims starting 01/11/2020 onward with variable pay" in {
         navigator.nextPage(
           PayMethodPage,
-          emptyUserAnswers.withPayMethod(PayMethod.Variable)
-        ) mustBe routes.VariableLengthEmployedController.onPageLoad()
+          emptyUserAnswers
+            .withPayMethod(PayMethod.Variable)
+            .withClaimPeriodStart("2020-11-01")
+        ) mustBe routes.FurloughInLastTaxYearController.onPageLoad()
+      }
 
-        navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
+      "go to variable length employed page after PayMethodPage for claims starting before 01/11/2020 with variable pay" in {
+        navigator.nextPage(
+          PayMethodPage,
+          emptyUserAnswers
+            .withPayMethod(PayMethod.Variable)
+            .withClaimPeriodStart("2020-10-31")
+        ) mustBe routes.VariableLengthEmployedController.onPageLoad()
+      }
+
+      "go to calculation unsupported from furlough in last tax year when answered true" in {
+        navigator.nextPage(
+          FurloughInLastTaxYearPage,
+          emptyUserAnswers.withFurloughInLastTaxYear(true)
+        ) mustBe routes.CalculationUnsupportedController.multipleFurlough()
+      }
+
+      "go to variable length employed from furlough in last tax year when answered false" in {
+        navigator.nextPage(
+          FurloughInLastTaxYearPage,
+          emptyUserAnswers.withFurloughInLastTaxYear(false)
+        ) mustBe routes.VariableLengthEmployedController.onPageLoad()
+      }
+
+      "repeat furlough in last tax year when answer hasn't been stored" in {
+        navigator.nextPage(
+          FurloughInLastTaxYearPage,
+          emptyUserAnswers
+        ) mustBe routes.FurloughInLastTaxYearController.onPageLoad()
       }
 
       "go to regular-pay-amount page after PayMethodPage if regular and PayDates were persisted in fast journey" in {
@@ -97,11 +131,6 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
             .withPayMethod(Regular)
             .withClaimPeriodStart("2020-11-01")
             .withPayDate(List())) mustBe routes.RegularLengthEmployedController.onPageLoad()
-
-        navigator.nextPage(
-          PayMethodPage,
-          emptyUserAnswers.withPayMethod(PayMethod.Variable)
-        ) mustBe routes.VariableLengthEmployedController.onPageLoad()
 
         navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }

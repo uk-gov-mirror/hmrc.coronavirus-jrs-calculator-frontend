@@ -1,35 +1,33 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration EmployeeRTISubmission"
+echo "Applying migration FurloughInLastTaxYear"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /employeeRTISubmission                        controllers.EmployeeRTISubmissionController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /employeeRTISubmission                        controllers.EmployeeRTISubmissionController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /furloughInLastTaxYear                        controllers.FurloughInLastTaxYearController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /furloughInLastTaxYear                        controllers.FurloughInLastTaxYearController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeEmployeeRTISubmission                  controllers.EmployeeRTISubmissionController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeEmployeeRTISubmission                  controllers.EmployeeRTISubmissionController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeFurloughInLastTaxYear                  controllers.FurloughInLastTaxYearController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeFurloughInLastTaxYear                  controllers.FurloughInLastTaxYearController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "employeeRTISubmission.title = Was an RTI submission made for this employee on or before 19 March?" >> ../conf/messages.en
-echo "employeeRTISubmission.heading = Was an RTI submission made for this employee on or before 19 March?" >> ../conf/messages.en
-echo "employeeRTISubmission.yes = Yes" >> ../conf/messages.en
-echo "employeeRTISubmission.no = No" >> ../conf/messages.en
-echo "employeeRTISubmission.checkYourAnswersLabel = Was an RTI submission made for this employee on or before 19 March?" >> ../conf/messages.en
-echo "employeeRTISubmission.error.required = Select employeeRTISubmission" >> ../conf/messages.en
+echo "furloughInLastTaxYear.title = furloughInLastTaxYear" >> ../conf/messages.en
+echo "furloughInLastTaxYear.heading = furloughInLastTaxYear" >> ../conf/messages.en
+echo "furloughInLastTaxYear.checkYourAnswersLabel = furloughInLastTaxYear" >> ../conf/messages.en
+echo "furloughInLastTaxYear.error.required = Select yes if furloughInLastTaxYear" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryEmployeeRTISubmissionUserAnswersEntry: Arbitrary[(EmployeeRTISubmissionPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryFurloughInLastTaxYearUserAnswersEntry: Arbitrary[(FurloughInLastTaxYearPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[EmployeeRTISubmissionPage.type]";\
-    print "        value <- arbitrary[EmployeeRTISubmission].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[FurloughInLastTaxYearPage.type]";\
+    print "        value <- arbitrary[Boolean].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -38,24 +36,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryEmployeeRTISubmissionPage: Arbitrary[EmployeeRTISubmissionPage.type] =";\
-    print "    Arbitrary(EmployeeRTISubmissionPage)";\
+    print "  implicit lazy val arbitraryFurloughInLastTaxYearPage: Arbitrary[FurloughInLastTaxYearPage.type] =";\
+    print "    Arbitrary(FurloughInLastTaxYearPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
-
-echo "Adding to ModelGenerators"
-awk '/trait ModelGenerators/ {\
-    print;\
-    print "";\
-    print "  implicit lazy val arbitraryEmployeeRTISubmission: Arbitrary[EmployeeRTISubmission] =";\
-    print "    Arbitrary {";\
-    print "      Gen.oneOf(EmployeeRTISubmission.values.toSeq)";\
-    print "    }";\
-    next }1' ../test/generators/ModelGenerators.scala > tmp && mv tmp ../test/generators/ModelGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(EmployeeRTISubmissionPage.type, JsValue)] ::";\
+    print "    arbitrary[(FurloughInLastTaxYearPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration EmployeeRTISubmission completed"
+echo "Migration FurloughInLastTaxYear completed"

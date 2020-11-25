@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-package pages.info
+package pages
 
-import pages.Page
+import play.api.libs.json.JsPath
 
-trait InfoPage extends Page
+case object FurloughInLastTaxYearPage extends QuestionPage[Boolean] {
 
-case object AccessibilityStatementPage extends InfoPage
+  override def path: JsPath = JsPath \ toString
 
-case object ComingSoonViewPage extends InfoPage
-
-case object CalculationUnsupportedPage extends InfoPage
-
-case object ConfirmationPage extends InfoPage
-
-case object ErrorPage extends InfoPage
-
-case object RootPage extends InfoPage
-
-case object SessionExpiredPage extends InfoPage
-
-case object UnauthorisedPage extends InfoPage
-
-case object IndexPage extends InfoPage
+  override def toString: String = "furloughInLastTaxYear"
+}

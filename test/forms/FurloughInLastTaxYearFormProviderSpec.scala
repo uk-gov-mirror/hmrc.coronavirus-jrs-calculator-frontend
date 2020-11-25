@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-package pages.info
+package forms
 
-import pages.Page
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-trait InfoPage extends Page
+class FurloughInLastTaxYearFormProviderSpec extends BooleanFieldBehaviours {
 
-case object AccessibilityStatementPage extends InfoPage
+  val requiredKey = "furloughInLastTaxYear.error.required"
+  val invalidKey = "error.boolean"
 
-case object ComingSoonViewPage extends InfoPage
+  val form = new FurloughInLastTaxYearFormProvider()()
 
-case object CalculationUnsupportedPage extends InfoPage
+  ".value" must {
 
-case object ConfirmationPage extends InfoPage
+    val fieldName = "value"
 
-case object ErrorPage extends InfoPage
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
 
-case object RootPage extends InfoPage
-
-case object SessionExpiredPage extends InfoPage
-
-case object UnauthorisedPage extends InfoPage
-
-case object IndexPage extends InfoPage
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+}

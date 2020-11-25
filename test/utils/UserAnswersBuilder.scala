@@ -50,6 +50,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withFurloughEndDate(startDate: String): UserAnswers =
       userAnswers.setValue(FurloughEndDatePage, startDate.toLocalDate)
 
+    def withFurloughInLastTaxYear(answer: Boolean): UserAnswers =
+      userAnswers.setValue(FurloughInLastTaxYearPage, answer)
+
     def withEmployeeStartDate(startDate: String): UserAnswers =
       userAnswers.setValue(EmployeeStartDatePage, startDate.toLocalDate)
 

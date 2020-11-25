@@ -21,6 +21,9 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryFurloughInLastTaxYearPage: Arbitrary[FurloughInLastTaxYearPage.type] =
+    Arbitrary(FurloughInLastTaxYearPage)
+
   implicit lazy val arbitraryEmployeeRTISubmissionPage: Arbitrary[EmployeeRTISubmissionPage.type] =
     Arbitrary(EmployeeRTISubmissionPage)
 

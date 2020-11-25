@@ -858,3 +858,11 @@ employeeRTISubmission.heading = Was an RTI submission made for this employee on 
 employeeRTISubmission.yes = Yes
 employeeRTISubmission.no = No
 employeeRTISubmission.error.required = Select one of the options below
+
+furloughInLastTaxYear.title = Has this employee had any previous periods of furlough which start in the 2019/20 tax year?
+furloughInLastTaxYear.heading = Has this employee had any previous periods of furlough which start in the 2019/20 tax year?
+furloughInLastTaxYear.error.required = Select one of the options below
+
+calculationUnsupported.heading = This calculation cannot be support at the moment
+calculationUnsupported.p1 = You can do this calculation manually. Remember you must still pay employees at least 80% of their wages for the time they are furloughed.
+calculationUnsupported.startAgain = Start a new calculation

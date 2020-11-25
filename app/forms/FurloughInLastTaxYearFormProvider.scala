@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package pages.info
+package forms
 
-import pages.Page
+import javax.inject.Inject
 
-trait InfoPage extends Page
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case object AccessibilityStatementPage extends InfoPage
+class FurloughInLastTaxYearFormProvider @Inject() extends Mappings {
 
-case object ComingSoonViewPage extends InfoPage
-
-case object CalculationUnsupportedPage extends InfoPage
-
-case object ConfirmationPage extends InfoPage
-
-case object ErrorPage extends InfoPage
-
-case object RootPage extends InfoPage
-
-case object SessionExpiredPage extends InfoPage
-
-case object UnauthorisedPage extends InfoPage
-
-case object IndexPage extends InfoPage
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("furloughInLastTaxYear.error.required")
+    )
+}
