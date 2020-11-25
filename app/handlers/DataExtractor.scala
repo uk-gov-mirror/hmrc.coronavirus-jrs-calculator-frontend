@@ -26,6 +26,7 @@ import services.{FurloughPeriodExtractor, PeriodHelper}
 import cats.syntax.apply._
 import cats.syntax.validated._
 import cats.syntax.semigroupk._
+import utils.LocalDateHelpers._
 
 trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
 
@@ -37,9 +38,24 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
       userAnswers.getV(EmployeeStartDatePage) <+> default.validNec[AnswerValidation],
       userAnswers.getV(ClaimPeriodStartPage)
     ).mapN { (furloughStart, employeeStartDate, claimStart) =>
-      endDateOrTaxYearEnd(Period(employeeStartDate, furloughStart.minusDays(1)), claimStart)
+      val isRtiSubmissionRequired = rtiSubmissionRequired(claimStart, employeeStartDate)
+      val rtiSubmission = userAnswers.getV(EmployeeRTISubmissionPage)
+      val empStartDateToConsiderForCalc = if (isRtiSubmissionRequired && rtiSubmission.exists(_ == EmployeeRTISubmission.No)) {
+        apr6th2020
+      } else {
+        employeeStartDate
+      }
+      endDateOrTaxYearEnd(Period(empStartDateToConsiderForCalc, furloughStart.minusDays(1)), claimStart)
     }
   }
+
+  private def rtiSubmissionRequired(claimStart: LocalDate, employeeStartDate: LocalDate) =
+    if (claimStart.isEqualOrAfter(nov1st2020) && employeeStartDate.isEqualOrAfter(feb1st2020) && employeeStartDate.isEqualOrBefore(
+          mar19th2020)) {
+      true
+    } else {
+      false
+    }
 
   def extractNonFurloughV(userAnswers: UserAnswers): AnswerV[NonFurloughPay] = {
     val preFurloughPay = userAnswers.getV(PartialPayBeforeFurloughPage).toOption
