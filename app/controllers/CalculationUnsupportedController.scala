@@ -34,7 +34,11 @@ class CalculationUnsupportedController @Inject()(
   val controllerComponents: MessagesControllerComponents)(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  def multipleFurlough: Action[AnyContent] = (identify andThen getData) { implicit request =>
+  def multipleFurloughUnsupported: Action[AnyContent] = (identify andThen getData) { implicit request =>
+    Ok(calculationUnsupportedView())
+  }
+
+  def startDateWithinLookbackUnsupported: Action[AnyContent] = (identify andThen getData) { implicit request =>
     Ok(calculationUnsupportedView())
   }
 }

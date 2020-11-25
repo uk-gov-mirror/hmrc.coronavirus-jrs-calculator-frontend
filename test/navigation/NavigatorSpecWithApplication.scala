@@ -99,7 +99,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(
           FurloughInLastTaxYearPage,
           emptyUserAnswers.withFurloughInLastTaxYear(true)
-        ) mustBe routes.CalculationUnsupportedController.multipleFurlough()
+        ) mustBe routes.CalculationUnsupportedController.multipleFurloughUnsupported()
       }
 
       "go to variable length employed from furlough in last tax year when answered false" in {
@@ -371,8 +371,27 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and employee started before apr6th2019" in {
         val userAnswers = emptyUserAnswers
           .withPayMethod(Variable)
+          .withPaymentFrequency(PaymentFrequency.Weekly)
+          .withClaimPeriodStart("2020,3,20")
+          .withClaimPeriodEnd("2020,3,26")
+          .withFurloughStartDate("2020,3,20")
+          .withPayDate(List("2020, 3, 19", "2020, 3, 27"))
           .withEmployeeStartedAfter1Feb2019()
           .withEmployeeStartDate("2019,3,4")
+
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
+      }
+
+      "go to LastYearPayPage after LastPayDatePage if the pay-method is Variable and employee started on or after Apr6th" in {
+        val userAnswers = emptyUserAnswers
+          .withPayMethod(Variable)
+          .withEmployeeStartedAfter1Feb2019()
+          .withEmployeeStartDate("2019,10,26") // Just outside of overlap
+          .withPaymentFrequency(PaymentFrequency.Weekly)
+          .withClaimPeriodStart("2020,11,1")
+          .withClaimPeriodEnd("2020,11,7")
+          .withFurloughStartDate("2020,11,1")
+          .withPayDate(List("2020, 10, 31", "2020, 11, 7"))
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
       }
@@ -382,8 +401,27 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .withPayMethod(Variable)
           .withEmployeeStartedAfter1Feb2019()
           .withEmployeeStartDate("2019,5,10")
+          .withPaymentFrequency(PaymentFrequency.Weekly)
+          .withClaimPeriodStart("2020,6,20")
+          .withClaimPeriodEnd("2020,6,26")
+          .withFurloughStartDate("2020,6,20")
+          .withPayDate(List("2020, 6, 19", "2020, 6, 27"))
 
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.AnnualPayAmountController.onPageLoad()
+      }
+
+      "go to calculation unsupported after LastPayDatePage if the pay-method is Variable and employee start overlaps lookback" in {
+        val userAnswers = emptyUserAnswers
+          .withPayMethod(Variable)
+          .withEmployeeStartedAfter1Feb2019()
+          .withEmployeeStartDate("2019,10,27")
+          .withPaymentFrequency(PaymentFrequency.Weekly)
+          .withClaimPeriodStart("2020,11,1")
+          .withClaimPeriodEnd("2020,11,7")
+          .withFurloughStartDate("2020,11,1")
+          .withPayDate(List("2020, 10, 31", "2020, 11, 7"))
+
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.CalculationUnsupportedController.startDateWithinLookbackUnsupported()
       }
 
       "go to payMethodPage after LastPayDatePage if the pay-method missing in UserAnswers" in {
@@ -473,22 +511,28 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           EmployeeStartDatePage,
           emptyUserAnswers
             .withPayMethod(PayMethod.Variable)
+            .withPaymentFrequency(PaymentFrequency.Weekly)
             .withEmployeeStartedAfter1Feb2019()
             .withClaimPeriodStart("2020,11,1")
+            .withClaimPeriodEnd("2020,11,8")
+            .withFurloughStartDate("2020,11,1")
             .withEmployeeStartDate("2019, 8, 1")
-            .withPayDate(List("2020,3,1", "2020,3,7"))
-            .withLastPayDate("2020,3,7")
-        ) mustBe routes.AnnualPayAmountController.onPageLoad()
+            .withPayDate(List("2020,10,31", "2020,11,7"))
+            .withLastPayDate("2020,11,7")
+        ) mustBe routes.LastYearPayController.onPageLoad(1)
 
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
             .withPayMethod(PayMethod.Variable)
+            .withPaymentFrequency(PaymentFrequency.Weekly)
             .withEmployeeStartedAfter1Feb2019()
             .withClaimPeriodStart("2020,11,1")
+            .withClaimPeriodEnd("2020,11,8")
             .withEmployeeStartDate("2019, 3, 30")
-            .withPayDate(List("2020,3,1", "2020,3,7"))
-            .withLastPayDate("2020,3,7")
+            .withPayDate(List("2020,10,31", "2020,11,7"))
+            .withLastPayDate("2020,11,7")
+            .withFurloughStartDate("2020,11,1")
         ) mustBe routes.LastYearPayController.onPageLoad(1)
       }
 

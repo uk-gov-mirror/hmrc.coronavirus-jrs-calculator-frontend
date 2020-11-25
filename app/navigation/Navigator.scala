@@ -23,6 +23,7 @@ import config.SchemeConfiguration
 import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.Singleton
+import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
 import models.PayMethod.{Regular, Variable}
 import models.{UserAnswers, _}
@@ -151,6 +152,22 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       }
     }).getOrElse(routes.ErrorController.internalServerError())
   }
+
+  private[this] def hasStartDateWithinFirstLookbackPeriod(userAnswers: UserAnswers): Boolean =
+    (getLastYearPeriods(userAnswers), userAnswers.getV(EmployeeStartDatePage), userAnswers.getV(EmployeeStartedPage)) match {
+      case (_, _, Valid(OnOrBefore1Feb2019)) => false
+      case (Valid(periods), Valid(startDate), Valid(After1Feb2019)) => {
+        periods.headOption
+          .map(_.start)
+          .map(!startDate.isBefore(_))
+          .getOrElse(throw new RuntimeException("No lookback periods could be determined"))
+      }
+      case (Invalid(e), _, _) =>
+        UserAnswers.logErrors(e)
+        true
+      case (_, _, Valid(After1Feb2019)) =>
+        throw new RuntimeException("Could not determine start date for lookback period check")
+    }
 
   private[this] val lastYearPayRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
     getLastYearPeriods(userAnswers).fold(
@@ -306,7 +323,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def furloughInLastTaxYearRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(FurloughInLastTaxYearPage) match {
-      case Valid(true)  => routes.CalculationUnsupportedController.multipleFurlough()
+      case Valid(true)  => routes.CalculationUnsupportedController.multipleFurloughUnsupported()
       case Valid(false) => routes.VariableLengthEmployedController.onPageLoad()
       case Invalid(_)   => routes.FurloughInLastTaxYearController.onPageLoad()
     }
@@ -370,6 +387,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
             routes.LastYearPayController.onPageLoad(1)
           case Valid(EmployeeStarted.After1Feb2019) =>
             userAnswers.getV(EmployeeStartDatePage) match {
+              case Valid(_) if hasStartDateWithinFirstLookbackPeriod(userAnswers) =>
+                routes.CalculationUnsupportedController.startDateWithinLookbackUnsupported()
               case Valid(date) if date.isBefore(dynamicCylbCutoff(userAnswers)) => routes.LastYearPayController.onPageLoad(1)
               case Valid(_)                                                     => routes.AnnualPayAmountController.onPageLoad()
               case Invalid(err) =>

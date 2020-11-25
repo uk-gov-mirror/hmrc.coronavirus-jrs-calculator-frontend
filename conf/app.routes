@@ -139,4 +139,5 @@ POST        /employee-rti-submission                         controllers.Employe
 GET         /furlough-in-last-tax-year                       controllers.FurloughInLastTaxYearController.onPageLoad()
 POST        /furlough-in-last-tax-year                       controllers.FurloughInLastTaxYearController.onSubmit()
 
-GET         /multiple-furlough-unsupported                   controllers.CalculationUnsupportedController.multipleFurlough()
+GET         /multiple-furlough-unsupported                   controllers.CalculationUnsupportedController.multipleFurloughUnsupported()
+GET         /start-date-within-lookback-unsupported          controllers.CalculationUnsupportedController.startDateWithinLookbackUnsupported()

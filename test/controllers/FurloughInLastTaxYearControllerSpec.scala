@@ -108,7 +108,7 @@ class FurloughInLastTaxYearControllerSpec extends SpecBaseControllerSpecs with M
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.CalculationUnsupportedController.multipleFurlough().url
+      redirectLocation(result).value mustEqual routes.CalculationUnsupportedController.multipleFurloughUnsupported().url
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
