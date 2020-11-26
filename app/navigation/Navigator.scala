@@ -387,7 +387,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
             routes.LastYearPayController.onPageLoad(1)
           case Valid(EmployeeStarted.After1Feb2019) =>
             userAnswers.getV(EmployeeStartDatePage) match {
-              case Valid(_) if hasStartDateWithinFirstLookbackPeriod(userAnswers) =>
+              case Valid(date) if date.isBefore(dynamicCylbCutoff(userAnswers)) && hasStartDateWithinFirstLookbackPeriod(userAnswers) =>
                 routes.CalculationUnsupportedController.startDateWithinLookbackUnsupported()
               case Valid(date) if date.isBefore(dynamicCylbCutoff(userAnswers)) => routes.LastYearPayController.onPageLoad(1)
               case Valid(_)                                                     => routes.AnnualPayAmountController.onPageLoad()
