@@ -866,8 +866,9 @@ regularLengthEmployed.yes = Iawn
 regularLengthEmployed.no = Na
 regularLengthEmployed.error.required = Dewiswch un o’r opsiynau isod
 
-employeeRTISubmission.title = A wnaed cyflwyniad RTI ar gyfer y cyflogai hwn ar neu cyn 19 Mawrth?
-employeeRTISubmission.heading = A wnaed cyflwyniad RTI ar gyfer y cyflogai hwn ar neu cyn 19 Mawrth?
+employeeRTISubmission.title = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 19 Mawrth 2020?
+employeeRTISubmission.heading = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 19 Mawrth 2020?
+employeeRTISubmission.hint = Nodwch ‘Iawn’ os gwnaethoch daliad o enillion iddo yn ystod blwyddyn dreth 2019/2020, a rhoddwyd gwybod am hynny i CThEM ar Gyflwyniad Taliadau Llawn (FPS) Gwybodaeth Amser Real (RTI) ar neu cyn 19 Mawrth 2020.
 employeeRTISubmission.yes = Iawn
 employeeRTISubmission.no = Na
 employeeRTISubmission.error.required = Dewiswch un o’r opsiynau isod

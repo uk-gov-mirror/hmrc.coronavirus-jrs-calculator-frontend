@@ -853,8 +853,9 @@ regularLengthEmployed.yes = Yes
 regularLengthEmployed.no = No
 regularLengthEmployed.error.required = Select one of the options below
 
-employeeRTISubmission.title = Was an RTI submission made for this employee on or before 19 March?
-employeeRTISubmission.heading = Was an RTI submission made for this employee on or before 19 March?
+employeeRTISubmission.title = Was this employee on your payroll on or before 19 March 2020?
+employeeRTISubmission.heading = Was this employee on your payroll on or before 19 March 2020?
+employeeRTISubmission.hint = Enter yes if you made a payment of earnings to them in the tax year 2019/2020, which was reported to HMRC on a Real Time Information (RTI) Full Payment Submission (FPS) on or before 19 March 2020.
 employeeRTISubmission.yes = Yes
 employeeRTISubmission.no = No
 employeeRTISubmission.error.required = Select one of the options below

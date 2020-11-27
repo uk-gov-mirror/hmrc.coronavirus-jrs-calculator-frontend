@@ -42,7 +42,8 @@
             legend = messages("employeeRTISubmission.heading"),
             legendAsHeading = false,
             classes = "govuk-visually-hidden",
-            items = EmployeeRTISubmission.options(form)
+            items = EmployeeRTISubmission.options(form),
+            hintKey = Some("employeeRTISubmission.hint")
         )
 
         @button("site.saveAndContinue")
