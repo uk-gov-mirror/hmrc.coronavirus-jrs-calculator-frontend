@@ -20,7 +20,7 @@ import play.api.http.Status._
 import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
 
 
-class IndexControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers {
+class RootPageControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers {
 
   "GET /" when {
 
