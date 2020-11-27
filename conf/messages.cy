@@ -877,5 +877,5 @@ furloughInLastTaxYear.heading = A yw’r cyflogai hwn wedi cael unrhyw gyfnodau 
 furloughInLastTaxYear.error.required = Select one of the options below
 
 calculationUnsupported.heading = Ni ellir cefnogi’r cyfrifiad hwn ar hyn o bryd
-calculationUnsupported.p1 = Gallwch wneud y cyfrifiad hwn â llaw. Cofiwch fod angen i chi barhau i dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo.
+calculationUnsupported.p1 = Gallwch wneud y cyfrifiad hwn â llaw.
 calculationUnsupported.startAgain = Dechrau cyfrifiad newydd
