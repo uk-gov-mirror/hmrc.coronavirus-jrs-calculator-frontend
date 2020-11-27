@@ -410,7 +410,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.AnnualPayAmountController.onPageLoad()
       }
 
-      "go to calculation unsupported after LastPayDatePage if the pay-method is Variable and employee start overlaps lookback" in {
+      "go to last year pay after LastPayDatePage if the pay-method is Variable and employee start overlaps lookback first day" in {
         val userAnswers = emptyUserAnswers
           .withPayMethod(Variable)
           .withEmployeeStartedAfter1Feb2019()
@@ -421,7 +421,51 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .withFurloughStartDate("2020,11,1")
           .withPayDate(List("2020, 10, 31", "2020, 11, 7"))
 
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.LastYearPayController.onPageLoad(1)
+      }
+
+      "go to calculation unsupported after LastPayDatePage if the pay-method is Variable and employee start overlaps lookback after the first day" in {
+        val userAnswers = emptyUserAnswers
+          .withPayMethod(Variable)
+          .withEmployeeStartedAfter1Feb2019()
+          .withEmployeeStartDate("2019,10,28")
+          .withPaymentFrequency(PaymentFrequency.Weekly)
+          .withClaimPeriodStart("2020,11,1")
+          .withClaimPeriodEnd("2020,11,7")
+          .withFurloughStartDate("2020,11,1")
+          .withPayDate(List("2020, 10, 31", "2020, 11, 7"))
+
         navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.CalculationUnsupportedController.startDateWithinLookbackUnsupported()
+      }
+
+      "go to calculation unsupported after LastPayDatePage if the pay-method is Variable and employee start overlaps the second lookback period" in {
+        val userAnswers = emptyUserAnswers
+          .withPayMethod(Variable)
+          .withEmployeeStartedAfter1Feb2019()
+          .withEmployeeStartDate("2019,11,9")
+          .withPaymentFrequency(PaymentFrequency.Weekly)
+          .withClaimPeriodStart("2020,11,1")
+          .withClaimPeriodEnd("2020,11,30")
+          .withFurloughStartDate("2020,11,1")
+          .withFurloughEndDate("2020,11,14")
+          .withPayDate(List("2020, 10, 31", "2020, 11, 7", "2020, 11, 14"))
+
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.CalculationUnsupportedController.startDateWithinLookbackUnsupported()
+      }
+
+      "go to AnnualPayAmountPage after LastPayDatePage if the pay-method is Variable and employee start is after the second lookback period" in {
+        val userAnswers = emptyUserAnswers
+          .withPayMethod(Variable)
+          .withEmployeeStartedAfter1Feb2019()
+          .withEmployeeStartDate("2019,11,10")
+          .withPaymentFrequency(PaymentFrequency.Weekly)
+          .withClaimPeriodStart("2020,11,1")
+          .withClaimPeriodEnd("2020,11,30")
+          .withFurloughStartDate("2020,11,1")
+          .withFurloughEndDate("2020,11,14")
+          .withPayDate(List("2020, 10, 31", "2020, 11, 7", "2020, 11, 14"))
+
+        navigator.nextPage(LastPayDatePage, userAnswers) mustBe routes.AnnualPayAmountController.onPageLoad()
       }
 
       "go to payMethodPage after LastPayDatePage if the pay-method missing in UserAnswers" in {

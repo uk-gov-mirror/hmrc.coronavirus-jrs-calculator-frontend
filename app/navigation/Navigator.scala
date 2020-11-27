@@ -154,19 +154,17 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   }
 
   private[this] def hasStartDateWithinFirstLookbackPeriod(userAnswers: UserAnswers): Boolean =
-    (getLastYearPeriods(userAnswers), userAnswers.getV(EmployeeStartDatePage), userAnswers.getV(EmployeeStartedPage)) match {
-      case (_, _, Valid(OnOrBefore1Feb2019)) => false
-      case (Valid(periods), Valid(startDate), Valid(After1Feb2019)) => {
-        periods.headOption
-          .map(_.start)
-          .map(!startDate.isBefore(_))
-          .getOrElse(throw new RuntimeException("No lookback periods could be determined"))
-      }
-      case (Invalid(e), _, _) =>
-        UserAnswers.logErrors(e)
-        true
-      case (_, _, Valid(After1Feb2019)) =>
-        throw new RuntimeException("Could not determine start date for lookback period check")
+    (userAnswers.getV(EmployeeStartedPage), userAnswers.getV(EmployeeStartDatePage), getLastYearPeriodsForFirstPeriod(userAnswers)) match {
+      case (Valid(OnOrBefore1Feb2019), _, _) => false
+      case (Valid(After1Feb2019), Valid(startDate), Valid(lookbackPeriods)) if startDate.isEqualOrBefore(lookbackPeriods.head.start) =>
+        false
+      case (Valid(After1Feb2019), Valid(startDate), Valid(lookbackPeriods)) =>
+        lookbackPeriods match {
+          case Nil                => throw new RuntimeException("Lookback periods list was empty")
+          case first :: Nil       => startDate.isEqualOrBefore(first.end)
+          case _ :: second :: Nil => startDate.isEqualOrBefore(second.end)
+        }
+      case (_, _, _) => throw new RuntimeException("No lookback periods could be determined")
     }
 
   private[this] val lastYearPayRoutes: (Int, UserAnswers) => Call = { (previousIdx, userAnswers) =>
