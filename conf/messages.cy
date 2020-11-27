@@ -866,8 +866,9 @@ regularLengthEmployed.yes = Iawn
 regularLengthEmployed.no = Na
 regularLengthEmployed.error.required = Dewiswch un o’r opsiynau isod
 
-employeeRTISubmission.title = A wnaed cyflwyniad RTI ar gyfer y cyflogai hwn ar neu cyn 19 Mawrth?
-employeeRTISubmission.heading = A wnaed cyflwyniad RTI ar gyfer y cyflogai hwn ar neu cyn 19 Mawrth?
+employeeRTISubmission.title = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 19 Mawrth 2020?
+employeeRTISubmission.heading = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 19 Mawrth 2020?
+employeeRTISubmission.hint = Nodwch ‘Iawn’ os gwnaethoch daliad o enillion iddo yn ystod blwyddyn dreth 2019/2020, a rhoddwyd gwybod am hynny i CThEM ar Gyflwyniad Taliadau Llawn (FPS) Gwybodaeth Amser Real (RTI) ar neu cyn 19 Mawrth 2020.
 employeeRTISubmission.yes = Iawn
 employeeRTISubmission.no = Na
 employeeRTISubmission.error.required = Dewiswch un o’r opsiynau isod
@@ -877,5 +878,5 @@ furloughInLastTaxYear.heading = A yw’r cyflogai hwn wedi cael unrhyw gyfnodau 
 furloughInLastTaxYear.error.required = Select one of the options below
 
 calculationUnsupported.heading = Ni ellir cefnogi’r cyfrifiad hwn ar hyn o bryd
-calculationUnsupported.p1 = Gallwch wneud y cyfrifiad hwn â llaw. Cofiwch fod angen i chi barhau i dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo.
+calculationUnsupported.p1 = Gallwch wneud y cyfrifiad hwn â llaw.
 calculationUnsupported.startAgain = Dechrau cyfrifiad newydd
