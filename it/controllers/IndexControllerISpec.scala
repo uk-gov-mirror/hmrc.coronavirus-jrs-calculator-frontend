@@ -1,6 +1,3 @@
-import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
-import play.api.http.Status._
-
 /*
  * Copyright 2020 HM Revenue & Customs
  *
@@ -16,6 +13,11 @@ import play.api.http.Status._
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package controllers
+
+import play.api.http.Status._
+import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
 
 
 class IndexControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers {
