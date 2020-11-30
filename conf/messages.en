@@ -432,13 +432,13 @@ employeeStartDate.hint = For example, 28 11 2019
 employeeStartDate.error.min = The employee start date must be on or after {0}
 employeeStartDate.error.max = The employee start date must be before they started furlough or, on or before {0}
 
-annualPayAmount.title.since = What has this employee earned since they started until {0}?
-annualPayAmount.heading.since = What has this employee earned since they started until {0}?
-annualPayAmount.title.from = What did this employee earn from {0} to {1}?
-annualPayAmount.heading.from = What did this employee earn from {0} to {1}?
+annualPayAmount.title.since = What has this employee been paid since they started until {0}?
+annualPayAmount.heading.since = What has this employee been paid since they started until {0}?
+annualPayAmount.title.from = What did this employee get paid from {0} to {1}?
+annualPayAmount.heading.from = What did this employee get paid from {0} to {1}?
 annualPayAmount.error.required = Enter a valid amount
 annualPayAmount.error.invalid = Enter a valid amount
-annualPayAmount.p1 = This is the gross amount they earned.
+annualPayAmount.p1 = This is the gross amount they were paid.
 annualPayAmount.p2 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 
 comingSoon.title = We are unable to do this calculation at the moment
@@ -541,7 +541,7 @@ topUpStatus.error.required = Select ‘Yes’ if you topped up this employee’s
 whatToInclude.summary = What should be included in this amount?
 whatToInclude.include = Include:
 whatToInclude.include.cylb = gross amount the employee earned in this pay period, even if paid in a different pay period
-whatToInclude.include.l1 = gross amount this employee earned
+whatToInclude.include.l1 = gross amount payable to the employee
 whatToInclude.include.l2 = non-discretionary overtime
 whatToInclude.include.l3 = non-discretionary fees
 whatToInclude.include.l4 = non-discretionary commission payments

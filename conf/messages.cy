@@ -434,13 +434,13 @@ employeeStartDate.hint = Er enghraifft, 28 11 2019
 employeeStartDate.error.min = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod ar neu ar ôl {0}
 employeeStartDate.error.max = Mae’n rhaid i ddyddiad dechrau’r cyflogai fod cyn iddo ddechrau ei ffyrlo, ar neu cyn {0}
 
-annualPayAmount.title.since = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
-annualPayAmount.heading.since = Faint y mae’r cyflogai hwn wedi’i ennill ers iddo ddechrau tan {0}?
-annualPayAmount.title.from = Faint a enillodd y cyflogai hwn o {0} i {1}?
-annualPayAmount.heading.from = Faint a enillodd y cyflogai hwn o 6 {0} i {1}?
+annualPayAmount.title.since = Faint sydd wedi’i dalu i’r cyflogai hwn ers iddo ddechrau tan {0}?
+annualPayAmount.heading.since = Faint sydd wedi’i dalu i’r cyflogai hwn ers iddo ddechrau tan {0}?
+annualPayAmount.title.from = Faint a dalwyd i’r cyflogai hwn o {0} i {1}?
+annualPayAmount.heading.from = Faint a dalwyd i’r cyflogai hwn o {0} i {1}?
 annualPayAmount.error.required = Nodwch swm dilys
 annualPayAmount.error.invalid = Nodwch swm dilys
-annualPayAmount.p1 = Dyma’r swm gros y mae wedi’i ennill.
+annualPayAmount.p1 = Dyma’r swm gros a dalwyd iddo.
 annualPayAmount.p2 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 
 comingSoon.title = Ni allwn wneud y cyfrifiad hwn ar hyn o bryd
@@ -543,7 +543,7 @@ topUpStatus.error.required = Dewiswch ‘Iawn’ os ydych wedi ychwanegu at gyfl
 whatToInclude.summary = Beth y dylid ei gynnwys yn y swm hwn?
 whatToInclude.include = Dylech gynnwys:
 whatToInclude.include.cylb = y swm gros a enillodd y cyflogai yn y cyfnod cyflog hwn, hyd yn oed os cafodd ei dalu mewn cyfnod cyflog gwahanol
-whatToInclude.include.l1 = y swm gros a enillodd y cyflogai hwn
+whatToInclude.include.l1 = gross amount payable to the employee
 whatToInclude.include.l2 = goramser nad yw’n ddewisol
 whatToInclude.include.l3 = ffioedd nad ydynt yn ddewisol
 whatToInclude.include.l4 = taliadau comisiwn nad ydynt yn ddewisol
