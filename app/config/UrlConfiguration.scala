@@ -24,7 +24,8 @@ trait UrlConfiguration {
   val ninoCatLetter: String = "https://www.gov.uk/national-insurance-rates-letters/category-letters"
 
   val workOutHowMuch: String =
-    "https://www.gov.uk/guidance/calculate-how-much-you-can-claim-using-the-coronavirus-job-retention-scheme#work-out-how-much-you-can-claim-for-employer-national-insurance-contributions-nics"
+    "https://www.gov.uk/guidance/calculate-how-much-you-can-claim-using-the-coronavirus-job-retention-scheme#" +
+      "work-out-how-much-you-can-claim-for-employer-national-insurance-contributions-nics"
 
   val webchatHelpUrl: String =
     "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/get-help-with-the-coronavirus-job-retention-scheme"

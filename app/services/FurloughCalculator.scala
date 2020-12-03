@@ -16,7 +16,9 @@
 
 package services
 
-import models.{FullPeriodFurloughBreakdown, FullPeriodWithPaymentDate, FurloughCalculationResult, PartialPeriodFurloughBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PaymentWithPeriod, PaymentWithPhaseTwoPeriod, PhaseTwoFurloughBreakdown, PhaseTwoFurloughCalculationResult}
+import models.{FullPeriodFurloughBreakdown, FullPeriodWithPaymentDate, FurloughCalculationResult,
+  PartialPeriodFurloughBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod,
+  PaymentWithPartialPeriod, PaymentWithPeriod, PaymentWithPhaseTwoPeriod, PhaseTwoFurloughBreakdown, PhaseTwoFurloughCalculationResult}
 import services.Calculators._
 import utils.TaxYearFinder
 
@@ -53,7 +55,7 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
 
   protected def calculateFullPeriod(
     paymentFrequency: PaymentFrequency,
-    payment: PaymentWithFullPeriod,
+    payment: PaymentWithFullPeriod
   ): FullPeriodFurloughBreakdown = {
     val cap = furloughCap(paymentFrequency, payment.periodWithPaymentDate.period.period)
 

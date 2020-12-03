@@ -44,7 +44,7 @@ class AdditionalPaymentAmountController @Inject()(
   requireData: DataRequiredAction,
   formProvider: AdditionalPaymentAmountFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: AdditionalPaymentAmountView,
+  view: AdditionalPaymentAmountView
 )(implicit ec: ExecutionContext, eh: ErrorHandler)
     extends BaseController {
 

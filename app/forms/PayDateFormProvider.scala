@@ -51,18 +51,20 @@ class PayDateFormProvider @Inject()() extends Mappings {
     implicit messages: Messages): Constraint[LocalDate] =
     Constraint { inputDate =>
       (beforeDate, paymentFrequency) match {
-        case (Some(effectiveStartDate), Some(pf)) => //beforeDate exists meaning we are on pay-date/1 page, so validate the date for meaningful value as per lookback
-
+        //beforeDate exists meaning we are on pay-date/1 page, so validate the date for meaningful value as per lookback
+        case (Some(effectiveStartDate), Some(pf)) =>
           val daysToLookBack = pf match {
             case Monthly => 31
-            case _ =>
-              PaymentFrequency.paymentFrequencyDays(pf)
+            case _ => PaymentFrequency.paymentFrequencyDays(pf)
           }
 
           val minDate = effectiveStartDate.minusDays(daysToLookBack)
 
-          if (inputDate.isEqualOrAfter(minDate)) Valid
-          else Invalid("payDate.error.must.be.as.per.paymentFrequency", dateToString(effectiveStartDate), dateToString(minDate))
+          if (inputDate.isEqualOrAfter(minDate)){
+            Valid
+          } else {
+            Invalid("payDate.error.must.be.as.per.paymentFrequency", dateToString(effectiveStartDate), dateToString(minDate))
+          }
 
         case _ => Valid
       }

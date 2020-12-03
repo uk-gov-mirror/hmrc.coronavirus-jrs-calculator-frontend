@@ -44,6 +44,7 @@ object BackLinker {
       case _ => "#"
     }
 
+  //scalastyle:off
   private def getBackLink(page: Page, idx: Option[Int])(implicit dataRequest: DataRequest[_]): Call =
     page match {
       case ClaimPeriodEndPage           => routes.ClaimPeriodStartController.onPageLoad()
@@ -73,6 +74,7 @@ object BackLinker {
       case PayPeriodQuestionPage        => routes.FurloughPeriodQuestionController.onPageLoad()
       case p                            => throw new RuntimeException(s"Back link not yet implemented for $p")
     }
+  //scalastyle:on
 
   private def paymentFrequencyBackLink()(implicit request: DataRequest[_]): Call =
     request.userAnswers.getV(FurloughStatusPage) match {

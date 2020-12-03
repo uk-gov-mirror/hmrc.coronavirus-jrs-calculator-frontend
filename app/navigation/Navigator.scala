@@ -271,6 +271,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     }
   }
 
+  //scalastyle:off
+  //TODO Refactor cyclomatic complexity or leave as is.
   private[this] def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
     val payDateRoutes = handlePayDateRoutes(userAnswers)
 
@@ -291,6 +293,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       case Invalid(e) => routes.ClaimPeriodStartController.onPageLoad()
     }
   }
+  //scalastyle:on
 
   private[this] val handlePayDateRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getList(PayDatePage).isEmpty, userAnswers.getV(LastPayDatePage)) match {
@@ -378,6 +381,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     }
   }
 
+  //scalastyle:off
+  //TODO Refactor cyclomatic complexity or leave as is.
   private[this] def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(PayMethodPage) match {
       case Valid(Regular) => routes.RegularPayAmountController.onPageLoad()
@@ -404,6 +409,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
         routes.PayMethodController.onPageLoad()
     }
   }
+  //scalastyle:on
 
   private def annualPayAmountRoutes: UserAnswers => Call =
     userAnswers =>

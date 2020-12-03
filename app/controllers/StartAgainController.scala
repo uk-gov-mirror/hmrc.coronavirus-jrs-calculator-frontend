@@ -30,7 +30,7 @@ class StartAgainController @Inject()(
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  sessionRepository: SessionRepository,
+  sessionRepository: SessionRepository
 ) extends FrontendBaseController with I18nSupport {
 
   def startAgain: Action[AnyContent] = (identify andThen getData) { implicit request =>

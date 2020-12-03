@@ -17,7 +17,10 @@
 package services
 
 import models.PensionStatus.{DoesContribute, DoesNotContribute}
-import models.{Amount, FullPeriodFurloughBreakdown, FullPeriodPensionBreakdown, FullPeriodWithPaymentDate, FurloughBreakdown, PartialPeriodFurloughBreakdown, PartialPeriodPensionBreakdown, PartialPeriodWithPaymentDate, PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionCalculationResult, PensionStatus, PhaseTwoFurloughBreakdown, PhaseTwoPensionBreakdown, PhaseTwoPensionCalculationResult}
+import models.{Amount, FullPeriodFurloughBreakdown, FullPeriodPensionBreakdown, FullPeriodWithPaymentDate,
+  FurloughBreakdown, PartialPeriodFurloughBreakdown, PartialPeriodPensionBreakdown, PartialPeriodWithPaymentDate,
+  PaymentFrequency, PaymentWithFullPeriod, PaymentWithPartialPeriod, PensionCalculationResult, PensionStatus,
+  PhaseTwoFurloughBreakdown, PhaseTwoPensionBreakdown, PhaseTwoPensionCalculationResult}
 import services.Calculators._
 
 trait PensionCalculator extends FurloughCapCalculator with CommonCalculationService with Calculators {
