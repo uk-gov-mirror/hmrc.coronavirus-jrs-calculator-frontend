@@ -29,8 +29,7 @@ import services.AuditService
 import utils.PagerDutyHelper
 import utils.PagerDutyHelper.PagerDutyKeys._
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
-import views.html.{ConfirmationViewWithDetailedBreakdowns, JrsExtensionConfirmationView, NoNicAndPensionConfirmationView,
-  OctoberConfirmationView, PhaseTwoConfirmationView, SeptemberConfirmationView}
+import views.html.{ConfirmationViewWithDetailedBreakdowns, JrsExtensionConfirmationView, NoNicAndPensionConfirmationView, OctoberConfirmationView, PhaseTwoConfirmationView, SeptemberConfirmationView}
 
 import scala.concurrent.{ExecutionContext, Future}
 

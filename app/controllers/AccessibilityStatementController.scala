@@ -29,6 +29,7 @@ class AccessibilityStatementController @Inject()(
 ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(problemPageUri: String): Action[AnyContent] = Action { implicit request =>
+    //TODO Make query parameter optional
     val sanitisedInput = HtmlFormat.escape(problemPageUri).toString
     Ok(view(sanitisedInput))
   }

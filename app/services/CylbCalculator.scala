@@ -19,10 +19,7 @@ package services
 import java.time.LocalDate
 
 import models.NonFurloughPay.determineNonFurloughPay
-import models.{Amount, AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbBreakdown,
-  CylbDuration, CylbPayment, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod,
-  CylbPaymentWithPhaseTwoPeriod, FullPeriodWithPaymentDate, LastYearPayment, NonFurloughPay,
-  OnePeriodCylb, PartialPeriodWithPaymentDate, PaymentFrequency, PeriodWithPaymentDate, PhaseTwoPeriod, TwoPeriodCylb}
+import models.{Amount, AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbBreakdown, CylbDuration, CylbPayment, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod, CylbPaymentWithPhaseTwoPeriod, FullPeriodWithPaymentDate, LastYearPayment, NonFurloughPay, OnePeriodCylb, PartialPeriodWithPaymentDate, PaymentFrequency, PeriodWithPaymentDate, PhaseTwoPeriod, TwoPeriodCylb}
 import services.Calculators.AmountRounding
 
 trait CylbCalculator extends PreviousYearPeriod with Calculators {

@@ -55,12 +55,12 @@ class PayDateFormProvider @Inject()() extends Mappings {
         case (Some(effectiveStartDate), Some(pf)) =>
           val daysToLookBack = pf match {
             case Monthly => 31
-            case _ => PaymentFrequency.paymentFrequencyDays(pf)
+            case _       => PaymentFrequency.paymentFrequencyDays(pf)
           }
 
           val minDate = effectiveStartDate.minusDays(daysToLookBack)
 
-          if (inputDate.isEqualOrAfter(minDate)){
+          if (inputDate.isEqualOrAfter(minDate)) {
             Valid
           } else {
             Invalid("payDate.error.must.be.as.per.paymentFrequency", dateToString(effectiveStartDate), dateToString(minDate))

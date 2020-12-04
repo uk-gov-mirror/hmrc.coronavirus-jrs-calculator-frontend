@@ -48,7 +48,7 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
 
     (userAnswers.getV(ClaimPeriodStartPage), date) match {
       case (Valid(claimStart), Valid(cutoff)) if !claimStart.isBefore(LocalDate.of(2020, 7, 1)) => cutoff
-      case _ => LocalDate.of(2019, 4, 6)
+      case _                                                                                    => LocalDate.of(2019, 4, 6)
     }
   }
 

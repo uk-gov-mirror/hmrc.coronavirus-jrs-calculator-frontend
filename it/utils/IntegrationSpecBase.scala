@@ -1,18 +1,13 @@
 package utils
 
-import config.FrontendAppConfig
 import models.UserAnswers
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.{TryValues, _}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import pages.QuestionPage
-import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.{Json, Writes}
-import play.api.test.FakeRequest
 import play.api.{Application, Environment, Mode}
-import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
@@ -40,6 +35,11 @@ trait IntegrationSpecBase extends WordSpec
     "microservice.services.job-retention-scheme-calculator.host" -> mockHost,
     "microservice.services.job-retention-scheme-calculator.port" -> mockPort,
   )
+
+  lazy val mongo: SessionRepository = app.injector.instanceOf[SessionRepository]
+
+  def setAnswers(userAnswers: UserAnswers)(implicit timeout: Duration): Unit = Await.result(mongo.set(userAnswers), timeout)
+  def getAnswers(id: String)(implicit timeout: Duration): Option[UserAnswers] = Await.result(mongo.get(id), timeout)
 
   override def beforeAll(): Unit = {
     super.beforeAll()

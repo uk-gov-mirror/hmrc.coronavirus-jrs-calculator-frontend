@@ -113,9 +113,8 @@ class AnnualPayAmountController @Inject()(
     }
   }
 
-  private def extensionMatching(employeeStarted: EmployeeStarted,
-                                furloughStart: LocalDate,
-                                employeeStartDate: AnswerV[LocalDate])(implicit message: Messages): (String, Seq[String]) ={
+  private def extensionMatching(employeeStarted: EmployeeStarted, furloughStart: LocalDate, employeeStartDate: AnswerV[LocalDate])(
+    implicit message: Messages): (String, Seq[String]) =
     (employeeStarted, employeeStartDate) match {
       case (OnOrBefore1Feb2019, _) =>
         ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
@@ -128,11 +127,9 @@ class AnnualPayAmountController @Inject()(
       case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2020) =>
         ("from", Seq(dateToString(apr6th2020), dateToString(furloughStart.minusDays(1))))
     }
-  }
 
-  private def preExtensionMatching(employeeStarted: EmployeeStarted,
-                                   furloughStart: LocalDate,
-                                   employeeStartDate: AnswerV[LocalDate])(implicit message: Messages): (String, Seq[String]) ={
+  private def preExtensionMatching(employeeStarted: EmployeeStarted, furloughStart: LocalDate, employeeStartDate: AnswerV[LocalDate])(
+    implicit message: Messages): (String, Seq[String]) =
     (employeeStarted, employeeStartDate) match {
       case (OnOrBefore1Feb2019, _) =>
         ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
@@ -141,7 +138,6 @@ class AnnualPayAmountController @Inject()(
       case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2019) =>
         ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
     }
-  }
 
   private def rtiSubmissionRequired(userAnswers: UserAnswers) =
     (userAnswers.getV(ClaimPeriodStartPage), userAnswers.getV(EmployeeStartDatePage)) match {
