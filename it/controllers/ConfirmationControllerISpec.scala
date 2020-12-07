@@ -40,7 +40,22 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
 
     "show the page" when {
 
-      "the user has answered the questions" in {
+      "the user has answered the questions for regular journey" in {
+
+        val userAnswers: UserAnswers = dummyUserAnswers
+
+        setAnswers(userAnswers)
+
+        val res = getRequestHeaders("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+        whenReady(res) { result =>
+          result should have(
+            httpStatus(OK),
+            titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK")
+          )
+        }
+      }
+      "the user has answered the questions for phase 2" in {
 
         val userAnswers: UserAnswers = phaseTwoJourney()
 
@@ -56,16 +71,23 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
         }
       }
     }
+
+
     "redirect to another page" when {
 
       "the user has not answered the questions" in {
 
-        val res = getRequest("/confirmation")()
+        val userAnswers: UserAnswers = emptyUserAnswers
 
+        setAnswers(userAnswers)
+
+        val res = getRequest("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+        //TODO Should redirect to reset or start again page
         whenReady(res) { result =>
           result should have(
             httpStatus(SEE_OTHER),
-            redirectLocation("/job-retention-scheme-calculator/this-service-has-been-reset")
+            redirectLocation("/job-retention-scheme-calculator/error")
           )
         }
       }
