@@ -32,7 +32,12 @@ trait ConfirmationControllerRequestHandler
 
   def loadResultData(userAnswers: UserAnswers): AnswerV[ConfirmationDataResult] =
     metaData(userAnswers) match {
-      case Valid(m)       => validateBreakdown(userAnswers, m)
+      case Valid(m) =>
+        println()
+        println("INITIAL METADATA " + m)
+        println()
+
+        validateBreakdown(userAnswers, m)
       case i @ Invalid(_) => i
     }
 
@@ -42,11 +47,24 @@ trait ConfirmationControllerRequestHandler
       if (claim.start.isBefore(LocalDate.of(2020, 7, 1))) breakdown(userAnswers) else phaseTwoBreakdown(userAnswers)
   }
 
-  private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] =
+  private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] = {
+
+    println()
+    println("ANSWERS FOR REQUEST - " + userAnswers)
+    println()
+    println("METADATA FOR REQUEST - " + m)
+    println()
+
     breakDown(m, userAnswers) match {
-      case Valid(bd)      => Valid(confirmationResult(m, bd))
+      case Valid(bd) =>
+        println()
+        println("BREAKDOWN - " + bd)
+        println()
+
+        Valid(confirmationResult(m, bd))
       case i @ Invalid(_) => i
     }
+  }
 
   private def confirmationResult(metadata: Metadata, breakdown: ViewBreakdown): ConfirmationDataResult =
     (metadata, breakdown) match {

@@ -33,7 +33,14 @@ import scala.annotation.tailrec
 
 trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
 
+  //scalastyle:off
   implicit class UserAnswerBuilder(userAnswers: UserAnswers) {
+
+    def withPartTimeHours(partTimeHours: List[PartTimeHours]): UserAnswers =
+      userAnswers.setList(PartTimeHoursPage, partTimeHours).success.value
+
+    def withUsualHours(usualHours: List[UsualHours]): UserAnswers =
+      userAnswers.setList(PartTimeNormalHoursPage, usualHours).success.value
 
     def withNiCategory(category: NicCategory = Payable): UserAnswers =
       userAnswers.setValue(NicCategoryPage, category)
