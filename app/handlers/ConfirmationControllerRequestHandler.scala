@@ -33,10 +33,6 @@ trait ConfirmationControllerRequestHandler
   def loadResultData(userAnswers: UserAnswers): AnswerV[ConfirmationDataResult] =
     metaData(userAnswers) match {
       case Valid(m) =>
-        println()
-        println("INITIAL METADATA " + m)
-        println()
-
         validateBreakdown(userAnswers, m)
       case i @ Invalid(_) => i
     }
@@ -48,19 +44,8 @@ trait ConfirmationControllerRequestHandler
   }
 
   private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] = {
-
-    println()
-    println("ANSWERS FOR REQUEST - " + userAnswers)
-    println()
-    println("METADATA FOR REQUEST - " + m)
-    println()
-
     breakDown(m, userAnswers) match {
       case Valid(bd) =>
-        println()
-        println("BREAKDOWN - " + bd)
-        println()
-
         Valid(confirmationResult(m, bd))
       case i @ Invalid(_) => i
     }

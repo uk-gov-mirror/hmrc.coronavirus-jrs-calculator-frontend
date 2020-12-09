@@ -51,16 +51,6 @@ class ConfirmationController @Inject()(
     extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val x = loadResultData(request.userAnswers)
-
-    x match {
-      case Valid(a) =>
-        println()
-        println("Result Data - " + a)
-        println()
-      case Invalid(e) => println(e)
-    }
-
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
@@ -81,9 +71,6 @@ class ConfirmationController @Inject()(
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case 11 | 12 | 1 =>
-            println("extension")
-            println("extension")
-
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(extensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
