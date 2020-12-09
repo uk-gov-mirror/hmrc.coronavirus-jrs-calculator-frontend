@@ -25,7 +25,177 @@ import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSp
 class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
-  val scenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+
+  val novemberTwoWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 1")
+      .withFurloughStatus(FurloughStatus.FurloughOngoing)
+      .withPaymentFrequency(FortNightly)
+      .withPayMethod(PayMethod.Regular)
+      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+      .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28", "2020-12-12"))
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withRegularPayAmount(650.00)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withPartTimePeriods(List(
+        FullPeriod(Period("2020, 11, 1".toLocalDate, "2020, 11, 14".toLocalDate)),
+        FullPeriod(Period("2020, 11, 15".toLocalDate, "2020, 11, 28".toLocalDate)),
+        PartialPeriod(Period("2020, 11, 29".toLocalDate, "2020, 12, 12".toLocalDate),
+          Period("2020, 11, 29".toLocalDate, "2020, 11, 30".toLocalDate)),
+      ))
+      .withUsualHours(List(
+        UsualHours("2020, 11, 14".toLocalDate, Hours(98.0)),
+        UsualHours("2020, 11, 28".toLocalDate, Hours(98.0)),
+        UsualHours("2020, 12, 12".toLocalDate, Hours(21.0))
+      ))
+      .withPartTimeHours(List(
+        PartTimeHours("2020, 11, 14".toLocalDate, Hours(48.0)),
+        PartTimeHours("2020, 11, 28".toLocalDate, Hours(48.0)),
+        PartTimeHours("2020, 12, 12".toLocalDate, Hours(6.0))
+      ))
+      -> 583.66
+  )
+
+  val novemberMonthlyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 1")
+      .withFurloughStatus(FurloughStatus.FurloughOngoing)
+      .withPaymentFrequency(Monthly)
+      .withPayMethod(PayMethod.Regular)
+      .withRegularLengthEmployed(RegularLengthEmployed.No)
+      .withPayDate(List("2020-10-31", "2020-11-30"))
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withRegularPayAmount(2400.00)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withPartTimePeriods(List(FullPeriod(Period("2020, 11, 1".toLocalDate, "2020, 11, 30".toLocalDate))))
+      .withUsualHours(List(UsualHours("2020, 11, 30".toLocalDate, Hours(160.0))))
+      .withPartTimeHours(List(PartTimeHours("2020, 11, 30".toLocalDate, Hours(40.0))))
+      -> 1440.00,
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 1")
+      .withFurloughStatus(FurloughStatus.FurloughOngoing)
+      .withPaymentFrequency(Monthly)
+      .withPayMethod(PayMethod.Regular)
+      .withRegularLengthEmployed(RegularLengthEmployed.No)
+      .withPayDate(List("2020-10-31", "2020-11-30"))
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withRegularPayAmount(3126.00)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
+      -> 2500.00,
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 05")
+      .withFurloughEndDate("2020, 11, 21")
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withPaymentFrequency(Monthly)
+      .withPayMethod(PayMethod.Regular)
+      .withRegularLengthEmployed(RegularLengthEmployed.No)
+      .withPayDate(List("2020-10-31", "2020-11-30"))
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withRegularPayAmount(2400.00)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020, 11, 1".toLocalDate, "2020, 11, 30".toLocalDate),
+        Period("2020, 11, 05".toLocalDate, "2020, 11, 21".toLocalDate)
+      )))
+      .withUsualHours(List(UsualHours("2020, 11, 30".toLocalDate, Hours(127.50))))
+      .withPartTimeHours(List(PartTimeHours("2020, 11, 30".toLocalDate, Hours(52.50))))
+      -> 640.00,
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 05")
+      .withFurloughEndDate("2020, 11, 21")
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withPaymentFrequency(Monthly)
+      .withPayMethod(PayMethod.Regular)
+      .withRegularLengthEmployed(RegularLengthEmployed.No)
+      .withPayDate(List("2020-10-31", "2020-11-30"))
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withRegularPayAmount(6500.00)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020, 11, 1".toLocalDate, "2020, 11, 30".toLocalDate),
+        Period("2020, 11, 05".toLocalDate, "2020, 11, 21".toLocalDate)
+      )))
+      .withUsualHours(List(UsualHours("2020, 11, 30".toLocalDate, Hours(127.50))))
+      .withPartTimeHours(List(PartTimeHours("2020, 11, 30".toLocalDate, Hours(52.50))))
+      -> 833.40,
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 02")
+      .withFurloughEndDate("2020, 11, 11")
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withPaymentFrequency(Monthly)
+      .withPayMethod(PayMethod.Regular)
+      .withRegularLengthEmployed(RegularLengthEmployed.No)
+      .withPayDate(List("2020-10-31", "2020-11-30"))
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withRegularPayAmount(2400.00)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020, 11, 1".toLocalDate, "2020, 11, 30".toLocalDate),
+        Period("2020, 11, 02".toLocalDate, "2020, 11, 11".toLocalDate)
+      )))
+      .withUsualHours(List(UsualHours("2020, 11, 30".toLocalDate, Hours(160.0))))
+      .withPartTimeHours(List(PartTimeHours("2020, 11, 30".toLocalDate, Hours(40.00))))
+      -> 480.00,
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 02")
+      .withClaimPeriodEnd("2020, 11, 20")
+      .withFurloughStartDate("2020, 11, 01")
+      .withFurloughEndDate("2020, 11, 20")
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withPaymentFrequency(Monthly)
+      .withPayMethod(PayMethod.Regular)
+      .withRegularLengthEmployed(RegularLengthEmployed.No)
+      .withPayDate(List("2020-10-31", "2020-11-30"))
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withRegularPayAmount(5555.00)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020, 11, 1".toLocalDate, "2020, 11, 30".toLocalDate),
+        Period("2020, 11, 02".toLocalDate, "2020, 11, 20".toLocalDate)
+      )))
+      .withUsualHours(List(UsualHours("2020, 11, 30".toLocalDate, Hours(160.0))))
+      .withPartTimeHours(List(PartTimeHours("2020, 11, 30".toLocalDate, Hours(40.00))))
+      -> 1187.60,
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 01")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 03, 01")
+      .withFurloughEndDate("2020, 11, 20")
+      .withFurloughStatus(FurloughStatus.FurloughOngoing)
+      .withPaymentFrequency(Monthly)
+      .withPayMethod(PayMethod.Regular)
+      .withRegularLengthEmployed(RegularLengthEmployed.No)
+      .withPayDate(List("2020-10-25", "2020-11-25", "2020-12-25"))
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withRegularPayAmount(4900.00)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020, 11, 26".toLocalDate, "2020, 12, 25".toLocalDate),
+        Period("2020, 11, 26".toLocalDate, "2020, 11, 30".toLocalDate)
+      )))
+      .withUsualHours(List(
+        UsualHours("2020, 11, 25".toLocalDate, Hours(160.0)),
+        UsualHours("2020, 12, 25".toLocalDate, Hours(160.0))
+      ))
+      .withPartTimeHours(List(
+        PartTimeHours("2020, 11, 25".toLocalDate, Hours(95.00)),
+        PartTimeHours("2020, 12, 25".toLocalDate, Hours(95.00))
+      ))
+      -> 1015.70,
+  )
+  val novemberFourWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
@@ -149,8 +319,14 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
           Period("2020, 11, 29".toLocalDate, "2020, 11, 29".toLocalDate))))
       .withUsualHours(List(UsualHours("2020, 12, 26".toLocalDate, Hours(15.86))))
       .withPartTimeHours(List(PartTimeHours("2020, 12, 26".toLocalDate, Hours(1.86))))
-      -> 2381.25,
+      -> 2381.25
   )
+
+  val scenarios: Seq[(UserAnswers, BigDecimal)] = {
+    novemberFourWeeklyScenarios ++
+      novemberMonthlyScenarios ++
+      novemberTwoWeeklyScenarios
+  }
 
   "GET /confirmation" should {
 
