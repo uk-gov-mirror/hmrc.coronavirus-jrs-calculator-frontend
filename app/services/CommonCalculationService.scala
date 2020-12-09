@@ -23,8 +23,7 @@ import utils.TaxYearFinder
 trait CommonCalculationService extends TaxYearFinder {
 
   protected def greaterThanAllowance(amount: Amount, allowance: BigDecimal, rate: Rate): Amount =
-    if (amount.value < allowance) Amount(0.0)
-    else Amount((amount.value - allowance) * rate.value).halfUp
+    if (amount.value < allowance) Amount(0.0) else Amount((amount.value - allowance) * rate.value).halfUp
 
   protected def thresholdFinder(frequency: PaymentFrequency, paymentDate: PaymentDate, rate: Rate): Threshold =
     FrequencyTaxYearThresholdMapping.thresholdFor(frequency, taxYearAt(paymentDate), rate)

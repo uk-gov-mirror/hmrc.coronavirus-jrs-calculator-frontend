@@ -45,11 +45,13 @@ trait BackJourneyValidator extends DataExtractor with PayPeriodsListHandler {
 
   private def hasReusablePayPeriods(userAnswers: UserAnswers): AnswerV[Seq[Periods]] = {
     val periods = extractPayPeriods(userAnswers)
-    if (periods.isEmpty)
+    if (periods.isEmpty) {
       NonEmptyChain
         .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(AnswerValidation(JsError("re-usable periods unavailable")))))
         .invalid
-    else Valid(periods)
+    } else {
+      Valid(periods)
+    }
   }
 
 }

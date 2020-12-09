@@ -26,6 +26,7 @@ import handlers.ErrorHandler
 import javax.inject.Inject
 import models.{AnnualPayAmount, EmployeeRTISubmission, EmployeeStarted, UserAnswers}
 import models.EmployeeStarted._
+import models.UserAnswers.AnswerV
 import navigation.Navigator
 import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
 import play.api.data.Form
@@ -96,7 +97,7 @@ class AnnualPayAmountController @Inject()(
     implicit message: Messages): (String, Seq[String]) = {
     val isExt: Boolean = claimStart.isEqualOrAfter(extensionStartDate)
 
-    val employeeStartDate = userAnswers.getV(EmployeeStartDatePage)
+    val employeeStartDate: AnswerV[LocalDate] = userAnswers.getV(EmployeeStartDatePage)
     val isRTISubmissionRequired = rtiSubmissionRequired(userAnswers)
     val rtiSubmission = userAnswers.getV(EmployeeRTISubmissionPage)
 
@@ -105,30 +106,38 @@ class AnnualPayAmountController @Inject()(
       if (isRTISubmissionRequired && rtiSubmission.exists(_ == EmployeeRTISubmission.No)) {
         ("from", Seq(dateToString(apr6th2020), dateToString(furloughStart.minusDays(1))))
       } else {
-        (employeeStarted, employeeStartDate) match {
-          case (OnOrBefore1Feb2019, _) =>
-            ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-          case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2019) =>
-            ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-          case (After1Feb2019, Valid(esd)) if esd.isEqualOrAfter(apr6th2019) && esd.isBefore(mar20th2020) =>
-            ("since", Seq(dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-          case (After1Feb2019, Valid(esd)) if esd.isAfter(apr5th2020) =>
-            ("since", Seq(dateToString(furloughStart.minusDays(1))))
-          case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2020) =>
-            ("from", Seq(dateToString(apr6th2020), dateToString(furloughStart.minusDays(1))))
-        }
+        extensionMatching(employeeStarted, furloughStart, employeeStartDate)
       }
     } else {
-      (employeeStarted, employeeStartDate) match {
-        case (OnOrBefore1Feb2019, _) =>
-          ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-        case (After1Feb2019, Valid(esd)) if esd.isEqualOrAfter(apr6th2019) =>
-          ("since", Seq(dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-        case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2019) =>
-          ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
-      }
+      preExtensionMatching(employeeStarted, furloughStart, employeeStartDate)
     }
   }
+
+  private def extensionMatching(employeeStarted: EmployeeStarted, furloughStart: LocalDate, employeeStartDate: AnswerV[LocalDate])(
+    implicit message: Messages): (String, Seq[String]) =
+    (employeeStarted, employeeStartDate) match {
+      case (OnOrBefore1Feb2019, _) =>
+        ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+      case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2019) =>
+        ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+      case (After1Feb2019, Valid(esd)) if esd.isEqualOrAfter(apr6th2019) && esd.isBefore(mar20th2020) =>
+        ("since", Seq(dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+      case (After1Feb2019, Valid(esd)) if esd.isAfter(apr5th2020) =>
+        ("since", Seq(dateToString(furloughStart.minusDays(1))))
+      case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2020) =>
+        ("from", Seq(dateToString(apr6th2020), dateToString(furloughStart.minusDays(1))))
+    }
+
+  private def preExtensionMatching(employeeStarted: EmployeeStarted, furloughStart: LocalDate, employeeStartDate: AnswerV[LocalDate])(
+    implicit message: Messages): (String, Seq[String]) =
+    (employeeStarted, employeeStartDate) match {
+      case (OnOrBefore1Feb2019, _) =>
+        ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+      case (After1Feb2019, Valid(esd)) if esd.isEqualOrAfter(apr6th2019) =>
+        ("since", Seq(dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+      case (After1Feb2019, Valid(esd)) if esd.isBefore(apr6th2019) =>
+        ("from", Seq(dateToString(apr6th2019), dateToString(earliestOf(apr5th2020, furloughStart.minusDays(1)))))
+    }
 
   private def rtiSubmissionRequired(userAnswers: UserAnswers) =
     (userAnswers.getV(ClaimPeriodStartPage), userAnswers.getV(EmployeeStartDatePage)) match {

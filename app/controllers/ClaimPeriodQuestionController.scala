@@ -45,7 +45,7 @@ class ClaimPeriodQuestionController @Inject()(
   requireData: DataRequiredAction,
   formProvider: ClaimPeriodQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimPeriodQuestionView,
+  view: ClaimPeriodQuestionView
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with FastJourneyUserAnswersHandler {
 
@@ -55,9 +55,11 @@ class ClaimPeriodQuestionController @Inject()(
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request: DataRequest[AnyContent] =>
-    if (didNotReuseDates(request.headers.toSimpleMap.get("Referer"), request.userAnswers.data))
+    if (didNotReuseDates(request.headers.toSimpleMap.get("Referer"), request.userAnswers.data)) {
       Future.successful(Redirect(routes.ResetCalculationController.onPageLoad()))
-    else processOnLoad
+    } else {
+      processOnLoad
+    }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>

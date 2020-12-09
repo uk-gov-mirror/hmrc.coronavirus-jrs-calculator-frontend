@@ -16,6 +16,14 @@ lazy val root = (project in file("."))
   .settings(DefaultBuildSettings.defaultSettings(): _*)
   .settings(SbtDistributablesPlugin.publishingSettings: _*)
   .settings(inConfig(Test)(testSettings): _*)
+  .configs(IntegrationTest)
+  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(
+    Keys.fork in IntegrationTest := true,
+    unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest) (base => Seq(base / "it")).value,
+    parallelExecution in IntegrationTest := false,
+    javaOptions += "-Dlogger.resource=logback-test.xml"
+  )
   .settings(majorVersion := 0)
   .settings(useSuperShell in ThisBuild := false)
   .settings(

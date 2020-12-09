@@ -16,20 +16,24 @@
 
 package controllers
 
-import javax.inject.Inject
-import play.api.Logger
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.SessionExpiredView
+import play.api.http.Status._
+import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
 
-class SessionExpiredController @Inject()(
-  val controllerComponents: MessagesControllerComponents,
-  view: SessionExpiredView
-) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view()).removingFromSession(SessionKeys.sessionId)
-  }
-}
+class RootPageControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers {
+
+  "GET /" when {
+
+        "redirect to the start page" in {
+
+          val res = getRequest("/")()
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(SEE_OTHER),
+              redirectLocation(controllers.routes.RootPageController.start().url)
+            )
+          }
+        }
+      }
+    }

@@ -31,7 +31,7 @@ import reactivemongo.play.json.collection.JSONCollection
 import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultSessionRepository @Inject()(
-  mongo: ReactiveMongoApi,
+  mongo: ReactiveMongoApi
 )(implicit ec: ExecutionContext)
     extends SessionRepository with MongoConfiguration {
 

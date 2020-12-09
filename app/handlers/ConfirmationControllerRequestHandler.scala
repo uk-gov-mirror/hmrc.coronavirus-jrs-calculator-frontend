@@ -32,7 +32,8 @@ trait ConfirmationControllerRequestHandler
 
   def loadResultData(userAnswers: UserAnswers): AnswerV[ConfirmationDataResult] =
     metaData(userAnswers) match {
-      case Valid(m)       => validateBreakdown(userAnswers, m)
+      case Valid(m) =>
+        validateBreakdown(userAnswers, m)
       case i @ Invalid(_) => i
     }
 
@@ -44,7 +45,8 @@ trait ConfirmationControllerRequestHandler
 
   private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] =
     breakDown(m, userAnswers) match {
-      case Valid(bd)      => Valid(confirmationResult(m, bd))
+      case Valid(bd) =>
+        Valid(confirmationResult(m, bd))
       case i @ Invalid(_) => i
     }
 

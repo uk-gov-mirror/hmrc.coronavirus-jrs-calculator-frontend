@@ -72,6 +72,8 @@ trait BaseController extends FrontendBaseController with I18nSupport with BackJo
         Future.successful(Redirect(requiredPage))
     }
 
+  //scalastyle:off
+  //TODO Refactor to include fewer parameters or leave as is.
   def getRequiredAnswersV[A, B](
     pageA: QuestionPage[A],
     pageB: QuestionPage[B],
@@ -96,7 +98,10 @@ trait BaseController extends FrontendBaseController with I18nSupport with BackJo
         identity
       )
   }
+  //scalastyle:on
 
+  //scalastyle:off
+  //TODO Refactor to include fewer parameters or leave as is.
   def getRequiredAnswersOrRestartJourneyV[A, B](
     pageA: QuestionPage[A],
     pageB: QuestionPage[B],
@@ -121,6 +126,7 @@ trait BaseController extends FrontendBaseController with I18nSupport with BackJo
         identity
       )
   }
+  //scalastyle:on
 
   def previousPageOrRedirect(view: Result)(implicit request: DataRequest[_]): Result = validateBackJourney(request.userAnswers) match {
     case BackToPreviousPage => view

@@ -53,7 +53,7 @@ trait FurloughCalculator extends FurloughCapCalculator with TaxYearFinder with C
 
   protected def calculateFullPeriod(
     paymentFrequency: PaymentFrequency,
-    payment: PaymentWithFullPeriod,
+    payment: PaymentWithFullPeriod
   ): FullPeriodFurloughBreakdown = {
     val cap = furloughCap(paymentFrequency, payment.periodWithPaymentDate.period.period)
 

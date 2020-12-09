@@ -37,6 +37,8 @@ trait PreviousYearPeriod {
   }
 
   def cylbCutoff(frequency: PaymentFrequency, periods: Seq[PeriodWithPaymentDate]): LocalDate = {
+    //TODO Make it head safe
+
     val periodWithPaymentDate = periods.head
 
     val cylbDuration = CylbDuration(frequency, periodWithPaymentDate.period)

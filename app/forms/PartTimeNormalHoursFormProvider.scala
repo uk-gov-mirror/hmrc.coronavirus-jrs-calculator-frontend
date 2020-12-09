@@ -36,9 +36,10 @@ class PartTimeNormalHoursFormProvider @Inject() extends Mappings {
       )(Hours.apply)(Hours.unapply))
 
   private def maximumValue(period: Periods): Constraint[Double] = Constraint { input =>
-    if (input <= period.period.countHours)
+    if (input <= period.period.countHours) {
       Valid
-    else
+    } else {
       Invalid("partTimeNormalHours.error.max")
+    }
   }
 }

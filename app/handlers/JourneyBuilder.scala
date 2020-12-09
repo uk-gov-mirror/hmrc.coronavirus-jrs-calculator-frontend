@@ -77,7 +77,7 @@ trait JourneyBuilder extends DataExtractor {
       extractReferencePayDataV(userAnswers),
       extractAnnualPayAmountV(userAnswers),
       extractNonFurloughV(userAnswers),
-      extractPriorFurloughPeriodV(userAnswers),
+      extractPriorFurloughPeriodV(userAnswers)
     ).mapN { (referencePayData, grossPay, nonFurlough, priorFurlough) =>
       val cylbPayments = extractCylbPayments(userAnswers)
       VariablePayWithCylbData(

@@ -40,7 +40,7 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
   def getLastYearPeriods(userAnswers: UserAnswers): AnswerV[Seq[Period]] =
     (
       userAnswers.getV(PaymentFrequencyPage),
-      extractFurloughWithinClaimV(userAnswers),
+      extractFurloughWithinClaimV(userAnswers)
     ).mapN { (frequency, furlough) =>
       val endDates = userAnswers.getList(PayDatePage)
       val periods = generatePeriodsWithFurlough(endDates, furlough)
@@ -56,10 +56,7 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
       cylbCutoff(frequency, periodsWithPayDates)
     }
 
-    (
-      userAnswers.getV(ClaimPeriodStartPage),
-      date
-    ) match {
+    (userAnswers.getV(ClaimPeriodStartPage), date) match {
       case (Valid(claimStart), Valid(cutoff)) if !claimStart.isBefore(LocalDate.of(2020, 7, 1)) => cutoff
       case _                                                                                    => LocalDate.of(2019, 4, 6)
     }
@@ -73,6 +70,7 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
       val payDates = userAnswers.getList(PayDatePage)
       val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
       val lastPayDay = determineLastPayDay(userAnswers, periods)
+
       assignPayDates(frequency, periods, lastPayDay)
     }
 

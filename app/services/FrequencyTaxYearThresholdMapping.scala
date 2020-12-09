@@ -33,7 +33,8 @@ case class NiRate(value: BigDecimal = 13.8 / 100) extends Rate
 case class PensionRate(value: BigDecimal = 3.0 / 100) extends Rate
 
 object FrequencyTaxYearThresholdMapping {
-  //noinspection ScalaStyle
+  //scalastyle:off
+  //TODO Refactor or leave as is?
   def thresholdFor(frequency: PaymentFrequency, taxYear: TaxYear, rate: Rate): Threshold =
     (frequency, taxYear, rate) match {
       case (Monthly, TaxYearEnding2020, _: NiRate)          => Threshold(719.00, TaxYearEnding2020, Monthly)
