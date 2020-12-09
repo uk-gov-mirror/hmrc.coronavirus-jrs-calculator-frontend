@@ -43,7 +43,7 @@ class AuthenticatedIdentifierAction @Inject()(
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    val x = authorised().retrieve(Retrievals.internalId) {
+    authorised().retrieve(Retrievals.internalId) {
       _.map { internalId =>
         block(IdentifierRequest(request, internalId))
       }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
@@ -53,8 +53,6 @@ class AuthenticatedIdentifierAction @Inject()(
       case _: AuthorisationException =>
         Redirect(routes.UnauthorisedController.onPageLoad())
     }
-
-    x
   }
 }
 

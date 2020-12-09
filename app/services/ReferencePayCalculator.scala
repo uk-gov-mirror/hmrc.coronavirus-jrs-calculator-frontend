@@ -16,7 +16,10 @@
 
 package services
 
-import models.{AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbPayment, CylbPaymentWithPhaseTwoPeriod, PaymentWithPeriod, PaymentWithPhaseTwoPeriod, PhaseTwoReferencePay, PhaseTwoRegularPayData, PhaseTwoVariablePayData, PhaseTwoVariablePayWithCylbData, ReferencePay, RegularPayData, VariablePayData, VariablePayWithCylbData}
+import models.{AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbPayment, CylbPaymentWithPhaseTwoPeriod,
+  PaymentWithPeriod, PaymentWithPhaseTwoPeriod, PhaseTwoReferencePay, PhaseTwoRegularPayData,
+  PhaseTwoVariablePayData, PhaseTwoVariablePayWithCylbData, ReferencePay, RegularPayData,
+  VariablePayData, VariablePayWithCylbData}
 
 trait ReferencePayCalculator extends RegularPayCalculator with AveragePayCalculator with CylbCalculator with Calculators {
 

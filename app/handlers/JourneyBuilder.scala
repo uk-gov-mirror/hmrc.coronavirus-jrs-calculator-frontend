@@ -20,7 +20,9 @@ import java.time.LocalDate
 
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PayMethod.{Regular, Variable}
-import models.{BranchingQuestions, Journey, PhaseTwoReferencePay, PhaseTwoRegularPayData, PhaseTwoVariablePayData, PhaseTwoVariablePayWithCylbData, ReferencePay, RegularPay, RegularPayData, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
+import models.{BranchingQuestions, Journey, PhaseTwoReferencePay, PhaseTwoRegularPayData,
+  PhaseTwoVariablePayData, PhaseTwoVariablePayWithCylbData, ReferencePay, RegularPay,
+  RegularPayData, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import cats.syntax.apply._
 import models.UserAnswers.AnswerV
 
