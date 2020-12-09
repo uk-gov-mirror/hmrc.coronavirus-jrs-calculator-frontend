@@ -43,13 +43,12 @@ trait ConfirmationControllerRequestHandler
       if (claim.start.isBefore(LocalDate.of(2020, 7, 1))) breakdown(userAnswers) else phaseTwoBreakdown(userAnswers)
   }
 
-  private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] = {
+  private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] =
     breakDown(m, userAnswers) match {
       case Valid(bd) =>
         Valid(confirmationResult(m, bd))
       case i @ Invalid(_) => i
     }
-  }
 
   private def confirmationResult(metadata: Metadata, breakdown: ViewBreakdown): ConfirmationDataResult =
     (metadata, breakdown) match {

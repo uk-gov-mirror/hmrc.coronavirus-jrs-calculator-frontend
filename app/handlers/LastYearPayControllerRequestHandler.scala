@@ -57,7 +57,6 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
       userAnswers.getV(PaymentFrequencyPage),
       extractFurloughWithinClaimV(userAnswers)
     ).mapN { (frequency, furloughPeriod) =>
-
       val payDates = userAnswers.getList(PayDatePage)
       val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
       val lastPayDay = determineLastPayDay(userAnswers, periods)
