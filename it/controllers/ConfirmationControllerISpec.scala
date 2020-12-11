@@ -25,6 +25,143 @@ import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSp
 class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
+  val novemberVariableWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+    emptyUserAnswers
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withEmployeeStartDate("2020-05-05")
+      .withFurloughEndDate("2020, 11, 14")
+      .withPaymentFrequency(Weekly)
+      .withEmployeeStartedAfter1Feb2019()
+      .withClaimPeriodStart("2020, 11, 1")
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withPartTimePeriods(List(
+        PartialPeriod(
+          Period("2020, 11, 01".toLocalDate, "2020, 11, 7".toLocalDate),
+          Period("2020, 11, 4".toLocalDate, "2020, 11, 7".toLocalDate)
+        ),
+        FullPeriod(Period("2020, 11, 8".toLocalDate, "2020, 11, 14".toLocalDate))
+      ))
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withAnnualPayAmount(19564.4)
+      .withFurloughStartDate("2020, 11, 4")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14"))
+      .withUsualHours(List(
+        UsualHours("2020, 11, 7".toLocalDate, Hours(40.0)),
+        UsualHours("2020, 11, 14".toLocalDate, Hours(50.0))
+      ))
+      .withPartTimeHours(List(
+        PartTimeHours("2020, 11, 7".toLocalDate, Hours(14.0)),
+        PartTimeHours("2020, 11, 14".toLocalDate, Hours(15.0))
+      ))
+      -> 620.52,
+    emptyUserAnswers
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withEmployeeStartDate("2020-04-01")
+      .withFurloughEndDate("2020, 11, 14")
+      .withPaymentFrequency(Weekly)
+      .withEmployeeStartedAfter1Feb2019()
+      .withClaimPeriodStart("2020, 11, 1")
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withPartTimePeriods(List(
+        PartialPeriod(
+          Period("2020, 11, 01".toLocalDate, "2020, 11, 7".toLocalDate),
+          Period("2020, 11, 4".toLocalDate, "2020, 11, 7".toLocalDate)
+        ),
+        FullPeriod(Period("2020, 11, 8".toLocalDate, "2020, 11, 14".toLocalDate))
+      ))
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withAnnualPayAmount(19564.4)
+      .withFurloughStartDate("2020, 11, 4")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14"))
+      .withUsualHours(List(
+        UsualHours("2020, 11, 7".toLocalDate, Hours(40.0)),
+        UsualHours("2020, 11, 14".toLocalDate, Hours(50.0))
+      ))
+      .withPartTimeHours(List(
+        PartTimeHours("2020, 11, 7".toLocalDate, Hours(14.0)),
+        PartTimeHours("2020, 11, 14".toLocalDate, Hours(15.0))
+      ))
+      -> 553.68,
+    emptyUserAnswers
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withEmployeeStartDate("2020-04-01")
+      .withFurloughEndDate("2020, 11, 14")
+      .withPaymentFrequency(Weekly)
+      .withEmployeeStartedAfter1Feb2019()
+      .withClaimPeriodStart("2020, 11, 1")
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withPartTimePeriods(List(
+        PartialPeriod(
+          Period("2020, 11, 01".toLocalDate, "2020, 11, 7".toLocalDate),
+          Period("2020, 11, 4".toLocalDate, "2020, 11, 7".toLocalDate)
+        ),
+        FullPeriod(Period("2020, 11, 8".toLocalDate, "2020, 11, 14".toLocalDate))
+      ))
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withAnnualPayAmount(1000.0)
+      .withFurloughStartDate("2020, 11, 4")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14"))
+      .withUsualHours(List(
+        UsualHours("2020, 11, 7".toLocalDate, Hours(40.0)),
+        UsualHours("2020, 11, 14".toLocalDate, Hours(50.0))
+      ))
+      .withPartTimeHours(List(
+        PartTimeHours("2020, 11, 7".toLocalDate, Hours(14.0)),
+        PartTimeHours("2020, 11, 14".toLocalDate, Hours(15.0))
+      ))
+      -> 28.32,
+    emptyUserAnswers
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withFurloughEndDate("2020, 11, 7")
+      .withPaymentFrequency(Weekly)
+      .withEmployeeStartedOnOrBefore1Feb2019()
+      .withClaimPeriodStart("2020, 11, 1")
+      .withLastYear(List("2019-11-02" -> 420,"2019-11-09" -> 490))
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withPartTimePeriods(List(
+        FullPeriod(Period("2020, 11, 1".toLocalDate, "2020, 11, 7".toLocalDate))
+      ))
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withAnnualPayAmount(26000.0)
+      .withFurloughStartDate("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withPayDate(List("2020-10-31", "2020-11-07"))
+      .withUsualHours(List(
+        UsualHours("2020, 11, 7".toLocalDate, Hours(40.0))
+      ))
+      .withPartTimeHours(List(
+        PartTimeHours("2020, 11, 7".toLocalDate, Hours(14.0)),
+      ))
+      -> 258.58,
+    emptyUserAnswers
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withFurloughEndDate("2020, 11, 24")
+      .withPaymentFrequency(Weekly)
+      .withEmployeeStartedOnOrBefore1Feb2019()
+      .withClaimPeriodStart("2020, 11, 3")
+      .withLastYear(List("2019-11-09" -> 420,"2019-11-16" -> 490,"2019-11-23" -> 560,"2019-11-30" -> 630))
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
+      .withAnnualPayAmount(26000.0)
+      .withFurloughStartDate("2020, 11, 4")
+      .withClaimPeriodEnd("2020, 11, 28")
+      .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14", "2020-11-21", "2020-11-28"))
+      -> 1257.15
+  )
+
   val novemberVariableTwoWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -96,7 +233,93 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
         PartTimeHours("2020, 11, 14".toLocalDate, Hours(14.0)),
         PartTimeHours("2020, 11, 28".toLocalDate, Hours(15.0))
       ))
-      -> 1043.42
+      -> 1043.42,
+    emptyUserAnswers
+      .withRtiSubmission(EmployeeRTISubmission.Yes)
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withEmployeeStartDate("2020-03-19")
+      .withFurloughEndDate("2020, 11, 25")
+      .withPaymentFrequency(FortNightly)
+      .withEmployeeStartedAfter1Feb2019()
+      .withClaimPeriodStart("2020, 11, 1")
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withPartTimePeriods(List(
+        PartialPeriod(
+          Period("2020, 11, 01".toLocalDate, "2020, 11, 14".toLocalDate),
+          Period("2020, 11, 5".toLocalDate, "2020, 11, 14".toLocalDate)
+        ),
+        PartialPeriod(
+          Period("2020, 11, 15".toLocalDate, "2020, 11, 28".toLocalDate),
+          Period("2020, 11, 15".toLocalDate, "2020, 11, 25".toLocalDate)
+        )
+      ))
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withAnnualPayAmount(1000.00)
+      .withFurloughStartDate("2020, 11, 5")
+      .withClaimPeriodEnd("2020, 11, 29")
+      .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28"))
+      .withUsualHours(List(
+        UsualHours("2020, 11, 14".toLocalDate, Hours(40.0)),
+        UsualHours("2020, 11, 28".toLocalDate, Hours(50.0))
+      ))
+      .withPartTimeHours(List(
+        PartTimeHours("2020, 11, 14".toLocalDate, Hours(14.0)),
+        PartTimeHours("2020, 11, 28".toLocalDate, Hours(15.0))
+      ))
+      -> 631.16,
+    emptyUserAnswers
+      .withRtiSubmission(EmployeeRTISubmission.No)
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withEmployeeStartDate("2020-03-19")
+      .withFurloughEndDate("2020, 11, 25")
+      .withPaymentFrequency(FortNightly)
+      .withEmployeeStartedAfter1Feb2019()
+      .withClaimPeriodStart("2020, 11, 1")
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withPartTimePeriods(List(
+        PartialPeriod(
+          Period("2020, 11, 01".toLocalDate, "2020, 11, 14".toLocalDate),
+          Period("2020, 11, 5".toLocalDate, "2020, 11, 14".toLocalDate)
+        ),
+        PartialPeriod(
+          Period("2020, 11, 15".toLocalDate, "2020, 11, 28".toLocalDate),
+          Period("2020, 11, 15".toLocalDate, "2020, 11, 25".toLocalDate)
+        )
+      ))
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+      .withAnnualPayAmount(1000.00)
+      .withFurloughStartDate("2020, 11, 5")
+      .withClaimPeriodEnd("2020, 11, 29")
+      .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28"))
+      .withUsualHours(List(
+        UsualHours("2020, 11, 14".toLocalDate, Hours(40.0)),
+        UsualHours("2020, 11, 28".toLocalDate, Hours(50.0))
+      ))
+      .withPartTimeHours(List(
+        PartTimeHours("2020, 11, 14".toLocalDate, Hours(14.0)),
+        PartTimeHours("2020, 11, 28".toLocalDate, Hours(15.0))
+      ))
+      -> 53.28,
+    emptyUserAnswers
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+      .withFurloughEndDate("2020, 11, 28")
+      .withPaymentFrequency(FortNightly)
+      .withEmployeeStartedOnOrBefore1Feb2019()
+      .withClaimPeriodStart("2020, 11, 1")
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+      .withLastYear(List("2019-11-16" -> 840, "2019-11-30" -> 980))
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
+      .withAnnualPayAmount(28000.00)
+      .withFurloughStartDate("2020, 11, 4")
+      .withClaimPeriodEnd("2020, 11, 28")
+      .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28"))
+      -> 1530.00
   )
 
   val novemberVariableMonthlyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
@@ -847,7 +1070,8 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       novemberWeeklyScenarios ++
       novemberVariableFourWeeklyScenarios ++
       novemberVariableMonthlyScenarios ++
-      novemberVariableTwoWeeklyScenarios
+      novemberVariableTwoWeeklyScenarios ++
+      novemberVariableWeeklyScenarios
   }
 
   "GET /confirmation" should {
