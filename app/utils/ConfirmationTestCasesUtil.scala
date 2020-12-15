@@ -28,6 +28,10 @@ import viewmodels.{ConfirmationDataResult, ConfirmationDataResultWithoutNicAndPe
 
 import scala.util.matching.Regex
 
+/**
+ * For integration testing purposes only.
+ */
+
 //scalastyle:off
 object ConfirmationTestCasesUtil {
 
