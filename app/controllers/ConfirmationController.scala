@@ -21,61 +21,41 @@ import config.CalculatorVersionConfiguration
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
-import models.EmployeeStarted.OnOrBefore1Feb2019
-import models.UserAnswers.AnswerV
 import models.UserAnswers
 import navigation.Navigator
-import pages.{AnnualPayAmountPage, ClaimPeriodEndPage, ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage,
-  FurloughEndDatePage, FurloughInLastTaxYearPage, FurloughStartDatePage, FurloughStatusPage, LastYearPayPage, PartTimeHoursPage, PartTimeNormalHoursPage,
-  PartTimePeriodsPage, PartTimeQuestionPage, PayDatePage, PayMethodPage, PayPeriodsListPage, PaymentFrequencyPage, RegularLengthEmployedPage,
-  RegularPayAmountPage
-}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AuditService
+import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
 import utils.PagerDutyHelper
 import utils.PagerDutyHelper.PagerDutyKeys._
-import viewmodels.{
-  ConfirmationDataResult,
-  ConfirmationDataResultWithoutNicAndPension,
-  PhaseOneConfirmationDataResult,
-  PhaseTwoConfirmationDataResult
-}
-import views.html.{
-  ConfirmationViewWithDetailedBreakdowns,
-  JrsExtensionConfirmationView,
-  NoNicAndPensionConfirmationView,
-  OctoberConfirmationView,
-  PhaseTwoConfirmationView,
-  SeptemberConfirmationView
-}
+import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
+import views.html._
 
 import scala.concurrent.{ExecutionContext, Future}
-import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
 
 class ConfirmationController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        viewWithDetailedBreakdowns: ConfirmationViewWithDetailedBreakdowns,
-                                        phaseTwoView: PhaseTwoConfirmationView,
-                                        noNicAndPensionView: NoNicAndPensionConfirmationView,
-                                        septemberConfirmationView: SeptemberConfirmationView,
-                                        octoberConfirmationView: OctoberConfirmationView,
-                                        extensionView: JrsExtensionConfirmationView,
-                                        auditService: AuditService,
-                                        val navigator: Navigator
-                                      )(implicit val errorHandler: ErrorHandler, ec: ExecutionContext) extends BaseController
-  with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  viewWithDetailedBreakdowns: ConfirmationViewWithDetailedBreakdowns,
+  phaseTwoView: PhaseTwoConfirmationView,
+  noNicAndPensionView: NoNicAndPensionConfirmationView,
+  septemberConfirmationView: SeptemberConfirmationView,
+  octoberConfirmationView: OctoberConfirmationView,
+  extensionView: JrsExtensionConfirmationView,
+  auditService: AuditService,
+  val navigator: Navigator
+)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
+    extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
 
   //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-
     /** Uncomment line to create integration test cases when going through journeys, either manually or via test packs.
-     * Set the number of cases to the amount of cases that will be executed. */
-    //printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 5)
+      * Set the number of cases to the amount of cases that will be executed. */
+//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 5)
 
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>
@@ -109,4 +89,3 @@ class ConfirmationController @Inject()(
     }
   }
 }
-
