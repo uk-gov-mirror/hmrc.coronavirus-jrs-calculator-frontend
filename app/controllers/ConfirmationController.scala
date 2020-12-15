@@ -53,6 +53,7 @@ import views.html.{
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
 
+//@formatter:off
 class ConfirmationController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         identify: IdentifierAction,
@@ -70,12 +71,10 @@ class ConfirmationController @Inject()(
                                       )(implicit val errorHandler: ErrorHandler, ec: ExecutionContext) extends BaseController
   with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
 
-  var testCases: Seq[String] = Seq()
-
   //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
 
-    //stringTestCase(request.userAnswers, loadResultData(request.userAnswers))
+    stringTestCase(request.userAnswers, loadResultData(request.userAnswers))
 
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>
@@ -109,7 +108,9 @@ class ConfirmationController @Inject()(
     }
   }
 
-  def stringTestCase(userAnswers: UserAnswers, result: AnswerV[ConfirmationDataResult]): String = {
+  var testCases: Seq[String] = Seq()
+
+  def stringTestCase(userAnswers: UserAnswers, result: AnswerV[ConfirmationDataResult], numberOfCases: Int = 10): String = {
 
     val date: Regex = """(\d{4})-(\d{2})-(\d{2})""".r
 
@@ -119,38 +120,38 @@ class ConfirmationController @Inject()(
     val partTimeHoursRegex: Regex = """PartTimeHours\("(\d{4})-(\d{2})-(\d{2})"""".r
 
     val text =s"""emptyUserAnswers
-         |      ${userAnswers.getO(EmployeeRTISubmissionPage).flatMap(x => x.toOption.map(x => ".withRtiSubmission(" + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(FurloughStatusPage).flatMap(x => x.toOption.map(x => ".withFurloughStatus(FurloughStatus." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(EmployeeStartDatePage).flatMap(x => x.toOption.map(x => ".withEmployeeStartDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(FurloughEndDatePage).flatMap(x => x.toOption.map(x => ".withFurloughEndDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(PaymentFrequencyPage).flatMap(x => x.toOption.map(x => ".withPaymentFrequency(" + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(EmployeeStartedPage).map { x =>
-                  if (x.exists(_.equals(OnOrBefore1Feb2019))) {
-                    ".withEmployeeStartedOnOrBefore1Feb2019(" + x.getClass.getSimpleName
-                      .replace("Valid(", "")
-                      .replace("$", "") + ")"
-                  } else {
-                    ".withEmployeeStartedAfter1Feb2019(" + x.getClass.getSimpleName
-                      .replace("Valid(", "")
-                      .replace("$", "") + ")"
-                  }
-                }.getOrElse("")}
-         |      ${userAnswers.getO(ClaimPeriodStartPage).flatMap(x => x.toOption.map(x => ".withClaimPeriodStart(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(FurloughInLastTaxYearPage).flatMap(x => x.toOption.map(x => ".withFurloughInLastTaxYear(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(PayPeriodsListPage).flatMap(x => x.toOption.map(x => ".withPayPeriodsList(PayPeriodsList." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(PartTimePeriodsPage).flatMap(x => x.toOption.map(x => ".withPartTimePeriods(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(PayMethodPage).flatMap(x => x.toOption.map(x => ".withPayMethod(PayMethod." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(PartTimeQuestionPage).flatMap(x => x.toOption.map(x => ".withPartTimeQuestion(PartTimeQuestion." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(AnnualPayAmountPage).flatMap(x => x.toOption.map(x => ".withAnnualPayAmount(" + x.amount.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(RegularPayAmountPage).flatMap(x => x.toOption.map(x => ".withRegularPayAmount(" + x.amount.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(FurloughStartDatePage).flatMap(x => x.toOption.map(x => ".withFurloughStartDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(ClaimPeriodEndPage).flatMap(x => x.toOption.map(x => ".withClaimPeriodEnd(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${userAnswers.getO(RegularLengthEmployedPage).flatMap(x => x.toOption.map(x => ".withRegularLengthEmployed(RegularLengthEmployed." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
-         |      ${".withPayDate(" + userAnswers.getList(PayDatePage).toString.replace("Valid(", "") + ")"}
-         |      ${userAnswers.getO(LastYearPayPage).flatMap(x => x.toOption.map(x => ".withPayDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-         |      ${".withUsualHours(" + userAnswers.getList(PartTimeNormalHoursPage).toString.replace("Valid(", "") + ")"}
-         |      ${".withPartTimeHours(" + userAnswers.getList(PartTimeHoursPage).toString.replace("Valid(", "") + ")"}
-         |""".stripMargin.replaceAll("\n\n", "\n")
+                 |      ${userAnswers.getO(EmployeeRTISubmissionPage).flatMap(x => x.toOption.map(x => ".withRtiSubmission(" + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(FurloughStatusPage).flatMap(x => x.toOption.map(x => ".withFurloughStatus(FurloughStatus." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(EmployeeStartDatePage).flatMap(x => x.toOption.map(x => ".withEmployeeStartDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(FurloughEndDatePage).flatMap(x => x.toOption.map(x => ".withFurloughEndDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(PaymentFrequencyPage).flatMap(x => x.toOption.map(x => ".withPaymentFrequency(" + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(EmployeeStartedPage).map { x =>
+                          if (x.exists(_.equals(OnOrBefore1Feb2019))) {
+                            ".withEmployeeStartedOnOrBefore1Feb2019(" + x.getClass.getSimpleName
+                              .replace("Valid(", "")
+                              .replace("$", "") + ")"
+                          } else {
+                            ".withEmployeeStartedAfter1Feb2019(" + x.getClass.getSimpleName
+                              .replace("Valid(", "")
+                              .replace("$", "") + ")"
+                          }
+                        }.getOrElse("")}
+                 |      ${userAnswers.getO(ClaimPeriodStartPage).flatMap(x => x.toOption.map(x => ".withClaimPeriodStart(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(FurloughInLastTaxYearPage).flatMap(x => x.toOption.map(x => ".withFurloughInLastTaxYear(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(PayPeriodsListPage).flatMap(x => x.toOption.map(x => ".withPayPeriodsList(PayPeriodsList." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(PartTimePeriodsPage).flatMap(x => x.toOption.map(x => ".withPartTimePeriods(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(PayMethodPage).flatMap(x => x.toOption.map(x => ".withPayMethod(PayMethod." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(PartTimeQuestionPage).flatMap(x => x.toOption.map(x => ".withPartTimeQuestion(PartTimeQuestion." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(AnnualPayAmountPage).flatMap(x => x.toOption.map(x => ".withAnnualPayAmount(" + x.amount.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(RegularPayAmountPage).flatMap(x => x.toOption.map(x => ".withRegularPayAmount(" + x.amount.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(FurloughStartDatePage).flatMap(x => x.toOption.map(x => ".withFurloughStartDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(ClaimPeriodEndPage).flatMap(x => x.toOption.map(x => ".withClaimPeriodEnd(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(RegularLengthEmployedPage).flatMap(x => x.toOption.map(x => ".withRegularLengthEmployed(RegularLengthEmployed." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
+                 |      ${".withPayDate(" + userAnswers.getList(PayDatePage).toString.replace("Valid(", "") + ")"}
+                 |      ${userAnswers.getO(LastYearPayPage).flatMap(x => x.toOption.map(x => ".withPayDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${".withUsualHours(" + userAnswers.getList(PartTimeNormalHoursPage).toString.replace("Valid(", "") + ")"}
+                 |      ${".withPartTimeHours(" + userAnswers.getList(PartTimeHoursPage).toString.replace("Valid(", "") + ")"}
+                 |""".stripMargin.replaceAll("\n\n", "\n")
 
     val textWithOutcome = text + "\n -> " + result.asInstanceOf[Valid[ConfirmationDataResultWithoutNicAndPension]].toOption.get.confirmationViewBreakdown.furlough.total.formatted("%.2f")
 
@@ -174,10 +175,10 @@ class ConfirmationController @Inject()(
 
     testCases = testCases ++ Seq(finalResult)
 
-    if(testCases.length > 8000){
+    if(testCases.length >= numberOfCases){
       println("Test cases done. See Outcome.")
       println("#############################")
-      println(testCases.mkString(",\n"))
+      println(testCases.mkString(","))
       Thread.sleep(30000)
       println("#############################")
     }
@@ -185,3 +186,4 @@ class ConfirmationController @Inject()(
     finalResult
   }
 }
+

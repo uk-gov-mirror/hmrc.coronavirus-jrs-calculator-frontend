@@ -31,7 +31,10 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate)), FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate)), PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-11".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate)),
+        FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate)),
+        PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-11".toLocalDate),
+          Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(650)
@@ -39,15 +42,20 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withClaimPeriodEnd("2020-12-31")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2020-11-30", "2020-12-14", "2020-12-28", "2021-01-11"))
-      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(98.0)), UsualHours("2020-12-28".toLocalDate,Hours(98.0)), UsualHours("2021-01-11".toLocalDate,Hours(21.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(48.0)), PartTimeHours("2020-12-28".toLocalDate,Hours(48.0)), PartTimeHours("2021-01-11".toLocalDate,Hours(6.0))))
+      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(98.0)),
+        UsualHours("2020-12-28".toLocalDate,Hours(98.0)), UsualHours("2021-01-11".toLocalDate,Hours(21.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(48.0)),
+        PartTimeHours("2020-12-28".toLocalDate,Hours(48.0)), PartTimeHours("2021-01-11".toLocalDate,Hours(6.0))))
       -> 610.19,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate)), FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate)), PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-11".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate)),
+        FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate)),
+        PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-11".toLocalDate),
+          Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2300.12)
@@ -55,15 +63,19 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withClaimPeriodEnd("2020-12-31")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2020-11-30", "2020-12-14", "2020-12-28", "2021-01-11"))
-      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(98.0)), UsualHours("2020-12-28".toLocalDate,Hours(98.0)), UsualHours("2021-01-11".toLocalDate,Hours(21.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(48.0)), PartTimeHours("2020-12-28".toLocalDate,Hours(48.0)), PartTimeHours("2021-01-11".toLocalDate,Hours(6.0))))
+      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(98.0)),
+        UsualHours("2020-12-28".toLocalDate,Hours(98.0)), UsualHours("2021-01-11".toLocalDate,Hours(21.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(48.0)),
+        PartTimeHours("2020-12-28".toLocalDate,Hours(48.0)), PartTimeHours("2021-01-11".toLocalDate,Hours(6.0))))
       -> 1350.20,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-13")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-11".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-12-29".toLocalDate,"2021-01-11".toLocalDate),
+        Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(650)
@@ -80,7 +92,8 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-03")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-29".toLocalDate,"2020-12-12".toLocalDate),Period("2020-12-03".toLocalDate,"2020-12-11".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-11-29".toLocalDate,"2020-12-12".toLocalDate),Period("2020-12-03".toLocalDate,"2020-12-11".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(464.28)
@@ -96,7 +109,8 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-27")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-28".toLocalDate,"2021-01-10".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-12-28".toLocalDate,"2021-01-10".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(789.12)
@@ -113,7 +127,11 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),Period("2020-12-05".toLocalDate,"2020-12-14".toLocalDate)), PartialPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate),Period("2020-12-15".toLocalDate,"2020-12-25".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),
+        Period("2020-12-05".toLocalDate,"2020-12-14".toLocalDate)),
+        PartialPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate),
+          Period("2020-12-15".toLocalDate,"2020-12-25".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(643.12)
@@ -121,15 +139,18 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withClaimPeriodEnd("2020-12-29")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2020-11-30", "2020-12-14", "2020-12-28"))
-      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(63.0)), UsualHours("2020-12-28".toLocalDate,Hours(77.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(8.0)), PartTimeHours("2020-12-28".toLocalDate,Hours(12.0))))
+      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(63.0)),
+        UsualHours("2020-12-28".toLocalDate,Hours(77.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(8.0)),
+        PartTimeHours("2020-12-28".toLocalDate,Hours(12.0))))
       -> 662.08,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-19".toLocalDate,"2020-12-02".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-11-19".toLocalDate,"2020-12-02".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1000.34)
@@ -145,7 +166,8 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-22".toLocalDate,"2020-12-05".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-11-22".toLocalDate,"2020-12-05".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1500)
@@ -162,7 +184,8 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-23".toLocalDate,"2020-12-06".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-01".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-11-23".toLocalDate,"2020-12-06".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1010.11)
@@ -179,7 +202,10 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withPaymentFrequency(FortNightly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-18".toLocalDate,"2020-12-01".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-01".toLocalDate)), PartialPeriod(Period("2020-12-02".toLocalDate,"2020-12-15".toLocalDate),Period("2020-12-02".toLocalDate,"2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-18".toLocalDate,"2020-12-01".toLocalDate),
+        Period("2020-12-01".toLocalDate,"2020-12-01".toLocalDate)),
+        PartialPeriod(Period("2020-12-02".toLocalDate,"2020-12-15".toLocalDate),
+          Period("2020-12-02".toLocalDate,"2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1465.55)
@@ -187,8 +213,10 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       .withClaimPeriodEnd("2020-12-02")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2020-11-17", "2020-12-01", "2020-12-15"))
-      .withUsualHours(List(UsualHours("2020-12-01".toLocalDate,Hours(7.5)), UsualHours("2020-12-15".toLocalDate,Hours(7.5))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-01".toLocalDate,Hours(3.0)), PartTimeHours("2020-12-15".toLocalDate,Hours(3.0))))
+      .withUsualHours(List(UsualHours("2020-12-01".toLocalDate,Hours(7.5)),
+        UsualHours("2020-12-15".toLocalDate,Hours(7.5))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-01".toLocalDate,Hours(3.0)),
+        PartTimeHours("2020-12-15".toLocalDate,Hours(3.0))))
       -> 96.78
   )
 
