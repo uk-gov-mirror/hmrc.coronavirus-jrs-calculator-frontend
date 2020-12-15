@@ -27,7 +27,7 @@ import NovemberConfirmationScenarios._
 class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
-  val november: Seq[(UserAnswers, BigDecimal)] = {
+  val november: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     novemberFourWeeklyScenarios ++
       novemberMonthlyScenarios ++
       novemberTwoWeeklyScenarios ++
@@ -38,7 +38,7 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       novemberVariableWeeklyScenarios
   }
 
-  val december: Seq[(UserAnswers, BigDecimal)] = {
+  val december: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     decemberFourWeeklyScenarios ++
       decemberMonthlyScenarios ++
       decemberTwoWeeklyScenarios ++
@@ -49,7 +49,7 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       decemberVariableWeeklyScenarios
   }
 
-  val january: Seq[(UserAnswers, BigDecimal)] = {
+  val january: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
       januaryFourWeeklyScenarios ++
       januaryMonthlyScenarios ++
       januaryTwoWeeklyScenarios ++
@@ -60,33 +60,36 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       januaryVariableWeeklyScenarios
   }
 
-  val scenarios: Seq[(UserAnswers, BigDecimal)] = {
-    november ++
-      december
+  val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    november ++ december ++ january
   }
 
   "GET /confirmation" should {
 
     "show the page" when {
 
-      scenarios.zipWithIndex.foreach {
-        case ((scenario, outcome), index) =>
+      scenarios.foreach {
+        case (scenarioSummary, scenarios) =>
 
-          s"the user has answered the questions for scenario $index" in {
-            val userAnswers: UserAnswers = scenario
+        scenarios.zipWithIndex.foreach {
+          case ((scenario, outcome), index) =>
 
-            setAnswers(userAnswers)
+            s"the user has answered the questions relating to $scenarioSummary for scenario ${index + 1}" in {
+              val userAnswers: UserAnswers = scenario
 
-            val res = getRequestHeaders("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+              setAnswers(userAnswers)
 
-            whenReady(res) { result =>
-              result should have(
-                httpStatus(OK),
-                titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
-                contentExists(s"${outcome.setScale(2).toString()}"),
-              )
+              val res = getRequestHeaders("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+              whenReady(res) { result =>
+                result should have(
+                  httpStatus(OK),
+                  titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
+                  contentExists(s"${outcome.setScale(2).toString()}"),
+                )
+              }
             }
-          }
+        }
       }
 
       "the user has answered the questions for regular journey" in {

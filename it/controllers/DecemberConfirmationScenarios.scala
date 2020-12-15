@@ -18,13 +18,14 @@ package controllers
 
 import assets.BaseITConstants
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{EmployeeRTISubmission, FullPeriod, FurloughStatus, Hours, PartTimeHours, PartTimeQuestion, PartialPeriod, PayMethod, PayPeriodsList, Period, RegularLengthEmployed, UserAnswers, UsualHours}
+import models.{EmployeeRTISubmission, FullPeriod, FurloughStatus, Hours, PartTimeHours,
+  PartTimeQuestion, PartialPeriod, PayMethod, PayPeriodsList, Period, RegularLengthEmployed, UserAnswers, UsualHours}
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
 
 object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
-  val decemberVariableFourWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val decemberVariableFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("December Variable Four Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-10-29")
@@ -35,7 +36,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-05".toLocalDate,"2020-12-02".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate)), PartialPeriod(Period("2020-12-03".toLocalDate,"2020-12-30".toLocalDate),Period("2020-12-03".toLocalDate,"2020-12-28".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-05".toLocalDate,"2020-12-02".toLocalDate),
+        Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate)),
+        PartialPeriod(Period("2020-12-03".toLocalDate,"2020-12-30".toLocalDate),Period("2020-12-03".toLocalDate,"2020-12-28".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(1500)
@@ -83,9 +86,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withUsualHours(List())
       .withPartTimeHours(List())
       -> 2000.00
-  )
+  ))
 
-  val decemberVariableMonthlyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val decemberVariableMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("December Variable Monthly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-08-01")
@@ -144,9 +147,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withUsualHours(List())
       .withPartTimeHours(List())
       -> 1953.99
-  )
+  ))
 
-  val decemberVariableTwoWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val decemberVariableTwoWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("December Variable Two Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-08-27")
@@ -157,15 +160,19 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),Period("2020-12-13".toLocalDate,"2020-12-14".toLocalDate)), FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate)), PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-11".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),
+        Period("2020-12-13".toLocalDate,"2020-12-14".toLocalDate)), FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate)),
+        PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-11".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(34000)
       .withFurloughStartDate("2020-12-01")
       .withClaimPeriodEnd("2020-12-31")
       .withPayDate(List("2020-11-30", "2020-12-14", "2020-12-28", "2021-01-11"))
-      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(40.0)), UsualHours("2020-12-28".toLocalDate,Hours(50.0)), UsualHours("2021-01-11".toLocalDate,Hours(50.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(14.0)), PartTimeHours("2020-12-28".toLocalDate,Hours(15.0)), PartTimeHours("2021-01-11".toLocalDate,Hours(15.0))))
+      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(40.0)),
+        UsualHours("2020-12-28".toLocalDate,Hours(50.0)), UsualHours("2021-01-11".toLocalDate,Hours(50.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(14.0)),
+        PartTimeHours("2020-12-28".toLocalDate,Hours(15.0)), PartTimeHours("2021-01-11".toLocalDate,Hours(15.0))))
       -> 1081.91,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -177,7 +184,10 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),Period("2020-12-05".toLocalDate,"2020-12-14".toLocalDate)), PartialPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate),Period("2020-12-15".toLocalDate,"2020-12-25".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),
+        Period("2020-12-05".toLocalDate,"2020-12-14".toLocalDate)), PartialPeriod(
+        Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate),
+        Period("2020-12-15".toLocalDate,"2020-12-25".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(19564.4)
@@ -198,7 +208,10 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),Period("2020-12-05".toLocalDate,"2020-12-14".toLocalDate)), PartialPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate),Period("2020-12-15".toLocalDate,"2020-12-25".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),
+        Period("2020-12-05".toLocalDate,"2020-12-14".toLocalDate)),
+        PartialPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate),
+          Period("2020-12-15".toLocalDate,"2020-12-25".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(1000)
@@ -219,15 +232,20 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),Period("2020-12-05".toLocalDate,"2020-12-14".toLocalDate)), PartialPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate),Period("2020-12-15".toLocalDate,"2020-12-25".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-14".toLocalDate),
+        Period("2020-12-05".toLocalDate,"2020-12-14".toLocalDate)),
+        PartialPeriod(Period("2020-12-15".toLocalDate,"2020-12-28".toLocalDate),
+          Period("2020-12-15".toLocalDate,"2020-12-25".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(1000)
       .withFurloughStartDate("2020-12-05")
       .withClaimPeriodEnd("2020-12-29")
       .withPayDate(List("2020-11-30", "2020-12-14", "2020-12-28"))
-      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(40.0)), UsualHours("2020-12-28".toLocalDate,Hours(50.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(14.0)), PartTimeHours("2020-12-28".toLocalDate,Hours(15.0))))
+      .withUsualHours(List(UsualHours("2020-12-14".toLocalDate,Hours(40.0)),
+        UsualHours("2020-12-28".toLocalDate,Hours(50.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-14".toLocalDate,Hours(14.0)),
+        PartTimeHours("2020-12-28".toLocalDate,Hours(15.0))))
       -> 46.80,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -247,9 +265,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withUsualHours(List())
       .withPartTimeHours(List())
       -> 1530.00
-  )
+  ))
 
-  val decemberVariableWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val decemberVariableWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("December Variable Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-05-05")
@@ -260,15 +278,19 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate),Period("2020-12-04".toLocalDate,"2020-12-07".toLocalDate)), FullPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate),
+        Period("2020-12-04".toLocalDate,"2020-12-07".toLocalDate)),
+        FullPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(19564.4)
       .withFurloughStartDate("2020-12-04")
       .withClaimPeriodEnd("2020-12-31")
       .withPayDate(List("2020-11-30", "2020-12-07", "2020-12-14"))
-      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(40.0)), UsualHours("2020-12-14".toLocalDate,Hours(50.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(14.0)), PartTimeHours("2020-12-14".toLocalDate,Hours(15.0))))
+      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(40.0)),
+        UsualHours("2020-12-14".toLocalDate,Hours(50.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(14.0)),
+        PartTimeHours("2020-12-14".toLocalDate,Hours(15.0))))
       -> 551.11,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -280,15 +302,19 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate),Period("2020-12-04".toLocalDate,"2020-12-07".toLocalDate)), FullPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate),
+        Period("2020-12-04".toLocalDate,"2020-12-07".toLocalDate)),
+        FullPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(26000)
       .withFurloughStartDate("2020-12-04")
       .withClaimPeriodEnd("2020-12-31")
       .withPayDate(List("2020-11-30", "2020-12-07", "2020-12-14"))
-      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(40.0)), UsualHours("2020-12-14".toLocalDate,Hours(50.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(14.0)), PartTimeHours("2020-12-14".toLocalDate,Hours(15.0))))
+      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(40.0)),
+        UsualHours("2020-12-14".toLocalDate,Hours(50.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(14.0)),
+        PartTimeHours("2020-12-14".toLocalDate,Hours(15.0))))
       -> 613.53,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -300,15 +326,19 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate),Period("2020-12-04".toLocalDate,"2020-12-07".toLocalDate)), FullPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate),
+        Period("2020-12-04".toLocalDate,"2020-12-07".toLocalDate)),
+        FullPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(1000)
       .withFurloughStartDate("2020-12-04")
       .withClaimPeriodEnd("2020-12-31")
       .withPayDate(List("2020-11-30", "2020-12-07", "2020-12-14"))
-      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(40.0)), UsualHours("2020-12-14".toLocalDate,Hours(50.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(14.0)), PartTimeHours("2020-12-14".toLocalDate,Hours(15.0))))
+      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(40.0)),
+        UsualHours("2020-12-14".toLocalDate,Hours(50.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(14.0)),
+        PartTimeHours("2020-12-14".toLocalDate,Hours(15.0))))
       -> 24.78,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -347,15 +377,20 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withUsualHours(List())
       .withPartTimeHours(List())
       -> 1257.15
-  )
+  ))
 
-  val decemberWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val decemberWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("December Fixed Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate)), FullPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate)), FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-21".toLocalDate)), FullPeriod(Period("2020-12-22".toLocalDate,"2020-12-28".toLocalDate)), PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-04".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate)),
+        FullPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate)),
+        FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-21".toLocalDate)),
+        FullPeriod(Period("2020-12-22".toLocalDate,"2020-12-28".toLocalDate)),
+        PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-04".toLocalDate),
+          Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(600)
@@ -363,15 +398,24 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020-12-31")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2020-11-30", "2020-12-07", "2020-12-14", "2020-12-21", "2020-12-28", "2021-01-04"))
-      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(37.0)), UsualHours("2020-12-14".toLocalDate,Hours(37.0)), UsualHours("2020-12-21".toLocalDate,Hours(37.0)), UsualHours("2020-12-28".toLocalDate,Hours(37.0)), UsualHours("2021-01-04".toLocalDate,Hours(15.86))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(10.0)), PartTimeHours("2020-12-14".toLocalDate,Hours(12.0)), PartTimeHours("2020-12-21".toLocalDate,Hours(10.0)), PartTimeHours("2020-12-28".toLocalDate,Hours(15.0)), PartTimeHours("2021-01-04".toLocalDate,Hours(1.06))))
+      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(37.0)),
+        UsualHours("2020-12-14".toLocalDate,Hours(37.0)), UsualHours("2020-12-21".toLocalDate,Hours(37.0)),
+        UsualHours("2020-12-28".toLocalDate,Hours(37.0)), UsualHours("2021-01-04".toLocalDate,Hours(15.86))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(10.0)),
+        PartTimeHours("2020-12-14".toLocalDate,Hours(12.0)), PartTimeHours("2020-12-21".toLocalDate,Hours(10.0)),
+        PartTimeHours("2020-12-28".toLocalDate,Hours(15.0)), PartTimeHours("2021-01-04".toLocalDate,Hours(1.06))))
       -> 1502.24,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-02")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-04".toLocalDate,"2020-12-10".toLocalDate),Period("2020-12-06".toLocalDate,"2020-12-10".toLocalDate)), FullPeriod(Period("2020-12-11".toLocalDate,"2020-12-17".toLocalDate)), FullPeriod(Period("2020-12-18".toLocalDate,"2020-12-24".toLocalDate)), PartialPeriod(Period("2020-12-25".toLocalDate,"2020-12-31".toLocalDate),Period("2020-12-25".toLocalDate,"2020-12-29".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-04".toLocalDate,"2020-12-10".toLocalDate),
+        Period("2020-12-06".toLocalDate,"2020-12-10".toLocalDate)),
+        FullPeriod(Period("2020-12-11".toLocalDate,"2020-12-17".toLocalDate)),
+        FullPeriod(Period("2020-12-18".toLocalDate,"2020-12-24".toLocalDate)),
+        PartialPeriod(Period("2020-12-25".toLocalDate,"2020-12-31".toLocalDate),
+          Period("2020-12-25".toLocalDate,"2020-12-29".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1200)
@@ -379,8 +423,12 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020-12-29")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2020-12-03", "2020-12-10", "2020-12-17", "2020-12-24", "2020-12-31"))
-      .withUsualHours(List(UsualHours("2020-12-10".toLocalDate,Hours(37.0)), UsualHours("2020-12-17".toLocalDate,Hours(37.0)), UsualHours("2020-12-24".toLocalDate,Hours(37.0)), UsualHours("2020-12-31".toLocalDate,Hours(37.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-10".toLocalDate,Hours(10.0)), PartTimeHours("2020-12-17".toLocalDate,Hours(12.0)), PartTimeHours("2020-12-24".toLocalDate,Hours(10.0)), PartTimeHours("2020-12-31".toLocalDate,Hours(15.0))))
+      .withUsualHours(List(UsualHours("2020-12-10".toLocalDate,Hours(37.0)),
+        UsualHours("2020-12-17".toLocalDate,Hours(37.0)), UsualHours("2020-12-24".toLocalDate,Hours(37.0)),
+        UsualHours("2020-12-31".toLocalDate,Hours(37.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-10".toLocalDate,Hours(10.0)),
+        PartTimeHours("2020-12-17".toLocalDate,Hours(12.0)),
+        PartTimeHours("2020-12-24".toLocalDate,Hours(10.0)), PartTimeHours("2020-12-31".toLocalDate,Hours(15.0))))
       -> 1344.84,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -388,7 +436,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-02")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-04".toLocalDate,"2020-12-10".toLocalDate),Period("2020-12-06".toLocalDate,"2020-12-10".toLocalDate)), PartialPeriod(Period("2020-12-25".toLocalDate,"2020-12-31".toLocalDate),Period("2020-12-25".toLocalDate,"2020-12-27".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-04".toLocalDate,"2020-12-10".toLocalDate),
+        Period("2020-12-06".toLocalDate,"2020-12-10".toLocalDate)),
+        PartialPeriod(Period("2020-12-25".toLocalDate,"2020-12-31".toLocalDate),Period("2020-12-25".toLocalDate,"2020-12-27".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1200)
@@ -404,7 +454,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-21".toLocalDate)), FullPeriod(Period("2020-12-22".toLocalDate,"2020-12-28".toLocalDate)), PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-04".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2020-12-15".toLocalDate,"2020-12-21".toLocalDate)),
+        FullPeriod(Period("2020-12-22".toLocalDate,"2020-12-28".toLocalDate)),
+        PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-04".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(600)
@@ -412,15 +464,18 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020-12-31")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2020-12-14", "2020-12-21", "2020-12-28", "2021-01-04"))
-      .withUsualHours(List(UsualHours("2020-12-21".toLocalDate,Hours(37.0)), UsualHours("2020-12-28".toLocalDate,Hours(37.0)), UsualHours("2021-01-04".toLocalDate,Hours(15.86))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-21".toLocalDate,Hours(10.0)), PartTimeHours("2020-12-28".toLocalDate,Hours(15.0)), PartTimeHours("2021-01-04".toLocalDate,Hours(1.06))))
+      .withUsualHours(List(UsualHours("2020-12-21".toLocalDate,Hours(37.0)),
+        UsualHours("2020-12-28".toLocalDate,Hours(37.0)), UsualHours("2021-01-04".toLocalDate,Hours(15.86))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-21".toLocalDate,Hours(10.0)),
+        PartTimeHours("2020-12-28".toLocalDate,Hours(15.0)), PartTimeHours("2021-01-04".toLocalDate,Hours(1.06))))
       -> 827.64,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-29")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-29".toLocalDate,"2021-01-04".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-12-29".toLocalDate,"2021-01-04".toLocalDate),Period("2020-12-29".toLocalDate,"2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(550)
@@ -437,7 +492,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate)), PartialPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate),Period("2020-12-08".toLocalDate,"2020-12-08".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate)),
+        PartialPeriod(Period("2020-12-08".toLocalDate,"2020-12-14".toLocalDate),
+          Period("2020-12-08".toLocalDate,"2020-12-08".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(600)
@@ -445,15 +502,18 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020-12-21")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2020-11-30", "2020-12-07", "2020-12-14"))
-      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(37.0)), UsualHours("2020-12-14".toLocalDate,Hours(37.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(10.0)), PartTimeHours("2020-12-14".toLocalDate,Hours(12.0))))
+      .withUsualHours(List(UsualHours("2020-12-07".toLocalDate,Hours(37.0)),
+        UsualHours("2020-12-14".toLocalDate,Hours(37.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-07".toLocalDate,Hours(10.0)),
+        PartTimeHours("2020-12-14".toLocalDate,Hours(12.0))))
       -> 396.60,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-12-01".toLocalDate,"2020-12-07".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(666.12)
@@ -469,7 +529,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-26".toLocalDate,"2020-12-02".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-26".toLocalDate,"2020-12-02".toLocalDate),
+        Period("2020-12-01".toLocalDate,"2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(890.11)
@@ -486,7 +547,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-29".toLocalDate,"2020-12-05".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-01".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-29".toLocalDate,"2020-12-05".toLocalDate),
+        Period("2020-12-01".toLocalDate,"2020-12-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(500)
@@ -503,7 +565,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Weekly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-25".toLocalDate,"2020-12-01".toLocalDate),Period("2020-12-01".toLocalDate,"2020-12-01".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-25".toLocalDate,"2020-12-01".toLocalDate),
+        Period("2020-12-01".toLocalDate,"2020-12-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(754.44)
@@ -514,9 +577,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withUsualHours(List(UsualHours("2020-12-01".toLocalDate,Hours(7.5))))
       .withPartTimeHours(List(PartTimeHours("2020-12-01".toLocalDate,Hours(3.0))))
       -> 129.04
-  )
+  ))
 
-  val decemberTwoWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val decemberTwoWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("December Fixed Two Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
@@ -709,9 +772,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeHours(List(PartTimeHours("2020-12-01".toLocalDate,Hours(3.0)),
         PartTimeHours("2020-12-15".toLocalDate,Hours(3.0))))
       -> 96.78
-  )
+  ))
 
-  val decemberMonthlyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val decemberMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("December Fixed Monthly Scenarios" -> Seq(
     emptyUserAnswers
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -782,7 +845,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate,"2020-12-31".toLocalDate),Period("2020-12-05".toLocalDate,"2020-12-21".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(
+        Period("2020-12-01".toLocalDate,"2020-12-31".toLocalDate),Period("2020-12-05".toLocalDate,"2020-12-21".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(6500)
@@ -800,7 +864,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate, "2020-12-31".toLocalDate), Period("2020-12-02".toLocalDate, "2020-12-11".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate, "2020-12-31".toLocalDate),
+        Period("2020-12-02".toLocalDate, "2020-12-11".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2400)
@@ -818,7 +883,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-02")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate, "2020-12-31".toLocalDate), Period("2020-12-02".toLocalDate, "2020-12-20".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate, "2020-12-31".toLocalDate),
+        Period("2020-12-02".toLocalDate, "2020-12-20".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(5555)
@@ -835,8 +901,10 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-26".toLocalDate, "2020-12-25".toLocalDate), Period("2020-12-01".toLocalDate, "2020-12-25".toLocalDate)),
-        PartialPeriod(Period("2020-12-26".toLocalDate, "2021-01-25".toLocalDate), Period("2020-12-26".toLocalDate, "2020-12-31".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-26".toLocalDate, "2020-12-25".toLocalDate),
+        Period("2020-12-01".toLocalDate, "2020-12-25".toLocalDate)),
+        PartialPeriod(Period("2020-12-26".toLocalDate, "2021-01-25".toLocalDate),
+          Period("2020-12-26".toLocalDate, "2020-12-31".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(4900)
@@ -844,8 +912,10 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020-12-31")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2020-11-25", "2020-12-25", "2021-01-25"))
-      .withUsualHours(List(UsualHours("2020-12-25".toLocalDate, Hours(160.0)), UsualHours("2021-01-25".toLocalDate, Hours(160.0))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-25".toLocalDate, Hours(95.0)), PartTimeHours("2021-01-25".toLocalDate, Hours(95.0))))
+      .withUsualHours(List(UsualHours("2020-12-25".toLocalDate, Hours(160.0)),
+        UsualHours("2021-01-25".toLocalDate, Hours(160.0))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-25".toLocalDate, Hours(95.0)),
+        PartTimeHours("2021-01-25".toLocalDate, Hours(95.0))))
       -> 1015.68,
 
     emptyUserAnswers
@@ -853,7 +923,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate, "2020-12-31".toLocalDate), Period("2020-12-01".toLocalDate, "2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate, "2020-12-31".toLocalDate),
+        Period("2020-12-01".toLocalDate, "2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2654.11)
@@ -870,7 +941,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-26".toLocalDate, "2020-12-25".toLocalDate), Period("2020-12-01".toLocalDate, "2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-26".toLocalDate, "2020-12-25".toLocalDate),
+        Period("2020-12-01".toLocalDate, "2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2654.11)
@@ -887,7 +959,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-03".toLocalDate, "2020-12-02".toLocalDate), Period("2020-12-01".toLocalDate, "2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-03".toLocalDate, "2020-12-02".toLocalDate),
+        Period("2020-12-01".toLocalDate, "2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(3200.11)
@@ -905,7 +978,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-09".toLocalDate, "2020-12-08".toLocalDate), Period("2020-12-01".toLocalDate, "2020-12-01".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-09".toLocalDate, "2020-12-08".toLocalDate),
+        Period("2020-12-01".toLocalDate, "2020-12-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2322.11)
@@ -922,8 +996,10 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-02".toLocalDate, "2020-12-01".toLocalDate), Period("2020-12-01".toLocalDate, "2020-12-01".toLocalDate)),
-        PartialPeriod(Period("2020-12-02".toLocalDate, "2021-01-01".toLocalDate), Period("2020-12-02".toLocalDate, "2020-12-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-11-02".toLocalDate, "2020-12-01".toLocalDate),
+        Period("2020-12-01".toLocalDate, "2020-12-01".toLocalDate)),
+        PartialPeriod(Period("2020-12-02".toLocalDate, "2021-01-01".toLocalDate),
+          Period("2020-12-02".toLocalDate, "2020-12-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1465.55)
@@ -931,8 +1007,10 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020-12-02")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2020-11-01", "2020-12-01", "2021-01-01"))
-      .withUsualHours(List(UsualHours("2020-12-01".toLocalDate, Hours(7.5)), UsualHours("2021-01-01".toLocalDate, Hours(7.5))))
-      .withPartTimeHours(List(PartTimeHours("2020-12-01".toLocalDate, Hours(3.0)), PartTimeHours("2021-01-01".toLocalDate, Hours(3.0))))
+      .withUsualHours(List(UsualHours("2020-12-01".toLocalDate, Hours(7.5)),
+        UsualHours("2021-01-01".toLocalDate, Hours(7.5))))
+      .withPartTimeHours(List(PartTimeHours("2020-12-01".toLocalDate, Hours(3.0)),
+        PartTimeHours("2021-01-01".toLocalDate, Hours(3.0))))
       -> 46.15,
 
     emptyUserAnswers
@@ -940,7 +1018,8 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Monthly)
       .withClaimPeriodStart("2020-12-01")
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate, "2020-12-31".toLocalDate), Period("2020-12-01".toLocalDate, "2020-12-01".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2020-12-01".toLocalDate, "2020-12-31".toLocalDate),
+        Period("2020-12-01".toLocalDate, "2020-12-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(3222)
@@ -952,9 +1031,9 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeHours(List(PartTimeHours("2020-12-31".toLocalDate, Hours(3.0))))
       -> 48.39,
 
-  )
+  ))
 
-  val decemberFourWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val decemberFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("December Fixed Four Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -1213,5 +1292,5 @@ object DecemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
         PartTimeHours("2020, 12, 29".toLocalDate, Hours(3.0))
       ))
       -> 50.24
-  )
+  ))
 }

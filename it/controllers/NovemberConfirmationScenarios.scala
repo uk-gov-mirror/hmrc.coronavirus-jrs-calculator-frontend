@@ -18,13 +18,14 @@ package controllers
 
 import assets.BaseITConstants
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{EmployeeRTISubmission, FullPeriod, FurloughStatus, Hours, PartTimeHours, PartTimeQuestion, PartialPeriod, PayMethod, PayPeriodsList, Period, RegularLengthEmployed, UserAnswers, UsualHours}
+import models.{EmployeeRTISubmission, FullPeriod, FurloughStatus, Hours, PartTimeHours,
+  PartTimeQuestion, PartialPeriod, PayMethod, PayPeriodsList, Period, RegularLengthEmployed, UserAnswers, UsualHours}
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
 
 object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
-  val novemberVariableWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val novemberVariableWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Variable Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-05-05")
@@ -159,9 +160,9 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020, 11, 28")
       .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14", "2020-11-21", "2020-11-28"))
       -> 1257.15
-  )
+  ))
 
-  val novemberVariableTwoWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val novemberVariableTwoWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Variable Two Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-08-27")
@@ -319,9 +320,9 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020, 11, 28")
       .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28"))
       -> 1530.00
-  )
+  ))
 
-  val novemberVariableMonthlyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val novemberVariableMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Variable Monthly Scenarios" -> Seq(
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
@@ -406,9 +407,9 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2020, 11, 30")
       .withPayDate(List("2020-10-31", "2020-11-30"))
       ->2267.76
-  )
+  ))
 
-  val novemberVariableFourWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val novemberVariableFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Variable Four Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
@@ -457,9 +458,9 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withEmployeeStartedOnOrBefore1Feb2019()
       .withFurloughInLastTaxYear(false)
       -> 2000.00
-  )
+  ))
 
-  val novemberWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val novemberWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Fixed Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
@@ -636,9 +637,9 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
         PartTimeHours("2020, 11, 14".toLocalDate, Hours(12.0))
       ))
       -> 396.60
-  )
+  ))
 
-  val novemberTwoWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val novemberTwoWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Fixed Two Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
@@ -796,9 +797,9 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
         PartTimeHours("2020, 11, 28".toLocalDate, Hours(12.0))
       ))
       -> 662.08
-  )
+  ))
 
-  val novemberMonthlyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val novemberMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Fixed Monthly Scenarios" -> Seq(
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
@@ -934,8 +935,9 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
         PartTimeHours("2020, 12, 25".toLocalDate, Hours(95.00))
       ))
       -> 1015.70,
-  )
-  val novemberFourWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  ))
+
+  val novemberFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Fixed Four Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
@@ -1060,5 +1062,5 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withUsualHours(List(UsualHours("2020, 12, 26".toLocalDate, Hours(15.86))))
       .withPartTimeHours(List(PartTimeHours("2020, 12, 26".toLocalDate, Hours(1.86))))
       -> 2381.25
-  )
+  ))
 }

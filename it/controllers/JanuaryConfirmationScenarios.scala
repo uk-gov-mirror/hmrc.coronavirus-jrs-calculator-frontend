@@ -18,13 +18,14 @@ package controllers
 
 import assets.BaseITConstants
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{EmployeeRTISubmission, FullPeriod, FurloughStatus, Hours, PartTimeHours, PartTimeQuestion, PartialPeriod, PayMethod, PayPeriodsList, Period, RegularLengthEmployed, UserAnswers, UsualHours}
+import models.{EmployeeRTISubmission, FullPeriod, FurloughStatus, Hours, PartTimeHours,
+  PartTimeQuestion, PartialPeriod, PayMethod, PayPeriodsList, Period, RegularLengthEmployed, UserAnswers, UsualHours}
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
 
 object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
-  val januaryFourWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  val januaryFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("January Fixed Four Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withFurloughEndDate("2021-01-28")
@@ -216,8 +217,8 @@ object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateReque
       .withUsualHours(List(UsualHours("2021-01-01".toLocalDate,Hours(7.5)), UsualHours("2021-01-29".toLocalDate,Hours(7.5))))
       .withPartTimeHours(List(PartTimeHours("2021-01-01".toLocalDate,Hours(3.0)), PartTimeHours("2021-01-29".toLocalDate,Hours(3.0))))
       -> 50.24
-  )
-  val januaryMonthlyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  ))
+  val januaryMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("January Fixed Monthly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Monthly)
@@ -443,8 +444,8 @@ object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateReque
       .withUsualHours(List(UsualHours("2021-01-31".toLocalDate,Hours(7.5))))
       .withPartTimeHours(List(PartTimeHours("2021-01-31".toLocalDate,Hours(3.0))))
       -> 48.39
-  )
-  val januaryTwoWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  ))
+  val januaryTwoWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("January Fixed Two Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
@@ -619,8 +620,8 @@ object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateReque
       .withUsualHours(List(UsualHours("2021-01-01".toLocalDate,Hours(7.5)), UsualHours("2021-01-15".toLocalDate,Hours(7.5))))
       .withPartTimeHours(List(PartTimeHours("2021-01-01".toLocalDate,Hours(3.0)), PartTimeHours("2021-01-15".toLocalDate,Hours(3.0))))
       -> 96.78
-  )
-  val januaryWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  ))
+  val januaryWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("January Fixed Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
@@ -786,8 +787,8 @@ object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateReque
       .withUsualHours(List(UsualHours("2021-01-01".toLocalDate,Hours(7.5))))
       .withPartTimeHours(List(PartTimeHours("2021-01-01".toLocalDate,Hours(3.0))))
       -> 129.04
-  )
-  val januaryVariableFourWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  ))
+  val januaryVariableFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("January Variable Four Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-10-29")
@@ -846,8 +847,8 @@ object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateReque
       .withUsualHours(List())
       .withPartTimeHours(List())
       -> 2000.00
-  )
-  val januaryVariableMonthlyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  ))
+  val januaryVariableMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("January Variable Monthly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-08-01")
@@ -906,8 +907,8 @@ object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateReque
       .withUsualHours(List())
       .withPartTimeHours(List())
       -> 1953.99
-  )
-  val januaryVariableTwoWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  ))
+  val januaryVariableTwoWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("January Variable Two Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-08-27")
@@ -1008,8 +1009,8 @@ object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateReque
       .withUsualHours(List())
       .withPartTimeHours(List())
       -> 1530.00
-  )
-  val januaryVariableWeeklyScenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
+  ))
+  val januaryVariableWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("January Variable Weekly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-05-05")
@@ -1104,5 +1105,5 @@ object JanuaryConfirmationScenarios extends IntegrationSpecBase with CreateReque
       .withUsualHours(List())
       .withPartTimeHours(List())
       -> 1257.15
-  )
+  ))
 }
