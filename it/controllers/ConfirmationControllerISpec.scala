@@ -17,163 +17,79 @@
 package controllers
 
 import assets.BaseITConstants
-import models.PaymentFrequency._
 import models._
 import play.api.test.Helpers._
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
+import JanuaryConfirmationScenarios._
+import DecemberConfirmationScenarios._
+import NovemberConfirmationScenarios._
 
 class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
-  val scenarios: Seq[(UserAnswers, BigDecimal)] = Seq(
-    emptyUserAnswers
-      .withClaimPeriodStart("2020, 11, 1")
-      .withClaimPeriodEnd("2020, 11, 30")
-      .withFurloughStartDate("2020, 11, 1")
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2020, 11, 28")
-      .withPaymentFrequency(FourWeekly)
-      .withPayMethod(PayMethod.Regular)
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2020-10-31", "2020-11-28"))
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withRegularPayAmount(2000.00)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withPartTimePeriods(List(FullPeriod(Period("2020, 11, 1".toLocalDate, "2020, 11, 28".toLocalDate))))
-      .withUsualHours(List(UsualHours("2020, 11, 28".toLocalDate, Hours(148.0))))
-      .withPartTimeHours(List(PartTimeHours("2020, 11, 28".toLocalDate, Hours(40.0))))
-      -> 1167.57,
-    emptyUserAnswers
-      .withClaimPeriodStart("2020, 11, 1")
-      .withClaimPeriodEnd("2020, 11, 30")
-      .withFurloughStartDate("2020, 11, 1")
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2020, 11, 28")
-      .withPaymentFrequency(FourWeekly)
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPayMethod(PayMethod.Regular)
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2020-10-04", "2020-11-01", "2020-11-29"))
-      .withRegularPayAmount(3300.00)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
-      -> 2333.52,
-    emptyUserAnswers
-      .withClaimPeriodStart("2020, 11, 1")
-      .withClaimPeriodEnd("2020, 11, 28")
-      .withFurloughStartDate("2020, 11, 1")
-      .withFurloughStatus(FurloughStatus.FurloughOngoing)
-      .withPaymentFrequency(FourWeekly)
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPayMethod(PayMethod.Regular)
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2020-10-31", "2020-11-28"))
-      .withRegularPayAmount(3300.00)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
-      -> 2307.68,
-    emptyUserAnswers
-      .withClaimPeriodStart("2020, 11, 1")
-      .withClaimPeriodEnd("2020, 11, 30")
-      .withFurloughStartDate("2020, 03, 01")
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2020, 11, 30")
-      .withPaymentFrequency(FourWeekly)
-      .withPayMethod(PayMethod.Regular)
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2020-10-31", "2020-11-28", "2020-12-26"))
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withRegularPayAmount(3500.00)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withPartTimePeriods(List(FullPeriod(Period("2020, 11, 1".toLocalDate, "2020, 11, 28".toLocalDate)),
-        PartialPeriod(
-          Period("2020, 11, 29".toLocalDate, "2020, 12, 26".toLocalDate),
-          Period("2020, 11, 29".toLocalDate, "2020, 11, 30".toLocalDate))))
-      .withUsualHours(List(UsualHours("2020, 11, 28".toLocalDate, Hours(148.0)),
-        UsualHours("2020, 12, 26".toLocalDate, Hours(15.86))))
-      .withPartTimeHours(List(PartTimeHours("2020, 11, 28".toLocalDate, Hours(40.0)),
-        PartTimeHours("2020, 12, 26".toLocalDate, Hours(1.86))))
-      -> 1831.11,
-    emptyUserAnswers
-      .withClaimPeriodStart("2020, 11, 30")
-      .withClaimPeriodEnd("2020, 11, 30")
-      .withFurloughStartDate("2020, 11, 29")
-      .withFurloughStatus(FurloughStatus.FurloughOngoing)
-      .withPaymentFrequency(FourWeekly)
-      .withPayMethod(PayMethod.Regular)
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2020-11-29", "2020-12-27"))
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withRegularPayAmount(2200.00)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withPartTimePeriods(List(
-        PartialPeriod(
-          Period("2020, 11, 30".toLocalDate, "2020, 12, 27".toLocalDate),
-          Period("2020, 11, 30".toLocalDate, "2020, 11, 30".toLocalDate))))
-      .withUsualHours(List(UsualHours("2020, 12, 27".toLocalDate, Hours(148.0))))
-      .withPartTimeHours(List(PartTimeHours("2020, 12, 27".toLocalDate, Hours(25.0))))
-      -> 52.24,
-    emptyUserAnswers
-      .withClaimPeriodStart("2020, 11, 1")
-      .withClaimPeriodEnd("2020, 11, 30")
-      .withFurloughStartDate("2020, 11, 01")
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2020, 11, 30")
-      .withPaymentFrequency(FourWeekly)
-      .withPayMethod(PayMethod.Regular)
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2020-10-31", "2020-11-28", "2020-12-26"))
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withRegularPayAmount(3500.00)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withPartTimePeriods(List(
-        PartialPeriod(
-          Period("2020, 11, 29".toLocalDate, "2020, 12, 26".toLocalDate),
-          Period("2020, 11, 29".toLocalDate, "2020, 11, 30".toLocalDate))))
-      .withUsualHours(List(UsualHours("2020, 12, 26".toLocalDate, Hours(15.86))))
-      .withPartTimeHours(List(PartTimeHours("2020, 12, 26".toLocalDate, Hours(1.86))))
-      -> 2454.81,
-    emptyUserAnswers
-      .withClaimPeriodStart("2020, 11, 1")
-      .withClaimPeriodEnd("2020, 11, 29")
-      .withFurloughStartDate("2020, 11, 01")
-      .withFurloughStatus(FurloughStatus.FurloughOngoing)
-      .withPaymentFrequency(FourWeekly)
-      .withPayMethod(PayMethod.Regular)
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2020-10-31", "2020-11-28", "2020-12-26"))
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withRegularPayAmount(3500.00)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withPartTimePeriods(List(
-        PartialPeriod(
-          Period("2020, 11, 29".toLocalDate, "2020, 12, 26".toLocalDate),
-          Period("2020, 11, 29".toLocalDate, "2020, 11, 29".toLocalDate))))
-      .withUsualHours(List(UsualHours("2020, 12, 26".toLocalDate, Hours(15.86))))
-      .withPartTimeHours(List(PartTimeHours("2020, 12, 26".toLocalDate, Hours(1.86))))
-      -> 2381.25,
-  )
+  val november: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    novemberFourWeeklyScenarios ++
+      novemberMonthlyScenarios ++
+      novemberTwoWeeklyScenarios ++
+      novemberWeeklyScenarios ++
+      novemberVariableFourWeeklyScenarios ++
+      novemberVariableMonthlyScenarios ++
+      novemberVariableTwoWeeklyScenarios ++
+      novemberVariableWeeklyScenarios
+  }
+
+  val december: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    decemberFourWeeklyScenarios ++
+      decemberMonthlyScenarios ++
+      decemberTwoWeeklyScenarios ++
+      decemberWeeklyScenarios ++
+      decemberVariableFourWeeklyScenarios ++
+      decemberVariableMonthlyScenarios ++
+      decemberVariableTwoWeeklyScenarios ++
+      decemberVariableWeeklyScenarios
+  }
+
+  val january: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+      januaryFourWeeklyScenarios ++
+      januaryMonthlyScenarios ++
+      januaryTwoWeeklyScenarios ++
+      januaryWeeklyScenarios ++
+      januaryVariableFourWeeklyScenarios ++
+      januaryVariableMonthlyScenarios ++
+      januaryVariableTwoWeeklyScenarios ++
+      januaryVariableWeeklyScenarios
+  }
+
+  val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    november ++ december ++ january
+  }
 
   "GET /confirmation" should {
 
     "show the page" when {
 
-      scenarios.zipWithIndex.foreach {
-        case ((scenario, outcome), index) =>
+      scenarios.foreach {
+        case (scenarioSummary, scenarios) =>
 
-          s"the user has answered the questions for scenario $index" in {
-            val userAnswers: UserAnswers = scenario
+        scenarios.zipWithIndex.foreach {
+          case ((scenario, outcome), index) =>
 
-            setAnswers(userAnswers)
+            s"the user has answered the questions relating to $scenarioSummary for scenario ${index + 1}" in {
+              val userAnswers: UserAnswers = scenario
 
-            val res = getRequestHeaders("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+              setAnswers(userAnswers)
 
-            whenReady(res) { result =>
-              result should have(
-                httpStatus(OK),
-                titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
-                contentExists(s"${outcome.setScale(2).toString()}"),
-              )
+              val res = getRequestHeaders("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+              whenReady(res) { result =>
+                result should have(
+                  httpStatus(OK),
+                  titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
+                  contentExists(s"${outcome.setScale(2).toString()}"),
+                )
+              }
             }
-          }
+        }
       }
 
       "the user has answered the questions for regular journey" in {

@@ -26,10 +26,11 @@ import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AuditService
+import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
 import utils.PagerDutyHelper
 import utils.PagerDutyHelper.PagerDutyKeys._
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
-import views.html.{ConfirmationViewWithDetailedBreakdowns, JrsExtensionConfirmationView, NoNicAndPensionConfirmationView, OctoberConfirmationView, PhaseTwoConfirmationView, SeptemberConfirmationView}
+import views.html._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -50,7 +51,12 @@ class ConfirmationController @Inject()(
 )(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
     extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
 
+  //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    /** Uncomment line to create integration test cases when going through journeys, either manually or via test packs.
+      * Set the number of cases to the amount of cases that will be executed. */
+//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 5)
+
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)

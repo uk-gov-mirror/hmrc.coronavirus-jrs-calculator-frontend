@@ -33,7 +33,8 @@ final case class UserAnswers(
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
-  private def path[T <: Query](page: T, idx: Option[Int]): JsPath = idx.fold(page.path)(idx => page.path \ (idx - 1))
+  private def path[T <: Query](page: T, idx: Option[Int]): JsPath =
+    idx.fold(page.path)(idx => page.path \ (idx - 1))
 
   def getV[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): AnswerV[A] =
     Reads.at(path(page, idx)).reads(data) match {
@@ -42,6 +43,12 @@ final case class UserAnswers(
         NonEmptyChain
           .fromNonEmptyList(NonEmptyList.fromListUnsafe(List(AnswerValidation(error, data, idx))))
           .invalid[A]
+    }
+
+  def getO[A](page: Gettable[A], idx: Option[Int] = None)(implicit rds: Reads[A]): Option[AnswerV[A]] =
+    Reads.at(path(page, idx)).reads(data) match {
+      case JsSuccess(value, _) => Some(value.validNec)
+      case JsError(_)          => None
     }
 
   def getList[A](page: Gettable[A])(implicit rds: Reads[A]): Seq[A] =
@@ -53,12 +60,13 @@ final case class UserAnswers(
     val list = page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
     val amendedList = list.patch(idx - 1, Seq(value), list.size)
 
-    val updatedData = data.setObject(path(page, None), Json.toJson(amendedList)) match {
-      case JsSuccess(jsValue, _) =>
-        Success(jsValue)
-      case JsError(errors) =>
-        Failure(JsResultException(errors))
-    }
+    val updatedData =
+      data.setObject(path(page, None), Json.toJson(amendedList)) match {
+        case JsSuccess(jsValue, _) =>
+          Success(jsValue)
+        case JsError(errors) =>
+          Failure(JsResultException(errors))
+      }
 
     updatedData.flatMap { d =>
       val updatedAnswers = copy(data = d)
@@ -67,12 +75,13 @@ final case class UserAnswers(
   }
 
   def setList[A](page: Settable[A], value: Seq[A])(implicit writes: Writes[A]): Try[UserAnswers] = {
-    val updatedData = data.setObject(path(page, None), Json.toJson(value)) match {
-      case JsSuccess(jsValue, _) =>
-        Success(jsValue)
-      case JsError(errors) =>
-        Failure(JsResultException(errors))
-    }
+    val updatedData =
+      data.setObject(path(page, None), Json.toJson(value)) match {
+        case JsSuccess(jsValue, _) =>
+          Success(jsValue)
+        case JsError(errors) =>
+          Failure(JsResultException(errors))
+      }
 
     updatedData.flatMap { d =>
       val updatedAnswers = copy(data = d)
@@ -82,12 +91,13 @@ final case class UserAnswers(
 
   def set[A](page: Settable[A], value: A, idx: Option[Int] = None)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
-    val updatedData = data.setObject(path(page, idx), Json.toJson(value)) match {
-      case JsSuccess(jsValue, _) =>
-        Success(jsValue)
-      case JsError(errors) =>
-        Failure(JsResultException(errors))
-    }
+    val updatedData =
+      data.setObject(path(page, idx), Json.toJson(value)) match {
+        case JsSuccess(jsValue, _) =>
+          Success(jsValue)
+        case JsError(errors) =>
+          Failure(JsResultException(errors))
+      }
 
     updatedData.flatMap { d =>
       val updatedAnswers = copy(data = d)
@@ -182,8 +192,9 @@ object UserAnswers {
     logger.error(s"Encountered validation errors")
     nec.toNonEmptyList.toList.foreach { validation =>
       val err = validation.underlying.errors.headOption match {
-        case Some((path, errors)) => s"${path.toJsonString}; JSON error: ${errors.map(_.toString)}"
-        case None                 => ""
+        case Some((path, errors)) =>
+          s"${path.toJsonString}; JSON error: ${errors.map(_.toString)}"
+        case None => ""
       }
       logger.error(s"""
       | Encountered validation error: ${validation.message};
@@ -196,8 +207,9 @@ object UserAnswers {
     logger.error(s"Encountered validation warnings")
     nec.toNonEmptyList.toList.foreach { validation =>
       val err = validation.underlying.errors.headOption match {
-        case Some((path, errors)) => s"${path.toJsonString}; JSON error: ${errors.map(_.toString)}"
-        case None                 => ""
+        case Some((path, errors)) =>
+          s"${path.toJsonString}; JSON error: ${errors.map(_.toString)}"
+        case None => ""
       }
       logger.warn(s"""
       | Encountered validation error: ${validation.message};
