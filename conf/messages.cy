@@ -319,7 +319,7 @@ confirmation.no.nic.pension.nextSteps.li.3 = 3. Defnyddiwch y gyfrifiannell eto 
 confirmation.no.nic.pension.nextSteps.li.3.2 = Cyfrifwch y cyfanswm y gallwch ei hawlio ar gyfer cyfraniadau Yswiriant Gwladol y cyflogwr (yn agor ffenestr neu dab newydd).
 confirmation.no.nic.pension.nextSteps.li.4 = 4. Ychwanegwch yr holl ganlyniadau at ei gilydd er mwyn cael y cyfanswm y gallwch ei hawlio.
 confirmation.no.nic.pension.nextSteps.li.4.1 = Gwnewch hawliad gan ddefnyddio {0}
-confirmation.no.nic.pension.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens in a new window or tab).
+confirmation.no.nic.pension.nextSteps.li.4.2 = gwasanaeth hawlio ar-lein y Cynllun Cadw Swyddi yn sgil Coronafeirws (yn agor ffenestr neu dab newydd).
 confirmation.no.nic.pension.breakdown.summary = Dadansoddiad o gyfrifiadau
 confirmation.no.nic.pension.disclaimer = Mae canlyniadau’r cyfrifiad yn dibynnu ar gywirdeb yr wybodaeth a nodwyd gennych, yr ydych yn gyfrifol amdani. Ni allwch hawlio am fwy o arian nag yr ydych yn mynd i’w dalu allan o dan y cynllun.
 
