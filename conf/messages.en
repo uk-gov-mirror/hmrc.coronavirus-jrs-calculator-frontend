@@ -302,7 +302,7 @@ confirmation.nextSteps.li.2.3 = employer minimum pension contributions
 confirmation.nextSteps.li.3.1 = Adjust the total amount of employer National Insurance contributions by subtracting any Employment Allowance used in each pay period.
 confirmation.nextSteps.li.3.2 = Work out how much you can claim in total for employer National Insurance contributions (opens in a new window or tab).
 
-confirmation.nextSteps.li.4.1 = Make a claim using {0}.
+confirmation.nextSteps.li.4.1 = Make a claim using {0}
 confirmation.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens in a new window or tab).
 confirmation.startAgain = Start another calculation
 confirmation.webchat = Webchat help (opens in a new tab).
@@ -317,7 +317,7 @@ confirmation.no.nic.pension.nextSteps.li.2 = Make a note of the result above.
 confirmation.no.nic.pension.nextSteps.li.3 = Use the calculator again for any other employees furloughed within this claim period ({0} to {1}) and make a note of the results.
 confirmation.no.nic.pension.nextSteps.li.3.2 = Work out how much you can claim in total for employer National Insurance contributions (opens in a new window or tab).
 confirmation.no.nic.pension.nextSteps.li.4 = Add all the results together to get the total amount you can claim.
-confirmation.no.nic.pension.nextSteps.li.4.1 = Make a claim using {0}.
+confirmation.no.nic.pension.nextSteps.li.4.1 = Make a claim using {0}
 confirmation.no.nic.pension.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens in a new window or tab).
 confirmation.no.nic.pension.breakdown.summary = Breakdown of calculations
 confirmation.no.nic.pension.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.
