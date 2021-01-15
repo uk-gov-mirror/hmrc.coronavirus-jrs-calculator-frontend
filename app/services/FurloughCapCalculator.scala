@@ -16,7 +16,7 @@
 
 package services
 
-import java.time.Month
+import java.time.{Month, Year}
 
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{FullPeriodCap, FurloughCap, PartialPeriodCap, PaymentFrequency, Period, PeriodSpansMonthCap}
@@ -47,16 +47,18 @@ trait FurloughCapCalculator extends PeriodHelper {
       PartialPeriodCap(cap, periodDays, period.start.getMonthValue, max)
     }
 
-  protected def dailyMax(month: Month): BigDecimal =
-    roundWithMode(2500.00 / month.maxLength, UP)
+  protected def dailyMax(month: Month, isLeapYear: Boolean = false): BigDecimal =
+    roundWithMode(2500.00 / month.length(isLeapYear), UP)
 
   protected def calculateFurloughCapNonSimplified(payPeriod: Period): PeriodSpansMonthCap = {
-    val startMonthPeriod = Period(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.maxLength()))
+    val isLeapYear = Year.of(payPeriod.start.getYear).isLeap
+    val startMonthPeriod =
+      Period(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.length(isLeapYear)))
     val startMonthDays = startMonthPeriod.countDays
     val endMonthPeriod = Period(payPeriod.end.withDayOfMonth(1), payPeriod.end)
     val endMonthDays = endMonthPeriod.countDays
-    val startMonthDailyMax: BigDecimal = dailyMax(payPeriod.start.getMonth)
-    val endMonthDailyMax: BigDecimal = dailyMax(payPeriod.end.getMonth)
+    val startMonthDailyMax: BigDecimal = dailyMax(payPeriod.start.getMonth, isLeapYear)
+    val endMonthDailyMax: BigDecimal = dailyMax(payPeriod.end.getMonth, isLeapYear)
 
     val cap = roundWithMode((startMonthDays * startMonthDailyMax) + (endMonthDays * endMonthDailyMax), HALF_UP)
 

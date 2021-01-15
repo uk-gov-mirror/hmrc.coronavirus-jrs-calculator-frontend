@@ -76,7 +76,7 @@ class ConfirmationController @Inject()(
           case 10 =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
-          case 11 | 12 | 1 =>
+          case 11 | 12 | 1 | 2 | 3 =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(extensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
