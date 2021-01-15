@@ -21,6 +21,7 @@ import org.scalatest.matchers._
 import play.api.http.HeaderNames
 import play.api.libs.json.Reads
 import play.api.libs.ws.WSResponse
+import play.twirl.api.Html
 
 trait CustomMatchers {
   def httpStatus(expectedValue: Int): HavePropertyMatcher[WSResponse, Int] =
@@ -78,15 +79,17 @@ trait CustomMatchers {
         )
     }
 
-  def contentExists(content: String): HavePropertyMatcher[WSResponse, String] =
-    new HavePropertyMatcher[WSResponse, String] {
-      def apply(response: WSResponse) =
-        HavePropertyMatchResult(
-          response.body.contains(content),
-          "response.body",
-          content,
-          response.body
-        )
+  def contentExists(content: String, cssSelector: String = "body"): HavePropertyMatcher[WSResponse, String] =
+    (response: WSResponse) => {
+
+      val elementText = Jsoup.parse(response.body).select(cssSelector).text
+
+      HavePropertyMatchResult(
+        elementText.contains(content),
+        cssSelector,
+        content,
+        elementText
+      )
     }
 
   def contentDoesNotExist(content: String): HavePropertyMatcher[WSResponse, String] =
