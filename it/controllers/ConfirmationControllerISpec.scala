@@ -21,6 +21,7 @@ import models._
 import play.api.test.Helpers._
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
 import JanuaryConfirmationScenarios._
+import FebruaryConfirmationScenarios._
 import DecemberConfirmationScenarios._
 import NovemberConfirmationScenarios._
 
@@ -60,8 +61,19 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       januaryVariableWeeklyScenarios
   }
 
+  val february: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    februaryFourWeeklyScenarios ++
+      februaryMonthlyScenarios ++
+      februaryTwoWeeklyScenarios ++
+      februaryWeeklyScenarios ++
+      februaryVariableFourWeeklyScenarios ++
+      februaryVariableMonthlyScenarios ++
+      februaryVariableTwoWeeklyScenarios ++
+      februaryVariableWeeklyScenarios
+  }
+
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    november ++ december ++ january
+    november ++ december ++ january ++ february
   }
 
   "GET /confirmation" should {
@@ -85,7 +97,7 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
                 result should have(
                   httpStatus(OK),
                   titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
-                  contentExists(s"${outcome.setScale(2).toString()}"),
+                  contentExists(s"${outcome.setScale(2).toString()}", ".govuk-panel__title"),
                 )
               }
             }

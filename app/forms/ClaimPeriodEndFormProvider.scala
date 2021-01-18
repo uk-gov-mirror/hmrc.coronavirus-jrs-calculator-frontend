@@ -16,7 +16,7 @@
 
 package forms
 
-import java.time.LocalDate
+import java.time.{LocalDate, Year}
 
 import config.SchemeConfiguration
 import forms.mappings.Mappings
@@ -84,11 +84,11 @@ class ClaimPeriodEndFormProvider @Inject()() extends Mappings with SchemeConfigu
           // Allow claims that are less than 7 days long if they start at the beginning of the month.
           start.getDayOfMonth == 1 ||
           // Allow claims that are less than 7 days long if they start on the last day of the month.
-          start.getDayOfMonth == start.getMonth.maxLength()
+          start.getDayOfMonth == start.getMonth.length(Year.of(start.getYear).isLeap)
         ) && Period(start, end).countDays < 7) {
       Valid
     } else if (start.isAfter(refDate)) {
-      if (end.getDayOfMonth != end.getMonth.maxLength() && Period(start, end).countDays < 7) {
+      if (end.getDayOfMonth != end.getMonth.length(Year.of(end.getYear).isLeap) && Period(start, end).countDays < 7) {
         Invalid("claimPeriodEnd.cannot.be.lessThan.7days")
       } else {
         Valid
