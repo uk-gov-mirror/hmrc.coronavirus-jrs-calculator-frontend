@@ -476,8 +476,8 @@ lastPayDate.details.p2 = ‘Cyfnod cyflog’ yw’r cyfnod o amser y caiff y cyf
 
 somethingWentWrong.button = Dechrau eto
 
-lastYearPay.title = Yn 2019, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
-lastYearPay.heading = Yn 2019, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
+lastYearPay.title = Yn y flwyddyn dreth flaenorol, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
+lastYearPay.heading = Yn y flwyddyn dreth flaenorol, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
 lastYearPay.p1 = Dyma’r swm gros cyn didyniadau. Mae angen hwn arnom er mwyn cyfrifo’i hawl, yn seiliedig ar swm y llynedd.
 lastYearPay.p2 = Dylech ond cynnwys taliadau ar gyfer gwaith a wnaed yn y cyfnod cyflog hwn, hyd yn oed os yw’r slip cyflog yn cynnwys taliadau ar gyfer gwaith arall.
 lastYearPay.p3 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
