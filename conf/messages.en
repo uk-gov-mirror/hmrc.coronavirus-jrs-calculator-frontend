@@ -474,9 +474,9 @@ lastPayDate.details.p2 = A ‘pay period’ is the period of time that the emplo
 
 somethingWentWrong.button = Start again
 
-lastYearPay.title = In 2019, what did this employee earn in the pay period {0} to {1}?
-lastYearPay.heading = In 2019, what did this employee earn in the pay period {0} to {1}?
-lastYearPay.p1 = This is the gross amount before deductions. We need this to work out their entitlement based on last year’s amount.
+lastYearPay.title = In the previous tax year, what did this employee earn in the pay period {0} to {1}?
+lastYearPay.heading = In the previous tax year, what did this employee earn in the pay period {0} to {1}?
+lastYearPay.p1 = This is the gross amount earned before deductions. We need this information to calculate how much you can claim, based on the amount the employee earned in the previous tax year.
 lastYearPay.p2 = Only include payments for work done in this pay period, even if the payslip includes payments for other work.
 lastYearPay.p3 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 lastYearPay.error.nonNumeric = Enter the salary using numbers
@@ -558,7 +558,7 @@ whatToInclude.doNotInclude.l3 = non-monetary benefits like benefits in kind (suc
 detailedBreakdown.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days in each pay period. The furlough grant is 80% of this.
 detailedBreakdown.p1.average = You told us this employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing the total pay in this employment by the number of calendar days they’ve worked for you. Then we’ve multiplied that by the number of furlough days in each pay period. The furlough grant is 80% of this.
 detailedBreakdown.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 80% of this.
-detailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in 2019 and applied this to the number of furlough days in each pay period.
+detailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in the previous tax year and applied this to the number of furlough days in each pay period.
 detailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days in each pay period.
 detailedBreakdown.p2 = There’s a maximum amount you can claim for furlough grant and Employer National Insurance contributions. If this affects your claim, we’ve adjusted the calculations.
 detailedBreakdown.p2.a = Work out the maximum wage amount you can claim (opens in new tab).
@@ -597,7 +597,7 @@ referencePayBreakdown.cylb.thenPeriodTwo = Then in period two:
 referencePayBreakdown.cylb.addTotals = Add £{0} + £{1} (the totals from both pay periods).
 referencePayBreakdown.cylb.result = Total pay from same dates last year = £{0}
 referencePayBreakdown.cylb.higherOf = Then take the higher figure from methods 1 and 2:
-referencePayBreakdown.cylb.higherOf.cylb = £{0} (method 1: pay from same dates last year).
+referencePayBreakdown.cylb.higherOf.cylb = £{0} (method 1: pay from same dates in the previous tax year).
 referencePayBreakdown.cylb.higherOf.average = £{0} (method 2: average pay last year).
 
 furloughBreakdown.h4 = Furlough grant
@@ -722,12 +722,12 @@ phaseTwoDetailedBreakdown.p1.average = You told us this employee gets paid a var
 phaseTwoDetailedBreakdown.september.p1.average = You told us this employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 70% of this.
 phaseTwoDetailedBreakdown.october.p1.average = You told us this employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 60% of this.
 phaseTwoDetailedBreakdown.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. They have worked during the claim period. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 80% of this.
-phaseTwoDetailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in 2019 and applied this to the number of furlough days and furlough hours in each pay period.
+phaseTwoDetailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in the previous tax year and applied this to the number of furlough days and furlough hours in each pay period.
 phaseTwoDetailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 80% of this.
 phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 70% of this.
 phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 60% of this.
-phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in 2019 and applied this to the number of furlough days in each pay period.
+phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2 = Method 1: we’ve taken the amounts they were paid for equivalent pay periods in the previous tax year and applied this to the number of furlough days in each pay period.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days in each pay period.
 phaseTwoDetailedBreakdown.p2 = There’s a maximum amount you can claim for furlough grant and Employer National Insurance contributions. If this affects your claim, we’ve adjusted the calculations.
 phaseTwoDetailedBreakdown.no.nic.pension.p2 = There’s a maximum amount you can claim. If this affects your claim, we’ve adjusted the calculations.
@@ -778,7 +778,7 @@ phaseTwoReferencePayBreakdown.cylb.hours.l3 = Multiply by {0} (furlough hours).
 phaseTwoReferencePayBreakdown.cylb.hoursResult = Total pay based on hours worked in this pay period = £{0}
 
 phaseTwoReferencePayBreakdown.cylb.higherOf = Then take the higher figure from methods 1 and 2:
-phaseTwoReferencePayBreakdown.cylb.higherOf.cylb = £{0} (method 1: pay from same dates last year).
+phaseTwoReferencePayBreakdown.cylb.higherOf.cylb = £{0} (method 1: pay from same dates in the previous tax year).
 phaseTwoReferencePayBreakdown.cylb.higherOf.average = £{0} (method 2: average pay last year).
 phaseTwoReferencePayBreakdown.cylb.higherOf.result = Total pay based on hours worked in this pay period = £{0}
 
