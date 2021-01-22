@@ -173,6 +173,7 @@ payFrequency.error.required = Select one of the options below
 
 rootPage.title = Job Retention Scheme calculator
 rootPage.heading = Job Retention Scheme calculator
+
 rootPage.p1 = The Coronavirus Job Retention Scheme has been extended until 30 April 2021. You can claim 80% of an employee’s usual salary for hours not worked, up to a maximum of £2,500 per month.
 rootPage.p2 = Use this calculator to work out the figures you will need when you make a Coronavirus Job Retention Scheme claim.
 rootPage.p3 = You will need to use the calculator for each employee on full or flexible furlough and add up the results of each claim amount for the claim period. For your records, the calculator will also break down the calculations for each pay period.
