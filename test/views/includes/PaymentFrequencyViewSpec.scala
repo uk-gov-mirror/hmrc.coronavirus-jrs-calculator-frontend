@@ -23,6 +23,8 @@ import models.requests.DataRequest
 import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import views.html.PaymentFrequencyView
 import views.includes.behaviours.ViewBehaviours
 
@@ -31,13 +33,31 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
   object Selectors extends BaseSelectors
 
   val messageKeyPrefix = "august.checkClaimAmounts"
-
   val view: PaymentFrequencyView = injector.instanceOf[PaymentFrequencyView]
   val form: Form[PaymentFrequency] = new PaymentFrequencyFormProvider()()
 
-  implicit val request: DataRequest[_] = fakeDataRequest()
+  //  def allRadioOptions(checked: Boolean = false) = Seq(
+  //    RadioItem(
+  //      value = Some(November.toString),
+  //      content = Text(messages(s"selectClaimPeriod.${November.toString}")),
+  //      hint = Some(hintText(SelectClaimPeriodMessages.novemberHint(frontendAppConfig.novemberClaimCutOff))),
+  //      checked = checked,
+  //      id = Some(November.toString)
+  //    ),
+  //    RadioItem(
+  //      value = Some(December.toString),
+  //      content = Text(messages(s"selectClaimPeriod.${December.toString}")),
+  //      hint = Some(hintText(SelectClaimPeriodMessages.decemberHint(frontendAppConfig.decemberClaimCutOff))),
+  //      checked = checked,
+  //      id = Some(December.toString)
+  //    )
+  //  )
+
+  val expectedContent = Seq() //update
 
   "PaymentFrequencyViewSpec" when {
+
+    implicit val request: DataRequest[_] = fakeDataRequest()
 
     def applyView(): HtmlFormat.Appendable = view(form)
 
@@ -47,6 +67,27 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
     behave like pageWithBackLink
     behave like pageWithHeading("mikey")
     behave like pageWithSubmitButton(BaseMessages.continue)
+
+    //    allRadioOptions().foreach { option =>
+
+    //      s"contain radio buttons for the value '${option.value.get}'" in {
+    //
+    //        val doc = asDocument(applyView(form, allRadioOptions()))
+    //        assertContainsRadioButton(doc, option.value.get, "value", option.value.get, false, hint)
+    //      }
+    //
+    //      s"rendered with a value of '${option.value.get}'" must {
+    //
+    //        s"have the '${option.value.get}' radio button selected" in {
+    //
+    //          val formWithData = form.bind(Map("value" -> s"${option.value.get}"))
+    //          val doc = asDocument(applyView(formWithData, allRadioOptions(true)))
+    //
+    //          assertContainsRadioButton(doc, option.value.get, "value", option.value.get, true, hint)
+    //        }
+    //      }
+    //    }
+
   }
 
 }
