@@ -47,33 +47,6 @@ trait BaseSelectors {
   val dropdown = "#main-content summary"
   val dropdownP: Int => String = i => s"#main-content details > div > p:nth-child($i)"
 
-  def checkAnswersHeading(id: Int, row: Int) = s"dl:nth-of-type($id) div:nth-of-type($row) dt"
-
-  def idBasedSummaryRowHeading(id: String, row: Int) = s"#$id > dl > div:nth-child($row) > dt"
-
-  def checkAnswersAnswerValue(id: Int, row: Int) = s"dl:nth-of-type($id) div:nth-of-type($row) dd:nth-of-type(1)"
-
-  def idBasedSummaryRowAnswerValue(id: String, row: Int) = s"#$id > dl > div:nth-child($row) > dd.govuk-summary-list__value"
-
-  def multiCheckAnswersHeading(id: String, row: Int) = s"#$id > div.multi-line-summary > dl > div:nth-child($row) > dt"
-
-  def multiCheckAnswersValue(id: String, row: Int) = s"#$id > div.multi-line-summary > dl > div:nth-child($row) > dd"
-
-  def reviewEmployeesRowLabel(row: Int) = s"table tr:nth-of-type($row) th"
-
-  def reviewEmployeesRowAction(row: Int) = s"table tr:nth-of-type($row) td a"
-
-  def tableColumnHeader(columnNumber: Int) = s"#main-content > div > div > div > table > thead > tr > th:nth-child($columnNumber)"
-
-  def tableRowHeader(row: Int) = s"#main-content > div > div > div > table > tbody > tr:nth-child($row) > td:nth-child(1)"
-
-  def tableRowCellContent(row: Int, rowCell: Int) =
-    s"#main-content > div > div > div > table > tbody > tr:nth-child($row) > td:nth-child($rowCell) > strong"
-
-  def tableReviewLink(row: Int) = s"#main-content > div > div > div > table > tbody > tr:nth-child($row) > td:nth-child(3) > a"
-
-  def tableReviewLinkAction(row: Int) = s"table tr:nth-of-type($row) td a"
-
 }
 
 object BaseSelectors extends BaseSelectors

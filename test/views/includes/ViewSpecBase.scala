@@ -31,9 +31,9 @@ trait ViewSpecBase extends SpecBase with BaseSelectors {
 
   implicit class ContentExtension(x: Content) {
     def text: String = x match {
-      case Text(text)        => text
+      case Text(text) => text
       case HtmlContent(html) => Jsoup.parse(html.toString).text
-      case _                 => ""
+      case _ => ""
     }
   }
 
@@ -103,12 +103,12 @@ trait ViewSpecBase extends SpecBase with BaseSelectors {
     assert(doc.getElementById(id).hasClass(expectedClass), s"\n\nElement $id does not have class $expectedClass")
 
   def assertContainsRadioButton(
-    doc: Document,
-    id: String,
-    name: String,
-    value: String,
-    isChecked: Boolean,
-    hint: Option[Content] = None) = {
+                                 doc: Document,
+                                 id: String,
+                                 name: String,
+                                 value: String,
+                                 isChecked: Boolean,
+                                 hint: Option[Content] = None) = {
     assertRenderedById(doc, id)
     val radio = doc.getElementById(id)
     assert(radio.attr("name") == name, s"\n\nElement $id does not have name $name")
@@ -124,75 +124,6 @@ trait ViewSpecBase extends SpecBase with BaseSelectors {
       assert(!radio.hasAttr("checked"), s"\n\nElement $id is checked")
     }
   }
-
-  def checkYourAnswersRowChecks(id: Int, expectedRowData: (String, String)*)(implicit document: Document): Unit =
-    expectedRowData.zipWithIndex.foreach {
-      case ((heading, value), i) =>
-        val rowPosition = i + 1
-
-        s"have the correct answer row at position $rowPosition for id: $id" which {
-
-          s"should have the correct heading of '$heading'" in {
-            document.select(checkAnswersHeading(id, rowPosition)).text mustBe heading
-          }
-
-          s"should have the correct value of '$value'" in {
-            document.select(checkAnswersAnswerValue(id, rowPosition)).text mustBe value
-          }
-        }
-    }
-
-  def idBasedSummaryRowCheck(id: String, expectedRowData: (String, String)*)(implicit document: Document): Unit =
-    expectedRowData.zipWithIndex.foreach {
-      case ((heading, value), i) =>
-        val rowPosition = i + 1
-
-        s"have the correct answer row at position $rowPosition for id: $id" which {
-
-          s"should have the correct heading of '$heading'" in {
-            document.select(idBasedSummaryRowHeading(id, rowPosition)).text mustBe heading
-          }
-
-          s"should have the correct value of '$value'" in {
-            document.select(idBasedSummaryRowAnswerValue(id, rowPosition)).text mustBe value
-          }
-        }
-    }
-
-  def checkYourAnswersMultiRowChecks(id: String, expectedRowData: (String, String)*)(implicit document: Document): Unit =
-    expectedRowData.zipWithIndex.foreach {
-      case ((heading, value), i) =>
-        val rowPosition = i + 1
-
-        s"have the correct answer row at position $rowPosition" which {
-
-          s"should have the correct heading of '$heading'" in {
-
-            document.select(multiCheckAnswersHeading(id, rowPosition)).first.text mustBe heading
-          }
-
-          s"should have the correct value of '$value'" in {
-            document.select(multiCheckAnswersValue(id, rowPosition)).first.text mustBe value
-          }
-        }
-    }
-
-  def tableRowsChecks(expectedRowData: (String, String)*)(implicit document: Document): Unit =
-    expectedRowData.zipWithIndex.foreach {
-      case ((heading, value), i) =>
-        val rowPosition = i + 1
-
-        s"have the correct answer row at position $rowPosition" which {
-
-          s"should have the correct heading of '$heading'" in {
-            document.select(tableRowHeader(rowPosition)).text mustBe heading
-          }
-
-          s"should have the correct value of '$value'" in {
-            document.select(tableRowCellContent(rowPosition, 2)).text mustBe value
-          }
-        }
-    }
 
   def currency(amt: BigDecimal): String = f"£$amt%,1.2f".replace(".00", "")
 

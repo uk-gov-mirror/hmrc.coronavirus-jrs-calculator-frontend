@@ -23,8 +23,6 @@ import models.requests.DataRequest
 import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import views.html.PaymentFrequencyView
 import views.includes.behaviours.ViewBehaviours
 
