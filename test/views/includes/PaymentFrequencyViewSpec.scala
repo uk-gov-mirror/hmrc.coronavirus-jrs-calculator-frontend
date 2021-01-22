@@ -48,7 +48,12 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
 
     implicit val request: DataRequest[_] = fakeDataRequest()
 
-    def applyView(): HtmlFormat.Appendable = view(form = form, radioItems = allRadioOptions())
+    def applyView(): HtmlFormat.Appendable =
+      view(
+        form = form,
+        postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
+        radioItems = allRadioOptions()
+      )
 
     implicit val doc: Document = asDocument(applyView())
 
@@ -62,7 +67,7 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
       s"contain radio buttons for the value '${option.value.get}'" in {
 
         val doc = asDocument(applyView())
-        assertContainsRadioButton(doc, option.value.get, name = "value", value = option.value.get, isChecked = false)
+        assertContainsRadioButton(doc, id = option.value.get, name = "value", value = option.value.get, isChecked = false)
       }
 
       s"rendered with a value of '${option.value.get}'" must {
@@ -70,12 +75,16 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
         s"have the '${option.value.get}' radio button selected" in {
 
           def applyView(form: Form[_], radioItems: Seq[RadioItem]): HtmlFormat.Appendable =
-            view.apply(form = form, radioItems = radioItems)
+            view.apply(
+              form = form,
+              postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
+              radioItems = radioItems
+            )
 
           val formWithData: Form[PaymentFrequency] = form.bind(Map("value" -> s"${option.value.get}"))
-          val doc = asDocument(applyView(formWithData, allRadioOptions(true)))
+          val doc = asDocument(applyView(formWithData, allRadioOptions(checked = true)))
 
-          assertContainsRadioButton(doc, option.value.get, "value", option.value.get, isChecked = true)
+          assertContainsRadioButton(doc, id = option.value.get, name = "value", value = option.value.get, isChecked = true)
         }
       }
     }

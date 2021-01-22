@@ -73,7 +73,12 @@ class PaymentFrequencyControllerSpec extends SpecBaseControllerSpecs with Mockit
       val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, allRadioOptions())(dataRequest, messages).toString
+      contentAsString(result) mustEqual
+        view(
+          form = form,
+          postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
+          radioItems = allRadioOptions()
+        )(dataRequest, messages).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
@@ -84,7 +89,10 @@ class PaymentFrequencyControllerSpec extends SpecBaseControllerSpecs with Mockit
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill(PaymentFrequency.values.head), allRadioOptions())(dataRequest, messages).toString
+        view(
+          form = form.fill(PaymentFrequency.values.head),
+          postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
+          radioItems = allRadioOptions())(dataRequest, messages).toString
     }
 
     "redirect to the next page when valid data is submitted" in {
@@ -108,7 +116,11 @@ class PaymentFrequencyControllerSpec extends SpecBaseControllerSpecs with Mockit
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
-        view(boundForm, allRadioOptions())(dataRequest, messages).toString
+        view(
+          form = boundForm,
+          postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
+          radioItems = allRadioOptions()
+        )(dataRequest, messages).toString
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {

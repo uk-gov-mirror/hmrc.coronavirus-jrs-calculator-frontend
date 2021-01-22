@@ -61,7 +61,8 @@ class PaymentFrequencyController @Inject()(
         form = preparedForm,
         postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
         radioItems = radioOptions
-      ))
+      )
+    )
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
