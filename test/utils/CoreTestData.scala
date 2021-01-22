@@ -24,10 +24,7 @@ import models.PayMethod.Variable
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.TopUpStatus.NotToppedUp
 import models.UserAnswers
-import models.requests.DataRequest
 import play.api.libs.json.Json
-import play.api.test.FakeRequest
-import uk.gov.hmrc.http.SessionKeys
 
 trait CoreTestData extends UserAnswersBuilder {
 
