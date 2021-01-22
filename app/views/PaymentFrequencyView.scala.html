@@ -31,7 +31,7 @@
         appConfig: config.FrontendAppConfig
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], radioItems:Seq[RadioItem])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "payFrequency.title")), thisPage = PaymentFrequencyPage) {
 
@@ -58,7 +58,7 @@
             form = form,
             legendAsHeading = false,
             legend = messages("payFrequency.heading"),
-            items = PaymentFrequency.options(form)
+            items = radioItems
         )
 
         @button("site.continue")

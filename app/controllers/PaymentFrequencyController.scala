@@ -20,11 +20,14 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.PaymentFrequencyFormProvider
 import javax.inject.Inject
+import models.PaymentFrequency
 import navigation.Navigator
 import pages.PaymentFrequencyPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.PaymentFrequencyView
 
@@ -43,7 +46,7 @@ class PaymentFrequencyController @Inject()(
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[PaymentFrequency] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(PaymentFrequencyPage) match {
@@ -51,14 +54,17 @@ class PaymentFrequencyController @Inject()(
       case Valid(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm))
+    val radioOptions: Seq[RadioItem] = PaymentFrequency.options(form = form)
+
+    Ok(view(preparedForm, radioItems = radioOptions))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val radioOptions: Seq[RadioItem] = PaymentFrequency.options(form = form)
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, radioOptions))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(PaymentFrequencyPage, value))
