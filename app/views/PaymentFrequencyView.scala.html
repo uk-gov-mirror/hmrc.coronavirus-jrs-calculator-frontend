@@ -22,8 +22,13 @@
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
+        h1: components.h1,
+        p: components.p,
+        link: components.link,
         inputRadio: components.inputRadio,
-        button: components.button
+        button: components.button,
+        panelIndent: components.panelIndent,
+        appConfig: config.FrontendAppConfig
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
@@ -34,8 +39,24 @@
 
         @errorSummary(form.errors)
 
+        @h1("payFrequency.heading")
+
+        @panelIndent(Html(messages("payFrequency.panelIndent")))
+
+        @p{@messages("payFrequency.p1")}
+
+        @p{
+            @messages("payFrequency.p2")
+            @link(
+                appConfig.calculateClaimAmount,
+                messages("payFrequency.link"),
+                true
+            )
+        }
+
         @inputRadio(
             form = form,
+            legendAsHeading = false,
             legend = messages("payFrequency.heading"),
             items = PaymentFrequency.options(form)
         )

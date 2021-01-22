@@ -31,9 +31,9 @@ trait ViewSpecBase extends SpecBase with BaseSelectors {
 
   implicit class ContentExtension(x: Content) {
     def text: String = x match {
-      case Text(text) => text
+      case Text(text)        => text
       case HtmlContent(html) => Jsoup.parse(html.toString).text
-      case _ => ""
+      case _                 => ""
     }
   }
 
@@ -103,12 +103,12 @@ trait ViewSpecBase extends SpecBase with BaseSelectors {
     assert(doc.getElementById(id).hasClass(expectedClass), s"\n\nElement $id does not have class $expectedClass")
 
   def assertContainsRadioButton(
-                                 doc: Document,
-                                 id: String,
-                                 name: String,
-                                 value: String,
-                                 isChecked: Boolean,
-                                 hint: Option[Content] = None) = {
+    doc: Document,
+    id: String,
+    name: String,
+    value: String,
+    isChecked: Boolean,
+    hint: Option[Content] = None) = {
     assertRenderedById(doc, id)
     val radio = doc.getElementById(id)
     assert(radio.attr("name") == name, s"\n\nElement $id does not have name $name")

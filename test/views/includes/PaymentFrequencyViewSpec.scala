@@ -25,6 +25,7 @@ import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.html.PaymentFrequencyView
 import views.includes.behaviours.ViewBehaviours
+import assets.PaymentFrequencyMessages
 
 class PaymentFrequencyViewSpec extends ViewBehaviours {
 
@@ -51,7 +52,13 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
   //    )
   //  )
 
-  val expectedContent = Seq() //update
+  val expectedContent = Seq(
+    Selectors.h1      -> PaymentFrequencyMessages.heading,
+    Selectors.indent  -> PaymentFrequencyMessages.indent,
+    Selectors.p(1)    -> PaymentFrequencyMessages.p1,
+    Selectors.p(2)    -> s"${PaymentFrequencyMessages.p2} ${PaymentFrequencyMessages.link}",
+    Selectors.link(1) -> PaymentFrequencyMessages.link
+  ) //update
 
   "PaymentFrequencyViewSpec" when {
 
@@ -67,6 +74,7 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
     behave like pageWithSubmitButton(BaseMessages.continue)
 
     //    allRadioOptions().foreach { option =>
+    behave like pageWithExpectedMessages(expectedContent)
 
     //      s"contain radio buttons for the value '${option.value.get}'" in {
     //
