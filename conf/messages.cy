@@ -173,29 +173,31 @@ payFrequency.error.required = Dewiswch un o’r opsiynau isod
 
 rootPage.title = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 rootPage.heading = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
-rootPage.p1 = Bydd y Cynllun Cadw Swyddi yn aros ar agor tan 31 Mawrth 2021. Ar gyfer cyfnodau hawlio yn rhedeg hyd at 31 Ionawr 2021, bydd cyflogeion yn cael 80% o’u cyflog arferol am yr oriau na chânt eu gweithio.
-rootPage.p2 = Defnyddiwch y gyfrifiannell hon i gyfrifo’r ffigurau sydd eu hangen arnoch pan fyddwch yn llenwi hawliad drwy’r cynllun.
-rootPage.p3 = Mae hefyd yn dadansoddi’r cyfrifiadau ar gyfer pob cyfnod cyflog ar gyfer eich cofnodion. Mae’r ffigurau ar gyfer un cyflogai, ar gyfer y cyfnod hawlio a nodir gennych. Defnyddiwch y gyfrifiannell eto ar gyfer unrhyw gyflogeion eraill rydych yn hawlio ar eu cyfer ac adiwch y canlyniadau at ei gilydd.
+rootPage.p1 = Mae’r Cynllun Cadw Swyddi yn sgil Coronafeirws wedi’i ymestyn tan 30 Ebrill 2021. Gallwch hawlio 80% o gyflog arferol cyflogai ar gyfer oriau na chawsant eu gweithio, hyd at uchafswm o £2,500 y mis.
+rootPage.p2 = Defnyddiwch y gyfrifiannell hon i gyfrifo’r ffigurau y bydd eu hangen arnoch pan fyddwch yn hawlio drwy’r Cynllun Cadw Swyddi yn sgil Coronafeirws.
+rootPage.p3 = Bydd yn rhaid i chi ddefnyddio’r gyfrifiannell ar gyfer pob cyflogai sydd ar ffyrlo llawn neu ffyrlo hyblyg, ac adio canlyniadau swm pob hawliad ar gyfer y cyfnod hawlio. Ar gyfer eich cofnodion, bydd y gyfrifiannell hefyd yn dadansoddi’r cyfrifiadau ar gyfer pob cyfnod cyflog.
 
-rootPage.h3.who.can.use.heading = Gallwch ddefnyddio’r gyfrifiannell hon i hawlio am y canlynol:
+rootPage.h3.who.can.use.heading = Gallwch ddefnyddio’r gyfrifiannell hon ar gyfer y canlynol:
 rootPage.h3.who.can.use.l1 = cyflogeion sydd ar ffyrlo llawn ac felly sydd heb weithio unrhyw oriau
 rootPage.h3.who.can.use.l2 = cyflogeion a ddaeth yn ôl i’r gwaith am rai o’u horiau arferol o 1 Gorffennaf ymlaen
 rootPage.h3.who.can.use.l3 = y mwyafrif o gyflogeion sy’n cael eu talu’n wythnosol, bob pythefnos, bob pedair wythnos neu’n fisol mewn cyfnodau cyflog sefydlog
-rootPage.h3.who.can.use.l4 = cyflogeion sydd wedi dychwelyd o absenoldeb statudol, megis absenoldeb mamolaeth, o 1 Awst ymlaen
+rootPage.h3.who.can.use.l4 = cyflogeion sydd wedi dychwelyd o absenoldeb statudol o 1 Awst 2020 ymlaen, er enghraifft, absenoldeb mamolaeth
 
 rootPage.h3.who.can.not.use.heading = Ni ellir defnyddio’r gyfrifiannell ar gyfer cyflogeion os yw’r canlynol yn wir:
 rootPage.h3.who.can.not.use.l1 = gwnaethant ddechrau cyfnod rhybudd neu roedd yn ofynnol iddynt ddychwelyd i’r gwaith yn ystod cyfnod rhybudd i weithio yn yr un cyfnod hawlio, ar neu ar ôl 1 Rhagfyr 2020
 rootPage.h3.who.can.not.use.l2 = mae ganddynt gyfnod cyflog blynyddol
 rootPage.h3.who.can.not.use.l3 = maent wedi’u trosglwyddo o dan reoliadau Trosglwyddo Ymgymeriadau Diogelu Cyflogaeth (TUPE)
 rootPage.h3.who.can.not.use.l4 = heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
-rootPage.h3.who.can.not.use.l5 = wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf neu’n gynt)
+rootPage.h3.who.can.not.use.l5 = wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf 2020 neu’n gynt)
 rootPage.h3.who.can.not.use.l6 = yn cael cyfraniadau pensiwn y cyflogwr y tu allan i gynllun pensiwn cofrestru awtomatig
 rootPage.h3.who.can.not.use.l7 = daeth ei ffyrlo i ben ac yna dechreuodd ei ffyrlo eto yn ystod yr un cyfnod hawlio
 rootPage.h3.who.can.not.use.l8 = cawsant eu talu ar ffurf amrywiol ac maent wedi bod ar fwy nag un cyfnod o ffyrlo lle’r oedd unrhyw ran o’r cyfnodau ffyrlo yn ystod blwyddyn dreth 2019/20
 rootPage.h3.who.can.not.use.l9 = mae ganddynt gyflog amrywiol, gwnaethant ddechrau gweithio cyn 6 Ebrill 2020 ac nid oeddent ar gyflogres eu cyflogwr ar neu cyn 19 Mawrth 2020
 rootPage.h3.who.can.not.use.l10 = gwnaethant ddechrau gweithio i’w cyflogwr yn ystod cyfnod calendr ym mlwyddyn dreth 2019-20 sy’n cydfynd â’r holl gyfnod neu ran ohono
+rootPage.h3.who.can.not.use.l11 = maent ar gyflog sefydlog ac wedi newid amlder y taliadau, er enghraifft o gyflog misol i gyflog wythnosol
+rootPage.h3.who.can.not.use.l12 = mae ganddynt gyflog amrywiol, nid oeddent ar gyflogres eu cyflogwr ar neu cyn 19 Mawrth 2020, ac maent wedi bod ar fwy nag un cyfnod o ffyrlo ar ôl 1 Tachwedd 2020
 
-rootPage.p4 = Yn yr achosion hyn, cyfrifwch yr hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
+rootPage.p4 = Yn yr achosion hyn, mae’n rhaid i chi gyfrifo’r hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
 rootPage.p4.link = arweiniad cyfrifo
 rootPage.p5 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y swm rydych yn ei hawlio yn gywir.
 rootPage.beforeYouStart.header = Cyn i chi ddechrau
@@ -214,8 +216,8 @@ rootPage.beforeYouStart.p2.l1 = {0}
 rootPage.beforeYouStart.p2.l1.link = oriau arferol y cyflogai
 rootPage.beforeYouStart.p2.l2 = yr oriau gwirioneddol a weithiwyd
 rootPage.beforeYouStart.p2.l3 = yr oriau ar ffyrlo
-rootPage.beforeYouStart.p3 = {0}
-rootPage.beforeYouStart.p3.link = Camau i’w cymryd cyn cyfrifo’ch hawliad
+rootPage.beforeYouStart.p3 = Darllenwch ragor am y {0}
+rootPage.beforeYouStart.p3.link = camau i’w cymryd cyn cyfrifo’ch hawliad
 
 payDate.title = Beth yw diwedd y cyfnod cyflog nesaf ar ôl {0}?
 payDate.heading = Beth yw diwedd y cyfnod cyflog nesaf ar ôl {0}?
