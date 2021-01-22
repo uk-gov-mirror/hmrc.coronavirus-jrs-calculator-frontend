@@ -31,11 +31,11 @@
         appConfig: config.FrontendAppConfig
 )
 
-@(form: Form[_], radioItems:Seq[RadioItem])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], postAction:Call, radioItems:Seq[RadioItem])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "payFrequency.title")), thisPage = PaymentFrequencyPage) {
 
-    @formHelper(action = PaymentFrequencyController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = postAction, 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
@@ -43,14 +43,14 @@
 
         @panelIndent(Html(messages("payFrequency.panelIndent")))
 
-        @p{@messages("payFrequency.p1")}
+        @p{ @messages("payFrequency.p1") }
 
         @p{
             @messages("payFrequency.p2")
             @link(
-                appConfig.calculateClaimAmount,
-                messages("payFrequency.link"),
-                true
+                link = appConfig.calculateClaimAmount,
+                messageKey = messages("payFrequency.link"),
+                attrTarget = true
             )
         }
 

@@ -50,13 +50,18 @@ class PaymentFrequencyController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(PaymentFrequencyPage) match {
-      case Invalid(e)   => form
+      case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
 
     val radioOptions: Seq[RadioItem] = PaymentFrequency.options(form = form)
 
-    Ok(view(preparedForm, radioItems = radioOptions))
+    Ok(
+      view(
+        form = preparedForm,
+        postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
+        radioItems = radioOptions
+      ))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
@@ -64,7 +69,15 @@ class PaymentFrequencyController @Inject()(
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, radioOptions))),
+        formWithErrors =>
+          Future.successful(
+            BadRequest(
+              view(
+                form = formWithErrors,
+                postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
+                radioItems = radioOptions
+              )
+            )),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(PaymentFrequencyPage, value))
