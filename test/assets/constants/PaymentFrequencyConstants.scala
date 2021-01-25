@@ -16,18 +16,11 @@
 
 package assets.constants
 
-import java.time.LocalDate
-
-import base.CoreTestDataBuilder
-import models.NicCategory.Payable
 import models.PaymentFrequency._
-import models.PensionStatus.DoesContribute
 import models._
 import play.api.i18n.Messages
-import services.Threshold
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
-import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown}
 
 object PaymentFrequencyConstants {
 

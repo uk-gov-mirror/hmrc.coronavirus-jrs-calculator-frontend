@@ -74,7 +74,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       contentAsString(result) mustEqual view(breakdown, meta.claimPeriod, calculatorVersionConf)(request, messages).toString
     }
 
-    "return OK and the phase two confirmation view with detailed breakdowns for a GET for 1-31st July 2020" in new CalculatorVersionConfiguration {
+    "return OK and the phase two confirmation view with detailed breakdowns for a GET for dates 1st to 31st July 2020" in new CalculatorVersionConfiguration {
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(phaseTwoJourney()))
 
@@ -109,7 +109,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         messages).toString
     }
 
-    "return OK and the JRSExtension view with calculations, for a GET for 1st to 31st March 2021" in new CalculatorVersionConfiguration {
+    "return OK and the JRSExtension view with calculations, for a GET for dates 1st to 31st March 2021" in new CalculatorVersionConfiguration {
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(march2021Journey()))
 
@@ -118,8 +118,6 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       val claimStartDate = "2021, 3, 1"
       val claimEndDate = "2021, 3, 31"
 
-      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
-      val result: Future[Result] = controller.onPageLoad()(request)
       val payment: RegularPaymentWithPhaseTwoPeriod = {
         RegularPaymentWithPhaseTwoPeriod(
           regularPay = employeeIncomeForPeriod,
@@ -145,6 +143,9 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
           )
         )
       }
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val result: Future[Result] = controller.onPageLoad()(request)
 
       val expected: String = contentAsString(result)
       val actual: String = extensionView(

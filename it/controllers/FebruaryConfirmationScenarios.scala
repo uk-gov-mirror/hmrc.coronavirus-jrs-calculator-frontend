@@ -24,182 +24,183 @@ import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSp
 object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
-  val februaryFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("February Fixed Four Weekly Scenarios" -> Seq(
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2021-02-28")
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-01")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate))))
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withRegularPayAmount(2000)
-      .withFurloughStartDate("2021-02-01")
-      .withClaimPeriodEnd("2021-02-28")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(148.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(40.0))))
-      -> 1167.57,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2021-02-27")
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-01")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
-      .withRegularPayAmount(3300)
-      .withFurloughStartDate("2021-02-01")
-      .withClaimPeriodEnd("2021-02-28")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-01-04", "2021-02-01", "2021-03-01"))
-      .withUsualHours(List())
-      .withPartTimeHours(List())
-      -> 2410.83,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughOngoing)
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-01")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
-      .withRegularPayAmount(3300)
-      .withFurloughStartDate("2021-02-01")
-      .withClaimPeriodEnd("2021-02-28")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List())
-      .withPartTimeHours(List())
-      -> 2307.68,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughOngoing)
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-28")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-28".toLocalDate,"2021-03-27".toLocalDate),Period("2021-02-28".toLocalDate,"2021-02-28".toLocalDate))))
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withRegularPayAmount(2200)
-      .withFurloughStartDate("2021-02-28")
-      .withClaimPeriodEnd("2021-02-28")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-02-27", "2021-03-27"))
-      .withUsualHours(List(UsualHours("2021-03-27".toLocalDate,Hours(148.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-03-27".toLocalDate,Hours(25.0))))
-      -> 52.24,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2021-02-28")
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-10")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-06".toLocalDate,"2021-03-05".toLocalDate),Period("2021-02-10".toLocalDate,"2021-02-28".toLocalDate))))
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withRegularPayAmount(3500)
-      .withFurloughStartDate("2021-02-01")
-      .withClaimPeriodEnd("2021-02-28")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-02-05", "2021-03-05"))
-      .withUsualHours(List(UsualHours("2021-03-05".toLocalDate,Hours(15.86))))
-      .withPartTimeHours(List(PartTimeHours("2021-03-05".toLocalDate,Hours(1.86))))
-      -> 1497.55,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2021-02-28")
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-10")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-06".toLocalDate,"2021-03-05".toLocalDate),Period("2021-02-10".toLocalDate,"2021-02-28".toLocalDate))))
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withRegularPayAmount(1500)
-      .withFurloughStartDate("2021-02-01")
-      .withClaimPeriodEnd("2021-02-28")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-02-05", "2021-03-05"))
-      .withUsualHours(List(UsualHours("2021-03-05".toLocalDate,Hours(22))))
-      .withPartTimeHours(List(PartTimeHours("2021-03-05".toLocalDate,Hours(17))))
-      -> 185.06,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughOngoing)
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-01")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-06".toLocalDate,"2021-02-02".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-02".toLocalDate))))
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withRegularPayAmount(2654.11)
-      .withFurloughStartDate("2020-04-01")
-      .withClaimPeriodEnd("2021-02-02")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-01-05", "2021-02-02"))
-      .withUsualHours(List(UsualHours("2021-02-02".toLocalDate,Hours(34.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-02".toLocalDate,Hours(11.4))))
-      -> 101.55,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughOngoing)
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-01")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-08".toLocalDate,"2021-02-04".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-02".toLocalDate))))
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withRegularPayAmount(3200.11)
-      .withFurloughStartDate("2020-04-01")
-      .withClaimPeriodEnd("2021-02-02")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-01-07", "2021-02-04"))
-      .withUsualHours(List(UsualHours("2021-02-04".toLocalDate,Hours(34.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-04".toLocalDate,Hours(11.4))))
-      -> 119.57,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2021-02-01")
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-01")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-10".toLocalDate,"2021-02-06".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate))))
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withRegularPayAmount(2322.11)
-      .withFurloughStartDate("2021-01-01")
-      .withClaimPeriodEnd("2021-02-02")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-01-09", "2021-02-06"))
-      .withUsualHours(List(UsualHours("2021-02-06".toLocalDate,Hours(10.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-06".toLocalDate,Hours(6.5))))
-      -> 23.22,
-    emptyUserAnswers
-      .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2021-02-02")
-      .withPaymentFrequency(FourWeekly)
-      .withClaimPeriodStart("2021-02-01")
-      .withLastYear(List())
-      .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-05".toLocalDate,"2021-02-01".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate)), PartialPeriod(Period("2021-02-02".toLocalDate,"2021-03-01".toLocalDate),Period("2021-02-02".toLocalDate,"2021-02-02".toLocalDate))))
-      .withPayMethod(PayMethod.Regular)
-      .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withRegularPayAmount(1465.55)
-      .withFurloughStartDate("2020-12-01")
-      .withClaimPeriodEnd("2021-02-02")
-      .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-      .withPayDate(List("2021-01-04", "2021-02-01", "2021-03-01"))
-      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate,Hours(7.5)), UsualHours("2021-03-01".toLocalDate,Hours(7.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate,Hours(3.0)), PartTimeHours("2021-03-01".toLocalDate,Hours(3.0))))
-      -> 50.24
-  ))
+  val februaryFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq(
+    "February Fixed Four Weekly Scenarios" -> Seq(
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2021-02-28")
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-01")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate))))
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+        .withRegularPayAmount(2000)
+        .withFurloughStartDate("2021-02-01")
+        .withClaimPeriodEnd("2021-02-28")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-01-31", "2021-02-28"))
+        .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(148.0))))
+        .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(40.0))))
+        -> 1167.57,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2021-02-27")
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-01")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
+        .withRegularPayAmount(3300)
+        .withFurloughStartDate("2021-02-01")
+        .withClaimPeriodEnd("2021-02-28")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-01-04", "2021-02-01", "2021-03-01"))
+        .withUsualHours(List())
+        .withPartTimeHours(List())
+        -> 2410.83,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughOngoing)
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-01")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
+        .withRegularPayAmount(3300)
+        .withFurloughStartDate("2021-02-01")
+        .withClaimPeriodEnd("2021-02-28")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-01-31", "2021-02-28"))
+        .withUsualHours(List())
+        .withPartTimeHours(List())
+        -> 2307.68,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughOngoing)
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-28")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPartTimePeriods(List(PartialPeriod(Period("2021-02-28".toLocalDate, "2021-03-27".toLocalDate), Period("2021-02-28".toLocalDate, "2021-02-28".toLocalDate))))
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+        .withRegularPayAmount(2200)
+        .withFurloughStartDate("2021-02-28")
+        .withClaimPeriodEnd("2021-02-28")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-02-27", "2021-03-27"))
+        .withUsualHours(List(UsualHours("2021-03-27".toLocalDate, Hours(148.0))))
+        .withPartTimeHours(List(PartTimeHours("2021-03-27".toLocalDate, Hours(25.0))))
+        -> 52.24,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2021-02-28")
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-10")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPartTimePeriods(List(PartialPeriod(Period("2021-02-06".toLocalDate, "2021-03-05".toLocalDate), Period("2021-02-10".toLocalDate, "2021-02-28".toLocalDate))))
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+        .withRegularPayAmount(3500)
+        .withFurloughStartDate("2021-02-01")
+        .withClaimPeriodEnd("2021-02-28")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-02-05", "2021-03-05"))
+        .withUsualHours(List(UsualHours("2021-03-05".toLocalDate, Hours(15.86))))
+        .withPartTimeHours(List(PartTimeHours("2021-03-05".toLocalDate, Hours(1.86))))
+        -> 1497.55,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2021-02-28")
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-10")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPartTimePeriods(List(PartialPeriod(Period("2021-02-06".toLocalDate, "2021-03-05".toLocalDate), Period("2021-02-10".toLocalDate, "2021-02-28".toLocalDate))))
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+        .withRegularPayAmount(1500)
+        .withFurloughStartDate("2021-02-01")
+        .withClaimPeriodEnd("2021-02-28")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-02-05", "2021-03-05"))
+        .withUsualHours(List(UsualHours("2021-03-05".toLocalDate, Hours(22))))
+        .withPartTimeHours(List(PartTimeHours("2021-03-05".toLocalDate, Hours(17))))
+        -> 185.06,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughOngoing)
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-01")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPartTimePeriods(List(PartialPeriod(Period("2021-02-06".toLocalDate, "2021-02-02".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-02".toLocalDate))))
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+        .withRegularPayAmount(2654.11)
+        .withFurloughStartDate("2020-04-01")
+        .withClaimPeriodEnd("2021-02-02")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-01-05", "2021-02-02"))
+        .withUsualHours(List(UsualHours("2021-02-02".toLocalDate, Hours(34.5))))
+        .withPartTimeHours(List(PartTimeHours("2021-02-02".toLocalDate, Hours(11.4))))
+        -> 101.55,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughOngoing)
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-01")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPartTimePeriods(List(PartialPeriod(Period("2021-01-08".toLocalDate, "2021-02-04".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-02".toLocalDate))))
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+        .withRegularPayAmount(3200.11)
+        .withFurloughStartDate("2020-04-01")
+        .withClaimPeriodEnd("2021-02-02")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-01-07", "2021-02-04"))
+        .withUsualHours(List(UsualHours("2021-02-04".toLocalDate, Hours(34.5))))
+        .withPartTimeHours(List(PartTimeHours("2021-02-04".toLocalDate, Hours(11.4))))
+        -> 119.57,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2021-02-01")
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-01")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPartTimePeriods(List(PartialPeriod(Period("2021-01-10".toLocalDate, "2021-02-06".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate))))
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+        .withRegularPayAmount(2322.11)
+        .withFurloughStartDate("2021-01-01")
+        .withClaimPeriodEnd("2021-02-02")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-01-09", "2021-02-06"))
+        .withUsualHours(List(UsualHours("2021-02-06".toLocalDate, Hours(10.0))))
+        .withPartTimeHours(List(PartTimeHours("2021-02-06".toLocalDate, Hours(6.5))))
+        -> 23.22,
+      emptyUserAnswers
+        .withFurloughStatus(FurloughStatus.FurloughEnded)
+        .withFurloughEndDate("2021-02-02")
+        .withPaymentFrequency(FourWeekly)
+        .withClaimPeriodStart("2021-02-01")
+        .withLastYear(List())
+        .withPayPeriodsList(PayPeriodsList.Yes)
+        .withPartTimePeriods(List(PartialPeriod(Period("2021-01-05".toLocalDate, "2021-02-01".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate)), PartialPeriod(Period("2021-02-02".toLocalDate, "2021-03-01".toLocalDate), Period("2021-02-02".toLocalDate, "2021-02-02".toLocalDate))))
+        .withPayMethod(PayMethod.Regular)
+        .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
+        .withRegularPayAmount(1465.55)
+        .withFurloughStartDate("2020-12-01")
+        .withClaimPeriodEnd("2021-02-02")
+        .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+        .withPayDate(List("2021-01-04", "2021-02-01", "2021-03-01"))
+        .withUsualHours(List(UsualHours("2021-02-01".toLocalDate, Hours(7.5)), UsualHours("2021-03-01".toLocalDate, Hours(7.5))))
+        .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate, Hours(3.0)), PartTimeHours("2021-03-01".toLocalDate, Hours(3.0))))
+        -> 50.24
+    ))
 
   val februaryMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("February Fixed Monthly Scenarios" -> Seq(
     emptyUserAnswers
@@ -208,7 +209,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2400)
@@ -216,8 +217,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(160.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(40.0))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(160.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(40.0))))
       -> 1440.00,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -242,7 +243,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate),Period("2021-02-05".toLocalDate,"2021-02-21".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate), Period("2021-02-05".toLocalDate, "2021-02-21".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2400)
@@ -250,8 +251,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(127.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(52.5))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(127.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(52.5))))
       -> 685.71,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -260,7 +261,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate),Period("2021-02-05".toLocalDate,"2021-02-21".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate), Period("2021-02-05".toLocalDate, "2021-02-21".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(6500)
@@ -268,8 +269,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(127.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(52.5))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(127.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(52.5))))
       -> 892.90,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -278,7 +279,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate),Period("2021-02-02".toLocalDate,"2021-02-11".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate), Period("2021-02-02".toLocalDate, "2021-02-11".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2400)
@@ -286,8 +287,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(160.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(40.0))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(160.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(40.0))))
       -> 514.29,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -296,7 +297,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-02")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate),Period("2021-02-02".toLocalDate,"2021-02-20".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate), Period("2021-02-02".toLocalDate, "2021-02-20".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(5555)
@@ -304,8 +305,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-21")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(160.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(40.0))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(160.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(40.0))))
       -> 1272.38,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -314,8 +315,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-26".toLocalDate,"2021-02-25".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-25".toLocalDate)),
-        PartialPeriod(Period("2021-02-26".toLocalDate,"2021-03-25".toLocalDate),Period("2021-02-26".toLocalDate,"2021-02-28".toLocalDate))
+        PartialPeriod(Period("2021-01-26".toLocalDate, "2021-02-25".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-25".toLocalDate)),
+        PartialPeriod(Period("2021-02-26".toLocalDate, "2021-03-25".toLocalDate), Period("2021-02-26".toLocalDate, "2021-02-28".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -324,8 +325,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-25", "2021-02-25", "2021-03-25"))
-      .withUsualHours(List(UsualHours("2021-02-25".toLocalDate,Hours(160.0)), UsualHours("2021-03-25".toLocalDate,Hours(160.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-25".toLocalDate,Hours(95.0)), PartTimeHours("2021-03-25".toLocalDate,Hours(95.0))))
+      .withUsualHours(List(UsualHours("2021-02-25".toLocalDate, Hours(160.0)), UsualHours("2021-03-25".toLocalDate, Hours(160.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-25".toLocalDate, Hours(95.0)), PartTimeHours("2021-03-25".toLocalDate, Hours(95.0))))
       -> 1015.67,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -333,7 +334,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2654.11)
@@ -341,8 +342,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(34.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(11.4))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(34.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(11.4))))
       -> 101.55,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -350,7 +351,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-27".toLocalDate,"2021-02-25".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-27".toLocalDate, "2021-02-25".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2654.11)
@@ -358,8 +359,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-26", "2021-02-25"))
-      .withUsualHours(List(UsualHours("2021-02-25".toLocalDate,Hours(34.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-25".toLocalDate,Hours(11.4))))
+      .withUsualHours(List(UsualHours("2021-02-25".toLocalDate, Hours(34.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-25".toLocalDate, Hours(11.4))))
       -> 94.78,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -367,7 +368,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-03".toLocalDate,"2021-02-02".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-02".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-03".toLocalDate, "2021-02-02".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(3200.11)
@@ -375,8 +376,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-02", "2021-02-02"))
-      .withUsualHours(List(UsualHours("2021-02-02".toLocalDate,Hours(34.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-02".toLocalDate,Hours(11.4))))
+      .withUsualHours(List(UsualHours("2021-02-02".toLocalDate, Hours(34.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-02".toLocalDate, Hours(11.4))))
       -> 110.59,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -385,7 +386,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-10".toLocalDate,"2021-02-08".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-10".toLocalDate, "2021-02-08".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(2322.11)
@@ -393,8 +394,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-09", "2021-02-08"))
-      .withUsualHours(List(UsualHours("2021-02-08".toLocalDate,Hours(10.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-08".toLocalDate,Hours(6.5))))
+      .withUsualHours(List(UsualHours("2021-02-08".toLocalDate, Hours(10.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-08".toLocalDate, Hours(6.5))))
       -> 21.67,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -403,8 +404,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-03".toLocalDate,"2021-02-01".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate)),
-        PartialPeriod(Period("2021-02-02".toLocalDate,"2021-03-01".toLocalDate),Period("2021-02-02".toLocalDate,"2021-02-02".toLocalDate))
+        PartialPeriod(Period("2021-01-03".toLocalDate, "2021-02-01".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate)),
+        PartialPeriod(Period("2021-02-02".toLocalDate, "2021-03-01".toLocalDate), Period("2021-02-02".toLocalDate, "2021-02-02".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -413,8 +414,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-02", "2021-02-01", "2021-03-01"))
-      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate,Hours(7.5)), UsualHours("2021-03-01".toLocalDate,Hours(7.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate,Hours(3.0)), PartTimeHours("2021-03-01".toLocalDate,Hours(3.0))))
+      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate, Hours(7.5)), UsualHours("2021-03-01".toLocalDate, Hours(7.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate, Hours(3.0)), PartTimeHours("2021-03-01".toLocalDate, Hours(3.0))))
       -> 48.57,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -422,7 +423,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(3222)
@@ -430,8 +431,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-01")
       .withRegularLengthEmployed(RegularLengthEmployed.No)
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(7.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(3.0))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(7.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(3.0))))
       -> 53.57
   ))
 
@@ -443,8 +444,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        FullPeriod(Period("2021-02-01".toLocalDate,"2021-02-14".toLocalDate)),
-        FullPeriod(Period("2021-02-15".toLocalDate,"2021-02-28".toLocalDate))
+        FullPeriod(Period("2021-02-01".toLocalDate, "2021-02-14".toLocalDate)),
+        FullPeriod(Period("2021-02-15".toLocalDate, "2021-02-28".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -453,8 +454,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-31", "2021-02-14", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-14".toLocalDate,Hours(98.0)), UsualHours("2021-02-28".toLocalDate,Hours(98.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-14".toLocalDate,Hours(48.0)), PartTimeHours("2021-02-28".toLocalDate,Hours(48.0))))
+      .withUsualHours(List(UsualHours("2021-02-14".toLocalDate, Hours(98.0)), UsualHours("2021-02-28".toLocalDate, Hours(98.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-14".toLocalDate, Hours(48.0)), PartTimeHours("2021-02-28".toLocalDate, Hours(48.0))))
       -> 530.60,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -463,8 +464,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        FullPeriod(Period("2021-02-01".toLocalDate,"2021-02-14".toLocalDate)),
-        FullPeriod(Period("2021-02-15".toLocalDate,"2021-02-28".toLocalDate))
+        FullPeriod(Period("2021-02-01".toLocalDate, "2021-02-14".toLocalDate)),
+        FullPeriod(Period("2021-02-15".toLocalDate, "2021-02-28".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -473,8 +474,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-31", "2021-02-14", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-14".toLocalDate,Hours(98.0)), UsualHours("2021-02-28".toLocalDate,Hours(98.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-14".toLocalDate,Hours(48.0)), PartTimeHours("2021-02-28".toLocalDate,Hours(48.0))))
+      .withUsualHours(List(UsualHours("2021-02-14".toLocalDate, Hours(98.0)), UsualHours("2021-02-28".toLocalDate, Hours(98.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-14".toLocalDate, Hours(48.0)), PartTimeHours("2021-02-28".toLocalDate, Hours(48.0))))
       -> 1177.38,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -482,7 +483,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-27")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-27".toLocalDate,"2021-03-12".toLocalDate),Period("2021-02-27".toLocalDate,"2021-02-28".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-02-27".toLocalDate, "2021-03-12".toLocalDate), Period("2021-02-27".toLocalDate, "2021-02-28".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(789.12)
@@ -490,8 +491,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-02-26", "2021-03-12"))
-      .withUsualHours(List(UsualHours("2021-03-12".toLocalDate,Hours(140.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-03-12".toLocalDate,Hours(50.0))))
+      .withUsualHours(List(UsualHours("2021-03-12".toLocalDate, Hours(140.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-03-12".toLocalDate, Hours(50.0))))
       -> 57.98,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -501,8 +502,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-02-01".toLocalDate,"2021-02-14".toLocalDate),Period("2021-02-05".toLocalDate,"2021-02-14".toLocalDate)),
-        PartialPeriod(Period("2021-02-15".toLocalDate,"2021-02-28".toLocalDate),Period("2021-02-15".toLocalDate,"2021-02-28".toLocalDate))))
+        PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-14".toLocalDate), Period("2021-02-05".toLocalDate, "2021-02-14".toLocalDate)),
+        PartialPeriod(Period("2021-02-15".toLocalDate, "2021-02-28".toLocalDate), Period("2021-02-15".toLocalDate, "2021-02-28".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(643.12)
@@ -510,8 +511,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-31", "2021-02-14", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-14".toLocalDate,Hours(63.0)), UsualHours("2021-02-28".toLocalDate,Hours(77.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-14".toLocalDate,Hours(8.0)), PartTimeHours("2021-02-28".toLocalDate,Hours(12.0))))
+      .withUsualHours(List(UsualHours("2021-02-14".toLocalDate, Hours(63.0)), UsualHours("2021-02-28".toLocalDate, Hours(77.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-14".toLocalDate, Hours(8.0)), PartTimeHours("2021-02-28".toLocalDate, Hours(12.0))))
       -> 755.14,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -520,8 +521,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-19".toLocalDate,"2021-02-01".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate)),
-        PartialPeriod(Period("2021-02-02".toLocalDate,"2021-02-15".toLocalDate),Period("2021-02-02".toLocalDate,"2021-02-02".toLocalDate))))
+        PartialPeriod(Period("2021-01-19".toLocalDate, "2021-02-01".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate)),
+        PartialPeriod(Period("2021-02-02".toLocalDate, "2021-02-15".toLocalDate), Period("2021-02-02".toLocalDate, "2021-02-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1000.34)
@@ -529,8 +530,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-18", "2021-02-01", "2021-02-15"))
-      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate,Hours(34.5)), UsualHours("2021-02-15".toLocalDate,Hours(34.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate,Hours(11.4)), PartTimeHours("2021-02-15".toLocalDate,Hours(11.4))))
+      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate, Hours(34.5)), UsualHours("2021-02-15".toLocalDate, Hours(34.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate, Hours(11.4)), PartTimeHours("2021-02-15".toLocalDate, Hours(11.4))))
       -> 76.54,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -539,7 +540,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-22".toLocalDate,"2021-02-04".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-02".toLocalDate))))
+        PartialPeriod(Period("2021-01-22".toLocalDate, "2021-02-04".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-02".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1500)
@@ -547,8 +548,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-21", "2021-02-04"))
-      .withUsualHours(List(UsualHours("2021-02-04".toLocalDate,Hours(34.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-04".toLocalDate,Hours(11.4))))
+      .withUsualHours(List(UsualHours("2021-02-04".toLocalDate, Hours(34.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-04".toLocalDate, Hours(11.4))))
       -> 114.78,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -557,7 +558,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-23".toLocalDate,"2021-02-05".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-01-23".toLocalDate, "2021-02-05".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1010.11)
@@ -565,8 +566,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-22", "2021-02-05"))
-      .withUsualHours(List(UsualHours("2021-02-05".toLocalDate,Hours(10.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-05".toLocalDate,Hours(6.5))))
+      .withUsualHours(List(UsualHours("2021-02-05".toLocalDate, Hours(10.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-05".toLocalDate, Hours(6.5))))
       -> 20.20,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -576,8 +577,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-19".toLocalDate,"2021-02-01".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate)),
-        PartialPeriod(Period("2021-02-02".toLocalDate,"2021-02-15".toLocalDate),Period("2021-02-02".toLocalDate,"2021-02-02".toLocalDate))
+        PartialPeriod(Period("2021-01-19".toLocalDate, "2021-02-01".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate)),
+        PartialPeriod(Period("2021-02-02".toLocalDate, "2021-02-15".toLocalDate), Period("2021-02-02".toLocalDate, "2021-02-02".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -586,8 +587,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-18", "2021-02-01", "2021-02-15"))
-      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate,Hours(7.5)), UsualHours("2021-02-15".toLocalDate,Hours(7.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate,Hours(3.0)), PartTimeHours("2021-02-15".toLocalDate,Hours(3.0))))
+      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate, Hours(7.5)), UsualHours("2021-02-15".toLocalDate, Hours(7.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate, Hours(3.0)), PartTimeHours("2021-02-15".toLocalDate, Hours(3.0))))
       -> 100.50
   ))
 
@@ -599,10 +600,10 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        FullPeriod(Period("2021-02-01".toLocalDate,"2021-02-07".toLocalDate)),
-        FullPeriod(Period("2021-02-08".toLocalDate,"2021-02-14".toLocalDate)),
-        FullPeriod(Period("2021-02-15".toLocalDate,"2021-02-21".toLocalDate)),
-        FullPeriod(Period("2021-02-22".toLocalDate,"2021-02-28".toLocalDate))
+        FullPeriod(Period("2021-02-01".toLocalDate, "2021-02-07".toLocalDate)),
+        FullPeriod(Period("2021-02-08".toLocalDate, "2021-02-14".toLocalDate)),
+        FullPeriod(Period("2021-02-15".toLocalDate, "2021-02-21".toLocalDate)),
+        FullPeriod(Period("2021-02-22".toLocalDate, "2021-02-28".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -612,16 +613,16 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-31", "2021-02-07", "2021-02-14", "2021-02-21", "2021-02-28"))
       .withUsualHours(List(
-        UsualHours("2021-02-07".toLocalDate,Hours(37.0)),
-        UsualHours("2021-02-14".toLocalDate,Hours(37.0)),
-        UsualHours("2021-02-21".toLocalDate,Hours(37.0)),
-        UsualHours("2021-02-28".toLocalDate,Hours(37.0))
+        UsualHours("2021-02-07".toLocalDate, Hours(37.0)),
+        UsualHours("2021-02-14".toLocalDate, Hours(37.0)),
+        UsualHours("2021-02-21".toLocalDate, Hours(37.0)),
+        UsualHours("2021-02-28".toLocalDate, Hours(37.0))
       ))
       .withPartTimeHours(List(
-        PartTimeHours("2021-02-07".toLocalDate,Hours(10.0)),
-        PartTimeHours("2021-02-14".toLocalDate,Hours(12.0)),
-        PartTimeHours("2021-02-21".toLocalDate,Hours(10.0)),
-        PartTimeHours("2021-02-28".toLocalDate,Hours(15.0))
+        PartTimeHours("2021-02-07".toLocalDate, Hours(10.0)),
+        PartTimeHours("2021-02-14".toLocalDate, Hours(12.0)),
+        PartTimeHours("2021-02-21".toLocalDate, Hours(10.0)),
+        PartTimeHours("2021-02-28".toLocalDate, Hours(15.0))
       ))
       -> 1310.28,
     emptyUserAnswers
@@ -631,10 +632,10 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-02-04".toLocalDate,"2021-02-10".toLocalDate),Period("2021-02-06".toLocalDate,"2021-02-10".toLocalDate)),
-        FullPeriod(Period("2021-02-11".toLocalDate,"2021-02-17".toLocalDate)),
-        FullPeriod(Period("2021-02-18".toLocalDate,"2021-02-24".toLocalDate)),
-        PartialPeriod(Period("2021-02-25".toLocalDate,"2021-03-02".toLocalDate),Period("2021-02-25".toLocalDate,"2021-02-28".toLocalDate))))
+        PartialPeriod(Period("2021-02-04".toLocalDate, "2021-02-10".toLocalDate), Period("2021-02-06".toLocalDate, "2021-02-10".toLocalDate)),
+        FullPeriod(Period("2021-02-11".toLocalDate, "2021-02-17".toLocalDate)),
+        FullPeriod(Period("2021-02-18".toLocalDate, "2021-02-24".toLocalDate)),
+        PartialPeriod(Period("2021-02-25".toLocalDate, "2021-03-02".toLocalDate), Period("2021-02-25".toLocalDate, "2021-02-28".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(1200)
@@ -643,16 +644,16 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-02-03", "2021-02-10", "2021-02-17", "2021-02-24", "2021-03-02"))
       .withUsualHours(List(
-        UsualHours("2021-02-10".toLocalDate,Hours(37.0)),
-        UsualHours("2021-02-17".toLocalDate,Hours(37.0)),
-        UsualHours("2021-02-24".toLocalDate,Hours(37.0)),
-        UsualHours("2021-02-28".toLocalDate,Hours(37.0))
+        UsualHours("2021-02-10".toLocalDate, Hours(37.0)),
+        UsualHours("2021-02-17".toLocalDate, Hours(37.0)),
+        UsualHours("2021-02-24".toLocalDate, Hours(37.0)),
+        UsualHours("2021-02-28".toLocalDate, Hours(37.0))
       ))
       .withPartTimeHours(List(
-        PartTimeHours("2021-02-10".toLocalDate,Hours(10.0)),
-        PartTimeHours("2021-02-17".toLocalDate,Hours(12.0)),
-        PartTimeHours("2021-02-24".toLocalDate,Hours(10.0)),
-        PartTimeHours("2021-02-28".toLocalDate,Hours(15.0))
+        PartTimeHours("2021-02-10".toLocalDate, Hours(10.0)),
+        PartTimeHours("2021-02-17".toLocalDate, Hours(12.0)),
+        PartTimeHours("2021-02-24".toLocalDate, Hours(10.0)),
+        PartTimeHours("2021-02-28".toLocalDate, Hours(15.0))
       ))
       -> 1493.76,
     emptyUserAnswers
@@ -663,10 +664,10 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-02-04".toLocalDate,"2021-02-10".toLocalDate),Period("2021-02-06".toLocalDate,"2021-02-10".toLocalDate)),
-        FullPeriod(Period("2021-02-11".toLocalDate,"2021-02-17".toLocalDate)),
-        FullPeriod(Period("2021-02-18".toLocalDate,"2021-02-24".toLocalDate)),
-        PartialPeriod(Period("2021-02-25".toLocalDate,"2021-03-02".toLocalDate),Period("2021-02-25".toLocalDate,"2021-02-27".toLocalDate))
+        PartialPeriod(Period("2021-02-04".toLocalDate, "2021-02-10".toLocalDate), Period("2021-02-06".toLocalDate, "2021-02-10".toLocalDate)),
+        FullPeriod(Period("2021-02-11".toLocalDate, "2021-02-17".toLocalDate)),
+        FullPeriod(Period("2021-02-18".toLocalDate, "2021-02-24".toLocalDate)),
+        PartialPeriod(Period("2021-02-25".toLocalDate, "2021-03-02".toLocalDate), Period("2021-02-25".toLocalDate, "2021-02-27".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -675,8 +676,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-27")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-02-03", "2021-02-10", "2021-02-17", "2021-02-24", "2021-03-02"))
-      .withUsualHours(List(UsualHours("2021-02-10".toLocalDate,Hours(37.0)), UsualHours("2021-03-02".toLocalDate,Hours(15.86))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-10".toLocalDate,Hours(10.0)), PartTimeHours("2021-03-02".toLocalDate,Hours(1.06))))
+      .withUsualHours(List(UsualHours("2021-02-10".toLocalDate, Hours(37.0)), UsualHours("2021-03-02".toLocalDate, Hours(15.86))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-10".toLocalDate, Hours(10.0)), PartTimeHours("2021-03-02".toLocalDate, Hours(1.06))))
       -> 1729.60,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -685,8 +686,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        FullPeriod(Period("2021-02-15".toLocalDate,"2021-02-21".toLocalDate)),
-        FullPeriod(Period("2021-02-22".toLocalDate,"2021-02-28".toLocalDate))
+        FullPeriod(Period("2021-02-15".toLocalDate, "2021-02-21".toLocalDate)),
+        FullPeriod(Period("2021-02-22".toLocalDate, "2021-02-28".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -696,12 +697,12 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-02-14", "2021-02-21", "2021-02-28"))
       .withUsualHours(List(
-        UsualHours("2021-02-21".toLocalDate,Hours(37.0)),
-        UsualHours("2021-02-28".toLocalDate,Hours(37.0))
+        UsualHours("2021-02-21".toLocalDate, Hours(37.0)),
+        UsualHours("2021-02-28".toLocalDate, Hours(37.0))
       ))
       .withPartTimeHours(List(
-        PartTimeHours("2021-02-21".toLocalDate,Hours(10.0)),
-        PartTimeHours("2021-02-28".toLocalDate,Hours(15.0))
+        PartTimeHours("2021-02-21".toLocalDate, Hours(10.0)),
+        PartTimeHours("2021-02-28".toLocalDate, Hours(15.0))
       ))
       -> 635.68,
     emptyUserAnswers
@@ -711,7 +712,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-02-28".toLocalDate,"2021-03-06".toLocalDate),Period("2021-02-28".toLocalDate,"2021-02-28".toLocalDate))
+        PartialPeriod(Period("2021-02-28".toLocalDate, "2021-03-06".toLocalDate), Period("2021-02-28".toLocalDate, "2021-02-28".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -720,8 +721,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-28")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-02-27", "2021-03-06"))
-      .withUsualHours(List(UsualHours("2021-03-06".toLocalDate,Hours(40.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-03-06".toLocalDate,Hours(14.0))))
+      .withUsualHours(List(UsualHours("2021-03-06".toLocalDate, Hours(40.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-03-06".toLocalDate, Hours(14.0))))
       -> 40.86,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -730,7 +731,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2021-02-01")
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate,"2021-02-07".toLocalDate)), PartialPeriod(Period("2021-02-08".toLocalDate,"2021-02-14".toLocalDate),Period("2021-02-08".toLocalDate,"2021-02-08".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate, "2021-02-07".toLocalDate)), PartialPeriod(Period("2021-02-08".toLocalDate, "2021-02-14".toLocalDate), Period("2021-02-08".toLocalDate, "2021-02-08".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(600)
@@ -738,8 +739,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-21")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-31", "2021-02-07", "2021-02-14"))
-      .withUsualHours(List(UsualHours("2021-02-07".toLocalDate,Hours(37.0)), UsualHours("2021-02-14".toLocalDate,Hours(37.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-07".toLocalDate,Hours(10.0)), PartTimeHours("2021-02-14".toLocalDate,Hours(12.0))))
+      .withUsualHours(List(UsualHours("2021-02-07".toLocalDate, Hours(37.0)), UsualHours("2021-02-14".toLocalDate, Hours(37.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-07".toLocalDate, Hours(10.0)), PartTimeHours("2021-02-14".toLocalDate, Hours(12.0))))
       -> 396.60,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -748,7 +749,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-31".toLocalDate,"2021-02-06".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-02".toLocalDate))
+        PartialPeriod(Period("2021-01-31".toLocalDate, "2021-02-06".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-02".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -757,8 +758,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-30", "2021-02-06"))
-      .withUsualHours(List(UsualHours("2021-02-06".toLocalDate,Hours(34.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-06".toLocalDate,Hours(11.4))))
+      .withUsualHours(List(UsualHours("2021-02-06".toLocalDate, Hours(34.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-06".toLocalDate, Hours(11.4))))
       -> 101.94,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
@@ -767,8 +768,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-26".toLocalDate,"2021-02-01".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate)),
-        PartialPeriod(Period("2021-02-02".toLocalDate,"2021-02-08".toLocalDate),Period("2021-02-02".toLocalDate,"2021-02-02".toLocalDate))
+        PartialPeriod(Period("2021-01-26".toLocalDate, "2021-02-01".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate)),
+        PartialPeriod(Period("2021-02-02".toLocalDate, "2021-02-08".toLocalDate), Period("2021-02-02".toLocalDate, "2021-02-02".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -778,12 +779,12 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-25", "2021-02-01", "2021-02-08"))
       .withUsualHours(List(
-        UsualHours("2021-02-01".toLocalDate,Hours(34.5)),
-        UsualHours("2021-02-08".toLocalDate,Hours(34.5))
+        UsualHours("2021-02-01".toLocalDate, Hours(34.5)),
+        UsualHours("2021-02-08".toLocalDate, Hours(34.5))
       ))
       .withPartTimeHours(List(
-        PartTimeHours("2021-02-01".toLocalDate,Hours(11.4)),
-        PartTimeHours("2021-02-08".toLocalDate,Hours(11.4))
+        PartTimeHours("2021-02-01".toLocalDate, Hours(11.4)),
+        PartTimeHours("2021-02-08".toLocalDate, Hours(11.4))
       ))
       -> 119.58,
     emptyUserAnswers
@@ -794,7 +795,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-28".toLocalDate,"2021-02-04".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate))))
+        PartialPeriod(Period("2021-01-28".toLocalDate, "2021-02-04".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate))))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withRegularPayAmount(500)
@@ -802,8 +803,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-28", "2021-02-04"))
-      .withUsualHours(List(UsualHours("2021-02-04".toLocalDate,Hours(10.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-04".toLocalDate,Hours(6.5))))
+      .withUsualHours(List(UsualHours("2021-02-04".toLocalDate, Hours(10.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-04".toLocalDate, Hours(6.5))))
       -> 20.00,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -813,8 +814,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-01-26".toLocalDate,"2021-02-01".toLocalDate),Period("2021-02-01".toLocalDate,"2021-02-01".toLocalDate)),
-        PartialPeriod(Period("2021-02-02".toLocalDate,"2021-02-08".toLocalDate),Period("2021-02-02".toLocalDate,"2021-02-02".toLocalDate))
+        PartialPeriod(Period("2021-01-26".toLocalDate, "2021-02-01".toLocalDate), Period("2021-02-01".toLocalDate, "2021-02-01".toLocalDate)),
+        PartialPeriod(Period("2021-02-02".toLocalDate, "2021-02-08".toLocalDate), Period("2021-02-02".toLocalDate, "2021-02-02".toLocalDate))
       ))
       .withPayMethod(PayMethod.Regular)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
@@ -823,8 +824,8 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodEnd("2021-02-02")
       .withRegularLengthEmployed(RegularLengthEmployed.Yes)
       .withPayDate(List("2021-01-25", "2021-02-01", "2021-02-08"))
-      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate,Hours(7.5))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate,Hours(3.0))))
+      .withUsualHours(List(UsualHours("2021-02-01".toLocalDate, Hours(7.5))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-01".toLocalDate, Hours(3.0))))
       -> 137.96
   ))
 
@@ -904,15 +905,15 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(10000)
       .withFurloughStartDate("2021-02-01")
       .withClaimPeriodEnd("2021-02-28")
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(40.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(14.0))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(40.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(14.0))))
       -> 791.34,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -924,15 +925,15 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate,"2021-02-28".toLocalDate))))
+      .withPartTimePeriods(List(FullPeriod(Period("2021-02-01".toLocalDate, "2021-02-28".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(10000)
       .withFurloughStartDate("2021-02-01")
       .withClaimPeriodEnd("2021-02-28")
       .withPayDate(List("2021-01-31", "2021-02-28"))
-      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate,Hours(40.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate,Hours(14.0))))
+      .withUsualHours(List(UsualHours("2021-02-28".toLocalDate, Hours(40.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-02-28".toLocalDate, Hours(14.0))))
       -> 483.68,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
@@ -995,7 +996,7 @@ object FebruaryConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
-        PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-14".toLocalDate),Period("2021-02-05".toLocalDate, "2021-02-14".toLocalDate)),
+        PartialPeriod(Period("2021-02-01".toLocalDate, "2021-02-14".toLocalDate), Period("2021-02-05".toLocalDate, "2021-02-14".toLocalDate)),
         FullPeriod(Period("2021-02-15".toLocalDate, "2021-02-28".toLocalDate))
       ))
       .withPayMethod(PayMethod.Variable)
