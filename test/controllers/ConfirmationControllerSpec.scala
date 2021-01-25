@@ -119,8 +119,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         RegularPaymentWithPhaseTwoPeriod(
           regularPay = Amount(10000.00),
           referencePay = Amount(10000.0),
-          phaseTwoPeriod = PhaseTwoPeriod(
-            fullPeriodWithPaymentDate("2021, 3, 1", "2021, 3, 31", "2021, 3, 31"), None, None)
+          phaseTwoPeriod = PhaseTwoPeriod(fullPeriodWithPaymentDate("2021, 3, 1", "2021, 3, 31", "2021, 3, 31"), None, None)
         )
       }
 
@@ -129,10 +128,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
           furlough = PhaseTwoFurloughCalculationResult(
             total = 2500.00,
             periodBreakdowns = Seq(
-              PhaseTwoFurloughBreakdown(
-                grant = Amount(2500.00),
-                paymentWithPeriod = payment,
-                furloughCap = FullPeriodCap(2500.00))
+              PhaseTwoFurloughBreakdown(grant = Amount(2500.00), paymentWithPeriod = payment, furloughCap = FullPeriodCap(2500.00))
             )
           )
         )

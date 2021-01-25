@@ -74,8 +74,8 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
 
       val data = Map(
         "startDate.day"   -> "1",
-        "startDate.month" -> "2",
-        "startDate.year"  -> "9999",
+        "startDate.month" -> s"${appConf.schemeEndDate.plusMonths(1).getMonthValue}",
+        "startDate.year"  -> s"${appConf.schemeEndDate.getYear}",
       )
 
       val result = form.bind(data)
