@@ -487,6 +487,11 @@ lastYearPay.p2 = Only include payments for work done in this pay period, even if
 lastYearPay.p3 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
 lastYearPay.error.nonNumeric = Enter the salary using numbers
 lastYearPay.error.required = Enter the salary
+lastYearPay.inset.p1 = If you are claiming for an employee who is furloughed for the whole month of February 2021, you can adjust the employee’s pay to reflect that February 2020 had 29 days. To do this you can either:
+lastYearPay.inset.bullet1 = enter the full amount earned in February 2020
+lastYearPay.inset.bullet2 = divide the full amount earned in February 2020 by 29, then multiply by 28
+lastYearPay.inset.p2 = HMRC will not challenge either approach.
+
 
 amount.error.max.2.decimals = The amount cannot have more than two decimal places
 amount.error.must.be.positive = Enter an amount greater than 0
