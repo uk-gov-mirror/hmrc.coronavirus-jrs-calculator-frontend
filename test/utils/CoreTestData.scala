@@ -33,7 +33,7 @@ trait CoreTestData extends UserAnswersBuilder {
 
   def dummyUserAnswers: UserAnswers = regularJourney()
 
-  def dummyUserAnswersNoLastPayDate = regularJourneyNoLastPayDate()
+  def dummyUserAnswersNoLastPayDate: UserAnswers = regularJourneyNoLastPayDate()
 
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, Json.obj())
 
