@@ -26,11 +26,12 @@ import models.PensionStatus.DoesContribute
 import models._
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{AuditService, Threshold}
-import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown, PhaseTwoConfirmationViewBreakdown}
-import views.html.{ConfirmationViewWithDetailedBreakdowns, JrsExtensionConfirmationView, NoNicAndPensionConfirmationView, OctoberConfirmationView, PhaseTwoConfirmationView, SeptemberConfirmationView}
+import viewmodels.{ConfirmationMetadata, ConfirmationViewBreakdown, ConfirmationViewBreakdownWithoutNicAndPension, PhaseTwoConfirmationViewBreakdown}
+import views.html._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -63,6 +64,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
   "Confirmation Controller" must {
 
     "return OK and the confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
+
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(dummyUserAnswers))
       val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
 
@@ -72,16 +74,19 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       contentAsString(result) mustEqual view(breakdown, meta.claimPeriod, calculatorVersionConf)(request, messages).toString
     }
 
-    "return OK and the phase two confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
+    "return OK and the phase two confirmation view with detailed breakdowns for a GET for 1-31st July 2020" in new CalculatorVersionConfiguration {
+
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(phaseTwoJourney()))
-      val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
 
-      val result = controller.onPageLoad()(request)
-
-      val payment = RegularPaymentWithPhaseTwoPeriod(
-        Amount(2000.00),
-        Amount(2000.0),
-        PhaseTwoPeriod(fullPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 31", "2020, 7, 31"), None, None))
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val result: Future[Result] = controller.onPageLoad()(request)
+      val payment: RegularPaymentWithPhaseTwoPeriod = {
+        RegularPaymentWithPhaseTwoPeriod(
+          regularPay = Amount(2000.00),
+          referencePay = Amount(2000.0),
+          phaseTwoPeriod = PhaseTwoPeriod(fullPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 31", "2020, 7, 31"), None, None)
+        )
+      }
 
       val breakdown = PhaseTwoConfirmationViewBreakdown(
         PhaseTwoFurloughCalculationResult(
@@ -103,6 +108,51 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         request,
         messages).toString
     }
+
+    "return OK and the phase two confirmation view with detailed breakdowns for a GET for 1-31 March 2021" in new CalculatorVersionConfiguration {
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(march2021Journey()))
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val result: Future[Result] = controller.onPageLoad()(request)
+      val payment: RegularPaymentWithPhaseTwoPeriod = {
+        RegularPaymentWithPhaseTwoPeriod(
+          regularPay = Amount(10000.00),
+          referencePay = Amount(10000.0),
+          phaseTwoPeriod = PhaseTwoPeriod(
+            fullPeriodWithPaymentDate("2021, 3, 1", "2021, 3, 31", "2021, 3, 31"), None, None)
+        )
+      }
+
+      val breakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        ConfirmationViewBreakdownWithoutNicAndPension(
+          furlough = PhaseTwoFurloughCalculationResult(
+            total = 2500.00,
+            periodBreakdowns = Seq(
+              PhaseTwoFurloughBreakdown(
+                grant = Amount(2500.00),
+                paymentWithPeriod = payment,
+                furloughCap = FullPeriodCap(2500.00))
+            )
+          )
+        )
+      }
+
+      val expected = contentAsString(result)
+
+      val actual = {
+        extView(
+          cvb = breakdown,
+          claimPeriod = period("2021, 3, 1", "2021, 3, 31"),
+          version = calculatorVersionConf
+        )(request, messages).toString
+      }
+
+      status(result) mustEqual OK
+      expected mustEqual actual
+
+    }
+
   }
 
   lazy val furlough =
