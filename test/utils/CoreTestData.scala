@@ -18,6 +18,7 @@ package utils
 
 import java.util.UUID
 
+import base.SpecBase
 import models.FurloughStatus.FurloughEnded
 import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable

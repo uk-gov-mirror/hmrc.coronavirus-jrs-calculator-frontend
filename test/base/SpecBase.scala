@@ -38,13 +38,14 @@ import play.api.mvc.{AnyContentAsEmpty, Call, MessagesControllerComponents}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.CoreTestData
 
 import scala.concurrent.duration.{Duration, FiniteDuration, _}
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 trait SpecBase
-    extends WordSpec with MustMatchers with GuiceOneAppPerSuite with TryValues with OptionValues with ScalaFutures with IntegrationPatience
-    with BeforeAndAfterEach {
+  extends WordSpec with MustMatchers with GuiceOneAppPerSuite with TryValues with OptionValues with ScalaFutures with IntegrationPatience
+    with BeforeAndAfterEach with CoreTestData {
 
   override def beforeEach(): Unit =
     super.beforeEach()
@@ -71,8 +72,6 @@ trait SpecBase
 
   def onwardRoute: Call = Call("GET", "/foo")
 
-  def blankUserAnswers: UserAnswers = UserAnswers(UUID.randomUUID().toString, Json.obj())
-
   lazy val messagesControllerComponents: MessagesControllerComponents = injector.instanceOf[MessagesControllerComponents]
 
   val component: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
@@ -88,11 +87,11 @@ trait SpecBase
   }
 
   lazy val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = {
-    DataRequest(fakeRequest, internalId, blankUserAnswers)
+    DataRequest(fakeRequest, internalId, emptyUserAnswers)
   }
 
   def fakeDataRequest(headers: (String, String)*): DataRequest[_] =
-    DataRequest(fakeRequest.withHeaders(headers: _*), internalId, blankUserAnswers)
+    DataRequest(fakeRequest.withHeaders(headers: _*), internalId, emptyUserAnswers)
 
   def fakeDataRequest(userAnswers: UserAnswers, headers: (String, String)*): DataRequest[_] =
     DataRequest(fakeRequest.withHeaders(headers: _*), internalId, userAnswers)
