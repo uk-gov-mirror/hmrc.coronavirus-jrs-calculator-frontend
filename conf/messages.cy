@@ -490,11 +490,15 @@ somethingWentWrong.button = Dechrau eto
 
 lastYearPay.title = Yn y flwyddyn dreth flaenorol, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
 lastYearPay.heading = Yn y flwyddyn dreth flaenorol, faint a enillodd y cyflogai hwn yn ystod y cyfnod cyflog {0} i {1}?
-lastYearPay.p1 = Dyma’r swm gros cyn didyniadau. Mae angen hwn arnom er mwyn cyfrifo’i hawl, yn seiliedig ar swm y llynedd.
+lastYearPay.p1 = Dyma’r swm gros a enillwyd cyn didyniadau. Mae angen yr wybodaeth hon arnom i gyfrifo faint y gallwch ei hawlio, a hynny’n seiliedig ar y swm a enillodd y cyflogai yn y flwyddyn dreth flaenorol.
 lastYearPay.p2 = Dylech ond cynnwys taliadau ar gyfer gwaith a wnaed yn y cyfnod cyflog hwn, hyd yn oed os yw’r slip cyflog yn cynnwys taliadau ar gyfer gwaith arall.
 lastYearPay.p3 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 lastYearPay.error.nonNumeric = Nodwch y cyflog gan ddefnyddio rhifau
 lastYearPay.error.required = Nodwch y cyflog
+lastYearPay.inset.p1 = Os ydych yn hawlio am gyflogai sy’n cael ei roi ar ffyrlo drwy gydol mis Chwefror 2021, gallwch addasu cyflog y cyflogai i ddangos bod 29 diwrnod ym mis Chwefror 2020. I wneud hyn, gallwch wneud y naill neu’r llall o’r canlynol:
+lastYearPay.inset.bullet1 = nodi’r swm llawn a enillwyd ym mis Chwefror 2020
+lastYearPay.inset.bullet2 = rhannu’r swm llawn a enillwyd ym mis Chwefror 2020 â 29, yna lluosi â 28
+lastYearPay.inset.p2 = Ni fydd CThEM yn herio’r naill ddull na’r llall.
 
 amount.error.max.2.decimals = Ni all y swm gael mwy na dau le degol
 amount.error.must.be.positive = Nodwch swm sy’n fwy na 0

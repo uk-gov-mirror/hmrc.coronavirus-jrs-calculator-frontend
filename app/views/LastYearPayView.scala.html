@@ -24,7 +24,9 @@
         h1: components.h1,
         p: components.p,
         button: components.button,
-        whatToInclude: includes.whatToInclude
+        whatToInclude: includes.whatToInclude,
+        insetText: components.panelIndent,
+        bullet: components.bullets
 )
 
 @(form: Form[_], idx: Int, period: Period)(implicit request: Request[_], messages: Messages)
@@ -36,6 +38,8 @@
         @errorSummary(form.errors)
 
         @h1(messages("lastYearPay.heading", dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)))
+
+        @insetText(leapYearText)
 
         @p(Html(messages("lastYearPay.p1")))
 
@@ -57,4 +61,17 @@
 
         @button("site.continue")
     }
+}
+
+@leapYearText = {
+
+@p(Html(messages("lastYearPay.inset.p1")))
+    @bullet(
+        content = Seq(
+            Html(messages("lastYearPay.inset.bullet1")),
+            Html(messages("lastYearPay.inset.bullet2"))
+        )
+    )
+@p(Html(messages("lastYearPay.inset.p2")))
+
 }
