@@ -165,6 +165,10 @@ payMethod.hint = This is the basic amount. Exclude extra payments such as overti
 
 payFrequency.title = How often do you pay this employee?
 payFrequency.heading = How often do you pay this employee?
+payFrequency.panelIndent = The employees current pay frequency is different from the pay frequency in the reference period
+payFrequency.p1 = You cannot use the calculator if this employee is on fixed pay and their pay frequency has changed between the reference period and the pay period you are calculating for. For example, if they have changed from monthly pay to weekly pay. You will need to manually work out what you can claim.
+payFrequency.p2 = You can
+payFrequency.link = read about the reference period and how to work out what you can claim manually using the calculation guidance (opens in a new tab).
 payFrequency.weekly = Weekly
 payFrequency.fortnightly = Every 2 weeks
 payFrequency.fourweekly = Every 4 weeks

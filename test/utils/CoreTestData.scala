@@ -18,6 +18,7 @@ package utils
 
 import java.util.UUID
 
+import base.SpecBase
 import models.FurloughStatus.FurloughEnded
 import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
@@ -29,9 +30,12 @@ import play.api.libs.json.Json
 trait CoreTestData extends UserAnswersBuilder {
 
   def userAnswersId: String = UUID.randomUUID().toString
-  def dummyUserAnswers = regularJourney()
+
+  def dummyUserAnswers: UserAnswers = regularJourney()
+
   def dummyUserAnswersNoLastPayDate = regularJourneyNoLastPayDate()
-  def emptyUserAnswers = UserAnswers(userAnswersId, Json.obj())
+
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, Json.obj())
 
   def mandatoryAnswersOnRegularMonthly =
     emptyUserAnswers

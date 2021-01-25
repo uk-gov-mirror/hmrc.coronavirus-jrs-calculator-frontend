@@ -24,7 +24,7 @@ import play.api.test.Helpers
 class FurloughCapHelperSpec extends SpecBase {
 
   val instance = new FurloughCapHelper()
-  implicit val messages: Messages = Helpers.stubMessages(
+  override implicit val messages: Messages = Helpers.stubMessages(
     Helpers.stubMessagesApi(
       Map(
         "en" -> Map(

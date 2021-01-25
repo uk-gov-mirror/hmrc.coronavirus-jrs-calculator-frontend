@@ -165,11 +165,21 @@ payMethod.hint = Dyma’r swm sylfaenol. Peidiwch â chynnwys taliadau ychwanego
 
 payFrequency.title = Pa mor aml yr ydych yn talu’r cyflogai hwn?
 payFrequency.heading = Pa mor aml yr ydych yn talu’r cyflogai hwn?
+
+# Needs welsh
+# ----------------------------------------------------------
+payFrequency.panelIndent = The employees current pay frequency is different from the pay frequency in the reference period
+payFrequency.p1 = You cannot use the calculator if this employee is on fixed pay and their pay frequency has changed between the reference period and the pay period you are calculating for. For example, if they have changed from monthly pay to weekly pay. You will need to manually work out what you can claim.
+payFrequency.p2 = You can
+payFrequency.link = read about the reference period and how to work out what you can claim manually using the calculation guidance (opens in a new tab).
+
 payFrequency.weekly = Bob wythnos
 payFrequency.fortnightly = Bob 2 wythnos
 payFrequency.fourweekly = Bob 4 wythnos
 payFrequency.monthly = Bob mis
 payFrequency.error.required = Dewiswch un o’r opsiynau isod
+
+
 
 rootPage.title = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 rootPage.heading = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws

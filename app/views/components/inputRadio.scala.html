@@ -32,7 +32,7 @@
         legend = Some(Legend(
             content = Text(messages(legend)),
             isPageHeading = legendAsHeading,
-            classes = classes
+            classes = if(legendAsHeading) classes else "govuk-visually-hidden"
         ))
     )),
     hint = hintKey.map { hint => Hint(

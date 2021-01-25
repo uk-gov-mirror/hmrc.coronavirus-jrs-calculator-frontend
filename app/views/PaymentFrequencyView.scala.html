@@ -22,22 +22,43 @@
         govukLayout: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
+        h1: components.h1,
+        p: components.p,
+        link: components.link,
         inputRadio: components.inputRadio,
-        button: components.button
+        button: components.button,
+        panelIndent: components.panelIndent,
+        appConfig: config.FrontendAppConfig
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], postAction:Call, radioItems:Seq[RadioItem])(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "payFrequency.title")), thisPage = PaymentFrequencyPage) {
 
-    @formHelper(action = PaymentFrequencyController.onSubmit(), 'autoComplete -> "off", 'novalidate -> "novalidate") {
+    @formHelper(action = postAction, 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
+        @h1("payFrequency.heading")
+
+        @panelIndent(Html(messages("payFrequency.panelIndent")))
+
+        @p{ @messages("payFrequency.p1") }
+
+        @p{
+            @messages("payFrequency.p2")
+            @link(
+                link = appConfig.calculateClaimAmount,
+                messageKey = messages("payFrequency.link"),
+                attrTarget = true
+            )
+        }
+
         @inputRadio(
             form = form,
+            legendAsHeading = false,
             legend = messages("payFrequency.heading"),
-            items = PaymentFrequency.options(form)
+            items = radioItems
         )
 
         @button("site.continue")

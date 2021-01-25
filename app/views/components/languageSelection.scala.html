@@ -24,7 +24,7 @@
             @if(messages.lang.code == "en"){
                 <span aria-current="true">@messages("language.english")</span>
             } else {
-                <a href="@routes.LanguageSwitchController.switchToLanguage(Language.English)" hrefLang="en" lang="en" rel="alternate" class="govuk-link">
+                <a href="@routes.LanguageSwitchController.switchToLanguage(Language.English)" hrefLang="en" id="english-switch" lang="en" rel="alternate" class="govuk-link">
                     <span class="govuk-visually-hidden">@messages("language.change.english")</span>
                     <span aria-hidden="true">@messages("language.english")</span>
                 </a>
@@ -34,7 +34,7 @@
             @if(messages.lang.code == "cy"){
                 <span aria-current="true">@messages("language.cymraeg")</span>
             } else {
-                <a href="@routes.LanguageSwitchController.switchToLanguage(Language.Cymraeg)" hrefLang="cy" lang="cy" rel="alternate" class="govuk-link">
+                <a href="@routes.LanguageSwitchController.switchToLanguage(Language.Cymraeg)" hrefLang="cy" id="cymraeg-switch" lang="cy" rel="alternate" class="govuk-link">
                     <span class="govuk-visually-hidden">@messages("language.change.cymraeg")</span>
                     <span aria-hidden="true">@messages("language.cymraeg")</span>
                 </a>
