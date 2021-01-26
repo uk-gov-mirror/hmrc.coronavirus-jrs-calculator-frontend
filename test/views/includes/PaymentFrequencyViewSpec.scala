@@ -38,7 +38,7 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
 
   val expectedContent = Seq(
     Selectors.h1      -> PaymentFrequencyMessages.heading,
-    Selectors.indent  -> PaymentFrequencyMessages.indent,
+    Selectors.detail  -> PaymentFrequencyMessages.indent,
     Selectors.p(1)    -> PaymentFrequencyMessages.p1,
     Selectors.p(2)    -> s"${PaymentFrequencyMessages.p2} ${PaymentFrequencyMessages.link}",
     Selectors.link(1) -> PaymentFrequencyMessages.link

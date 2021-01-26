@@ -29,6 +29,7 @@ trait BaseSelectors {
   val legend: String = "fieldset legend"
   val link: Int => String = i => s"main a:nth-of-type($i)"
   val indent = "div.govuk-inset-text"
+  val detail = ".govuk-details__summary-text"
   val nthIndent: Int => String = i => s"div.govuk-inset-text:nth-of-type($i)"
   val hint = "main span.govuk-hint"
   val bullet: Int => String = i => s"main ul.govuk-list.govuk-list--bullet li:nth-of-type($i)"
