@@ -84,7 +84,11 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
     aprilFourWeeklyScenarios ++
       aprilMonthlyScenarios ++
       aprilTwoWeeklyScenarios ++
-      aprilWeeklyScenarios
+      aprilWeeklyScenarios ++
+      aprilVariableWeeklyScenarios ++
+      aprilVariableTwoWeeklyScenarios ++
+      aprilVariableMonthlyScenarios ++
+      aprilVariableFourWeeklyScenarios
   }
 
   val march: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
