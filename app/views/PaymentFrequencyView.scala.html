@@ -27,6 +27,7 @@
         link: components.link,
         inputRadio: components.inputRadio,
         button: components.button,
+        details: components.details,
         panelIndent: components.panelIndent,
         appConfig: config.FrontendAppConfig
 )
@@ -41,17 +42,21 @@
 
         @h1("payFrequency.heading")
 
-        @panelIndent(Html(messages("payFrequency.panelIndent")))
+        @details(
+        summaryText = Messages("payFrequency.panelIndent")
+        ) {
+             <p>@Messages("payFrequency.p1")</p>
 
-        @p{ @messages("payFrequency.p1") }
+            @p{
+                @messages("payFrequency.p2")
+                    @link(
+                        link = appConfig.calculateClaimAmount,
+                        messageKey = messages("payFrequency.link"),
+                        attrTarget = true
+                    )
+        }
 
-        @p{
-            @messages("payFrequency.p2")
-            @link(
-                link = appConfig.calculateClaimAmount,
-                messageKey = messages("payFrequency.link"),
-                attrTarget = true
-            )
+
         }
 
         @inputRadio(
