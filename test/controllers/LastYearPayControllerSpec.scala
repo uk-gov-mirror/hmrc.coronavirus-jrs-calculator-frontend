@@ -111,7 +111,21 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
       val request = getRequest(1)
       val result = controller(Some(variableMonthlyUserAnswers)).onPageLoad(1)(request)
       val dataRequest = DataRequest(request, variableMonthlyUserAnswers.id, variableMonthlyUserAnswers)
-      val expectedView = view(form, 1, period("2019, 3, 1", "2019, 3, 31"))(dataRequest, messages).toString
+      val expectedView = view(form, 1, period("2019, 3, 1", "2019, 3, 31"), false)(dataRequest, messages).toString
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual expectedView
+    }
+
+    "return OK and the correct view for a GET - with inset text set" in {
+      val request = getRequest(1)
+      val result = controller(Some(variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019)).onPageLoad(1)(request)
+      val dataRequest =
+        DataRequest(
+          request,
+          variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019.id,
+          variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019)
+      val expectedView = view(form, 1, period("2021, 2, 1", "2021, 2, 28"), true)(dataRequest, messages).toString
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual expectedView
@@ -125,7 +139,7 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer), 1, period("2019, 3, 1", "2019, 3, 31"))(dataRequest, messages).toString
+        view(form.fill(validAnswer), 1, period("2019, 3, 1", "2019, 3, 31"), false)(dataRequest, messages).toString
     }
 
     "redirect to error page for POST when extract from user answers fails" in {
@@ -179,7 +193,7 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
-        view(boundForm, 1, period("2019, 3, 1", "2019, 3, 31"))(dataRequest, messages).toString
+        view(boundForm, 1, period("2019, 3, 1", "2019, 3, 31"), false)(dataRequest, messages).toString
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {

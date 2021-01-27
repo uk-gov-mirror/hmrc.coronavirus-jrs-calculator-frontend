@@ -16,6 +16,8 @@
 
 package controllers
 
+import java.time.Month
+
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.LastYearPayFormProvider
@@ -24,7 +26,7 @@ import javax.inject.Inject
 import models.{Amount, LastYearPayment, Period, UserAnswers}
 import navigation.Navigator
 import org.slf4j.{Logger, LoggerFactory}
-import pages.LastYearPayPage
+import pages.{ClaimPeriodStartPage, LastYearPayPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -59,13 +61,21 @@ class LastYearPayController @Inject()(
         UserAnswers.logErrors(nel)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       }, { periods =>
-        withValidPeriod(periods, idx) { period =>
-          val preparedForm = request.userAnswers.getV(LastYearPayPage) match {
-            case Invalid(e)   => form
-            case Valid(value) => form.fill(value.amount)
-          }
+        withValidPeriod(periods, idx) {
+          period =>
+            val preparedForm = request.userAnswers.getV(LastYearPayPage) match {
+              case Invalid(e)   => form
+              case Valid(value) => form.fill(value.amount)
+            }
 
-          Future.successful(Ok(view(preparedForm, idx, period)))
+            request.userAnswers.getV(ClaimPeriodStartPage) match {
+              case Invalid(e) => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+              case Valid(startDate) => {
+                val isStartDateOfClaimInFebruaryAndYear2021: Boolean = startDate.getMonth == Month.FEBRUARY && startDate.getYear == 2021
+                Future.successful(Ok(view(preparedForm, idx, period, isStartDateOfClaimInFebruaryAndYear2021)))
+              }
+            }
+
         }
       }
     )
@@ -83,18 +93,26 @@ class LastYearPayController @Inject()(
         UserAnswers.logErrors(nel)
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
       }, { periods =>
-        withValidPeriod(periods, idx) { period =>
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, idx, period))),
-              value =>
-                userAnswerPersistence
-                  .persistAnswer(request.userAnswers, LastYearPayPage, LastYearPayment(period.end, value), Some(idx))
-                  .map { updatedAnswers =>
-                    Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
-                }
-            )
+        withValidPeriod(periods, idx) {
+          period =>
+            request.userAnswers.getV(ClaimPeriodStartPage) match {
+              case Invalid(e) => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+              case Valid(startDate) => {
+                val isStartDateOfClaimInFebruaryAndYear2021: Boolean = startDate.getMonth == Month.FEBRUARY && startDate.getYear == 2021
+                form
+                  .bindFromRequest()
+                  .fold(
+                    formWithErrors =>
+                      Future.successful(BadRequest(view(formWithErrors, idx, period, isStartDateOfClaimInFebruaryAndYear2021))),
+                    value =>
+                      userAnswerPersistence
+                        .persistAnswer(request.userAnswers, LastYearPayPage, LastYearPayment(period.end, value), Some(idx))
+                        .map { updatedAnswers =>
+                          Redirect(navigator.nextPage(LastYearPayPage, updatedAnswers, Some(idx)))
+                      }
+                  )
+              }
+            }
         }
       }
     )
