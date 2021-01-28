@@ -94,13 +94,6 @@ trait CoreTestData extends UserAnswersBuilder {
       .withNiCategory()
       .withPensionStatus()
 
-  lazy val variablePartialBeforeFeb2019 =
-    emptyUserAnswers
-      .withPayMethod(Variable)
-      .withEmployeeStartedOnOrBefore1Feb2019()
-      .withNiCategory()
-      .withPensionStatus()
-
   lazy val variableMonthlyPartial: UserAnswers =
     variablePartial
       .withClaimPeriodStart("2020-03-01")
@@ -118,7 +111,7 @@ trait CoreTestData extends UserAnswersBuilder {
       .withPayDate(List("2020-02-29", "2020-03-31", "2020-04-30"))
 
   lazy val variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019: UserAnswers =
-    variablePartialBeforeFeb2019
+    variablePartial
       .withClaimPeriodStart("2021-02-01")
       .withClaimPeriodEnd("2021-02-28")
       .withFurloughStartDate("2021-02-01")
