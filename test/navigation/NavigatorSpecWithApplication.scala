@@ -26,6 +26,8 @@ import models.PayMethod.{Regular, Variable}
 import models.PaymentFrequency.Monthly
 import models._
 import pages._
+import play.api.mvc.Call
+import services.ClaimsService
 
 class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
@@ -850,5 +852,22 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.routeFor(UnknownPage) mustBe routes.ErrorController.internalServerError()
       }
     }
+
+    "calling .requireLastPayDateRoutes()" when {
+
+      "it is a date before 2020-4-5" in {
+
+        val userAnswers: UserAnswers = {
+          emptyUserAnswers
+            .set(PayDatePage, LocalDate.of(2020, 4, 4), Some(1)).success.value
+        }
+
+        val actual = navigator.requireLastPayDateRoutes(userAnswers)
+        val expected = routes.LastPayDateController.onPageLoad()
+
+        actual mustBe expected
+      }
+    }
+
   }
 }
