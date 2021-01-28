@@ -17,8 +17,11 @@
 package controllers
 
 import assets.BaseITConstants
+import controllers.DecemberConfirmationScenarios._
 import controllers.FebruaryConfirmationScenarios._
+import controllers.JanuaryConfirmationScenarios._
 import controllers.MarchConfirmationScenarios._
+import controllers.NovemberConfirmationScenarios._
 import models._
 import play.api.test.Helpers._
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
@@ -26,38 +29,38 @@ import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSp
 class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
 
-  //  val november: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-  //    novemberFourWeeklyScenarios ++
-  //      novemberMonthlyScenarios ++
-  //      novemberTwoWeeklyScenarios ++
-  //      novemberWeeklyScenarios ++
-  //      novemberVariableFourWeeklyScenarios ++
-  //      novemberVariableMonthlyScenarios ++
-  //      novemberVariableTwoWeeklyScenarios ++
-  //      novemberVariableWeeklyScenarios
-  //  }
+  val november: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    novemberFourWeeklyScenarios ++
+      novemberMonthlyScenarios ++
+      novemberTwoWeeklyScenarios ++
+      novemberWeeklyScenarios ++
+      novemberVariableFourWeeklyScenarios ++
+      novemberVariableMonthlyScenarios ++
+      novemberVariableTwoWeeklyScenarios ++
+      novemberVariableWeeklyScenarios
+  }
 
-  //  val december: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-  //    decemberFourWeeklyScenarios ++
-  //      decemberMonthlyScenarios ++
-  //      decemberTwoWeeklyScenarios ++
-  //      decemberWeeklyScenarios ++
-  //      decemberVariableFourWeeklyScenarios ++
-  //      decemberVariableMonthlyScenarios ++
-  //      decemberVariableTwoWeeklyScenarios ++
-  //      decemberVariableWeeklyScenarios
-  //  }
+  val december: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    decemberFourWeeklyScenarios ++
+      decemberMonthlyScenarios ++
+      decemberTwoWeeklyScenarios ++
+      decemberWeeklyScenarios ++
+      decemberVariableFourWeeklyScenarios ++
+      decemberVariableMonthlyScenarios ++
+      decemberVariableTwoWeeklyScenarios ++
+      decemberVariableWeeklyScenarios
+  }
 
-  //  val january: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-  //    januaryFourWeeklyScenarios ++
-  //      januaryMonthlyScenarios ++
-  //      januaryTwoWeeklyScenarios ++
-  //      januaryWeeklyScenarios ++
-  //      januaryVariableFourWeeklyScenarios ++
-  //      januaryVariableMonthlyScenarios ++
-  //      januaryVariableTwoWeeklyScenarios ++
-  //      januaryVariableWeeklyScenarios
-  //  }
+  val january: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    januaryFourWeeklyScenarios ++
+      januaryMonthlyScenarios ++
+      januaryTwoWeeklyScenarios ++
+      januaryWeeklyScenarios ++
+      januaryVariableFourWeeklyScenarios ++
+      januaryVariableMonthlyScenarios ++
+      januaryVariableTwoWeeklyScenarios ++
+      januaryVariableWeeklyScenarios
+  }
 
   val february: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     februaryFourWeeklyScenarios ++
@@ -73,17 +76,16 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
   val march: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     marchFourWeeklyScenarios ++
       marchMonthlyScenarios ++
-      marchTwoWeeklyScenarios //++
-    //      marchWeeklyScenarios ++
-    //      marchVariableFourWeeklyScenarios ++
-    //      marchVariableMonthlyScenarios ++
-    //      marchVariableTwoWeeklyScenarios ++
-    //      marchVariableWeeklyScenarios
+      marchTwoWeeklyScenarios ++
+      marchWeeklyScenarios ++
+      marchVariableFourWeeklyScenarios ++
+      marchVariableMonthlyScenarios ++
+      marchVariableTwoWeeklyScenarios ++
+      marchVariableWeeklyScenarios
   }
 
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    //    november ++ december ++ january ++ february ++
-    march
+    november ++ december ++ january ++ february ++ march
   }
 
   "GET /confirmation" should {
