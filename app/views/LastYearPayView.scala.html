@@ -29,7 +29,7 @@
         bullet: components.bullets
 )
 
-@(form: Form[_], idx: Int, period: Period)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], idx: Int, period: Period, showInsetTextForLeapYear: Boolean)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)))), thisPage = LastYearPayPage, currentIdx = Some(idx)) {
 
@@ -39,7 +39,10 @@
 
         @h1(messages("lastYearPay.heading", dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)))
 
-        @insetText(leapYearText)
+        @if(showInsetTextForLeapYear) {
+            @insetText(leapYearText)
+        }
+
 
         @p(Html(messages("lastYearPay.p1")))
 

@@ -110,6 +110,22 @@ trait CoreTestData extends UserAnswersBuilder {
       .withPartialPayAfterFurlough(800.0)
       .withPayDate(List("2020-02-29", "2020-03-31", "2020-04-30"))
 
+  lazy val variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019: UserAnswers =
+    variablePartial
+      .withClaimPeriodStart("2021-02-01")
+      .withClaimPeriodEnd("2021-02-28")
+      .withFurloughStartDate("2021-02-01")
+      .withFurloughEndDate("2021-02-28")
+      .withEmployeeStartDate("2020-03-01")
+      .withLastPayDate("2021-01-31")
+      .withFurloughStatus(FurloughEnded)
+      .withPaymentFrequency(Monthly)
+      .withToppedUpStatus(NotToppedUp)
+      .withAnnualPayAmount(10000.0)
+      .withPartialPayBeforeFurlough(1000.0)
+      .withPartialPayAfterFurlough(800.0)
+      .withPayDate(List("2021-01-31", "2021-02-28", "2021-03-31"))
+
   lazy val variableAveragePartial: UserAnswers =
     variablePartial
       .withFurloughStatus()
