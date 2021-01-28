@@ -382,7 +382,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   //scalastyle:off
   //TODO Refactor cyclomatic complexity or leave as is.
-  private[navigation] def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
+  private[this] def lastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(PayMethodPage) match {
       case Valid(Regular) => routes.RegularPayAmountController.onPageLoad()
       case Valid(Variable) =>
