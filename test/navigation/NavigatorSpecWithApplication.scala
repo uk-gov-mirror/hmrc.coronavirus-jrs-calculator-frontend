@@ -26,8 +26,6 @@ import models.PayMethod.{Regular, Variable}
 import models.PaymentFrequency.Monthly
 import models._
 import pages._
-import play.api.mvc.Call
-import services.ClaimsService
 
 class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
