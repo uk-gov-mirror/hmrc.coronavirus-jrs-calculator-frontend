@@ -16,13 +16,12 @@
 
 package controllers
 
-import java.time.LocalDate
-
+import java.time.{LocalDate, Month}
 import base.SpecBaseControllerSpecs
 import controllers.actions.DataRetrievalActionImpl
 import forms.LastYearPayFormProvider
 import models.requests.DataRequest
-import models.{Amount, LastYearPayment, UserAnswers}
+import models.{Amount, LastYearPayment, Period, UserAnswers}
 import pages.LastYearPayPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
@@ -125,7 +124,7 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
           request,
           variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019.id,
           variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019)
-      val expectedView = view(form, 1, period("2021, 2, 1", "2021, 2, 28"), true)(dataRequest, messages).toString
+      val expectedView = view(form, 1, period("2020, 2, 1", "2020, 2, 28"), true)(dataRequest, messages).toString
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual expectedView
@@ -213,6 +212,23 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
+    }
+
+    "calling the lastPayYearPeriodDates method" when {
+
+      (2020 to 2024).foreach { year =>
+        (1 to 12).foreach { month =>
+          s"the end date of the period is in the year $year and for ${Month.of(month)} onwards" must {
+
+            val expectedYear = if (month > 2) 2019 else 2020
+
+            s"adjust the period to the year $expectedYear" in {
+              controller(None).lastPayYearPeriodDates(period(s"$year, $month, 1", s"$year, $month, 24")) mustBe
+                period(s"$expectedYear, $month, 1", s"$expectedYear, $month, 24")
+            }
+          }
+        }
+      }
     }
   }
 }
