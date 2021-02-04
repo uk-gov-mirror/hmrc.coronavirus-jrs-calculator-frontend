@@ -45,7 +45,6 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     case ClaimPeriodStartPage =>
       _ =>
         routes.ClaimPeriodEndController.onPageLoad()
-
     case ClaimPeriodEndPage =>
       _ =>
         routes.FurloughStartDateController.onPageLoad()
