@@ -54,8 +54,8 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
     def withFurloughStartDate(startDate: String): UserAnswers =
       userAnswers.setValue(FurloughStartDatePage, startDate.toLocalDate)
 
-    def withFurloughEndDate(startDate: String): UserAnswers =
-      userAnswers.setValue(FurloughEndDatePage, startDate.toLocalDate)
+    def withFurloughEndDate(endDate: String): UserAnswers =
+      userAnswers.setValue(FurloughEndDatePage, endDate.toLocalDate)
 
     def withFurloughInLastTaxYear(answer: Boolean): UserAnswers =
       userAnswers.setValue(FurloughInLastTaxYearPage, answer)
@@ -139,7 +139,7 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
       userAnswers.setValue(PayPeriodsListPage, answer)
 
     def withPayDate(dates: List[String]): UserAnswers =
-      withListOfValues[String](dates, PayDatePage)
+      withListOfValues[String](payments = dates, page = PayDatePage)
 
     def withLastYear(payments: List[(String, Int)]): UserAnswers =
       withListOfValues[(String, Int)](payments, LastYearPayPage)

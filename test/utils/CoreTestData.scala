@@ -33,7 +33,7 @@ trait CoreTestData extends UserAnswersBuilder {
 
   def dummyUserAnswers: UserAnswers = regularJourney()
 
-  def dummyUserAnswersNoLastPayDate = regularJourneyNoLastPayDate()
+  def dummyUserAnswersNoLastPayDate: UserAnswers = regularJourneyNoLastPayDate()
 
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, Json.obj())
 
@@ -86,6 +86,21 @@ trait CoreTestData extends UserAnswersBuilder {
       .withLastPayDate("2020, 7, 31")
       .withPartTimeQuestion(PartTimeNo)
       .withRegularPayAmount(2000.00)
+
+  def march2021Journey(): UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2021, 3, 1")
+      .withClaimPeriodEnd("2021, 3, 31")
+      .withFurloughStartDate("2020, 3, 20")
+      .withFurloughStatus()
+      .withPaymentFrequency(Monthly)
+      .withNiCategory()
+      .withPensionStatus()
+      .withPayMethod()
+      .withPayDate(List("2021, 2, 28", "2021, 3, 31"))
+      .withLastPayDate("2021, 3, 31")
+      .withPartTimeQuestion(PartTimeNo)
+      .withRegularPayAmount(10000.00)
 
   lazy val variablePartial =
     emptyUserAnswers

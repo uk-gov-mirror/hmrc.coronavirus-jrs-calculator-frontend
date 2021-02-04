@@ -291,6 +291,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       case Invalid(e) => routes.ClaimPeriodStartController.onPageLoad()
     }
   }
+
   //scalastyle:on
 
   private[this] val handlePayDateRoutes: UserAnswers => Call = { userAnswers =>
@@ -407,6 +408,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
         routes.PayMethodController.onPageLoad()
     }
   }
+
   //scalastyle:on
 
   private def annualPayAmountRoutes: UserAnswers => Call =
@@ -458,10 +460,10 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     }
   }
 
-  private def requireLastPayDateRoutes: UserAnswers => Call = { userAnswers =>
+  private[navigation] def requireLastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     val endDates = sortedEndDates(userAnswers.getList(PayDatePage))
     val period = Period(endDates.head.plusDays(1), endDates.last)
-    if (periodContainsNewTaxYear(period) || period.start.isBefore(LocalDate.of(2020, 4, 6))) {
+    if (period.start.isBefore(LocalDate.of(2020, 4, 6))) {
       routes.LastPayDateController.onPageLoad()
     } else {
       lastPayDateRoutes(userAnswers)

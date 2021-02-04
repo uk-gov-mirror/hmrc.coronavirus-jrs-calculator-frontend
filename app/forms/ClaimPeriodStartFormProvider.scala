@@ -38,4 +38,5 @@ class ClaimPeriodStartFormProvider @Inject() extends Mappings with SchemeConfigu
       Invalid("claimPeriodStart.error.outofrange", ViewUtils.dateToString(schemeStartDate), ViewUtils.dateToString(schemeEndDate))
     }
   }
+
 }

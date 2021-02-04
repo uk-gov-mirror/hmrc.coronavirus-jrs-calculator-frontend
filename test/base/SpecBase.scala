@@ -16,8 +16,6 @@
 
 package base
 
-import java.util.UUID
-
 import com.typesafe.config.ConfigValue
 import config.FrontendAppConfig
 import controllers.actions.{DataRequiredActionImpl, FakeIdentifierAction}
@@ -33,7 +31,6 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
-import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Call, MessagesControllerComponents}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
@@ -44,7 +41,7 @@ import scala.concurrent.duration.{Duration, FiniteDuration, _}
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 trait SpecBase
-    extends WordSpec with MustMatchers with GuiceOneAppPerSuite with TryValues with OptionValues with ScalaFutures with IntegrationPatience
+  extends WordSpec with MustMatchers with GuiceOneAppPerSuite with TryValues with OptionValues with ScalaFutures with IntegrationPatience
     with BeforeAndAfterEach with CoreTestData {
 
   override def beforeEach(): Unit =

@@ -26,6 +26,7 @@ import models.PayMethod.{Regular, Variable}
 import models.PaymentFrequency.Monthly
 import models._
 import pages._
+import play.api.mvc.Call
 
 class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
@@ -850,5 +851,87 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.routeFor(UnknownPage) mustBe routes.ErrorController.internalServerError()
       }
     }
+
+    "calling .requireLastPayDateRoutes()" when {
+
+      "there are single Periods set" when {
+
+        "the date is before 2020-4-5 return LastPayDateController.onPageLoad()" in {
+
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(PayDatePage, LocalDate.of(2020, 4, 4), Some(1))
+              .success
+              .value
+          }
+
+          val actual = navigator.requireLastPayDateRoutes(userAnswers)
+          val expected = routes.LastPayDateController.onPageLoad()
+
+          actual mustBe expected
+        }
+
+        "the date.head is after or equal 2020-4-6 and pay method is regular return RegularPayAmountController.onPageLoad()" in {
+
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(PayDatePage, LocalDate.of(2020, 4, 6), Some(1))
+              .success
+              .value
+              .set(PayMethodPage, Regular)
+              .success
+              .value
+          }
+
+          val actual: Call = navigator.requireLastPayDateRoutes(userAnswers)
+          val expected: Call = routes.RegularPayAmountController.onPageLoad()
+
+          actual mustBe expected
+        }
+      }
+
+      "there are multiple Periods set" when {
+
+        "the date is before 2020-4-5 return LastPayDateController.onPageLoad()" in {
+
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(PayDatePage, LocalDate.of(2020, 4, 3), Some(1))
+              .success
+              .value
+              .set(PayDatePage, LocalDate.of(2020, 4, 4), Some(1))
+              .success
+              .value
+          }
+
+          val actual = navigator.requireLastPayDateRoutes(userAnswers)
+          val expected = routes.LastPayDateController.onPageLoad()
+
+          actual mustBe expected
+        }
+
+        "the date.head is after or equal 2020-4-6 and pay method is regular return RegularPayAmountController.onPageLoad()" in {
+
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(PayDatePage, LocalDate.of(2020, 4, 6), Some(1))
+              .success
+              .value
+              .set(PayDatePage, LocalDate.of(2020, 4, 8), Some(2))
+              .success
+              .value
+              .set(PayMethodPage, Regular)
+              .success
+              .value
+          }
+
+          val actual: Call = navigator.requireLastPayDateRoutes(userAnswers)
+          val expected: Call = routes.RegularPayAmountController.onPageLoad()
+
+          actual mustBe expected
+        }
+      }
+    }
+
   }
 }
