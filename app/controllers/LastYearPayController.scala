@@ -16,25 +16,24 @@
 
 package controllers
 
-import java.time.Month
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.LastYearPayFormProvider
 import handlers.LastYearPayControllerRequestHandler
-
-import javax.inject.Inject
 import models.{Amount, LastYearPayment, Period, UserAnswers}
 import navigation.Navigator
 import org.slf4j.{Logger, LoggerFactory}
 import pages.{ClaimPeriodStartPage, LastYearPayPage}
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import services.UserAnswerPersistence
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.LastYearPayView
 
+import java.time.Month
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class LastYearPayController @Inject()(
@@ -72,7 +71,7 @@ class LastYearPayController @Inject()(
               case Invalid(e) => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
               case Valid(startDate) => {
                 val isStartDateOfClaimInFebruaryAndYear2021: Boolean = startDate.getMonth == Month.FEBRUARY && startDate.getYear == 2021
-                Future.successful(Ok(view(preparedForm, idx, lastPayYearPeriodDates(period), isStartDateOfClaimInFebruaryAndYear2021)))
+                Future.successful(Ok(view(preparedForm, idx, period, isStartDateOfClaimInFebruaryAndYear2021)))
               }
             }
 
@@ -86,15 +85,6 @@ class LastYearPayController @Inject()(
       case Some(period) => f(period)
       case None         => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }
-
-  private[controllers] def lastPayYearPeriodDates(period: Period)(implicit messages: Messages): Period = {
-
-    val determineYearByEndDate = if (period.end.getMonthValue > 2) 2019 else 2020
-    val startDate = period.start.withYear(determineYearByEndDate)
-    val endDate = period.end.withYear(determineYearByEndDate)
-
-    Period(startDate, endDate)
-  }
 
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getLastYearPeriods(request.userAnswers).fold(

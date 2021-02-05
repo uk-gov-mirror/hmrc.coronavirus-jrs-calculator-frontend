@@ -213,22 +213,5 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
     }
-
-    "calling the lastPayYearPeriodDates method" when {
-
-      (2020 to 2024).foreach { year =>
-        (1 to 12).foreach { month =>
-          s"the end date of the period is in the year $year and for ${Month.of(month)} onwards" must {
-
-            val expectedYear = if (month > 2) 2019 else 2020
-
-            s"adjust the period to the year $expectedYear" in {
-              controller(None).lastPayYearPeriodDates(period(s"$year, $month, 1", s"$year, $month, 24")) mustBe
-                period(s"$expectedYear, $month, 1", s"$expectedYear, $month, 24")
-            }
-          }
-        }
-      }
-    }
   }
 }
