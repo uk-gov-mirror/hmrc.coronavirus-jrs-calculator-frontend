@@ -111,6 +111,10 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
 
       //TODO wire up routes in navigator (when appropriate) - then this test will pass
 
+      //Have a look at regularLengthEmployedRoutes - should route to the previous furlough page
+      // if yes selected route to when was this employee first furlough (Will's page)
+      // if no selected route to what's the last day this employee was paid for before 1 December 2020 page
+
       // redirectLocation(result).value mustEqual routes.PreviousFurloughPeriodsController.onSubmit().url
     }
 
