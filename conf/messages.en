@@ -901,6 +901,11 @@ calculationUnsupported.heading = This calculation cannot be supported at the mom
 calculationUnsupported.p1 = You can do this calculation manually.
 calculationUnsupported.startAgain = Start a new calculation
 
+previousFurloughPeriods.title = Has this employee been furloughed more than once since 1 November 2020?
+previousFurloughPeriods.heading = Has this employee been furloughed more than once since 1 November 2020?
+previousFurloughPeriods.checkYourAnswersLabel = previousFurloughPeriods
+previousFurloughPeriods.error.required = Select yes if this employee has been furloughed more than once since 1 November 2020
+
 firstFurloughStartDate.title = When was this employee first furloughed?
 firstFurloughStartDate.heading = When was this employee first furloughed?
 firstFurloughStartDate.p1 = This is the date when the employee was first furloughed, on or after 1 November 2020.
