@@ -1,32 +1,32 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration FurloughInLastTaxYear"
+echo "Applying migration PreviousFurloughPeriods"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /furloughInLastTaxYear                        controllers.FurloughInLastTaxYearController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /furloughInLastTaxYear                        controllers.FurloughInLastTaxYearController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /previousFurloughPeriods                        controllers.PreviousFurloughPeriodsController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /previousFurloughPeriods                        controllers.PreviousFurloughPeriodsController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeFurloughInLastTaxYear                  controllers.FurloughInLastTaxYearController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeFurloughInLastTaxYear                  controllers.FurloughInLastTaxYearController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changePreviousFurloughPeriods                  controllers.PreviousFurloughPeriodsController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changePreviousFurloughPeriods                  controllers.PreviousFurloughPeriodsController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "furloughInLastTaxYear.title = furloughInLastTaxYear" >> ../conf/messages.en
-echo "furloughInLastTaxYear.heading = furloughInLastTaxYear" >> ../conf/messages.en
-echo "furloughInLastTaxYear.checkYourAnswersLabel = furloughInLastTaxYear" >> ../conf/messages.en
-echo "furloughInLastTaxYear.error.required = Select yes if furloughInLastTaxYear" >> ../conf/messages.en
+echo "previousFurloughPeriods.title = previousFurloughPeriods" >> ../conf/messages.en
+echo "previousFurloughPeriods.heading = previousFurloughPeriods" >> ../conf/messages.en
+echo "previousFurloughPeriods.checkYourAnswersLabel = previousFurloughPeriods" >> ../conf/messages.en
+echo "previousFurloughPeriods.error.required = Select yes if previousFurloughPeriods" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughInLastTaxYearUserAnswersEntry: Arbitrary[(FurloughInLastTaxYearPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryPreviousFurloughPeriodsUserAnswersEntry: Arbitrary[(PreviousFurloughPeriodsPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[FurloughInLastTaxYearPage.type]";\
+    print "        page  <- arbitrary[PreviousFurloughPeriodsPage.type]";\
     print "        value <- arbitrary[Boolean].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
@@ -36,14 +36,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryFurloughInLastTaxYearPage: Arbitrary[FurloughInLastTaxYearPage.type] =";\
-    print "    Arbitrary(FurloughInLastTaxYearPage)";\
+    print "  implicit lazy val arbitraryPreviousFurloughPeriodsPage: Arbitrary[PreviousFurloughPeriodsPage.type] =";\
+    print "    Arbitrary(PreviousFurloughPeriodsPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(FurloughInLastTaxYearPage.type, JsValue)] ::";\
+    print "    arbitrary[(PreviousFurloughPeriodsPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration FurloughInLastTaxYear completed"
+echo "Migration PreviousFurloughPeriods completed"
