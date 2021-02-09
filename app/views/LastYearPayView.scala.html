@@ -31,13 +31,13 @@
 
 @(form: Form[_], idx: Int, period: Period, showInsetTextForLeapYear: Boolean)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)))), thisPage = LastYearPayPage, currentIdx = Some(idx)) {
+@govukLayout(pageTitle = Some(title(form, "lastYearPay.title", titleMessageArgs = Seq(dateToString(period.start), dateToString(period.end)))), thisPage = LastYearPayPage, currentIdx = Some(idx)) {
 
     @formHelper(action = LastYearPayController.onSubmit(idx), 'autoComplete -> "off", 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages("lastYearPay.heading", dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)))
+        @h1(messages("lastYearPay.heading", dateToString(period.start), dateToString(period.end)))
 
         @if(showInsetTextForLeapYear) {
             @insetText(leapYearText)
@@ -56,7 +56,7 @@
             form,
             id = "value",
             name = "value",
-            label = messages("lastYearPay.heading", dateToStringWithoutYear(period.start), dateToStringWithoutYear(period.end)),
+            label = messages("lastYearPay.heading", dateToString(period.start), dateToString(period.end)),
             isPageHeading = false,
             labelClasses = Some("govuk-visually-hidden"),
             classes = Some("govuk-input--width-10")

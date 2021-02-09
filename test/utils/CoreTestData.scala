@@ -184,6 +184,42 @@ trait CoreTestData extends UserAnswersBuilder {
         ))
       .withLastPayDate("2020-03-31")
 
+  lazy val cylbMarch2021Year: UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2021-03-01")
+      .withClaimPeriodEnd("2021-03-31")
+      .withFurloughStartDate("2020-03-01")
+      .withFurloughStatus()
+      .withPaymentFrequency(FortNightly)
+      .withPayMethod(Variable)
+      .withEmployeeStartedOnOrBefore1Feb2019()
+      .withPayDate(
+        List(
+          "2021-02-17",
+          "2021-03-03",
+          "2021-03-17",
+          "2021-03-31"
+        ))
+      .withLastPayDate("2021-03-31")
+
+  lazy val cylbMarch2022Year: UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2022-03-01")
+      .withClaimPeriodEnd("2022-03-31")
+      .withFurloughStartDate("2020-03-01")
+      .withFurloughStatus()
+      .withPaymentFrequency(FortNightly)
+      .withPayMethod(Variable)
+      .withEmployeeStartedOnOrBefore1Feb2019()
+      .withPayDate(
+        List(
+          "2022-02-17",
+          "2022-03-03",
+          "2022-03-17",
+          "2022-03-31"
+        ))
+      .withLastPayDate("2022-03-31")
+
   lazy val variableWeekly: UserAnswers =
     variablePartialWith10KAnnualPayment
       .withLastPayDate("2020-03-21")

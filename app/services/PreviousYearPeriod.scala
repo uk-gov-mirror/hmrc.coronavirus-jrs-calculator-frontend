@@ -16,10 +16,11 @@
 
 package services
 
-import java.time.LocalDate
-
 import models.PaymentFrequency.{Monthly, _}
 import models.{CylbDuration, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
+
+import java.time.{LocalDate, Year}
+import java.time.temporal.ChronoUnit
 
 trait PreviousYearPeriod {
 
@@ -51,18 +52,18 @@ trait PreviousYearPeriod {
     }
   }
 
-  private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] = frequency match {
-    case Monthly => Seq(Period(period.start.minusYears(1), period.end.minusYears(1)))
-    case _ =>
-      val eqStart = period.start.minusDays(364)
-      val eqEnd = period.end.minusDays(364)
-      val equivalent = Period(eqStart, eqEnd)
-
-      val prStart = eqStart.minusDays(paymentFrequencyDays(frequency))
-      val prEnd = eqEnd.minusDays(paymentFrequencyDays(frequency))
-
-      val previous = Period(prStart, prEnd)
-
-      Seq(previous, equivalent)
+  private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] = {
+    val adjustedPeriod = {
+      val policyStart = LocalDate.of(2020, 3, 1)
+      period.substractYears(ChronoUnit.YEARS.between(policyStart, period.end).toInt.abs)
+    }
+    frequency match {
+      case Monthly => Seq(adjustedPeriod.substractYears(1))
+      case _ =>
+        val leapYearAdjustment = if (period.start.getMonthValue == 2 && !Year.isLeap(period.start.getYear)) 1 else 0
+        val equivalent = adjustedPeriod.substract52Weeks(leapYearAdjustment)
+        val previous = equivalent.substractDays(paymentFrequencyDays(frequency))
+        Seq(previous, equivalent)
+    }
   }
 }

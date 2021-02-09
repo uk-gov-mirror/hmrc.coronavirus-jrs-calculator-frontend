@@ -16,13 +16,10 @@
 
 package controllers
 
-import java.time.Month
-
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.LastYearPayFormProvider
 import handlers.LastYearPayControllerRequestHandler
-import javax.inject.Inject
 import models.{Amount, LastYearPayment, Period, UserAnswers}
 import navigation.Navigator
 import org.slf4j.{Logger, LoggerFactory}
@@ -35,6 +32,8 @@ import services.UserAnswerPersistence
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.LastYearPayView
 
+import java.time.Month
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class LastYearPayController @Inject()(
