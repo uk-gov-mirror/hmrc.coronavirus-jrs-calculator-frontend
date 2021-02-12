@@ -9,6 +9,7 @@ object AprilConfirmationScenarios extends IntegrationSpecBase with CreateRequest
   with BaseITConstants with ITCoreTestData {
   val aprilVariableWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("April Variable Weekly Scenarios" -> Seq(
     emptyUserAnswers
+
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-05-05")
       .withFurloughEndDate("2021-04-14")
@@ -22,53 +23,70 @@ object AprilConfirmationScenarios extends IntegrationSpecBase with CreateRequest
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(19564.4)
+
       .withFurloughStartDate("2021-04-04")
       .withClaimPeriodEnd("2021-04-30")
+
       .withPayDate(List("2021-03-31", "2021-04-07", "2021-04-14"))
+
       .withUsualHours(List(UsualHours("2021-04-07".toLocalDate, Hours(40.0)), UsualHours("2021-04-14".toLocalDate, Hours(50.0))))
       .withPartTimeHours(List(PartTimeHours("2021-04-07".toLocalDate, Hours(14.0)), PartTimeHours("2021-04-14".toLocalDate, Hours(15.0))))
+
       -> 351.48,
     emptyUserAnswers
+
       .withFurloughStatus(FurloughStatus.FurloughEnded)
+
       .withFurloughEndDate("2021-04-07")
       .withPaymentFrequency(Weekly)
       .withEmployeeStartedOnOrBefore1Feb2019()
       .withClaimPeriodStart("2021-04-01")
-      .withLastYear(List("2020-04-01" -> 420, "2020-04-08" -> 490))
+      .withLastYear(List("2019-04-02" -> 420, "2019-04-09" -> 490))
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(FullPeriod(Period("2021-04-01".toLocalDate, "2021-04-07".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(26000)
+
       .withFurloughStartDate("2021-04-01")
       .withClaimPeriodEnd("2021-04-30")
+
       .withPayDate(List("2021-03-31", "2021-04-07"))
+
       .withUsualHours(List(UsualHours("2021-04-07".toLocalDate, Hours(40.0))))
       .withPartTimeHours(List(PartTimeHours("2021-04-07".toLocalDate, Hours(14.0))))
-      -> 258.58,
-    emptyUserAnswers
+
+      -> 258.58, emptyUserAnswers
+
       .withFurloughStatus(FurloughStatus.FurloughEnded)
+
       .withFurloughEndDate("2021-04-24")
       .withPaymentFrequency(Weekly)
       .withEmployeeStartedOnOrBefore1Feb2019()
       .withClaimPeriodStart("2021-04-03")
-      .withLastYear(List("2020-04-08" -> 420, "2020-04-15" -> 490, "2020-04-22" -> 560, "2020-04-29" -> 630))
+      .withLastYear(List("2019-04-09" -> 420, "2019-04-16" -> 490, "2019-04-23" -> 560, "2019-04-30" -> 630))
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
+
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
       .withAnnualPayAmount(26000)
+
       .withFurloughStartDate("2021-04-04")
       .withClaimPeriodEnd("2021-04-28")
+
       .withPayDate(List("2021-03-31", "2021-04-07", "2021-04-14", "2021-04-21", "2021-04-28"))
+
       .withUsualHours(List())
       .withPartTimeHours(List())
+
       -> 1257.15
   ))
 
   val aprilVariableTwoWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("April Variable Two Weekly Scenarios" -> Seq(
     emptyUserAnswers
+
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-08-27")
       .withFurloughEndDate("2021-04-30")
@@ -82,32 +100,46 @@ object AprilConfirmationScenarios extends IntegrationSpecBase with CreateRequest
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(34000)
+
       .withFurloughStartDate("2021-04-01")
       .withClaimPeriodEnd("2021-04-30")
+
       .withPayDate(List("2021-03-31", "2021-04-14", "2021-04-28", "2021-05-12"))
+
       .withUsualHours(List(UsualHours("2021-04-14".toLocalDate, Hours(40.0)), UsualHours("2021-04-28".toLocalDate, Hours(50.0)), UsualHours("2021-05-12".toLocalDate, Hours(50.0))))
       .withPartTimeHours(List(PartTimeHours("2021-04-14".toLocalDate, Hours(14.0)), PartTimeHours("2021-04-28".toLocalDate, Hours(15.0)), PartTimeHours("2021-05-12".toLocalDate, Hours(15.0))))
-      -> 1032.71,
-    //    emptyUserAnswers
-    //      .withFurloughStatus(FurloughStatus.FurloughEnded)
-    //      .withFurloughEndDate("2021-04-28")
-    //      .withPaymentFrequency(FortNightly)
-    //      .withEmployeeStartedOnOrBefore1Feb2019()
-    //      .withClaimPeriodStart("2021-04-01")
-    //      .withLastYear(List("2020-04-16" -> 840, "2020-04-30" -> 980))
-    //      .withFurloughInLastTaxYear(false)
-    //      .withPayPeriodsList(PayPeriodsList.Yes)
-    //      .withPayMethod(PayMethod.Variable)
-    //      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
-    //      .withAnnualPayAmount(28000)
-    //      .withFurloughStartDate("2021-04-04")
-    //      .withClaimPeriodEnd("2021-04-28")
-    //      .withPayDate(List("2021-03-31", "2021-04-14", "2021-04-28"))
-    //      -> 1530.00
+
+      -> 1032.71, emptyUserAnswers
+
+      .withFurloughStatus(FurloughStatus.FurloughEnded)
+
+      .withFurloughEndDate("2021-04-28")
+      .withPaymentFrequency(FortNightly)
+      .withEmployeeStartedOnOrBefore1Feb2019()
+      .withClaimPeriodStart("2021-04-01")
+      .withLastYear(List("2019-04-16" -> 840, "2019-04-30" -> 980))
+      .withFurloughInLastTaxYear(false)
+      .withPayPeriodsList(PayPeriodsList.Yes)
+
+      .withPayMethod(PayMethod.Variable)
+      .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
+      .withAnnualPayAmount(28000)
+
+      .withFurloughStartDate("2021-04-04")
+      .withClaimPeriodEnd("2021-04-28")
+
+      .withPayDate(List("2021-03-31", "2021-04-14", "2021-04-28"))
+
+      .withUsualHours(List())
+      .withPartTimeHours(List())
+
+      -> 1530.00
+
   ))
 
   val aprilVariableMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("April Variable Monthly Scenarios" -> Seq(
     emptyUserAnswers
+
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-08-01")
       .withFurloughEndDate("2021-04-30")
@@ -121,72 +153,92 @@ object AprilConfirmationScenarios extends IntegrationSpecBase with CreateRequest
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(10000)
+
       .withFurloughStartDate("2021-04-01")
       .withClaimPeriodEnd("2021-04-30")
+
       .withPayDate(List("2021-03-31", "2021-04-30"))
+
       .withUsualHours(List(UsualHours("2021-04-30".toLocalDate, Hours(40.0))))
       .withPartTimeHours(List(PartTimeHours("2021-04-30".toLocalDate, Hours(14.0))))
-      -> 641.94,
-    emptyUserAnswers
+
+      -> 641.94, emptyUserAnswers
+
       .withFurloughStatus(FurloughStatus.FurloughEnded)
+
       .withFurloughEndDate("2021-04-30")
       .withPaymentFrequency(Monthly)
       .withEmployeeStartedOnOrBefore1Feb2019()
       .withClaimPeriodStart("2021-04-01")
-      .withLastYear(List("2020-04-30" -> 2000))
+      .withLastYear(List("2019-04-30" -> 2000))
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
+
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
       .withAnnualPayAmount(26000)
+
       .withFurloughStartDate("2020-03-01")
       .withClaimPeriodEnd("2021-04-30")
+
       .withPayDate(List("2021-03-31", "2021-04-30"))
+
       .withUsualHours(List())
       .withPartTimeHours(List())
-      -> 1890.96
 
+      -> 1890.96
   ))
 
   val aprilVariableFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("April Variable Four Weekly Scenarios" -> Seq(
     emptyUserAnswers
+
       .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withEmployeeStartDate("2020-08-01")
-      .withFurloughEndDate("2021-04-30")
-      .withPaymentFrequency(Monthly)
+      .withEmployeeStartDate("2020-10-29")
+      .withFurloughEndDate("2021-04-28")
+      .withPaymentFrequency(FourWeekly)
       .withEmployeeStartedAfter1Feb2019()
       .withClaimPeriodStart("2021-04-01")
       .withLastYear(List())
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
-      .withPartTimePeriods(List(FullPeriod(Period("2021-04-01".toLocalDate,"2021-04-30".toLocalDate))))
+      .withPartTimePeriods(List(PartialPeriod(Period("2021-03-05".toLocalDate, "2021-04-01".toLocalDate), Period("2021-04-01".toLocalDate, "2021-04-01".toLocalDate)), PartialPeriod(Period("2021-04-02".toLocalDate, "2021-04-29".toLocalDate), Period("2021-04-02".toLocalDate, "2021-04-28".toLocalDate))))
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
-      .withAnnualPayAmount(10000)
+      .withAnnualPayAmount(1500)
+
       .withFurloughStartDate("2021-04-01")
       .withClaimPeriodEnd("2021-04-30")
-      .withPayDate(List("2021-03-31", "2021-04-30"))
-      .withUsualHours(List(UsualHours("2021-04-30".toLocalDate,Hours(40.0))))
-      .withPartTimeHours(List(PartTimeHours("2021-04-30".toLocalDate,Hours(14.0))))
-      -> 641.94,
-    emptyUserAnswers
+
+      .withPayDate(List("2021-03-04", "2021-04-01", "2021-04-29"))
+
+      .withUsualHours(List(UsualHours("2021-04-01".toLocalDate, Hours(40.0)), UsualHours("2021-04-29".toLocalDate, Hours(50.0))))
+      .withPartTimeHours(List(PartTimeHours("2021-04-01".toLocalDate, Hours(14.0)), PartTimeHours("2021-04-29".toLocalDate, Hours(15.0))))
+
+      -> 152.33, emptyUserAnswers
+
       .withFurloughStatus(FurloughStatus.FurloughEnded)
-      .withFurloughEndDate("2021-04-30")
-      .withPaymentFrequency(Monthly)
+
+      .withFurloughEndDate("2021-04-28")
+      .withPaymentFrequency(FourWeekly)
       .withEmployeeStartedOnOrBefore1Feb2019()
       .withClaimPeriodStart("2021-04-01")
-      .withLastYear(List("2020-04-30" -> 2000))
+      .withLastYear(List("2019-04-30" -> 2800))
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
+
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
-      .withAnnualPayAmount(26000)
-      .withFurloughStartDate("2020-03-01")
-      .withClaimPeriodEnd("2021-04-30")
-      .withPayDate(List("2021-03-31", "2021-04-30"))
+      .withAnnualPayAmount(36000)
+
+      .withFurloughStartDate("2021-04-04")
+      .withClaimPeriodEnd("2021-04-28")
+
+      .withPayDate(List("2021-03-31", "2021-04-28"))
+
       .withUsualHours(List())
       .withPartTimeHours(List())
-      -> 1890.96
+
+      -> 2000.00
   ))
 
   val aprilWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("April Fixed Weekly Scenarios" -> Seq(
