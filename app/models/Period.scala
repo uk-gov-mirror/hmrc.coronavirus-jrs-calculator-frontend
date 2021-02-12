@@ -16,14 +16,15 @@
 
 package models
 
+import play.api.libs.json.{Format, JsResult, JsValue, Json}
+
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import play.api.libs.json.{Format, JsResult, JsValue, Json}
 
 final case class Period(start: LocalDate, end: LocalDate) {
   def substractDays(days: Int): Period = Period(start.minusDays(days), end.minusDays(days))
   def substractYears(years: Int): Period = Period(start.minusYears(years), end.minusYears(years))
-  def substract52Weeks(leapYearAdjustment: Int = 0): Period = Period(start.minusDays(364).plusDays(leapYearAdjustment), end.minusDays(364))
+  def substract52Weeks(nTimes: Int = 1): Period = Period(start.minusDays(364 * nTimes), end.minusDays(364 * nTimes))
 }
 
 object Period {
