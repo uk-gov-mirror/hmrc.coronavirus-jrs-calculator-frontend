@@ -55,7 +55,7 @@ class ConfirmationController @Inject()(
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     /** Uncomment line to create integration test cases when going through journeys, either manually or via test packs.
       * Set the number of cases to the amount of cases that will be executed. */
-//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 6)
+//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 4)
 
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>

@@ -117,21 +117,6 @@ class PeriodHelperSpec extends SpecBase with ScalaCheckPropertyChecks with CoreT
     generateEndDates(FourWeekly, firstEndDate, furloughPeriod) mustBe expectedFourWeekly
   }
 
-  "determine if a period contains the start of a new tax year" in new PeriodHelper {
-    periodContainsNewTaxYear(Period(LocalDate.of(2020, 3, 20), LocalDate.of(2020, 4, 20))) mustBe true
-    periodContainsNewTaxYear(Period(LocalDate.of(2020, 3, 6), LocalDate.of(2020, 4, 6))) mustBe true
-    periodContainsNewTaxYear(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))) mustBe false
-  }
-
-  "determine whether a given date falls in a certain period" in new PeriodHelper {
-    val period = Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))
-
-    dateExistsInPayPeriod(LocalDate.of(2020, 3, 15), period) mustBe true
-    dateExistsInPayPeriod(LocalDate.of(2020, 4, 15), period) mustBe false
-    dateExistsInPayPeriod(LocalDate.of(2020, 3, 31), period) mustBe true
-    dateExistsInPayPeriod(LocalDate.of(2020, 3, 1), period) mustBe true
-  }
-
   "return pay period with tax year end as the end date if tax year end is earlier than given end date" in new PeriodHelper {
     val periodOne = Period(LocalDate.of(2019, 12, 1), LocalDate.of(2020, 2, 29))
     val periodTwo = Period(LocalDate.of(2019, 12, 1), LocalDate.of(2020, 4, 29))
