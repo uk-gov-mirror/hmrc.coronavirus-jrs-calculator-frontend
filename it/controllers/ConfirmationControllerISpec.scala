@@ -78,7 +78,16 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       februaryVariableWeeklyScenarios
   }
 
-  //march here
+  val march: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    marchFourWeeklyScenarios ++
+      marchMonthlyScenarios ++
+      marchTwoWeeklyScenarios ++
+      marchWeeklyScenarios ++
+      marchVariableFourWeeklyScenarios ++
+      marchVariableMonthlyScenarios ++
+      marchVariableTwoWeeklyScenarios ++
+      marchVariableWeeklyScenarios
+  }
 
   val april: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     aprilFourWeeklyScenarios ++
@@ -89,17 +98,6 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       aprilVariableTwoWeeklyScenarios ++
       aprilVariableMonthlyScenarios ++
       aprilVariableFourWeeklyScenarios
-  }
-
-  val march: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    marchFourWeeklyScenarios ++
-      marchMonthlyScenarios ++
-      marchTwoWeeklyScenarios ++
-      marchWeeklyScenarios ++
-      marchVariableFourWeeklyScenarios ++
-      marchVariableMonthlyScenarios ++
-      marchVariableTwoWeeklyScenarios ++
-      marchVariableWeeklyScenarios
   }
 
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
