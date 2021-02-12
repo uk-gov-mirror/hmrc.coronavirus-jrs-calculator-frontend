@@ -53,15 +53,14 @@ trait PreviousYearPeriod {
   }
 
   private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] = {
-    val adjustedPeriod = {
-      val policyStart = LocalDate.of(2020, 3, 1)
-      period.substractYears(ChronoUnit.YEARS.between(policyStart, period.end).toInt.abs)
-    }
+
+    val policyStart = LocalDate.of(2020, 3, 1)
+    val yearsBetweenPolicyStartAndPeriodEnd = ChronoUnit.YEARS.between(policyStart, period.end).toInt.abs
+
     frequency match {
-      case Monthly => Seq(adjustedPeriod.substractYears(1))
+      case Monthly => Seq(period.substractYears(yearsBetweenPolicyStartAndPeriodEnd + 1))
       case _ =>
-        val leapYearAdjustment = if (period.start.getMonthValue == 2 && !Year.isLeap(period.start.getYear)) 1 else 0
-        val equivalent = adjustedPeriod.substract52Weeks(leapYearAdjustment)
+        val equivalent = period.substract52Weeks(yearsBetweenPolicyStartAndPeriodEnd + 1)
         val previous = equivalent.substractDays(paymentFrequencyDays(frequency))
         Seq(previous, equivalent)
     }
