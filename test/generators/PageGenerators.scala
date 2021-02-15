@@ -21,7 +21,7 @@ import pages._
 
 trait PageGenerators {
 
-  implicit lazy val arbitraryEmployeeFirstFurloughedPage: Arbitrary[FirstFurloughDatePage.type] =
+  implicit lazy val arbitraryFirstFurloughDatePage: Arbitrary[FirstFurloughDatePage.type] =
     Arbitrary(FirstFurloughDatePage)
 
   implicit lazy val arbitraryFurloughInLastTaxYearPage: Arbitrary[FurloughInLastTaxYearPage.type] =

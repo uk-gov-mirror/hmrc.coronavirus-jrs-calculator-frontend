@@ -66,7 +66,7 @@ class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
       val result = form.bind(data)
 
       result.errors shouldBe List(
-        FormError("firstFurloughDate", "firstFurloughStartDate.error.required.three")
+        FormError("firstFurloughDate", "firstFurloughStartDate.error.required")
       )
     }
 

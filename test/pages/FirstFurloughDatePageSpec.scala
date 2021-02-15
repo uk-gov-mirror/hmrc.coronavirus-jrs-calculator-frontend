@@ -23,7 +23,7 @@ import pages.behaviours.PageBehaviours
 
 class FirstFurloughDatePageSpec extends PageBehaviours {
 
-  "EmployeeFirstFurloughedPage" must {
+  "FirstFurloughDatePage" must {
 
     beRetrievable[LocalDate](FirstFurloughDatePage)
 
