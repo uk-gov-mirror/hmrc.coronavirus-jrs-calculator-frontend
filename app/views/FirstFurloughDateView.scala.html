@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import pages.EmployeeFirstFurloughedPage
+@import pages.FirstFurloughDatePage
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -28,23 +28,23 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "employeeFirstFurloughed.title")), timeout = false, thisPage = EmployeeFirstFurloughedPage ) {
+@govukLayout(pageTitle = Some(title(form, "firstFurloughStartDate.title")), timeout = false, thisPage = FirstFurloughDatePage ) {
 
-    @formHelper(action = EmployeeFirstFurloughedController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = FirstFurloughDateController.onSubmit(), 'autoComplete -> "off") {
 
-      @h1(messages("employeeFirstFurloughed.heading"))
+      @h1(messages("firstFurloughStartDate.heading"))
 
-       @p(Html(messages("employeeFirstFurloughed.p1")))
+       @p(Html(messages("firstFurloughStartDate.p1")))
 
-       @p(Html(messages("employeeFirstFurloughed.p2")))
+       @p(Html(messages("firstFurloughStartDate.p2")))
 
         @errorSummary(form.errors, Some("date-value.day"))
 
 
         @inputDate(
         form,
-        legendContent =  "employeeFirstFurloughed.heading",
-        hintText = Some("employeeFirstFurloughed.hint"),
+        legendContent =  "firstFurloughStartDate.heading",
+        hintText = Some("firstFurloughStartDate.hint"),
         legendAsPageHeading = false,
         legendClasses = "govuk-visually-hidden"
         )

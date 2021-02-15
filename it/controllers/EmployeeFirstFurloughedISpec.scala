@@ -8,11 +8,11 @@ import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
 
 class EmployeeFirstFurloughedISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants {
 
-  "GET /employeeFirstFurloughed" when {
+  "GET /first-furlough-date" when {
 
     "redirect to the start page" in {
 
-      val res = getRequest("/employeeFirstFurloughed")()
+      val res = getRequest("/first-furlough-date")()
 
       whenReady(res) { result =>
         result should have(
@@ -30,7 +30,7 @@ class EmployeeFirstFurloughedISpec extends IntegrationSpecBase with CreateReques
 //      "redirect to EmployeeFirstFurloughed" in {
 //
 //
-//        val res = postRequest("/employeeFirstFurloughed",
+//        val res = postRequest("/first-furlough-date",
 //          Json.obj(
 //            "value.day" -> claimStartDate.getDayOfMonth,
 //            "value.month" -> claimStartDate.getMonthValue,
