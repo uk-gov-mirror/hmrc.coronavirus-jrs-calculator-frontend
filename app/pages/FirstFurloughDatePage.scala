@@ -24,5 +24,5 @@ case object FirstFurloughDatePage extends QuestionPage[LocalDate] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "employeeFirstFurloughed"
+  override def toString: String = "firstFurloughDate"
 }

@@ -32,14 +32,13 @@
 
     @formHelper(action = FirstFurloughDateController.onSubmit(), 'autoComplete -> "off") {
 
+      @errorSummary(form.errors, Some("date-value.day"))
+
       @h1(messages("firstFurloughStartDate.heading"))
 
        @p(Html(messages("firstFurloughStartDate.p1")))
 
        @p(Html(messages("firstFurloughStartDate.p2")))
-
-        @errorSummary(form.errors, Some("date-value.day"))
-
 
         @inputDate(
         form,

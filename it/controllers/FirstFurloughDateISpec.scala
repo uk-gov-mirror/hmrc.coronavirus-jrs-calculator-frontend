@@ -1,12 +1,11 @@
 package controllers
 
 import assets.BaseITConstants
-import assets.PageTitles.{claimPeriodStartDate, employeeFirstFurloughed}
-import play.api.http.Status.{OK, SEE_OTHER}
-import play.api.libs.json.Json
+import assets.PageTitles.firstFurloughDate
+import play.api.http.Status.OK
 import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
 
-class EmployeeFirstFurloughedISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants {
+class FirstFurloughDateISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants {
 
   "GET /first-furlough-date" when {
 
@@ -17,7 +16,7 @@ class EmployeeFirstFurloughedISpec extends IntegrationSpecBase with CreateReques
       whenReady(res) { result =>
         result should have(
           httpStatus(OK),
-          titleOf(employeeFirstFurloughed)
+          titleOf(firstFurloughDate)
         )
       }
     }
