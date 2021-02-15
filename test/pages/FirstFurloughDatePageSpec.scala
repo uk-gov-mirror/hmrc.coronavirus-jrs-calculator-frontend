@@ -21,15 +21,15 @@ import java.time.LocalDate
 import org.scalacheck.Arbitrary
 import pages.behaviours.PageBehaviours
 
-class EmployeeFirstFurloughedPageSpec extends PageBehaviours {
+class FirstFurloughDatePageSpec extends PageBehaviours {
 
   "EmployeeFirstFurloughedPage" must {
 
-    beRetrievable[LocalDate](EmployeeFirstFurloughedPage)
+    beRetrievable[LocalDate](FirstFurloughDatePage)
 
-    beSettable[LocalDate](EmployeeFirstFurloughedPage)
+    beSettable[LocalDate](FirstFurloughDatePage)
 
-    beRemovable[LocalDate](EmployeeFirstFurloughedPage)
+    beRemovable[LocalDate](FirstFurloughDatePage)
 
   }
 }

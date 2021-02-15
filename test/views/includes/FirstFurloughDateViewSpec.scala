@@ -19,34 +19,32 @@ package views.includes
 import java.time.LocalDate
 
 import assets.messages.BaseMessages
-import forms.{EmployeeFirstFurloughedFormProvider, EmployeeFirstFurloughedFormProviderSpec}
-import messages.EmployeeFirstFurloughMessages
-import models.requests.DataRequest
-import views.includes.behaviours.{QuestionViewBehaviours, ViewBehaviours}
-import views.html.EmployeeFirstFurloughedView
+import forms.FirstFurloughDateFormProvider
+import messages.FirstFurloughDateMessages
+import views.includes.behaviours.QuestionViewBehaviours
+import views.html.FirstFurloughDateView
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import org.jsoup.nodes.Document
 
-class EmployeeFirstFurloughedViewSpec extends QuestionViewBehaviours[LocalDate] {
+class FirstFurloughDateViewSpec extends QuestionViewBehaviours[LocalDate] {
 
   object Selectors extends BaseSelectors
 
-  val messageKeyPrefix = "employeeFirstFurloughed"
-  val view: EmployeeFirstFurloughedView = injector.instanceOf[EmployeeFirstFurloughedView]
-  val form = new EmployeeFirstFurloughedFormProvider()()
-  val section = Some(messages("section.main"))
+  val messageKeyPrefix = "firstFurloughStartDate"
+  val view: FirstFurloughDateView = injector.instanceOf[FirstFurloughDateView]
+  val form = new FirstFurloughDateFormProvider()()
 
   val expectedContent = Seq(
-    Selectors.h1   -> EmployeeFirstFurloughMessages.heading,
-    Selectors.p(1) -> EmployeeFirstFurloughMessages.p1,
-    Selectors.p(2) -> EmployeeFirstFurloughMessages.p2
+    Selectors.h1   -> FirstFurloughDateMessages.heading,
+    Selectors.p(1) -> FirstFurloughDateMessages.p1,
+    Selectors.p(2) -> FirstFurloughDateMessages.p2
   )
 
-  "EmployeeFirstFurloughViewSpec" when {
+  "FirstFurloughDateViewSpec" when {
 
     def applyView(form: Form[_]): HtmlFormat.Appendable = {
-      val view = viewFor[EmployeeFirstFurloughedView](Some(emptyUserAnswers))
+      val view = viewFor[FirstFurloughDateView](Some(emptyUserAnswers))
       view.apply(form)(fakeRequest, messages)
     }
 
@@ -56,6 +54,9 @@ class EmployeeFirstFurloughedViewSpec extends QuestionViewBehaviours[LocalDate] 
 
     behave like pageWithSubmitButton(BaseMessages.continue)
 
+    behave like pageWithHeading(heading = FirstFurloughDateMessages.heading)
+
+    behave like pageWithExpectedMessages(expectedContent)
   }
 
 }

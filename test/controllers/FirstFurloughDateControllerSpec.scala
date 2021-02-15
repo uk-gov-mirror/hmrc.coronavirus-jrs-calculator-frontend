@@ -18,55 +18,48 @@ package controllers
 
 import java.time.{LocalDate, ZoneOffset}
 
-import base.{SpecBase, SpecBaseControllerSpecs}
+import base.SpecBaseControllerSpecs
 import controllers.actions.DataRetrievalActionImpl
-import forms.EmployeeFirstFurloughedFormProvider
-import models.{NormalMode, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import pages.EmployeeFirstFurloughedPage
+import forms.FirstFurloughDateFormProvider
+import models.UserAnswers
+import pages.FirstFurloughDatePage
 import play.api.data.Form
-import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
 import play.api.test.Helpers._
-import repositories.SessionRepository
-import views.html.EmployeeFirstFurloughedView
-import play.api.libs.json.{JsString, Json}
+import views.html.FirstFurloughDateView
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class EmployeeFirstFurloughedControllerSpec extends SpecBaseControllerSpecs {
+class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
 
-  val formProvider = new EmployeeFirstFurloughedFormProvider()
+  val formProvider = new FirstFurloughDateFormProvider()
   private def form: Form[LocalDate] = formProvider()
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
-  lazy val employeeFirstFurloughedStartRoute: String = routes.EmployeeFirstFurloughedController.onPageLoad().url
+  lazy val firstFurLoughDateStartRoute: String = routes.FirstFurloughDateController.onPageLoad().url
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, employeeFirstFurloughedStartRoute).withCSRFToken
+    FakeRequest(GET, firstFurLoughDateStartRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, employeeFirstFurloughedStartRoute).withCSRFToken
+    FakeRequest(POST, firstFurLoughDateStartRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(
-        "value.day"   -> validAnswer.getDayOfMonth.toString,
-        "value.month" -> validAnswer.getMonthValue.toString,
-        "value.year"  -> validAnswer.getYear.toString
+        "firstFurloughDate.day"   -> validAnswer.getDayOfMonth.toString,
+        "firstFurloughDate.month" -> validAnswer.getMonthValue.toString,
+        "firstFurloughDate.year"  -> validAnswer.getYear.toString
       )
 
-  val view = app.injector.instanceOf[EmployeeFirstFurloughedView]
+  val view = app.injector.instanceOf[FirstFurloughDateView]
 
   def controller(stubbedAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) =
-    new EmployeeFirstFurloughedController(
+    new FirstFurloughDateController(
       messagesApi,
       mockSessionRepository,
       navigator,
@@ -91,7 +84,7 @@ class EmployeeFirstFurloughedControllerSpec extends SpecBaseControllerSpecs {
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers = UserAnswers(userAnswersId).set(EmployeeFirstFurloughedPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(FirstFurloughDatePage, validAnswer).success.value
       val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustBe OK
@@ -107,17 +100,16 @@ class EmployeeFirstFurloughedControllerSpec extends SpecBaseControllerSpecs {
 //      val result = controller(Some(existingAnswers)).onSubmit()(postRequest)
 //
 //      status(result) mustEqual SEE_OTHER
-//      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/employeeFirstFurloughed"
+//      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/first-furlough-date"
 //    }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-
       val request =
-        FakeRequest(POST, employeeFirstFurloughedStartRoute).withCSRFToken
+        FakeRequest(POST, firstFurLoughDateStartRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-          .withFormUrlEncodedBody(("value", "invalid value"))
+          .withFormUrlEncodedBody(("firstFurloughDate", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "value"))
+      val boundForm = form.bind(Map("firstFurloughDate" -> "invalid value"))
 
       val result = controller().onSubmit()(request)
 

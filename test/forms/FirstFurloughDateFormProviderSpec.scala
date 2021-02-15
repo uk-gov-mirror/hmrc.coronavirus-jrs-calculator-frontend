@@ -21,21 +21,21 @@ import forms.behaviours.DateBehaviours
 import forms.mappings.LocalDateFormatter
 import play.api.data.FormError
 
-class EmployeeFirstFurloughedFormProviderSpec extends SpecBaseControllerSpecs {
+class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
 
-  val form = new EmployeeFirstFurloughedFormProvider()()
+  val form = new FirstFurloughDateFormProvider()()
   val dateBehaviours = new DateBehaviours
   import dateBehaviours._
 
-  ".value" should {
+  ".firstFurloughDate" should {
 
     "bind valid data" in {
 
-      forAll(claimPeriodDatesGen -> "valid date") { date =>
+      forAll(firstFurloughDatesGen -> "valid date") { date =>
         val data = Map(
-          "value.day"   -> date.getDayOfMonth.toString,
-          "value.month" -> date.getMonthValue.toString,
-          "value.year"  -> date.getYear.toString,
+          "firstFurloughDate.day"   -> date.getDayOfMonth.toString,
+          "firstFurloughDate.month" -> date.getMonthValue.toString,
+          "firstFurloughDate.year"  -> date.getYear.toString,
         )
 
         val result = form.bind(data)
@@ -49,10 +49,26 @@ class EmployeeFirstFurloughedFormProviderSpec extends SpecBaseControllerSpecs {
       val result = form.bind(Map.empty[String, String])
 
       result.errors should contain allElementsOf List(
-        FormError(s"value.day", LocalDateFormatter.dayBlankErrorKey),
-        FormError(s"value.month", LocalDateFormatter.monthBlankErrorKey),
-        FormError(s"value.year", LocalDateFormatter.yearBlankErrorKey),
+        FormError(s"firstFurloughDate.day", LocalDateFormatter.dayBlankErrorKey),
+        FormError(s"firstFurloughDate.month", LocalDateFormatter.monthBlankErrorKey),
+        FormError(s"firstFurloughDate.year", LocalDateFormatter.yearBlankErrorKey),
       )
     }
+
+    "fail with invalid dates" in {
+
+      val data = Map(
+        "firstFurloughDate.day"   -> "1",
+        "firstFurloughDate.month" -> "2",
+        "firstFurloughDate.year"  -> "2020",
+      )
+
+      val result = form.bind(data)
+
+      result.errors shouldBe List(
+        FormError("firstFurloughDate", "firstFurloughStartDate.error.required.three")
+      )
+    }
+
   }
 }

@@ -20,31 +20,31 @@ import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
-import forms.EmployeeFirstFurloughedFormProvider
+import forms.FirstFurloughDateFormProvider
 import javax.inject.Inject
 import models.UserAnswers
 import navigation.Navigator
-import pages.EmployeeFirstFurloughedPage
+import pages.FirstFurloughDatePage
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.EmployeeFirstFurloughedView
 import play.api.data.Form
 import services.UserAnswerPersistence
+import views.html.FirstFurloughDateView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EmployeeFirstFurloughedController @Inject()(
+class FirstFurloughDateController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: EmployeeFirstFurloughedFormProvider,
+  formProvider: FirstFurloughDateFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: EmployeeFirstFurloughedView
+  view: FirstFurloughDateView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
@@ -54,7 +54,7 @@ class EmployeeFirstFurloughedController @Inject()(
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
     val preparedForm = request.userAnswers
       .getOrElse(UserAnswers(request.internalId))
-      .getV(EmployeeFirstFurloughedPage) match {
+      .getV(FirstFurloughDatePage) match {
       case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
@@ -69,9 +69,9 @@ class EmployeeFirstFurloughedController @Inject()(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           userAnswerPersistence
-            .persistAnswer(UserAnswers(request.internalId), EmployeeFirstFurloughedPage, value, None)
+            .persistAnswer(UserAnswers(request.internalId), FirstFurloughDatePage, value, None)
             .map { updatedAnswers =>
-              Redirect(navigator.nextPage(EmployeeFirstFurloughedPage, updatedAnswers, None))
+              Redirect(navigator.nextPage(FirstFurloughDatePage, updatedAnswers, None))
           }
       )
   }

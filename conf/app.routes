@@ -142,5 +142,5 @@ POST        /furlough-in-last-tax-year                       controllers.Furloug
 GET         /multiple-furlough-unsupported                   controllers.CalculationUnsupportedController.multipleFurloughUnsupported()
 GET         /start-date-within-lookback-unsupported          controllers.CalculationUnsupportedController.startDateWithinLookbackUnsupported()
 
-GET        /employeeFirstFurloughed                              controllers.EmployeeFirstFurloughedController.onPageLoad()
-POST       /employeeFirstFurloughed                              controllers.EmployeeFirstFurloughedController.onSubmit()
+GET        /first-furlough-date                               controllers.FirstFurloughDateController.onPageLoad()
+POST       /first-furlough-date                               controllers.FirstFurloughDateController.onSubmit()
