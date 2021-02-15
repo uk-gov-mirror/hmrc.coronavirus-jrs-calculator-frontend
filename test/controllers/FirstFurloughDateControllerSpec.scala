@@ -74,7 +74,7 @@ class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
       view
     )
 
-  "EmployeeFirstFurloughed Controller" must {
+  "FirstFurloughDate Controller" must {
 
     "return OK and the correct view for a GET" in {
       val result = controller().onPageLoad()(getRequest)
