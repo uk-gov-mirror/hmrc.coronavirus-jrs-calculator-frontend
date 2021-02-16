@@ -76,14 +76,14 @@ final case class UserAnswers(
 
   def setList[A](page: Settable[A], value: Seq[A])(implicit writes: Writes[A]): Try[UserAnswers] = {
     val updatedData =
-      data.setObject(path(page, None), Json.toJson(value)) match {
+      data.setObject(path = path(page, None), value = Json.toJson(value)) match {
         case JsSuccess(jsValue, _) =>
           Success(jsValue)
         case JsError(errors) =>
           Failure(JsResultException(errors))
       }
 
-    updatedData.flatMap { d =>
+    updatedData.flatMap { d: JsObject =>
       val updatedAnswers = copy(data = d)
       page.cleanup(None, updatedAnswers)
     }

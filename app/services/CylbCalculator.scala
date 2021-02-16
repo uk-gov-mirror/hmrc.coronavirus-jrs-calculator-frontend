@@ -76,6 +76,7 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
   }
 
   private def previousYearFurlough(datesRequired: Seq[LocalDate], cylbs: Seq[LastYearPayment], ops: CylbDuration): CylbBreakdown = {
+
     val lastYearPayments: Seq[LastYearPayment] = datesRequired.flatMap(date => cylbs.find(_.date == date))
 
     lastYearPayments match {

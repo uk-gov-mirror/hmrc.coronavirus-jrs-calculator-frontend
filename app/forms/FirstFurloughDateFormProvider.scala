@@ -28,7 +28,7 @@ import play.api.i18n.Messages
 class FirstFurloughDateFormProvider @Inject() extends Mappings with SchemeConfiguration {
 
   def apply()(implicit messages: Messages): Form[LocalDate] =
-    Form("firstFurloughDate" -> localDate(invalidKey = "firstFurloughStartDate.error.invalid").verifying(validFirstFurloughDate))
+    Form("value" -> localDate(invalidKey = "firstFurloughStartDate.error.invalid").verifying(validFirstFurloughDate))
 
   private def validFirstFurloughDate(implicit messages: Messages): Constraint[LocalDate] = Constraint { firstFurloughDate =>
     if (!firstFurloughDate.isBefore(extensionStartDate)) {

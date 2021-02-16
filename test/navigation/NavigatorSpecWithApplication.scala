@@ -26,6 +26,7 @@ import models.PayMethod.{Regular, Variable}
 import models.PaymentFrequency.Monthly
 import models._
 import pages._
+import play.api.mvc.Call
 
 class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
@@ -522,9 +523,24 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
-            .withEmployeeStartDate("2019,8,1")
+            .withEmployeeStartDate("2020,3,20")
             .withClaimPeriodStart("2020,11,1")
         ) mustBe routes.PayDateController.onPageLoad(1)
+
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          emptyUserAnswers
+            .withEmployeeStartDate("2020,4,1")
+            .withFurloughStartDate("2020,11,10")
+            .withClaimPeriodStart("2020,11,1")
+        ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
+
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          emptyUserAnswers
+            .withEmployeeStartDate("2020,2,2")
+            .withClaimPeriodStart("2020,11,1")
+        ) mustBe routes.EmployeeRTISubmissionController.onPageLoad()
 
         navigator.nextPage(
           EmployeeStartDatePage,
@@ -588,8 +604,10 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
         navigator.nextPage(
           EmployeeRTISubmissionPage,
-          emptyUserAnswers.withRtiSubmission(EmployeeRTISubmission.No)
-        ) mustBe routes.PayDateController.onPageLoad(1)
+          emptyUserAnswers
+            .withFurloughStartDate("2020,11,15")
+            .withRtiSubmission(EmployeeRTISubmission.No)
+        ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
       }
 
       "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {
@@ -839,6 +857,18 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           emptyUserAnswers.withClaimPeriodQuestion(ClaimOnDifferentPeriod)
         ) mustBe routes.ClaimPeriodStartController.onPageLoad()
       }
+
+      "go to the correct page after PreviousFurloughPeriodsPage" in {
+//        navigator.nextPage(
+//          PreviousFurloughPeriodsPage,
+//          emptyUserAnswers.withPreviousFurloughedPeriodsAnswer(true)
+//        ) mustBe routes.FirstFurloughedDate.onPageLoad() //TODO // Uncomment once FirstFurloughedDate (Will's page) is added
+
+        navigator.nextPage(
+          PreviousFurloughPeriodsPage,
+          emptyUserAnswers.withPreviousFurloughedPeriodsAnswer(false)
+        ) mustBe routes.PayDateController.onPageLoad(1)
+      }
     }
 
     "routeFor() is called" should {
@@ -850,5 +880,87 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.routeFor(UnknownPage) mustBe routes.ErrorController.internalServerError()
       }
     }
+
+    "calling .requireLastPayDateRoutes()" when {
+
+      "there are single Periods set" when {
+
+        "the date is before 2020-4-5 return LastPayDateController.onPageLoad()" in {
+
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(PayDatePage, LocalDate.of(2020, 4, 4), Some(1))
+              .success
+              .value
+          }
+
+          val actual = navigator.requireLastPayDateRoutes(userAnswers)
+          val expected = routes.LastPayDateController.onPageLoad()
+
+          actual mustBe expected
+        }
+
+        "the date.head is after or equal 2020-4-6 and pay method is regular return RegularPayAmountController.onPageLoad()" in {
+
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(PayDatePage, LocalDate.of(2020, 4, 6), Some(1))
+              .success
+              .value
+              .set(PayMethodPage, Regular)
+              .success
+              .value
+          }
+
+          val actual: Call = navigator.requireLastPayDateRoutes(userAnswers)
+          val expected: Call = routes.RegularPayAmountController.onPageLoad()
+
+          actual mustBe expected
+        }
+      }
+
+      "there are multiple Periods set" when {
+
+        "the date is before 2020-4-5 return LastPayDateController.onPageLoad()" in {
+
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(PayDatePage, LocalDate.of(2020, 4, 3), Some(1))
+              .success
+              .value
+              .set(PayDatePage, LocalDate.of(2020, 4, 4), Some(1))
+              .success
+              .value
+          }
+
+          val actual = navigator.requireLastPayDateRoutes(userAnswers)
+          val expected = routes.LastPayDateController.onPageLoad()
+
+          actual mustBe expected
+        }
+
+        "the date.head is after or equal 2020-4-6 and pay method is regular return RegularPayAmountController.onPageLoad()" in {
+
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(PayDatePage, LocalDate.of(2020, 4, 6), Some(1))
+              .success
+              .value
+              .set(PayDatePage, LocalDate.of(2020, 4, 8), Some(2))
+              .success
+              .value
+              .set(PayMethodPage, Regular)
+              .success
+              .value
+          }
+
+          val actual: Call = navigator.requireLastPayDateRoutes(userAnswers)
+          val expected: Call = routes.RegularPayAmountController.onPageLoad()
+
+          actual mustBe expected
+        }
+      }
+    }
+
   }
 }

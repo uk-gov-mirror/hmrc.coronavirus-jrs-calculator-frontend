@@ -112,14 +112,6 @@ trait PeriodHelper {
     if (period.countDays != partial.countDays) PartialPeriod(period, partial) else FullPeriod(period)
   }
 
-  def periodContainsNewTaxYear(period: Period): Boolean =
-    dateExistsInPayPeriod(LocalDate.of(period.start.getYear, 4, 5), period) &&
-      dateExistsInPayPeriod(LocalDate.of(period.start.getYear, 4, 6), period)
-
-  def dateExistsInPayPeriod(date: LocalDate, period: Period): Boolean =
-    (date.isAfter(period.start) || date.isEqual(period.start)) &&
-      (date.isBefore(period.end) || date.isEqual(period.end))
-
   protected def sortedEndDates(in: Seq[LocalDate]): Seq[LocalDate] = in.sortWith((x, y) => x.isBefore(y))
 
   protected def periodSpansMonth(period: Period): Boolean = period.start.getMonth != period.end.getMonth

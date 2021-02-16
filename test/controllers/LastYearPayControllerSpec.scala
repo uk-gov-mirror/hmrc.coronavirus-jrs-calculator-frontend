@@ -16,13 +16,12 @@
 
 package controllers
 
-import java.time.LocalDate
-
+import java.time.{LocalDate, Month}
 import base.SpecBaseControllerSpecs
 import controllers.actions.DataRetrievalActionImpl
 import forms.LastYearPayFormProvider
 import models.requests.DataRequest
-import models.{Amount, LastYearPayment, UserAnswers}
+import models.{Amount, LastYearPayment, Period, UserAnswers}
 import pages.LastYearPayPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
@@ -125,7 +124,7 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
           request,
           variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019.id,
           variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019)
-      val expectedView = view(form, 1, period("2021, 2, 1", "2021, 2, 28"), true)(dataRequest, messages).toString
+      val expectedView = view(form, 1, period("2020, 2, 1", "2020, 2, 28"), true)(dataRequest, messages).toString
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual expectedView

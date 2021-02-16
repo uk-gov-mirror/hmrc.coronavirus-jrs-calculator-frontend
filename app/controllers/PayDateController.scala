@@ -92,7 +92,7 @@ class PayDateController @Inject()(
       formProvider(
         beforeDate = if (idx == 1) Some(effectiveStartDate) else None,
         afterDate = if (idx != 1) Some(latestDate) else None,
-        paymentFrequency(request.userAnswers)
+        paymentFrequency = paymentFrequency(request.userAnswers)
       ).bindFromRequest()
         .fold(
           formWithErrors => {

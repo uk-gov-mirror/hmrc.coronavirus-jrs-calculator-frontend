@@ -25,6 +25,7 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
 
   val form = new ClaimPeriodStartFormProvider()()
   val dateBehaviours = new DateBehaviours
+
   import dateBehaviours._
 
   ".startDate" should {
@@ -54,7 +55,7 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
       )
     }
 
-    "fail with invalid dates" in {
+    "fail for invalid before min date" in {
 
       val data = Map(
         "startDate.day"   -> "1",
@@ -65,7 +66,22 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
       val result = form.bind(data)
 
       result.errors shouldBe List(
-        FormError("startDate", "claimPeriodStart.error.outofrange", Seq("1 March 2020", "28 February 2021")),
+        FormError("startDate", "claimPeriodStart.error.outofrange", Seq("1 March 2020", "30 April 2021")),
+      )
+    }
+
+    "fail with invalid after max possible end date" in {
+
+      val data = Map(
+        "startDate.day"   -> "1",
+        "startDate.month" -> s"${appConf.schemeEndDate.plusMonths(1).getMonthValue}",
+        "startDate.year"  -> s"${appConf.schemeEndDate.getYear}",
+      )
+
+      val result = form.bind(data)
+
+      result.errors shouldBe List(
+        FormError(key = "startDate", message = "claimPeriodStart.error.outofrange", args = Seq("1 March 2020", "30 April 2021")),
       )
     }
   }

@@ -16,8 +16,6 @@
 
 package base
 
-import java.util.UUID
-
 import com.typesafe.config.ConfigValue
 import config.FrontendAppConfig
 import controllers.actions.{DataRequiredActionImpl, FakeIdentifierAction}
@@ -33,7 +31,6 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
-import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Call, MessagesControllerComponents}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest

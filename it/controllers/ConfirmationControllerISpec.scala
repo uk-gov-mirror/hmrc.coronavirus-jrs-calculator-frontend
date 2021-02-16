@@ -17,6 +17,11 @@
 package controllers
 
 import assets.BaseITConstants
+import controllers.DecemberConfirmationScenarios._
+import controllers.FebruaryConfirmationScenarios._
+import controllers.JanuaryConfirmationScenarios._
+import controllers.MarchConfirmationScenarios._
+import controllers.NovemberConfirmationScenarios._
 import models._
 import play.api.test.Helpers._
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
@@ -24,6 +29,7 @@ import JanuaryConfirmationScenarios._
 import FebruaryConfirmationScenarios._
 import DecemberConfirmationScenarios._
 import NovemberConfirmationScenarios._
+import AprilConfirmationScenarios._
 
 class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
@@ -51,7 +57,7 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
   }
 
   val january: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-      januaryFourWeeklyScenarios ++
+    januaryFourWeeklyScenarios ++
       januaryMonthlyScenarios ++
       januaryTwoWeeklyScenarios ++
       januaryWeeklyScenarios ++
@@ -72,8 +78,30 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       februaryVariableWeeklyScenarios
   }
 
+  val march: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    marchFourWeeklyScenarios ++
+      marchMonthlyScenarios ++
+      marchTwoWeeklyScenarios ++
+      marchWeeklyScenarios ++
+      marchVariableFourWeeklyScenarios ++
+      marchVariableMonthlyScenarios ++
+      marchVariableTwoWeeklyScenarios ++
+      marchVariableWeeklyScenarios
+  }
+
+  val april: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    aprilFourWeeklyScenarios ++
+      aprilMonthlyScenarios ++
+      aprilTwoWeeklyScenarios ++
+      aprilWeeklyScenarios ++
+      aprilVariableWeeklyScenarios ++
+      aprilVariableTwoWeeklyScenarios ++
+      aprilVariableMonthlyScenarios ++
+      aprilVariableFourWeeklyScenarios
+  }
+
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    november ++ december ++ january ++ february
+    november ++ december ++ january ++ february ++ march ++ april
   }
 
   "GET /confirmation" should {
@@ -83,25 +111,25 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       scenarios.foreach {
         case (scenarioSummary, scenarios) =>
 
-        scenarios.zipWithIndex.foreach {
-          case ((scenario, outcome), index) =>
+          scenarios.zipWithIndex.foreach {
+            case ((scenario, outcome), index) =>
 
-            s"the user has answered the questions relating to $scenarioSummary for scenario ${index + 1}" in {
-              val userAnswers: UserAnswers = scenario
+              s"the user has answered the questions relating to $scenarioSummary for scenario ${index + 1}" in {
+                val userAnswers: UserAnswers = scenario
 
-              setAnswers(userAnswers)
+                setAnswers(userAnswers)
 
-              val res = getRequestHeaders("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+                val res = getRequestHeaders("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
 
-              whenReady(res) { result =>
-                result should have(
-                  httpStatus(OK),
-                  titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
-                  contentExists(s"${outcome.setScale(2).toString()}", ".govuk-panel__title"),
-                )
+                whenReady(res) { result =>
+                  result should have(
+                    httpStatus(OK),
+                    titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
+                    contentExists(s"${outcome.setScale(2).toString()}", ".govuk-panel__title"),
+                  )
+                }
               }
-            }
-        }
+          }
       }
 
       "the user has answered the questions for regular journey" in {

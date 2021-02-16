@@ -33,7 +33,7 @@ trait CoreTestData extends UserAnswersBuilder {
 
   def dummyUserAnswers: UserAnswers = regularJourney()
 
-  def dummyUserAnswersNoLastPayDate = regularJourneyNoLastPayDate()
+  def dummyUserAnswersNoLastPayDate: UserAnswers = regularJourneyNoLastPayDate()
 
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, Json.obj())
 
@@ -86,6 +86,21 @@ trait CoreTestData extends UserAnswersBuilder {
       .withLastPayDate("2020, 7, 31")
       .withPartTimeQuestion(PartTimeNo)
       .withRegularPayAmount(2000.00)
+
+  def march2021Journey(): UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2021, 3, 1")
+      .withClaimPeriodEnd("2021, 3, 31")
+      .withFurloughStartDate("2020, 3, 20")
+      .withFurloughStatus()
+      .withPaymentFrequency(Monthly)
+      .withNiCategory()
+      .withPensionStatus()
+      .withPayMethod()
+      .withPayDate(List("2021, 2, 28", "2021, 3, 31"))
+      .withLastPayDate("2021, 3, 31")
+      .withPartTimeQuestion(PartTimeNo)
+      .withRegularPayAmount(10000.00)
 
   lazy val variablePartial =
     emptyUserAnswers
@@ -168,6 +183,42 @@ trait CoreTestData extends UserAnswersBuilder {
           "2020-03-31"
         ))
       .withLastPayDate("2020-03-31")
+
+  lazy val cylbMarch2021Year: UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2021-03-01")
+      .withClaimPeriodEnd("2021-03-31")
+      .withFurloughStartDate("2020-03-01")
+      .withFurloughStatus()
+      .withPaymentFrequency(FortNightly)
+      .withPayMethod(Variable)
+      .withEmployeeStartedOnOrBefore1Feb2019()
+      .withPayDate(
+        List(
+          "2021-02-17",
+          "2021-03-03",
+          "2021-03-17",
+          "2021-03-31"
+        ))
+      .withLastPayDate("2021-03-31")
+
+  lazy val cylbMarch2022Year: UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2022-03-01")
+      .withClaimPeriodEnd("2022-03-31")
+      .withFurloughStartDate("2020-03-01")
+      .withFurloughStatus()
+      .withPaymentFrequency(FortNightly)
+      .withPayMethod(Variable)
+      .withEmployeeStartedOnOrBefore1Feb2019()
+      .withPayDate(
+        List(
+          "2022-02-17",
+          "2022-03-03",
+          "2022-03-17",
+          "2022-03-31"
+        ))
+      .withLastPayDate("2022-03-31")
 
   lazy val variableWeekly: UserAnswers =
     variablePartialWith10KAnnualPayment

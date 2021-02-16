@@ -28,6 +28,7 @@ import views.ViewUtils
 class ClaimPeriodEndFormProviderSpec extends SpecBaseControllerSpecs {
 
   val dateBehaviours = new DateBehaviours
+
   import dateBehaviours._
 
   val claimStart = LocalDate.of(2020, 3, 1)
@@ -80,21 +81,23 @@ class ClaimPeriodEndFormProviderSpec extends SpecBaseControllerSpecs {
 
     "fail with invalid dates -  after policy end" in {
 
-      val form = new ClaimPeriodEndFormProvider()(LocalDate.of(2021, 3, 1))
+      val form = new ClaimPeriodEndFormProvider()(
+        LocalDate.of(appConf.schemeEndDate.getYear, appConf.schemeEndDate.plusMonths(1).getMonthValue, 1)
+      )
 
       val data = Map(
-        "endDate.day"   -> "31",
-        "endDate.month" -> "03",
-        "endDate.year"  -> "2021",
+        "endDate.day"   -> s"${appConf.schemeEndDate.plusMonths(1).getDayOfMonth}",
+        "endDate.month" -> s"${appConf.schemeEndDate.plusMonths(1).getMonthValue}",
+        "endDate.year"  -> s"${appConf.schemeEndDate.plusMonths(1).getYear}",
       )
 
       val result = form.bind(data)
 
       result.errors shouldBe List(
         FormError(
-          "endDate",
-          "claimPeriodEnd.cannot.be.after.policyEnd",
-          Seq(ViewUtils.dateToString(appConf.schemeEndDate))
+          key = "endDate",
+          message = "claimPeriodEnd.cannot.be.after.policyEnd",
+          args = Seq(ViewUtils.dateToString(appConf.schemeEndDate))
         ))
     }
 

@@ -480,8 +480,8 @@ lastPayDate.details.p2 = A ‘pay period’ is the period of time that the emplo
 
 somethingWentWrong.button = Start again
 
-lastYearPay.title = In the previous tax year, what did this employee earn in the pay period {0} to {1}?
-lastYearPay.heading = In the previous tax year, what did this employee earn in the pay period {0} to {1}?
+lastYearPay.title = What did this employee earn in the pay period {0} to {1}?
+lastYearPay.heading = What did this employee earn in the pay period {0} to {1}?
 lastYearPay.p1 = This is the gross amount earned before deductions. We need this information to calculate how much you can claim, based on the amount the employee earned in the previous tax year.
 lastYearPay.p2 = Only include payments for work done in this pay period, even if the payslip includes payments for other work.
 lastYearPay.p3 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
@@ -878,6 +878,10 @@ furloughInLastTaxYear.error.required = Select one of the options below
 calculationUnsupported.heading = This calculation cannot be supported at the moment
 calculationUnsupported.p1 = You can do this calculation manually.
 calculationUnsupported.startAgain = Start a new calculation
+
+previousFurloughPeriods.title = Has this employee been furloughed more than once since 1 November 2020?
+previousFurloughPeriods.heading = Has this employee been furloughed more than once since 1 November 2020?
+previousFurloughPeriods.error.required = Select yes if this employee has been furloughed more than once since 1 November 2020
 
 firstFurloughStartDate.title = When was this employee first furloughed?
 firstFurloughStartDate.heading = When was this employee first furloughed?

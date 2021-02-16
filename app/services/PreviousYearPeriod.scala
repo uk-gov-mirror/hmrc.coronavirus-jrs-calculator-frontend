@@ -16,10 +16,11 @@
 
 package services
 
-import java.time.LocalDate
-
 import models.PaymentFrequency.{Monthly, _}
 import models.{CylbDuration, PaymentFrequency, Period, PeriodWithPaymentDate, Periods}
+
+import java.time.{LocalDate, Year}
+import java.time.temporal.ChronoUnit
 
 trait PreviousYearPeriod {
 
@@ -51,18 +52,17 @@ trait PreviousYearPeriod {
     }
   }
 
-  private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] = frequency match {
-    case Monthly => Seq(Period(period.start.minusYears(1), period.end.minusYears(1)))
-    case _ =>
-      val eqStart = period.start.minusDays(364)
-      val eqEnd = period.end.minusDays(364)
-      val equivalent = Period(eqStart, eqEnd)
+  private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] = {
 
-      val prStart = eqStart.minusDays(paymentFrequencyDays(frequency))
-      val prEnd = eqEnd.minusDays(paymentFrequencyDays(frequency))
+    val policyStart = LocalDate.of(2020, 3, 1)
+    val yearsBetweenPolicyStartAndPeriodEnd = ChronoUnit.YEARS.between(policyStart, period.end).toInt.abs
 
-      val previous = Period(prStart, prEnd)
-
-      Seq(previous, equivalent)
+    frequency match {
+      case Monthly => Seq(period.substractYears(yearsBetweenPolicyStartAndPeriodEnd + 1))
+      case _ =>
+        val equivalent = period.substract52Weeks(yearsBetweenPolicyStartAndPeriodEnd + 1)
+        val previous = equivalent.substractDays(paymentFrequencyDays(frequency))
+        Seq(previous, equivalent)
+    }
   }
 }
