@@ -25,6 +25,11 @@ import controllers.NovemberConfirmationScenarios._
 import models._
 import play.api.test.Helpers._
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
+import JanuaryConfirmationScenarios._
+import FebruaryConfirmationScenarios._
+import DecemberConfirmationScenarios._
+import NovemberConfirmationScenarios._
+import AprilConfirmationScenarios._
 
 class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
@@ -84,8 +89,19 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       marchVariableWeeklyScenarios
   }
 
+  val april: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    aprilFourWeeklyScenarios ++
+      aprilMonthlyScenarios ++
+      aprilTwoWeeklyScenarios ++
+      aprilWeeklyScenarios ++
+      aprilVariableWeeklyScenarios ++
+      aprilVariableTwoWeeklyScenarios ++
+      aprilVariableMonthlyScenarios ++
+      aprilVariableFourWeeklyScenarios
+  }
+
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    november ++ december ++ january ++ february ++ march
+    november ++ december ++ january ++ february ++ march ++ april
   }
 
   "GET /confirmation" should {

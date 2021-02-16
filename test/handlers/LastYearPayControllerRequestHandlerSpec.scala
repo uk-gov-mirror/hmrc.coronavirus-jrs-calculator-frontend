@@ -56,6 +56,30 @@ class LastYearPayControllerRequestHandlerSpec extends SpecBase with CoreTestData
     periods mustBe expected
   }
 
+  "get the pay periods in previous year taking into account leap year when calculating back from March 2021" in new LastYearPayControllerRequestHandler {
+    val periods = getLastYearPeriods(cylbMarch2021Year).value
+
+    val expected = Seq(
+      period("2019, 2, 21", "2019, 3, 6"),
+      period("2019, 3, 7", "2019, 3, 20"),
+      period("2019, 3, 21", "2019, 4, 3")
+    )
+
+    periods mustBe expected
+  }
+
+  "get the pay periods in previous year taking into account leap year when calculating back from March 2022" in new LastYearPayControllerRequestHandler {
+    val periods = getLastYearPeriods(cylbMarch2022Year).value
+
+    val expected = Seq(
+      period("2019, 2, 22", "2019, 3, 7"),
+      period("2019, 3, 8", "2019, 3, 21"),
+      period("2019, 3, 22", "2019, 4, 4")
+    )
+
+    periods mustBe expected
+  }
+
   "get the pay periods in previous year for fortnightly" in new LastYearPayControllerRequestHandler {
     val periods = getLastYearPeriods(variableFortnightly).value
 
