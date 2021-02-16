@@ -42,60 +42,154 @@ class PreviousYearPeriodSpec extends SpecBase with CoreTestDataBuilder {
   def extract(duration: CylbDuration): (Int, Int, Int) =
     (duration.fullPeriodLength, duration.equivalentPeriodDays, duration.previousPeriodDays)
 
-  "Weekly tests" in {
-    extract(CylbDuration(Weekly, fullPeriod("2020,3,1", "2020,3,7"))) mustBe Tuple3(7, 5, 2)
+  "Weekly tests" when {
 
-    extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,3" -> "2020,3,7"))) mustBe
-      Tuple3(7, 5, 0)
+    "claim is before 1st March 2021" in {
 
-    extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,4" -> "2020,3,7"))) mustBe
-      Tuple3(7, 4, 0)
+      extract(CylbDuration(Weekly, fullPeriod("2020,3,1", "2020,3,7"))) mustBe Tuple3(7, 5, 2)
 
-    extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,2" -> "2020,3,7"))) mustBe
-      Tuple3(7, 5, 1)
+      extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,3" -> "2020,3,7"))) mustBe
+        Tuple3(7, 5, 0)
 
-    extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,1" -> "2020,3,6"))) mustBe
-      Tuple3(7, 4, 2)
+      extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,4" -> "2020,3,7"))) mustBe
+        Tuple3(7, 4, 0)
 
-    extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,1" -> "2020,3,2"))) mustBe
-      Tuple3(7, 0, 2)
+      extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,2" -> "2020,3,7"))) mustBe
+        Tuple3(7, 5, 1)
+
+      extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,1" -> "2020,3,6"))) mustBe
+        Tuple3(7, 4, 2)
+
+      extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,1" -> "2020,3,2"))) mustBe
+        Tuple3(7, 0, 2)
+
+      extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,1" -> "2020,3,1"))) mustBe
+        Tuple3(7, -1, 2)
+    }
+
+    "claim is 1st March 2021 onward" in {
+
+      extract(CylbDuration(Weekly, fullPeriod("2021,3,1", "2021,3,7"))) mustBe Tuple3(7, 4, 3)
+
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,3" -> "2021,3,7"))) mustBe
+        Tuple3(7, 5, 0)
+
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,4" -> "2021,3,7"))) mustBe
+        Tuple3(7, 4, 0)
+
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,2" -> "2021,3,7"))) mustBe
+        Tuple3(7, 5, 1)
+
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,6"))) mustBe
+        Tuple3(7, 3, 3)
+
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,2"))) mustBe
+        Tuple3(7, -1, 3)
+
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,1"))) mustBe
+        Tuple3(7, -2, 3)
+    }
   }
 
-  "Fortnightly tests" in {
-    extract(CylbDuration(FortNightly, fullPeriod("2020,3,1", "2020,3,14"))) mustBe
-      Tuple3(14, 12, 2)
+  "Fortnightly tests" when {
 
-    extract(CylbDuration(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,3" -> "2020,3,14"))) mustBe
-      Tuple3(14, 12, 0)
+    "claim is before 1st March 2021" in {
 
-    extract(CylbDuration(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,5" -> "2020,3,14"))) mustBe
-      Tuple3(14, 10, 0)
+      extract(CylbDuration(FortNightly, fullPeriod("2020,3,1", "2020,3,14"))) mustBe
+        Tuple3(14, 12, 2)
 
-    extract(CylbDuration(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,2" -> "2020,3,14"))) mustBe
-      Tuple3(14, 12, 1)
+      extract(CylbDuration(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,3" -> "2020,3,14"))) mustBe
+        Tuple3(14, 12, 0)
+
+      extract(CylbDuration(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,5" -> "2020,3,14"))) mustBe
+        Tuple3(14, 10, 0)
+
+      extract(CylbDuration(FortNightly, partialPeriod("2020,3,1" -> "2020,3,14", "2020,3,2" -> "2020,3,14"))) mustBe
+        Tuple3(14, 12, 1)
+    }
+
+    "claim is 1st March 2021 onward" in {
+
+      extract(CylbDuration(FortNightly, fullPeriod("2021,3,1", "2021,3,14"))) mustBe
+        Tuple3(14, 11, 3)
+
+      extract(CylbDuration(FortNightly, partialPeriod("2021,3,1" -> "2021,3,14", "2021,3,3" -> "2021,3,14"))) mustBe
+        Tuple3(14, 12, 0)
+
+      extract(CylbDuration(FortNightly, partialPeriod("2021,3,1" -> "2021,3,14", "2021,3,5" -> "2021,3,14"))) mustBe
+        Tuple3(14, 10, 0)
+
+      extract(CylbDuration(FortNightly, partialPeriod("2021,3,1" -> "2021,3,14", "2021,3,2" -> "2021,3,14"))) mustBe
+        Tuple3(14, 12, 1)
+    }
   }
 
-  "Fourweekly tests" in {
-    extract(CylbDuration(FourWeekly, fullPeriod("2020,3,1", "2020,3,28"))) mustBe
-      Tuple3(28, 26, 2)
+  "Fourweekly tests" when {
 
-    extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,3" -> "2020,3,28"))) mustBe
-      Tuple3(28, 26, 0)
+    "claim is before 1st March 2021" in {
 
-    extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,9" -> "2020,3,28"))) mustBe
-      Tuple3(28, 20, 0)
+      extract(CylbDuration(FourWeekly, fullPeriod("2020,3,1", "2020,3,28"))) mustBe
+        Tuple3(28, 26, 2)
 
-    extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3, 2" -> "2020,3,28"))) mustBe
-      Tuple3(28, 26, 1)
+      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,3" -> "2020,3,28"))) mustBe
+        Tuple3(28, 26, 0)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,9" -> "2020,3,28"))) mustBe
+        Tuple3(28, 20, 0)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3, 2" -> "2020,3,28"))) mustBe
+        Tuple3(28, 26, 1)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3, 1" -> "2020,3,5"))) mustBe
+        Tuple3(28, 3, 2)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3, 1" -> "2020,3,1"))) mustBe
+        Tuple3(28, -1, 2)
+    }
+
+    "claim is 1st March 2021 onwards" in {
+
+      extract(CylbDuration(FourWeekly, fullPeriod("2021,3,1", "2021,3,28"))) mustBe
+        Tuple3(28, 25, 3)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3,3" -> "2021,3,28"))) mustBe
+        Tuple3(28, 26, 0)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3,9" -> "2021,3,28"))) mustBe
+        Tuple3(28, 20, 0)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3, 2" -> "2021,3,28"))) mustBe
+        Tuple3(28, 26, 1)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3, 1" -> "2021,3,5"))) mustBe
+        Tuple3(28, 2, 3)
+
+      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3, 1" -> "2021,3,1"))) mustBe
+        Tuple3(28, -2, 3)
+    }
   }
 
-  "Monthly tests" in {
-    extract(CylbDuration(Monthly, fullPeriod("2020,3,1", "2020,3,31"))) mustBe
-      Tuple3(31, 31, 0)
-    extract(CylbDuration(Monthly, fullPeriod("2020,4,1", "2020,4,30"))) mustBe
-      Tuple3(30, 30, 0)
-    extract(CylbDuration(Monthly, partialPeriod("2020,3,1" -> "2020,3,31", "2020,3,3" -> "2020,3,31"))) mustBe
-      Tuple3(31, 29, 0)
+  "Monthly tests" when {
+
+    "claim is before 1st March 2021" in {
+
+      extract(CylbDuration(Monthly, fullPeriod("2020,3,1", "2020,3,31"))) mustBe
+        Tuple3(31, 31, 0)
+      extract(CylbDuration(Monthly, fullPeriod("2020,4,1", "2020,4,30"))) mustBe
+        Tuple3(30, 30, 0)
+      extract(CylbDuration(Monthly, partialPeriod("2020,3,1" -> "2020,3,31", "2020,3,3" -> "2020,3,31"))) mustBe
+        Tuple3(31, 29, 0)
+    }
+
+    "claim is 1st March 2021 onwards" in {
+
+      extract(CylbDuration(Monthly, fullPeriod("2021,3,1", "2021,3,31"))) mustBe
+        Tuple3(31, 31, 0)
+      extract(CylbDuration(Monthly, fullPeriod("2021,4,1", "2021,4,30"))) mustBe
+        Tuple3(30, 30, 0)
+      extract(CylbDuration(Monthly, partialPeriod("2021,3,1" -> "2021,3,31", "2021,3,3" -> "2021,3,31"))) mustBe
+        Tuple3(31, 29, 0)
+    }
   }
 
   "determine cylbCutoff date" in new PreviousYearPeriod {

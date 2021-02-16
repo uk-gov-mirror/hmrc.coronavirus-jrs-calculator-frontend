@@ -17,9 +17,9 @@
 package services
 
 import java.time.LocalDate
-
 import models.NonFurloughPay.determineNonFurloughPay
 import models.{Amount, AveragePayment, AveragePaymentWithPhaseTwoPeriod, CylbBreakdown, CylbDuration, CylbPayment, CylbPaymentWithFullPeriod, CylbPaymentWithPartialPeriod, CylbPaymentWithPhaseTwoPeriod, FullPeriodWithPaymentDate, LastYearPayment, NonFurloughPay, OnePeriodCylb, PartialPeriodWithPaymentDate, PaymentFrequency, PeriodWithPaymentDate, PhaseTwoPeriod, TwoPeriodCylb}
+import play.api.Logger.logger
 import services.Calculators.AmountRounding
 
 trait CylbCalculator extends PreviousYearPeriod with Calculators {
@@ -85,7 +85,8 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
     }
   }
 
-  private def previousOrCurrent(lastYearPayment: LastYearPayment, ops: CylbDuration): OnePeriodCylb =
+  private def previousOrCurrent(lastYearPayment: LastYearPayment, ops: CylbDuration): OnePeriodCylb = {
+    logger.debug(s"[CylbCalculator][previousOrCurrent] opsEquivalentPeriodDays = ${ops.equivalentPeriodDays}")
     if (ops.equivalentPeriodDays == 0) {
       val referencePay = Amount((lastYearPayment.amount.value / ops.fullPeriodLength) * ops.previousPeriodDays).halfUp
       OnePeriodCylb(referencePay, lastYearPayment.amount, ops.fullPeriodLength, ops.previousPeriodDays, lastYearPayment.date)
@@ -93,6 +94,7 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
       val referencePay = Amount((lastYearPayment.amount.value / ops.fullPeriodLength) * ops.equivalentPeriodDays).halfUp
       OnePeriodCylb(referencePay, lastYearPayment.amount, ops.fullPeriodLength, ops.equivalentPeriodDays, lastYearPayment.date)
     }
+  }
 
   private def previousAndCurrent(
     ops: CylbDuration,

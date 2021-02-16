@@ -1162,7 +1162,7 @@ object MarchConfirmationScenarios extends IntegrationSpecBase
           .withPayDate(List("2021-02-28", "2021-03-07", "2021-03-14", "2021-03-21", "2021-03-28"))
           .withUsualHours(List())
           .withPartTimeHours(List())
-          -> 1257.15,
+          -> 1241.15,
         emptyUserAnswers
           .withFurloughStatus(FurloughStatus.FurloughEnded)
           .withEmployeeStartDate("2020-01-01")

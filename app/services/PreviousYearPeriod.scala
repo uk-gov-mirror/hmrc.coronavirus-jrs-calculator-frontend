@@ -52,17 +52,12 @@ trait PreviousYearPeriod {
     }
   }
 
-  private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] = {
-
-    val policyStart = LocalDate.of(2020, 3, 1)
-    val yearsBetweenPolicyStartAndPeriodEnd = ChronoUnit.YEARS.between(policyStart, period.end).toInt.abs
-
+  private def lastYearPeriods(frequency: PaymentFrequency, period: Period): Seq[Period] =
     frequency match {
-      case Monthly => Seq(period.substractYears(yearsBetweenPolicyStartAndPeriodEnd + 1))
+      case Monthly => Seq(period.substractYears(period.yearsBetweenPolicyStartAndPeriodEnd + 1))
       case _ =>
-        val equivalent = period.substract52Weeks(yearsBetweenPolicyStartAndPeriodEnd + 1)
+        val equivalent = period.substract52Weeks(period.yearsBetweenPolicyStartAndPeriodEnd + 1)
         val previous = equivalent.substractDays(paymentFrequencyDays(frequency))
         Seq(previous, equivalent)
     }
-  }
 }

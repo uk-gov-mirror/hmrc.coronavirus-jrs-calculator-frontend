@@ -17,12 +17,12 @@
 package handlers
 
 import java.time.LocalDate
-
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PayMethod.{Regular, Variable}
 import models.{BranchingQuestions, Journey, PhaseTwoReferencePay, PhaseTwoRegularPayData, PhaseTwoVariablePayData, PhaseTwoVariablePayWithCylbData, ReferencePay, RegularPay, RegularPayData, UserAnswers, VariablePay, VariablePayData, VariablePayWithCylb, VariablePayWithCylbData}
 import cats.syntax.apply._
 import models.UserAnswers.AnswerV
+import play.api.Logger.logger
 
 trait JourneyBuilder extends DataExtractor {
 
@@ -96,6 +96,14 @@ trait JourneyBuilder extends DataExtractor {
       extractPriorFurloughPeriodV(userAnswers)
     ).mapN { (referencePayData, annualPay, priorFurlough) =>
       val cylbPayments = extractCylbPayments(userAnswers)
+
+      logger.debug(
+        s"[handlers][phaseTwoVariablePayWithCylbDataV] Answers" +
+          s"\n - referencePayData = $referencePayData" +
+          s"\n - annualPay = $annualPay" +
+          s"\n - periodFurlough = $priorFurlough" +
+          s"\n - cylbPayments = $cylbPayments")
+
       PhaseTwoVariablePayWithCylbData(
         referencePayData,
         annualPay,
