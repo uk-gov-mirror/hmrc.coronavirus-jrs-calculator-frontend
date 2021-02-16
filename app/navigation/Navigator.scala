@@ -23,6 +23,7 @@ import config.SchemeConfiguration
 import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.Singleton
+import models.EmployeeRTISubmission.{No, Yes}
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
 import models.PayMethod.{Regular, Variable}
@@ -109,6 +110,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     case PartTimePeriodsPage =>
       _ =>
         routes.PartTimeNormalHoursController.onPageLoad(1)
+    case PreviousFurloughPeriodsPage =>
+      firstFurloughedRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -276,10 +279,9 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     userAnswers.getV(ClaimPeriodStartPage) match {
       case Valid(claimPeriodStart) if claimPeriodStart.isEqualOrAfter(nov1st2020) =>
         userAnswers.getV(EmployeeStartDatePage) match {
-          case Valid(empStartDate) if empStartDate.isBefore(feb1st2019) => payDateRoutes
-          case Valid(empStartDate)
-              if empStartDate.isEqualOrAfter(feb1st2019) && (empStartDate.isBefore(feb1st2020) || empStartDate.isAfter(mar19th2020)) =>
-            payDateRoutes
+          case Valid(empStartDate) if empStartDate.isBefore(feb1st2019)                                            => payDateRoutes
+          case Valid(empStartDate) if empStartDate.isAfter(mar19th2020)                                            => routeToEmployeeFirstFurloughed(userAnswers)
+          case Valid(empStartDate) if empStartDate.isEqualOrAfter(feb1st2019) && empStartDate.isBefore(feb1st2020) => payDateRoutes
           case Valid(empStartDate) if empStartDate.isEqualOrAfter(feb1st2020) && empStartDate.isEqualOrBefore(mar19th2020) =>
             routes.EmployeeRTISubmissionController.onPageLoad()
           case Invalid(e) => routes.EmployeeStartDateController.onPageLoad()
@@ -290,6 +292,12 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       case Invalid(e) => routes.ClaimPeriodStartController.onPageLoad()
     }
   }
+
+  private[this] def routeToEmployeeFirstFurloughed(userAnswers: UserAnswers): Call =
+    userAnswers.getV(FurloughStartDatePage) match {
+      case Valid(startDate) if startDate.isAfter(nov8th2020) => routes.PreviousFurloughPeriodsController.onPageLoad()
+      case _                                                 => handlePayDateRoutes(userAnswers)
+    }
 
   //scalastyle:on
 
@@ -302,7 +310,18 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   }
 
   private[this] def employeeRTISubmissionRoutes: UserAnswers => Call = { userAnswers =>
-    handlePayDateRoutes(userAnswers)
+    userAnswers.getV(EmployeeRTISubmissionPage) match {
+      case Valid(Yes) => handlePayDateRoutes(userAnswers)
+      case Valid(No)  => routeToEmployeeFirstFurloughed(userAnswers)
+    }
+  }
+
+  private[this] def firstFurloughedRoutes: UserAnswers => Call = { userAnswers =>
+    userAnswers.getV(PreviousFurloughPeriodsPage) match {
+      case Valid(true)  => routes.IndexController.keepalive() //TODO Change to Will's page once hes got routing working
+      case Valid(false) => handlePayDateRoutes(userAnswers)
+      case Invalid(_)   => routes.PreviousFurloughPeriodsController.onPageLoad()
+    }
   }
 
   private[this] def payMethodRoutes: UserAnswers => Call = { userAnswers =>

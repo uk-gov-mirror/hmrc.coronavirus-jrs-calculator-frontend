@@ -131,6 +131,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withPayPeriodsList(answer: PayPeriodsList = PayPeriodsList.Yes) =
       userAnswers.setValue(PayPeriodsListPage, answer)
 
+    def withPreviousFurloughedPeriodsAnswer(answer: Boolean): UserAnswers =
+      userAnswers.setValue(PreviousFurloughPeriodsPage, answer)
+
     def withPayDate(dates: List[String]): UserAnswers =
       withListOfValues[String](dates, PayDatePage)
 
