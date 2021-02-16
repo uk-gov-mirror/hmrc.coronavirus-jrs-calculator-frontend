@@ -103,19 +103,34 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
 
     }
 
-    "redirect to the next page when valid data is submitted" in {
+    "redirect to the next page when the value 'true' is submitted" in {
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
       val result = controller(Some(userAnswers)).onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
 
-      //TODO wire up routes in navigator (when appropriate) - then this test will pass
+      // TODO wire up routes in navigator (when appropriate) - then this test will pass
+      // Uncomment once FirstFurloughedDate (Will's page) is added
 
-      //Have a look at regularLengthEmployedRoutes - should route to the previous furlough page
-      // if yes selected route to when was this employee first furlough (Will's page)
-      // if no selected route to what's the last day this employee was paid for before 1 December 2020 page
+//       redirectLocation(result).value mustEqual routes.FirstFurloughedDate.onPageLoad().url
+    }
 
-      // redirectLocation(result).value mustEqual routes.PreviousFurloughPeriodsController.onSubmit().url
+    "redirect to the next page when the value 'false' is submitted " in {
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+
+      lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
+        FakeRequest(POST, previousFurloughPeriodsRoute).withCSRFToken
+          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+          .withFormUrlEncodedBody(
+            "value" -> "false"
+          )
+
+      val result = controller(Some(userAnswers)).onSubmit()(postRequest)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.PayDateController.onPageLoad(1).url
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
