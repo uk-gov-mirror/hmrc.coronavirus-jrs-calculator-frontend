@@ -527,7 +527,6 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
             .withClaimPeriodStart("2020,11,1")
         ) mustBe routes.PayDateController.onPageLoad(1)
 
-        println("test for previous furluogh periods - currently not working")
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
@@ -536,7 +535,6 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
             .withClaimPeriodStart("2020,11,1")
         ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
 
-        println("test for RTI submission page")
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
