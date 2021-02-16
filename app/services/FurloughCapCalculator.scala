@@ -17,9 +17,9 @@
 package services
 
 import java.time.{Month, Year}
-
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.{FullPeriodCap, FurloughCap, PartialPeriodCap, PaymentFrequency, Period, PeriodSpansMonthCap}
+import play.api.Logger.logger
 import utils.AmountRounding._
 
 import scala.math.BigDecimal.RoundingMode._
@@ -40,6 +40,7 @@ trait FurloughCapCalculator extends PeriodHelper {
     if (periodSpansMonth(period)) {
       calculateFurloughCapNonSimplified(period)
     } else {
+      logger.debug("[FurloughCapCalculator][calculateFurloughCapNonSimplified] Starting Simplified calc")
       val max = dailyMax(period.start.getMonth)
       val periodDays = period.countDays
       val cap = roundWithMode(periodDays * max, HALF_UP)
@@ -51,6 +52,7 @@ trait FurloughCapCalculator extends PeriodHelper {
     roundWithMode(2500.00 / month.length(isLeapYear), UP)
 
   protected def calculateFurloughCapNonSimplified(payPeriod: Period): PeriodSpansMonthCap = {
+    logger.debug("[FurloughCapCalculator][calculateFurloughCapNonSimplified] Starting NonSimplified calc")
     val isLeapYear = Year.of(payPeriod.start.getYear).isLeap
     val startMonthPeriod =
       Period(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.length(isLeapYear)))

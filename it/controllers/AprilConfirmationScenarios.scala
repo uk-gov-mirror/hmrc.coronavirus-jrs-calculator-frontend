@@ -64,7 +64,7 @@ object AprilConfirmationScenarios extends IntegrationSpecBase with CreateRequest
     .withPayDate(List("2021-03-31", "2021-04-07", "2021-04-14", "2021-04-21", "2021-04-28"))
     .withUsualHours(List())
     .withPartTimeHours(List())
-  -> 1257.15
+  -> 1241.15
   ))
 
   val aprilVariableTwoWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("April Variable Two Weekly Scenarios" -> Seq(

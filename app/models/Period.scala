@@ -22,6 +22,10 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 final case class Period(start: LocalDate, end: LocalDate) {
+
+  val policyStart = LocalDate.of(2020, 3, 1)
+  val yearsBetweenPolicyStartAndPeriodEnd = ChronoUnit.YEARS.between(policyStart, end).toInt.abs
+
   def substractDays(days: Int): Period = Period(start.minusDays(days), end.minusDays(days))
   def substractYears(years: Int): Period = Period(start.minusYears(years), end.minusYears(years))
   def substract52Weeks(nTimes: Int = 1): Period = Period(start.minusDays(364 * nTimes), end.minusDays(364 * nTimes))

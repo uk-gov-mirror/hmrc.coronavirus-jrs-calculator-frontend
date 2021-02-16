@@ -17,6 +17,7 @@
 package models
 
 import models.PaymentFrequency._
+import play.api.Logger.logger
 
 case class CylbOperators(fullPeriodLength: Int, daysFromPrevious: Int, daysFromCurrent: Int)
 
@@ -37,9 +38,13 @@ protected trait FourWeekly extends FixedLength {
 }
 
 protected trait FullPeriodCylb { this: FixedLength =>
+  def fullPeriod: FullPeriod
+
   def equivalentPeriodDays: Int = fullPeriodLength - previousPeriodDays
 
-  def previousPeriodDays: Int = 2
+  def previousPeriodDays: Int =
+    //This is not leap year safe from 2024 onwards but this should not be an issue
+    fullPeriod.period.yearsBetweenPolicyStartAndPeriodEnd + 2
 }
 
 protected trait PartialPeriodCylb { this: FixedLength =>
@@ -47,10 +52,23 @@ protected trait PartialPeriodCylb { this: FixedLength =>
 
   def equivalentPeriodDays: Int = partial.partial.countDays - previousPeriodDays
 
-  def previousPeriodDays: Int =
+  def previousPeriodDays: Int = {
+
+    logger.debug(
+      s"[PartialPeriodCylb][previousPeriodDays] Values:" +
+        s"\n - partial.partial = ${partial.partial}" +
+        s"\n - partial.original = ${partial.original}" +
+        s"\n - partial.isFurloughStart = ${partial.isFurloughStart}" +
+        s"\n - partial.partial.countDays = ${partial.partial.countDays}" +
+        s"\n - partial.original.countDays = ${partial.original.countDays}")
+
     if (partial.isFurloughStart) {
       if (partial.partial.countDays < (partial.original.countDays - 1)) 0 else 1
-    } else { 2 }
+    } else {
+      //This is not leap year safe from 2024 onwards but this should not be an issue
+      partial.period.yearsBetweenPolicyStartAndPeriodEnd + 2
+    }
+  }
 }
 
 trait CylbDuration {
@@ -61,9 +79,9 @@ trait CylbDuration {
 
 object CylbDuration {
 
-  object WeeklyFullCylb extends CylbDuration with FullPeriodCylb with Weekly
-  object FortnightlyFullCylb extends CylbDuration with FullPeriodCylb with Fortnightly
-  object FourweeklyFullCylb extends CylbDuration with FullPeriodCylb with FourWeekly
+  case class WeeklyFullCylb(override val fullPeriod: FullPeriod) extends CylbDuration with FullPeriodCylb with Weekly
+  case class FortnightlyFullCylb(override val fullPeriod: FullPeriod) extends CylbDuration with FullPeriodCylb with Fortnightly
+  case class FourweeklyFullCylb(override val fullPeriod: FullPeriod) extends CylbDuration with FullPeriodCylb with FourWeekly
   case class MonthlyFullCylb(fullPeriod: FullPeriod) extends CylbDuration {
     val fullPeriodLength: Int = fullPeriod.period.countDays
     override def equivalentPeriodDays: Int = fullPeriodLength
@@ -81,11 +99,11 @@ object CylbDuration {
 
   def apply(paymentFrequency: PaymentFrequency, period: Periods): CylbDuration =
     (paymentFrequency, period) match {
-      case (Weekly, _: FullPeriod)               => WeeklyFullCylb
+      case (Weekly, full: FullPeriod)            => WeeklyFullCylb(full)
       case (Weekly, partial: PartialPeriod)      => WeeklyPartialCylb(partial)
-      case (FortNightly, _: FullPeriod)          => FortnightlyFullCylb
+      case (FortNightly, full: FullPeriod)       => FortnightlyFullCylb(full)
       case (FortNightly, partial: PartialPeriod) => FortnightlyPartialCylb(partial)
-      case (FourWeekly, _: FullPeriod)           => FourweeklyFullCylb
+      case (FourWeekly, full: FullPeriod)        => FourweeklyFullCylb(full)
       case (FourWeekly, partial: PartialPeriod)  => FourweeklyPartialCylb(partial)
       case (Monthly, full: FullPeriod)           => MonthlyFullCylb(full)
       case (Monthly, partial: PartialPeriod)     => MonthlyPartialCylb(partial)

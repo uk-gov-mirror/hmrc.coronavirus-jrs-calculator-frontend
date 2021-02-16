@@ -17,11 +17,11 @@
 package handlers
 
 import java.time.LocalDate
-
 import cats.data.Validated.{Invalid, Valid}
 import cats.syntax.apply._
 import models.UserAnswers.AnswerV
 import models._
+import play.api.Logger.logger
 import services._
 import viewmodels._
 import utils.LocalDateHelpers._
@@ -43,12 +43,15 @@ trait ConfirmationControllerRequestHandler
       if (claim.start.isBefore(LocalDate.of(2020, 7, 1))) breakdown(userAnswers) else phaseTwoBreakdown(userAnswers)
   }
 
-  private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] =
+  private def validateBreakdown(userAnswers: UserAnswers, m: Metadata): AnswerV[ConfirmationDataResult] = {
+    logger.debug(s"[handlers][validateBreakdown] Metadata: $m")
     breakDown(m, userAnswers) match {
       case Valid(bd) =>
         Valid(confirmationResult(m, bd))
       case i @ Invalid(_) => i
+
     }
+  }
 
   private def confirmationResult(metadata: Metadata, breakdown: ViewBreakdown): ConfirmationDataResult =
     (metadata, breakdown) match {
@@ -85,7 +88,8 @@ trait ConfirmationControllerRequestHandler
       case inv @ Invalid(e) => inv
     }
 
-  private def breakdownWithoutNicAndPension(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdownWithoutNicAndPension] =
+  private def breakdownWithoutNicAndPension(userAnswers: UserAnswers): AnswerV[ConfirmationViewBreakdownWithoutNicAndPension] = {
+    logger.debug("[handlers][breakdownWithoutNicAndPension] Calculating without Nic and Pension")
     extractBranchingQuestionsV(userAnswers) match {
       case Valid(questions) =>
         phaseTwoJourneyDataV(define(questions, dynamicCylbCutoff(userAnswers)), userAnswers) match {
@@ -97,6 +101,7 @@ trait ConfirmationControllerRequestHandler
         }
       case i @ Invalid(_) => i
     }
+  }
 
   private def phaseTwoBreakdown(userAnswers: UserAnswers): AnswerV[PhaseTwoConfirmationViewBreakdown] =
     extractBranchingQuestionsV(userAnswers) match {
