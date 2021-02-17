@@ -23,7 +23,7 @@ import controllers.actions._
 import forms.LastPayDateFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.{LastPayDatePage, PayDatePage}
+import pages.{FurloughStartDatePage, LastPayDatePage, PayDatePage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -47,7 +47,6 @@ class LastPayDateController @Inject()(
     extends FrontendBaseController with I18nSupport {
 
   def form(latestPayDate: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(latestPayDate)
-
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.getList(PayDatePage).lastOption match {
       case Some(date) =>

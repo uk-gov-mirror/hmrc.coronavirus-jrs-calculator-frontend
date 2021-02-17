@@ -74,6 +74,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withPaymentFrequency(frequency: PaymentFrequency): UserAnswers =
       userAnswers.setValue(PaymentFrequencyPage, frequency)
 
+    def withVariableLengthEmployed(answer: EmployeeStarted): UserAnswers =
+      userAnswers.setValue(EmployeeStartedPage, answer)
+
     def withRegularPayAmount(salary: BigDecimal): UserAnswers =
       userAnswers.setValue(RegularPayAmountPage, Salary(salary))
 

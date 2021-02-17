@@ -24,6 +24,7 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import play.api.i18n.Messages
+import views.ViewUtils
 
 class FirstFurloughDateFormProvider @Inject() extends Mappings with SchemeConfiguration {
 

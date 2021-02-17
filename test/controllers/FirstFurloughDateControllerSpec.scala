@@ -21,9 +21,12 @@ import java.time.{LocalDate, ZoneOffset}
 import base.SpecBaseControllerSpecs
 import controllers.actions.DataRetrievalActionImpl
 import forms.FirstFurloughDateFormProvider
-import models.UserAnswers
+import models.PayMethod.Variable
+import models.PaymentFrequency.Weekly
+import models.{EmployeeStarted, UserAnswers}
 import pages.FirstFurloughDatePage
 import play.api.data.Form
+import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
@@ -93,16 +96,6 @@ class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
 
     }
 
-    //TODO Will need to implement this test once the page has been wired up in the navigator
-//    "redirect to the next page when valid data is submitted" in {
-//
-//      val existingAnswers = emptyUserAnswers.copy(data = Json.obj(EmployeeFirstFurloughedPage.toString -> JsString(validAnswer.toString)))
-//      val result = controller(Some(existingAnswers)).onSubmit()(postRequest)
-//
-//      status(result) mustEqual SEE_OTHER
-//      redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/first-furlough-date"
-//    }
-
     "return a Bad Request and errors when invalid data is submitted" in {
       val request =
         FakeRequest(POST, firstFurLoughDateStartRoute).withCSRFToken
@@ -118,5 +111,20 @@ class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
         view(boundForm)(request, messages).toString()
 
     }
+
+    "redirect to Session Expired for a GET if no existing data is found" in {
+      val result = controller(None).onPageLoad()(getRequest)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
+    }
+
+    "redirect to Session Expired for a POST if no existing data is found" in {
+      val result = controller(None).onSubmit()(postRequest)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
+    }
+
   }
 }

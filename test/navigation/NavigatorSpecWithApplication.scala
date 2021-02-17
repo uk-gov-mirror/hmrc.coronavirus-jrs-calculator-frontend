@@ -859,10 +859,10 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to the correct page after PreviousFurloughPeriodsPage" in {
-//        navigator.nextPage(
-//          PreviousFurloughPeriodsPage,
-//          emptyUserAnswers.withPreviousFurloughedPeriodsAnswer(true)
-//        ) mustBe routes.FirstFurloughedDate.onPageLoad() //TODO // Uncomment once FirstFurloughedDate (Will's page) is added
+        navigator.nextPage(
+          PreviousFurloughPeriodsPage,
+          emptyUserAnswers.withPreviousFurloughedPeriodsAnswer(true)
+        ) mustBe routes.FirstFurloughDateController.onPageLoad()
 
         navigator.nextPage(
           PreviousFurloughPeriodsPage,

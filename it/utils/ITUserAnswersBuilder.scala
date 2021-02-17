@@ -36,6 +36,9 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
   //scalastyle:off
   implicit class UserAnswerBuilder(userAnswers: UserAnswers) {
 
+    def withPreviousFurloughedPeriodsAnswer(answer: Boolean): UserAnswers =
+      userAnswers.setValue(PreviousFurloughPeriodsPage, answer)
+
     def withPartTimeHours(partTimeHours: List[PartTimeHours]): UserAnswers =
       userAnswers.setList(PartTimeHoursPage, partTimeHours).success.value
 
@@ -57,8 +60,14 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
     def withFurloughEndDate(endDate: String): UserAnswers =
       userAnswers.setValue(FurloughEndDatePage, endDate.toLocalDate)
 
+    def withFirstFurloughDate(date: String) : UserAnswers =
+      userAnswers.setValue(FirstFurloughDatePage, date.toLocalDate)
+
     def withFurloughInLastTaxYear(answer: Boolean): UserAnswers =
       userAnswers.setValue(FurloughInLastTaxYearPage, answer)
+
+    def withVariableLengthEmployed(answer: EmployeeStarted): UserAnswers =
+      userAnswers.setValue(EmployeeStartedPage, answer)
 
     def withEmployeeStartDate(startDate: String): UserAnswers =
       userAnswers.setValue(EmployeeStartDatePage, startDate.toLocalDate)
