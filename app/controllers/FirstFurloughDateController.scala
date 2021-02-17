@@ -51,10 +51,8 @@ class FirstFurloughDateController @Inject()(
   def form(implicit messages: Messages): Form[LocalDate] = formProvider()
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = request.userAnswers
-      .getOrElse(UserAnswers(request.internalId))
-      .getV(FirstFurloughDatePage) match {
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.getV(FirstFurloughDatePage) match {
       case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
@@ -62,14 +60,14 @@ class FirstFurloughDateController @Inject()(
     Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           userAnswerPersistence
-            .persistAnswer(UserAnswers(request.internalId), FirstFurloughDatePage, value, None)
+            .persistAnswer(request.userAnswers, FirstFurloughDatePage, value, None)
             .map { updatedAnswers =>
               Redirect(navigator.nextPage(FirstFurloughDatePage, updatedAnswers, None))
           }

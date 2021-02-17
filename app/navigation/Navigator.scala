@@ -112,6 +112,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
         routes.PartTimeNormalHoursController.onPageLoad(1)
     case PreviousFurloughPeriodsPage =>
       firstFurloughedRoutes
+    case FirstFurloughDatePage =>
+      handlePayDateRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -318,7 +320,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def firstFurloughedRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(PreviousFurloughPeriodsPage) match {
-      case Valid(true)  => routes.IndexController.keepalive() //TODO Change to Will's page once hes got routing working
+      case Valid(true)  => routes.FirstFurloughDateController.onPageLoad()
       case Valid(false) => handlePayDateRoutes(userAnswers)
       case Invalid(_)   => routes.PreviousFurloughPeriodsController.onPageLoad()
     }

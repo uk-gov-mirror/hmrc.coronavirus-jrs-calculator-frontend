@@ -23,7 +23,7 @@ import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.TopUpStatus.NotToppedUp
-import models.UserAnswers
+import models.{EmployeeStarted, UserAnswers}
 import play.api.libs.json.Json
 
 trait ITCoreTestData extends ITUserAnswersBuilder {
@@ -45,6 +45,33 @@ trait ITCoreTestData extends ITUserAnswersBuilder {
       .withPayMethod()
       .withLastPayDate("2020, 3, 31")
       .withPayDate(List("2020, 2, 29", "2020, 3, 31"))
+
+  def variablePayNewStarterEmployeeJourney =
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 15")
+      .withFurloughStatus()
+      .withPaymentFrequency(Weekly)
+      .withPayMethod(Variable)
+      .withFurloughInLastTaxYear(false)
+      .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+      .withEmployeeStartDate("2020, 3, 20")
+      .withPreviousFurloughedPeriodsAnswer(true)
+
+  def hasEmployeeBeenFurloughedAfterNovember =
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 15")
+      .withFurloughStatus()
+      .withPaymentFrequency(Weekly)
+      .withPayMethod(Variable)
+      .withFurloughInLastTaxYear(false)
+      .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+      .withEmployeeStartDate("2020, 3, 20")
+      .withPreviousFurloughedPeriodsAnswer(true)
+      .withFirstFurloughDate("2020, 11, 10")
 
   private def regularJourney(): UserAnswers =
     mandatoryAnswersOnRegularMonthly

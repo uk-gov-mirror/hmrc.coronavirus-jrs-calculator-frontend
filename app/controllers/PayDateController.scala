@@ -26,7 +26,7 @@ import javax.inject.Inject
 import models.PaymentFrequency.Monthly
 import models.{PaymentFrequency, UserAnswers}
 import navigation.Navigator
-import pages.{ClaimPeriodStartPage, FurloughStartDatePage, PayDatePage}
+import pages.{ClaimPeriodStartPage, FirstFurloughDatePage, FurloughStartDatePage, PayDatePage}
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -58,8 +58,8 @@ class PayDateController @Inject()(
       getRequiredAnswersV(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
         val effectiveStartDate = utils.LocalDateHelpers.latestOf(claimStartDate, furloughStartDate)
         messageDateFrom(effectiveStartDate, request.userAnswers, idx).fold {
-          Logger.warn(s"onPageLoad messageDateFrom returned none for claimStartDate=$claimStartDate, payDates=${request.userAnswers.getList(
-            PayDatePage)}, idx=$idx")
+          Logger.warn(s"onPageLoad messageDateFrom returned none for claimStartDate=$claimStartDate, payDates=${request.userAnswers
+            .getList(PayDatePage)}, idx=$idx")
           Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         } { messageDate =>
           val preparedForm = request.userAnswers.getV(PayDatePage, Some(idx)) match {
@@ -78,7 +78,6 @@ class PayDateController @Inject()(
   def onSubmit(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswersV(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
       val effectiveStartDate = utils.LocalDateHelpers.latestOf(claimStartDate, furloughStartDate)
-
       val messageDate = messageDateFrom(effectiveStartDate, request.userAnswers, idx)
       val dayBeforeClaimStart = effectiveStartDate.minusDays(1)
       val latestDate = request.userAnswers

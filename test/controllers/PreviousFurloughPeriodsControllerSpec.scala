@@ -111,10 +111,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
 
       status(result) mustEqual SEE_OTHER
 
-      // TODO wire up routes in navigator (when appropriate) - then this test will pass
-      // Uncomment once FirstFurloughedDate (Will's page) is added
-
-//       redirectLocation(result).value mustEqual routes.FirstFurloughedDate.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.FirstFurloughDateController.onPageLoad().url
     }
 
     "redirect to the next page when the value 'false' is submitted " in {
