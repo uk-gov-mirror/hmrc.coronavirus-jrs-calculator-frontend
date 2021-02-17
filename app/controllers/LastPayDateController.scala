@@ -23,7 +23,7 @@ import controllers.actions._
 import forms.LastPayDateFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.{FurloughStartDatePage, LastPayDatePage, PayDatePage}
+import pages.{LastPayDatePage, PayDatePage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
