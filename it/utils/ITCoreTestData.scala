@@ -59,6 +59,18 @@ trait ITCoreTestData extends ITUserAnswersBuilder {
       .withEmployeeStartDate("2020, 3, 20")
       .withPreviousFurloughedPeriodsAnswer(true)
 
+  def hasTheEmployerHadPreviousFurloughPeriods =
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 15")
+      .withFurloughStatus()
+      .withPaymentFrequency(Weekly)
+      .withPayMethod(Variable)
+      .withFurloughInLastTaxYear(false)
+      .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+      .withEmployeeStartDate("2020, 3, 20")
+
   def hasEmployeeBeenFurloughedAfterNovember =
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
