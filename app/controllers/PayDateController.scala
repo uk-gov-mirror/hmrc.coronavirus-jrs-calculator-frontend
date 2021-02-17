@@ -39,17 +39,17 @@ import views.html.PayDateView
 import scala.concurrent.{ExecutionContext, Future}
 
 class PayDateController @Inject()(
-                                   override val messagesApi: MessagesApi,
-                                   sessionRepository: SessionRepository,
-                                   val navigator: Navigator,
-                                   identify: IdentifierAction,
-                                   getData: DataRetrievalAction,
-                                   requireData: DataRequiredAction,
-                                   formProvider: PayDateFormProvider,
-                                   val controllerComponents: MessagesControllerComponents,
-                                   view: PayDateView
-                                 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
-  extends BaseController with I18nSupport with LocalDateHelpers with PeriodHelper with DataExtractor {
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  val navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: PayDateFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: PayDateView
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+    extends BaseController with I18nSupport with LocalDateHelpers with PeriodHelper with DataExtractor {
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     if (shouldRedirect(request.userAnswers, idx)) {
