@@ -98,33 +98,6 @@ trait BaseController extends FrontendBaseController with I18nSupport with BackJo
         identity
       )
   }
-
-  def getRequiredAnswersThreeV[A, B, C](
-    pageA: QuestionPage[A],
-    pageB: QuestionPage[B],
-    pageC: QuestionPage[C],
-    idxA: Option[Int] = None,
-    idxB: Option[Int] = None,
-    idxC: Option[Int] = None
-  )(
-    f: (A, B, C) => Future[Result]
-  )(implicit request: DataRequest[_], readsA: Reads[A], readsB: Reads[B], readsC: Reads[C], errorHandler: ErrorHandler): Future[Result] = {
-
-    import cats.syntax.apply._
-
-    (getAnswerV(pageA, idxA), getAnswerV(pageB, idxB), getAnswerV(pageC, idxC))
-      .mapN { (ansA, ansB, ansC) =>
-        f(ansA, ansB, ansC)
-      }
-      .fold(
-        nel => {
-          logger.error(s"[BaseController][getRequiredAnswers] Failed to retrieve expected data for page: $pageB")
-          UserAnswers.logErrors(nel)(logger)
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
-        },
-        identity
-      )
-  }
   //scalastyle:on
 
   //scalastyle:off
