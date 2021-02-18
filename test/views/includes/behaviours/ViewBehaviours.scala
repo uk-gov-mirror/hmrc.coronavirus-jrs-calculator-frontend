@@ -156,4 +156,16 @@ trait ViewBehaviours extends ViewSpecBase {
     "behave like a page with a multiField error" in {
       assertRenderedById(document, s"$key-multiField-error-message")
     }
+
+  def pageWithLink(selector: String = "main a:nth-of-type(1)", msg: String, url: String)(implicit document: Document) =
+    "has a link to view previous claims" which {
+
+      "has the correct text" in {
+        document.select(selector).text mustBe msg
+      }
+
+      "has the correct destination" in {
+        document.select(selector).attr("href") mustBe url
+      }
+    }
 }

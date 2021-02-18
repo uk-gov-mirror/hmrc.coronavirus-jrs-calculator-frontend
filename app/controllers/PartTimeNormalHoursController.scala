@@ -19,7 +19,6 @@ package controllers
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.PartTimeNormalHoursFormProvider
-import javax.inject.Inject
 import models.{Periods, UsualHours}
 import navigation.Navigator
 import pages.{PartTimeNormalHoursPage, PartTimePeriodsPage}
@@ -28,6 +27,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import views.html.PartTimeNormalHoursView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PartTimeNormalHoursController @Inject()(
