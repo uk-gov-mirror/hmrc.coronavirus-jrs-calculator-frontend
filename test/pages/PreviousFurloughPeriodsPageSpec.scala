@@ -16,7 +16,11 @@
 
 package pages
 
+import models.UserAnswers
 import pages.behaviours.PageBehaviours
+
+import java.time.LocalDate
+import scala.util.Success
 
 class PreviousFurloughPeriodsPageSpec extends PageBehaviours {
 
@@ -27,5 +31,17 @@ class PreviousFurloughPeriodsPageSpec extends PageBehaviours {
     beSettable[Boolean](PreviousFurloughPeriodsPage)
 
     beRemovable[Boolean](PreviousFurloughPeriodsPage)
+
+    val emptyAnswers = UserAnswers("test")
+    val testUserAnswers = emptyAnswers.set(FirstFurloughDatePage, LocalDate.of(2020, 1, 1)).get
+
+    "remove the First Furlough Date when answer is false OR None" in {
+      PreviousFurloughPeriodsPage.cleanup(Some(false), testUserAnswers) mustBe Success(emptyAnswers)
+      PreviousFurloughPeriodsPage.cleanup(None, testUserAnswers) mustBe Success(emptyAnswers)
+    }
+
+    "NOT remove the First Furlough Date when answer is true" in {
+      PreviousFurloughPeriodsPage.cleanup(Some(true), testUserAnswers) mustBe Success(testUserAnswers)
+    }
   }
 }
