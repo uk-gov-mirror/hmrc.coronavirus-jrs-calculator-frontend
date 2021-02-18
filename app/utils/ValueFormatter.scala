@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package utils
 
-@(
-    link: String,
-    messageKey: String,
-    attrTarget: Boolean = false,
-    id: Option[String] = None)(implicit messages: Messages
-)
+import java.time.LocalDate
 
-<a href="@link" class="govuk-link" @id.map(x => s"id=$x") @if(attrTarget) { target="_blank" rel="noopener noreferrer" }>@messages(messageKey)</a>
+import play.api.i18n.Messages
+
+trait ValueFormatter {
+
+  def dateToString(date: LocalDate)(implicit messages: Messages): String =
+    s"${date.getDayOfMonth} ${messages(s"month.${date.getMonthValue}")} ${date.getYear}"
+
+  def dateToStringWithoutYear(date: LocalDate)(implicit messages: Messages): String =
+    s"${date.getDayOfMonth} ${messages(s"month.${date.getMonthValue}")}"
+
+  def currencyFormatter(amount: BigDecimal): String = s"£${amount.formatted("%.2f")}"
+
+}

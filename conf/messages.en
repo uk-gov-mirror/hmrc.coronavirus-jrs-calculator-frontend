@@ -266,6 +266,9 @@ pensionContribution.doesContribute = Yes
 pensionContribution.doesNotContribute = No
 pensionContribution.error.required = Select yes if you pay pension contributions for this employee
 
+# ConfirmationPage Messages
+# ----------------------------------------------------------
+
 confirmation.title = What you can claim for this employee
 confirmation.heading = What you can claim for this employee
 confirmation.confirmation.p1 = Amount paid to this furloughed employee
@@ -314,16 +317,16 @@ confirmation.startAgain = Start another calculation
 confirmation.webchat = Webchat help (opens in a new tab).
 
 
-confirmation.no.nic.pension.insert.t1 = From 1 August, you can no longer claim employer National Insurance and pension contributions for the time the employee is on furlough.
+confirmation.no.nic.pension.insert.t1 = You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these
 confirmation.no.nic.pension.title = What you can claim for this employee
 confirmation.no.nic.pension.heading = What you can claim for this employee
 confirmation.no.nic.pension.p1 = Furlough grant
 confirmation.no.nic.pension.nextSteps.li.1 = for your records
-confirmation.no.nic.pension.nextSteps.li.2 = Make a note of the result above.
-confirmation.no.nic.pension.nextSteps.li.3 = Use the calculator again for any other employees furloughed within this claim period ({0} to {1}) and make a note of the results.
+confirmation.no.nic.pension.nextSteps.li.2 = Make a note of the amount you can claim or this employee and the claim period.
+confirmation.no.nic.pension.nextSteps.li.3 = Use the calculator again for any other employees furloughed within this claim period {0} to {1} and make a note of the results.
 confirmation.no.nic.pension.nextSteps.li.3.2 = Work out how much you can claim in total for employer National Insurance contributions (opens in a new window or tab).
-confirmation.no.nic.pension.nextSteps.li.4 = Add all the results together to get the total amount you can claim.
-confirmation.no.nic.pension.nextSteps.li.4.1 = Make a claim using {0}
+confirmation.no.nic.pension.nextSteps.li.4 = Add all the results for each employee furloughed in this claim period together to get the total amount you can claim.
+confirmation.no.nic.pension.nextSteps.li.4.1 = Make a claim through the {0}
 confirmation.no.nic.pension.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens in a new window or tab).
 confirmation.no.nic.pension.breakdown.summary = Breakdown of calculations
 confirmation.no.nic.pension.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.

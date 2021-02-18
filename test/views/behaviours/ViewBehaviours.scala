@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package views.includes.behaviours
+package views.behaviours
 
 import org.jsoup.nodes.Document
-import views.includes.{BaseSelectors, ViewSpecBase}
+import views._
 
 trait ViewBehaviours extends ViewSpecBase {
 

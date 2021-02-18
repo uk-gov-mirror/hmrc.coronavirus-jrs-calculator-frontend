@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.includes
+package views
 
 import assets.constants.PaymentFrequencyConstants.allRadioOptions
 import assets.messages.{BaseMessages, PaymentFrequencyMessages}
@@ -25,8 +25,8 @@ import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import views.behaviours.ViewBehaviours
 import views.html.PaymentFrequencyView
-import views.includes.behaviours.ViewBehaviours
 
 class PaymentFrequencyViewSpec extends ViewBehaviours {
 

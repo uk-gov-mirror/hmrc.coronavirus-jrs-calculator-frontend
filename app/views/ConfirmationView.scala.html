@@ -69,8 +69,8 @@
         <li>@messages("confirmation.claimPeriod", dateToString(cm.claimPeriod.start), dateToString(cm.claimPeriod.end))</li>
         <li>
             @{cm.furloughDates match {
-            case FurloughEnded(start, end) => messages("confirmation.furloughPeriod.startedAndEnded", dateToString(start), dateToString(end))
-            case FurloughOngoing(start) =>  messages("confirmation.furloughPeriod.started", dateToString(start))
+                case FurloughEnded(start, end) => messages("confirmation.furloughPeriod.startedAndEnded", dateToString(start), dateToString(end))
+                case FurloughOngoing(start) =>  messages("confirmation.furloughPeriod.started", dateToString(start))
             }}
         <li>@messages(s"confirmation.paid.${cm.frequency}")</li>
         <li>@messages(s"confirmation.nic.${cm.nic}")</li>
@@ -82,7 +82,7 @@
     @p(Html(messages("confirmation.breakdown.p")))
 
     @details(
-    summaryText = Messages("confirmation.breakdown.details")
+        summaryText = Messages("confirmation.breakdown.details")
     ) {
         @for((furlough, nic, pension) <- (cvb.furlough.periodBreakdowns, cvb.nic.periodBreakdowns,
         cvb.pension.periodBreakdowns).zipped.toList) {

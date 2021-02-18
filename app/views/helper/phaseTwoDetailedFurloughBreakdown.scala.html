@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import views.includes.FurloughCapHelper
+@import views.helper.FurloughCapHelper
 
 @this(h4: components.h4,
         p: components.p,
@@ -45,6 +45,6 @@
         @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p3")))
     }
 
-    <div class="govuk-inset-text govuk-!-font-size-24">
+    <div class="govuk-inset-text govuk-!-font-size-24" id="total-furlough-grant">
         @messages("phaseTwoFurloughBreakdown.total", breakdown.grant.value.formatted("%.2f"))
     </div>

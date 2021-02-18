@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.includes
+package views
 
 import base.SpecBase
 import models.UserAnswers

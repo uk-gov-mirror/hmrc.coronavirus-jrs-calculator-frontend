@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.includes.behaviours
+package views.behaviours
 
 import org.jsoup.nodes.Document
 import play.api.data.Form
