@@ -56,6 +56,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withEmployeeStartDate(startDate: String): UserAnswers =
       userAnswers.setValue(EmployeeStartDatePage, startDate.toLocalDate)
 
+    def withFirstFurloughDate(date: String): UserAnswers =
+      userAnswers.setValue(FirstFurloughDatePage, date.toLocalDate)
+
     def withLastPayDate(date: String): UserAnswers =
       userAnswers.setValue(LastPayDatePage, date.toLocalDate)
 

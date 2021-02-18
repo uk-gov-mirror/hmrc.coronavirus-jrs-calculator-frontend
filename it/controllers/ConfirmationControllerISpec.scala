@@ -79,13 +79,13 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
   }
 
   val march: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    marchFourWeeklyScenarios ++
-      marchMonthlyScenarios ++
-      marchTwoWeeklyScenarios ++
-      marchWeeklyScenarios ++
-      marchVariableFourWeeklyScenarios ++
-      marchVariableMonthlyScenarios ++
-      marchVariableTwoWeeklyScenarios ++
+//    marchFourWeeklyScenarios ++
+//      marchMonthlyScenarios ++
+//      marchTwoWeeklyScenarios ++
+//      marchWeeklyScenarios ++
+//      marchVariableFourWeeklyScenarios ++
+//      marchVariableMonthlyScenarios ++
+//      marchVariableTwoWeeklyScenarios ++
       marchVariableWeeklyScenarios
   }
 
@@ -101,7 +101,8 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
   }
 
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    november ++ december ++ january ++ february ++ march ++ april
+//    november ++ december ++ january ++ february ++ march ++ april
+    march
   }
 
   "GET /confirmation" should {
