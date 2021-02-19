@@ -47,6 +47,7 @@ class JrsExtensionConfirmationViewSpec extends ViewBehaviours with ConfirmationC
     val h4CalculatePayParagraphTwo: String = nonGreenContentParagraphChild(16)
     val h4FurloughGrantParagraphOne: String = nonGreenContentParagraphChild(19)
     val h4FurloughGrantParagraphTwo: String = nonGreenContentParagraphChild(20)
+    val furloughGrantBullet: String = "#main-content > div > div > div > ul.govuk-list.govuk-list--bullet > li"
     val h4FurloughGrantParagraphThree: String = nonGreenContentParagraphChild(22)
     val furloughGrantInset: String = "#total-furlough-grant"
     val bottomDisclaimer: String = nonGreenContentParagraphChild(26)
@@ -115,6 +116,7 @@ class JrsExtensionConfirmationViewSpec extends ViewBehaviours with ConfirmationC
     Selectors.furloughGrantList(2)          -> furloughGrantListMessage(2),
     Selectors.h4FurloughGrantParagraphOne   -> JRSExtensionConfirmationMessages.furloughGrantParagraphOne(8000),
     Selectors.h4FurloughGrantParagraphTwo   -> JRSExtensionConfirmationMessages.furloughGrantParagraphTwo,
+    Selectors.furloughGrantBullet           -> JRSExtensionConfirmationMessages.maxFurloughGrantBullet(2500),
     Selectors.h4FurloughGrantParagraphThree -> JRSExtensionConfirmationMessages.furloughGrantParagraphThree,
     Selectors.furloughGrantInset            -> JRSExtensionConfirmationMessages.furloughGrantIndent(2500),
     Selectors.bottomDisclaimer              -> JRSExtensionConfirmationMessages.disclaimerBottomPage,

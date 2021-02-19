@@ -87,6 +87,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
   val furloughGrantParagraphOne = (calculatedAmount: BigDecimal) => s"Calculated furlough grant = ${currencyFormatter(calculatedAmount)}"
   val furloughGrantParagraphTwo = "This exceeds the maximum furlough grant for this pay period, which is:"
+  val maxFurloughGrantBullet: BigDecimal => String = (maxAmount: BigDecimal) => currencyFormatter(maxAmount)
   val furloughGrantParagraphThree = "Therefore we use the maximum furlough grant amount."
 
   val furloughGrantIndent = (furloughPay: BigDecimal) => s"Total furlough grant for pay period = ${currencyFormatter(furloughPay)}"

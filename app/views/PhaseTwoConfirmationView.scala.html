@@ -104,10 +104,10 @@
     @p(Html(messages("phaseTwoDetailedBreakdown.p3")))
 
     @for(detailedBreakdown <- cvb.detailedBreakdowns) {
-    @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-    @furloughBreakdown(detailedBreakdown.furlough)
-    @nicBreakdown(detailedBreakdown.nic, detailedBreakdown.furlough.grant)
-    @pensionBreakdown(detailedBreakdown.pension, detailedBreakdown.furlough.grant)
+        @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
+        @furloughBreakdown(detailedBreakdown.furlough)
+        @nicBreakdown(detailedBreakdown.nic, detailedBreakdown.furlough.grant)
+        @pensionBreakdown(detailedBreakdown.pension, detailedBreakdown.furlough.grant)
     }
 
     @p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))

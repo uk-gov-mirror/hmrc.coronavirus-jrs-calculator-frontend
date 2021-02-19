@@ -170,8 +170,8 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
   def detailedBreakdowns: Seq[NoNicAndPensionDetailedBreakdown] = furlough.periodBreakdowns map { breakdowns =>
     import breakdowns._
     NoNicAndPensionDetailedBreakdown(
-      paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period,
-      PhaseTwoFurloughBreakdown(grant, paymentWithPeriod, furloughCap)
+      period = paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period,
+      furlough = PhaseTwoFurloughBreakdown(grant, paymentWithPeriod, furloughCap)
     )
   }
 
@@ -234,6 +234,28 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
               "phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1",
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
+              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
+            )
+        }
+      }
+      .getOrElse(Seq())
+
+  def detailedBreakdownMessageKeysJRSExtension: Seq[String] =
+    furlough.periodBreakdowns.headOption
+      .map {
+        _.paymentWithPeriod match {
+          case _: RegularPaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.p1.regular"
+            )
+          case _: AveragePaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.p1.average"
+            )
+          case _: CylbPaymentWithPhaseTwoPeriod =>
+            Seq(
+              "phaseTwoDetailedBreakdown.jrsExtension.no.nic.pension.p1.cylb.1",
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
             )

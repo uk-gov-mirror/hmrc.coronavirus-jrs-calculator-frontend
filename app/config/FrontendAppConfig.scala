@@ -73,9 +73,13 @@ class FrontendAppConfig() extends UrlConfiguration with SchemeConfiguration with
   lazy val exampleWages: String = configSource("exampleWages").loadOrThrow[String]
   lazy val calculateClaimAmount: String = configSource("calculateClaimAmount").loadOrThrow[String]
 
+  lazy val phaseTwoReferencePayBreakdownDynamicMessageDate =
+    LocalDate.parse(configSource("phaseTwoReferencePayBreakdownDynamicMessageDate").loadOrThrow[String])
+
 }
 
 trait SchemeConfiguration extends CamelCaseConf {
+
   lazy val schemeConf: SchemeConf = ConfigSource.default.at("scheme").loadOrThrow[SchemeConf]
 
   lazy val schemeStartDate = LocalDate.parse(schemeConf.startDate)

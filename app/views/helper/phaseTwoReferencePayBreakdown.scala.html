@@ -14,11 +14,15 @@
  * limitations under the License.
  *@
 
+@import java.time.LocalDate
+
 @this(
     h4: components.h4,
     p: components.p,
+    strong: components.strong,
     onePeriodCylbBreakdown: cylbPeriodBreakdown,
-    twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown
+    twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown,
+    appConfig: config.FrontendAppConfig
 )
 
 @(payment: PaymentWithPhaseTwoPeriod)(implicit messages: Messages)
@@ -49,7 +53,13 @@
 
   @averagePaymentBreakdown(average: AveragePaymentWithPhaseTwoPeriod, partOfCylb: Boolean) = {
       @if(partOfCylb) {
-          @p(Html(messages("phaseTwoReferencePayBreakdown.average.p1.partOfCylb")))
+          @p{
+                @strong(
+                    Html(messages(
+                        "phaseTwoReferencePayBreakdown.average.p1.partOfCylb"
+                    ))
+                )
+          }
       } else {
           @p(Html(messages("phaseTwoReferencePayBreakdown.average.p1")))
       }
@@ -76,7 +86,20 @@
   }
 
   @cylbPaymentBreakdown(cylb: CylbPaymentWithPhaseTwoPeriod) = {
-      @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.p1")))
+
+      @p{
+        @strong(
+            Html(messages(
+                "phaseTwoReferencePayBreakdown.cylb.p1"
+            ))
+        )
+      }
+
+      @if(LocalDate.of(2021, 3, 10).isAfter(appConfig.phaseTwoReferencePayBreakdownDynamicMessageDate)) {
+        @p{
+          @messages("phaseTwoReferencePayBreakdown.cylb.p2.march2021")
+        }
+      }
 
       @{cylb.cylbBreakdown match {
           case op: OnePeriodCylb => onePeriodCylbBreakdown(op)
