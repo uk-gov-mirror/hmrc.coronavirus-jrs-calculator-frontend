@@ -16,9 +16,28 @@
 
 @import models.OnePeriodCylb
 
-@this(p: components.p)
+@this(
+        p: components.p,
+        strong: components.strong,
+        appConfig: config.FrontendAppConfig
+)
 
-@(cylb: OnePeriodCylb)(implicit messages: Messages)
+@(cylb: OnePeriodCylb, period: Periods, isSinglePeriod: Boolean)(implicit messages: Messages)
+
+
+    @if(isSinglePeriod) {
+        @p {
+            @strong(Html(messages(
+                "referencePayBreakdown.cylb.p1", cylb.lastYearPayDay.getYear.toString
+            )))
+        }
+
+        @if(period.period.end.isAfter(appConfig.phaseTwoReferencePayBreakdownDynamicMessageDate)) {
+            @p {
+                @messages("referencePayBreakdown.cylb.p2.march2021", dateToStringWithoutDay(period.period.end))
+            }
+        }
+    }
 
     <ol class="govuk-list govuk-list--number">
         <li>@messages("referencePayBreakdown.cylb.l1", cylb.periodPay.value.formatted("%.2f"), dateToString(cylb.lastYearPayDay))</li>

@@ -15,8 +15,6 @@
  *@
 
 @import models.TwoPeriodCylb
-@import java.time.LocalDate
-
 
 @this(
     cylbBreakdown: cylbPeriodBreakdown,
@@ -25,25 +23,25 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(cylb: TwoPeriodCylb)(implicit messages: Messages)
+@(cylb: TwoPeriodCylb, period: Periods)(implicit messages: Messages)
 
 @p{
     @strong(Html(messages(
-        "phaseTwoReferencePayBreakdown.cylb.p1", cylb.firstPeriod.lastYearPayDay.getYear.toString
+        "referencePayBreakdown.cylb.p1", cylb.firstPeriod.lastYearPayDay.getYear.toString
     )))
 }
 
-@if(LocalDate.of(2021, 3, 10).isAfter(appConfig.phaseTwoReferencePayBreakdownDynamicMessageDate)) {
-    @p{ @messages("phaseTwoReferencePayBreakdown.cylb.p2.march2021", cylb.firstPeriod.lastYearPayDay.getMonth.toString.capitalize) }
+@if(period.period.end.isAfter(appConfig.phaseTwoReferencePayBreakdownDynamicMessageDate)) {
+    @p{ @messages("referencePayBreakdown.cylb.p2.march2021", dateToStringWithoutDay(period.period.end)) }
 }
 
 @p(Html(messages("referencePayBreakdown.cylb.twoPeriods.p1", cylb.firstPeriod.lastYearPayDay.getYear.toString)))
 
-@cylbBreakdown(cylb.firstPeriod)
+@cylbBreakdown(cylb.firstPeriod, period, isSinglePeriod = false)
 
 @p(Html(messages("referencePayBreakdown.cylb.thenPeriodTwo")))
 
-@cylbBreakdown(cylb.secondPeriod)
+@cylbBreakdown(cylb.secondPeriod, period, isSinglePeriod = false)
 
 @p(Html(messages("referencePayBreakdown.cylb.then")))
 

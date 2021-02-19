@@ -25,7 +25,7 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(payment: PaymentWithPhaseTwoPeriod)(implicit messages: Messages)
+@(payment: PaymentWithPhaseTwoPeriod, period: Periods)(implicit messages: Messages)
 
   @regularPaymentBreakdown(regular: RegularPaymentWithPhaseTwoPeriod) = {
       @p(Html(messages("phaseTwoReferencePayBreakdown.regular.p1")))
@@ -88,8 +88,8 @@
   @cylbPaymentBreakdown(cylb: CylbPaymentWithPhaseTwoPeriod) = {
 
       @{cylb.cylbBreakdown match {
-          case op: OnePeriodCylb => onePeriodCylbBreakdown(op)
-          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp)
+          case op: OnePeriodCylb => onePeriodCylbBreakdown(op, period, isSinglePeriod = true)
+          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp, period)
       }}
 
     @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.daysResult", cylb.basedOnDays)))

@@ -21,7 +21,7 @@
     twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown
 )
 
-@(payment: PaymentWithPeriod)(implicit messages: Messages)
+@(payment: PaymentWithPeriod, period: Periods)(implicit messages: Messages)
 
   @regularPaymentBreakdown(regular: RegularPayment) = {
       @p(Html(messages("referencePayBreakdown.regular.p1")))
@@ -64,8 +64,8 @@
       @p(Html(messages("referencePayBreakdown.cylb.p1")))
 
       @{cylb.cylbBreakdown match {
-          case op: OnePeriodCylb => onePeriodCylbBreakdown(op)
-          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp)
+          case op: OnePeriodCylb => onePeriodCylbBreakdown(op, period, isSinglePeriod = true)
+          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp, period)
       }}
 
     @p(Html(messages("referencePayBreakdown.cylb.result", cylb.cylbBreakdown.referencePay.value.formatted("%.2f"))))

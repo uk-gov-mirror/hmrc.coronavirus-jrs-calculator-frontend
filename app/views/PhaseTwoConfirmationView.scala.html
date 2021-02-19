@@ -105,7 +105,7 @@
 
     @for(detailedBreakdown <- cvb.detailedBreakdowns) {
         @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-        @furloughBreakdown(detailedBreakdown.furlough)
+        @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period)
         @nicBreakdown(detailedBreakdown.nic, detailedBreakdown.furlough.grant)
         @pensionBreakdown(detailedBreakdown.pension, detailedBreakdown.furlough.grant)
     }

@@ -60,11 +60,8 @@ class PhaseTwoReferencePayBreakdownSpec extends ViewBehaviours with Confirmation
   val messageKeyPrefix = "confirmation"
   val breakdownComponent: phaseTwoReferencePayBreakdown = injector.instanceOf[phaseTwoReferencePayBreakdown]
 
-  def applyComponent(): Seq[HtmlFormat.Appendable] = {
-    noNicAndPensionBreakdown.map(phaseTwoFurloughBreakdown => breakdownComponent(payment = phaseTwoFurloughBreakdown.paymentWithPeriod))
-  }
-
-
+//  def applyComponent(): Seq[HtmlFormat.Appendable] =
+//    noNicAndPensionBreakdown.map(phaseTwoFurloughBreakdown => breakdownComponent(payment = phaseTwoFurloughBreakdown.paymentWithPeriod))
 //  "PhaseTwoReferencePayBreakdown" when {
 //
 //    "the component produces the correct messages" in {

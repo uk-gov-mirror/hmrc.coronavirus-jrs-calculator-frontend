@@ -91,7 +91,8 @@ class JrsExtensionConfirmationViewSpec extends ViewBehaviours with ConfirmationC
         loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
       }
 
-      val nextStepsListMessage: Int => String = (bullet: Int) => JRSExtensionConfirmationMessages.nextStepsListMessages(bullet, decClaimPeriod)
+      val nextStepsListMessage: Int => String =
+        (bullet: Int) => JRSExtensionConfirmationMessages.nextStepsListMessages(bullet, decClaimPeriod)
       val calculatePayListMessage: Int => String = { (bullet: Int) =>
         JRSExtensionConfirmationMessages.calculatePayListMessages(bullet, 10000, 31, 31)
       }
@@ -100,39 +101,39 @@ class JrsExtensionConfirmationViewSpec extends ViewBehaviours with ConfirmationC
       }
 
       val expectedContent = Seq(
-        Selectors.h1 -> JRSExtensionConfirmationMessages.heading,
-        Selectors.dateAndCalculatorVersion -> JRSExtensionConfirmationMessages.dateAndCalculatorVersion,
-        Selectors.indent -> JRSExtensionConfirmationMessages.indent,
-        Selectors.disclaimer -> JRSExtensionConfirmationMessages.disclaimerTopPage,
-        Selectors.h2(1) -> JRSExtensionConfirmationMessages.h2NextSteps,
-        Selectors.nextStepsNumberedList(1) -> nextStepsListMessage(1),
-        Selectors.nextStepsNumberedList(2) -> nextStepsListMessage(2),
-        Selectors.nextStepsNumberedList(3) -> nextStepsListMessage(3),
-        Selectors.nextStepsNumberedList(4) -> nextStepsListMessage(4),
-        Selectors.nextStepsNumberedList(5) -> nextStepsListMessage(5),
-        Selectors.h2(2) -> JRSExtensionConfirmationMessages.h2BreakdownOfCalculations,
-        Selectors.breakdownParagraphOne -> JRSExtensionConfirmationMessages.breakDownParagraphOne,
-        Selectors.breakdownParagraphTwo -> JRSExtensionConfirmationMessages.breakDownParagraphTwo,
-        Selectors.breakdownParagraphThree -> JRSExtensionConfirmationMessages.breakDownParagraphThree,
-        Selectors.h3(1) -> JRSExtensionConfirmationMessages.h3PayPeriod(decClaimPeriod),
-        Selectors.h4(1) -> JRSExtensionConfirmationMessages.h4CalculatePay,
-        Selectors.h4CalculatePayParagraphOne -> JRSExtensionConfirmationMessages.h4ParagraphOne,
-        Selectors.calculatePayList(1) -> calculatePayListMessage(1),
-        Selectors.calculatePayList(2) -> calculatePayListMessage(2),
-        Selectors.calculatePayList(3) -> calculatePayListMessage(3),
-        Selectors.h4CalculatePayParagraphTwo -> JRSExtensionConfirmationMessages.h4ParagraphTwo(10000),
-        Selectors.h4(2) -> JRSExtensionConfirmationMessages.h4FurloughGrant,
-        Selectors.furloughGrantList(1) -> furloughGrantListMessage(1),
-        Selectors.furloughGrantList(2) -> furloughGrantListMessage(2),
-        Selectors.h4FurloughGrantParagraphOne -> JRSExtensionConfirmationMessages.furloughGrantParagraphOne(8000),
-        Selectors.h4FurloughGrantParagraphTwo -> JRSExtensionConfirmationMessages.furloughGrantParagraphTwo,
-        Selectors.furloughGrantBullet -> JRSExtensionConfirmationMessages.maxFurloughGrantBullet(2500),
+        Selectors.h1                            -> JRSExtensionConfirmationMessages.heading,
+        Selectors.dateAndCalculatorVersion      -> JRSExtensionConfirmationMessages.dateAndCalculatorVersion,
+        Selectors.indent                        -> JRSExtensionConfirmationMessages.indent,
+        Selectors.disclaimer                    -> JRSExtensionConfirmationMessages.disclaimerTopPage,
+        Selectors.h2(1)                         -> JRSExtensionConfirmationMessages.h2NextSteps,
+        Selectors.nextStepsNumberedList(1)      -> nextStepsListMessage(1),
+        Selectors.nextStepsNumberedList(2)      -> nextStepsListMessage(2),
+        Selectors.nextStepsNumberedList(3)      -> nextStepsListMessage(3),
+        Selectors.nextStepsNumberedList(4)      -> nextStepsListMessage(4),
+        Selectors.nextStepsNumberedList(5)      -> nextStepsListMessage(5),
+        Selectors.h2(2)                         -> JRSExtensionConfirmationMessages.h2BreakdownOfCalculations,
+        Selectors.breakdownParagraphOne         -> JRSExtensionConfirmationMessages.breakDownParagraphOne,
+        Selectors.breakdownParagraphTwo         -> JRSExtensionConfirmationMessages.breakDownParagraphTwo,
+        Selectors.breakdownParagraphThree       -> JRSExtensionConfirmationMessages.breakDownParagraphThree,
+        Selectors.h3(1)                         -> JRSExtensionConfirmationMessages.h3PayPeriod(decClaimPeriod),
+        Selectors.h4(1)                         -> JRSExtensionConfirmationMessages.h4CalculatePay,
+        Selectors.h4CalculatePayParagraphOne    -> JRSExtensionConfirmationMessages.h4ParagraphOne,
+        Selectors.calculatePayList(1)           -> calculatePayListMessage(1),
+        Selectors.calculatePayList(2)           -> calculatePayListMessage(2),
+        Selectors.calculatePayList(3)           -> calculatePayListMessage(3),
+        Selectors.h4CalculatePayParagraphTwo    -> JRSExtensionConfirmationMessages.h4ParagraphTwo(10000),
+        Selectors.h4(2)                         -> JRSExtensionConfirmationMessages.h4FurloughGrant,
+        Selectors.furloughGrantList(1)          -> furloughGrantListMessage(1),
+        Selectors.furloughGrantList(2)          -> furloughGrantListMessage(2),
+        Selectors.h4FurloughGrantParagraphOne   -> JRSExtensionConfirmationMessages.furloughGrantParagraphOne(8000),
+        Selectors.h4FurloughGrantParagraphTwo   -> JRSExtensionConfirmationMessages.furloughGrantParagraphTwo,
+        Selectors.furloughGrantBullet           -> JRSExtensionConfirmationMessages.maxFurloughGrantBullet(2500),
         Selectors.h4FurloughGrantParagraphThree -> JRSExtensionConfirmationMessages.furloughGrantParagraphThree,
-        Selectors.furloughGrantInset -> JRSExtensionConfirmationMessages.furloughGrantIndent(2500),
-        Selectors.bottomDisclaimer -> JRSExtensionConfirmationMessages.disclaimerBottomPage,
-        Selectors.printLink -> JRSExtensionConfirmationMessages.printOrSave,
-        Selectors.webChatLink -> JRSExtensionConfirmationMessages.webchatLink,
-        Selectors.feedbackLink -> JRSExtensionConfirmationMessages.feedbackLink
+        Selectors.furloughGrantInset            -> JRSExtensionConfirmationMessages.furloughGrantIndent(2500),
+        Selectors.bottomDisclaimer              -> JRSExtensionConfirmationMessages.disclaimerBottomPage,
+        Selectors.printLink                     -> JRSExtensionConfirmationMessages.printOrSave,
+        Selectors.webChatLink                   -> JRSExtensionConfirmationMessages.webchatLink,
+        Selectors.feedbackLink                  -> JRSExtensionConfirmationMessages.feedbackLink
       )
 
       implicit val request: DataRequest[_] = fakeDataRequest()
@@ -176,7 +177,7 @@ class JrsExtensionConfirmationViewSpec extends ViewBehaviours with ConfirmationC
         LocalDate.of(2020, 12, 31)
       )
 
-      def dec2020Journey(): UserAnswers = {
+      def dec2020Journey(): UserAnswers =
         emptyUserAnswers
           .withClaimPeriodStart("2020, 12, 1")
           .withClaimPeriodEnd("2020, 12, 31")
@@ -193,14 +194,14 @@ class JrsExtensionConfirmationViewSpec extends ViewBehaviours with ConfirmationC
           .withLastYear(List("2019-12-31" -> 10000))
           .withPartTimeQuestion(PartTimeNo)
           .withAnnualPayAmount(10000)
-      }
 
       val userAnswers: UserAnswers = dec2020Journey()
       val noNicAndPensionBreakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
         loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
       }
 
-      val nextStepsListMessage: Int => String = (bullet: Int) => JRSExtensionConfirmationMessages.nextStepsListMessages(bullet, decClaimPeriod)
+      val nextStepsListMessage: Int => String =
+        (bullet: Int) => JRSExtensionConfirmationMessages.nextStepsListMessages(bullet, decClaimPeriod)
       val calculatePayListMessage: Int => String = { (bullet: Int) =>
         JRSExtensionConfirmationMessages.calculatePayListMessages(bullet, 10000, 31, 31)
       }

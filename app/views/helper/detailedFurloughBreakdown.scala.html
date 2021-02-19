@@ -22,9 +22,9 @@
       helper: FurloughCapHelper,
       referencePayBreakdown: referencePayBreakdown)
 
-@(breakdown: DetailedFurloughBreakdown)(implicit messages: Messages)
+@(breakdown: DetailedFurloughBreakdown, period: Periods)(implicit messages: Messages)
 
-    @referencePayBreakdown(breakdown.payment)
+    @referencePayBreakdown(breakdown.payment, period)
 
     @h4(messages("furloughBreakdown.h4"))
 

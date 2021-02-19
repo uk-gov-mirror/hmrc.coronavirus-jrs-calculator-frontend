@@ -40,7 +40,7 @@ protected trait FourWeekly extends FixedLength {
 protected trait FullPeriodCylb { this: FixedLength =>
   def fullPeriod: FullPeriod
 
-  def equivalentPeriodDays: Int = fullPeriodLength - previousPeriodDays
+  def equivalentPeriodDays: Int = (fullPeriodLength - previousPeriodDays).max(0)
 
   def previousPeriodDays: Int =
     //This is not leap year safe from 2024 onwards but this should not be an issue
@@ -50,7 +50,7 @@ protected trait FullPeriodCylb { this: FixedLength =>
 protected trait PartialPeriodCylb { this: FixedLength =>
   def partial: PartialPeriod
 
-  def equivalentPeriodDays: Int = partial.partial.countDays - previousPeriodDays
+  def equivalentPeriodDays: Int = (partial.partial.countDays - previousPeriodDays).max(0)
 
   def previousPeriodDays: Int = {
 
