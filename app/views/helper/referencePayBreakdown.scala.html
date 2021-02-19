@@ -61,7 +61,6 @@
   }
 
   @cylbPaymentBreakdown(cylb: CylbPayment) = {
-      @p(Html(messages("referencePayBreakdown.cylb.p1")))
 
       @{cylb.cylbBreakdown match {
           case op: OnePeriodCylb => onePeriodCylbBreakdown(op, period, isSinglePeriod = true)
