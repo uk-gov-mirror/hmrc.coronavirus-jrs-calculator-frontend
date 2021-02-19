@@ -16,6 +16,8 @@
 
 package messages
 
+import java.time.LocalDate
+
 import models.Period
 import play.api.i18n.Messages
 import utils.ValueFormatter
@@ -24,7 +26,8 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
   val heading = "What you can claim for this employee"
 
-  val dateAndCalculatorVersion = "Calculated on: 18 February 2021 (Calculator Version v2)"
+  val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
+
   val indent = "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
 
   val disclaimerTopPage = {
@@ -35,12 +38,12 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
   def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
     messageNumber match {
       case 1 => "Print or save a copy of this page for your records"
-      case 2 => "Make a note of the amount you can claim or this employee and the claim period."
+      case 2 => "Make a note of the amount you can claim for this employee and the claim period."
       case 3 =>
         s"Use the calculator again for any other employees furloughed within this claim period ${dateToStringWithoutYear(period.start)} " +
           s"to ${dateToString(period.`end`)} and make a note of the results."
       case 4 => "Add all the results for each employee furloughed in this claim period together to get the total amount you can claim."
-      case 5 => "Make a claim through the Job Retention Scheme online claim service (opens in a new window or tab)."
+      case 5 => "Make a claim through the Coronavirus Job Retention Scheme (opens in a new window or tab)."
       case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
     }
 
@@ -60,7 +63,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
   def h3PayPeriod(claimPeriod: Period)(implicit messages: Messages): String =
     s"For pay period ${dateToStringWithoutYear(claimPeriod.start)} to ${dateToString(claimPeriod.`end`)}"
 
-  val h4CalculatePay = "Calculate pay based on furlough days"
+  val h4CalculatePay = "Calculate the employee’s pay based on their furlough days"
 
   val h4ParagraphOne = "Take the pay in pay period:"
 
@@ -68,7 +71,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     implicit messages: Messages): String =
     messageNumber match {
       case 1 => s"Start with ${currencyFormatter(pay)} (from pay period)."
-      case 2 => s"Divide by $daysInPeriod (days in pay period)."
+      case 2 => s"Divide by $daysInPeriod (number of days in the pay period)."
       case 3 => s"Multiply by $numberOfDaysFurloughed (furlough days)."
       case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
     }
@@ -86,9 +89,11 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     }
 
   val furloughGrantParagraphOne = (calculatedAmount: BigDecimal) => s"Calculated furlough grant = ${currencyFormatter(calculatedAmount)}"
-  val furloughGrantParagraphTwo = "This exceeds the maximum furlough grant for this pay period, which is:"
+  val furloughGrantParagraphTwo = (calculatedAmount: BigDecimal) =>
+    s"The calculated furlough grant is more than the maximum furlough grant for this pay period. " +
+      s"Because of this, you must use the maximum furlough grant, which is ${currencyFormatter(calculatedAmount)}"
   val maxFurloughGrantBullet: BigDecimal => String = (maxAmount: BigDecimal) => currencyFormatter(maxAmount)
-  val furloughGrantParagraphThree = "Therefore we use the maximum furlough grant amount."
+  val furloughGrantParagraphThree = (calculatedAmount: BigDecimal) => s"Actual furlough grant = ${currencyFormatter(calculatedAmount)}"
 
   val furloughGrantIndent = (furloughPay: BigDecimal) => s"Total furlough grant for pay period = ${currencyFormatter(furloughPay)}"
 

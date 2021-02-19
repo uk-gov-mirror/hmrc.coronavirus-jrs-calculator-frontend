@@ -41,11 +41,8 @@
 
     @if(breakdown.isCapped) {
         @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p1", breakdown.calculatedSixty)))
-        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p2")))
-        <ul class="govuk-list govuk-list--bullet">
-            <li class="govuk-body">@helper.calculationForOct(breakdown.furloughCap)</li>
-        </ul>
-        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p3")))
+        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p2", helper.calculationForOct(breakdown.furloughCap))))
+        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p3", helper.calculationForOct(breakdown.furloughCap))))
     }
 
     <div class="govuk-inset-text govuk-!-font-size-24">

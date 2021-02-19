@@ -74,8 +74,8 @@
 
     @p(Html(messages("referencePayBreakdown.cylb.higherOf")))
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("referencePayBreakdown.cylb.higherOf.cylb", cylb.cylbBreakdown.referencePay.value.formatted("%.2f"))</li>
-        <li>@messages("referencePayBreakdown.cylb.higherOf.average", cylb.averagePayment.referencePay.value.formatted("%.2f"))</li>
+        <li>@messages("referencePayBreakdown.cylb.higherOf.cylb", cylb.cylbBreakdown.referencePay.value.formatted("%.2f"), cylb.cylbBreakdown.latestPeriodEndDate.getYear.toString)</li>
+        <li>@messages("referencePayBreakdown.cylb.higherOf.average", cylb.averagePayment.referencePay.value.formatted("%.2f"), cylb.cylbBreakdown.latestPeriodEndDate.getYear.toString)</li>
     </ul>
   }
 
