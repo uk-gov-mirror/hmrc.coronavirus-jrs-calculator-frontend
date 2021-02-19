@@ -17,12 +17,29 @@
 package models
 
 import models.PaymentFrequency._
-import play.api.Logger.logger
 
 case class CylbOperators(fullPeriodLength: Int, daysFromPrevious: Int, daysFromCurrent: Int)
 
 protected sealed trait FixedLength {
   def fullPeriodLength: Int
+
+  def equivalentPeriodCalculator(claimPeriod: Period, partialPeriod: Option[Period]) = {
+
+    val yearsBetweenPolicyStartAndClaimPeriod = claimPeriod.yearsBetweenPolicyStartAndPeriodEnd + 1
+
+    val adjustedPeriod = claimPeriod.substract52Weeks(yearsBetweenPolicyStartAndClaimPeriod)
+    val yearShift = partialPeriod.getOrElse(claimPeriod).substractYears(yearsBetweenPolicyStartAndClaimPeriod)
+
+    val adjustedStartDateDayOfYear = adjustedPeriod.start.getDayOfYear
+    val claimStartDayOfYear = yearShift.start.getDayOfYear
+    val claimEndDayOfYear = yearShift.end.getDayOfYear
+    val claimDuration = yearShift.countDays
+
+    val priorDays = (adjustedStartDateDayOfYear - claimStartDayOfYear).min(claimDuration) max 0
+    val afterDays = (claimEndDayOfYear - (adjustedStartDateDayOfYear - 1)).min(claimDuration) max 0
+
+    priorDays -> afterDays
+  }
 }
 
 protected trait Weekly extends FixedLength {
@@ -40,35 +57,84 @@ protected trait FourWeekly extends FixedLength {
 protected trait FullPeriodCylb { this: FixedLength =>
   def fullPeriod: FullPeriod
 
-  def equivalentPeriodDays: Int = (fullPeriodLength - previousPeriodDays).max(0)
+  def equivalentPeriod = equivalentPeriodCalculator(fullPeriod.period, None)
 
-  def previousPeriodDays: Int =
-    //This is not leap year safe from 2024 onwards but this should not be an issue
-    fullPeriod.period.yearsBetweenPolicyStartAndPeriodEnd + 2
+  def equivalentPeriodDays: Int = equivalentPeriod._2
+
+  def previousPeriodDays: Int = equivalentPeriod._1
 }
 
 protected trait PartialPeriodCylb { this: FixedLength =>
   def partial: PartialPeriod
 
-  def equivalentPeriodDays: Int = (partial.partial.countDays - previousPeriodDays).max(0)
+  def equivalentPeriod = equivalentPeriodCalculator(partial.period, Some(partial.partial))
 
-  def previousPeriodDays: Int = {
+  def equivalentPeriodDays: Int = equivalentPeriod._2
 
-    logger.debug(
-      s"[PartialPeriodCylb][previousPeriodDays] Values:" +
-        s"\n - partial.partial = ${partial.partial}" +
-        s"\n - partial.original = ${partial.original}" +
-        s"\n - partial.isFurloughStart = ${partial.isFurloughStart}" +
-        s"\n - partial.partial.countDays = ${partial.partial.countDays}" +
-        s"\n - partial.original.countDays = ${partial.original.countDays}")
-
-    if (partial.isFurloughStart) {
-      if (partial.partial.countDays < (partial.original.countDays - 1)) 0 else 1
-    } else {
-      //This is not leap year safe from 2024 onwards but this should not be an issue
-      partial.period.yearsBetweenPolicyStartAndPeriodEnd + 2
-    }
-  }
+  def previousPeriodDays: Int = equivalentPeriod._1
+//  {
+//
+//    // Note:
+//    // 2021 period is:             Monday to Sunday 1/3/2021 to 7/3/2021
+//    // 2019 period equivalent is:  Monday to Sunday 4/3/2019 to 10/3/2019
+//    // Claim Period                                 4/3/2019 to 7/3/2019    (0 DAYS PRIOR AND 4 DAYS EQUIVALENT)
+//    // Claim Period                                 1/3/2019 to 7/3/2019    (3 DAYS PRIOR AND 4 DAYS EQUIVALENT)
+//    // Claim Period                                 1/3/2019 to 1/3/2019    (1 DAY  PRIOR AND 0 DAYS EQUIVALENT)
+//
+//    // Days Prior Calc
+//    // ===============
+//    //
+//    //       1/3/2019             4/3/2019
+//    //   if(startDateClaim) > AdjustedStartDate { 0 } else {
+//    //           7/3/2019         4/3/2019
+//    //      if(endDateClaim > AdjustedStartDate) {
+//    //         AdjustedStartDate - startDateClaim  = 3 DAYS
+//    //      } else {
+//    //         AdjustedPeriod.length
+//    //      }
+//    //   }
+//
+////    extract(CylbDuration(Weekly, fullPeriod("2021,3,1", "2021,3,7"))) mustBe Tuple3(7, 4, 3)
+////
+////    extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,3" -> "2021,3,7"))) mustBe
+////      Tuple3(7, 4, 1)
+////
+////    extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,4" -> "2021,3,7"))) mustBe
+////      Tuple3(7, 4, 0)
+//
+////    val yearShifted = partial.partial.substractYears(partial.period.yearsBetweenPolicyStartAndPeriodEnd + 1)
+//
+////
+////       <- 4/3/2019 ->
+////    1/3/2019 -> 7/3/2019
+//
+////    val priorDays = if (yearShifted.start.isAfter(adjustedPeriod.start)) { 0 } else {
+////      if (yearShifted.end.isAfter(adjustedPeriod.start)) {
+////        ChronoUnit.DAYS.between(adjustedPeriod.start, yearShifted.start).abs
+////      } else {
+////        ChronoUnit.DAYS.between(adjustedPeriod.start, adjustedPeriod.end)
+////      }
+////    }
+//
+////    logger.debug(
+////      s"[PartialPeriodCylb][previousPeriodDays] Values:" +
+////        s"\n - partial.partial = ${partial.partial}" +
+////        s"\n - partial.original = ${partial.original}" +
+////        s"\n - partial.isFurloughStart = ${partial.isFurloughStart}" +
+////        s"\n - partial.partial.countDays = ${partial.partial.countDays}" +
+////        s"\n - partial.original.countDays = ${partial.original.countDays}")
+//
+//    if (partial.isFurloughStart) {
+//      if (partial.partial.countDays < (partial.original.countDays - 1)) {
+//        0
+//      } else {
+//        partial.period.yearsBetweenPolicyStartAndPeriodEnd + 1
+//      }
+//    } else {
+//      //This is not leap year safe from 2024 onwards but this should not be an issue
+//      partial.period.yearsBetweenPolicyStartAndPeriodEnd + 2
+//    }
+//  }
 }
 
 trait CylbDuration {
