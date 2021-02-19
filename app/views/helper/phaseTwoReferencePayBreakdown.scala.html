@@ -14,14 +14,18 @@
  * limitations under the License.
  *@
 
+@import java.time.LocalDate
+
 @this(
     h4: components.h4,
     p: components.p,
+    strong: components.strong,
     onePeriodCylbBreakdown: cylbPeriodBreakdown,
-    twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown
+    twoPeriodCylbBreakdown: cylbTwoPeriodBreakdown,
+    appConfig: config.FrontendAppConfig
 )
 
-@(payment: PaymentWithPhaseTwoPeriod)(implicit messages: Messages)
+@(payment: PaymentWithPhaseTwoPeriod, period: Periods)(implicit messages: Messages)
 
   @regularPaymentBreakdown(regular: RegularPaymentWithPhaseTwoPeriod) = {
       @p(Html(messages("phaseTwoReferencePayBreakdown.regular.p1")))
@@ -49,7 +53,13 @@
 
   @averagePaymentBreakdown(average: AveragePaymentWithPhaseTwoPeriod, partOfCylb: Boolean) = {
       @if(partOfCylb) {
-          @p(Html(messages("phaseTwoReferencePayBreakdown.average.p1.partOfCylb")))
+          @p{
+                @strong(
+                    Html(messages(
+                        "phaseTwoReferencePayBreakdown.average.p1.partOfCylb"
+                    ))
+                )
+          }
       } else {
           @p(Html(messages("phaseTwoReferencePayBreakdown.average.p1")))
       }
@@ -76,11 +86,10 @@
   }
 
   @cylbPaymentBreakdown(cylb: CylbPaymentWithPhaseTwoPeriod) = {
-      @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.p1")))
 
       @{cylb.cylbBreakdown match {
-          case op: OnePeriodCylb => onePeriodCylbBreakdown(op)
-          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp)
+          case op: OnePeriodCylb => onePeriodCylbBreakdown(op, period, isSinglePeriod = true)
+          case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp, period)
       }}
 
     @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.daysResult", cylb.basedOnDays)))
@@ -101,8 +110,8 @@
 
     @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.higherOf")))
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("phaseTwoReferencePayBreakdown.cylb.higherOf.cylb", cylb.basedOnHours)</li>
-        <li>@messages("phaseTwoReferencePayBreakdown.cylb.higherOf.average", cylb.averagePayment.referencePay.value.formatted("%.2f"))</li>
+        <li>@messages("phaseTwoReferencePayBreakdown.cylb.higherOf.cylb", cylb.basedOnHours, cylb.cylbBreakdown.latestPeriodEndDate.getYear.toString)</li>
+        <li>@messages("phaseTwoReferencePayBreakdown.cylb.higherOf.average", cylb.averagePayment.referencePay.value.formatted("%.2f"), cylb.cylbBreakdown.latestPeriodEndDate.getYear.toString)</li>
     </ul>
 
     @p(Html(messages("phaseTwoReferencePayBreakdown.cylb.higherOf.result", cylb.higherOfResult)))
@@ -110,8 +119,8 @@
 
 @h4(messages("phaseTwoReferencePayBreakdown.h4"))
 
-  @{payment match {
-    case p: RegularPaymentWithPhaseTwoPeriod => regularPaymentBreakdown(p)
-    case p: AveragePaymentWithPhaseTwoPeriod => averagePaymentBreakdown(p, false)
-    case p: CylbPaymentWithPhaseTwoPeriod    => cylbPaymentBreakdown(p)
-  }}
+    @{payment match {
+        case p: RegularPaymentWithPhaseTwoPeriod => regularPaymentBreakdown(p)
+        case p: AveragePaymentWithPhaseTwoPeriod => averagePaymentBreakdown(p, false)
+        case p: CylbPaymentWithPhaseTwoPeriod    => cylbPaymentBreakdown(p)
+    }}

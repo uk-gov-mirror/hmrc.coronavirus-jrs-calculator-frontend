@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.includes.behaviours
+package views.behaviours
 
 import play.api.data.{Form, FormError}
 import play.twirl.api.HtmlFormat

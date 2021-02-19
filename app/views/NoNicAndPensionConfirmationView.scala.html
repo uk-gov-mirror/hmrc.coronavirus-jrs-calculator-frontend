@@ -20,63 +20,65 @@
 @import pages.info.ConfirmationPage
 
 @this(
-govukLayout: templates.GovukLayoutWrapper,
-h1: components.h1,
-h2: components.h2,
-h3: components.h3,
-p: components.p,
-confirmation: components.confirmation,
-furloughBreakdown: includes.phaseTwoDetailedFurloughBreakdown,
-nicBreakdown: includes.phaseTwoDetailedNicBreakdown,
-pensionBreakdown: includes.phaseTwoDetailedPensionBreakdown,
-button: components.button,
-details: components.details,
-link: components.link,
-appConfig: config.FrontendAppConfig
+    govukLayout: templates.GovukLayoutWrapper,
+    h1: components.h1,
+    h2: components.h2,
+    h3: components.h3,
+    p: components.p,
+    panelIndent: components.panelIndent,
+    strong: components.strong,
+    confirmation: components.confirmation,
+    furloughBreakdown: helper.phaseTwoDetailedFurloughBreakdown,
+    nicBreakdown: helper.phaseTwoDetailedNicBreakdown,
+    pensionBreakdown: helper.phaseTwoDetailedPensionBreakdown,
+    button: components.button,
+    details: components.details,
+    link: components.link,
+    appConfig: config.FrontendAppConfig
 )
 
 @(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
-@confirmation {
+    @confirmation {
 
-@h1(Html(messages("confirmation.no.nic.pension.heading")), classes = Some(""))
+        @h1(Html(messages("confirmation.no.nic.pension.heading")), classes = Some(""))
 
-<div class="furlough-heading">
-    <p>@messages("confirmation.no.nic.pension.p1")</p>
-    <p class="govuk-panel__title">&pound;@cvb.furlough.total.formatted("%.2f")</p>
-</div>
+        <div class="furlough-heading">
+            <p>@messages("confirmation.no.nic.pension.p1")</p>
+            <p class="govuk-panel__title">&pound;@cvb.furlough.total.formatted("%.2f")</p>
+        </div>
 
-}
+    }
 
-<div class="govuk-inset-text">@messages("confirmation.no.nic.pension.insert.t1")</div>
+    @p {
+        @strong(Html(messages("confirmation.calculated.on")))
+        @dateToString(LocalDate.now())
+        @Html(messages("confirmation.date.version", version))
+    }
 
-@p {
-<span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
-@dateToString(LocalDate.now())
-@Html(messages("confirmation.date.version", version))
-}
+    @panelIndent(Html(messages("confirmation.no.nic.pension.insert.t1")))
 
-@p(Html(messages("confirmation.disclaimer")))
+    @p(Html(messages("confirmation.disclaimer")))
 
-@h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
+    @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
 
-<ul class="govuk-list govuk-list--number">
-    <li><a class="govuk-link" onClick="window.print()" href="">@messages("confirmation.print.this.page")</a> @messages("confirmation.no.nic.pension.nextSteps.li.1")</li>
-    <li>@messages("confirmation.no.nic.pension.nextSteps.li.2")</li>
-    <li>@messages("confirmation.no.nic.pension.nextSteps.li.3",
-        dateToStringWithoutYear(claimPeriod.start),
-        dateToStringWithoutYear(claimPeriod.end))</li>
-    <li>@messages("confirmation.no.nic.pension.nextSteps.li.4")</li>
-    <li>@Html(messages("confirmation.no.nic.pension.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,
-        "confirmation.no.nic.pension.nextSteps.li.4.2", true)))
-    </li>
-</ul>
+    <ul class="govuk-list govuk-list--number">
+        <li><a class="govuk-link" onClick="window.print()" href="">@messages("confirmation.print.this.page")</a> @messages("confirmation.no.nic.pension.nextSteps.li.1")</li>
+        <li>@messages("confirmation.no.nic.pension.nextSteps.li.2")</li>
+        <li>@messages("confirmation.no.nic.pension.nextSteps.li.3",
+            dateToStringWithoutYear(claimPeriod.start),
+            dateToStringWithoutYear(claimPeriod.end))</li>
+        <li>@messages("confirmation.no.nic.pension.nextSteps.li.4")</li>
+        <li>@Html(messages("confirmation.no.nic.pension.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,
+            "confirmation.no.nic.pension.nextSteps.li.4.2", true)))
+        </li>
+    </ul>
 
-@button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
+    @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
 
-@h2(Html(messages("confirmation.no.nic.pension.breakdown.summary")), classes = Some("govuk-heading-m"))
+    @h2(Html(messages("confirmation.no.nic.pension.breakdown.summary")), classes = Some("govuk-heading-m"))
 
 
 
@@ -93,7 +95,7 @@ appConfig: config.FrontendAppConfig
 
 @for(detailedBreakdown <- cvb.detailedBreakdowns) {
     @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-    @furloughBreakdown(detailedBreakdown.furlough)
+    @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period)
 }
 <hr>
 <br>

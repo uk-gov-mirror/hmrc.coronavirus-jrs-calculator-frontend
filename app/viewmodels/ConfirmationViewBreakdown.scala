@@ -170,8 +170,8 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
   def detailedBreakdowns: Seq[NoNicAndPensionDetailedBreakdown] = furlough.periodBreakdowns map { breakdowns =>
     import breakdowns._
     NoNicAndPensionDetailedBreakdown(
-      paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period,
-      PhaseTwoFurloughBreakdown(grant, paymentWithPeriod, furloughCap)
+      period = paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period,
+      furlough = PhaseTwoFurloughBreakdown(grant, paymentWithPeriod, furloughCap)
     )
   }
 

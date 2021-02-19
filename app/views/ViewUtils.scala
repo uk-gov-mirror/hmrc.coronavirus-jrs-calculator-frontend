@@ -42,4 +42,7 @@ object ViewUtils {
 
   def dateToStringOnlyMonth(date: LocalDate)(implicit messages: Messages): String =
     messages(s"month.${date.getMonthValue}")
+
+  def dateToStringWithoutDay(date: LocalDate)(implicit messages: Messages): String =
+    s"${messages(s"month.${date.getMonthValue}")} ${date.getYear}"
 }

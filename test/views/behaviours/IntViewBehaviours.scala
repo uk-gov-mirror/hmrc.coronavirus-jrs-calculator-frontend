@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package views.includes.behaviours
+package views.behaviours
 
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 
-trait DecimalViewBehaviours extends QuestionViewBehaviours[BigDecimal] {
+trait IntViewBehaviours extends QuestionViewBehaviours[Int] {
 
-  val number = 123.12
+  val number = 123
 
-  def decimalPage(
-    form: Form[BigDecimal],
-    createView: Form[BigDecimal] => HtmlFormat.Appendable,
+  def intPage(
+    form: Form[Int],
+    createView: Form[Int] => HtmlFormat.Appendable,
     messageKeyPrefix: String,
-    expectedFormAction: String,
     headingArgs: Seq[String] = Seq(),
+    expectedFormAction: String,
     section: Option[String] = None): Unit =
-    "behave like a page with a decimal value field" when {
+    "behave like a page with an integer value field" when {
 
       "rendered" must {
 
         "contain a label for the value" in {
 
           val doc = asDocument(createView(form))
-          assertContainsLabel(doc, "value", messages(s"$messageKeyPrefix.label", headingArgs: _*))
+          assertContainsLabel(doc, "value", messages(s"$messageKeyPrefix.label"))
         }
 
         "contain an input for the value" in {
@@ -80,36 +80,4 @@ trait DecimalViewBehaviours extends QuestionViewBehaviours[BigDecimal] {
         }
       }
     }
-
-  def currencyPage(createView: Form[BigDecimal] => HtmlFormat.Appendable) = {
-
-    val doc = asDocument(createView(form))
-
-    "behave like a currency page" which {
-
-      "has the currency input class on the input field" in {
-        doc.select("input").hasClass("govuk-currency-input__inner__input") mustBe true
-      }
-
-      "has a span for the currency unit with a pound sign" in {
-        doc.select("span.govuk-currency-input__inner__unit").text mustBe "£"
-      }
-    }
-  }
-
-  def percentagePage(createView: Form[BigDecimal] => HtmlFormat.Appendable) = {
-
-    val doc = asDocument(createView(form))
-
-    "behave like a percentage page" which {
-
-      "has the percentage input class on the input field" in {
-        doc.select("input").hasClass("govuk-percentage-input__inner__input") mustBe true
-      }
-
-      "has a span for the percentage unit with a percent sign" in {
-        doc.select("span.govuk-percentage-input__inner__unit").text mustBe "%"
-      }
-    }
-  }
 }

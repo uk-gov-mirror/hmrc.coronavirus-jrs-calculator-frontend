@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import models.OnePeriodCylb
+package utils
 
-@this(p: components.p)
+import java.time.LocalDate
 
-@(cylb: OnePeriodCylb)(implicit messages: Messages)
+import play.api.i18n.Messages
 
-    <ol class="govuk-list govuk-list--number">
-        <li>@messages("referencePayBreakdown.cylb.l1", cylb.periodPay.value.formatted("%.2f"), dateToString(cylb.lastYearPayDay))</li>
-        <li>@messages("referencePayBreakdown.cylb.l2", cylb.daysInPeriod)</li>
-        <li>@messages("referencePayBreakdown.cylb.l3", cylb.daysRequiredFromPeriod)</li>
-    </ol>
+trait ValueFormatter {
 
-    @p(Html(messages("referencePayBreakdown.cylb.periodTotal", cylb.referencePay.value.formatted("%.2f"))))
+  def dateToString(date: LocalDate)(implicit messages: Messages): String =
+    s"${date.getDayOfMonth} ${messages(s"month.${date.getMonthValue}")} ${date.getYear}"
+
+  def dateToStringWithoutYear(date: LocalDate)(implicit messages: Messages): String =
+    s"${date.getDayOfMonth} ${messages(s"month.${date.getMonthValue}")}"
+
+  def currencyFormatter(amount: BigDecimal): String = s"£${amount.formatted("%.2f")}"
+
+}

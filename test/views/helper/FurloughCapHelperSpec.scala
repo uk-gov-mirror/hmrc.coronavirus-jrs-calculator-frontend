@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package views.includes
+package views.helper
 
 import base.SpecBase
 import models._
 import play.api.i18n.Messages
 import play.api.test.Helpers
+import views.helper.FurloughCapHelper
 
 class FurloughCapHelperSpec extends SpecBase {
 

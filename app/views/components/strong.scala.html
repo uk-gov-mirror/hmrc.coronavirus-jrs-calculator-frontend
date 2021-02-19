@@ -14,23 +14,8 @@
  * limitations under the License.
  *@
 
-@import models.TwoPeriodCylb
+@this()
 
-@this(
-    cylbBreakdown: cylbPeriodBreakdown,
-    p: components.p
-)
+@(content: Html)(implicit messages: Messages)
 
-@(cylb: TwoPeriodCylb)(implicit messages: Messages)
-
-@p(Html(messages("referencePayBreakdown.cylb.twoPeriods")))
-
-@cylbBreakdown(cylb.firstPeriod)
-
-@p(Html(messages("referencePayBreakdown.cylb.thenPeriodTwo")))
-
-@cylbBreakdown(cylb.secondPeriod)
-
-@p(Html(messages("referencePayBreakdown.cylb.then")))
-
-@p(Html(messages("referencePayBreakdown.cylb.addTotals", cylb.firstPeriod.referencePay.value.formatted("%.2f"), cylb.secondPeriod.referencePay.value.formatted("%.2f"))))
+<span class="govuk-!-font-weight-bold">@content</span>

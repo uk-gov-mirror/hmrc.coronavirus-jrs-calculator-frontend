@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-package views.includes.behaviours
+package views.behaviours
 
-import models.Hours
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 
-trait HoursViewBehaviours extends QuestionViewBehaviours[Hours] {
+trait StringViewBehaviours extends QuestionViewBehaviours[String] {
 
-  val hours: Hours = Hours(25.5)
+  val answer = "answer"
 
-  def decimalPage(
-    form: Form[Hours],
-    createView: Form[Hours] => HtmlFormat.Appendable,
+  def stringPage(
+    form: Form[String],
+    createView: Form[String] => HtmlFormat.Appendable,
     messageKeyPrefix: String,
     expectedFormAction: String,
-    headingArgs: Seq[String] = Seq(),
-    section: Option[String] = None): Unit =
-    "behave like a page with a decimal value field" when {
+    expectedHintKey: Option[String] = None,
+    section: Option[String] = None,
+    headingArgs: Seq[String] = Seq()) =
+    "behave like a page with a string value field" when {
 
       "rendered" must {
 
         "contain a label for the value" in {
 
           val doc = asDocument(createView(form))
-          assertContainsLabel(doc, "value", messages(s"$messageKeyPrefix.label", headingArgs: _*))
+          val expectedHintText = expectedHintKey map (k => messages(k))
+          assertContainsLabel(doc, "value", messages(s"$messageKeyPrefix.heading", headingArgs: _*), expectedHintText)
         }
 
         "contain an input for the value" in {
@@ -52,8 +53,8 @@ trait HoursViewBehaviours extends QuestionViewBehaviours[Hours] {
 
         "include the form's value in the value input" in {
 
-          val doc = asDocument(createView(form.fill(hours)))
-          doc.getElementById("value").attr("value") mustBe hours.toString
+          val doc = asDocument(createView(form.fill(answer)))
+          doc.getElementById("value").attr("value") mustBe answer
         }
       }
 
@@ -65,7 +66,7 @@ trait HoursViewBehaviours extends QuestionViewBehaviours[Hours] {
           assertRenderedById(doc, "error-summary-title")
         }
 
-        "show an error associated with the value field" in {
+        "show an error associated to the value field" in {
 
           val doc = asDocument(createView(form.withError(error)))
           val errorSpan = doc.getElementsByClass("govuk-error-message").first

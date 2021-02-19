@@ -65,11 +65,16 @@ object TopUpPayment {
 
 sealed trait CylbBreakdown {
   val referencePay: Amount
+  val latestPeriodEndDate: LocalDate
 }
 
 case class OnePeriodCylb(referencePay: Amount, periodPay: Amount, daysInPeriod: Int, daysRequiredFromPeriod: Int, lastYearPayDay: LocalDate)
-    extends CylbBreakdown
-case class TwoPeriodCylb(referencePay: Amount, firstPeriod: OnePeriodCylb, secondPeriod: OnePeriodCylb) extends CylbBreakdown
+    extends CylbBreakdown {
+  override val latestPeriodEndDate: LocalDate = lastYearPayDay
+}
+case class TwoPeriodCylb(referencePay: Amount, firstPeriod: OnePeriodCylb, secondPeriod: OnePeriodCylb) extends CylbBreakdown {
+  override val latestPeriodEndDate: LocalDate = secondPeriod.lastYearPayDay
+}
 
 sealed trait PaymentWithPeriod {
   val referencePay: Amount

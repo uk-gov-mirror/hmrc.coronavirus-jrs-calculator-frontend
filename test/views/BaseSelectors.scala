@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.includes
+package views
 
 trait BaseSelectors {
 
@@ -45,6 +45,9 @@ trait BaseSelectors {
   val subheadingSelector = "#subheading"
   val viewAddedSoFar = "#viewAddedSoFar"
   val h2: Int => String = i => s"#main-content h2:nth-of-type($i)"
+  val h3: Int => String = i => s"#main-content h3:nth-of-type($i)"
+  val h4: Int => String = i => s"#main-content h4:nth-of-type($i)"
+  val h5: Int => String = i => s"#main-content h5:nth-of-type($i)"
   val dropdown = "#main-content summary"
   val dropdownP: Int => String = i => s"#main-content details > div > p:nth-child($i)"
 
