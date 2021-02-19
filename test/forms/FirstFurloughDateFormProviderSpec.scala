@@ -16,6 +16,8 @@
 
 package forms
 
+import java.time.LocalDate
+
 import base.SpecBaseControllerSpecs
 import forms.behaviours.DateBehaviours
 import forms.mappings.LocalDateFormatter
@@ -23,11 +25,62 @@ import play.api.data.FormError
 
 class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
 
-  val form = new FirstFurloughDateFormProvider()()
   val dateBehaviours = new DateBehaviours
   import dateBehaviours._
 
+  def form(furloughStartDate: LocalDate) = new FirstFurloughDateFormProvider()(furloughStartDate)
+
   ".firstFurloughDate" should {
+
+    "when furlough start date is before the first furlough date" in {
+
+      val firstFurloughDate = LocalDate.of(2021, 1, 1)
+      val furloughStartDate = LocalDate.of(2021, 1, 2)
+
+      val data = Map(
+        "value.day"   -> firstFurloughDate.getDayOfMonth.toString,
+        "value.month" -> firstFurloughDate.getMonthValue.toString,
+        "value.year"  -> firstFurloughDate.getYear.toString
+      )
+
+      val result = form(furloughStartDate).bind(data)
+      result.value.value shouldEqual firstFurloughDate
+    }
+
+    "when furlough start date is the same as the first furlough date" in {
+
+      val firstFurloughDate = LocalDate.of(2021, 1, 2)
+      val furloughStartDate = LocalDate.of(2021, 1, 2)
+
+      val data = Map(
+        "value.day"   -> firstFurloughDate.getDayOfMonth.toString,
+        "value.month" -> firstFurloughDate.getMonthValue.toString,
+        "value.year"  -> firstFurloughDate.getYear.toString
+      )
+
+      val result = form(furloughStartDate).bind(data)
+
+      result.errors shouldBe List(
+        FormError("value", "firstFurloughStartDate.error.afterStartDate")
+      )
+    }
+
+    "when furlough start date is after the first furlough date" in {
+
+      val firstFurloughDate = LocalDate.of(2021, 1, 2)
+      val furloughStartDate = LocalDate.of(2021, 1, 1)
+
+      val data = Map(
+        "value.day"   -> firstFurloughDate.getDayOfMonth.toString,
+        "value.month" -> firstFurloughDate.getMonthValue.toString,
+        "value.year"  -> firstFurloughDate.getYear.toString
+      )
+
+      val result = form(furloughStartDate).bind(data)
+      result.errors shouldBe List(
+        FormError("value", "firstFurloughStartDate.error.afterStartDate")
+      )
+    }
 
     "bind valid data" in {
 
@@ -38,15 +91,15 @@ class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
           "firstFurloughDate.year"  -> date.getYear.toString,
         )
 
-        val result = form.bind(data)
+        val result = form(firstFurloughDatesGenEnd.plusDays(1)).bind(data)
 
         result.value.value shouldEqual date
-
       }
+
     }
 
     "fail to bind an empty date" in {
-      val result = form.bind(Map.empty[String, String])
+      val result = form(firstFurloughDatesGenEnd.plusDays(1)).bind(Map.empty[String, String])
 
       result.errors should contain allElementsOf List(
         FormError(s"firstFurloughDate.day", LocalDateFormatter.dayBlankErrorKey),
@@ -63,12 +116,11 @@ class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
         "firstFurloughDate.year"  -> "2020",
       )
 
-      val result = form.bind(data)
+      val result = form(firstFurloughDatesGenEnd.plusDays(1)).bind(data)
 
       result.errors shouldBe List(
-        FormError("firstFurloughDate", "firstFurloughStartDate.error.required")
+        FormError("firstFurloughDate", "firstFurloughStartDate.error.beforeExtensionDate")
       )
     }
-
   }
 }

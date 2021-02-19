@@ -24,7 +24,7 @@ import forms.FirstFurloughDateFormProvider
 import models.PayMethod.Variable
 import models.PaymentFrequency.Weekly
 import models.{EmployeeStarted, UserAnswers}
-import pages.FirstFurloughDatePage
+import pages.{FirstFurloughDatePage, FurloughStartDatePage}
 import play.api.data.Form
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
@@ -39,8 +39,9 @@ import scala.concurrent.Future
 class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new FirstFurloughDateFormProvider()
-  private def form: Form[LocalDate] = formProvider()
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val furlouoghStartDate = validAnswer.plusMonths(1)
+  private def form: Form[LocalDate] = formProvider(furlouoghStartDate)
 
   lazy val firstFurLoughDateStartRoute: String = routes.FirstFurloughDateController.onPageLoad().url
 
@@ -80,14 +81,25 @@ class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
   "FirstFurloughDate Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = controller().onPageLoad()(getRequest)
+
+      val userAnswers = UserAnswers(userAnswersId).set(FurloughStartDatePage, furlouoghStartDate).success.value
+
+      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form)(getRequest, messages).toString()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers = UserAnswers(userAnswersId).set(FirstFurloughDatePage, validAnswer).success.value
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(FirstFurloughDatePage, validAnswer)
+        .success
+        .value
+        .set(FurloughStartDatePage, furlouoghStartDate)
+        .success
+        .value
+
       val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustBe OK
@@ -97,6 +109,9 @@ class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
+
+      val userAnswers = UserAnswers(userAnswersId).set(FurloughStartDatePage, furlouoghStartDate).success.value
+
       val request =
         FakeRequest(POST, firstFurLoughDateStartRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -104,7 +119,7 @@ class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
 
       val boundForm = form.bind(Map("firstFurloughDate" -> "invalid value"))
 
-      val result = controller().onSubmit()(request)
+      val result = controller(Some(userAnswers)).onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual

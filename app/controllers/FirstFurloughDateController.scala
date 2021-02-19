@@ -21,10 +21,11 @@ import java.time.LocalDate
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.FirstFurloughDateFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
 import models.UserAnswers
 import navigation.Navigator
-import pages.FirstFurloughDatePage
+import pages.{FirstFurloughDatePage, FurloughStartDatePage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -38,40 +39,43 @@ import scala.concurrent.{ExecutionContext, Future}
 class FirstFurloughDateController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
-  navigator: Navigator,
+  val navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: FirstFurloughDateFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: FirstFurloughDateView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+    extends BaseController with I18nSupport {
 
-  def form(implicit messages: Messages): Form[LocalDate] = formProvider()
+  def form(startDate: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(startDate)
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.getV(FirstFurloughDatePage) match {
-      case Invalid(_)   => form
-      case Valid(value) => form.fill(value)
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswerV(FurloughStartDatePage) { startDate =>
+      val preparedForm = request.userAnswers.getV(FirstFurloughDatePage) match {
+        case Invalid(_)   => form(startDate)
+        case Valid(value) => form(startDate).fill(value)
+      }
+      Future(Ok(view(preparedForm)))
     }
-
-    Ok(view(preparedForm))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          userAnswerPersistence
-            .persistAnswer(request.userAnswers, FirstFurloughDatePage, value, None)
-            .map { updatedAnswers =>
-              Redirect(navigator.nextPage(FirstFurloughDatePage, updatedAnswers, None))
-          }
-      )
+    getRequiredAnswerV(FurloughStartDatePage) { startDate =>
+      form(startDate)
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+          value =>
+            userAnswerPersistence
+              .persistAnswer(request.userAnswers, FirstFurloughDatePage, value, None)
+              .map { updatedAnswers =>
+                Redirect(navigator.nextPage(FirstFurloughDatePage, updatedAnswers, None))
+            }
+        )
+    }
   }
 
 }

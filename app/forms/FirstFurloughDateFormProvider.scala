@@ -16,27 +16,30 @@
 
 package forms
 
-import java.time.LocalDate
-
-import forms.mappings.Mappings
 import config.SchemeConfiguration
-import javax.inject.Inject
+import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import play.api.i18n.Messages
-import views.ViewUtils
+
+import java.time.LocalDate
+import javax.inject.Inject
 
 class FirstFurloughDateFormProvider @Inject() extends Mappings with SchemeConfiguration {
 
-  def apply()(implicit messages: Messages): Form[LocalDate] =
-    Form("firstFurloughDate" -> localDate(invalidKey = "firstFurloughStartDate.error.invalid").verifying(validFirstFurloughDate))
+  def apply(furloughStartDate: LocalDate)(implicit messages: Messages): Form[LocalDate] =
+    Form(
+      "firstFurloughDate" -> localDate(invalidKey = "firstFurloughStartDate.error.invalid")
+        .verifying(validFirstFurloughDate(furloughStartDate)))
 
-  private def validFirstFurloughDate(implicit messages: Messages): Constraint[LocalDate] = Constraint { firstFurloughDate =>
-    if (!firstFurloughDate.isBefore(extensionStartDate)) {
-      Valid
-    } else {
-      Invalid("firstFurloughStartDate.error.required")
-    }
+  private def validFirstFurloughDate(furloughStartDate: LocalDate)(implicit messages: Messages): Constraint[LocalDate] = Constraint {
+    firstFurloughDate =>
+      if (!furloughStartDate.isAfter(firstFurloughDate)) {
+        Invalid("firstFurloughStartDate.error.afterStartDate")
+      } else if (firstFurloughDate.isBefore(extensionStartDate)) {
+        Invalid("firstFurloughStartDate.error.beforeExtensionDate")
+      } else {
+        Valid
+      }
   }
-
 }

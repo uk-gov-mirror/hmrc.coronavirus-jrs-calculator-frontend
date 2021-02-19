@@ -198,8 +198,11 @@ trait ModelGenerators {
     date <- periodDatesBetween(LocalDate.of(2020, 3, 1), LocalDate.of(2021, 3, 31))
   } yield date
 
+  val firstFurloughDatesGenStart = LocalDate.of(2020, 11, 10)
+  val firstFurloughDatesGenEnd = LocalDate.of(2021, 5, 31)
+
   val firstFurloughDatesGen = for {
-    date <- periodDatesBetween(LocalDate.of(2020, 11, 10), LocalDate.of(2021, 5, 31))
+    date <- periodDatesBetween(firstFurloughDatesGenStart, firstFurloughDatesGenEnd)
   } yield date
 
   implicit lazy val arbitraryClaimPeriod: Arbitrary[LocalDate] = Arbitrary(claimPeriodDatesGen)
