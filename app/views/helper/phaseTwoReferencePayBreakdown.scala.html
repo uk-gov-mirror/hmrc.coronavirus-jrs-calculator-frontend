@@ -87,20 +87,6 @@
 
   @cylbPaymentBreakdown(cylb: CylbPaymentWithPhaseTwoPeriod) = {
 
-      @p{
-        @strong(
-            Html(messages(
-                "phaseTwoReferencePayBreakdown.cylb.p1"
-            ))
-        )
-      }
-
-      @if(LocalDate.of(2021, 3, 10).isAfter(appConfig.phaseTwoReferencePayBreakdownDynamicMessageDate)) {
-        @p{
-          @messages("phaseTwoReferencePayBreakdown.cylb.p2.march2021")
-        }
-      }
-
       @{cylb.cylbBreakdown match {
           case op: OnePeriodCylb => onePeriodCylbBreakdown(op)
           case tp: TwoPeriodCylb => twoPeriodCylbBreakdown(tp)
@@ -133,8 +119,8 @@
 
 @h4(messages("phaseTwoReferencePayBreakdown.h4"))
 
-  @{payment match {
-    case p: RegularPaymentWithPhaseTwoPeriod => regularPaymentBreakdown(p)
-    case p: AveragePaymentWithPhaseTwoPeriod => averagePaymentBreakdown(p, false)
-    case p: CylbPaymentWithPhaseTwoPeriod    => cylbPaymentBreakdown(p)
-  }}
+    @{payment match {
+        case p: RegularPaymentWithPhaseTwoPeriod => regularPaymentBreakdown(p)
+        case p: AveragePaymentWithPhaseTwoPeriod => averagePaymentBreakdown(p, false)
+        case p: CylbPaymentWithPhaseTwoPeriod    => cylbPaymentBreakdown(p)
+    }}

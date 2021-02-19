@@ -601,6 +601,9 @@ referencePayBreakdown.average.l3 = Multiply by {0} (furlough days).
 referencePayBreakdown.average.result = Total average pay last year = £{0}
 
 referencePayBreakdown.cylb.p1 = Method 1: take pay from same dates last year.
+
+referencePayBreakdown.cylb.twoPeriods.p1 = In {0}, these dates overlap more than one pay period. In period one you should:
+
 referencePayBreakdown.cylb.twoPeriods = Last year’s dates overlap two pay periods so in period one:
 referencePayBreakdown.cylb.l1 = Start with £{0} (from pay day {1} last year).
 referencePayBreakdown.cylb.l2 = Divide by {0} (days in pay period).
@@ -799,8 +802,9 @@ phaseTwoReferencePayBreakdown.average.hours.l2 = Divide by {0} (usual hours).
 phaseTwoReferencePayBreakdown.average.hours.l3 = Multiply by {0} (furlough hours).
 phaseTwoReferencePayBreakdown.average.hoursResult = Total pay based on hours worked in this pay period = £{0}
 
-phaseTwoReferencePayBreakdown.cylb.p1 = Method 1: take the employee’s pay from same dates (lookback year).
-phaseTwoReferencePayBreakdown.cylb.p2.march2021 = Because this claim is for (claim month) is for 2021 you must use the calendar lookback method to look back to 2019
+phaseTwoReferencePayBreakdown.cylb.p1 = Method 1: take the employee’s pay from the same dates in {0}.
+
+phaseTwoReferencePayBreakdown.cylb.p2.march2021 = Because this claim is for {0} is for 2021 you must use the calendar lookback method to look back to 2019
 
 phaseTwoReferencePayBreakdown.cylb.twoPeriods = Last year’s dates overlap two pay periods so in period one:
 phaseTwoReferencePayBreakdown.cylb.l1 = Start with £{0} (from pay day {1} last year).

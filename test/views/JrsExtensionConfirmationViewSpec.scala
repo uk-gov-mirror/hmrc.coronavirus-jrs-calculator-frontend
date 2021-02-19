@@ -21,7 +21,10 @@ import java.time.LocalDate
 import cats.scalatest.ValidatedValues
 import handlers.ConfirmationControllerRequestHandler
 import messages.JRSExtensionConfirmationMessages
+import models.FurloughStatus.FurloughOngoing
+import models.NicCategory.Nonpayable
 import models.PartTimeQuestion.PartTimeNo
+import models.PayMethod.Variable
 import models.PaymentFrequency.Monthly
 import models.requests.DataRequest
 import models.{Period, UserAnswers}
@@ -56,109 +59,225 @@ class JrsExtensionConfirmationViewSpec extends ViewBehaviours with ConfirmationC
     val feedbackLink: String = "#main-content > div > div > div > p:nth-child(29) > a"
   }
 
-  val decClaimPeriod = Period(LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 31))
-
-  def dec2020Journey(): UserAnswers =
-    emptyUserAnswers
-      .withClaimPeriodStart("2020, 12, 1")
-      .withClaimPeriodEnd("2021, 12, 31")
-      .withFurloughStartDate("2020, 3, 20")
-      .withFurloughStatus()
-      .withPaymentFrequency(Monthly)
-      .withNiCategory()
-      .withPensionStatus()
-      .withPayMethod()
-      .withPayDate(List("2020, 11, 30", "2020, 12, 31"))
-      .withLastPayDate("2020, 11, 30")
-      .withPartTimeQuestion(PartTimeNo)
-      .withRegularPayAmount(10000.00)
-
-  val userAnswers: UserAnswers = dec2020Journey()
-  val noNicAndPensionBreakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
-    loadResultData(dec2020Journey()).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
-  }
-
   val messageKeyPrefix = "confirmation"
   val view: JrsExtensionConfirmationView = injector.instanceOf[JrsExtensionConfirmationView]
 
-  val nextStepsListMessage: Int => String = (bullet: Int) => JRSExtensionConfirmationMessages.nextStepsListMessages(bullet, decClaimPeriod)
-  val calculatePayListMessage: Int => String = { (bullet: Int) =>
-    JRSExtensionConfirmationMessages.calculatePayListMessages(bullet, 10000, 31, 31)
-  }
-  val furloughGrantListMessage: Int => String = { (bullet: Int) =>
-    JRSExtensionConfirmationMessages.furloughGrantListMessages(bullet, 10000, 80)
-  }
-
-  val expectedContent = Seq(
-    Selectors.h1                            -> JRSExtensionConfirmationMessages.heading,
-    Selectors.dateAndCalculatorVersion      -> JRSExtensionConfirmationMessages.dateAndCalculatorVersion,
-    Selectors.indent                        -> JRSExtensionConfirmationMessages.indent,
-    Selectors.disclaimer                    -> JRSExtensionConfirmationMessages.disclaimerTopPage,
-    Selectors.h2(1)                         -> JRSExtensionConfirmationMessages.h2NextSteps,
-    Selectors.nextStepsNumberedList(1)      -> nextStepsListMessage(1),
-    Selectors.nextStepsNumberedList(2)      -> nextStepsListMessage(2),
-    Selectors.nextStepsNumberedList(3)      -> nextStepsListMessage(3),
-    Selectors.nextStepsNumberedList(4)      -> nextStepsListMessage(4),
-    Selectors.nextStepsNumberedList(5)      -> nextStepsListMessage(5),
-    Selectors.h2(2)                         -> JRSExtensionConfirmationMessages.h2BreakdownOfCalculations,
-    Selectors.breakdownParagraphOne         -> JRSExtensionConfirmationMessages.breakDownParagraphOne,
-    Selectors.breakdownParagraphTwo         -> JRSExtensionConfirmationMessages.breakDownParagraphTwo,
-    Selectors.breakdownParagraphThree       -> JRSExtensionConfirmationMessages.breakDownParagraphThree,
-    Selectors.h3(1)                         -> JRSExtensionConfirmationMessages.h3PayPeriod(decClaimPeriod),
-    Selectors.h4(1)                         -> JRSExtensionConfirmationMessages.h4CalculatePay,
-    Selectors.h4CalculatePayParagraphOne    -> JRSExtensionConfirmationMessages.h4ParagraphOne,
-    Selectors.calculatePayList(1)           -> calculatePayListMessage(1),
-    Selectors.calculatePayList(2)           -> calculatePayListMessage(2),
-    Selectors.calculatePayList(3)           -> calculatePayListMessage(3),
-    Selectors.h4CalculatePayParagraphTwo    -> JRSExtensionConfirmationMessages.h4ParagraphTwo(10000),
-    Selectors.h4(2)                         -> JRSExtensionConfirmationMessages.h4FurloughGrant,
-    Selectors.furloughGrantList(1)          -> furloughGrantListMessage(1),
-    Selectors.furloughGrantList(2)          -> furloughGrantListMessage(2),
-    Selectors.h4FurloughGrantParagraphOne   -> JRSExtensionConfirmationMessages.furloughGrantParagraphOne(8000),
-    Selectors.h4FurloughGrantParagraphTwo   -> JRSExtensionConfirmationMessages.furloughGrantParagraphTwo,
-    Selectors.furloughGrantBullet           -> JRSExtensionConfirmationMessages.maxFurloughGrantBullet(2500),
-    Selectors.h4FurloughGrantParagraphThree -> JRSExtensionConfirmationMessages.furloughGrantParagraphThree,
-    Selectors.furloughGrantInset            -> JRSExtensionConfirmationMessages.furloughGrantIndent(2500),
-    Selectors.bottomDisclaimer              -> JRSExtensionConfirmationMessages.disclaimerBottomPage,
-    Selectors.printLink                     -> JRSExtensionConfirmationMessages.printOrSave,
-    Selectors.webChatLink                   -> JRSExtensionConfirmationMessages.webchatLink,
-    Selectors.feedbackLink                  -> JRSExtensionConfirmationMessages.feedbackLink
-  )
-
   "JRSExtensionConfirmationViewSpec" when {
 
-    implicit val request: DataRequest[_] = fakeDataRequest()
+    "for a Regular Pay Pre-Covid Employee (Employee Type 1)" should {
 
-    def applyView(): HtmlFormat.Appendable =
-      view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2")
+      val decClaimPeriod: Period = Period(
+        LocalDate.of(2020, 12, 1),
+        LocalDate.of(2020, 12, 31)
+      )
 
-    implicit val doc: Document = asDocument(applyView())
+      def dec2020Journey(): UserAnswers =
+        emptyUserAnswers
+          .withClaimPeriodStart("2020, 12, 1")
+          .withClaimPeriodEnd("2021, 12, 31")
+          .withFurloughStartDate("2020, 3, 20")
+          .withFurloughStatus()
+          .withPaymentFrequency(Monthly)
+          .withNiCategory()
+          .withPensionStatus()
+          .withPayMethod()
+          .withPayDate(List("2020, 11, 30", "2020, 12, 31"))
+          .withLastPayDate("2020, 11, 30")
+          .withPartTimeQuestion(PartTimeNo)
+          .withRegularPayAmount(10000.00)
 
-    behave like normalPage(messageKeyPrefix)
-    behave like pageWithHeading(heading = JRSExtensionConfirmationMessages.heading)
-    behave like pageWithExpectedMessages(expectedContent)
+      val userAnswers: UserAnswers = dec2020Journey()
+      val noNicAndPensionBreakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
+      }
 
-    "behave like a page with a StartAnotherCalculation button" must {
+      val nextStepsListMessage: Int => String = (bullet: Int) => JRSExtensionConfirmationMessages.nextStepsListMessages(bullet, decClaimPeriod)
+      val calculatePayListMessage: Int => String = { (bullet: Int) =>
+        JRSExtensionConfirmationMessages.calculatePayListMessages(bullet, 10000, 31, 31)
+      }
+      val furloughGrantListMessage: Int => String = { (bullet: Int) =>
+        JRSExtensionConfirmationMessages.furloughGrantListMessages(bullet, 10000, 80)
+      }
 
-      s"have a button with message '${JRSExtensionConfirmationMessages.startAnotherCalculation}'" in {
-        assertEqualsMessage(doc, "#main-content > div > div > div > a", JRSExtensionConfirmationMessages.startAnotherCalculation)
+      val expectedContent = Seq(
+        Selectors.h1 -> JRSExtensionConfirmationMessages.heading,
+        Selectors.dateAndCalculatorVersion -> JRSExtensionConfirmationMessages.dateAndCalculatorVersion,
+        Selectors.indent -> JRSExtensionConfirmationMessages.indent,
+        Selectors.disclaimer -> JRSExtensionConfirmationMessages.disclaimerTopPage,
+        Selectors.h2(1) -> JRSExtensionConfirmationMessages.h2NextSteps,
+        Selectors.nextStepsNumberedList(1) -> nextStepsListMessage(1),
+        Selectors.nextStepsNumberedList(2) -> nextStepsListMessage(2),
+        Selectors.nextStepsNumberedList(3) -> nextStepsListMessage(3),
+        Selectors.nextStepsNumberedList(4) -> nextStepsListMessage(4),
+        Selectors.nextStepsNumberedList(5) -> nextStepsListMessage(5),
+        Selectors.h2(2) -> JRSExtensionConfirmationMessages.h2BreakdownOfCalculations,
+        Selectors.breakdownParagraphOne -> JRSExtensionConfirmationMessages.breakDownParagraphOne,
+        Selectors.breakdownParagraphTwo -> JRSExtensionConfirmationMessages.breakDownParagraphTwo,
+        Selectors.breakdownParagraphThree -> JRSExtensionConfirmationMessages.breakDownParagraphThree,
+        Selectors.h3(1) -> JRSExtensionConfirmationMessages.h3PayPeriod(decClaimPeriod),
+        Selectors.h4(1) -> JRSExtensionConfirmationMessages.h4CalculatePay,
+        Selectors.h4CalculatePayParagraphOne -> JRSExtensionConfirmationMessages.h4ParagraphOne,
+        Selectors.calculatePayList(1) -> calculatePayListMessage(1),
+        Selectors.calculatePayList(2) -> calculatePayListMessage(2),
+        Selectors.calculatePayList(3) -> calculatePayListMessage(3),
+        Selectors.h4CalculatePayParagraphTwo -> JRSExtensionConfirmationMessages.h4ParagraphTwo(10000),
+        Selectors.h4(2) -> JRSExtensionConfirmationMessages.h4FurloughGrant,
+        Selectors.furloughGrantList(1) -> furloughGrantListMessage(1),
+        Selectors.furloughGrantList(2) -> furloughGrantListMessage(2),
+        Selectors.h4FurloughGrantParagraphOne -> JRSExtensionConfirmationMessages.furloughGrantParagraphOne(8000),
+        Selectors.h4FurloughGrantParagraphTwo -> JRSExtensionConfirmationMessages.furloughGrantParagraphTwo,
+        Selectors.furloughGrantBullet -> JRSExtensionConfirmationMessages.maxFurloughGrantBullet(2500),
+        Selectors.h4FurloughGrantParagraphThree -> JRSExtensionConfirmationMessages.furloughGrantParagraphThree,
+        Selectors.furloughGrantInset -> JRSExtensionConfirmationMessages.furloughGrantIndent(2500),
+        Selectors.bottomDisclaimer -> JRSExtensionConfirmationMessages.disclaimerBottomPage,
+        Selectors.printLink -> JRSExtensionConfirmationMessages.printOrSave,
+        Selectors.webChatLink -> JRSExtensionConfirmationMessages.webchatLink,
+        Selectors.feedbackLink -> JRSExtensionConfirmationMessages.feedbackLink
+      )
+
+      implicit val request: DataRequest[_] = fakeDataRequest()
+
+      def applyView(): HtmlFormat.Appendable =
+        view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2")
+
+      implicit val doc: Document = asDocument(applyView())
+
+      behave like normalPage(messageKeyPrefix)
+      behave like pageWithHeading(heading = JRSExtensionConfirmationMessages.heading)
+      behave like pageWithExpectedMessages(expectedContent)
+
+      "behave like a page with a StartAnotherCalculation button" must {
+
+        s"have a button with message '${JRSExtensionConfirmationMessages.startAnotherCalculation}'" in {
+          assertEqualsMessage(doc, "#main-content > div > div > div > a", JRSExtensionConfirmationMessages.startAnotherCalculation)
+        }
+      }
+
+      "behave like a page with correct links" must {
+
+        "have a PrintOrSave link - brings up window.print() when clicked" in {
+          doc.select(Selectors.printLink).attr("onClick") mustBe "window.print()"
+        }
+
+        "have a Webchat link - opens a webchat/contact details page" in {
+          doc.select(Selectors.webChatLink).attr("href") mustBe appConf.webchatHelpUrl
+        }
+
+        "have a Feedback link" in {
+          doc.select(Selectors.feedbackLink).attr("href") mustBe "/job-retention-scheme-calculator/start-survey"
+        }
       }
     }
 
-    "behave like a page with correct links" must {
+    "for a Variable Pay Pre-Covid Employee, worked full tax year prior (Employee Type 3)" should {
 
-      "have a PrintOrSave link - brings up window.print() when clicked" in {
-        doc.select(Selectors.printLink).attr("onClick") mustBe "window.print()"
+      val decClaimPeriod: Period = Period(
+        LocalDate.of(2020, 12, 1),
+        LocalDate.of(2020, 12, 31)
+      )
+
+      def dec2020Journey(): UserAnswers = {
+        emptyUserAnswers
+          .withClaimPeriodStart("2020, 12, 1")
+          .withClaimPeriodEnd("2020, 12, 31")
+          .withFurloughStartDate("2020, 3, 20")
+          .withFurloughStatus(FurloughOngoing)
+          .withPaymentFrequency(Monthly)
+          .withPayMethod(Variable)
+          .withFurloughInLastTaxYear(false)
+          .withEmployeeStartedAfter1Feb2019()
+          .withNiCategory()
+          .withPensionStatus()
+          .withLastPayDate("2020, 11, 30")
+          .withPayDate(List("2020, 11, 30", "2020, 12, 31"))
+          .withLastYear(List("2019-12-31" -> 10000))
+          .withPartTimeQuestion(PartTimeNo)
+          .withAnnualPayAmount(10000)
       }
 
-      "have a Webchat link - opens a webchat/contact details page" in {
-        doc.select(Selectors.webChatLink).attr("href") mustBe appConf.webchatHelpUrl
+      val userAnswers: UserAnswers = dec2020Journey()
+      val noNicAndPensionBreakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
       }
 
-      "have a Feedback link" in {
-        doc.select(Selectors.feedbackLink).attr("href") mustBe "/job-retention-scheme-calculator/start-survey"
+      val nextStepsListMessage: Int => String = (bullet: Int) => JRSExtensionConfirmationMessages.nextStepsListMessages(bullet, decClaimPeriod)
+      val calculatePayListMessage: Int => String = { (bullet: Int) =>
+        JRSExtensionConfirmationMessages.calculatePayListMessages(bullet, 10000, 31, 31)
+      }
+      val furloughGrantListMessage: Int => String = { (bullet: Int) =>
+        JRSExtensionConfirmationMessages.furloughGrantListMessages(bullet, 10000, 80)
+      }
+
+      val expectedContent = Seq(
+//        Selectors.h1 -> JRSExtensionConfirmationMessages.heading,
+//        Selectors.dateAndCalculatorVersion -> JRSExtensionConfirmationMessages.dateAndCalculatorVersion,
+//        Selectors.indent -> JRSExtensionConfirmationMessages.indent,
+//        Selectors.disclaimer -> JRSExtensionConfirmationMessages.disclaimerTopPage,
+//        Selectors.h2(1) -> JRSExtensionConfirmationMessages.h2NextSteps,
+//        Selectors.nextStepsNumberedList(1) -> nextStepsListMessage(1),
+//        Selectors.nextStepsNumberedList(2) -> nextStepsListMessage(2),
+//        Selectors.nextStepsNumberedList(3) -> nextStepsListMessage(3),
+//        Selectors.nextStepsNumberedList(4) -> nextStepsListMessage(4),
+//        Selectors.nextStepsNumberedList(5) -> nextStepsListMessage(5),
+//        Selectors.h2(2) -> JRSExtensionConfirmationMessages.h2BreakdownOfCalculations,
+//        Selectors.breakdownParagraphOne -> JRSExtensionConfirmationMessages.breakDownParagraphOne,
+//        Selectors.breakdownParagraphTwo -> JRSExtensionConfirmationMessages.breakDownParagraphTwo,
+//        Selectors.breakdownParagraphThree -> JRSExtensionConfirmationMessages.breakDownParagraphThree,
+//        Selectors.h3(1) -> JRSExtensionConfirmationMessages.h3PayPeriod(decClaimPeriod),
+//        Selectors.h4(1) -> JRSExtensionConfirmationMessages.h4CalculatePay,
+//        Selectors.h4CalculatePayParagraphOne -> JRSExtensionConfirmationMessages.h4ParagraphOne,
+//        Selectors.calculatePayList(1) -> calculatePayListMessage(1),
+//        Selectors.calculatePayList(2) -> calculatePayListMessage(2),
+//        Selectors.calculatePayList(3) -> calculatePayListMessage(3),
+//        Selectors.h4CalculatePayParagraphTwo -> JRSExtensionConfirmationMessages.h4ParagraphTwo(10000),
+//        Selectors.h4(2) -> JRSExtensionConfirmationMessages.h4FurloughGrant,
+//        Selectors.furloughGrantList(1) -> furloughGrantListMessage(1),
+//        Selectors.furloughGrantList(2) -> furloughGrantListMessage(2),
+//        Selectors.h4FurloughGrantParagraphOne -> JRSExtensionConfirmationMessages.furloughGrantParagraphOne(8000),
+//        Selectors.h4FurloughGrantParagraphTwo -> JRSExtensionConfirmationMessages.furloughGrantParagraphTwo,
+//        Selectors.furloughGrantBullet -> JRSExtensionConfirmationMessages.maxFurloughGrantBullet(2500),
+//        Selectors.h4FurloughGrantParagraphThree -> JRSExtensionConfirmationMessages.furloughGrantParagraphThree,
+//        Selectors.furloughGrantInset -> JRSExtensionConfirmationMessages.furloughGrantIndent(2500),
+//        Selectors.bottomDisclaimer -> JRSExtensionConfirmationMessages.disclaimerBottomPage,
+//        Selectors.printLink -> JRSExtensionConfirmationMessages.printOrSave,
+//        Selectors.webChatLink -> JRSExtensionConfirmationMessages.webchatLink,
+//        Selectors.feedbackLink -> JRSExtensionConfirmationMessages.feedbackLink
+      )
+
+      implicit val request: DataRequest[_] = fakeDataRequest()
+
+      def applyView(): HtmlFormat.Appendable =
+        view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2")
+
+      implicit val doc: Document = asDocument(applyView())
+
+      behave like normalPage(messageKeyPrefix)
+      behave like pageWithHeading(heading = JRSExtensionConfirmationMessages.heading)
+      behave like pageWithExpectedMessages(expectedContent)
+
+      "behave like a page with a StartAnotherCalculation button" must {
+
+        s"have a button with message '${JRSExtensionConfirmationMessages.startAnotherCalculation}'" in {
+          assertEqualsMessage(doc, "#main-content > div > div > div > a", JRSExtensionConfirmationMessages.startAnotherCalculation)
+        }
+      }
+
+      "behave like a page with correct links" must {
+
+        "have a PrintOrSave link - brings up window.print() when clicked" in {
+          doc.select(Selectors.printLink).attr("onClick") mustBe "window.print()"
+        }
+
+        "have a Webchat link - opens a webchat/contact details page" in {
+          doc.select(Selectors.webChatLink).attr("href") mustBe appConf.webchatHelpUrl
+        }
+
+        "have a Feedback link" in {
+          doc.select(Selectors.feedbackLink).attr("href") mustBe "/job-retention-scheme-calculator/start-survey"
+        }
       }
     }
+
   }
 
 }

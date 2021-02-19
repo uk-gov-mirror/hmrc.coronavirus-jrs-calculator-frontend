@@ -15,15 +15,29 @@
  *@
 
 @import models.TwoPeriodCylb
+@import java.time.LocalDate
+
 
 @this(
     cylbBreakdown: cylbPeriodBreakdown,
-    p: components.p
+    p: components.p,
+    strong: components.strong,
+    appConfig: config.FrontendAppConfig
 )
 
 @(cylb: TwoPeriodCylb)(implicit messages: Messages)
 
-@p(Html(messages("referencePayBreakdown.cylb.twoPeriods")))
+@p{
+    @strong(Html(messages(
+        "phaseTwoReferencePayBreakdown.cylb.p1", cylb.firstPeriod.lastYearPayDay.getYear.toString
+    )))
+}
+
+@if(LocalDate.of(2021, 3, 10).isAfter(appConfig.phaseTwoReferencePayBreakdownDynamicMessageDate)) {
+    @p{ @messages("phaseTwoReferencePayBreakdown.cylb.p2.march2021", cylb.firstPeriod.lastYearPayDay.getMonth.toString.capitalize) }
+}
+
+@p(Html(messages("referencePayBreakdown.cylb.twoPeriods.p1", cylb.firstPeriod.lastYearPayDay.getYear.toString)))
 
 @cylbBreakdown(cylb.firstPeriod)
 

@@ -240,28 +240,6 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
         }
       }
       .getOrElse(Seq())
-
-  def detailedBreakdownMessageKeysJRSExtension: Seq[String] =
-    furlough.periodBreakdowns.headOption
-      .map {
-        _.paymentWithPeriod match {
-          case _: RegularPaymentWithPhaseTwoPeriod =>
-            Seq(
-              "phaseTwoDetailedBreakdown.p1.regular"
-            )
-          case _: AveragePaymentWithPhaseTwoPeriod =>
-            Seq(
-              "phaseTwoDetailedBreakdown.p1.average"
-            )
-          case _: CylbPaymentWithPhaseTwoPeriod =>
-            Seq(
-              "phaseTwoDetailedBreakdown.jrsExtension.no.nic.pension.p1.cylb.1",
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
-            )
-        }
-      }
-      .getOrElse(Seq())
 }
 
 sealed trait Metadata
