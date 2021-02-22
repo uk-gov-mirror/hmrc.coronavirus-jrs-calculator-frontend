@@ -46,6 +46,9 @@ class PreviousYearPeriodSpec extends SpecBase with CoreTestDataBuilder {
 
     "claim is before 1st March 2021" in {
 
+      // Note:
+      // 2019 period equivalent is: 3/3/2019 to 9/3/2019
+
       extract(CylbDuration(Weekly, fullPeriod("2020,3,1", "2020,3,7"))) mustBe Tuple3(7, 5, 2)
 
       extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,3" -> "2020,3,7"))) mustBe
@@ -64,36 +67,36 @@ class PreviousYearPeriodSpec extends SpecBase with CoreTestDataBuilder {
         Tuple3(7, 0, 2)
 
       extract(CylbDuration(Weekly, partialPeriod("2020,3,1" -> "2020,3,7", "2020,3,1" -> "2020,3,1"))) mustBe
-        Tuple3(7, 0, 2)
+        Tuple3(7, 0, 1)
     }
 
     "claim is 1st March 2021 onward" in {
 
-      extract(CylbDuration(Weekly, fullPeriod("2021,3,1", "2021,3,7"))) mustBe Tuple3(7, 4, 3)
+      // Note:
+      // 2019 period equivalent is: 4/3/2019 to 10/3/2019
 
-      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,3" -> "2021,3,7"))) mustBe
-        Tuple3(7, 5, 0)
+      extract(CylbDuration(Weekly, fullPeriod("2021,3,1", "2021,3,7"))) mustBe (7, 4, 3)
 
-      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,4" -> "2021,3,7"))) mustBe
-        Tuple3(7, 4, 0)
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,3" -> "2021,3,7"))) mustBe (7, 4, 1)
 
-      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,2" -> "2021,3,7"))) mustBe
-        Tuple3(7, 5, 1)
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,4" -> "2021,3,7"))) mustBe (7, 4, 0)
 
-      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,6"))) mustBe
-        Tuple3(7, 3, 3)
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,2" -> "2021,3,7"))) mustBe (7, 4, 2)
 
-      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,2"))) mustBe
-        Tuple3(7, 0, 3)
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,6"))) mustBe (7, 3, 3)
 
-      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,1"))) mustBe
-        Tuple3(7, 0, 3)
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,2"))) mustBe (7, 0, 2)
+
+      extract(CylbDuration(Weekly, partialPeriod("2021,3,1" -> "2021,3,7", "2021,3,1" -> "2021,3,1"))) mustBe (7, 0, 1)
     }
   }
 
   "Fortnightly tests" when {
 
     "claim is before 1st March 2021" in {
+
+      // Note:
+      // 2019 period equivalent is: 3/3/2019 to 16/3/2019
 
       extract(CylbDuration(FortNightly, fullPeriod("2020,3,1", "2020,3,14"))) mustBe
         Tuple3(14, 12, 2)
@@ -110,17 +113,20 @@ class PreviousYearPeriodSpec extends SpecBase with CoreTestDataBuilder {
 
     "claim is 1st March 2021 onward" in {
 
+      // Note:
+      // 2019 period equivalent is: 4/3/2019 to 17/3/2019
+
       extract(CylbDuration(FortNightly, fullPeriod("2021,3,1", "2021,3,14"))) mustBe
         Tuple3(14, 11, 3)
 
       extract(CylbDuration(FortNightly, partialPeriod("2021,3,1" -> "2021,3,14", "2021,3,3" -> "2021,3,14"))) mustBe
-        Tuple3(14, 12, 0)
+        Tuple3(14, 11, 1)
 
       extract(CylbDuration(FortNightly, partialPeriod("2021,3,1" -> "2021,3,14", "2021,3,5" -> "2021,3,14"))) mustBe
         Tuple3(14, 10, 0)
 
       extract(CylbDuration(FortNightly, partialPeriod("2021,3,1" -> "2021,3,14", "2021,3,2" -> "2021,3,14"))) mustBe
-        Tuple3(14, 12, 1)
+        Tuple3(14, 11, 2)
     }
   }
 
@@ -137,14 +143,14 @@ class PreviousYearPeriodSpec extends SpecBase with CoreTestDataBuilder {
       extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,9" -> "2020,3,28"))) mustBe
         Tuple3(28, 20, 0)
 
-      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3, 2" -> "2020,3,28"))) mustBe
+      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,2" -> "2020,3,28"))) mustBe
         Tuple3(28, 26, 1)
 
-      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3, 1" -> "2020,3,5"))) mustBe
+      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,1" -> "2020,3,5"))) mustBe
         Tuple3(28, 3, 2)
 
-      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3, 1" -> "2020,3,1"))) mustBe
-        Tuple3(28, 0, 2)
+      extract(CylbDuration(FourWeekly, partialPeriod("2020,3,1" -> "2020,3,28", "2020,3,1" -> "2020,3,1"))) mustBe
+        Tuple3(28, 0, 1)
     }
 
     "claim is 1st March 2021 onwards" in {
@@ -153,19 +159,19 @@ class PreviousYearPeriodSpec extends SpecBase with CoreTestDataBuilder {
         Tuple3(28, 25, 3)
 
       extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3,3" -> "2021,3,28"))) mustBe
-        Tuple3(28, 26, 0)
+        Tuple3(28, 25, 1)
 
       extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3,9" -> "2021,3,28"))) mustBe
         Tuple3(28, 20, 0)
 
-      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3, 2" -> "2021,3,28"))) mustBe
-        Tuple3(28, 26, 1)
+      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3,2" -> "2021,3,28"))) mustBe
+        Tuple3(28, 25, 2)
 
-      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3, 1" -> "2021,3,5"))) mustBe
+      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3,1" -> "2021,3,5"))) mustBe
         Tuple3(28, 2, 3)
 
-      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3, 1" -> "2021,3,1"))) mustBe
-        Tuple3(28, 0, 3)
+      extract(CylbDuration(FourWeekly, partialPeriod("2021,3,1" -> "2021,3,28", "2021,3,1" -> "2021,3,1"))) mustBe
+        Tuple3(28, 0, 1)
     }
   }
 

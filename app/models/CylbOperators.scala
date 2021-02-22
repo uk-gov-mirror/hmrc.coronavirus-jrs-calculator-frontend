@@ -17,12 +17,29 @@
 package models
 
 import models.PaymentFrequency._
-import play.api.Logger.logger
 
 case class CylbOperators(fullPeriodLength: Int, daysFromPrevious: Int, daysFromCurrent: Int)
 
 protected sealed trait FixedLength {
   def fullPeriodLength: Int
+
+  def equivalentPeriodCalculator(claimPeriod: Period, partialPeriod: Option[Period]) = {
+
+    val yearsBetweenPolicyStartAndClaimPeriod = claimPeriod.yearsBetweenPolicyStartAndPeriodEnd + 1
+
+    val adjustedPeriod = claimPeriod.substract52Weeks(yearsBetweenPolicyStartAndClaimPeriod)
+    val yearShift = partialPeriod.getOrElse(claimPeriod).substractYears(yearsBetweenPolicyStartAndClaimPeriod)
+
+    val adjustedStartDateDayOfYear = adjustedPeriod.start.getDayOfYear
+    val claimStartDayOfYear = yearShift.start.getDayOfYear
+    val claimEndDayOfYear = yearShift.end.getDayOfYear
+    val claimDuration = yearShift.countDays
+
+    val priorDays = (adjustedStartDateDayOfYear - claimStartDayOfYear).min(claimDuration) max 0
+    val afterDays = (claimEndDayOfYear - (adjustedStartDateDayOfYear - 1)).min(claimDuration) max 0
+
+    priorDays -> afterDays
+  }
 }
 
 protected trait Weekly extends FixedLength {
@@ -40,35 +57,21 @@ protected trait FourWeekly extends FixedLength {
 protected trait FullPeriodCylb { this: FixedLength =>
   def fullPeriod: FullPeriod
 
-  def equivalentPeriodDays: Int = (fullPeriodLength - previousPeriodDays).max(0)
+  def equivalentPeriod = equivalentPeriodCalculator(fullPeriod.period, None)
 
-  def previousPeriodDays: Int =
-    //This is not leap year safe from 2024 onwards but this should not be an issue
-    fullPeriod.period.yearsBetweenPolicyStartAndPeriodEnd + 2
+  def equivalentPeriodDays: Int = equivalentPeriod._2
+
+  def previousPeriodDays: Int = equivalentPeriod._1
 }
 
 protected trait PartialPeriodCylb { this: FixedLength =>
   def partial: PartialPeriod
 
-  def equivalentPeriodDays: Int = (partial.partial.countDays - previousPeriodDays).max(0)
+  def equivalentPeriod = equivalentPeriodCalculator(partial.period, Some(partial.partial))
 
-  def previousPeriodDays: Int = {
+  def equivalentPeriodDays: Int = equivalentPeriod._2
 
-    logger.debug(
-      s"[PartialPeriodCylb][previousPeriodDays] Values:" +
-        s"\n - partial.partial = ${partial.partial}" +
-        s"\n - partial.original = ${partial.original}" +
-        s"\n - partial.isFurloughStart = ${partial.isFurloughStart}" +
-        s"\n - partial.partial.countDays = ${partial.partial.countDays}" +
-        s"\n - partial.original.countDays = ${partial.original.countDays}")
-
-    if (partial.isFurloughStart) {
-      if (partial.partial.countDays < (partial.original.countDays - 1)) 0 else 1
-    } else {
-      //This is not leap year safe from 2024 onwards but this should not be an issue
-      partial.period.yearsBetweenPolicyStartAndPeriodEnd + 2
-    }
-  }
+  def previousPeriodDays: Int = equivalentPeriod._1
 }
 
 trait CylbDuration {
