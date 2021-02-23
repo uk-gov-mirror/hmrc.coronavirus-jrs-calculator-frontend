@@ -32,15 +32,15 @@ class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
 
   ".firstFurloughDate" should {
 
-    "when furlough start date is before the first furlough date" in {
+    "when first furlough start date is before the furlough date" in {
 
       val firstFurloughDate = LocalDate.of(2021, 1, 1)
       val furloughStartDate = LocalDate.of(2021, 1, 2)
 
       val data = Map(
-        "value.day"   -> firstFurloughDate.getDayOfMonth.toString,
-        "value.month" -> firstFurloughDate.getMonthValue.toString,
-        "value.year"  -> firstFurloughDate.getYear.toString
+        "firstFurloughDate.day"   -> firstFurloughDate.getDayOfMonth.toString,
+        "firstFurloughDate.month" -> firstFurloughDate.getMonthValue.toString,
+        "firstFurloughDate.year"  -> firstFurloughDate.getYear.toString
       )
 
       val result = form(furloughStartDate).bind(data)
@@ -53,15 +53,15 @@ class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
       val furloughStartDate = LocalDate.of(2021, 1, 2)
 
       val data = Map(
-        "value.day"   -> firstFurloughDate.getDayOfMonth.toString,
-        "value.month" -> firstFurloughDate.getMonthValue.toString,
-        "value.year"  -> firstFurloughDate.getYear.toString
+        "firstFurloughDate.day"   -> firstFurloughDate.getDayOfMonth.toString,
+        "firstFurloughDate.month" -> firstFurloughDate.getMonthValue.toString,
+        "firstFurloughDate.year"  -> firstFurloughDate.getYear.toString
       )
 
       val result = form(furloughStartDate).bind(data)
 
       result.errors shouldBe List(
-        FormError("value", "firstFurloughStartDate.error.afterStartDate")
+        FormError("firstFurloughDate", "firstFurloughStartDate.error.afterStartDate")
       )
     }
 
@@ -71,14 +71,14 @@ class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
       val furloughStartDate = LocalDate.of(2021, 1, 1)
 
       val data = Map(
-        "value.day"   -> firstFurloughDate.getDayOfMonth.toString,
-        "value.month" -> firstFurloughDate.getMonthValue.toString,
-        "value.year"  -> firstFurloughDate.getYear.toString
+        "firstFurloughDate.day"   -> firstFurloughDate.getDayOfMonth.toString,
+        "firstFurloughDate.month" -> firstFurloughDate.getMonthValue.toString,
+        "firstFurloughDate.year"  -> firstFurloughDate.getYear.toString
       )
 
       val result = form(furloughStartDate).bind(data)
       result.errors shouldBe List(
-        FormError("value", "firstFurloughStartDate.error.afterStartDate")
+        FormError("firstFurloughDate", "firstFurloughStartDate.error.afterStartDate")
       )
     }
 

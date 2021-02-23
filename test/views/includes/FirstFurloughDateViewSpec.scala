@@ -16,16 +16,17 @@
 
 package views.includes
 
-import java.time.LocalDate
-
 import assets.messages.BaseMessages
 import forms.FirstFurloughDateFormProvider
 import messages.FirstFurloughDateMessages
-import views.includes.behaviours.QuestionViewBehaviours
-import views.html.FirstFurloughDateView
+import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import org.jsoup.nodes.Document
+import views.BaseSelectors
+import views.behaviours.QuestionViewBehaviours
+import views.html.FirstFurloughDateView
+
+import java.time.LocalDate
 
 class FirstFurloughDateViewSpec extends QuestionViewBehaviours[LocalDate] {
 
