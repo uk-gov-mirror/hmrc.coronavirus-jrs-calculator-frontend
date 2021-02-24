@@ -34,7 +34,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
     val default = LocalDate.of(2019, 4, 6)
 
     (
-      userAnswers.getV(FurloughStartDatePage),
+      userAnswers.getV(FirstFurloughDatePage) <+> userAnswers.getV(FurloughStartDatePage),
       userAnswers.getV(EmployeeStartDatePage) <+> default.validNec[AnswerValidation],
       userAnswers.getV(ClaimPeriodStartPage)
     ).mapN { (furloughStart, employeeStartDate, claimStart) =>

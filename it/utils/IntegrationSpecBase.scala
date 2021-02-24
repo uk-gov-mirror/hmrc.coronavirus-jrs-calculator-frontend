@@ -4,7 +4,9 @@ import models.UserAnswers
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.{TryValues, _}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import pages.QuestionPage
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.{Json, Writes}
 import play.api.{Application, Environment, Mode}
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
@@ -35,6 +37,7 @@ trait IntegrationSpecBase extends WordSpec
     "microservice.services.job-retention-scheme-calculator.host" -> mockHost,
     "microservice.services.job-retention-scheme-calculator.port" -> mockPort,
   )
+
 
   lazy val mongo: SessionRepository = app.injector.instanceOf[SessionRepository]
 

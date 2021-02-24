@@ -16,28 +16,28 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import cats.data.Validated.{Invalid, Valid}
 import config.SchemeConfiguration
 import controllers.actions._
 import forms.AnnualPayAmountFormProvider
 import handlers.ErrorHandler
-import javax.inject.Inject
-import models.{AnnualPayAmount, EmployeeRTISubmission, EmployeeStarted, UserAnswers}
 import models.EmployeeStarted._
 import models.UserAnswers.AnswerV
+import models.requests.DataRequest
+import models.{AnnualPayAmount, EmployeeRTISubmission, EmployeeStarted, UserAnswers}
 import navigation.Navigator
-import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
+import pages._
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import services.UserAnswerPersistence
 import utils.LocalDateHelpers._
-import views.html.AnnualPayAmountView
 import views.ViewUtils._
+import views.html.AnnualPayAmountView
 
+import java.time.LocalDate
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AnnualPayAmountController @Inject()(
@@ -56,40 +56,47 @@ class AnnualPayAmountController @Inject()(
   val form: Form[AnnualPayAmount] = formProvider()
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
+  private def getRequiredData(f: (LocalDate, EmployeeStarted, LocalDate) => Future[Result])(implicit request: DataRequest[_]) =
+    getRequiredAnswersV(FurloughStartDatePage, EmployeeStartedPage) { (originalFurloughStart, employeeStarted) =>
+      getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
+        val furloughStart = getAnswerV(FirstFurloughDatePage) match {
+          case Valid(firstFurlough) => firstFurlough
+          case _                    => originalFurloughStart
+        }
+        f(furloughStart, employeeStarted, claimStart)
+      }
+    }
+
   def onPageLoad(): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
-      getRequiredAnswersV(FurloughStartDatePage, EmployeeStartedPage) { (furloughStart, employeeStarted) =>
-        getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
-          val preparedForm = request.userAnswers.getV(AnnualPayAmountPage) match {
-            case Invalid(e)   => form
-            case Valid(value) => form.fill(value)
-          }
-
-          val (keySwitch, args) = titleHeading(claimStart, employeeStarted, furloughStart, request.userAnswers)
-
-          Future.successful(Ok(view(preparedForm, keySwitch, args)))
+      getRequiredData { (furloughStart, employeeStarted, claimStart) =>
+        val preparedForm = getAnswerV(AnnualPayAmountPage) match {
+          case Invalid(_)   => form
+          case Valid(value) => form.fill(value)
         }
+
+        val (keySwitch, args) = titleHeading(claimStart, employeeStarted, furloughStart, request.userAnswers)
+
+        Future.successful(Ok(view(preparedForm, keySwitch, args)))
       }
     }
 
   def onSubmit(): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
-      getRequiredAnswersV(FurloughStartDatePage, EmployeeStartedPage) { (furloughStart, employeeStarted) =>
-        getRequiredAnswerV(ClaimPeriodStartPage) { claimStart =>
-          val (keySwitch, args) = titleHeading(claimStart, employeeStarted, furloughStart, request.userAnswers)
+      getRequiredData { (furloughStart, employeeStarted, claimStart) =>
+        val (keySwitch, args) = titleHeading(claimStart, employeeStarted, furloughStart, request.userAnswers)
 
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, keySwitch, args))),
-              value =>
-                userAnswerPersistence
-                  .persistAnswer(request.userAnswers, AnnualPayAmountPage, value, None)
-                  .map { updatedAnswers =>
-                    Redirect(navigator.nextPage(AnnualPayAmountPage, updatedAnswers, None))
-                }
-            )
-        }
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, keySwitch, args))),
+            value =>
+              userAnswerPersistence
+                .persistAnswer(request.userAnswers, AnnualPayAmountPage, value, None)
+                .map { updatedAnswers =>
+                  Redirect(navigator.nextPage(AnnualPayAmountPage, updatedAnswers, None))
+              }
+          )
       }
     }
 

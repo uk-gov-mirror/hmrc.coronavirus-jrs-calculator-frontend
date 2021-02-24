@@ -24,7 +24,7 @@ import forms.AnnualPayAmountFormProvider
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.requests.DataRequest
 import models.{AnnualPayAmount, EmployeeRTISubmission, UserAnswers}
-import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, FurloughStartDatePage}
+import pages.{AnnualPayAmountPage, ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, FirstFurloughDatePage, FurloughStartDatePage}
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.CSRFTokenHelper._
@@ -45,6 +45,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
   val claimStart = LocalDate.parse("2020-04-01")
   val furloughStart = LocalDate.parse("2020-04-01")
+  val firstFurloughStart = LocalDate.parse("2020-03-01")
   val uiDateToShow = furloughStart.minusDays(1)
   val empStart = LocalDate.parse("2020-02-01")
 
@@ -89,13 +90,33 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
   "AnnualPayAmountController" must {
 
-    "return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET without a First Furlough Period Answer" in {
       val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
         view(form, "since", Seq("31 March 2020"))(dataRequest, messages).toString
+    }
+
+    "return OK and the correct view for a GET with a First Furlough Period Answer" in {
+      val userAnswers = UserAnswers(
+        userAnswersId,
+        Json.obj(
+          ClaimPeriodStartPage.toString  -> JsString(claimStart.toString),
+          FurloughStartDatePage.toString -> JsString(furloughStart.toString),
+          EmployeeStartDatePage.toString -> JsString(empStart.toString),
+          EmployeeStartedPage.toString   -> JsString(After1Feb2019.toString),
+          FirstFurloughDatePage.toString -> JsString(firstFurloughStart.toString)
+        )
+      )
+
+      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form, "since", Seq("29 February 2020"))(dataRequest, messages).toString
     }
 
     "return OK and the correct view for a GET if the EmployeeStarted is OnOrBefore1Feb2019" in {

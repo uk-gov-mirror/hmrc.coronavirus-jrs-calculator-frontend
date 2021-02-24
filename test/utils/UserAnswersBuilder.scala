@@ -56,6 +56,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withEmployeeStartDate(startDate: String): UserAnswers =
       userAnswers.setValue(EmployeeStartDatePage, startDate.toLocalDate)
 
+    def withFirstFurloughDate(date: String): UserAnswers =
+      userAnswers.setValue(FirstFurloughDatePage, date.toLocalDate)
+
     def withLastPayDate(date: String): UserAnswers =
       userAnswers.setValue(LastPayDatePage, date.toLocalDate)
 
@@ -73,6 +76,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
 
     def withPaymentFrequency(frequency: PaymentFrequency): UserAnswers =
       userAnswers.setValue(PaymentFrequencyPage, frequency)
+
+    def withVariableLengthEmployed(answer: EmployeeStarted): UserAnswers =
+      userAnswers.setValue(EmployeeStartedPage, answer)
 
     def withRegularPayAmount(salary: BigDecimal): UserAnswers =
       userAnswers.setValue(RegularPayAmountPage, Salary(salary))
@@ -130,6 +136,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
 
     def withPayPeriodsList(answer: PayPeriodsList = PayPeriodsList.Yes) =
       userAnswers.setValue(PayPeriodsListPage, answer)
+
+    def withPreviousFurloughedPeriodsAnswer(answer: Boolean): UserAnswers =
+      userAnswers.setValue(PreviousFurloughPeriodsPage, answer)
 
     def withPayDate(dates: List[String]): UserAnswers =
       withListOfValues[String](dates, PayDatePage)
