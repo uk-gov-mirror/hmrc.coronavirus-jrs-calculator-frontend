@@ -21,6 +21,7 @@ import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import play.api.i18n.Messages
+import views.ViewUtils
 
 import java.time.LocalDate
 import javax.inject.Inject
@@ -34,8 +35,8 @@ class FirstFurloughDateFormProvider @Inject() extends Mappings with SchemeConfig
 
   private def validFirstFurloughDate(furloughStartDate: LocalDate)(implicit messages: Messages): Constraint[LocalDate] = Constraint {
     firstFurloughDate =>
-      if (!furloughStartDate.isAfter(firstFurloughDate)) {
-        Invalid("firstFurloughStartDate.error.afterStartDate")
+      if (!firstFurloughDate.isBefore(furloughStartDate)) {
+        Invalid("firstFurloughStartDate.error.afterStartDate", ViewUtils.dateToString(furloughStartDate))
       } else if (firstFurloughDate.isBefore(extensionStartDate)) {
         Invalid("firstFurloughStartDate.error.beforeExtensionDate")
       } else {

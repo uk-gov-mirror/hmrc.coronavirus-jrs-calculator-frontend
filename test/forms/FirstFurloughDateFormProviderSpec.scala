@@ -17,11 +17,11 @@
 package forms
 
 import java.time.LocalDate
-
 import base.SpecBaseControllerSpecs
 import forms.behaviours.DateBehaviours
 import forms.mappings.LocalDateFormatter
 import play.api.data.FormError
+import views.ViewUtils
 
 class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
 
@@ -61,7 +61,7 @@ class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
       val result = form(furloughStartDate).bind(data)
 
       result.errors shouldBe List(
-        FormError("firstFurloughDate", "firstFurloughStartDate.error.afterStartDate")
+        FormError("firstFurloughDate", "firstFurloughStartDate.error.afterStartDate", Seq(ViewUtils.dateToString(furloughStartDate)))
       )
     }
 
@@ -78,7 +78,7 @@ class FirstFurloughDateFormProviderSpec extends SpecBaseControllerSpecs {
 
       val result = form(furloughStartDate).bind(data)
       result.errors shouldBe List(
-        FormError("firstFurloughDate", "firstFurloughStartDate.error.afterStartDate")
+        FormError("firstFurloughDate", "firstFurloughStartDate.error.afterStartDate", Seq(ViewUtils.dateToString(furloughStartDate)))
       )
     }
 

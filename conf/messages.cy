@@ -882,3 +882,16 @@ furloughInLastTaxYear.error.required = Select one of the options below
 calculationUnsupported.heading = Ni ellir cefnogi’r cyfrifiad hwn ar hyn o bryd
 calculationUnsupported.p1 = Gallwch wneud y cyfrifiad hwn â llaw.
 calculationUnsupported.startAgain = Dechrau cyfrifiad newydd
+
+previousFurloughPeriods.title = Has this employee been furloughed more than once since 1 November 2020?
+previousFurloughPeriods.heading = Has this employee been furloughed more than once since 1 November 2020?
+previousFurloughPeriods.error.required = Select yes if this employee has been furloughed more than once since 1 November 2020
+
+firstFurloughStartDate.title = When was this employee first furloughed?
+firstFurloughStartDate.heading = When was this employee first furloughed?
+firstFurloughStartDate.p1 = This is the date when the employee was first furloughed, on or after 1 November 2020.
+firstFurloughStartDate.p2 = We need this information because you told us this employee has been on more than one period of furlough since 1 November 2020, and was not eligible for the Coronavirus Job Retention Scheme before this date.
+firstFurloughStartDate.error.invalid = The date the employee was first furloughed must be on or after 1 November 2020
+firstFurloughStartDate.hint = For example, 30 11 2020
+firstFurloughStartDate.error.beforeExtensionDate = The date the employee was first furloughed must be on or after 1 November 2020
+firstFurloughStartDate.error.afterStartDate = The date the employee was first furloughed must be before {0}
