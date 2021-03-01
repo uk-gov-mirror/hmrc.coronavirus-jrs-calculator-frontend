@@ -210,7 +210,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
             )
-          case _: ExtensionPaymentWithPhaseTwoPeriod =>
+          case _: ExtensionPaymentWithPhaseTwoPeriod =>  // not sure how to get a extension calc is it the same as AveragePaymentWithPhaseTwoPeriod?
             Seq(
               "phaseTwoDetailedBreakdown.no.nic.p1.extension"
             )
