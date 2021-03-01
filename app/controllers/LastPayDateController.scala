@@ -47,7 +47,6 @@ class LastPayDateController @Inject()(
     extends FrontendBaseController with I18nSupport {
 
   def form(latestPayDate: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(latestPayDate)
-
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.getList(PayDatePage).lastOption match {
       case Some(date) =>

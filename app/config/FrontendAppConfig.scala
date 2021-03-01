@@ -97,4 +97,4 @@ trait CalculatorVersionConfiguration extends CamelCaseConf {
 }
 
 final case class SchemeConf(startDate: String, endDate: String, phaseTwoStartDate: String, extensionStartDate: String)
-final case class MongoConf(uri: String, timeToLiveInSeconds: String)
+final case class MongoConf(uri: String, timeToLiveInSeconds: Int)

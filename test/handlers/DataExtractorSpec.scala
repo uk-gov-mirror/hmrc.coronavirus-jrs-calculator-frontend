@@ -40,6 +40,16 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuil
       extractPriorFurloughPeriodV(userAnswers) mustBe Valid(expected)
     }
 
+    "First Furlough Date is present" in new DataExtractor {
+      val userAnswers = dummyUserAnswersNoLastPayDate
+        .withEmployeeStartDate("2020-12-01")
+        .withFirstFurloughDate("2020, 4, 1")
+
+      val expected = period("2020, 12, 1", "2020, 3, 31")
+
+      extractPriorFurloughPeriodV(userAnswers) mustBe Valid(expected)
+    }
+
     "employee start date is not present" in new DataExtractor {
       val expected = period("2019, 4, 6", "2020, 2, 29")
 

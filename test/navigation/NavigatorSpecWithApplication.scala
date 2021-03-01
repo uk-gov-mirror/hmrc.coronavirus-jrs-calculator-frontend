@@ -523,9 +523,24 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
-            .withEmployeeStartDate("2019,8,1")
+            .withEmployeeStartDate("2020,3,20")
             .withClaimPeriodStart("2020,11,1")
         ) mustBe routes.PayDateController.onPageLoad(1)
+
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          emptyUserAnswers
+            .withEmployeeStartDate("2020,4,1")
+            .withFurloughStartDate("2020,11,10")
+            .withClaimPeriodStart("2020,11,1")
+        ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
+
+        navigator.nextPage(
+          EmployeeStartDatePage,
+          emptyUserAnswers
+            .withEmployeeStartDate("2020,2,2")
+            .withClaimPeriodStart("2020,11,1")
+        ) mustBe routes.EmployeeRTISubmissionController.onPageLoad()
 
         navigator.nextPage(
           EmployeeStartDatePage,
@@ -589,8 +604,10 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
         navigator.nextPage(
           EmployeeRTISubmissionPage,
-          emptyUserAnswers.withRtiSubmission(EmployeeRTISubmission.No)
-        ) mustBe routes.PayDateController.onPageLoad(1)
+          emptyUserAnswers
+            .withFurloughStartDate("2020,11,15")
+            .withRtiSubmission(EmployeeRTISubmission.No)
+        ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
       }
 
       "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {
@@ -839,6 +856,18 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           ClaimPeriodQuestionPage,
           emptyUserAnswers.withClaimPeriodQuestion(ClaimOnDifferentPeriod)
         ) mustBe routes.ClaimPeriodStartController.onPageLoad()
+      }
+
+      "go to the correct page after PreviousFurloughPeriodsPage" in {
+        navigator.nextPage(
+          PreviousFurloughPeriodsPage,
+          emptyUserAnswers.withPreviousFurloughedPeriodsAnswer(true)
+        ) mustBe routes.FirstFurloughDateController.onPageLoad()
+
+        navigator.nextPage(
+          PreviousFurloughPeriodsPage,
+          emptyUserAnswers.withPreviousFurloughedPeriodsAnswer(false)
+        ) mustBe routes.PayDateController.onPageLoad(1)
       }
     }
 

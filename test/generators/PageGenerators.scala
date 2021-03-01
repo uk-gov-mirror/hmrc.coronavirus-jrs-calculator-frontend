@@ -21,6 +21,12 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryPreviousFurloughPeriodsPage: Arbitrary[PreviousFurloughPeriodsPage.type] =
+    Arbitrary(PreviousFurloughPeriodsPage)
+
+  implicit lazy val arbitraryFirstFurloughDatePage: Arbitrary[FirstFurloughDatePage.type] =
+    Arbitrary(FirstFurloughDatePage)
+
   implicit lazy val arbitraryFurloughInLastTaxYearPage: Arbitrary[FurloughInLastTaxYearPage.type] =
     Arbitrary(FurloughInLastTaxYearPage)
 
