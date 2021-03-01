@@ -117,6 +117,11 @@ sealed trait CylbPayment extends PaymentWithPeriod {
   val cylbBreakdown: CylbBreakdown
 }
 
+sealed trait ExtensionPayment extends PaymentWithPeriod {
+  val annualPay: Amount
+  val priorFurloughPeriod: Period
+}
+
 case class RegularPaymentWithFullPeriod(regularPay: Amount, referencePay: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate)
     extends PaymentWithFullPeriod with RegularPayment
 
@@ -195,6 +200,7 @@ case class CylbPaymentWithPhaseTwoPeriod(
   cylbBreakdown: CylbBreakdown)
     extends PaymentWithPhaseTwoPeriod {
   def basedOnDays: String = cylbBreakdown.referencePay.value.formatted("%.2f")
+
   def basedOnHours: String =
     if (phaseTwoPeriod.isPartTime) {
       Amount((cylbBreakdown.referencePay.value / phaseTwoPeriod.usual) * phaseTwoPeriod.furloughed).halfUp.value.formatted("%.2f")
@@ -202,4 +208,16 @@ case class CylbPaymentWithPhaseTwoPeriod(
       cylbBreakdown.referencePay.value.formatted("%.2f")
     }
   def higherOfResult: String = referencePay.value.formatted("%.2f")
+}
+
+case class ExtensionPaymentWithPhaseTwoPeriod(
+  referencePay: Amount,
+  annualPay: Amount,
+  priorFurloughPeriod: Period,
+  phaseTwoPeriod: PhaseTwoPeriod)
+    extends PaymentWithPhaseTwoPeriod {
+  def basedOnDays: String = {
+    val daily = Amount(annualPay.value / priorFurloughPeriod.countDays).halfUp
+    (daily.value * furloughDays).formatted("%.2f")
+  }
 }
