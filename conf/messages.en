@@ -755,7 +755,7 @@ phaseTwoDetailedBreakdown.october.p1.average = You told us your employee gets pa
 # Variable Pay, Employee Type 5 - Eligible for CJRS Extension claims only - Messages for Post-1st of November 2020
 # ----------------------------------------------------------
 
-phaseTwoDetailedBreakdown.p1.extension = You told us your employee gets paid a variable amount each time and was not on your payroll before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2020 (or the date their employment started, whichever is later) and the day before they were first furloughed on or after 1 November 2020. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
+phaseTwoDetailedBreakdown.no.nic.p1.extension = You told us your employee gets paid a variable amount each time and was not on your payroll before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2020 (or the date their employment started, whichever is later) and the day before they were first furloughed on or after 1 November 2020. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
 
 # Shared Breakdown Section Messages
 # ----------------------------------------------------------
@@ -798,7 +798,8 @@ phaseTwoReferencePayBreakdown.average.hours.l2 = Divide by {0} (usual hours).
 phaseTwoReferencePayBreakdown.average.hours.l3 = Multiply by {0} (furlough hours).
 phaseTwoReferencePayBreakdown.average.hoursResult = Total pay based on hours worked in this pay period = £{0}
 
-phaseTwoReferencePayBreakdown.extension.p1 = Averaging method: take the employee’s total pay from 6 April 2020 (or the date the employment started, whichever is later), up to the day before the furlough started on or after 1 November 2020.
+phaseTwoReferencePayBreakdown.extension.p1.strong = Averaging method:
+phaseTwoReferencePayBreakdown.extension.p1 = take the employee’s total pay from 6 April 2020 (or the date the employment started, whichever is later), up to the day before the furlough started on or after 1 November 2020.
 phaseTwoReferencePayBreakdown.extension.days.l1 = Start with £{0} (total pay from 6 April 2020 to the day before furlough started on or after 1 November 2020).
 phaseTwoReferencePayBreakdown.extension.days.l2 = Divide by {0} (days employed since the start of the tax year).
 phaseTwoReferencePayBreakdown.extension.days.l3 = Multiply by {0} (furlough days in pay period).

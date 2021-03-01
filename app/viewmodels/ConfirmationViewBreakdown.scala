@@ -17,6 +17,7 @@
 package viewmodels
 
 import models._
+import java.time.LocalDate
 import services.{AuditBreakdown, AuditCalculationResult, AuditPeriodBreakdown}
 
 sealed trait ConfirmationDataResult
@@ -123,6 +124,12 @@ case class PhaseTwoConfirmationViewBreakdown(
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
             )
+          case avg: AveragePaymentWithPhaseTwoPeriod //this might not need changing
+              if avg.phaseTwoPeriod.periodWithPaymentDate.period.period.start
+                .isAfter(LocalDate.of(2020, 11, 1)) =>  //TODO: make app config value if used
+            Seq(
+              "phaseTwoReferencePayBreakdown.extension.p1"
+            )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
               "phaseTwoDetailedBreakdown.p1.average"
@@ -135,7 +142,7 @@ case class PhaseTwoConfirmationViewBreakdown(
             )
           case _: ExtensionPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.p1.extension"
+              "phaseTwoReferencePayBreakdown.extension.p1"
             )
         }
       }
@@ -166,6 +173,8 @@ case class PhaseTwoConfirmationViewBreakdown(
 
 case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurloughCalculationResult) extends ViewBreakdown {
 
+  //this one
+
   val auditFurlough = AuditCalculationResult(
     furlough.total,
     furlough.periodBreakdowns
@@ -182,7 +191,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
     )
   }
 
-  def detailedBreakdownMessageKeys: Seq[String] =
+  def detailedBreakdownMessageKeys: Seq[String] = //this is the breakdown section not pay-period calc breakdown
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
@@ -190,10 +199,11 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
             )
+          case avg: AveragePaymentWithPhaseTwoPeriod
+              if avg.phaseTwoPeriod.periodWithPaymentDate.period.period.start.isAfter(LocalDate.of(2020, 11, 1)) =>
+            Seq("phaseTwoDetailedBreakdown.no.nic.p1.extension")
           case _: AveragePaymentWithPhaseTwoPeriod =>
-            Seq(
-              "phaseTwoDetailedBreakdown.p1.average"
-            )
+            Seq("phaseTwoDetailedBreakdown.p1.average")
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1",
@@ -202,7 +212,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
             )
           case _: ExtensionPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoReferencePayBreakdown.extension.p1"
+              "phaseTwoDetailedBreakdown.no.nic.p1.extension"
             )
         }
       }

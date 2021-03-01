@@ -52,17 +52,19 @@
   }
 
   @averagePaymentBreakdown(average: AveragePaymentWithPhaseTwoPeriod, partOfCylb: Boolean) = {
-      @if(partOfCylb) {
-          @p{
-                @strong(
-                    Html(messages(
-                        "phaseTwoReferencePayBreakdown.average.p1.partOfCylb"
-                    ))
-                )
-          }
-      } else {
-          @p(Html(messages("phaseTwoReferencePayBreakdown.average.p1")))
-      }
+    @{(average, partOfCylb) match {
+        case (avg, false) if avg.phaseTwoPeriod.periodWithPaymentDate.period.period.start.isAfter(LocalDate.of(2020, 11, 1)) =>
+            extensionPayPeriod
+        case (avg, false) =>
+            p(Html(messages("phaseTwoReferencePayBreakdown.average.p1")))
+        case (_ , true) =>
+            p{
+                strong(Html(messages(
+                    "phaseTwoReferencePayBreakdown.average.p1.partOfCylb"
+                )))
+            }
+        }
+    }
 
       <ol class="govuk-list govuk-list--number">
           <li>@messages("phaseTwoReferencePayBreakdown.average.days.l1", average.annualPay.value.formatted("%.2f"))</li>
@@ -136,3 +138,11 @@
         case p: AveragePaymentWithPhaseTwoPeriod => averagePaymentBreakdown(p, false)
         case p: CylbPaymentWithPhaseTwoPeriod    => cylbPaymentBreakdown(p)
     }}
+
+
+@extensionPayPeriod = {
+    @p{
+        @strong( Html(messages("phaseTwoReferencePayBreakdown.extension.p1.strong")) )
+        @Html(messages("phaseTwoReferencePayBreakdown.extension.p1"))
+    }
+}
