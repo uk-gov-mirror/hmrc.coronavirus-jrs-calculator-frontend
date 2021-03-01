@@ -25,7 +25,7 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(payment: PaymentWithPhaseTwoPeriod, period: Periods)(implicit messages: Messages)
+@(payment: PaymentWithPhaseTwoPeriod, period: Periods, extensionHasMultipleFurloughs:Boolean)(implicit messages: Messages)
 
   @regularPaymentBreakdown(regular: RegularPaymentWithPhaseTwoPeriod) = {
       @p(Html(messages("phaseTwoReferencePayBreakdown.regular.p1")))
@@ -53,16 +53,13 @@
 
   @averagePaymentBreakdown(average: AveragePaymentWithPhaseTwoPeriod, partOfCylb: Boolean) = {
     @{(average, partOfCylb) match {
-        case (avg, false) if avg.phaseTwoPeriod.periodWithPaymentDate.period.period.start.isAfter(LocalDate.of(2020, 11, 1)) =>
-            extensionPayPeriod
+        case (avg, false) if extensionHasMultipleFurloughs => extensionPayPeriod
         case (avg, false) =>
             p(Html(messages("phaseTwoReferencePayBreakdown.average.p1")))
         case (_ , true) =>
-            p{
-                strong(Html(messages(
-                    "phaseTwoReferencePayBreakdown.average.p1.partOfCylb"
-                )))
-            }
+            p{ strong(Html(messages(
+                "phaseTwoReferencePayBreakdown.average.p1.partOfCylb"
+            ))) }
         }
     }
 

@@ -116,7 +116,7 @@ case class PhaseTwoConfirmationViewBreakdown(
     )
   }
 
-  def detailedBreakdownMessageKeys: Seq[String] =
+  def detailedBreakdownMessageKeys(extensionHasMultipleFurloughs: Boolean): Seq[String] =
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
@@ -124,9 +124,7 @@ case class PhaseTwoConfirmationViewBreakdown(
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
             )
-          case avg: AveragePaymentWithPhaseTwoPeriod //this might not need changing
-              if avg.phaseTwoPeriod.periodWithPaymentDate.period.period.start
-                .isAfter(LocalDate.of(2020, 11, 1)) =>  //TODO: make app config value if used
+          case avg: AveragePaymentWithPhaseTwoPeriod if extensionHasMultipleFurloughs =>
             Seq(
               "phaseTwoReferencePayBreakdown.extension.p1"
             )
@@ -191,7 +189,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
     )
   }
 
-  def detailedBreakdownMessageKeys: Seq[String] = //this is the breakdown section not pay-period calc breakdown
+  def detailedBreakdownMessageKeys(extensionHasMultipleFurloughs: Boolean): Seq[String] = //this is the breakdown section not pay-period calc breakdown
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
@@ -199,8 +197,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
             )
-          case avg: AveragePaymentWithPhaseTwoPeriod
-              if avg.phaseTwoPeriod.periodWithPaymentDate.period.period.start.isAfter(LocalDate.of(2020, 11, 1)) =>
+          case avg: AveragePaymentWithPhaseTwoPeriod if extensionHasMultipleFurloughs =>
             Seq("phaseTwoDetailedBreakdown.no.nic.p1.extension")
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq("phaseTwoDetailedBreakdown.p1.average")
@@ -210,7 +207,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
             )
-          case _: ExtensionPaymentWithPhaseTwoPeriod =>  // not sure how to get a extension calc is it the same as AveragePaymentWithPhaseTwoPeriod?
+          case _: ExtensionPaymentWithPhaseTwoPeriod => // not sure how to get a extension calc is it the same as AveragePaymentWithPhaseTwoPeriod?
             Seq(
               "phaseTwoDetailedBreakdown.no.nic.p1.extension"
             )

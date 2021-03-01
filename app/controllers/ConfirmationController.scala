@@ -22,9 +22,11 @@ import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
 import models.UserAnswers
+import models.UserAnswers.AnswerV
 import navigation.Navigator
+import pages.PreviousFurloughPeriodsPage
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.AuditService
 import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
 import utils.PagerDutyHelper
@@ -78,7 +80,14 @@ class ConfirmationController @Inject()(
             Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case 11 | 12 | 1 | 2 | 3 | 4 =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
-            Future.successful(Ok(extensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
+            val extensionHasMultipleFurloughs: Future[Result] = request.userAnswers.getV(PreviousFurloughPeriodsPage) match {
+              case Valid(ans) =>
+                Future.successful(
+                  Ok(extensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf, ans))
+                )
+              case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+            }
+            extensionHasMultipleFurloughs
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
       case Invalid(e) =>

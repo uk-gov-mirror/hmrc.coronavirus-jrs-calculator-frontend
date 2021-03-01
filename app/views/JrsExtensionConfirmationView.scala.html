@@ -37,7 +37,7 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
+@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String, extensionHasMultipleFurloughs:Boolean)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
@@ -84,7 +84,7 @@
 
     @h2(Html(messages("confirmation.no.nic.pension.breakdown.summary")), classes = Some("govuk-heading-m"))
 
-    @for(messageKey <- cvb.detailedBreakdownMessageKeys) {
+    @for(messageKey <- cvb.detailedBreakdownMessageKeys(extensionHasMultipleFurloughs)) {
         @p(Html(messages(messageKey)))
     }
 
@@ -97,7 +97,7 @@
 
     @for(detailedBreakdown <- cvb.detailedBreakdowns) {
         @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-        @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period)
+        @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period, extensionHasMultipleFurloughs)
     }
     <hr>
     <br>

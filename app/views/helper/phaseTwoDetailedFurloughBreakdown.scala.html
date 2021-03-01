@@ -24,9 +24,9 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(breakdown: PhaseTwoFurloughBreakdown, period: Periods)(implicit messages: Messages)
+@(breakdown: PhaseTwoFurloughBreakdown, period: Periods, extensionHasMultipleFurloughs:Boolean)(implicit messages: Messages)
 
-    @referencePayBreakdown(breakdown.paymentWithPeriod, period)
+    @referencePayBreakdown(breakdown.paymentWithPeriod, period, extensionHasMultipleFurloughs)
 
     @h4(messages("phaseTwoFurloughBreakdown.h4"))
 

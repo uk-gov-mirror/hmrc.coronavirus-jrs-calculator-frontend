@@ -34,7 +34,7 @@
         appConfig: config.FrontendAppConfig
 )
 
-@(cvb: PhaseTwoConfirmationViewBreakdown, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
+@(cvb: PhaseTwoConfirmationViewBreakdown, claimPeriod: Period, version: String, extensionHasMultipleFurloughs:Boolean = false)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
@@ -92,7 +92,7 @@
     @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
 
     @h3(Messages("confirmation.breakdown.summary"))
-    @for(messageKey <- cvb.detailedBreakdownMessageKeys) {
+    @for(messageKey <- cvb.detailedBreakdownMessageKeys(extensionHasMultipleFurloughs)) {
     @p(Html(messages(messageKey)))
     }
 
@@ -105,7 +105,7 @@
 
     @for(detailedBreakdown <- cvb.detailedBreakdowns) {
         @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-        @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period)
+        @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period, extensionHasMultipleFurloughs)
         @nicBreakdown(detailedBreakdown.nic, detailedBreakdown.furlough.grant)
         @pensionBreakdown(detailedBreakdown.pension, detailedBreakdown.furlough.grant)
     }
