@@ -16,12 +16,13 @@
 
 package controllers
 
+import cats.data.{NonEmptyChain, Validated}
 import cats.data.Validated.{Invalid, Valid}
 import config.CalculatorVersionConfiguration
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
-import models.UserAnswers
+import models.{AnswerValidation, UserAnswers}
 import models.UserAnswers.AnswerV
 import navigation.Navigator
 import pages.PreviousFurloughPeriodsPage
@@ -49,15 +50,14 @@ class ConfirmationController @Inject()(
   octoberConfirmationView: OctoberConfirmationView,
   extensionView: JrsExtensionConfirmationView,
   auditService: AuditService,
-  val navigator: Navigator
-)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
+  val navigator: Navigator)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
     extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
 
   //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     /** Uncomment line to create integration test cases when going through journeys, either manually or via test packs.
       * Set the number of cases to the amount of cases that will be executed. */
-//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 3)
+    //    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 3)
 
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>
@@ -85,7 +85,15 @@ class ConfirmationController @Inject()(
                 Future.successful(
                   Ok(extensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf, ans))
                 )
-              case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+              case _ =>
+                Future.successful(
+                  Ok(
+                    extensionView(
+                      data.confirmationViewBreakdown,
+                      data.metaData.claimPeriod,
+                      calculatorVersionConf,
+                      extensionHasMultipleFurloughs = false))
+                )
             }
             extensionHasMultipleFurloughs
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))

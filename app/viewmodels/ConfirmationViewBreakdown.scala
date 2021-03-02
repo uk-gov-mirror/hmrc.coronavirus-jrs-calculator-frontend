@@ -121,7 +121,7 @@ case class PhaseTwoConfirmationViewBreakdown(
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
             )
-          case avg: AveragePaymentWithPhaseTwoPeriod if extensionHasMultipleFurloughs =>
+          case _: AveragePaymentWithPhaseTwoPeriod if extensionHasMultipleFurloughs =>
             Seq(
               "phaseTwoReferencePayBreakdown.extension.p1"
             )
