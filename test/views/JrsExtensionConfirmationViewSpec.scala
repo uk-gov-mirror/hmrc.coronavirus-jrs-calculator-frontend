@@ -23,9 +23,11 @@ import handlers.ConfirmationControllerRequestHandler
 import messages.JRSExtensionConfirmationMessages.RegularType1
 import messages.JRSExtensionConfirmationMessages.VariableExtensionType5
 import models.FurloughStatus.FurloughOngoing
+import models.NicCategory.Nonpayable
 import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
 import models.PaymentFrequency.Monthly
+import models.PensionStatus.DoesNotContribute
 import models.requests.DataRequest
 import models.{EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
@@ -209,19 +211,19 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
   def nov2020Type5Journey(): UserAnswers =
     emptyUserAnswers
       .withClaimPeriodStart("2020, 11, 1")
-      .withClaimPeriodEnd("2021, 11, 30")
-      .withFurloughStartDate("2020, 3, 20")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 15")
       .withFurloughStatus(FurloughOngoing)
       .withPaymentFrequency(Monthly)
       .withNiCategory()
       .withPensionStatus()
       .withPayMethod(Variable)
+      .withFurloughInLastTaxYear(false)
       .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
       .withEmployeeStartDate("2020, 3, 20")
       .withPreviousFurloughedPeriodsAnswer(true)
       .withFirstFurloughDate("2020, 11, 10")
       .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
-      .withLastPayDate("2020, 10, 31")
       .withAnnualPayAmount(10000.00)
       .withPartTimeQuestion(PartTimeNo)
 
@@ -230,10 +232,10 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
   val nextStepsListMessage: Int => String =
     (bullet: Int) => VariableExtensionType5.nextStepsListMessages(bullet, novClaimPeriod)
   val calculatePayListMessage: Int => String = { (bullet: Int) =>
-    VariableExtensionType5.calculatePayListMessages(bullet, 10000, 30, 30)
+    VariableExtensionType5.calculatePayListMessages(bullet, 10000, 218, 16)
   }
   val furloughGrantListMessage: Int => String = { (bullet: Int) =>
-    VariableExtensionType5.furloughGrantListMessages(bullet, 10000, 80)
+    VariableExtensionType5.furloughGrantListMessages(bullet, 733.92, 80)
   }
 
   val expectedContent = Seq(
@@ -258,11 +260,11 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
     VariableEmployeeTypeFiveSelectors.calculatePayList(1)        -> calculatePayListMessage(1),
     VariableEmployeeTypeFiveSelectors.calculatePayList(2)        -> calculatePayListMessage(2),
     VariableEmployeeTypeFiveSelectors.calculatePayList(3)        -> calculatePayListMessage(3),
-    VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphTwo -> VariableExtensionType5.h4ParagraphTwo(10000),
+    VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphTwo -> VariableExtensionType5.h4ParagraphTwo(733.92),
     VariableEmployeeTypeFiveSelectors.h4(2)                      -> VariableExtensionType5.h4FurloughGrant,
     VariableEmployeeTypeFiveSelectors.furloughGrantList(1)       -> furloughGrantListMessage(1),
     VariableEmployeeTypeFiveSelectors.furloughGrantList(2)       -> furloughGrantListMessage(2),
-    VariableEmployeeTypeFiveSelectors.furloughGrantInset         -> VariableExtensionType5.furloughGrantIndent(1137.58),
+    VariableEmployeeTypeFiveSelectors.furloughGrantInset         -> VariableExtensionType5.furloughGrantIndent(587.14),
     VariableEmployeeTypeFiveSelectors.bottomDisclaimer           -> VariableExtensionType5.disclaimerBottomPage,
     VariableEmployeeTypeFiveSelectors.printLink                  -> VariableExtensionType5.printOrSave,
     VariableEmployeeTypeFiveSelectors.webChatLink                -> VariableExtensionType5.webchatLink,
