@@ -136,7 +136,7 @@ class JrsExtensionConfirmationViewSpec
       implicit val request: DataRequest[_] = fakeDataRequest()
 
       def applyView(): HtmlFormat.Appendable =
-        view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2")
+        view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2", false)
 
       implicit val doc: Document = asDocument(applyView())
 

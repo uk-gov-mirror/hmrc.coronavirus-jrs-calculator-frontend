@@ -117,11 +117,6 @@ sealed trait CylbPayment extends PaymentWithPeriod {
   val cylbBreakdown: CylbBreakdown
 }
 
-sealed trait ExtensionPayment extends PaymentWithPeriod {
-  val annualPay: Amount
-  val priorFurloughPeriod: Period
-}
-
 case class RegularPaymentWithFullPeriod(regularPay: Amount, referencePay: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate)
     extends PaymentWithFullPeriod with RegularPayment
 

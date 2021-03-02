@@ -69,9 +69,6 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
               "detailedBreakdown.p1.cylb.2",
               "detailedBreakdown.p1.cylb.3"
             )
-          case _: ExtensionPayment =>
-            Seq(
-              )
         }
       }
       .getOrElse(Seq())
@@ -138,10 +135,6 @@ case class PhaseTwoConfirmationViewBreakdown(
               "phaseTwoDetailedBreakdown.p1.cylb.2",
               "phaseTwoDetailedBreakdown.p1.cylb.3"
             )
-          case _: ExtensionPaymentWithPhaseTwoPeriod =>
-            Seq(
-              "phaseTwoReferencePayBreakdown.extension.p1"
-            )
         }
       }
       .getOrElse(Seq())
@@ -206,10 +199,6 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1",
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
-            )
-          case _: ExtensionPaymentWithPhaseTwoPeriod => // not sure how to get a extension calc is it the same as AveragePaymentWithPhaseTwoPeriod?
-            Seq(
-              "phaseTwoDetailedBreakdown.no.nic.p1.extension"
             )
         }
       }

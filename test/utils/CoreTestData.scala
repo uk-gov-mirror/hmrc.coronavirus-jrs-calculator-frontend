@@ -97,6 +97,7 @@ trait CoreTestData extends UserAnswersBuilder {
       .withNiCategory()
       .withPensionStatus()
       .withPayMethod()
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withPayDate(List("2021, 2, 28", "2021, 3, 31"))
       .withLastPayDate("2021, 3, 31")
       .withPartTimeQuestion(PartTimeNo)

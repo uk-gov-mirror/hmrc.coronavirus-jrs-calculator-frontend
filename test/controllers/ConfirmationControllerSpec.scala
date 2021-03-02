@@ -151,7 +151,9 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       val actual: String = extensionView(
         cvb = breakdown,
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
-        version = calculatorVersionConf)(request, messages).toString
+        version = calculatorVersionConf,
+        extensionHasMultipleFurloughs = false
+      )(request, messages).toString
 
       status(result) mustEqual OK
       expected mustEqual actual
