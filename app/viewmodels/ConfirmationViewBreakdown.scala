@@ -164,7 +164,6 @@ case class PhaseTwoConfirmationViewBreakdown(
 
 case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurloughCalculationResult) extends ViewBreakdown {
 
-  //this one
 
   val auditFurlough = AuditCalculationResult(
     furlough.total,
@@ -182,7 +181,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
     )
   }
 
-  def detailedBreakdownMessageKeys(extensionHasMultipleFurloughs: Boolean): Seq[String] = //this is the breakdown section not pay-period calc breakdown
+  def detailedBreakdownMessageKeys(extensionHasMultipleFurloughs: Boolean): Seq[String] =
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
