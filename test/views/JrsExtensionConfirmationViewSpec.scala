@@ -290,7 +290,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
 
     "behave like a page with a StartAnotherCalculation button" must {
 
-      s"have a button with message '${VariableExtensionType5.startAnotherCalculation}2'" in {
+      s"have a button with message '${VariableExtensionType5.startAnotherCalculation}'" in {
         assertEqualsMessage(doc, "#main-content > div > div > div > a", VariableExtensionType5.startAnotherCalculation)
       }
     }

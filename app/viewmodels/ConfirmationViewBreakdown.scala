@@ -164,7 +164,6 @@ case class PhaseTwoConfirmationViewBreakdown(
 
 case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurloughCalculationResult) extends ViewBreakdown {
 
-
   val auditFurlough = AuditCalculationResult(
     furlough.total,
     furlough.periodBreakdowns
