@@ -45,7 +45,7 @@ class EmployeeTypeServiceSpec extends SpecBase with CoreTestDataBuilder {
             .success
             .value
 
-          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers))
+          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
           val expected = true
 
           actual mustBe expected
@@ -64,7 +64,7 @@ class EmployeeTypeServiceSpec extends SpecBase with CoreTestDataBuilder {
             .success
             .value
 
-          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers))
+          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
           val expected = true
 
           actual mustBe expected
@@ -86,7 +86,7 @@ class EmployeeTypeServiceSpec extends SpecBase with CoreTestDataBuilder {
             .success
             .value
 
-          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers))
+          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
           val expected = false
 
           actual mustBe expected
@@ -105,7 +105,7 @@ class EmployeeTypeServiceSpec extends SpecBase with CoreTestDataBuilder {
             .success
             .value
 
-          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers))
+          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
           val expected = false
 
           actual mustBe expected

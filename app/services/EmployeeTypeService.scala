@@ -19,6 +19,7 @@ package services
 import java.time.LocalDate
 
 import cats.data.Validated.Valid
+import config.FrontendAppConfig
 import models.EmployeeRTISubmission
 import models.EmployeeRTISubmission.No
 import models.UserAnswers.AnswerV
@@ -27,16 +28,16 @@ import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, PreviousFurlough
 
 class EmployeeTypeService() {
 
-  def isType5NewStarter()(implicit request: DataRequest[_]): Boolean = {
+  def isType5NewStarter()(implicit request: DataRequest[_], appConfig: FrontendAppConfig): Boolean = {
 
     val startDate: AnswerV[LocalDate] = request.userAnswers.getV(EmployeeStartDatePage)
     val employeeRTI: AnswerV[EmployeeRTISubmission] = request.userAnswers.getV(EmployeeRTISubmissionPage)
     val extensionHasMultipleFurloughs: AnswerV[Boolean] = request.userAnswers.getV(PreviousFurloughPeriodsPage)
 
     (startDate, employeeRTI, extensionHasMultipleFurloughs) match {
-      case (Valid(date), _, Valid(_)) if date.isAfter(LocalDate.of(2020, 3, 19)) => true
-      case (Valid(_), Valid(No), Valid(_))                                       => true
-      case _                                                                     => false
+      case (Valid(date), _, Valid(_)) if date.isAfter(appConfig.employeeStartDatePostCovid) => true
+      case (Valid(_), Valid(No), Valid(_))                                                  => true
+      case _                                                                                => false
     }
   }
 

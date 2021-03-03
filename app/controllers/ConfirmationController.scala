@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import cats.data.{NonEmptyChain, Validated}
 import cats.data.Validated.{Invalid, Valid}
-import config.CalculatorVersionConfiguration
+import config.{CalculatorVersionConfiguration, FrontendAppConfig}
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
@@ -55,7 +55,7 @@ class ConfirmationController @Inject()(
   octoberConfirmationView: OctoberConfirmationView,
   extensionView: JrsExtensionConfirmationView,
   auditService: AuditService,
-  val navigator: Navigator)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
+  val navigator: Navigator)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext, appConfig: FrontendAppConfig)
     extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
 
   //scalastyle:off
@@ -91,8 +91,9 @@ class ConfirmationController @Inject()(
                   data.confirmationViewBreakdown,
                   data.metaData.claimPeriod,
                   calculatorVersionConf,
-                  employeeTypeService.isType5NewStarter())
-              ))
+                  employeeTypeService.isType5NewStarter()
+                ))
+            )
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
       case Invalid(e) =>

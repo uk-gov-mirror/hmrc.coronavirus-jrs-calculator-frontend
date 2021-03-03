@@ -76,6 +76,8 @@ class FrontendAppConfig() extends UrlConfiguration with SchemeConfiguration with
   lazy val phaseTwoReferencePayBreakdownDynamicMessageDate =
     LocalDate.parse(configSource("phaseTwoReferencePayBreakdownDynamicMessageDate").loadOrThrow[String])
 
+  lazy val employeeStartDatePostCovid = LocalDate.parse(configSource("employeeStartDatePostCovid").loadOrThrow[String])
+
 }
 
 trait SchemeConfiguration extends CamelCaseConf {
@@ -97,4 +99,5 @@ trait CalculatorVersionConfiguration extends CamelCaseConf {
 }
 
 final case class SchemeConf(startDate: String, endDate: String, phaseTwoStartDate: String, extensionStartDate: String)
+
 final case class MongoConf(uri: String, timeToLiveInSeconds: Int)
