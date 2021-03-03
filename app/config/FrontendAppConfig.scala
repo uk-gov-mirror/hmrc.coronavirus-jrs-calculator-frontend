@@ -77,8 +77,6 @@ class FrontendAppConfig() extends UrlConfiguration with SchemeConfiguration with
     LocalDate.parse(configSource("phaseTwoReferencePayBreakdownDynamicMessageDate").loadOrThrow[String])
 
   lazy val employeeStartDatePostCovid = LocalDate.parse(configSource("employeeStartDatePostCovid").loadOrThrow[String])
-  lazy val furloughStartDateNewStarterType5ACutoff =
-    LocalDate.parse(configSource("furloughStartDateNewStarterType5ACutoff").loadOrThrow[String])
 
 }
 
