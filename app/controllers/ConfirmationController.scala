@@ -16,23 +16,27 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import cats.data.{NonEmptyChain, Validated}
 import cats.data.Validated.{Invalid, Valid}
 import config.CalculatorVersionConfiguration
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
-import models.{AnswerValidation, UserAnswers}
+import models.EmployeeRTISubmission._
+import models.{AnswerValidation, EmployeeRTISubmission, Period, UserAnswers}
 import models.UserAnswers.AnswerV
+import models.requests.DataRequest
 import navigation.Navigator
-import pages.PreviousFurloughPeriodsPage
+import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, PreviousFurloughPeriodsPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.AuditService
+import services.{AuditService, EmployeeTypeService}
 import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
 import utils.PagerDutyHelper
 import utils.PagerDutyHelper.PagerDutyKeys._
-import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
+import viewmodels.{ConfirmationDataResult, ConfirmationDataResultWithoutNicAndPension, ConfirmationViewBreakdownWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult, ViewBreakdown}
 import views.html._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,6 +47,7 @@ class ConfirmationController @Inject()(
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
+  employeeTypeService: EmployeeTypeService,
   viewWithDetailedBreakdowns: ConfirmationViewWithDetailedBreakdowns,
   phaseTwoView: PhaseTwoConfirmationView,
   noNicAndPensionView: NoNicAndPensionConfirmationView,
@@ -80,22 +85,14 @@ class ConfirmationController @Inject()(
             Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case 11 | 12 | 1 | 2 | 3 | 4 =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
-            val extensionHasMultipleFurloughs: Future[Result] = request.userAnswers.getV(PreviousFurloughPeriodsPage) match {
-              case Valid(ans) =>
-                Future.successful(
-                  Ok(extensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf, ans))
-                )
-              case _ =>
-                Future.successful(
-                  Ok(
-                    extensionView(
-                      data.confirmationViewBreakdown,
-                      data.metaData.claimPeriod,
-                      calculatorVersionConf,
-                      extensionHasMultipleFurloughs = false))
-                )
-            }
-            extensionHasMultipleFurloughs
+            Future.successful(
+              Ok(
+                extensionView(
+                  data.confirmationViewBreakdown,
+                  data.metaData.claimPeriod,
+                  calculatorVersionConf,
+                  employeeTypeService.isType5NewStarter())
+              ))
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
       case Invalid(e) =>
@@ -105,4 +102,18 @@ class ConfirmationController @Inject()(
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }
   }
+
+//  def isNewStarter()(implicit request: DataRequest[_]): Boolean = {
+//
+//    val startDate: AnswerV[LocalDate] = request.userAnswers.getV(EmployeeStartDatePage)
+//    val employeeRTI: AnswerV[EmployeeRTISubmission] = request.userAnswers.getV(EmployeeRTISubmissionPage)
+//    val extensionHasMultipleFurloughs: AnswerV[Boolean] = request.userAnswers.getV(PreviousFurloughPeriodsPage)
+//
+//    (startDate, employeeRTI, extensionHasMultipleFurloughs) match {
+//      case (Valid(date), _, Valid(_)) if date.isAfter(LocalDate.of(2020, 3, 19)) => true
+//      case (Valid(_), Valid(No), Valid(_)) => true
+//      case _ => false
+//    }
+//  }
+
 }

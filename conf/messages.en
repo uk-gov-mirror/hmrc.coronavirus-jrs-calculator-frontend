@@ -804,9 +804,6 @@ phaseTwoReferencePayBreakdown.average.hoursResult = Total pay based on hours wor
 
 phaseTwoReferencePayBreakdown.extension.p1.strong = Averaging method:
 phaseTwoReferencePayBreakdown.extension.p1 = take the employee’s total pay from 6 April 2020 (or the date the employment started, whichever is later), up to the day before the furlough started on or after 1 November 2020.
-phaseTwoReferencePayBreakdown.extension.days.l1 = Start with £{0} (total pay from 6 April 2020 to the day before furlough started on or after 1 November 2020).
-phaseTwoReferencePayBreakdown.extension.days.l2 = Divide by {0} (days employed since the start of the tax year).
-phaseTwoReferencePayBreakdown.extension.days.l3 = Multiply by {0} (furlough days in pay period).
 phaseTwoReferencePayBreakdown.extension.daysResult = Total pay based on furlough days = £{0}
 
 phaseTwoReferencePayBreakdown.cylb.p1 = Method 1: take the employee’s pay from the same dates in {0}.

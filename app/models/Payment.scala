@@ -204,18 +204,3 @@ case class CylbPaymentWithPhaseTwoPeriod(
     }
   def higherOfResult: String = referencePay.value.formatted("%.2f")
 }
-
-case class ExtensionPaymentWithPhaseTwoPeriod(
-  referencePay: Amount,
-  annualPay: Amount,
-  priorFurloughPeriod: Period,
-  phaseTwoPeriod: PhaseTwoPeriod)
-    extends PaymentWithPhaseTwoPeriod {
-
-  def basedOnDays: String = {
-    val daily = Amount(annualPay.value / priorFurloughPeriod.countDays).halfUp
-    (daily.value * furloughDays).formatted("%.2f")
-  }
-
-  def basedOnHours: String = referencePay.value.formatted("%.2f")
-}
