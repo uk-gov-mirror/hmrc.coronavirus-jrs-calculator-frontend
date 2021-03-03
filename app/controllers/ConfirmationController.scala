@@ -103,17 +103,4 @@ class ConfirmationController @Inject()(
     }
   }
 
-//  def isNewStarter()(implicit request: DataRequest[_]): Boolean = {
-//
-//    val startDate: AnswerV[LocalDate] = request.userAnswers.getV(EmployeeStartDatePage)
-//    val employeeRTI: AnswerV[EmployeeRTISubmission] = request.userAnswers.getV(EmployeeRTISubmissionPage)
-//    val extensionHasMultipleFurloughs: AnswerV[Boolean] = request.userAnswers.getV(PreviousFurloughPeriodsPage)
-//
-//    (startDate, employeeRTI, extensionHasMultipleFurloughs) match {
-//      case (Valid(date), _, Valid(_)) if date.isAfter(LocalDate.of(2020, 3, 19)) => true
-//      case (Valid(_), Valid(No), Valid(_)) => true
-//      case _ => false
-//    }
-//  }
-
 }
