@@ -30,86 +30,135 @@ class EmployeeTypeServiceSpec extends SpecBase with CoreTestDataBuilder {
 
     "calling the isType5NewStarter" when {
 
-      "all three pages (EmployeeStartDatePage, EmployeeRTISubmissionPage = No, PreviousFurloughPeriodsPage) are answered " should {
+      "Employee Type is 5a New Starter Variable pay" when {
 
-        "return true" in {
+        "answers are (EmployeeStartDatePage = after 19th March 2020, EmployeeRTISubmissionPage = not answered)" should {
 
-          val userAnswers = emptyUserAnswers
-            .set(EmployeeStartDatePage, LocalDate.of(2020, 1, 1))
-            .success
-            .value
-            .set(EmployeeRTISubmissionPage, No)
-            .success
-            .value
-            .set(PreviousFurloughPeriodsPage, true)
-            .success
-            .value
+          "return true" in {
 
-          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
-          val expected = true
+            val userAnswers = emptyUserAnswers
+              .set(EmployeeStartDatePage, LocalDate.of(2020, 3, 20))
+              .success
+              .value
 
-          actual mustBe expected
+            val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
+            val expected = true
+
+            actual mustBe expected
+          }
+        }
+
+        "answers are (EmployeeStartDatePage = after 19th March 2020, EmployeeRTISubmissionPage = Yes)" should {
+
+          "return true" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(EmployeeStartDatePage, LocalDate.of(2020, 3, 20))
+              .success
+              .value
+              .set(EmployeeRTISubmissionPage, Yes)
+              .success
+              .value
+
+            val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
+            val expected = true
+
+            actual mustBe expected
+          }
+        }
+
+        "answers are (EmployeeStartDatePage = after 19th March 2020, EmployeeRTISubmissionPage = No)" should {
+
+          "return true" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(EmployeeStartDatePage, LocalDate.of(2020, 3, 20))
+              .success
+              .value
+              .set(EmployeeRTISubmissionPage, No)
+              .success
+              .value
+
+            val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
+            val expected = true
+
+            actual mustBe expected
+          }
+        }
+
+        "answers are (EmployeeStartDatePage = before 19th March 2020, EmployeeRTISubmissionPage = No)" should {
+
+          "return true" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(EmployeeStartDatePage, LocalDate.of(2020, 3, 20))
+              .success
+              .value
+              .set(EmployeeRTISubmissionPage, No)
+              .success
+              .value
+
+            val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
+            val expected = true
+
+            actual mustBe expected
+          }
         }
       }
 
-      "EmployeeStartDatePage = after 19th March 2020, EmployeeRTISubmissionPage = not answered, PreviousFurloughPeriodsPage = true" should {
+      "Employee Type is Not a 5x New Starter Variable pay" when {
 
-        "return true" in {
+        "answers are (EmployeeStartDatePage = before 19th March 2020, EmployeeRTISubmissionPage = not answered)" should {
 
-          val userAnswers = emptyUserAnswers
-            .set(EmployeeStartDatePage, LocalDate.of(2020, 3, 20))
-            .success
-            .value
-            .set(PreviousFurloughPeriodsPage, true)
-            .success
-            .value
+          "return false" in {
 
-          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
-          val expected = true
+            val userAnswers = emptyUserAnswers
+              .set(EmployeeStartDatePage, LocalDate.of(2020, 3, 18))
+              .success
+              .value
 
-          actual mustBe expected
+            val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
+            val expected = false
+
+            actual mustBe expected
+          }
         }
-      }
 
-      "EmployeeStartDatePage = defined, EmployeeRTISubmissionPage = Yes, PreviousFurloughPeriodsPage = true" should {
+        "answers are (EmployeeStartDatePage = 19th March 2020, EmployeeRTISubmissionPage = not answered)" should {
 
-        "return false" in {
+          "return false" in {
 
-          val userAnswers = emptyUserAnswers
-            .set(EmployeeStartDatePage, LocalDate.of(2020, 1, 1))
-            .success
-            .value
-            .set(EmployeeRTISubmissionPage, Yes)
-            .success
-            .value
-            .set(PreviousFurloughPeriodsPage, true)
-            .success
-            .value
+            val userAnswers = emptyUserAnswers
+              .set(EmployeeStartDatePage, LocalDate.of(2020, 3, 19))
+              .success
+              .value
 
-          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
-          val expected = false
+            val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
+            val expected = false
 
-          actual mustBe expected
+            actual mustBe expected
+          }
         }
-      }
 
-      "EmployeeStartDatePage = before 19th March, EmployeeRTISubmissionPage = not answered, PreviousFurloughPeriodsPage = true" should {
+        "answers are (EmployeeStartDatePage = before 19th March 2020, EmployeeRTISubmissionPage = Yes)" should {
 
-        "return false" in {
+          "return false" in {
 
-          val userAnswers = emptyUserAnswers
-            .set(EmployeeStartDatePage, LocalDate.of(2020, 1, 1))
-            .success
-            .value
-            .set(PreviousFurloughPeriodsPage, true)
-            .success
-            .value
+            val userAnswers = emptyUserAnswers
+              .set(EmployeeStartDatePage, LocalDate.of(2020, 3, 18))
+              .success
+              .value
+              .set(EmployeeRTISubmissionPage, Yes)
+              .success
+              .value
 
-          val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
-          val expected = false
+            val actual = service.isType5NewStarter()(fakeDataRequest(userAnswers), frontendAppConfig)
+            val expected = false
 
-          actual mustBe expected
+            actual mustBe expected
+          }
         }
+
       }
     }
   }
