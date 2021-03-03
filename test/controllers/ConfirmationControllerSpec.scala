@@ -154,7 +154,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         cvb = breakdown,
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
         version = calculatorVersionConf,
-        extensionHasMultipleFurloughs = false
+        isNewStarterType5 = false
       )(request, messages).toString
 
       status(result) mustEqual OK

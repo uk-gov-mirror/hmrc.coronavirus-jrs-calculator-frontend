@@ -113,7 +113,7 @@ case class PhaseTwoConfirmationViewBreakdown(
     )
   }
 
-  def detailedBreakdownMessageKeys(extensionHasMultipleFurloughs: Boolean): Seq[String] =
+  def detailedBreakdownMessageKeys(isNewStarterType5: Boolean): Seq[String] =
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
@@ -121,7 +121,7 @@ case class PhaseTwoConfirmationViewBreakdown(
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
             )
-          case _: AveragePaymentWithPhaseTwoPeriod if extensionHasMultipleFurloughs =>
+          case _: AveragePaymentWithPhaseTwoPeriod if isNewStarterType5 =>
             Seq(
               "phaseTwoReferencePayBreakdown.extension.p1"
             )
@@ -180,7 +180,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
     )
   }
 
-  def detailedBreakdownMessageKeys(extensionHasMultipleFurloughs: Boolean): Seq[String] =
+  def detailedBreakdownMessageKeys(isNewStarterType5: Boolean): Seq[String] =
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
@@ -188,7 +188,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
             )
-          case avg: AveragePaymentWithPhaseTwoPeriod if extensionHasMultipleFurloughs =>
+          case avg: AveragePaymentWithPhaseTwoPeriod if isNewStarterType5 =>
             Seq("phaseTwoDetailedBreakdown.no.nic.p1.extension")
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq("phaseTwoDetailedBreakdown.p1.average")
