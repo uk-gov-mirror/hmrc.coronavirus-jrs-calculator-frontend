@@ -1,25 +1,8 @@
-/*
- * Copyright 2020 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package controllers
+package controllers.scenarios
 
 import assets.BaseITConstants
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
-import models.{EmployeeRTISubmission, FullPeriod, FurloughStatus, Hours, PartTimeHours,
-  PartTimeQuestion, PartialPeriod, PayMethod, PayPeriodsList, Period, RegularLengthEmployed, UserAnswers, UsualHours}
+import models.{EmployeeRTISubmission, FullPeriod, FurloughStatus, Hours, PartTimeHours, PartTimeQuestion, PartialPeriod, PayMethod, PayPeriodsList, Period, RegularLengthEmployed, UserAnswers, UsualHours}
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
 
 object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
@@ -46,6 +29,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(19564.4)
       .withFurloughStartDate("2020, 11, 4")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 30")
       .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14"))
       .withUsualHours(List(
@@ -77,6 +61,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(19564.4)
       .withFurloughStartDate("2020, 11, 4")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 30")
       .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14"))
       .withUsualHours(List(
@@ -108,6 +93,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(1000.0)
       .withFurloughStartDate("2020, 11, 4")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 30")
       .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14"))
       .withUsualHours(List(
@@ -125,7 +111,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Weekly)
       .withEmployeeStartedOnOrBefore1Feb2019()
       .withClaimPeriodStart("2020, 11, 1")
-      .withLastYear(List("2019-11-02" -> 420,"2019-11-09" -> 490))
+      .withLastYear(List("2019-11-02" -> 420, "2019-11-09" -> 490))
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPartTimePeriods(List(
@@ -135,6 +121,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(26000.0)
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 30")
       .withPayDate(List("2020-10-31", "2020-11-07"))
       .withUsualHours(List(
@@ -150,13 +137,14 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPaymentFrequency(Weekly)
       .withEmployeeStartedOnOrBefore1Feb2019()
       .withClaimPeriodStart("2020, 11, 3")
-      .withLastYear(List("2019-11-09" -> 420,"2019-11-16" -> 490,"2019-11-23" -> 560,"2019-11-30" -> 630))
+      .withLastYear(List("2019-11-09" -> 420, "2019-11-16" -> 490, "2019-11-23" -> 560, "2019-11-30" -> 630))
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
       .withPayMethod(PayMethod.Variable)
       .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
       .withAnnualPayAmount(26000.0)
       .withFurloughStartDate("2020, 11, 4")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 28")
       .withPayDate(List("2020-10-31", "2020-11-07", "2020-11-14", "2020-11-21", "2020-11-28"))
       -> 1257.15
@@ -187,6 +175,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(34000.00)
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 30")
       .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28", "2020-12-12"))
       .withUsualHours(List(
@@ -223,6 +212,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(19564.40)
       .withFurloughStartDate("2020, 11, 5")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 29")
       .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28"))
       .withUsualHours(List(
@@ -258,6 +248,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(1000.00)
       .withFurloughStartDate("2020, 11, 5")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 29")
       .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28"))
       .withUsualHours(List(
@@ -293,6 +284,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeYes)
       .withAnnualPayAmount(1000.00)
       .withFurloughStartDate("2020, 11, 5")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 29")
       .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28"))
       .withUsualHours(List(
@@ -317,6 +309,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
       .withAnnualPayAmount(28000.00)
       .withFurloughStartDate("2020, 11, 4")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 28")
       .withPayDate(List("2020-10-31", "2020-11-14", "2020-11-28"))
       -> 1530.00
@@ -327,6 +320,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 30")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(Monthly)
@@ -353,6 +347,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 30")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(Monthly)
@@ -388,9 +383,10 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
       .withAnnualPayAmount(26000.00)
       .withFurloughStartDate("2020, 3, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 30")
       .withPayDate(List("2020-10-31", "2020-11-30"))
-      ->1890.96,
+      -> 1890.96,
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2019-12-01")
@@ -404,9 +400,10 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
       .withAnnualPayAmount(12000.00)
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withClaimPeriodEnd("2020, 11, 30")
       .withPayDate(List("2020-10-31", "2020-11-30"))
-      ->2267.76
+      -> 2267.76
   ))
 
   val novemberVariableFourWeeklyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("November Variable Four Weekly Scenarios" -> Seq(
@@ -414,6 +411,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 28")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(FourWeekly)
@@ -445,6 +443,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 28")
       .withFurloughStartDate("2020, 11, 4")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 28")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(FourWeekly)
@@ -465,6 +464,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
       .withPayMethod(PayMethod.Regular)
@@ -500,6 +500,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 2")
       .withClaimPeriodEnd("2020, 11, 29")
       .withFurloughStartDate("2020, 11, 6")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
       .withPayMethod(PayMethod.Regular)
@@ -533,6 +534,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 2")
       .withClaimPeriodEnd("2020, 11, 29")
       .withFurloughStartDate("2020, 11, 6")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 27")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(Weekly)
@@ -561,6 +563,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 15")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 27")
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
@@ -591,6 +594,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 29")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 29")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Weekly)
       .withPayMethod(PayMethod.Regular)
@@ -614,6 +618,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 21")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 8")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(Weekly)
@@ -644,6 +649,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
       .withPayMethod(PayMethod.Regular)
@@ -673,6 +679,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
       .withPayMethod(PayMethod.Regular)
@@ -702,6 +709,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 13")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
       .withPayMethod(PayMethod.Regular)
@@ -725,6 +733,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 03")
       .withClaimPeriodEnd("2020, 11, 11")
       .withFurloughStartDate("2020, 3, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 11")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(FortNightly)
@@ -749,6 +758,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 27")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 29")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 11")
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FortNightly)
@@ -773,6 +783,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 29")
       .withFurloughStartDate("2020, 11, 5")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 25")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(FortNightly)
@@ -804,6 +815,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Monthly)
       .withPayMethod(PayMethod.Regular)
@@ -820,6 +832,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Monthly)
       .withPayMethod(PayMethod.Regular)
@@ -833,6 +846,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 05")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 21")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(Monthly)
@@ -853,6 +867,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 05")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 21")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(Monthly)
@@ -873,6 +888,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 02")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 11")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(Monthly)
@@ -893,6 +909,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 02")
       .withClaimPeriodEnd("2020, 11, 20")
       .withFurloughStartDate("2020, 11, 01")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 20")
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withPaymentFrequency(Monthly)
@@ -913,6 +930,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 01")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 03, 01")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughEndDate("2020, 11, 20")
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(Monthly)
@@ -942,6 +960,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withFurloughEndDate("2020, 11, 28")
       .withPaymentFrequency(FourWeekly)
@@ -959,6 +978,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withFurloughEndDate("2020, 11, 28")
       .withPaymentFrequency(FourWeekly)
@@ -973,6 +993,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 28")
       .withFurloughStartDate("2020, 11, 1")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FourWeekly)
       .withPayPeriodsList(PayPeriodsList.Yes)
@@ -986,6 +1007,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 03, 01")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withFurloughEndDate("2020, 11, 30")
       .withPaymentFrequency(FourWeekly)
@@ -1008,6 +1030,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 30")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 29")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FourWeekly)
       .withPayMethod(PayMethod.Regular)
@@ -1027,6 +1050,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 30")
       .withFurloughStartDate("2020, 11, 01")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withFurloughEndDate("2020, 11, 30")
       .withPaymentFrequency(FourWeekly)
@@ -1047,6 +1071,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withClaimPeriodStart("2020, 11, 1")
       .withClaimPeriodEnd("2020, 11, 29")
       .withFurloughStartDate("2020, 11, 01")
+      .withPreviousFurloughedPeriodsAnswer(false)
       .withFurloughStatus(FurloughStatus.FurloughOngoing)
       .withPaymentFrequency(FourWeekly)
       .withPayMethod(PayMethod.Regular)

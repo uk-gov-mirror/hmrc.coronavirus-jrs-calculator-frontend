@@ -24,86 +24,178 @@ import utils.ValueFormatter
 
 object JRSExtensionConfirmationMessages extends ValueFormatter {
 
-  val heading = "What you can claim for this employee"
+  object RegularType1 {
 
-  val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
+    val heading = "What you can claim for this employee"
 
-  val indent = "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
+    val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
 
-  val disclaimerTopPage = {
-    "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. " +
-      "You cannot claim for more money than you are going to pay out under the scheme."
+    val indent = "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
+
+    val disclaimerTopPage = {
+      "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. " +
+        "You cannot claim for more money than you are going to pay out under the scheme."
+    }
+
+    def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
+      messageNumber match {
+        case 1 => "Print or save a copy of this page for your records"
+        case 2 => "Make a note of the amount you can claim for this employee and the claim period."
+        case 3 =>
+          s"Use the calculator again for any other employees furloughed within this claim period ${dateToStringWithoutYear(period.start)} " +
+            s"to ${dateToString(period.`end`)} and make a note of the results."
+        case 4 => "Add all the results for each employee furloughed in this claim period together to get the total amount you can claim."
+        case 5 => "Make a claim through the Coronavirus Job Retention Scheme (opens in a new window or tab)."
+        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
+      }
+
+    val h2NextSteps = "Next steps"
+    val h2BreakdownOfCalculations = "Breakdown of calculations"
+
+    val breakDownParagraphOne
+      : String = "You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings" +
+      " and multiplied by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this."
+
+    val breakDownParagraphTwo
+      : String = "There’s a maximum amount you can claim. If this affects your claim, we’ve adjusted the calculations. " +
+      "Work out the maximum wage amount you can claim (opens in new tab)."
+
+    val breakDownParagraphThree = "Calculations are rounded to the nearest penny unless otherwise stated."
+
+    def h3PayPeriod(claimPeriod: Period)(implicit messages: Messages): String =
+      s"For pay period ${dateToStringWithoutYear(claimPeriod.start)} to ${dateToString(claimPeriod.`end`)}"
+
+    val h4CalculatePay = "Calculate the employee’s pay based on their furlough days"
+
+    val h4ParagraphOne = "Take the pay in pay period:"
+
+    def calculatePayListMessages(messageNumber: Int, pay: BigDecimal, daysInPeriod: Int, numberOfDaysFurloughed: Int)(
+      implicit messages: Messages): String =
+      messageNumber match {
+        case 1 => s"Start with ${currencyFormatter(pay)} (from pay period)."
+        case 2 => s"Divide by $daysInPeriod (number of days in the pay period)."
+        case 3 => s"Multiply by $numberOfDaysFurloughed (furlough days)."
+        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
+      }
+
+    val h4ParagraphTwo: BigDecimal => String = (pay: BigDecimal) => s"Total pay based on furlough days = ${currencyFormatter(pay)}"
+
+    val h4FurloughGrant = "Furlough grant"
+
+    def furloughGrantListMessages(messageNumber: Int, pay: BigDecimal, generosityPercentage: BigDecimal)(
+      implicit messages: Messages): String =
+      messageNumber match {
+        case 1 => s"Take ${currencyFormatter(pay)} (pay based on furlough days)."
+        case 2 => s"Multiply by $generosityPercentage%"
+        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
+      }
+
+    val furloughGrantParagraphOne = (calculatedAmount: BigDecimal) => s"Calculated furlough grant = ${currencyFormatter(calculatedAmount)}"
+    val furloughGrantParagraphTwo = (calculatedAmount: BigDecimal) =>
+      s"The calculated furlough grant is more than the maximum furlough grant for this pay period. " +
+        s"Because of this, you must use the maximum furlough grant, which is ${currencyFormatter(calculatedAmount)}"
+    val maxFurloughGrantBullet: BigDecimal => String = (maxAmount: BigDecimal) => currencyFormatter(maxAmount)
+    val furloughGrantParagraphThree = (calculatedAmount: BigDecimal) => s"Actual furlough grant = ${currencyFormatter(calculatedAmount)}"
+
+    val furloughGrantIndent = (furloughPay: BigDecimal) => s"Total furlough grant for pay period = ${currencyFormatter(furloughPay)}"
+
+    val disclaimerBottomPage = "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible." +
+      " You cannot claim for more money than you are going to pay out under the scheme."
+
+    val printOrSave = "Print or save a copy of this page"
+    val webchatLink = "Webchat help (opens in a new tab)."
+    val feedbackLink = "What do you think of this service?"
+
+    val startAnotherCalculation = "Start another calculation"
   }
 
-  def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
-    messageNumber match {
-      case 1 => "Print or save a copy of this page for your records"
-      case 2 => "Make a note of the amount you can claim for this employee and the claim period."
-      case 3 =>
-        s"Use the calculator again for any other employees furloughed within this claim period ${dateToStringWithoutYear(period.start)} " +
-          s"to ${dateToString(period.`end`)} and make a note of the results."
-      case 4 => "Add all the results for each employee furloughed in this claim period together to get the total amount you can claim."
-      case 5 => "Make a claim through the Coronavirus Job Retention Scheme (opens in a new window or tab)."
-      case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
+  object VariableExtensionType5 {
+
+    val heading = "What you can claim for this employee"
+
+    val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
+
+    val indent = "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
+
+    val disclaimerTopPage = {
+      "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. " +
+        "You cannot claim for more money than you are going to pay out under the scheme."
     }
 
-  val h2NextSteps = "Next steps"
-  val h2BreakdownOfCalculations = "Breakdown of calculations"
+    def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
+      messageNumber match {
+        case 1 => "Print or save a copy of this page for your records"
+        case 2 => "Make a note of the amount you can claim for this employee and the claim period."
+        case 3 =>
+          s"Use the calculator again for any other employees furloughed within this claim period ${dateToStringWithoutYear(period.start)} " +
+            s"to ${dateToString(period.`end`)} and make a note of the results."
+        case 4 => "Add all the results for each employee furloughed in this claim period together to get the total amount you can claim."
+        case 5 => "Make a claim through the Coronavirus Job Retention Scheme (opens in a new window or tab)."
+        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
+      }
 
-  val breakDownParagraphOne
-    : String = "You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings" +
-    " and multiplied by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this."
+    val h2NextSteps = "Next steps"
+    val h2BreakdownOfCalculations = "Breakdown of calculations"
 
-  val breakDownParagraphTwo
-    : String = "There’s a maximum amount you can claim. If this affects your claim, we’ve adjusted the calculations. " +
-    "Work out the maximum wage amount you can claim (opens in new tab)."
+    val breakDownParagraphOne: String = "You told us your employee gets paid a variable amount each time and was not on your payroll " +
+      "before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar" +
+      " days between 6 April 2020 (or the date their employment started, whichever is later) and the day before they were first" +
+      " furloughed on or after 1 November 2020. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period." +
+      " The furlough grant is 80% of this."
 
-  val breakDownParagraphThree = "Calculations are rounded to the nearest penny unless otherwise stated."
+    val breakDownParagraphTwo
+      : String = "There’s a maximum amount you can claim. If this affects your claim, we’ve adjusted the calculations. " +
+      "Work out the maximum wage amount you can claim (opens in new tab)."
 
-  def h3PayPeriod(claimPeriod: Period)(implicit messages: Messages): String =
-    s"For pay period ${dateToStringWithoutYear(claimPeriod.start)} to ${dateToString(claimPeriod.`end`)}"
+    val breakDownParagraphThree = "Calculations are rounded to the nearest penny unless otherwise stated."
 
-  val h4CalculatePay = "Calculate the employee’s pay based on their furlough days"
+    def h3PayPeriod(claimPeriod: Period)(implicit messages: Messages): String =
+      s"For pay period ${dateToStringWithoutYear(claimPeriod.start)} to ${dateToString(claimPeriod.`end`)}"
 
-  val h4ParagraphOne = "Take the pay in pay period:"
+    val h4CalculatePay = "Calculate the employee’s pay based on their furlough days"
 
-  def calculatePayListMessages(messageNumber: Int, pay: BigDecimal, daysInPeriod: Int, numberOfDaysFurloughed: Int)(
-    implicit messages: Messages): String =
-    messageNumber match {
-      case 1 => s"Start with ${currencyFormatter(pay)} (from pay period)."
-      case 2 => s"Divide by $daysInPeriod (number of days in the pay period)."
-      case 3 => s"Multiply by $numberOfDaysFurloughed (furlough days)."
-      case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
-    }
+    val h4ParagraphOne =
+      "Averaging method: take the employee’s total pay from 6 April 2020 (or the date the employment started, whichever is later), up to the day before the furlough started on or after 1 November 2020."
 
-  val h4ParagraphTwo: BigDecimal => String = (pay: BigDecimal) => s"Total pay based on furlough days = ${currencyFormatter(pay)}"
+    def calculatePayListMessages(messageNumber: Int, pay: BigDecimal, daysInPeriod: Int, numberOfDaysFurloughed: Int)(
+      implicit messages: Messages): String =
+      messageNumber match {
+        case 1 =>
+          s"Start with ${currencyFormatter(pay)} (total pay from 6 April 2020 to the day before furlough started on or after 1 November 2020)."
+        case 2 => s"Divide by $daysInPeriod (days employed since the start of the tax year)."
+        case 3 => s"Multiply by $numberOfDaysFurloughed (furlough days in pay period)."
+        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
+      }
 
-  val h4FurloughGrant = "Furlough grant"
+    val h4ParagraphTwo: BigDecimal => String = (pay: BigDecimal) => s"Total pay based on furlough days = ${currencyFormatter(pay)}"
 
-  def furloughGrantListMessages(messageNumber: Int, pay: BigDecimal, generosityPercentage: BigDecimal)(
-    implicit messages: Messages): String =
-    messageNumber match {
-      case 1 => s"Take ${currencyFormatter(pay)} (pay based on furlough days)."
-      case 2 => s"Multiply by $generosityPercentage%"
-      case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
-    }
+    val h4FurloughGrant = "Furlough grant"
 
-  val furloughGrantParagraphOne = (calculatedAmount: BigDecimal) => s"Calculated furlough grant = ${currencyFormatter(calculatedAmount)}"
-  val furloughGrantParagraphTwo = (calculatedAmount: BigDecimal) =>
-    s"The calculated furlough grant is more than the maximum furlough grant for this pay period. " +
-      s"Because of this, you must use the maximum furlough grant, which is ${currencyFormatter(calculatedAmount)}"
-  val maxFurloughGrantBullet: BigDecimal => String = (maxAmount: BigDecimal) => currencyFormatter(maxAmount)
-  val furloughGrantParagraphThree = (calculatedAmount: BigDecimal) => s"Actual furlough grant = ${currencyFormatter(calculatedAmount)}"
+    def furloughGrantListMessages(messageNumber: Int, pay: BigDecimal, generosityPercentage: BigDecimal)(
+      implicit messages: Messages): String =
+      messageNumber match {
+        case 1 => s"Take ${currencyFormatter(pay)} (pay based on furlough days)."
+        case 2 => s"Multiply by $generosityPercentage%"
+        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
+      }
 
-  val furloughGrantIndent = (furloughPay: BigDecimal) => s"Total furlough grant for pay period = ${currencyFormatter(furloughPay)}"
+    val furloughGrantParagraphOne = (calculatedAmount: BigDecimal) => s"Calculated furlough grant = ${currencyFormatter(calculatedAmount)}"
+    val furloughGrantParagraphTwo = (calculatedAmount: BigDecimal) =>
+      s"The calculated furlough grant is more than the maximum furlough grant for this pay period. " +
+        s"Because of this, you must use the maximum furlough grant, which is ${currencyFormatter(calculatedAmount)}"
+    val maxFurloughGrantBullet: BigDecimal => String = (maxAmount: BigDecimal) => currencyFormatter(maxAmount)
+    val furloughGrantParagraphThree = (calculatedAmount: BigDecimal) => s"Actual furlough grant = ${currencyFormatter(calculatedAmount)}"
 
-  val disclaimerBottomPage = "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible." +
-    " You cannot claim for more money than you are going to pay out under the scheme."
+    val furloughGrantIndent = (furloughPay: BigDecimal) => s"Total furlough grant for pay period = ${currencyFormatter(furloughPay)}"
 
-  val printOrSave = "Print or save a copy of this page"
-  val webchatLink = "Webchat help (opens in a new tab)."
-  val feedbackLink = "What do you think of this service?"
+    val disclaimerBottomPage = "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible." +
+      " You cannot claim for more money than you are going to pay out under the scheme."
 
-  val startAnotherCalculation = "Start another calculation"
+    val printOrSave = "Print or save a copy of this page"
+    val webchatLink = "Webchat help (opens in a new tab)."
+    val feedbackLink = "What do you think of this service?"
+
+    val startAnotherCalculation = "Start another calculation"
+  }
 
 }

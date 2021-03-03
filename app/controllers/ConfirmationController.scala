@@ -16,20 +16,27 @@
 
 package controllers
 
+import java.time.LocalDate
+
+import cats.data.{NonEmptyChain, Validated}
 import cats.data.Validated.{Invalid, Valid}
-import config.CalculatorVersionConfiguration
+import config.{CalculatorVersionConfiguration, FrontendAppConfig}
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
 import javax.inject.Inject
-import models.UserAnswers
+import models.EmployeeRTISubmission._
+import models.{AnswerValidation, EmployeeRTISubmission, Period, UserAnswers}
+import models.UserAnswers.AnswerV
+import models.requests.DataRequest
 import navigation.Navigator
+import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, PreviousFurloughPeriodsPage}
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.AuditService
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.{AuditService, EmployeeTypeService}
 import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
 import utils.PagerDutyHelper
 import utils.PagerDutyHelper.PagerDutyKeys._
-import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
+import viewmodels.{ConfirmationDataResult, ConfirmationDataResultWithoutNicAndPension, ConfirmationViewBreakdownWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult, ViewBreakdown}
 import views.html._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,6 +47,7 @@ class ConfirmationController @Inject()(
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
+  employeeTypeService: EmployeeTypeService,
   viewWithDetailedBreakdowns: ConfirmationViewWithDetailedBreakdowns,
   phaseTwoView: PhaseTwoConfirmationView,
   noNicAndPensionView: NoNicAndPensionConfirmationView,
@@ -47,15 +55,14 @@ class ConfirmationController @Inject()(
   octoberConfirmationView: OctoberConfirmationView,
   extensionView: JrsExtensionConfirmationView,
   auditService: AuditService,
-  val navigator: Navigator
-)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext)
+  val navigator: Navigator)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext, appConfig: FrontendAppConfig)
     extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
 
   //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     /** Uncomment line to create integration test cases when going through journeys, either manually or via test packs.
       * Set the number of cases to the amount of cases that will be executed. */
-//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 3)
+    //    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 3)
 
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>
@@ -78,7 +85,15 @@ class ConfirmationController @Inject()(
             Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
           case 11 | 12 | 1 | 2 | 3 | 4 =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
-            Future.successful(Ok(extensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
+            Future.successful(
+              Ok(
+                extensionView(
+                  data.confirmationViewBreakdown,
+                  data.metaData.claimPeriod,
+                  calculatorVersionConf,
+                  employeeTypeService.isType5NewStarter()
+                ))
+            )
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
       case Invalid(e) =>
@@ -88,4 +103,5 @@ class ConfirmationController @Inject()(
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }
   }
+
 }

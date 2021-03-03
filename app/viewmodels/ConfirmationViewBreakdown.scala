@@ -17,6 +17,7 @@
 package viewmodels
 
 import models._
+import java.time.LocalDate
 import services.{AuditBreakdown, AuditCalculationResult, AuditPeriodBreakdown}
 
 sealed trait ConfirmationDataResult
@@ -112,13 +113,17 @@ case class PhaseTwoConfirmationViewBreakdown(
     )
   }
 
-  def detailedBreakdownMessageKeys: Seq[String] =
+  def detailedBreakdownMessageKeys(isNewStarterType5: Boolean): Seq[String] =
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
           case _: RegularPaymentWithPhaseTwoPeriod =>
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
+            )
+          case _: AveragePaymentWithPhaseTwoPeriod if isNewStarterType5 =>
+            Seq(
+              "phaseTwoReferencePayBreakdown.extension.p1"
             )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
@@ -175,7 +180,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
     )
   }
 
-  def detailedBreakdownMessageKeys: Seq[String] =
+  def detailedBreakdownMessageKeys(isNewStarterType5: Boolean): Seq[String] =
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
@@ -183,10 +188,10 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
             Seq(
               "phaseTwoDetailedBreakdown.p1.regular"
             )
+          case avg: AveragePaymentWithPhaseTwoPeriod if isNewStarterType5 =>
+            Seq("phaseTwoDetailedBreakdown.no.nic.p1.extension")
           case _: AveragePaymentWithPhaseTwoPeriod =>
-            Seq(
-              "phaseTwoDetailedBreakdown.p1.average"
-            )
+            Seq("phaseTwoDetailedBreakdown.p1.average")
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
               "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1",

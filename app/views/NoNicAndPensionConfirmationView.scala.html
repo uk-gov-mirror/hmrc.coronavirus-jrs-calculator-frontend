@@ -37,7 +37,7 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
+@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String, isNewStarterType5:Boolean = false)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
@@ -82,7 +82,7 @@
 
 
 
-@for(messageKey <- cvb.detailedBreakdownMessageKeys) {
+@for(messageKey <- cvb.detailedBreakdownMessageKeys(isNewStarterType5)) {
     @p(Html(messages(messageKey)))
 }
 
@@ -95,7 +95,7 @@
 
 @for(detailedBreakdown <- cvb.detailedBreakdowns) {
     @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-    @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period)
+    @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period, isNewStarterType5)
 }
 <hr>
 <br>

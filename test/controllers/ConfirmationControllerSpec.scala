@@ -28,7 +28,7 @@ import org.mockito.Mockito.when
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{AuditService, Threshold}
+import services.{AuditService, EmployeeTypeService, Threshold}
 import viewmodels.{ConfirmationViewBreakdownWithoutNicAndPension, PhaseTwoConfirmationViewBreakdown}
 import views.html._
 
@@ -44,6 +44,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
   val octView = app.injector.instanceOf[OctoberConfirmationView]
   val extensionView = app.injector.instanceOf[JrsExtensionConfirmationView]
   val audit = app.injector.instanceOf[AuditService]
+  val service = app.injector.instanceOf[EmployeeTypeService]
 
   val controller = new ConfirmationController(
     messagesApi = messagesApi,
@@ -51,6 +52,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
     getData = dataRetrieval,
     requireData = dataRequired,
     controllerComponents = component,
+    employeeTypeService = service,
     viewWithDetailedBreakdowns = view,
     phaseTwoView = phaseTwoView,
     noNicAndPensionView = noNicView,
@@ -151,7 +153,9 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       val actual: String = extensionView(
         cvb = breakdown,
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
-        version = calculatorVersionConf)(request, messages).toString
+        version = calculatorVersionConf,
+        isNewStarterType5 = false
+      )(request, messages).toString
 
       status(result) mustEqual OK
       expected mustEqual actual
