@@ -21,6 +21,7 @@ import config.FrontendAppConfig
 import models.Language
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class LanguageSwitchControllerSpec extends SpecBaseControllerSpecs {
 
@@ -29,7 +30,7 @@ class LanguageSwitchControllerSpec extends SpecBaseControllerSpecs {
   "switching language when translation is enabled" should {
     "should set the language to Cymraeg" in {
 
-      val controller = languageSwitchController(new FrontendAppConfig() {
+      val controller = languageSwitchController(new FrontendAppConfig(injector.instanceOf[ServicesConfig]) {
         override lazy val languageTranslationEnabled: Boolean = true
       })
 
@@ -42,7 +43,7 @@ class LanguageSwitchControllerSpec extends SpecBaseControllerSpecs {
     }
 
     "set the language to English" in {
-      val controller = languageSwitchController(new FrontendAppConfig() {
+      val controller = languageSwitchController(new FrontendAppConfig(injector.instanceOf[ServicesConfig]) {
         override lazy val languageTranslationEnabled: Boolean = true
       })
 
@@ -58,7 +59,7 @@ class LanguageSwitchControllerSpec extends SpecBaseControllerSpecs {
   "when translation is disabled" should {
 
     "should set the language to English regardless of what is requested" in {
-      implicit val appConf: FrontendAppConfig = new FrontendAppConfig {
+      implicit val appConf: FrontendAppConfig = new FrontendAppConfig(injector.instanceOf[ServicesConfig]) {
         override lazy val languageTranslationEnabled: Boolean = false
       }
       val controller = new LanguageSwitchController(appConf, messagesApi, component)

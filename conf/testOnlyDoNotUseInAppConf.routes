@@ -11,3 +11,6 @@
 
 # Add all the application routes to the prod.routes file
 ->         /                          prod.Routes
+
+GET         /job-retention-scheme-calculator/test-only/feature-switch        testonly.controllers.FeatureSwitchController.show
+POST        /job-retention-scheme-calculator/test-only/feature-switch        testonly.controllers.FeatureSwitchController.submit

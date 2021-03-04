@@ -80,7 +80,7 @@ class PartTimeNormalHoursViewSpec extends HoursViewBehaviours {
       behave like pageWithExpectedMessages(expectedContent)
 
       "has the correct link destination" in {
-        doc.select(Selectors.link(1)).attr("href") mustBe appConf.usualHours
+        doc.select(Selectors.link(1)).attr("href") mustBe frontendAppConfig.usualHours
       }
     }
 
@@ -123,7 +123,7 @@ class PartTimeNormalHoursViewSpec extends HoursViewBehaviours {
       behave like pageWithExpectedMessages(expectedContent)
 
       "has the correct link destination" in {
-        doc.select(Selectors.link(1)).attr("href") mustBe appConf.usualHours
+        doc.select(Selectors.link(1)).attr("href") mustBe frontendAppConfig.usualHours
       }
     }
   }
