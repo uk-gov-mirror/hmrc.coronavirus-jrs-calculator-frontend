@@ -17,17 +17,21 @@
 package config
 
 import java.time.LocalDate
-
-import com.google.inject.Singleton
+import config.featureSwitch.{FeatureSwitching, WelshLanguageFeature}
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+
 import scala.util.Try
 import pureconfig.ConfigSource
-import pureconfig.generic.auto._ // Do not remove this
+import pureconfig.generic.auto._ // do not remove this
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class FrontendAppConfig() extends UrlConfiguration with SchemeConfiguration with MongoConfiguration {
+class FrontendAppConfig @Inject()(val servicesConfig: ServicesConfig)
+    extends UrlConfiguration with SchemeConfiguration with MongoConfiguration with FeatureSwitching {
 
-  private val configSource: String => ConfigSource = ConfigSource.default.at _
+  private val configSource: String => ConfigSource = ConfigSource.default.at
   private val serviceIdentifier = "jrsc"
 
   private val contactHost = configSource("contact-frontend.host").loadOrThrow[String]
@@ -61,7 +65,7 @@ class FrontendAppConfig() extends UrlConfiguration with SchemeConfiguration with
   private val feedbackSurveyFEUrl: String = configSource("microservice.services.feedback-survey.url").loadOrThrow[String]
   val feedbackUrl: String = s"$feedbackSurveyFEUrl/$serviceIdentifier"
 
-  lazy val languageTranslationEnabled: Boolean = configSource("features.welsh-translation").loadOrThrow[Boolean]
+  def languageTranslationEnabled: Boolean = isEnabled(WelshLanguageFeature)(this)
 
   lazy val cookies: String = host + configSource("urls.footer.cookies").loadOrThrow[String]
   lazy val privacy: String = host + configSource("urls.footer.privacy").loadOrThrow[String]

@@ -61,8 +61,6 @@ trait SpecBase
 
   implicit lazy val frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
-  implicit val appConf: FrontendAppConfig = new FrontendAppConfig
-
   implicit lazy val errorHandler: ErrorHandler = injector.instanceOf[ErrorHandler]
 
   implicit class AnswerHelpers[A](val answer: AnswerV[A]) {}

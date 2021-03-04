@@ -43,14 +43,14 @@ import scala.concurrent.Future
 trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with CoreTestData with MockitoSugar {
 
   def injector: Injector = app.injector
-  def messagesApi = app.injector.instanceOf[MessagesApi]
-  val component = app.injector.instanceOf[MessagesControllerComponents]
-  val identifier = app.injector.instanceOf[FakeIdentifierAction]
-  val dataRequired = app.injector.instanceOf[DataRequiredActionImpl]
-  val navigator = app.injector.instanceOf[Navigator]
+  def messagesApi = injector.instanceOf[MessagesApi]
+  val component = injector.instanceOf[MessagesControllerComponents]
+  val identifier = injector.instanceOf[FakeIdentifierAction]
+  val dataRequired = injector.instanceOf[DataRequiredActionImpl]
+  val navigator = injector.instanceOf[Navigator]
   val dataRetrieval = new DataRetrievalActionImpl(mockSessionRepository)
-  implicit val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
-  implicit val appConf: FrontendAppConfig = new FrontendAppConfig
+  implicit val errorHandler: ErrorHandler = injector.instanceOf[ErrorHandler]
+  implicit val appConf: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   implicit class AnswerHelpers[A](val answer: AnswerV[A]) {}
 
@@ -58,7 +58,7 @@ trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with Cor
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
-  private val configKeyValues: Set[(String, ConfigValue)] = app.injector.instanceOf[Configuration].entrySet
+  private val configKeyValues: Set[(String, ConfigValue)] = injector.instanceOf[Configuration].entrySet
 
   def configValues(kv: (String, Any)): List[(String, Any)] =
     configKeyValues.toMap.+(kv._1 -> kv._2).toList

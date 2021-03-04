@@ -164,7 +164,7 @@ class JrsExtensionConfirmationViewSpec
         }
 
         "have a Webchat link - opens a webchat/contact details page" in {
-          doc.select(RegularEmployeeTypeOneSelectors.webChatLink).attr("href") mustBe appConf.webchatHelpUrl
+          doc.select(RegularEmployeeTypeOneSelectors.webChatLink).attr("href") mustBe frontendAppConfig.webchatHelpUrl
         }
 
         "have a Feedback link" in {
@@ -302,7 +302,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
       }
 
       "have a Webchat link - opens a webchat/contact details page" in {
-        doc.select(VariableEmployeeTypeFiveSelectors.webChatLink).attr("href") mustBe appConf.webchatHelpUrl
+        doc.select(VariableEmployeeTypeFiveSelectors.webChatLink).attr("href") mustBe frontendAppConfig.webchatHelpUrl
       }
 
       "have a Feedback link" in {
