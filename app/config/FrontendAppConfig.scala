@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 
 import scala.util.Try
 import pureconfig.ConfigSource
-import pureconfig.generic.auto._
+import pureconfig.generic.auto._ // do not remove this
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
