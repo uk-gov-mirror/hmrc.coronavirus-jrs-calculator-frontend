@@ -148,6 +148,6 @@ POST        /furloughed-more-than-once                       controllers.Previou
 GET         /first-furlough-date                             controllers.FirstFurloughDateController.onPageLoad()
 POST        /first-furlough-date                             controllers.FirstFurloughDateController.onSubmit()
 
-GET        /on-payroll-before-30th-oct-2020                  controllers.OnPayrollBefore30thOct2020Controller.onPageLoad()
-POST       /onPayrollBefore30thOct2020                       controllers.OnPayrollBefore30thOct2020Controller.onSubmit()
+GET         /october-payroll                                 controllers.OnPayrollBefore30thOct2020Controller.onPageLoad()
+POST        /october-payroll                                 controllers.OnPayrollBefore30thOct2020Controller.onSubmit()
 

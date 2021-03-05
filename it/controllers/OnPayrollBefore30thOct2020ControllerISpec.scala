@@ -18,50 +18,55 @@ package controllers
 
 import assets.BaseITConstants
 import assets.PageTitles.onPayrollBefore30thOct2020
+import controllers.scenarios.AprilConfirmationScenarios.dummyUserAnswers
+import models.UserAnswers
 import play.api.http.Status._
-import play.api.libs.json.Json
 import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
 
 class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants {
 
-  "GET /url30th" when {
+  "GET /october-payroll" when {
 
-    "redirect to the start page" in {
+    "is a Regular Journey" should {
 
-      val res = getRequest("/url30th")()
+      "retur correct page with Status: 200" in {
 
-      whenReady(res) { result =>
-        result should have(
-          httpStatus(OK),
-          titleOf(onPayrollBefore30thOct2020)
-        )
-      }
-    }
-  }
+        val userAnswers: UserAnswers = dummyUserAnswers
+        setAnswers(userAnswers)
 
-  "POST /url30th" when {
-
-    "enters a valid answer" when {
-
-      "redirect to <next page> page" in {
-
-        val res = postRequest("/url30th",
-          Json.obj(
-            "startDate.day" -> claimStartDate.getDayOfMonth,
-            "startDate.month" -> claimStartDate.getMonthValue,
-            "startDate.year" -> claimStartDate.getYear
-          ))()
-
+        val res = getRequestHeaders("/october-payroll")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
 
         whenReady(res) { result =>
           result should have(
-            httpStatus(SEE_OTHER),
-            redirectLocation(controllers.routes.ClaimPeriodEndController.onPageLoad().url)
+            httpStatus(OK),
+            titleOf(onPayrollBefore30thOct2020)
           )
         }
       }
-
     }
   }
+
+  //  "POST /october-payroll" when {
+  //
+  //    "enters a valid answer" when {
+  //
+  //      "redirect to <next page> page" in {
+  //
+  //        val res = postRequest(
+  //          path = "/october-payroll",
+  //          formJson = Json.obj("value" -> "true")
+  //        )()
+  //
+  //
+  //        whenReady(res) { result =>
+  //          result should have(
+  //            httpStatus(SEE_OTHER),
+  //            redirectLocation(controllers.routes.UnderConstruction.onPageLoad().url)  // no under construction page :(
+  //          )
+  //        }
+  //      }
+  //
+  //    }
+  //  }
 
 }
