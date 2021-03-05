@@ -16,8 +16,8 @@
 
 @import viewmodels.TableModel
 
-@this(GovukTable: GovukTable)
+@this(govukTable: GovukTable)
 
-@(table: TableModel)(implicit messages: Messages)
+@(table: TableModel)
 
-@GovukTable(table.toGovukTable)
+@govukTable(table.toGovukTable)
