@@ -18,7 +18,7 @@ package controllers
 
 import assets.BaseITConstants
 import assets.PageTitles.onPayrollBefore30thOct2020
-import controllers.scenarios.AprilConfirmationScenarios.dummyUserAnswers
+import controllers.scenarios.AprilConfirmationScenarios._
 import models.UserAnswers
 import play.api.http.Status._
 import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
@@ -29,7 +29,7 @@ class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with
 
     "is a Regular Journey" should {
 
-      "retur correct page with Status: 200" in {
+      "return correct page & title, Status: 200" in {
 
         val userAnswers: UserAnswers = dummyUserAnswers
         setAnswers(userAnswers)
@@ -44,6 +44,25 @@ class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with
         }
       }
     }
+
+    "is a Variable Journey" should {
+
+      "return correct page & title, Status: 200" in {
+
+        val userAnswers: UserAnswers = hasEmployeeBeenFurloughedAfterNovember
+        setAnswers(userAnswers)
+
+        val res = getRequestHeaders("/october-payroll")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+        whenReady(res) { result =>
+          result should have(
+            httpStatus(OK),
+            titleOf(onPayrollBefore30thOct2020)
+          )
+        }
+      }
+    }
+
   }
 
   //  "POST /october-payroll" when {
