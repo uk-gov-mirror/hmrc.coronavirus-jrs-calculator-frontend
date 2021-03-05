@@ -36,7 +36,8 @@
     js: Option[Html] = None,
     showBackButton: Boolean = true,
     showResearch: Boolean = false,
-    thisPage: Page, currentIdx: Option[Int] = None
+    thisPage: Page,
+    currentIdx: Option[Int] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {

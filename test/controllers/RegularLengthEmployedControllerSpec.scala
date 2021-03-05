@@ -43,15 +43,15 @@ class RegularLengthEmployedControllerSpec extends SpecBaseControllerSpecs with M
   val form = formProvider()
 
   val controller = new RegularLengthEmployedController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view
+    messagesApi = messagesApi,
+    sessionRepository = mockSessionRepository,
+    navigator = navigator,
+    identify = identifier,
+    getData = dataRetrieval,
+    requireData = dataRequired,
+    formProvider = formProvider,
+    controllerComponents = component,
+    view = view
   )
 
   lazy val regularLengthEmployedRouteGet = routes.RegularLengthEmployedController.onPageLoad().url
