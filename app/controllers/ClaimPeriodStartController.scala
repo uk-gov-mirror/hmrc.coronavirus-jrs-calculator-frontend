@@ -48,7 +48,7 @@ class ClaimPeriodStartController @Inject()(
     extends FrontendBaseController with I18nSupport {
 
   def form(implicit messages: Messages): Form[LocalDate] = formProvider()
-  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
+  protected val userAnswerPersistence                    = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
     val preparedForm = request.userAnswers

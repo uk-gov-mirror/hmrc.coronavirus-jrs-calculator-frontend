@@ -28,9 +28,9 @@ object FeatureSwitch {
     ExtensionTwoNewStarterFlow
   )
 
-  val booleanFeatureSwitches: Seq[BooleanFeatureSwitch] = switches.collect { case a: BooleanFeatureSwitch           => a }
+  val booleanFeatureSwitches: Seq[BooleanFeatureSwitch]       = switches.collect { case a: BooleanFeatureSwitch => a }
   val customValueFeatureSwitch: Seq[CustomValueFeatureSwitch] = switches.collect { case a: CustomValueFeatureSwitch => a }
-  val configurableConstantsKeys: Seq[String] = Seq[String]().map(key => s"constants.$key")
+  val configurableConstantsKeys: Seq[String]                  = Seq[String]().map(key => s"constants.$key")
 
   def apply(str: String): FeatureSwitch =
     switches find (_.name == str) match {
@@ -55,7 +55,7 @@ sealed trait CustomValueFeatureSwitch extends FeatureSwitch {
 }
 
 object WelshLanguageFeature extends BooleanFeatureSwitch {
-  override val name: String = s"$prefix.welsh-translation"
+  override val name: String        = s"$prefix.welsh-translation"
   override val displayText: String = "Enable or Disable welsh language translation option"
 }
 

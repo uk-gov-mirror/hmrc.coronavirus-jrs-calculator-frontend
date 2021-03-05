@@ -47,7 +47,7 @@ class PartTimeHoursController @Inject()(
     getRequiredAnswerOrRedirectV(PartTimePeriodsPage) { partTimePeriods =>
       withValidPartTimePeriod(partTimePeriods, idx) { partTimePeriod =>
         val usuals: Seq[UsualHours] = request.userAnswers.getList(PartTimeNormalHoursPage)
-        val form = formProvider(usuals, partTimePeriod)
+        val form                    = formProvider(usuals, partTimePeriod)
         val preparedForm = request.userAnswers.getV(PartTimeHoursPage, Some(idx)) match {
           case Invalid(e)   => form
           case Valid(value) => form.fill(value.hours)
@@ -71,7 +71,7 @@ class PartTimeHoursController @Inject()(
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers
-                                   .set(PartTimeHoursPage, PartTimeHours(partTimePeriod.period.end, value), Some(idx)))
+                  .set(PartTimeHoursPage, PartTimeHours(partTimePeriod.period.end, value), Some(idx)))
                 _ <- sessionRepository.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(PartTimeHoursPage, updatedAnswers, Some(idx)))
           )

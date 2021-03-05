@@ -62,9 +62,9 @@ object AuditBreakdown {
 @Singleton
 class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendAppConfig) {
 
-  def sendCalculationPerformed(
-    userAnswers: UserAnswers,
-    breakdown: ViewBreakdown)(implicit hc: HeaderCarrier, request: Request[Any], ec: ExecutionContext): Future[Unit] =
+  def sendCalculationPerformed(userAnswers: UserAnswers, breakdown: ViewBreakdown)(implicit hc: HeaderCarrier,
+                                                                                   request: Request[Any],
+                                                                                   ec: ExecutionContext): Future[Unit] =
     auditEvent(
       JobRetentionSchemeCalculatorEvent.CalculationPerformed,
       "calculation-performed",
@@ -130,7 +130,7 @@ class AuditService @Inject()(auditConnector: AuditConnector, config: FrontendApp
     request: Request[Any]): DataEvent = {
 
     val detail = hc.toAuditDetails(details.map(pair => pair._1 -> pair._2.toString): _*)
-    val tags = hc.toAuditTags(transactionName, request.path)
+    val tags   = hc.toAuditTags(transactionName, request.path)
     DataEvent(auditSource = config.appName, auditType = event.toString, tags = tags, detail = detail)
   }
 

@@ -18,4 +18,4 @@ package models
 
 sealed trait BackJourneyValidation
 case object BackToPreviousPage extends BackJourneyValidation
-case object BackFirstPage extends BackJourneyValidation
+case object BackFirstPage      extends BackJourneyValidation

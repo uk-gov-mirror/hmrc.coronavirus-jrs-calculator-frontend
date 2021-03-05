@@ -29,7 +29,7 @@ case class Threshold(value: BigDecimal, taxYear: TaxYear, frequency: PaymentFreq
 sealed trait Rate {
   val value: BigDecimal
 }
-case class NiRate(value: BigDecimal = 13.8 / 100) extends Rate
+case class NiRate(value: BigDecimal = 13.8 / 100)     extends Rate
 case class PensionRate(value: BigDecimal = 3.0 / 100) extends Rate
 
 object FrequencyTaxYearThresholdMapping {

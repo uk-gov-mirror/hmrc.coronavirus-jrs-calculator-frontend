@@ -46,7 +46,7 @@ class FeatureFlagAction(
 
 trait FeatureFlagActionProvider {
   def apply(flag: Option[FeatureFlag]): ActionFilter[IdentifierRequest]
-  def apply(): ActionFilter[IdentifierRequest] = apply(None)
+  def apply(): ActionFilter[IdentifierRequest]                  = apply(None)
   def apply(flag: FeatureFlag): ActionFilter[IdentifierRequest] = apply(Some(flag))
 }
 
@@ -60,7 +60,7 @@ sealed trait FeatureFlag {
 }
 
 final case class FeatureFlagKeyWithRedirect(key: String, redirectRoute: Call) extends FeatureFlag
-final case class FeatureFlagWith404(key: String) extends FeatureFlag
+final case class FeatureFlagWith404(key: String)                              extends FeatureFlag
 
 object FeatureFlag {
   import pureconfig.ConfigSource

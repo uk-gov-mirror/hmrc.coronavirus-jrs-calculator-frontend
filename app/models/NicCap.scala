@@ -18,5 +18,5 @@ package models
 
 case class NicCap(furloughGrant: Amount, nicGrant: Amount, cap: Amount) {
   def cappedGrant = Amount(nicGrant.value.min(cap.value))
-  def isCapped = nicGrant.value > cap.value
+  def isCapped    = nicGrant.value > cap.value
 }

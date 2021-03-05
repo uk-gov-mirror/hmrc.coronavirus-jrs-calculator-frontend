@@ -25,7 +25,7 @@ sealed trait PensionStatus
 
 object PensionStatus extends Enumerable.Implicits {
 
-  case object DoesContribute extends WithName("doesContribute") with PensionStatus
+  case object DoesContribute    extends WithName("doesContribute") with PensionStatus
   case object DoesNotContribute extends WithName("doesNotContribute") with PensionStatus
 
   val values: Seq[PensionStatus] = Seq(

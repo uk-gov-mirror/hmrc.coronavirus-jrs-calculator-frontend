@@ -28,9 +28,8 @@ case class PhaseOneConfirmationDataResult(metaData: ConfirmationMetadata, confir
 case class PhaseTwoConfirmationDataResult(metaData: ConfirmationMetadata, confirmationViewBreakdown: PhaseTwoConfirmationViewBreakdown)
     extends ConfirmationDataResult
 
-case class ConfirmationDataResultWithoutNicAndPension(
-  metaData: ConfirmationMetadataWithoutNicAndPension,
-  confirmationViewBreakdown: ConfirmationViewBreakdownWithoutNicAndPension)
+case class ConfirmationDataResultWithoutNicAndPension(metaData: ConfirmationMetadataWithoutNicAndPension,
+                                                      confirmationViewBreakdown: ConfirmationViewBreakdownWithoutNicAndPension)
     extends ConfirmationDataResult
 
 sealed trait ViewBreakdown {
@@ -96,10 +95,9 @@ case class ConfirmationViewBreakdown(furlough: FurloughCalculationResult, nic: N
   }
 }
 
-case class PhaseTwoConfirmationViewBreakdown(
-  furlough: PhaseTwoFurloughCalculationResult,
-  nic: PhaseTwoNicCalculationResult,
-  pension: PhaseTwoPensionCalculationResult)
+case class PhaseTwoConfirmationViewBreakdown(furlough: PhaseTwoFurloughCalculationResult,
+                                             nic: PhaseTwoNicCalculationResult,
+                                             pension: PhaseTwoPensionCalculationResult)
     extends ViewBreakdown {
   def zippedBreakdowns: Seq[(PhaseTwoFurloughBreakdown, PhaseTwoNicBreakdown, PhaseTwoPensionBreakdown)] =
     (furlough.periodBreakdowns, nic.periodBreakdowns, pension.periodBreakdowns).zipped.toList
@@ -252,10 +250,9 @@ sealed trait Metadata
 final case class ConfirmationMetadataWithoutNicAndPension(claimPeriod: Period, furloughDates: FurloughDates, frequency: PaymentFrequency)
     extends Metadata
 
-final case class ConfirmationMetadata(
-  claimPeriod: Period,
-  furloughDates: FurloughDates,
-  frequency: PaymentFrequency,
-  nic: NicCategory,
-  pension: PensionStatus)
+final case class ConfirmationMetadata(claimPeriod: Period,
+                                      furloughDates: FurloughDates,
+                                      frequency: PaymentFrequency,
+                                      nic: NicCategory,
+                                      pension: PensionStatus)
     extends Metadata

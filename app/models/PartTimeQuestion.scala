@@ -26,7 +26,7 @@ sealed trait PartTimeQuestion
 object PartTimeQuestion extends Enumerable.Implicits {
 
   case object PartTimeYes extends WithName("partTimeYes") with PartTimeQuestion
-  case object PartTimeNo extends WithName("partTimeNo") with PartTimeQuestion
+  case object PartTimeNo  extends WithName("partTimeNo") with PartTimeQuestion
 
   val values: Seq[PartTimeQuestion] = Seq(
     PartTimeYes,

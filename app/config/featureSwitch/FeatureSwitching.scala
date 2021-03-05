@@ -22,7 +22,7 @@ import scala.sys.SystemProperties
 
 trait FeatureSwitching {
 
-  val FEATURE_SWITCH_ON = "true"
+  val FEATURE_SWITCH_ON  = "true"
   val FEATURE_SWITCH_OFF = "false"
 
   def isEnabled(featureSwitch: FeatureSwitch)(implicit config: FrontendAppConfig): Boolean =

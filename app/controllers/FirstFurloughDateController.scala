@@ -50,7 +50,7 @@ class FirstFurloughDateController @Inject()(
     extends BaseController with I18nSupport {
 
   def form(startDate: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(startDate)
-  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
+  protected val userAnswerPersistence                                          = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerV(FurloughStartDatePage) { startDate =>

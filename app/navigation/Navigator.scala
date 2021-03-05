@@ -484,7 +484,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[navigation] def requireLastPayDateRoutes: UserAnswers => Call = { userAnswers =>
     val endDates = sortedEndDates(userAnswers.getList(PayDatePage))
-    val period = Period(endDates.head.plusDays(1), endDates.last)
+    val period   = Period(endDates.head.plusDays(1), endDates.last)
     if (period.start.isBefore(LocalDate.of(2020, 4, 6))) {
       routes.LastPayDateController.onPageLoad()
     } else {

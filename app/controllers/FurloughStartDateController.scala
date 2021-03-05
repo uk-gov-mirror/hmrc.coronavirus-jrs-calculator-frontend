@@ -48,7 +48,7 @@ class FurloughStartDateController @Inject()(
     extends BaseController with I18nSupport {
 
   def form(claimEndDate: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(claimEndDate)
-  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
+  protected val userAnswerPersistence                                             = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswersV(ClaimPeriodStartPage, ClaimPeriodEndPage) { (claimStartDate, claimEndDate) =>
