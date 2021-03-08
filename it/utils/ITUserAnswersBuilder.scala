@@ -72,6 +72,9 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
     def withEmployeeStartDate(startDate: String): UserAnswers =
       userAnswers.setValue(EmployeeStartDatePage, startDate.toLocalDate)
 
+    def withOnPayrollBefore30thOct2020(isOnPayrollBefore30thOct2020: Boolean): UserAnswers =
+      userAnswers.setValue(OnPayrollBefore30thOct2020Page, isOnPayrollBefore30thOct2020)
+
     def withLastPayDate(date: String): UserAnswers =
       userAnswers.setValue(LastPayDatePage, date.toLocalDate)
 

@@ -21,13 +21,14 @@ import java.time.LocalDate
 import base.SpecBaseControllerSpecs
 import controllers.actions.DataRetrievalActionImpl
 import forms.PreviousFurloughPeriodsFormProvider
+import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.requests.DataRequest
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{FurloughStartDatePage, PreviousFurloughPeriodsPage}
+import pages.{EmployeeStartedPage, FurloughStartDatePage, OnPayrollBefore30thOct2020Page, PreviousFurloughPeriodsPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
@@ -85,39 +86,29 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
   val mar1st2020: LocalDate = LocalDate.of(2020, 3, 1)
   val may1st2021: LocalDate = LocalDate.of(2021, 5, 1)
 
-  def userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(furloughStartDate: LocalDate): UserAnswers =
+  def userAnswersEmployedBefore1stFeb2019(): UserAnswers =
     UserAnswers(userAnswersId)
-      .withPreviousFurloughedPeriodsAnswer(true)
-      .withFurloughStartDate(furloughStartDate.toString)
+      .set(EmployeeStartedPage, OnOrBefore1Feb2019)
+      .success
+      .value
 
-  def userAnswersWithFurloughStartDateSet(furloughStartDate: LocalDate): UserAnswers =
+  def userAnswersWithPreviousFurloughPeriodsPageSet(userAnswers: => UserAnswers): UserAnswers =
+    userAnswers
+      .set(PreviousFurloughPeriodsPage, true)
+      .success
+      .value
+
+  def userAnswersEmployedAfter1stFeb2019(isOnPayrollBefore30thOct: Boolean): UserAnswers =
     UserAnswers(userAnswersId)
-      .set(FurloughStartDatePage, furloughStartDate)
+      .withEmployeeStartedAfter1Feb2019()
+      .set(OnPayrollBefore30thOct2020Page, isOnPayrollBefore30thOct)
       .success
       .value
 
   "PreviousFurloughPeriods Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = controller(Some(userAnswersWithFurloughStartDateSet(may8th2021.plusDays(1)))).onPageLoad()(getRequest)
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form, may1st2021)(getRequest, messages).toString
-    }
-
-    "return OK and the correct view for a get when the date is after 8th March 2020 but is before 8th Nov 2020 (display 1st March 2020)" in {
-      val result = controller(Some(userAnswersWithFurloughStartDateSet(mar8th2020.plusDays(1)))).onPageLoad()(getRequest)
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form, mar1st2020)(getRequest, messages).toString
-    }
-
-    "return OK and the correct view for a get when the date is after 8th November 2020 but is before 8th May 2021 (display 1st November 2020)" in {
-      val result = controller(Some(userAnswersWithFurloughStartDateSet(nov8th2020.plusDays(1)))).onPageLoad()(getRequest)
+      val result = controller(Some(userAnswersEmployedAfter1stFeb2019(true))).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
@@ -125,18 +116,34 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
         view(form, nov1st2020)(getRequest, messages).toString
     }
 
-    "return OK and the correct view for a get when the date is after 8th May 2021 (display 1st May 2021)" in {
-      val result = controller(Some(userAnswersWithFurloughStartDateSet(may8th2021.plusDays(1)))).onPageLoad()(getRequest)
+    "return OK and the correct view for a GET when the user selected Yes to employee working for them before Feb 2019 - showing March 2020" in {
+      val result = controller(Some(userAnswersEmployedBefore1stFeb2019())).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, may1st2021)(getRequest, messages).toString
+        view(form, mar1st2020)(getRequest, messages).toString
+    }
+
+    "return OK and the correct view for a GET when the user selected No to employee working for them before Feb 2019" must {
+      "show 1st November 2020 when the user answered Yes on OnPayrollBefore30thOct2020Page" in {
+        val result = controller(Some(userAnswersEmployedAfter1stFeb2019(true))).onPageLoad()(getRequest)
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual
+          view(form, nov1st2020)(getRequest, messages).toString
+      }
+
+      "show 1st May 2021 when the user answered No on OnPayrollBefore30thOct2020Page" in {
+        val result = controller(Some(userAnswersEmployedAfter1stFeb2019(false))).onPageLoad()(getRequest)
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual
+          view(form, may1st2021)(getRequest, messages).toString
+      }
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val result = controller(Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(mar8th2020.plusDays(1))))
+      val result = controller(Some(userAnswersWithPreviousFurloughPeriodsPageSet(userAnswersEmployedBefore1stFeb2019())))
         .onPageLoad()(getRequest)
 
       status(result) mustEqual OK
@@ -149,9 +156,9 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
     "redirect to the next page when the value 'true' is submitted" in {
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(
-        Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(mar8th2020.plusDays(1))))
+        Some(userAnswersWithPreviousFurloughPeriodsPageSet(userAnswersEmployedBefore1stFeb2019)))
 
-      val result = controller(Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(mar8th2020.plusDays(1))))
+      val result = controller(Some(userAnswersWithPreviousFurloughPeriodsPageSet(userAnswersEmployedBefore1stFeb2019)))
         .onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
@@ -161,7 +168,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
 
     "redirect to the next page when the value 'false' is submitted " in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(
-        Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(nov8th2020.plusDays(1))))
+        Some(userAnswersWithPreviousFurloughPeriodsPageSet(userAnswersEmployedBefore1stFeb2019)))
 
       lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
         FakeRequest(POST, previousFurloughPeriodsRoute).withCSRFToken
@@ -170,7 +177,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
             "value" -> "false"
           )
 
-      val result = controller(Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(nov8th2020.plusDays(1))))
+      val result = controller(Some(userAnswersWithPreviousFurloughPeriodsPageSet(userAnswersEmployedBefore1stFeb2019)))
         .onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
@@ -178,7 +185,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      val userAnswers = userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(nov8th2020.plusDays(1))
+      val userAnswers = userAnswersWithPreviousFurloughPeriodsPageSet(userAnswersEmployedBefore1stFeb2019)
       val request =
         FakeRequest(POST, previousFurloughPeriodsRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -192,7 +199,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, nov1st2020)(dataRequest, messages).toString
+        view(boundForm, mar1st2020)(dataRequest, messages).toString
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {

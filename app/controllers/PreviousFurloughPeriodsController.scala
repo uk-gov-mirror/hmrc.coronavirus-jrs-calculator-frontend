@@ -22,10 +22,11 @@ import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.PreviousFurloughPeriodsFormProvider
 import javax.inject.Inject
+import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.Mode
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.{FurloughStartDatePage, PreviousFurloughPeriodsPage}
+import pages.{EmployeeStartedPage, FurloughStartDatePage, OnPayrollBefore30thOct2020Page, PreviousFurloughPeriodsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -51,53 +52,30 @@ class PreviousFurloughPeriodsController @Inject()(
   val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    getFurloughStartDateFromUserAnswers.fold(
-      Redirect(routes.ErrorController.somethingWentWrong())
-    )(
-      furloughStartDate => {
-        val preparedForm = request.userAnswers.getV(PreviousFurloughPeriodsPage) match {
-          case Invalid(_)   => form
-          case Valid(value) => form.fill(value)
-        }
-        Ok(view(preparedForm, getDateToShowInHeadingFromFurloughStartDate(furloughStartDate)))
-      }
-    )
+    val preparedForm = request.userAnswers.getV(PreviousFurloughPeriodsPage) match {
+      case Invalid(_)   => form
+      case Valid(value) => form.fill(value)
+    }
+    Ok(view(preparedForm, getDateToShowInHeadingFromAnswers))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    getFurloughStartDateFromUserAnswers.fold(
-      Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
-    )(
-      furloughStartDate => {
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, getDateToShowInHeadingFromFurloughStartDate(furloughStartDate)))),
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousFurloughPeriodsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(PreviousFurloughPeriodsPage, updatedAnswers))
-          )
-      }
-    )
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, getDateToShowInHeadingFromAnswers))),
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousFurloughPeriodsPage, value))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(PreviousFurloughPeriodsPage, updatedAnswers))
+      )
   }
 
-  private def getFurloughStartDateFromUserAnswers()(implicit request: DataRequest[_]): Option[LocalDate] =
-    request.userAnswers.getV(FurloughStartDatePage) match {
-      case Valid(furloughStartDate) => {
-        Some(furloughStartDate)
-      }
-      case Invalid(_) => {
-        None
-      }
-    }
-
-  private def getDateToShowInHeadingFromFurloughStartDate(furloughStartDate: LocalDate): LocalDate =
-    furloughStartDate match {
-      case date if (date.isAfter(mar8th2020) && date.isBefore(nov8th2020)) => mar1st2020
-      case date if (date.isAfter(nov8th2020) && date.isBefore(may8th2021)) => nov1st2020
-      case _                                                               => may1st2021
+  private def getDateToShowInHeadingFromAnswers(implicit request: DataRequest[_]): LocalDate =
+    (request.userAnswers.getO(EmployeeStartedPage), request.userAnswers.getO(OnPayrollBefore30thOct2020Page)) match {
+      case (Some(Valid(OnOrBefore1Feb2019)), _)             => mar1st2020
+      case (Some(Valid(After1Feb2019)), Some(Valid(false))) => may1st2021
+      case (Some(Valid(After1Feb2019)), Some(Valid(true)))  => nov1st2020
     }
 }
