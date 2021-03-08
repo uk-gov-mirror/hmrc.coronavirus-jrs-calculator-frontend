@@ -19,6 +19,7 @@ package controllers
 import java.time.LocalDate
 
 import base.SpecBaseControllerSpecs
+import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
 import controllers.actions.DataRetrievalActionImpl
 import forms.PreviousFurloughPeriodsFormProvider
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
@@ -40,7 +41,7 @@ import views.html.PreviousFurloughPeriodsView
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with MockitoSugar with FeatureSwitching {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -106,6 +107,17 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
       .value
 
   "PreviousFurloughPeriods Controller" must {
+
+    "return OK and the correct view for a GET - showing 1st November 2020 when Feature Switch is disabled" in {
+      disable(ExtensionTwoNewStarterFlow)
+      val result = controller(Some(emptyUserAnswers)).onPageLoad()(getRequest)
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(form, nov1st2020)(getRequest, messages).toString
+      enable(ExtensionTwoNewStarterFlow)
+    }
 
     "return OK and the correct view for a GET" in {
       val result = controller(Some(userAnswersEmployedAfter1stFeb2019(true))).onPageLoad()(getRequest)

@@ -19,6 +19,8 @@ package controllers
 import java.time.{LocalDate, Month}
 
 import cats.data.Validated.{Invalid, Valid}
+import config.FrontendAppConfig
+import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
 import controllers.actions._
 import forms.PreviousFurloughPeriodsFormProvider
 import javax.inject.Inject
@@ -46,8 +48,8 @@ class PreviousFurloughPeriodsController @Inject()(
   formProvider: PreviousFurloughPeriodsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: PreviousFurloughPeriodsView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
+    extends FrontendBaseController with I18nSupport with FeatureSwitching {
 
   val form = formProvider()
 
@@ -56,6 +58,7 @@ class PreviousFurloughPeriodsController @Inject()(
       case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
+
     Ok(view(preparedForm, getDateToShowInHeadingFromAnswers))
   }
 
@@ -73,9 +76,13 @@ class PreviousFurloughPeriodsController @Inject()(
   }
 
   private def getDateToShowInHeadingFromAnswers(implicit request: DataRequest[_]): LocalDate =
-    (request.userAnswers.getO(EmployeeStartedPage), request.userAnswers.getO(OnPayrollBefore30thOct2020Page)) match {
-      case (Some(Valid(OnOrBefore1Feb2019)), _)             => mar1st2020
-      case (Some(Valid(After1Feb2019)), Some(Valid(false))) => may1st2021
-      case (Some(Valid(After1Feb2019)), Some(Valid(true)))  => nov1st2020
+    (
+      request.userAnswers.getO(EmployeeStartedPage),
+      request.userAnswers.getO(OnPayrollBefore30thOct2020Page),
+      isEnabled(ExtensionTwoNewStarterFlow)) match {
+      case (_, _, false)                                          => nov1st2020 //TODO: remove when ExtensionTwoNewStarterFlow feature switch is deprecated
+      case (Some(Valid(OnOrBefore1Feb2019)), _, true)             => mar1st2020
+      case (Some(Valid(After1Feb2019)), Some(Valid(false)), true) => may1st2021
+      case (Some(Valid(After1Feb2019)), Some(Valid(true)), true)  => nov1st2020
     }
 }
