@@ -16,6 +16,8 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBaseControllerSpecs
 import controllers.actions.DataRetrievalActionImpl
 import forms.PreviousFurloughPeriodsFormProvider
@@ -25,7 +27,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.PreviousFurloughPeriodsPage
+import pages.{FurloughStartDatePage, PreviousFurloughPeriodsPage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
@@ -75,39 +77,82 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
       view
     )
 
-  val userAnswers =
+  val nov8th2020 = LocalDate.of(2020, 11, 8)
+  val mar8th2020: LocalDate = LocalDate.of(2020, 3, 8)
+  val may8th2021: LocalDate = LocalDate.of(2021, 5, 8)
+
+  val nov1st2020 = LocalDate.of(2020, 11, 1)
+  val mar1st2020: LocalDate = LocalDate.of(2020, 3, 1)
+  val may1st2021: LocalDate = LocalDate.of(2021, 5, 1)
+
+  def userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(furloughStartDate: LocalDate): UserAnswers =
     UserAnswers(userAnswersId)
-      .set(PreviousFurloughPeriodsPage, true)
+      .withPreviousFurloughedPeriodsAnswer(true)
+      .withFurloughStartDate(furloughStartDate.toString)
+
+  def userAnswersWithFurloughStartDateSet(furloughStartDate: LocalDate): UserAnswers =
+    UserAnswers(userAnswersId)
+      .set(FurloughStartDatePage, furloughStartDate)
       .success
       .value
 
   "PreviousFurloughPeriods Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = controller().onPageLoad()(getRequest)
+      val result = controller(Some(userAnswersWithFurloughStartDateSet(may8th2021.plusDays(1)))).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(getRequest, messages).toString
+        view(form, may1st2021)(getRequest, messages).toString
+    }
+
+    "return OK and the correct view for a get when the date is after 8th March 2020 but is before 8th Nov 2020 (display 1st March 2020)" in {
+      val result = controller(Some(userAnswersWithFurloughStartDateSet(mar8th2020.plusDays(1)))).onPageLoad()(getRequest)
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(form, mar1st2020)(getRequest, messages).toString
+    }
+
+    "return OK and the correct view for a get when the date is after 8th November 2020 but is before 8th May 2021 (display 1st November 2020)" in {
+      val result = controller(Some(userAnswersWithFurloughStartDateSet(nov8th2020.plusDays(1)))).onPageLoad()(getRequest)
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(form, nov1st2020)(getRequest, messages).toString
+    }
+
+    "return OK and the correct view for a get when the date is after 8th May 2021 (display 1st May 2021)" in {
+      val result = controller(Some(userAnswersWithFurloughStartDateSet(may8th2021.plusDays(1)))).onPageLoad()(getRequest)
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(form, may1st2021)(getRequest, messages).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result = controller(Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(mar8th2020.plusDays(1))))
+        .onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(getRequest, messages).toString
+        view(form.fill(true), mar1st2020)(getRequest, messages).toString
 
     }
 
     "redirect to the next page when the value 'true' is submitted" in {
 
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(
+        Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(mar8th2020.plusDays(1))))
 
-      val result = controller(Some(userAnswers)).onSubmit()(postRequest)
+      val result = controller(Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(mar8th2020.plusDays(1))))
+        .onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
 
@@ -115,7 +160,8 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
     }
 
     "redirect to the next page when the value 'false' is submitted " in {
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(
+        Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(nov8th2020.plusDays(1))))
 
       lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
         FakeRequest(POST, previousFurloughPeriodsRoute).withCSRFToken
@@ -124,14 +170,15 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
             "value" -> "false"
           )
 
-      val result = controller(Some(userAnswers)).onSubmit()(postRequest)
+      val result = controller(Some(userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(nov8th2020.plusDays(1))))
+        .onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.PayDateController.onPageLoad(1).url
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-
+      val userAnswers = userAnswersWithFurloughStartDateSetAndPreviousFurloughPeriodsPageSet(nov8th2020.plusDays(1))
       val request =
         FakeRequest(POST, previousFurloughPeriodsRoute).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -145,7 +192,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(dataRequest, messages).toString
+        view(boundForm, nov1st2020)(dataRequest, messages).toString
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {

@@ -15,6 +15,8 @@
  *@
 
 @import pages.PreviousFurloughPeriodsPage
+@import java.time.LocalDate
+@import java.time.Month
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -24,15 +26,15 @@
         button: components.button
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], furloughStartDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "previousFurloughPeriods.title")), thisPage = PreviousFurloughPeriodsPage) {
+@govukLayout(pageTitle = Some(title(form, "previousFurloughPeriods.title", titleMessageArgs = Seq(dateToString(furloughStartDate)))), thisPage = PreviousFurloughPeriodsPage) {
 
     @formHelper(action = PreviousFurloughPeriodsController.onSubmit()) {
 
         @errorSummary(form.errors)
 
-        @yesNoRadio(form, "previousFurloughPeriods.heading")
+        @yesNoRadio(form, "previousFurloughPeriods.heading", headingMessageArgs = Seq(dateToString(furloughStartDate)))
 
         @button("site.saveAndContinue")
     }
