@@ -40,7 +40,10 @@
 
         @p(Html(messages("furloughStartDate.p1")))
 
-        @if(claimStartDate.isEqualOrAfter(nov1st2020)) {
+        @if(claimStartDate.isEqualOrAfter(may1st2021)) {
+            @p(Html(messages("furloughStartDate.extension.p2")))
+            @p(Html(messages("furloughStartDate.extension.p3")))
+        } else if(claimStartDate.isEqualOrAfter(nov1st2020)) {
             @p(Html(messages("furloughStartDate.p2")))
         }
 
