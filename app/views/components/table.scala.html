@@ -14,8 +14,10 @@
  * limitations under the License.
  *@
 
-@this(govukButton: GovukButton)
+@import viewmodels.TableModel
 
-@(msg: String, href: Option[String] = None, classes: Option[String] = None, isStartButton: Boolean = false)(implicit messages: Messages)
+@this(govukTable: GovukTable)
 
-@govukButton(Button(content = Text(messages(msg)), href = href, classes = classes.getOrElse(""), isStartButton = isStartButton))
+@(table: TableModel)
+
+@govukTable(table.toGovukTable)

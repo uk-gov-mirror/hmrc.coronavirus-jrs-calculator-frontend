@@ -43,13 +43,6 @@ class FrontendAppConfig @Inject()(val servicesConfig: ServicesConfig)
   def reportAccessibilityIssueUrl(problemPageUri: String): String =
     s"$contactHost/contact/accessibility-unauthenticated?service=$serviceIdentifier&userAction=${SafeRedirectUrl(host + problemPageUri).encodedUrl}"
 
-  val gtmContainer: Option[String] = (Try {
-    configSource("gtm.container").loadOrThrow[String]
-  } map {
-    case "main"         => Some("GTM-NDJKHWK")
-    case "transitional" => Some("GTM-TSFTCWZ")
-  }) getOrElse None
-
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$serviceIdentifier"
   val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$serviceIdentifier"
   val contactStandaloneForm = s"$contactHost/contact/contact-hmrc-unauthenticated?service=$serviceIdentifier"

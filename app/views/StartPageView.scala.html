@@ -1,0 +1,133 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.actions.FeatureFlagHelper
+@import pages.info.RootPage
+@import viewmodels.StartPageCalcTable
+
+@this(
+        govukLayout: templates.GovukLayoutWrapper,
+        h1: components.h1,
+        h2: components.h2,
+        h3: components.h3,
+        p: components.p,
+        button: components.button,
+        bullets: components.bullets,
+        link: components.link,
+        appConfig: config.FrontendAppConfig,
+        featureFlag: FeatureFlagHelper,
+        calcRatesTable: StartPageCalcTable
+)
+
+@(startNowAction: Call)(implicit request: Request[_], messages: Messages)
+
+@govukLayout(
+    pageTitle = Some(titleNoForm("startPage.title")),
+    showBackButton = false,
+    showResearch = true,
+    thisPage = RootPage
+) {
+
+    @h1("startPage.heading")
+
+    <div id="whatCanYouClaim">
+        @h2("startPage.whatCanYouClaim.h2", classes = Some("govuk-heading-m"))
+        @p { @messages("startPage.whatCanYouClaim.p1") }
+        @p { @messages("startPage.whatCanYouClaim.p2") }
+
+        @calcRatesTable.renderTable
+
+        @p { @messages("startPage.whatCanYouClaim.p3") }
+        @p { @messages("startPage.whatCanYouClaim.p4") }
+    </div>
+
+    <div id="about">
+
+        @h2("startPage.about.h2", classes = Some("govuk-heading-m"))
+        @p { @messages("startPage.about.p1") }
+        @p { @messages("startPage.about.p2") }
+
+        <div id="whoCanUse">
+
+            @h3("startPage.about.whoCanUse.h3", classes = Some("govuk-heading-m"))
+
+            @bullets(Seq(
+                Html(messages("startPage.about.whoCanUse.l1")),
+                Html(messages("startPage.about.whoCanUse.l2")),
+                Html(messages("startPage.about.whoCanUse.l3")),
+                Html(messages("startPage.about.whoCanUse.l4"))
+            ))
+        </div>
+
+        <div id="whoCannotUse">
+
+            @h3("startPage.about.whoCannotUse.h3", classes = Some("govuk-heading-m"))
+
+            @bullets(Seq(
+                Html(messages("startPage.about.whoCannotUse.l1")),
+                Html(messages("startPage.about.whoCannotUse.l2")),
+                Html(messages("startPage.about.whoCannotUse.l3")),
+                Html(messages("startPage.about.whoCannotUse.l4")),
+                Html(messages("startPage.about.whoCannotUse.l5")),
+                Html(messages("startPage.about.whoCannotUse.l6")),
+                Html(messages("startPage.about.whoCannotUse.l7")),
+                Html(messages("startPage.about.whoCannotUse.l8")),
+                Html(messages("startPage.about.whoCannotUse.l9")),
+                Html(messages("startPage.about.whoCannotUse.l10")),
+                Html(messages("startPage.about.whoCannotUse.l11"))
+            ))
+
+            @p(Html(Messages("startPage.about.whoCannotUse.p4", link(appConfig.calculationGuidance, "startPage.about.whoCannotUse.p4.link"))))
+            @p(Html(Messages("startPage.about.whoCannotUse.p5")))
+        </div>
+    </div>
+
+    <div id="beforeYouStart">
+
+        @h2("startPage.beforeYouStart.h2", classes = Some("govuk-heading-m"))
+
+        @p(Html(Messages("startPage.beforeYouStart.p1")))
+
+        @bullets(Seq(
+            Html(messages("startPage.beforeYouStart.p1.l1")),
+            Html(messages("startPage.beforeYouStart.p1.l2")),
+            Html(messages("startPage.beforeYouStart.p1.l3")),
+            Html(messages("startPage.beforeYouStart.p1.l4")),
+            Html(messages("startPage.beforeYouStart.p1.l5")),
+            Html(messages("startPage.beforeYouStart.p1.l6")),
+            Html(messages("startPage.beforeYouStart.p1.l7"))
+        ))
+
+        @p(Html(Messages("startPage.beforeYouStart.p2")))
+
+        <div id="julyOnwards">
+            @bullets(Seq(
+                Html(Html(messages("startPage.beforeYouStart.p2.l1", link(appConfig.usualHours, "startPage.beforeYouStart.p2.l1.link", false, Some("_blank"))))),
+                Html(messages("startPage.beforeYouStart.p2.l2")),
+                Html(messages("startPage.beforeYouStart.p2.l3"))
+            ))
+        </div>
+
+        @p(Html(Messages("startPage.beforeYouStart.p3", link(appConfig.stepsBeforeCalculation, "startPage.beforeYouStart.p3.link", false, Some("_blank")))))
+
+        @button(
+            msg = "site.startNow",
+            href = Some(startNowAction.url),
+            isStartButton = true
+        )
+
+    </div>
+}

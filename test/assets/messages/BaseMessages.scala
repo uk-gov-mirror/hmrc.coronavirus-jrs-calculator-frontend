@@ -27,4 +27,19 @@ object BaseMessages {
   val changeLink = "Change"
   val yes = "Yes"
   val no = "No"
+
+  object Month {
+    val january = "January"
+    val february = "February"
+    val march = "March"
+    val april = "April"
+    val may = "May"
+    val june = "June"
+    val july = "July"
+    val august = "August"
+    val september = "September"
+    val october = "October"
+    val november = "November"
+    val december = "December"
+  }
 }

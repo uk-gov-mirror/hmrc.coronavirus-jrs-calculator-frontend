@@ -21,6 +21,7 @@ import assets.PageTitles.onPayrollBefore30thOct2020
 import controllers.scenarios.AprilConfirmationScenarios._
 import models.UserAnswers
 import play.api.http.Status._
+import play.api.libs.json.Json
 import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
 
 class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants {
@@ -65,27 +66,25 @@ class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with
 
   }
 
-  //  TODO: "POST /october-payroll" when {
-  //
-  //    "enters a valid answer" when {
-  //
-  //      "redirect to <next page> page" in {
-  //
-  //        val res = postRequest(
-  //          path = "/october-payroll",
-  //          formJson = Json.obj("value" -> "true")
-  //        )()
-  //
-  //
-  //        whenReady(res) { result =>
-  //          result should have(
-  //            httpStatus(SEE_OTHER),
-  //            redirectLocation(controllers.routes.UnderConstruction.onPageLoad().url)  // no under construction page :(
-  //          )
-  //        }
-  //      }
-  //
-  //    }
-  //  }
+  "POST /october-payroll" when {
 
+    "enters a valid answer" when {
+
+      "redirect to <next page> page" in {
+
+        val res = postRequest(
+          path = "/october-payroll",
+          formJson = Json.obj("value" -> "true")
+        )()
+
+
+        whenReady(res) { result =>
+          result should have(
+            httpStatus(SEE_OTHER),
+            redirectLocation(controllers.routes.SessionExpiredController.onPageLoad().url) //TODO: Update when routing is added!
+          )
+        }
+      }
+    }
+  }
 }
