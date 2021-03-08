@@ -421,6 +421,8 @@ furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.p1 = Os yw’r cyflogai hwn wedi’i roi ar ffyrlo fwy nag unwaith, dyma’r dyddiad diweddaraf y cafodd ei roi ar ffyrlo.
 furloughStartDate.p2 = Os nad oedd y cyflogai ar eich cyflogres ar 19 Mawrth 2020, mewn perthynas â Chyflwyniad Taliad Llawn (FPS) Gwybodaeth Amser Real (RTI), a chafodd ei roi ar ffyrlo cyn 1 Tachwedd 2020, defnyddiwch y dyddiad 1 Tachwedd 2020.
+furloughStartDate.extension.p2 = If this employee was not on your payroll on 30 October 2020 and was furloughed before 1 May 2021, then use the date 1 May 2021.
+furloughStartDate.extension.p3 = Employees must be on your payroll and therefore appear in your Real Time Information (RTI) Full Payment Submissions (FPS) on or before 2 March 2021 to be eligible.
 
 furloughStartDate.error.required.all = Nodwch ddyddiad dechrau’r ffyrlo
 furloughStartDate.error.required.two = Mae’n rhaid i ddyddiad dechrau’r ffyrlo gynnwys {0} a {1}

@@ -415,6 +415,8 @@ furloughStartDate.title = When was this employee furloughed?
 furloughStartDate.heading = When was this employee furloughed?
 furloughStartDate.p1 = If this employee has been furloughed more than once it is the date they were most recently furloughed.
 furloughStartDate.p2 = If the employee was not on your payroll on 19 March 2020, in relation to Real Time Information (RTI) Full Payment Submission (FPS), and was furloughed before 1 November 2020, then use the date 1 November 2020.
+furloughStartDate.extension.p2 = If this employee was not on your payroll on 30 October 2020 and was furloughed before 1 May 2021, then use the date 1 May 2021.
+furloughStartDate.extension.p3 = Employees must be on your payroll and therefore appear in your Real Time Information (RTI) Full Payment Submissions (FPS) on or before 2 March 2021 to be eligible.
 
 furloughStartDate.error.required.all = Enter the furlough start date
 furloughStartDate.error.required.two = The furlough start date must include {0} and {1}
