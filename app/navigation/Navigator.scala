@@ -282,7 +282,7 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       case Valid(claimPeriodStart) if claimPeriodStart.isEqualOrAfter(nov1st2020) =>
         userAnswers.getV(EmployeeStartDatePage) match {
           case Valid(empStartDate) if empStartDate.isBefore(feb1st2019)                                            => payDateRoutes
-          case Valid(empStartDate) if empStartDate.isAfter(mar19th2020)                                            => routes.OnPayrollBefore30thOct2020Controller.onPageLoad() //new
+          case Valid(empStartDate) if empStartDate.isAfter(mar19th2020)                                            => routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
           case Valid(empStartDate) if empStartDate.isEqualOrAfter(feb1st2019) && empStartDate.isBefore(feb1st2020) => payDateRoutes
           case Valid(empStartDate) if empStartDate.isEqualOrAfter(feb1st2020) && empStartDate.isEqualOrBefore(mar19th2020) =>
             routes.EmployeeRTISubmissionController.onPageLoad()
