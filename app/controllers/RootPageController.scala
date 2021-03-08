@@ -16,23 +16,30 @@
 
 package controllers
 
-import javax.inject.Inject
+import config.FrontendAppConfig
+import config.featureSwitch.{FeatureSwitching, ShowNewStartPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.RootPageView
+import views.html.{RootPageView, StartPageView}
+
+import javax.inject.Inject
 
 class RootPageController @Inject()(
   override val messagesApi: MessagesApi,
   val controllerComponents: MessagesControllerComponents,
-  view: RootPageView
-) extends FrontendBaseController with I18nSupport {
+  view: RootPageView,
+  newView: StartPageView
+)(implicit appConfig: FrontendAppConfig)
+    extends FrontendBaseController with I18nSupport with FeatureSwitching {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
     Redirect(routes.RootPageController.start())
   }
 
   def start: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
+    fsGuard[Result](ShowNewStartPage, Ok(view())) {
+      Ok(newView(routes.ClaimPeriodStartController.onPageLoad()))
+    }
   }
 }

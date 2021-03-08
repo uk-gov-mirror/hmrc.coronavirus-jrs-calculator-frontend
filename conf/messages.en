@@ -929,6 +929,72 @@ firstFurloughStartDate.error.beforeExtensionDate = The date the employee was fir
 firstFurloughStartDate.error.afterStartDate = The date the employee was first furloughed must be before {0}
 
 
+# New Start Page Content - May Onwards #
+# -------------------------------------#
+startPage.title = Job Retention Scheme calculator
+startPage.heading = Job Retention Scheme calculator
+
+startPage.whatCanYouClaim.h2 = What you can claim
+startPage.whatCanYouClaim.p1 = The Coronavirus Job Retention Scheme has been extended until 30 September 2021. For claim periods between 1 November 2020 and 30 April 2021, you can claim 80% of an employee’s usual salary for hours not worked, up to a maximum of £2,500 per month.
+startPage.whatCanYouClaim.p2 = From 1 July 2021, the amount you can claim for is changing:
+
+startPage.whatCanYouClaim.table.column1HeadingHidden = Claim month
+startPage.whatCanYouClaim.table.column2Heading = Government contribution: wages for hours not worked
+startPage.whatCanYouClaim.table.column3Heading = Employer contribution: wages for hours not worked
+startPage.whatCanYouClaim.table.naughtPercent = 0%
+startPage.whatCanYouClaim.table.mayJunGovt = 80% up to £2,500
+startPage.whatCanYouClaim.table.julGovt = 70% up to £2,187.50
+startPage.whatCanYouClaim.table.augSepGovt = 60% up to £1,8750
+startPage.whatCanYouClaim.table.julyEmp = 10% up to £312.50
+startPage.whatCanYouClaim.table.augSepEmp = 20% up to £625
+
+startPage.whatCanYouClaim.p3 = To be eligible for the grant you must continue to pay your furloughed employees at least 80% of their wages for the time they are on furlough. You can choose to pay them more than this, but you do not have to.
+startPage.whatCanYouClaim.p4 = You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these.
+
+startPage.about.h2 = About the calculator
+startPage.about.p1 = Use this calculator to work out the figures you will need when you make a Coronavirus Job Retention Scheme claim.
+startPage.about.p2 = You will need to use the calculator for each employee on full or flexible furlough and add up the results of each claim amount for the claim period. For your records, the calculator will also break down the calculations for each pay period.
+
+startPage.about.whoCanUse.h3 = You can use this calculator for:
+startPage.about.whoCanUse.l1 = employees who are fully furloughed and therefore not working any hours
+startPage.about.whoCanUse.l2 = employees brought back to work for some of their normal hours from 1 July
+startPage.about.whoCanUse.l3 = most employees who are paid weekly, two weekly, four weekly or monthly in fixed pay periods
+startPage.about.whoCanUse.l4 = employees who have returned from statutory leave from 1 August 2020 onwards, for example, maternity leave
+
+startPage.about.whoCannotUse.h3 = The calculator cannot be used for employees if they:
+startPage.about.whoCannotUse.l1 = started a notice period or went back off a notice period in the same claim period on or after 1 December 2020
+startPage.about.whoCannotUse.l2 = have an annual pay period
+startPage.about.whoCannotUse.l3 = have been transferred under The Transfer of Undertakings Protection of Employment (TUPE)
+startPage.about.whoCannotUse.l4 = were not employed continuously before their furlough started
+startPage.about.whoCannotUse.l5 = returned from statutory leave such as maternity leave in the last 3 months (if the claim period is in July 2020 or earlier)
+startPage.about.whoCannotUse.l6 = receive employer pension contributions outside of an auto-enrolment pension scheme
+startPage.about.whoCannotUse.l7 = ended furlough then began again during the same claim period
+startPage.about.whoCannotUse.l8 = were variably paid, and have been on more than one period of furlough where any part of any of the periods of furlough was in the 2019/20 tax year
+startPage.about.whoCannotUse.l9 = have variable pay, started employment before 6 April 2020 and were not on their employer’s payroll on or before 19 March 2020
+startPage.about.whoCannotUse.l10 = started employment with their employer during a calendar period in the 2019-20 tax year which corresponds with part or all of the period being claimed for
+startPage.about.whoCannotUse.l11 = are on fixed pay and have had a change in payment frequency, for example from monthly pay to weekly pay
+
+startPage.about.whoCannotUse.p4 = In these cases, you must work out what you can claim manually using the {0} or seek professional advice.
+startPage.about.whoCannotUse.p4.link = calculation guidance
+startPage.about.whoCannotUse.p5 = It is your responsibility to check that the amount you’re claiming for is correct.
+
+startPage.beforeYouStart.h2 = Before you start
+startPage.beforeYouStart.p1 = You will need:
+startPage.beforeYouStart.p1.l1 = claim start date (for your first claim, this is when the first employee started furlough)
+startPage.beforeYouStart.p1.l2 = claim end date
+startPage.beforeYouStart.p1.l3 = pay dates (when the employee gets their pay)
+startPage.beforeYouStart.p1.l4 = dates of pay periods (the time periods that their pay covers)
+startPage.beforeYouStart.p1.l5 = regular payment amounts
+startPage.beforeYouStart.p1.l6 = additional payments (such as tips, discretionary bonuses, non-cash payments)
+startPage.beforeYouStart.p1.l7 = date furlough ended, if it is not ongoing
+startPage.beforeYouStart.p2 = From 1 July, if the employee is flexibly furloughed, you will also need:
+startPage.beforeYouStart.p2.l1 = {0}
+startPage.beforeYouStart.p2.l1.link = employee’s usual hours
+startPage.beforeYouStart.p2.l2 = actual hours worked
+startPage.beforeYouStart.p2.l3 = hours furloughed
+startPage.beforeYouStart.p3 = Read more about {0}
+startPage.beforeYouStart.p3.link = steps to take before calculating your claim
+
 # OnPayrollBefore30thOct2020 Messages
 # ------------------------------------------------
 onPayrollBefore30thOct2020.title = Was this employee on your payroll on or before 30 October 2020?
