@@ -96,8 +96,8 @@ class PreviousFurloughPeriodsController @Inject()(
 
   private def getDateToShowInHeadingFromFurloughStartDate(furloughStartDate: LocalDate): LocalDate =
     furloughStartDate match {
-      case date if (date.isAfter(mar8th2020) && date.isBefore(nov8th2020)) => LocalDate.of(2020, 3, 1)
-      case date if (date.isAfter(nov8th2020) && date.isBefore(may8th2021)) => LocalDate.of(2020, 11, 1)
-      case _                                                               => LocalDate.of(2021, 5, 1)
+      case date if (date.isAfter(mar8th2020) && date.isBefore(nov8th2020)) => mar1st2020
+      case date if (date.isAfter(nov8th2020) && date.isBefore(may8th2021)) => nov1st2020
+      case _                                                               => may1st2021
     }
 }
