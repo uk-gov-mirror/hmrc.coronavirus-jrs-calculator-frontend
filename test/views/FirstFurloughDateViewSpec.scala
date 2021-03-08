@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package views.includes
+package views
+
+import java.time.LocalDate
 
 import assets.messages.BaseMessages
 import forms.FirstFurloughDateFormProvider
@@ -22,11 +24,8 @@ import messages.FirstFurloughDateMessages
 import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import views.BaseSelectors
 import views.behaviours.QuestionViewBehaviours
 import views.html.FirstFurloughDateView
-
-import java.time.LocalDate
 
 class FirstFurloughDateViewSpec extends QuestionViewBehaviours[LocalDate] {
 

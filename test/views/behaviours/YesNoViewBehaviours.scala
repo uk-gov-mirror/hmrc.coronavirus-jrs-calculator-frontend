@@ -25,7 +25,6 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
     form: Form[Boolean],
     createView: Form[Boolean] => HtmlFormat.Appendable,
     messageKeyPrefix: String,
-    expectedFormAction: String,
     headingArgs: Seq[String] = Seq(),
     titleArgs: Seq[String] = Seq(),
     section: Option[String] = None): Unit =

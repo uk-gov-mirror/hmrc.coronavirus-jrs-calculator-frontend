@@ -927,3 +927,11 @@ firstFurloughStartDate.error.invalid = The date the employee was first furloughe
 firstFurloughStartDate.hint = For example, 30 11 2020
 firstFurloughStartDate.error.beforeExtensionDate = The date the employee was first furloughed must be on or after 1 November 2020
 firstFurloughStartDate.error.afterStartDate = The date the employee was first furloughed must be before {0}
+
+
+# OnPayrollBefore30thOct2020 Messages
+# ------------------------------------------------
+onPayrollBefore30thOct2020.title = Was this employee on your payroll on or before 30 October 2020?
+onPayrollBefore30thOct2020.heading = Was this employee on your payroll on or before 30 October 2020?
+onPayrollBefore30thOct2020.hint = Enter Yes if you have made a payment of earnings to them in the tax year 2020/2021, which was reported to HMRC on a Real Time Information (RTi) Full Payment Submission (FPS) on or before 30 October 2020
+onPayrollBefore30thOct2020.error.required = Select yes if this employee on your payroll on or before 30 October 2020?

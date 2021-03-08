@@ -145,5 +145,9 @@ GET         /start-date-within-lookback-unsupported          controllers.Calcula
 GET         /furloughed-more-than-once                       controllers.PreviousFurloughPeriodsController.onPageLoad()
 POST        /furloughed-more-than-once                       controllers.PreviousFurloughPeriodsController.onSubmit()
 
-GET         /first-furlough-date                               controllers.FirstFurloughDateController.onPageLoad()
-POST        /first-furlough-date                               controllers.FirstFurloughDateController.onSubmit()
+GET         /first-furlough-date                             controllers.FirstFurloughDateController.onPageLoad()
+POST        /first-furlough-date                             controllers.FirstFurloughDateController.onSubmit()
+
+GET         /october-payroll                                 controllers.OnPayrollBefore30thOct2020Controller.onPageLoad()
+POST        /october-payroll                                 controllers.OnPayrollBefore30thOct2020Controller.onSubmit()
+

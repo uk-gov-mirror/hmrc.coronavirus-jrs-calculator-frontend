@@ -16,56 +16,57 @@
 
 package controllers
 
-import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
-import forms.RegularLengthEmployedFormProvider
+import forms.OnPayrollBefore30thOct2020FormProvider
 import javax.inject.Inject
-import models.RegularLengthEmployed
+import cats.data.Validated.{Invalid, Valid}
 import navigation.Navigator
-import pages.RegularLengthEmployedPage
+import pages.OnPayrollBefore30thOct2020Page
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.RegularLengthEmployedView
+import views.html.OnPayrollBefore30thOct2020View
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RegularLengthEmployedController @Inject()(
+class OnPayrollBefore30thOct2020Controller @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: RegularLengthEmployedFormProvider,
+  formProvider: OnPayrollBefore30thOct2020FormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: RegularLengthEmployedView
+  view: OnPayrollBefore30thOct2020View
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[Boolean] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm: Form[RegularLengthEmployed] = request.userAnswers.getV(RegularLengthEmployedPage) match {
+    val preparedForm: Form[Boolean] = request.userAnswers.getV(OnPayrollBefore30thOct2020Page) match {
       case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm))
+    Ok(view(preparedForm, postAction = controllers.routes.OnPayrollBefore30thOct2020Controller.onSubmit()))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors =>
+          Future.successful(
+            BadRequest(view(formWithErrors, postAction = controllers.routes.OnPayrollBefore30thOct2020Controller.onSubmit()))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RegularLengthEmployedPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(OnPayrollBefore30thOct2020Page, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(RegularLengthEmployedPage, updatedAnswers))
+          } yield Redirect(navigator.nextPage(OnPayrollBefore30thOct2020Page, updatedAnswers))
       )
   }
 }

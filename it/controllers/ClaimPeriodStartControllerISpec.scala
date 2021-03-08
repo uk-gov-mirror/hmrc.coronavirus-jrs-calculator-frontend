@@ -27,40 +27,40 @@ class ClaimPeriodStartControllerISpec extends IntegrationSpecBase with CreateReq
 
   "GET /claim-period-start" when {
 
-        "redirect to the start page" in {
+    "redirect to the start page" in {
 
-          val res = getRequest("/claim-period-start")()
+      val res = getRequest("/claim-period-start")()
 
-          whenReady(res) { result =>
-            result should have(
-              httpStatus(OK),
-              titleOf(claimPeriodStartDate)
-            )
-          }
-        }
+      whenReady(res) { result =>
+        result should have(
+          httpStatus(OK),
+          titleOf(claimPeriodStartDate)
+        )
       }
+    }
+  }
+
   "POST /claim-period-start" when {
 
-      "enters a valid answer" when {
+    "enters a valid answer" when {
 
-        "redirect to claim-period-end page" in {
+      "redirect to claim-period-end page" in {
+
+        val res = postRequest("/claim-period-start",
+          Json.obj(
+            "startDate.day" -> claimStartDate.getDayOfMonth,
+            "startDate.month" -> claimStartDate.getMonthValue,
+            "startDate.year" -> claimStartDate.getYear
+          ))()
 
 
-          val res = postRequest("/claim-period-start",
-            Json.obj(
-              "startDate.day" -> claimStartDate.getDayOfMonth,
-              "startDate.month" -> claimStartDate.getMonthValue,
-              "startDate.year" -> claimStartDate.getYear
-            ))()
-
-
-          whenReady(res) { result =>
-            result should have(
-              httpStatus(SEE_OTHER),
-              redirectLocation(controllers.routes.ClaimPeriodEndController.onPageLoad().url)
-            )
-          }
+        whenReady(res) { result =>
+          result should have(
+            httpStatus(SEE_OTHER),
+            redirectLocation(controllers.routes.ClaimPeriodEndController.onPageLoad().url)
+          )
         }
       }
     }
-    }
+  }
+}
