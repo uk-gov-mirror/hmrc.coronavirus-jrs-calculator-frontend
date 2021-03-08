@@ -136,13 +136,36 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
-      "go to PayDatesPage after RegularLengthEmployedPage for claims starting on or after 01/11/2020 for Regular payMethods" in {
+      "go to PayDatePage for claims starting on or after 01/11/2020 for Regular payMethods if PayDate is not defined" in {
         navigator.nextPage(
           RegularLengthEmployedPage,
           emptyUserAnswers
+            .withRegularLengthEmployed(RegularLengthEmployed.Yes)
             .withPayMethod(Regular)
             .withClaimPeriodStart("2020-11-01")
-            .withRegularLengthEmployed())
+        ) mustBe routes.PayDateController.onPageLoad(1)
+      }
+
+      "go to RegularPayAmountPage for claims starting on or after 01/11/2020 for Regular payMethods if PayDate is defined" in {
+        navigator.nextPage(
+          RegularLengthEmployedPage,
+          emptyUserAnswers
+            .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+            .withPayMethod(Regular)
+            .withClaimPeriodStart("2020-11-01")
+            .withPayDate(List("2020-10-31"))
+        ) mustBe routes.RegularPayAmountController.onPageLoad()
+      }
+
+      "go to OnPayrollBefore30thOct2020Page after RegularLengthEmployedPage for claims starting on or after 01/11/2020 for Regular payMethods" in {
+
+        navigator.nextPage(
+          RegularLengthEmployedPage,
+          emptyUserAnswers
+            .withRegularLengthEmployed(RegularLengthEmployed.No)
+            .withPayMethod(Regular)
+            .withClaimPeriodStart("2020-11-01")
+        ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
       }
 
       "go to RegularPayAmountPage after PaymentQuestionPage" in {
@@ -520,12 +543,13 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to correct page after EmployeeStartDatePage" in {
+
         navigator.nextPage(
           EmployeeStartDatePage,
           emptyUserAnswers
             .withEmployeeStartDate("2020,3,20")
             .withClaimPeriodStart("2020,11,1")
-        ) mustBe routes.PayDateController.onPageLoad(1)
+        ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
 
         navigator.nextPage(
           EmployeeStartDatePage,
@@ -533,7 +557,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
             .withEmployeeStartDate("2020,4,1")
             .withFurloughStartDate("2020,11,10")
             .withClaimPeriodStart("2020,11,1")
-        ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
+        ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
 
         navigator.nextPage(
           EmployeeStartDatePage,
@@ -597,6 +621,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to correct page after EmployeeSRTISubmissionPage" in {
+
         navigator.nextPage(
           EmployeeRTISubmissionPage,
           emptyUserAnswers.withRtiSubmission(EmployeeRTISubmission.Yes)
@@ -606,8 +631,16 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           EmployeeRTISubmissionPage,
           emptyUserAnswers
             .withFurloughStartDate("2020,11,15")
+            .withRtiSubmission(EmployeeRTISubmission.Yes)
+        ) mustBe routes.PayDateController.onPageLoad(1)
+
+        navigator.nextPage(
+          EmployeeRTISubmissionPage,
+          emptyUserAnswers
+            .withFurloughStartDate("2020,11,15")
             .withRtiSubmission(EmployeeRTISubmission.No)
         ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+
       }
 
       "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {
