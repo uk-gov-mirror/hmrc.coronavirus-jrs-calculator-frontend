@@ -119,6 +119,8 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       firstFurloughedRoutes
     case FirstFurloughDatePage =>
       handlePayDateRoutes
+    case OnPayrollBefore30thOct2020Page =>
+      onPayrollBefore30thOct2020Routes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -514,6 +516,20 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       routes.LastPayDateController.onPageLoad()
     } else {
       lastPayDateRoutes(userAnswers)
+    }
+  }
+
+  private[navigation] def onPayrollBefore30thOct2020Routes: UserAnswers => Call = { userAnswers =>
+    (userAnswers.getV(PayMethodPage), userAnswers.getV(FurloughStartDatePage), userAnswers.getV(OnPayrollBefore30thOct2020Page)) match {
+      case (Valid(Variable), Valid(furloughStartDate), Valid(isOnPayrollBefore30thOct2020Page))
+          if (isOnPayrollBefore30thOct2020Page && furloughStartDate.isAfter(nov8th2020)) =>
+        routeToEmployeeFirstFurloughed(userAnswers)
+      case (Valid(Variable), Valid(furloughStartDate), Valid(isOnPayrollBefore30thOct2020Page))
+          if (!isOnPayrollBefore30thOct2020Page && furloughStartDate.isAfter(may8th2021)) =>
+        routeToEmployeeFirstFurloughed(userAnswers)
+      case (Valid(Variable), Valid(_), Valid(_)) => routes.LastPayDateController.onPageLoad()
+      case _ =>
+        routes.LastPayDateController.onPageLoad()
     }
   }
 
