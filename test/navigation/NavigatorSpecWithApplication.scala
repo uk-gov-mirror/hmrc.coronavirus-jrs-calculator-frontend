@@ -607,7 +607,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           emptyUserAnswers
             .withFurloughStartDate("2020,11,15")
             .withRtiSubmission(EmployeeRTISubmission.No)
-        ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
+        ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
       }
 
       "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {
