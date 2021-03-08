@@ -16,11 +16,7 @@
 
 package views.components
 
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 import viewmodels.{Cell, Header, Row, TableModel}
