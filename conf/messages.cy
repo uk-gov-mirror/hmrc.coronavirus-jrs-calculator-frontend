@@ -885,9 +885,9 @@ calculationUnsupported.heading = Ni ellir cefnogi’r cyfrifiad hwn ar hyn o bry
 calculationUnsupported.p1 = Gallwch wneud y cyfrifiad hwn â llaw.
 calculationUnsupported.startAgain = Dechrau cyfrifiad newydd
 
-previousFurloughPeriods.title = Has this employee been furloughed more than once since 1 November 2020?
-previousFurloughPeriods.heading = Has this employee been furloughed more than once since 1 November 2020?
-previousFurloughPeriods.error.required = Select yes if this employee has been furloughed more than once since 1 November 2020
+previousFurloughPeriods.title = Has this employee been furloughed more than once since {0}?
+previousFurloughPeriods.heading = Has this employee been furloughed more than once since {0}?
+previousFurloughPeriods.error.required = Select yes if this employee has been furloughed more than once since {0}
 
 firstFurloughStartDate.title = When was this employee first furloughed?
 firstFurloughStartDate.heading = When was this employee first furloughed?

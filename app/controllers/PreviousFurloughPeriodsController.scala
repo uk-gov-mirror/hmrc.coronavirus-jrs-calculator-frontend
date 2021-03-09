@@ -16,17 +16,27 @@
 
 package controllers
 
+import java.time.{LocalDate, Month}
+
 import cats.data.Validated.{Invalid, Valid}
+import config.FrontendAppConfig
+import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
 import controllers.actions._
 import forms.PreviousFurloughPeriodsFormProvider
+import handlers.ErrorHandler
 import javax.inject.Inject
+import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.Mode
+import models.requests.DataRequest
 import navigation.Navigator
-import pages.PreviousFurloughPeriodsPage
+import pages.{EmployeeStartedPage, FurloughStartDatePage, OnPayrollBefore30thOct2020Page, PreviousFurloughPeriodsPage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.EmployeeTypeUtil
+import utils.LocalDateHelpers._
 import views.html.PreviousFurloughPeriodsView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,8 +51,8 @@ class PreviousFurloughPeriodsController @Inject()(
   formProvider: PreviousFurloughPeriodsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: PreviousFurloughPeriodsView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext, appConfig: FrontendAppConfig, errorHandler: ErrorHandler)
+    extends FrontendBaseController with I18nSupport with FeatureSwitching with EmployeeTypeUtil {
 
   val form = formProvider()
 
@@ -51,15 +61,14 @@ class PreviousFurloughPeriodsController @Inject()(
       case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
-
-    Ok(view(preparedForm))
+    renderPage(Ok, preparedForm)
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(renderPage(BadRequest, formWithErrors)),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousFurloughPeriodsPage, value))
@@ -67,4 +76,13 @@ class PreviousFurloughPeriodsController @Inject()(
           } yield Redirect(navigator.nextPage(PreviousFurloughPeriodsPage, updatedAnswers))
       )
   }
+
+  private def renderPage(successfulCallStatus: Status, preparedForm: Form[Boolean])(implicit request: DataRequest[_]): Result =
+    variablePayResolver[LocalDate](type3EmployeeResult = Some(mar1st2020),
+                                   type5aEmployeeResult = Some(nov1st2020),
+                                   type5bEmployeeResult = Some(may1st2021)).fold(
+      InternalServerError(errorHandler.internalServerErrorTemplate(request))
+    )(
+      dateToShow => successfulCallStatus(view(preparedForm, dateToShow))
+    )
 }
