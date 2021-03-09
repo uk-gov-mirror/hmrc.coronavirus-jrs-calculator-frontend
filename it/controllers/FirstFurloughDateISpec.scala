@@ -38,7 +38,7 @@ class FirstFurloughDateISpec extends IntegrationSpecBase with CreateRequestHelpe
 
         setAnswers(userAnswers)
 
-        val res = postRequestheader(
+        val res = postRequestHeader(
           path = "/first-furlough-date",
           formJson = Json.obj(
             "firstFurloughDate.day" -> "11",

@@ -371,7 +371,7 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
         //if claim is not on or after 1/11/2020, then users should not have seen RegularLengthEmployedPage
         //something must have gone wrong
         routes.RootPageController.onPageLoad()
-      case (Invalid(_), _, _) => routes.RegularLengthEmployedController.onPageLoad()
+      case _ => routes.RegularLengthEmployedController.onPageLoad()
     }
   }
 

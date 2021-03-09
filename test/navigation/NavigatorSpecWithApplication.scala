@@ -723,18 +723,47 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "EmployeeSRTISubmissionPage" when {
 
-        "the ExtensionTwoNewStarterFlow switch is enabled" should {
+        "the ExtensionTwoNewStarterFlow switch is enabled" when {
 
-          "return the OnPayrollBefore30thOct2020 page" in {
+          "answered No" should {
 
-            enable(ExtensionTwoNewStarterFlow)
+            "return the OnPayrollBefore30thOct2020 page" in {
 
-            navigator.nextPage(
-              EmployeeRTISubmissionPage,
-              emptyUserAnswers
-                .withFurloughStartDate("2020,11,15")
-                .withRtiSubmission(EmployeeRTISubmission.No)
-            ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+              enable(ExtensionTwoNewStarterFlow)
+
+              navigator.nextPage(
+                EmployeeRTISubmissionPage,
+                emptyUserAnswers
+                  .withFurloughStartDate("2020,11,15")
+                  .withRtiSubmission(EmployeeRTISubmission.No)
+              ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+            }
+          }
+
+          "answered Yes" should {
+
+            "return the PayDatePage when furlough date is defined" in {
+
+              enable(ExtensionTwoNewStarterFlow)
+
+              navigator.nextPage(
+                EmployeeRTISubmissionPage,
+                emptyUserAnswers
+                  .withFurloughStartDate("2020,11,15")
+                  .withRtiSubmission(EmployeeRTISubmission.Yes)
+              ) mustBe routes.PayDateController.onPageLoad(1)
+
+            }
+
+            "return the PayDatePage when furlough date is not defined" in {
+
+              enable(ExtensionTwoNewStarterFlow)
+
+              navigator.nextPage(
+                EmployeeRTISubmissionPage,
+                emptyUserAnswers.withRtiSubmission(EmployeeRTISubmission.Yes)
+              ) mustBe routes.PayDateController.onPageLoad(1)
+            }
           }
         }
 

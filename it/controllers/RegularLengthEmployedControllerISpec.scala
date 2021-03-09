@@ -18,46 +18,278 @@ package controllers
 
 import assets.BaseITConstants
 import assets.PageTitles._
-import models.RegularLengthEmployed
+import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
+import models.PaymentFrequency.Monthly
+import models.{RegularLengthEmployed, UserAnswers}
 import play.api.http.Status._
 import play.api.libs.json.Json
-import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
+import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
 
+class RegularLengthEmployedControllerISpec extends IntegrationSpecBase
+  with CreateRequestHelper with CustomMatchers with BaseITConstants with ITCoreTestData with FeatureSwitching {
 
-class RegularLengthEmployedControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants {
+  "the ExtensionTwoNewStarterFlow is turned ON" when {
 
-  "GET /regular-length-employed" when {
+    "GET /regular-length-employed" should {
 
-    "redirect to the start page" in {
+      "redirect display the correct title" in {
 
-      val res = getRequest("/regular-length-employed")()
+        enable(ExtensionTwoNewStarterFlow)
 
-      whenReady(res) { result =>
-        result should have(
-          httpStatus(OK),
-          titleOf(regularLengthEmployed)
-        )
-      }
-    }
-  }
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .withClaimPeriodStart("2020, 11, 1")
+            .withClaimPeriodEnd("2020, 11, 30")
+            .withFurloughStartDate("2020, 11, 1")
+            .withFurloughStatus()
+            .withPaymentFrequency(Monthly)
+            .withNiCategory()
+            .withPensionStatus()
+            .withPayMethod()
+            .withLastPayDate("2020, 10, 31")
+            .withPayDate(List("2020, 10, 31"))
 
-  "POST /regular-length-employed" when {
+        setAnswers(userAnswers)
 
-    "enters a No valid answer" when {
-
-      "redirect to claim-period-end page" in {
-
-        val res = postRequest("/regular-length-employed",
-          Json.obj("value" -> RegularLengthEmployed.No.toString)
-        )()
+        val res = getRequestHeaders("/regular-length-employed")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
 
         whenReady(res) { result =>
           result should have(
-            httpStatus(SEE_OTHER),
-            redirectLocation(controllers.routes.OnPayrollBefore30thOct2020Controller.onPageLoad().url)
+            httpStatus(OK),
+            titleOf(regularLengthEmployed)
           )
         }
       }
+    }
+
+    "POST /regular-length-employed" when {
+
+      "user enters a 'Yes' answer" should {
+
+        "redirect to RegularPayAmount page when PayDate is defined" in {
+
+          enable(ExtensionTwoNewStarterFlow)
+
+          val userAnswers: UserAnswers =
+            emptyUserAnswers
+              .withClaimPeriodStart("2020, 11, 1")
+              .withClaimPeriodEnd("2020, 11, 30")
+              .withFurloughStartDate("2020, 11, 1")
+              .withFurloughStatus()
+              .withPaymentFrequency(Monthly)
+              .withNiCategory()
+              .withPensionStatus()
+              .withPayMethod()
+              .withLastPayDate("2020, 10, 31")
+              .withPayDate(List("2020, 11, 30"))
+
+          setAnswers(userAnswers)
+
+          val res = postRequestHeader("/regular-length-employed",
+            Json.obj("value" -> RegularLengthEmployed.Yes.toString)
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(SEE_OTHER),
+              redirectLocation(controllers.routes.RegularPayAmountController.onPageLoad().url)
+            )
+          }
+        }
+      }
+
+      "user enters a 'No' answer" should {
+
+        "redirect to OnPayrollBefore30thOct2020 page" in {
+
+          enable(ExtensionTwoNewStarterFlow)
+
+          val userAnswers: UserAnswers = emptyUserAnswers
+            .withClaimPeriodStart("2020, 11, 1")
+            .withClaimPeriodEnd("2020, 11, 30")
+            .withFurloughStartDate("2020, 11, 1")
+            .withFurloughStatus()
+            .withPaymentFrequency(Monthly)
+            .withNiCategory()
+            .withPensionStatus()
+            .withPayMethod()
+            .withLastPayDate("2020, 10, 31")
+            .withPayDate(List("2020, 11, 30"))
+
+          setAnswers(userAnswers)
+
+          val res = postRequestHeader("/regular-length-employed",
+            Json.obj("value" -> RegularLengthEmployed.No.toString)
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(SEE_OTHER),
+              redirectLocation(controllers.routes.OnPayrollBefore30thOct2020Controller.onPageLoad().url)
+            )
+          }
+        }
+      }
+
+      "user enters an Invalid answer" should {
+
+        "redirect back to the same RegularLengthEmployed page" in {
+
+          enable(ExtensionTwoNewStarterFlow)
+
+          val userAnswers: UserAnswers = emptyUserAnswers
+            .withClaimPeriodStart("2020, 11, 1")
+            .withClaimPeriodEnd("2020, 11, 30")
+            .withFurloughStartDate("2020, 11, 1")
+            .withFurloughStatus()
+            .withPaymentFrequency(Monthly)
+            .withNiCategory()
+            .withPensionStatus()
+            .withPayMethod()
+            .withLastPayDate("2020, 10, 31")
+            .withPayDate(List("2020, 11, 30"))
+
+          setAnswers(userAnswers)
+
+          val res = postRequestHeader("/regular-length-employed",
+            Json.obj("value" -> "bleh")
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(BAD_REQUEST)
+            )
+          }
+        }
+      }
+
+    }
+  }
+
+  "the ExtensionTwoNewStarterFlow is turned OFF" when {
+
+    "GET /regular-length-employed" should {
+
+      "redirect to the start page" in {
+
+        disable(ExtensionTwoNewStarterFlow)
+
+        val userAnswers: UserAnswers = emptyUserAnswers
+        setAnswers(userAnswers)
+
+        val res = getRequestHeaders("/regular-length-employed")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+        whenReady(res) { result =>
+          result should have(
+            httpStatus(OK),
+            titleOf(regularLengthEmployed)
+          )
+        }
+      }
+    }
+
+    "POST /regular-length-employed" when {
+
+      "user enters a 'Yes' answer" should {
+
+        "redirect to RegularPayAmount page when PayDate is defined" in {
+
+          disable(ExtensionTwoNewStarterFlow)
+
+          val userAnswers: UserAnswers =
+            emptyUserAnswers
+              .withClaimPeriodStart("2020, 11, 1")
+              .withClaimPeriodEnd("2020, 11, 30")
+              .withFurloughStartDate("2020, 11, 1")
+              .withFurloughStatus()
+              .withPaymentFrequency(Monthly)
+              .withNiCategory()
+              .withPensionStatus()
+              .withPayMethod()
+              .withLastPayDate("2020, 10, 31")
+              .withPayDate(List("2020, 11, 30"))
+
+          setAnswers(userAnswers)
+
+
+          val res = postRequestHeader("/regular-length-employed",
+            Json.obj("value" -> RegularLengthEmployed.Yes.toString)
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(SEE_OTHER),
+              redirectLocation(controllers.routes.RegularPayAmountController.onPageLoad().url)
+            )
+          }
+        }
+      }
+
+      "user enters a 'No' answer" should {
+
+        "redirect to RegularPayAmount page" in {
+
+          disable(ExtensionTwoNewStarterFlow)
+
+          val userAnswers: UserAnswers = emptyUserAnswers
+            .withClaimPeriodStart("2020, 11, 1")
+            .withClaimPeriodEnd("2020, 11, 30")
+            .withFurloughStartDate("2020, 11, 1")
+            .withFurloughStatus()
+            .withPaymentFrequency(Monthly)
+            .withNiCategory()
+            .withPensionStatus()
+            .withPayMethod()
+            .withLastPayDate("2020, 10, 31")
+            .withPayDate(List("2020, 11, 30"))
+
+          setAnswers(userAnswers)
+
+          val res = postRequestHeader("/regular-length-employed",
+            Json.obj("value" -> RegularLengthEmployed.No.toString)
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(SEE_OTHER),
+              redirectLocation(controllers.routes.RegularPayAmountController.onPageLoad().url)
+            )
+          }
+        }
+      }
+
+      "user enters an Invalid answer" should {
+
+        "redirect back to the same RegularLengthEmployed page" in {
+
+          disable(ExtensionTwoNewStarterFlow)
+
+          val userAnswers: UserAnswers = emptyUserAnswers
+            .withClaimPeriodStart("2020, 11, 1")
+            .withClaimPeriodEnd("2020, 11, 30")
+            .withFurloughStartDate("2020, 11, 1")
+            .withFurloughStatus()
+            .withPaymentFrequency(Monthly)
+            .withNiCategory()
+            .withPensionStatus()
+            .withPayMethod()
+            .withLastPayDate("2020, 10, 31")
+            .withPayDate(List("2020, 11, 30"))
+
+          setAnswers(userAnswers)
+
+          val res = postRequestHeader("/regular-length-employed",
+            Json.obj("value" -> "bleh")
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(BAD_REQUEST)
+            )
+          }
+        }
+      }
+
     }
   }
 

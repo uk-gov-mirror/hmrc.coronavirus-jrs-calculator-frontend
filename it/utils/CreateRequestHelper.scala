@@ -63,8 +63,8 @@ trait CreateRequestHelper extends ServerProvider {
       .post(formJson)
   }
 
-  def postRequestheader(path: String, formJson: JsValue, follow: Boolean = false, headers: Seq[(String, String)] = Seq.empty)
-                 (sessionKvs: (String, String)*)(): Future[WSResponse] = {
+  def postRequestHeader(path: String, formJson: JsValue, follow: Boolean = false, headers: Seq[(String, String)] = Seq.empty)
+                       (sessionKvs: (String, String)*)(): Future[WSResponse] = {
 
     val allHeaders = headers ++ Seq("Csrf-Token" -> "nocheck", bakeCookie(sessionKvs:_*))
     ws.url(s"http://localhost:$port/job-retention-scheme-calculator$path")

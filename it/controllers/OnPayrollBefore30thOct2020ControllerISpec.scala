@@ -18,13 +18,12 @@ package controllers
 
 import assets.BaseITConstants
 import assets.PageTitles.onPayrollBefore30thOct2020
-import controllers.scenarios.AprilConfirmationScenarios._
 import models.UserAnswers
 import play.api.http.Status._
 import play.api.libs.json.Json
-import utils.{CreateRequestHelper, CustomMatchers, IntegrationSpecBase}
+import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
 
-class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants {
+class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants with ITCoreTestData {
 
   "GET /october-payroll" when {
 
