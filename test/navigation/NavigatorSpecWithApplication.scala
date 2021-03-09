@@ -139,7 +139,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "RegularLengthEmployedPage" when {
 
-        "the ExtensionTwoNewStarterFlow switch is enable" when {
+        "the ExtensionTwoNewStarterFlow switch is enabled" when {
 
           "claim period start date is on or after 01/11/2020" should {
 
@@ -158,7 +158,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
             "go to RegularPayAmountPage if PayDate is defined" in {
 
-              disable(ExtensionTwoNewStarterFlow)
+              enable(ExtensionTwoNewStarterFlow)
               navigator.nextPage(
                 RegularLengthEmployedPage,
                 emptyUserAnswers
