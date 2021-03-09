@@ -79,11 +79,11 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
       view
     )
 
-  val nov8th2020 = LocalDate.of(2020, 11, 8)
+  val nov8th2020            = LocalDate.of(2020, 11, 8)
   val mar8th2020: LocalDate = LocalDate.of(2020, 3, 8)
   val may8th2021: LocalDate = LocalDate.of(2021, 5, 8)
 
-  val nov1st2020 = LocalDate.of(2020, 11, 1)
+  val nov1st2020            = LocalDate.of(2020, 11, 1)
   val mar1st2020: LocalDate = LocalDate.of(2020, 3, 1)
   val may1st2021: LocalDate = LocalDate.of(2021, 5, 1)
 

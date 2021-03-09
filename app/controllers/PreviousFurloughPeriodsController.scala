@@ -76,10 +76,9 @@ class PreviousFurloughPeriodsController @Inject()(
   }
 
   private def getDateToShowInHeadingFromAnswers(implicit request: DataRequest[_]): LocalDate =
-    (
-      request.userAnswers.getO(EmployeeStartedPage),
-      request.userAnswers.getO(OnPayrollBefore30thOct2020Page),
-      isEnabled(ExtensionTwoNewStarterFlow)) match {
+    (request.userAnswers.getO(EmployeeStartedPage),
+     request.userAnswers.getO(OnPayrollBefore30thOct2020Page),
+     isEnabled(ExtensionTwoNewStarterFlow)) match {
       case (_, _, false)                                          => nov1st2020 //TODO: remove when ExtensionTwoNewStarterFlow feature switch is deprecated
       case (Some(Valid(OnOrBefore1Feb2019)), _, true)             => mar1st2020
       case (Some(Valid(After1Feb2019)), Some(Valid(false)), true) => may1st2021
