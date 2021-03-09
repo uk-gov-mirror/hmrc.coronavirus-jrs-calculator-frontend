@@ -45,7 +45,7 @@ class FurloughOngoingController @Inject()(
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController {
 
-  val form: Form[FurloughStatus] = formProvider()
+  val form: Form[FurloughStatus]      = formProvider()
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>

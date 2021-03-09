@@ -46,7 +46,7 @@ class AuthActionSpecWithApplication extends SpecBaseControllerSpecs {
         val authAction =
           new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), appConf, bodyParsers)
         val controller = new Harness(authAction)
-        val result = controller.onPageLoad()(fakeRequest)
+        val result     = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -61,7 +61,7 @@ class AuthActionSpecWithApplication extends SpecBaseControllerSpecs {
         val authAction =
           new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), appConf, bodyParsers)
         val controller = new Harness(authAction)
-        val result = controller.onPageLoad()(fakeRequest)
+        val result     = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).get must startWith(appConf.loginUrl)
@@ -75,7 +75,7 @@ class AuthActionSpecWithApplication extends SpecBaseControllerSpecs {
         val authAction =
           new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), appConf, bodyParsers)
         val controller = new Harness(authAction)
-        val result = controller.onPageLoad()(fakeRequest)
+        val result     = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
@@ -88,7 +88,7 @@ class AuthActionSpecWithApplication extends SpecBaseControllerSpecs {
         val authAction =
           new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), appConf, bodyParsers)
         val controller = new Harness(authAction)
-        val result = controller.onPageLoad()(fakeRequest)
+        val result     = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -103,7 +103,7 @@ class AuthActionSpecWithApplication extends SpecBaseControllerSpecs {
         val authAction =
           new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), appConf, bodyParsers)
         val controller = new Harness(authAction)
-        val result = controller.onPageLoad()(fakeRequest)
+        val result     = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -118,7 +118,7 @@ class AuthActionSpecWithApplication extends SpecBaseControllerSpecs {
         val authAction =
           new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), appConf, bodyParsers)
         val controller = new Harness(authAction)
-        val result = controller.onPageLoad()(fakeRequest)
+        val result     = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -133,7 +133,7 @@ class AuthActionSpecWithApplication extends SpecBaseControllerSpecs {
         val authAction =
           new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole), appConf, bodyParsers)
         val controller = new Harness(authAction)
-        val result = controller.onPageLoad()(fakeRequest)
+        val result     = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)

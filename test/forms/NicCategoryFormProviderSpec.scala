@@ -26,7 +26,7 @@ class NicCategoryFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "nicCategory.error.required"
 
     behave like optionsField[NicCategory](

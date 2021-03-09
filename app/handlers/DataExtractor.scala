@@ -39,7 +39,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
       userAnswers.getV(ClaimPeriodStartPage)
     ).mapN { (furloughStart, employeeStartDate, claimStart) =>
       val isRtiSubmissionRequired = rtiSubmissionRequired(claimStart, employeeStartDate)
-      val rtiSubmission = userAnswers.getV(EmployeeRTISubmissionPage)
+      val rtiSubmission           = userAnswers.getV(EmployeeRTISubmissionPage)
       val empStartDateToConsiderForCalc = if (isRtiSubmissionRequired && rtiSubmission.exists(_ == EmployeeRTISubmission.No)) {
         apr6th2020
       } else {
@@ -58,7 +58,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
     }
 
   def extractNonFurloughV(userAnswers: UserAnswers): AnswerV[NonFurloughPay] = {
-    val preFurloughPay = userAnswers.getV(PartialPayBeforeFurloughPage).toOption
+    val preFurloughPay  = userAnswers.getV(PartialPayBeforeFurloughPage).toOption
     val postFurloughPay = userAnswers.getV(PartialPayAfterFurloughPage).toOption
 
     NonFurloughPay(
@@ -120,10 +120,10 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
       extractFurloughWithinClaimV(userAnswers),
       extractPaymentFrequencyV(userAnswers)
     ).mapN { (furloughPeriod, frequency) =>
-      val payDates = userAnswers.getList(PayDatePage)
-      val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
+      val payDates   = userAnswers.getList(PayDatePage)
+      val periods    = generatePeriodsWithFurlough(payDates, furloughPeriod)
       val lastPayDay = determineLastPayDay(userAnswers, periods)
-      val assigned = assignPayDates(frequency, periods, lastPayDay)
+      val assigned   = assignPayDates(frequency, periods, lastPayDay)
       ReferencePayData(furloughPeriod, assigned, frequency)
     }
 
@@ -132,12 +132,12 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
       extractFurloughWithinClaimV(userAnswers),
       extractPaymentFrequencyV(userAnswers)
     ).mapN { (furloughPeriod, frequency) =>
-      val payDates = userAnswers.getList(PayDatePage)
-      val actuals = userAnswers.getList(PartTimeHoursPage)
-      val usuals: Seq[UsualHours] = userAnswers.getList(PartTimeNormalHoursPage)
-      val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
-      val lastPayDay = determineLastPayDay(userAnswers, periods)
-      val assigned = assignPayDates(frequency, periods, lastPayDay)
+      val payDates                      = userAnswers.getList(PayDatePage)
+      val actuals                       = userAnswers.getList(PartTimeHoursPage)
+      val usuals: Seq[UsualHours]       = userAnswers.getList(PartTimeNormalHoursPage)
+      val periods                       = generatePeriodsWithFurlough(payDates, furloughPeriod)
+      val lastPayDay                    = determineLastPayDay(userAnswers, periods)
+      val assigned                      = assignPayDates(frequency, periods, lastPayDay)
       val phaseTwo: Seq[PhaseTwoPeriod] = assignPartTimeHours(assigned, actuals, usuals)
 
       PhaseTwoReferencePayData(furloughPeriod, phaseTwo, frequency)

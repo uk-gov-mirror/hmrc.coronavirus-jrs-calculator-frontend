@@ -33,5 +33,5 @@ object PartTimeNormalHoursMessages {
   val p1 =
     "This is the total number of hours this employee would have been expected to work during this pay period if they had not been furloughed."
   val link = "work out your employee’s usual hours and furloughed hours (opens in a new tab)."
-  val p2 = s"Read more about how to $link"
+  val p2   = s"Read more about how to $link"
 }

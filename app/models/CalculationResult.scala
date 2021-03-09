@@ -18,10 +18,10 @@ package models
 
 case class FurloughCalculationResult(total: BigDecimal, periodBreakdowns: Seq[FurloughBreakdown])
 case class PhaseTwoFurloughCalculationResult(total: BigDecimal, periodBreakdowns: Seq[PhaseTwoFurloughBreakdown]) {
-  def seventy = periodBreakdowns.map(_.seventy).sum
-  def sixty = periodBreakdowns.map(_.sixty).sum
+  def seventy     = periodBreakdowns.map(_.seventy).sum
+  def sixty       = periodBreakdowns.map(_.sixty).sum
   def seventyDiff = total - seventy
-  def sixtyDiff = total - sixty
+  def sixtyDiff   = total - sixty
 }
 case class NicCalculationResult(total: BigDecimal, periodBreakdowns: Seq[NicBreakdown])
 case class PhaseTwoNicCalculationResult(total: BigDecimal, periodBreakdowns: Seq[PhaseTwoNicBreakdown])

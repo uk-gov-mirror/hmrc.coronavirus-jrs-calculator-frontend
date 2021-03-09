@@ -69,12 +69,11 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to pay dates page after PayMethodPage for claims starting before 01/11/2020" in {
-        navigator.nextPage(
-          PayMethodPage,
-          emptyUserAnswers
-            .withPayMethod(Regular)
-            .withClaimPeriodStart("2020-10-01")
-            .withPayDate(List())) mustBe routes.PayDateController.onPageLoad(1)
+        navigator.nextPage(PayMethodPage,
+                           emptyUserAnswers
+                             .withPayMethod(Regular)
+                             .withClaimPeriodStart("2020-10-01")
+                             .withPayDate(List())) mustBe routes.PayDateController.onPageLoad(1)
 
         navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
@@ -119,20 +118,18 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to regular-pay-amount page after PayMethodPage if regular and PayDates were persisted in fast journey" in {
-        navigator.nextPage(
-          PayMethodPage,
-          dummyUserAnswers
-            .withPayMethod(Regular)
-            .withPayDate(List("2020-1-1"))) mustBe routes.RegularPayAmountController.onPageLoad()
+        navigator.nextPage(PayMethodPage,
+                           dummyUserAnswers
+                             .withPayMethod(Regular)
+                             .withPayDate(List("2020-1-1"))) mustBe routes.RegularPayAmountController.onPageLoad()
       }
 
       "go to RegularLengthEmployedPage after PayMethodPage for claims starting on or after 01/11/2020 for Regular payMethods" in {
-        navigator.nextPage(
-          PayMethodPage,
-          emptyUserAnswers
-            .withPayMethod(Regular)
-            .withClaimPeriodStart("2020-11-01")
-            .withPayDate(List())) mustBe routes.RegularLengthEmployedController.onPageLoad()
+        navigator.nextPage(PayMethodPage,
+                           emptyUserAnswers
+                             .withPayMethod(Regular)
+                             .withClaimPeriodStart("2020-11-01")
+                             .withPayDate(List())) mustBe routes.RegularLengthEmployedController.onPageLoad()
 
         navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
@@ -254,19 +251,17 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
 
       "go to NicCategoryPage after PartTimeQuestionPage if `PartTimeNo`" in {
-        navigator.nextPage(
-          PartTimeQuestionPage,
-          emptyUserAnswers
-            .withClaimPeriodStart("2020, 7, 31")
-            .withPartTimeQuestion(PartTimeNo)) mustBe routes.NicCategoryController.onPageLoad()
+        navigator.nextPage(PartTimeQuestionPage,
+                           emptyUserAnswers
+                             .withClaimPeriodStart("2020, 7, 31")
+                             .withPartTimeQuestion(PartTimeNo)) mustBe routes.NicCategoryController.onPageLoad()
       }
 
       "go to ConfirmationPage after PartTimeQuestionPage if `PartTimeNo` and claim started after July" in {
-        navigator.nextPage(
-          PartTimeQuestionPage,
-          emptyUserAnswers
-            .withClaimPeriodStart("2020, 8, 1")
-            .withPartTimeQuestion(PartTimeNo)) mustBe routes.ConfirmationController.onPageLoad()
+        navigator.nextPage(PartTimeQuestionPage,
+                           emptyUserAnswers
+                             .withClaimPeriodStart("2020, 8, 1")
+                             .withPartTimeQuestion(PartTimeNo)) mustBe routes.ConfirmationController.onPageLoad()
       }
 
       "go to PartTimeQuestionPage after RegularPayAmountPage if phase two started and furlough has ended" in {
@@ -321,7 +316,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "go to PartTimeHours after PartTimePeriods" in {
         val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
-        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        val userAnswers                    = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
         navigator.nextPage(
           PartTimePeriodsPage,
           userAnswers
@@ -330,7 +325,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "go to PartTimeNormalHours after PartTimeHours" in {
         val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
-        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        val userAnswers                    = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
         navigator.nextPage(
           PartTimeHoursPage,
           userAnswers,
@@ -340,7 +335,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "go to Nic after PartTimeHours if period not found" in {
         val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
-        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        val userAnswers                    = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
         navigator.nextPage(
           PartTimeHoursPage,
           userAnswers,
@@ -372,7 +367,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "loop from PartTimeHours to PartTimeNormalHours if there are more PartTimePeriods to iterate" in {
         val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
-        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        val userAnswers                    = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
         navigator.nextPage(
           PartTimeNormalHoursPage,
           userAnswers,
@@ -382,7 +377,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "stop loop around part time pages if there are no more PartTimePeriods to iterate" in {
         val partTimePeriods: List[Periods] = List(fullPeriod("2020,7,1", "2020,7,8"), fullPeriod("2020,7,9", "2020,7,15"))
-        val userAnswers = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
+        val userAnswers                    = mandatoryAnswersOnRegularMonthly.withPartTimePeriods(partTimePeriods)
         navigator.nextPage(
           PartTimeHoursPage,
           userAnswers,
@@ -1079,7 +1074,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual = navigator.requireLastPayDateRoutes(userAnswers)
+          val actual   = navigator.requireLastPayDateRoutes(userAnswers)
           val expected = routes.LastPayDateController.onPageLoad()
 
           actual mustBe expected
@@ -1097,7 +1092,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual: Call = navigator.requireLastPayDateRoutes(userAnswers)
+          val actual: Call   = navigator.requireLastPayDateRoutes(userAnswers)
           val expected: Call = routes.RegularPayAmountController.onPageLoad()
 
           actual mustBe expected
@@ -1118,7 +1113,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual = navigator.requireLastPayDateRoutes(userAnswers)
+          val actual   = navigator.requireLastPayDateRoutes(userAnswers)
           val expected = routes.LastPayDateController.onPageLoad()
 
           actual mustBe expected
@@ -1139,7 +1134,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual: Call = navigator.requireLastPayDateRoutes(userAnswers)
+          val actual: Call   = navigator.requireLastPayDateRoutes(userAnswers)
           val expected: Call = routes.RegularPayAmountController.onPageLoad()
 
           actual mustBe expected

@@ -58,40 +58,36 @@ final case class FullPeriodFurloughBreakdown(grant: Amount, paymentWithPeriod: P
 final case class PartialPeriodFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithPartialPeriod, furloughCap: FurloughCap)
     extends PartialPeriodBreakdown with FurloughBreakdown
 
-final case class FullPeriodNicBreakdown(
-  grant: Amount,
-  topUpPay: Amount,
-  additionalPay: Amount,
-  paymentWithPeriod: PaymentWithFullPeriod,
-  threshold: Threshold,
-  nicCap: NicCap,
-  nicCategory: NicCategory)
+final case class FullPeriodNicBreakdown(grant: Amount,
+                                        topUpPay: Amount,
+                                        additionalPay: Amount,
+                                        paymentWithPeriod: PaymentWithFullPeriod,
+                                        threshold: Threshold,
+                                        nicCap: NicCap,
+                                        nicCategory: NicCategory)
     extends FullPeriodBreakdown with NicBreakdown
 
-final case class PartialPeriodNicBreakdown(
-  grant: Amount,
-  topUpPay: Amount,
-  additionalPay: Amount,
-  paymentWithPeriod: PaymentWithPartialPeriod,
-  threshold: Threshold,
-  nicCap: NicCap,
-  nicCategory: NicCategory)
+final case class PartialPeriodNicBreakdown(grant: Amount,
+                                           topUpPay: Amount,
+                                           additionalPay: Amount,
+                                           paymentWithPeriod: PaymentWithPartialPeriod,
+                                           threshold: Threshold,
+                                           nicCap: NicCap,
+                                           nicCategory: NicCategory)
     extends PartialPeriodBreakdown with NicBreakdown
 
-final case class FullPeriodPensionBreakdown(
-  grant: Amount,
-  paymentWithPeriod: PaymentWithFullPeriod,
-  threshold: Threshold,
-  allowance: Amount,
-  pensionStatus: PensionStatus)
+final case class FullPeriodPensionBreakdown(grant: Amount,
+                                            paymentWithPeriod: PaymentWithFullPeriod,
+                                            threshold: Threshold,
+                                            allowance: Amount,
+                                            pensionStatus: PensionStatus)
     extends FullPeriodBreakdown with PensionBreakdown
 
-final case class PartialPeriodPensionBreakdown(
-  grant: Amount,
-  paymentWithPeriod: PaymentWithPartialPeriod,
-  threshold: Threshold,
-  allowance: Amount,
-  pensionStatus: PensionStatus)
+final case class PartialPeriodPensionBreakdown(grant: Amount,
+                                               paymentWithPeriod: PaymentWithPartialPeriod,
+                                               threshold: Threshold,
+                                               allowance: Amount,
+                                               pensionStatus: PensionStatus)
     extends PartialPeriodBreakdown with PensionBreakdown
 
 object FurloughBreakdown {
@@ -113,21 +109,20 @@ sealed trait PhaseTwoPeriodBreakdown {
 
 final case class PhaseTwoFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithPhaseTwoPeriod, furloughCap: FurloughCap)
     extends PhaseTwoPeriodBreakdown {
-  def isCapped: Boolean = (paymentWithPeriod.referencePay.value * 0.8) > furloughCap.value
+  def isCapped: Boolean          = (paymentWithPeriod.referencePay.value * 0.8) > furloughCap.value
   def calculatedFurlough: String = Amount(paymentWithPeriod.referencePay.value * 0.8).halfUp.value.formatted("%.2f")
-  def calculatedSeventy: String = Amount(paymentWithPeriod.referencePay.value * 0.7).halfUp.value.formatted("%.2f")
-  def calculatedSixty: String = Amount(paymentWithPeriod.referencePay.value * 0.6).halfUp.value.formatted("%.2f")
-  def seventy = Amount((grant.value / 80) * 70).halfUp.value
-  def sixty = Amount((grant.value / 80) * 60).halfUp.value
+  def calculatedSeventy: String  = Amount(paymentWithPeriod.referencePay.value * 0.7).halfUp.value.formatted("%.2f")
+  def calculatedSixty: String    = Amount(paymentWithPeriod.referencePay.value * 0.6).halfUp.value.formatted("%.2f")
+  def seventy                    = Amount((grant.value / 80) * 70).halfUp.value
+  def sixty                      = Amount((grant.value / 80) * 60).halfUp.value
 }
 
-final case class PhaseTwoNicBreakdown(
-  grant: Amount,
-  paymentWithPeriod: PaymentWithPhaseTwoPeriod,
-  threshold: Threshold,
-  nicCategory: NicCategory)
+final case class PhaseTwoNicBreakdown(grant: Amount,
+                                      paymentWithPeriod: PaymentWithPhaseTwoPeriod,
+                                      threshold: Threshold,
+                                      nicCategory: NicCategory)
     extends PhaseTwoPeriodBreakdown {
-  def isPartial = paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.isInstanceOf[PartialPeriod]
+  def isPartial  = paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.isInstanceOf[PartialPeriod]
   def isPartTime = paymentWithPeriod.phaseTwoPeriod.isPartTime
 
   def thresholdMessage(implicit messages: Messages): String =
@@ -162,13 +157,12 @@ final case class PhaseTwoNicBreakdown(
     }
 }
 
-final case class PhaseTwoPensionBreakdown(
-  grant: Amount,
-  paymentWithPeriod: PaymentWithPhaseTwoPeriod,
-  threshold: Threshold,
-  pensionStatus: PensionStatus)
+final case class PhaseTwoPensionBreakdown(grant: Amount,
+                                          paymentWithPeriod: PaymentWithPhaseTwoPeriod,
+                                          threshold: Threshold,
+                                          pensionStatus: PensionStatus)
     extends PhaseTwoPeriodBreakdown {
-  def isPartial = paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.isInstanceOf[PartialPeriod]
+  def isPartial  = paymentWithPeriod.phaseTwoPeriod.periodWithPaymentDate.period.isInstanceOf[PartialPeriod]
   def isPartTime = paymentWithPeriod.phaseTwoPeriod.isPartTime
 
   def thresholdMessage(implicit messages: Messages): String =

@@ -40,7 +40,7 @@ class RegularLengthEmployedControllerSpec extends SpecBaseControllerSpecs with M
   val view = app.injector.instanceOf[RegularLengthEmployedView]
 
   val formProvider = new RegularLengthEmployedFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val controller = new RegularLengthEmployedController(
     messagesApi = messagesApi,
@@ -54,7 +54,7 @@ class RegularLengthEmployedControllerSpec extends SpecBaseControllerSpecs with M
     view = view
   )
 
-  lazy val regularLengthEmployedRouteGet = routes.RegularLengthEmployedController.onPageLoad().url
+  lazy val regularLengthEmployedRouteGet  = routes.RegularLengthEmployedController.onPageLoad().url
   lazy val regularLengthEmployedRoutePost = routes.RegularLengthEmployedController.onSubmit().url
 
   "RegularLengthEmployed Controller" must {
@@ -64,7 +64,7 @@ class RegularLengthEmployedControllerSpec extends SpecBaseControllerSpecs with M
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request = FakeRequest(GET, regularLengthEmployedRouteGet).withCSRFToken
         .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-      val result = controller.onPageLoad()(request)
+      val result      = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual OK
@@ -77,7 +77,7 @@ class RegularLengthEmployedControllerSpec extends SpecBaseControllerSpecs with M
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request = FakeRequest(GET, regularLengthEmployedRouteGet).withCSRFToken
         .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-      val result = controller.onPageLoad()(request)
+      val result      = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -113,8 +113,8 @@ class RegularLengthEmployedControllerSpec extends SpecBaseControllerSpecs with M
           .withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
-      val result = controller.onSubmit()(request)
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
+      val result      = controller.onSubmit()(request)
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual BAD_REQUEST
@@ -127,7 +127,7 @@ class RegularLengthEmployedControllerSpec extends SpecBaseControllerSpecs with M
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, regularLengthEmployedRouteGet).withCSRFToken
         .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-      val result = controller.onPageLoad()(request)
+      val result      = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual SEE_OTHER

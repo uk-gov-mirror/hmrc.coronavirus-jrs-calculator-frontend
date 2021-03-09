@@ -34,12 +34,11 @@ class ClaimPeriodEndFormProvider @Inject()() extends Mappings with SchemeConfigu
     Form("endDate" -> localDate(invalidKey = "claimPeriodEnd.error.invalid").verifying(validEndDate(claimStart)))
 
   private def validEndDate(claimStart: LocalDate)(implicit messages: Messages): Constraint[LocalDate] = Constraint { claimEndDate =>
-    (
-      isBeforeStart(claimStart, claimEndDate),
-      isDifferentCalendarMonth(claimStart, claimEndDate),
-      isMoreThan14daysInFuture(claimStart, claimEndDate),
-      isClaimLessThan7Days(claimStart, claimEndDate),
-      isAfterPolicyEnd(claimEndDate)) match {
+    (isBeforeStart(claimStart, claimEndDate),
+     isDifferentCalendarMonth(claimStart, claimEndDate),
+     isMoreThan14daysInFuture(claimStart, claimEndDate),
+     isClaimLessThan7Days(claimStart, claimEndDate),
+     isAfterPolicyEnd(claimEndDate)) match {
       case (r @ Invalid(_), _, _, _, _) => r
       case (_, r @ Invalid(_), _, _, _) => r
       case (_, _, r @ Invalid(_), _, _) => r

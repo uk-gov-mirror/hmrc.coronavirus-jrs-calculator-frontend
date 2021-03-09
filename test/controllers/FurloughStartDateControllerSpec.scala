@@ -35,10 +35,10 @@ import scala.concurrent.Future
 
 class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs {
 
-  val formProvider = new FurloughStartDateFormProvider()
+  val formProvider             = new FurloughStartDateFormProvider()
   private val claimPeriodStart = LocalDate.of(2020, 3, 1)
-  private val claimPeriodEnd = LocalDate.of(2020, 6, 1)
-  private def form = formProvider(claimPeriodEnd)
+  private val claimPeriodEnd   = LocalDate.of(2020, 6, 1)
+  private def form             = formProvider(claimPeriodEnd)
 
   val validAnswer = LocalDate.of(2020, 4, 1)
 
@@ -91,7 +91,7 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs {
 
     "return OK and the correct view for a GET with different contents if 1st July or after" in {
       val userAnswers = emptyUserAnswers.withClaimPeriodStart("2020,7,1").withClaimPeriodEnd("2020,7,14")
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       val actualContent = contentAsString(result)
@@ -103,7 +103,7 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs {
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = userAnswersWithClaimStartAndEnd.set(FurloughStartDatePage, validAnswer).success.value
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -126,7 +126,7 @@ class FurloughStartDateControllerSpec extends SpecBaseControllerSpecs {
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
       val dataRequest = DataRequest(request, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
-      val result = controller(Some(userAnswersWithClaimStartAndEnd)).onSubmit()(request)
+      val result      = controller(Some(userAnswersWithClaimStartAndEnd)).onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual

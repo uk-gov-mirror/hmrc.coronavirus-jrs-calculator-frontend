@@ -49,7 +49,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
         case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
       }
 
-    val h2NextSteps = "Next steps"
+    val h2NextSteps               = "Next steps"
     val h2BreakdownOfCalculations = "Breakdown of calculations"
 
     val breakDownParagraphOne
@@ -95,15 +95,15 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
       s"The calculated furlough grant is more than the maximum furlough grant for this pay period. " +
         s"Because of this, you must use the maximum furlough grant, which is ${currencyFormatter(calculatedAmount)}"
     val maxFurloughGrantBullet: BigDecimal => String = (maxAmount: BigDecimal) => currencyFormatter(maxAmount)
-    val furloughGrantParagraphThree = (calculatedAmount: BigDecimal) => s"Actual furlough grant = ${currencyFormatter(calculatedAmount)}"
+    val furloughGrantParagraphThree                  = (calculatedAmount: BigDecimal) => s"Actual furlough grant = ${currencyFormatter(calculatedAmount)}"
 
     val furloughGrantIndent = (furloughPay: BigDecimal) => s"Total furlough grant for pay period = ${currencyFormatter(furloughPay)}"
 
     val disclaimerBottomPage = "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible." +
       " You cannot claim for more money than you are going to pay out under the scheme."
 
-    val printOrSave = "Print or save a copy of this page"
-    val webchatLink = "Webchat help (opens in a new tab)."
+    val printOrSave  = "Print or save a copy of this page"
+    val webchatLink  = "Webchat help (opens in a new tab)."
     val feedbackLink = "What do you think of this service?"
 
     val startAnotherCalculation = "Start another calculation"
@@ -134,7 +134,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
         case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
       }
 
-    val h2NextSteps = "Next steps"
+    val h2NextSteps               = "Next steps"
     val h2BreakdownOfCalculations = "Breakdown of calculations"
 
     val breakDownParagraphOne: String = "You told us your employee gets paid a variable amount each time and was not on your payroll " +
@@ -184,15 +184,15 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
       s"The calculated furlough grant is more than the maximum furlough grant for this pay period. " +
         s"Because of this, you must use the maximum furlough grant, which is ${currencyFormatter(calculatedAmount)}"
     val maxFurloughGrantBullet: BigDecimal => String = (maxAmount: BigDecimal) => currencyFormatter(maxAmount)
-    val furloughGrantParagraphThree = (calculatedAmount: BigDecimal) => s"Actual furlough grant = ${currencyFormatter(calculatedAmount)}"
+    val furloughGrantParagraphThree                  = (calculatedAmount: BigDecimal) => s"Actual furlough grant = ${currencyFormatter(calculatedAmount)}"
 
     val furloughGrantIndent = (furloughPay: BigDecimal) => s"Total furlough grant for pay period = ${currencyFormatter(furloughPay)}"
 
     val disclaimerBottomPage = "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible." +
       " You cannot claim for more money than you are going to pay out under the scheme."
 
-    val printOrSave = "Print or save a copy of this page"
-    val webchatLink = "Webchat help (opens in a new tab)."
+    val printOrSave  = "Print or save a copy of this page"
+    val webchatLink  = "Webchat help (opens in a new tab)."
     val feedbackLink = "What do you think of this service?"
 
     val startAnotherCalculation = "Start another calculation"

@@ -28,7 +28,7 @@ case class NonFurloughPay(pre: Option[Amount], post: Option[Amount])
 
 object NonFurloughPay extends PeriodHelper {
   implicit class PrePostFurlough(nonFurloughPay: NonFurloughPay) {
-    def preAmount: Amount = opt(nonFurloughPay.pre)
+    def preAmount: Amount  = opt(nonFurloughPay.pre)
     def postAmount: Amount = opt(nonFurloughPay.post)
 
     private val opt: Option[Amount] => Amount =
@@ -39,7 +39,7 @@ object NonFurloughPay extends PeriodHelper {
     period match {
       case _: FullPeriod => Amount(0.00)
       case pp: PartialPeriod =>
-        val pre = if (isFurloughStart(pp)) nonFurloughPay.preAmount else Amount(0.00)
+        val pre  = if (isFurloughStart(pp)) nonFurloughPay.preAmount else Amount(0.00)
         val post = if (isFurloughEnd(pp)) nonFurloughPay.postAmount else Amount(0.00)
         Amount(pre.value + post.value)
     }
@@ -120,41 +120,36 @@ sealed trait CylbPayment extends PaymentWithPeriod {
 case class RegularPaymentWithFullPeriod(regularPay: Amount, referencePay: Amount, periodWithPaymentDate: FullPeriodWithPaymentDate)
     extends PaymentWithFullPeriod with RegularPayment
 
-case class RegularPaymentWithPartialPeriod(
-  nonFurloughPay: Amount,
-  regularPay: Amount,
-  referencePay: Amount,
-  periodWithPaymentDate: PartialPeriodWithPaymentDate)
+case class RegularPaymentWithPartialPeriod(nonFurloughPay: Amount,
+                                           regularPay: Amount,
+                                           referencePay: Amount,
+                                           periodWithPaymentDate: PartialPeriodWithPaymentDate)
     extends PaymentWithPartialPeriod with RegularPayment
 
-case class AveragePaymentWithFullPeriod(
-  referencePay: Amount,
-  periodWithPaymentDate: FullPeriodWithPaymentDate,
-  annualPay: Amount,
-  priorFurloughPeriod: Period)
+case class AveragePaymentWithFullPeriod(referencePay: Amount,
+                                        periodWithPaymentDate: FullPeriodWithPaymentDate,
+                                        annualPay: Amount,
+                                        priorFurloughPeriod: Period)
     extends PaymentWithFullPeriod with AveragePayment
 
-case class AveragePaymentWithPartialPeriod(
-  nonFurloughPay: Amount,
-  referencePay: Amount,
-  periodWithPaymentDate: PartialPeriodWithPaymentDate,
-  annualPay: Amount,
-  priorFurloughPeriod: Period)
+case class AveragePaymentWithPartialPeriod(nonFurloughPay: Amount,
+                                           referencePay: Amount,
+                                           periodWithPaymentDate: PartialPeriodWithPaymentDate,
+                                           annualPay: Amount,
+                                           priorFurloughPeriod: Period)
     extends PaymentWithPartialPeriod with AveragePayment
 
-case class CylbPaymentWithFullPeriod(
-  referencePay: Amount,
-  periodWithPaymentDate: FullPeriodWithPaymentDate,
-  averagePayment: AveragePayment,
-  cylbBreakdown: CylbBreakdown)
+case class CylbPaymentWithFullPeriod(referencePay: Amount,
+                                     periodWithPaymentDate: FullPeriodWithPaymentDate,
+                                     averagePayment: AveragePayment,
+                                     cylbBreakdown: CylbBreakdown)
     extends PaymentWithFullPeriod with CylbPayment
 
-case class CylbPaymentWithPartialPeriod(
-  nonFurloughPay: Amount,
-  referencePay: Amount,
-  periodWithPaymentDate: PartialPeriodWithPaymentDate,
-  averagePayment: AveragePayment,
-  cylbBreakdown: CylbBreakdown)
+case class CylbPaymentWithPartialPeriod(nonFurloughPay: Amount,
+                                        referencePay: Amount,
+                                        periodWithPaymentDate: PartialPeriodWithPaymentDate,
+                                        averagePayment: AveragePayment,
+                                        cylbBreakdown: CylbBreakdown)
     extends PaymentWithPartialPeriod with CylbPayment
 
 sealed trait PaymentWithPhaseTwoPeriod {
@@ -171,15 +166,14 @@ sealed trait PaymentWithPhaseTwoPeriod {
 
 case class RegularPaymentWithPhaseTwoPeriod(regularPay: Amount, referencePay: Amount, phaseTwoPeriod: PhaseTwoPeriod)
     extends PaymentWithPhaseTwoPeriod {
-  def basedOnDays: String = Amount((regularPay.value / periodDays) * furloughDays).halfUp.value.formatted("%.2f")
+  def basedOnDays: String  = Amount((regularPay.value / periodDays) * furloughDays).halfUp.value.formatted("%.2f")
   def basedOnHours: String = referencePay.value.formatted("%.2f")
 }
 
-case class AveragePaymentWithPhaseTwoPeriod(
-  referencePay: Amount,
-  annualPay: Amount,
-  priorFurloughPeriod: Period,
-  phaseTwoPeriod: PhaseTwoPeriod)
+case class AveragePaymentWithPhaseTwoPeriod(referencePay: Amount,
+                                            annualPay: Amount,
+                                            priorFurloughPeriod: Period,
+                                            phaseTwoPeriod: PhaseTwoPeriod)
     extends PaymentWithPhaseTwoPeriod {
   def basedOnDays: String = {
     val daily = Amount(annualPay.value / priorFurloughPeriod.countDays).halfUp
@@ -188,11 +182,10 @@ case class AveragePaymentWithPhaseTwoPeriod(
   def basedOnHours: String = referencePay.value.formatted("%.2f")
 }
 
-case class CylbPaymentWithPhaseTwoPeriod(
-  referencePay: Amount,
-  phaseTwoPeriod: PhaseTwoPeriod,
-  averagePayment: AveragePaymentWithPhaseTwoPeriod,
-  cylbBreakdown: CylbBreakdown)
+case class CylbPaymentWithPhaseTwoPeriod(referencePay: Amount,
+                                         phaseTwoPeriod: PhaseTwoPeriod,
+                                         averagePayment: AveragePaymentWithPhaseTwoPeriod,
+                                         cylbBreakdown: CylbBreakdown)
     extends PaymentWithPhaseTwoPeriod {
   def basedOnDays: String = cylbBreakdown.referencePay.value.formatted("%.2f")
 

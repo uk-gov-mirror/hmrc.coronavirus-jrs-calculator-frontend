@@ -23,11 +23,11 @@ import java.time.temporal.ChronoUnit
 
 final case class Period(start: LocalDate, end: LocalDate) {
 
-  val policyStart = LocalDate.of(2020, 3, 1)
+  val policyStart                         = LocalDate.of(2020, 3, 1)
   val yearsBetweenPolicyStartAndPeriodEnd = ChronoUnit.YEARS.between(policyStart, end).toInt.abs
 
-  def substractDays(days: Int): Period = Period(start.minusDays(days), end.minusDays(days))
-  def substractYears(years: Int): Period = Period(start.minusYears(years), end.minusYears(years))
+  def substractDays(days: Int): Period          = Period(start.minusDays(days), end.minusDays(days))
+  def substractYears(years: Int): Period        = Period(start.minusYears(years), end.minusYears(years))
   def substract52Weeks(nTimes: Int = 1): Period = Period(start.minusDays(364 * nTimes), end.minusDays(364 * nTimes))
 }
 
@@ -51,9 +51,9 @@ object FullPeriod {
   implicit val defaultFormat: Format[FullPeriod] = Json.format
 }
 final case class PartialPeriod(original: Period, partial: Period) extends Periods {
-  override val period = original
+  override val period          = original
   def isFurloughStart: Boolean = original.start.isBefore(partial.start)
-  def isFurloughEnd: Boolean = original.end.isAfter(partial.end)
+  def isFurloughEnd: Boolean   = original.end.isAfter(partial.end)
 }
 
 object PartialPeriod {
@@ -80,13 +80,13 @@ sealed trait PeriodWithPaymentDate {
   val period: Periods
   val paymentDate: PaymentDate
 }
-case class FullPeriodWithPaymentDate(period: FullPeriod, paymentDate: PaymentDate) extends PeriodWithPaymentDate
+case class FullPeriodWithPaymentDate(period: FullPeriod, paymentDate: PaymentDate)       extends PeriodWithPaymentDate
 case class PartialPeriodWithPaymentDate(period: PartialPeriod, paymentDate: PaymentDate) extends PeriodWithPaymentDate
 
 case class PhaseTwoPeriod(periodWithPaymentDate: PeriodWithPaymentDate, actualHours: Option[Hours], usualHours: Option[Hours]) {
   def isPartTime: Boolean = (actualHours.isDefined && usualHours.isDefined)
-  def actual: BigDecimal = actualHours.defaulted.value
-  def usual: BigDecimal = usualHours.defaulted.value
+  def actual: BigDecimal  = actualHours.defaulted.value
+  def usual: BigDecimal   = usualHours.defaulted.value
   def furloughed: BigDecimal = {
     val furloughed = usual - actual
     if (furloughed < 0) {

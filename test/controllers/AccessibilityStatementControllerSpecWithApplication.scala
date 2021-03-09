@@ -51,7 +51,7 @@ class AccessibilityStatementControllerSpecWithApplication extends SpecBaseContro
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
 
       val request = FakeRequest(GET, routes.AccessibilityStatementController.onPageLoad(problemUri).url)
-      val result = controller.onPageLoad(problemUri)(request)
+      val result  = controller.onPageLoad(problemUri)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual

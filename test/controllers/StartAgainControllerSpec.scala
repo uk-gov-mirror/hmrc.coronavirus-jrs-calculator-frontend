@@ -31,7 +31,7 @@ import scala.concurrent.Future
 class StartAgainControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   lazy val startAgainRoute = routes.StartAgainController.startAgain().url
-  lazy val getRequest = FakeRequest(GET, startAgainRoute)
+  lazy val getRequest      = FakeRequest(GET, startAgainRoute)
 
   val controller = new StartAgainController(component, navigator, identifier, dataRetrieval, mockSessionRepository)
 

@@ -54,11 +54,10 @@ trait Formatters {
       def unbind(key: String, value: Boolean) = Map(key -> value.toString)
     }
 
-  private[mappings] def intFormatter(
-    requiredKey: String,
-    wholeNumberKey: String,
-    nonNumericKey: String,
-    args: Seq[String] = Seq.empty): Formatter[Int] =
+  private[mappings] def intFormatter(requiredKey: String,
+                                     wholeNumberKey: String,
+                                     nonNumericKey: String,
+                                     args: Seq[String] = Seq.empty): Formatter[Int] =
     new Formatter[Int] {
 
       val decimalRegexp = """^-?(\d*\.\d*)$"""
@@ -108,10 +107,9 @@ trait Formatters {
         baseFormatter.unbind(key, value.toString)
     }
 
-  private[mappings] def bigDecimalFormatter(
-    requiredKey: String,
-    nonNumericKey: String,
-    args: Seq[String] = Seq.empty): Formatter[BigDecimal] =
+  private[mappings] def bigDecimalFormatter(requiredKey: String,
+                                            nonNumericKey: String,
+                                            args: Seq[String] = Seq.empty): Formatter[BigDecimal] =
     new Formatter[BigDecimal] {
       private val baseFormatter = stringFormatter(requiredKey)
 

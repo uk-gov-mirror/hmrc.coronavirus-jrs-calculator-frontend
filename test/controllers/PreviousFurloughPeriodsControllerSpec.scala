@@ -39,7 +39,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new PreviousFurloughPeriodsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val view = app.injector.instanceOf[PreviousFurloughPeriodsView]
 
@@ -136,7 +136,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST

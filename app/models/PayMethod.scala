@@ -25,7 +25,7 @@ sealed trait PayMethod
 
 object PayMethod extends Enumerable.Implicits {
 
-  case object Regular extends WithName("regular") with PayMethod
+  case object Regular  extends WithName("regular") with PayMethod
   case object Variable extends WithName("variable") with PayMethod
 
   val values: Seq[PayMethod] = Seq(

@@ -26,8 +26,8 @@ class RichJsValueSpec extends FreeSpec with MustMatchers with ScalaCheckProperty
 
   implicit def dontShrink[A]: Shrink[A] = Shrink.shrinkAny
 
-  val min = 2
-  val max = 10
+  val min                           = 2
+  val max                           = 10
   val nonEmptyAlphaStr: Gen[String] = Gen.alphaStr.suchThat(_.nonEmpty)
 
   def buildJsObj[B](keys: Seq[String], values: Seq[B])(implicit writes: Writes[B]): JsObject =
@@ -282,7 +282,7 @@ class RichJsValueSpec extends FreeSpec with MustMatchers with ScalaCheckProperty
       forAll(gen) {
         case (key: String, values: List[String], indexToRemove: Int) =>
           val valuesInArrays: Seq[JsValue] = values.map(Json.toJson[String])
-          val initialObj: JsObject = buildJsObj(Seq(key), Seq(valuesInArrays))
+          val initialObj: JsObject         = buildJsObj(Seq(key), Seq(valuesInArrays))
 
           val pathToRemove = JsPath \ key \ indexToRemove
 

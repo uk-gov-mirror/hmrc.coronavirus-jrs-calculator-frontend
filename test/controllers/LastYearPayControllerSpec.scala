@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new LastYearPayFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val variableMonthlyUserAnswers = variableMonthlyPartial
 
@@ -107,9 +107,9 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
     }
 
     "return OK and the correct view for a GET" in {
-      val request = getRequest(1)
-      val result = controller(Some(variableMonthlyUserAnswers)).onPageLoad(1)(request)
-      val dataRequest = DataRequest(request, variableMonthlyUserAnswers.id, variableMonthlyUserAnswers)
+      val request      = getRequest(1)
+      val result       = controller(Some(variableMonthlyUserAnswers)).onPageLoad(1)(request)
+      val dataRequest  = DataRequest(request, variableMonthlyUserAnswers.id, variableMonthlyUserAnswers)
       val expectedView = view(form, 1, period("2019, 3, 1", "2019, 3, 31"), false)(dataRequest, messages).toString
 
       status(result) mustEqual OK
@@ -118,12 +118,11 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
 
     "return OK and the correct view for a GET - with inset text set" in {
       val request = getRequest(1)
-      val result = controller(Some(variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019)).onPageLoad(1)(request)
+      val result  = controller(Some(variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019)).onPageLoad(1)(request)
       val dataRequest =
-        DataRequest(
-          request,
-          variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019.id,
-          variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019)
+        DataRequest(request,
+                    variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019.id,
+                    variableMonthlyPartialWithClaimPeriodInFeb2021EmployedBeforeFeb2019)
       val expectedView = view(form, 1, period("2020, 2, 1", "2020, 2, 28"), true)(dataRequest, messages).toString
 
       status(result) mustEqual OK
@@ -132,8 +131,8 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = variableMonthlyUserAnswers.set(LastYearPayPage, LastYearPayment(validDate, validAnswer)).success.value
-      val request = getRequest(1)
-      val result = controller(Some(userAnswers)).onPageLoad(1)(request)
+      val request     = getRequest(1)
+      val result      = controller(Some(userAnswers)).onPageLoad(1)(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -186,9 +185,9 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
       val dataRequest = DataRequest(request, variableMonthlyUserAnswers.id, variableMonthlyUserAnswers)
-      val result = controller(Some(variableMonthlyUserAnswers)).onSubmit(1)(request)
+      val result      = controller(Some(variableMonthlyUserAnswers)).onSubmit(1)(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -197,7 +196,7 @@ class LastYearPayControllerSpec extends SpecBaseControllerSpecs {
 
     "redirect to Session Expired for a GET if no existing data is found" in {
       val request = FakeRequest(GET, lastYearPayRoute)
-      val result = controller(None).onPageLoad(1)(request)
+      val result  = controller(None).onPageLoad(1)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

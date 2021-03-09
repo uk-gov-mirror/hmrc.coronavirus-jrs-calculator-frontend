@@ -24,10 +24,10 @@ import models.{Amount, AveragePaymentWithPhaseTwoPeriod, Hours, NonFurloughPay, 
 class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "calculates average pay for an employee" in new AveragePayCalculator {
-    val employeeStartDate = LocalDate.of(2019, 12, 1)
-    val furloughStartDate = LocalDate.of(2020, 3, 1)
-    val nonFurloughPay = NonFurloughPay(None, Some(Amount(1000.00)))
-    val grossPay = Amount(2400.00)
+    val employeeStartDate   = LocalDate.of(2019, 12, 1)
+    val furloughStartDate   = LocalDate.of(2020, 3, 1)
+    val nonFurloughPay      = NonFurloughPay(None, Some(Amount(1000.00)))
+    val grossPay            = Amount(2400.00)
     val priorFurloughPeriod = Period(employeeStartDate, furloughStartDate.minusDays(1))
     val afterFurloughPeriod = fullPeriodWithPaymentDate("2020, 3, 1", "2020, 3, 31", "2020, 3, 31")
 
@@ -45,15 +45,15 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
   }
 
   "calculate daily average gross earning for a given pay period" in new AveragePayCalculator {
-    val employeeStartDate = LocalDate.of(2019, 12, 1)
-    val furloughStartDate = LocalDate.of(2020, 3, 1)
+    val employeeStartDate    = LocalDate.of(2019, 12, 1)
+    val furloughStartDate    = LocalDate.of(2020, 3, 1)
     val periodBeforeFurlough = Period(employeeStartDate, furloughStartDate.minusDays(1))
 
     averageDailyCalculator(periodBeforeFurlough, Amount(2400.0)) mustBe Amount(26.37)
   }
 
   "Phase Two: assign user entered salary if full period and not part time" in new AveragePayCalculator {
-    val annualPay = Amount(20000.0)
+    val annualPay           = Amount(20000.0)
     val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
     val periods = Seq(
       PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), None, None)
@@ -66,7 +66,7 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
   }
 
   "Phase Two: return 0.0 if furloughed hours amount to zero, eg. employee worked full time in that period" in new AveragePayCalculator {
-    val annualPay = Amount(20000.0)
+    val annualPay           = Amount(20000.0)
     val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
     val periods = Seq(
       PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(40.0)), Some(Hours(40.0)))
@@ -79,7 +79,7 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
   }
 
   "Phase Two: assign user entered salary if partial period and not part time" in new AveragePayCalculator {
-    val annualPay = Amount(20000.0)
+    val annualPay           = Amount(20000.0)
     val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
     val periods = Seq(
       PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"), None, None)
@@ -92,7 +92,7 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
   }
 
   "Phase Two: assign user entered salary if full period and part time" in new AveragePayCalculator {
-    val annualPay = Amount(20000.0)
+    val annualPay           = Amount(20000.0)
     val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
     val periods = Seq(
       PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(24.0)), Some(Hours(40.0)))
@@ -105,13 +105,12 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
   }
 
   "Phase Two: assign user entered salary if partial period and part time" in new AveragePayCalculator {
-    val annualPay = Amount(20000.0)
+    val annualPay           = Amount(20000.0)
     val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
     val periods = Seq(
-      PhaseTwoPeriod(
-        partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"),
-        Some(Hours(10.0)),
-        Some(Hours(40.0)))
+      PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"),
+                     Some(Hours(10.0)),
+                     Some(Hours(40.0)))
     )
     val expected = Seq(
       AveragePaymentWithPhaseTwoPeriod(Amount(323.29), Amount(20000.0), priorFurloughPeriod, periods.head)

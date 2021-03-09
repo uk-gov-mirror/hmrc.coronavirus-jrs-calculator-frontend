@@ -43,7 +43,7 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseControllerSpecs wit
   lazy val getRequest = FakeRequest(GET, additionalPaymentPeriodsRoute).withCSRFToken
     .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
   val formProvider = new AdditionalPaymentPeriodsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val validAnswer = List(LocalDate.of(2020, 3, 31), LocalDate.of(2020, 4, 30))
   val periodBreakdowns: Seq[FurloughBreakdown] = Seq(
@@ -90,7 +90,7 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseControllerSpecs wit
 
   "AdditionalPaymentPeriodsController" must {
     "return OK and the correct view for a GET" in {
-      val result = controller(Some(baseUserAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(baseUserAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
 
       status(result) mustEqual OK
@@ -120,7 +120,7 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseControllerSpecs wit
       val userAnswers = baseUserAnswers
         .withAdditionalPaymentPeriods(validAnswer.map(_.toString))
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -144,9 +144,9 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseControllerSpecs wit
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value[0]", "invalid value"))
 
-      val boundForm = form.bind(Map("value[0]" -> "invalid value"))
+      val boundForm   = form.bind(Map("value[0]" -> "invalid value"))
       val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
-      val result = controller(Some(baseUserAnswers)).onSubmit()(request)
+      val result      = controller(Some(baseUserAnswers)).onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -189,7 +189,7 @@ class AdditionalPaymentPeriodsControllerSpec extends SpecBaseControllerSpecs wit
 
     "redirect to Session Expired for a GET if no existing data is found" in {
       val request = FakeRequest(GET, additionalPaymentPeriodsRoute)
-      val result = controller(None).onPageLoad()(request)
+      val result  = controller(None).onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

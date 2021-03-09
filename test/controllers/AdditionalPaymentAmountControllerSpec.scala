@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new AdditionalPaymentAmountFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def additionalPaymentAmountRoute(idx: Int) = routes.AdditionalPaymentAmountController.onPageLoad(idx).url
   def getRequest(method: String, idx: Int) =
@@ -48,18 +48,17 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs {
   def controller(stubbedAnswer: UserAnswers = emptyUserAnswers) = {
     def flagProvider() = new FeatureFlagActionProviderImpl()
 
-    new AdditionalPaymentAmountController(
-      messagesApi,
-      mockSessionRepository,
-      navigator,
-      identifier,
-      stubDataRetrieval(Some(stubbedAnswer)),
-      dataRequired,
-      formProvider,
-      component,
-      view) {
+    new AdditionalPaymentAmountController(messagesApi,
+                                          mockSessionRepository,
+                                          navigator,
+                                          identifier,
+                                          stubDataRetrieval(Some(stubbedAnswer)),
+                                          dataRequired,
+                                          formProvider,
+                                          component,
+                                          view) {
       override val feature: FeatureFlagActionProvider = flagProvider()
-      override val userAnswerPersistence = new UserAnswerPersistence(_ => Future.successful(true))
+      override val userAnswerPersistence              = new UserAnswerPersistence(_ => Future.successful(true))
     }
   }
 
@@ -67,7 +66,7 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs {
 
     "return OK and the correct view for a GET" in {
       val additionalPaymentPeriod = LocalDate.of(2020, 3, 31)
-      val request = getRequest(GET, 1)
+      val request                 = getRequest(GET, 1)
       val userAnswers = mandatoryAnswersOnRegularMonthly
         .withAdditionalPaymentPeriods(List(additionalPaymentPeriod.toString))
       val result = controller(userAnswers).onPageLoad(1)(request)
@@ -86,9 +85,9 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs {
         val userAnswers = mandatoryAnswersOnRegularMonthly
           .withAdditionalPaymentPeriods(List(additionalPaymentPeriod.toString))
 
-        val resultOfZero = controller(userAnswers).onPageLoad(0).apply(getRequest(GET, 0))
+        val resultOfZero     = controller(userAnswers).onPageLoad(0).apply(getRequest(GET, 0))
         val resultOfNegative = controller(userAnswers).onPageLoad(-1).apply(getRequest(GET, -1))
-        val resultTooHigh = controller(userAnswers).onPageLoad(2).apply(getRequest(GET, 2))
+        val resultTooHigh    = controller(userAnswers).onPageLoad(2).apply(getRequest(GET, 2))
 
         status(resultOfZero) mustEqual SEE_OTHER
         redirectLocation(resultOfZero).value mustEqual routes.ErrorController.somethingWentWrong().url
@@ -99,15 +98,15 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val additionalPaymentPeriod = LocalDate.of(2020, 3, 31)
-      val amount = Amount(100)
-      val additionalPayment = AdditionalPayment(additionalPaymentPeriod, amount)
+      val amount                  = Amount(100)
+      val additionalPayment       = AdditionalPayment(additionalPaymentPeriod, amount)
 
       val userAnswers = mandatoryAnswersOnRegularMonthly
         .withAdditionalPaymentPeriods(List(additionalPaymentPeriod.toString))
         .withAdditionalPaymentAmount(additionalPayment, Some(1))
 
       val request = getRequest(GET, 1)
-      val result = controller(userAnswers).onPageLoad(1)(request)
+      val result  = controller(userAnswers).onPageLoad(1)(request)
 
       status(result) mustEqual OK
 
@@ -119,7 +118,7 @@ class AdditionalPaymentAmountControllerSpec extends SpecBaseControllerSpecs {
 
     "redirect to the next page when valid data is submitted" in {
       val additionalPaymentPeriod = LocalDate.of(2020, 3, 31)
-      val userAnswers = mandatoryAnswersOnRegularMonthly.withAdditionalPaymentPeriods(List(additionalPaymentPeriod.toString))
+      val userAnswers             = mandatoryAnswersOnRegularMonthly.withAdditionalPaymentPeriods(List(additionalPaymentPeriod.toString))
 
       val request =
         getRequest(POST, 1)

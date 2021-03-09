@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class TopUpAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSugar with CoreTestDataBuilder {
 
   val formProvider = new TopUpAmountFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def topUpAmountRoute(idx: Int) = routes.TopUpAmountController.onPageLoad(idx).url
   def getRequest(method: String, idx: Int) =
@@ -45,16 +45,15 @@ class TopUpAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSuga
 
   val view = app.injector.instanceOf[TopUpAmountView]
 
-  val controller = new TopUpAmountController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new TopUpAmountController(messagesApi,
+                                             mockSessionRepository,
+                                             navigator,
+                                             identifier,
+                                             dataRetrieval,
+                                             dataRequired,
+                                             formProvider,
+                                             component,
+                                             view)
 
   "TopUpAmount Controller" must {
 
@@ -62,8 +61,8 @@ class TopUpAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSuga
       val topUpPeriod = TopUpPeriod(LocalDate.of(2020, 3, 31), Amount(100))
       val userAnswers = mandatoryAnswersOnRegularMonthly.withTopUpPeriods(List(topUpPeriod))
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val request = getRequest(GET, 1)
-      val result = controller.onPageLoad(1)(request)
+      val request     = getRequest(GET, 1)
+      val result      = controller.onPageLoad(1)(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -113,8 +112,8 @@ class TopUpAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSuga
         .withTopUpAmount(topUpAmount, Some(1))
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val request = getRequest(GET, 1)
-      val result = controller.onPageLoad(1)(request)
+      val request     = getRequest(GET, 1)
+      val result      = controller.onPageLoad(1)(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -145,8 +144,8 @@ class TopUpAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSuga
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 
-      val boundForm = form.bind(Map("value" -> ""))
-      val result = controller.onSubmit(1)(request)
+      val boundForm   = form.bind(Map("value" -> ""))
+      val result      = controller.onSubmit(1)(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST
@@ -157,7 +156,7 @@ class TopUpAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSuga
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = getRequest(GET, 1)
-      val result = controller.onPageLoad(1)(request)
+      val result  = controller.onPageLoad(1)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

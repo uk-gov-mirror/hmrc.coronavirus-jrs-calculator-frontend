@@ -28,12 +28,12 @@ protected sealed trait FixedLength {
     val yearsBetweenPolicyStartAndClaimPeriod = claimPeriod.yearsBetweenPolicyStartAndPeriodEnd + 1
 
     val adjustedPeriod = claimPeriod.substract52Weeks(yearsBetweenPolicyStartAndClaimPeriod)
-    val yearShift = partialPeriod.getOrElse(claimPeriod).substractYears(yearsBetweenPolicyStartAndClaimPeriod)
+    val yearShift      = partialPeriod.getOrElse(claimPeriod).substractYears(yearsBetweenPolicyStartAndClaimPeriod)
 
     val adjustedStartDateDayOfYear = adjustedPeriod.start.getDayOfYear
-    val claimStartDayOfYear = yearShift.start.getDayOfYear
-    val claimEndDayOfYear = yearShift.end.getDayOfYear
-    val claimDuration = yearShift.countDays
+    val claimStartDayOfYear        = yearShift.start.getDayOfYear
+    val claimEndDayOfYear          = yearShift.end.getDayOfYear
+    val claimDuration              = yearShift.countDays
 
     val priorDays = (adjustedStartDateDayOfYear - claimStartDayOfYear).min(claimDuration) max 0
     val afterDays = (claimEndDayOfYear - (adjustedStartDateDayOfYear - 1)).min(claimDuration) max 0
@@ -82,22 +82,22 @@ trait CylbDuration {
 
 object CylbDuration {
 
-  case class WeeklyFullCylb(override val fullPeriod: FullPeriod) extends CylbDuration with FullPeriodCylb with Weekly
+  case class WeeklyFullCylb(override val fullPeriod: FullPeriod)      extends CylbDuration with FullPeriodCylb with Weekly
   case class FortnightlyFullCylb(override val fullPeriod: FullPeriod) extends CylbDuration with FullPeriodCylb with Fortnightly
-  case class FourweeklyFullCylb(override val fullPeriod: FullPeriod) extends CylbDuration with FullPeriodCylb with FourWeekly
+  case class FourweeklyFullCylb(override val fullPeriod: FullPeriod)  extends CylbDuration with FullPeriodCylb with FourWeekly
   case class MonthlyFullCylb(fullPeriod: FullPeriod) extends CylbDuration {
-    val fullPeriodLength: Int = fullPeriod.period.countDays
+    val fullPeriodLength: Int              = fullPeriod.period.countDays
     override def equivalentPeriodDays: Int = fullPeriodLength
-    override def previousPeriodDays: Int = 0
+    override def previousPeriodDays: Int   = 0
   }
 
-  case class WeeklyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with Weekly
+  case class WeeklyPartialCylb(partial: PartialPeriod)      extends CylbDuration with PartialPeriodCylb with Weekly
   case class FortnightlyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with Fortnightly
-  case class FourweeklyPartialCylb(partial: PartialPeriod) extends CylbDuration with PartialPeriodCylb with FourWeekly
+  case class FourweeklyPartialCylb(partial: PartialPeriod)  extends CylbDuration with PartialPeriodCylb with FourWeekly
   case class MonthlyPartialCylb(partialPeriod: PartialPeriod) extends CylbDuration {
-    val fullPeriodLength: Int = partialPeriod.original.countDays
+    val fullPeriodLength: Int              = partialPeriod.original.countDays
     override def equivalentPeriodDays: Int = partialPeriod.partial.countDays
-    override def previousPeriodDays: Int = 0
+    override def previousPeriodDays: Int   = 0
   }
 
   def apply(paymentFrequency: PaymentFrequency, period: Periods): CylbDuration =

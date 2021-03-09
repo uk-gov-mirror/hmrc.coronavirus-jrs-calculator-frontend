@@ -28,8 +28,8 @@ class FurloughStartDateFormProviderSpec extends SpecBaseControllerSpecs {
   import dateBehaviours._
 
   private val startDate = LocalDate.of(2020, 3, 1)
-  private val endDate = LocalDate.of(2020, 6, 1)
-  val form = new FurloughStartDateFormProvider()(endDate)
+  private val endDate   = LocalDate.of(2020, 6, 1)
+  val form              = new FurloughStartDateFormProvider()(endDate)
 
   ".value" should {
 

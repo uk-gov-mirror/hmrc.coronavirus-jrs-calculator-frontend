@@ -30,7 +30,7 @@ import utils.CoreTestData
 class FastJourneyUserAnswersHandlerSpec extends SpecBase with CoreTestData with ValidatedValues {
 
   "delete all data from the DB if answer is `No` to claim period question excluding session id" in new FastJourneyUserAnswersHandler {
-    val userAnswers: UserAnswers = dummyUserAnswers.withClaimPeriodQuestion(ClaimOnDifferentPeriod)
+    val userAnswers: UserAnswers            = dummyUserAnswers.withClaimPeriodQuestion(ClaimOnDifferentPeriod)
     val actualUserAnswers: UserAnswersState = updateJourney(userAnswers).toOption.value
 
     userAnswers.data.value.values.size must be > 1

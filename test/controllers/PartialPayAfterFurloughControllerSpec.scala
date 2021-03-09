@@ -39,17 +39,17 @@ import scala.concurrent.Future
 class PartialPayAfterFurloughControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   lazy val pageLoadAfterFurloughRoute = routes.PartialPayAfterFurloughController.onPageLoad().url
-  lazy val submitAfterFurloughRoute = routes.PartialPayAfterFurloughController.onSubmit().url
-  val formProvider = new FurloughPartialPayFormProvider()
-  val form = formProvider()
-  val payPeriod1 = LocalDate.of(2020, 3, 22)
-  val payPeriod2 = LocalDate.of(2020, 3, 29)
-  val payPeriod3 = LocalDate.of(2020, 4, 5)
-  val payPeriod4 = LocalDate.of(2020, 4, 12)
-  val furloughStartDate = LocalDate.of(2020, 3, 27)
-  val furloughEndDate = LocalDate.of(2020, 4, 6)
-  val claimPeriodStart = LocalDate.of(2020, 3, 27)
-  val claimPeriodEnd = LocalDate.of(2020, 4, 6)
+  lazy val submitAfterFurloughRoute   = routes.PartialPayAfterFurloughController.onSubmit().url
+  val formProvider                    = new FurloughPartialPayFormProvider()
+  val form                            = formProvider()
+  val payPeriod1                      = LocalDate.of(2020, 3, 22)
+  val payPeriod2                      = LocalDate.of(2020, 3, 29)
+  val payPeriod3                      = LocalDate.of(2020, 4, 5)
+  val payPeriod4                      = LocalDate.of(2020, 4, 12)
+  val furloughStartDate               = LocalDate.of(2020, 3, 27)
+  val furloughEndDate                 = LocalDate.of(2020, 4, 6)
+  val claimPeriodStart                = LocalDate.of(2020, 3, 27)
+  val claimPeriodEnd                  = LocalDate.of(2020, 4, 6)
   val userAnswers = UserAnswers(userAnswersId)
     .withPaymentFrequency(Weekly)
     .withPayDate(List(payPeriod1, payPeriod2, payPeriod2, payPeriod4).map(_.toString))
@@ -69,23 +69,22 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseControllerSpecs with
 
   val view = app.injector.instanceOf[VariableLengthPartialPayView]
 
-  val controller = new PartialPayAfterFurloughController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PartialPayAfterFurloughController(messagesApi,
+                                                         mockSessionRepository,
+                                                         navigator,
+                                                         identifier,
+                                                         dataRetrieval,
+                                                         dataRequired,
+                                                         formProvider,
+                                                         component,
+                                                         view)
 
   "PartialPayAfterFurloughController" must {
 
     "return OK and the correct view for a GET" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request = getRequest(pageLoadAfterFurloughRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
 
@@ -105,7 +104,7 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseControllerSpecs with
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(answers))
 
       val request = getRequest(pageLoadAfterFurloughRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
 
@@ -193,7 +192,7 @@ class PartialPayAfterFurloughControllerSpec extends SpecBaseControllerSpecs with
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, pageLoadAfterFurloughRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

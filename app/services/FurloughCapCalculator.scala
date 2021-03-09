@@ -41,9 +41,9 @@ trait FurloughCapCalculator extends PeriodHelper {
       calculateFurloughCapNonSimplified(period)
     } else {
       logger.debug("[FurloughCapCalculator][calculateFurloughCapNonSimplified] Starting Simplified calc")
-      val max = dailyMax(period.start.getMonth)
+      val max        = dailyMax(period.start.getMonth)
       val periodDays = period.countDays
-      val cap = roundWithMode(periodDays * max, HALF_UP)
+      val cap        = roundWithMode(periodDays * max, HALF_UP)
 
       PartialPeriodCap(cap, periodDays, period.start.getMonthValue, max)
     }
@@ -56,11 +56,11 @@ trait FurloughCapCalculator extends PeriodHelper {
     val isLeapYear = Year.of(payPeriod.start.getYear).isLeap
     val startMonthPeriod =
       Period(payPeriod.start, payPeriod.start.withDayOfMonth(payPeriod.start.getMonth.length(isLeapYear)))
-    val startMonthDays = startMonthPeriod.countDays
-    val endMonthPeriod = Period(payPeriod.end.withDayOfMonth(1), payPeriod.end)
-    val endMonthDays = endMonthPeriod.countDays
+    val startMonthDays                 = startMonthPeriod.countDays
+    val endMonthPeriod                 = Period(payPeriod.end.withDayOfMonth(1), payPeriod.end)
+    val endMonthDays                   = endMonthPeriod.countDays
     val startMonthDailyMax: BigDecimal = dailyMax(payPeriod.start.getMonth, isLeapYear)
-    val endMonthDailyMax: BigDecimal = dailyMax(payPeriod.end.getMonth, isLeapYear)
+    val endMonthDailyMax: BigDecimal   = dailyMax(payPeriod.end.getMonth, isLeapYear)
 
     val cap = roundWithMode((startMonthDays * startMonthDailyMax) + (endMonthDays * endMonthDailyMax), HALF_UP)
 

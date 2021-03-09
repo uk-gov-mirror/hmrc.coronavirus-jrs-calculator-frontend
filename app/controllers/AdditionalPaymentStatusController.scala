@@ -48,7 +48,7 @@ class AdditionalPaymentStatusController @Inject()(
     extends FrontendBaseController with I18nSupport with FurloughCalculationHandler {
 
   val form: Form[AdditionalPaymentStatus] = formProvider()
-  val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
+  val userAnswerPersistence               = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(AdditionalPaymentStatusPage) match {

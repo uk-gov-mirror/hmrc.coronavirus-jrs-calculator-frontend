@@ -25,7 +25,7 @@ sealed trait FurloughStatus
 
 object FurloughStatus extends Enumerable.Implicits {
 
-  case object FurloughEnded extends WithName("ended") with FurloughStatus
+  case object FurloughEnded   extends WithName("ended") with FurloughStatus
   case object FurloughOngoing extends WithName("ongoing") with FurloughStatus
 
   val values: Seq[FurloughStatus] = Seq(

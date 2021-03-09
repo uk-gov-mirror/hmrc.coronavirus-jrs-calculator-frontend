@@ -22,7 +22,7 @@ import play.api.data.FormError
 class OnPayrollBefore30thOct2020FormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "onPayrollBefore30thOct2020.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new OnPayrollBefore30thOct2020FormProvider()()
 

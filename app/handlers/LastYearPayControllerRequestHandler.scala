@@ -33,7 +33,7 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
       extractFurloughWithinClaimV(userAnswers)
     ).mapN { (frequency, furlough) =>
       val endDates = userAnswers.getList(PayDatePage)
-      val periods = generatePeriodsWithFurlough(endDates, furlough)
+      val periods  = generatePeriodsWithFurlough(endDates, furlough)
       periods.headOption.map(p => previousYearPeriod(frequency, p)).getOrElse(Seq.empty)
     }
 
@@ -42,8 +42,8 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
       userAnswers.getV(PaymentFrequencyPage),
       extractFurloughWithinClaimV(userAnswers)
     ).mapN { (frequency, furlough) =>
-      val endDates = userAnswers.getList(PayDatePage)
-      val periods = generatePeriodsWithFurlough(endDates, furlough)
+      val endDates              = userAnswers.getList(PayDatePage)
+      val periods               = generatePeriodsWithFurlough(endDates, furlough)
       val periodsWithDuplicates = periods.flatMap(p => previousYearPeriod(frequency, p))
       periodsWithDuplicates.distinct
     }
@@ -67,8 +67,8 @@ trait LastYearPayControllerRequestHandler extends DataExtractor with PreviousYea
       userAnswers.getV(PaymentFrequencyPage),
       extractFurloughWithinClaimV(userAnswers)
     ).mapN { (frequency, furloughPeriod) =>
-      val payDates = userAnswers.getList(PayDatePage)
-      val periods = generatePeriodsWithFurlough(payDates, furloughPeriod)
+      val payDates   = userAnswers.getList(PayDatePage)
+      val periods    = generatePeriodsWithFurlough(payDates, furloughPeriod)
       val lastPayDay = determineLastPayDay(userAnswers, periods)
 
       assignPayDates(frequency, periods, lastPayDay)

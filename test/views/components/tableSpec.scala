@@ -25,7 +25,7 @@ import views.html.components.table
 class tableSpec extends PlaySpec {
 
   val govukTableComponent = new GovukTable
-  val tableComponent = new table(govukTableComponent)
+  val tableComponent      = new table(govukTableComponent)
 
   "The HTML table component" must {
 
@@ -63,7 +63,7 @@ class tableSpec extends PlaySpec {
       )
 
       val expected = govukTableComponent(viewmodel.toGovukTable)
-      val actual = tableComponent(viewmodel)
+      val actual   = tableComponent(viewmodel)
 
       actual.body.trim mustBe expected.body.trim
     }

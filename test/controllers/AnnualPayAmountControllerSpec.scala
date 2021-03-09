@@ -39,15 +39,15 @@ import scala.concurrent.Future
 class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new AnnualPayAmountFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val annualPayAmountRoute = routes.AnnualPayAmountController.onPageLoad().url
 
-  val claimStart = LocalDate.parse("2020-04-01")
-  val furloughStart = LocalDate.parse("2020-04-01")
+  val claimStart         = LocalDate.parse("2020-04-01")
+  val furloughStart      = LocalDate.parse("2020-04-01")
   val firstFurloughStart = LocalDate.parse("2020-03-01")
-  val uiDateToShow = furloughStart.minusDays(1)
-  val empStart = LocalDate.parse("2020-02-01")
+  val uiDateToShow       = furloughStart.minusDays(1)
+  val empStart           = LocalDate.parse("2020-02-01")
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, annualPayAmountRoute).withCSRFToken
@@ -91,7 +91,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
   "AnnualPayAmountController" must {
 
     "return OK and the correct view for a GET without a First Furlough Period Answer" in {
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -111,7 +111,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
         )
       )
 
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -121,8 +121,8 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
     "return OK and the correct view for a GET if the EmployeeStarted is OnOrBefore1Feb2019" in {
       val updatedAnswers = userAnswers.set(EmployeeStartedPage, OnOrBefore1Feb2019).success.value
-      val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller(Some(updatedAnswers)).onPageLoad()(getRequest)
+      val dataRequest    = DataRequest(getRequest, userAnswers.id, userAnswers)
+      val result         = controller(Some(updatedAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -158,8 +158,8 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswersUpdated = userAnswers.set(AnnualPayAmountPage, AnnualPayAmount(111)).success.value
-      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
-      val result = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
+      val dataRequest        = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+      val result             = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -182,7 +182,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
       val boundForm = form.bind(Map("value" -> ""))
 
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -191,7 +191,7 @@ class AnnualPayAmountControllerSpec extends SpecBaseControllerSpecs {
 
     "redirect to Session Expired for a GET if no existing data is found" in {
       val request = FakeRequest(GET, annualPayAmountRoute)
-      val result = controller(None).onPageLoad()(request)
+      val result  = controller(None).onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

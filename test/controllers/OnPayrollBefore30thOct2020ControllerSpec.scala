@@ -35,15 +35,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-  val view = app.injector.instanceOf[OnPayrollBefore30thOct2020View]
+  val view         = app.injector.instanceOf[OnPayrollBefore30thOct2020View]
   val formProvider = new OnPayrollBefore30thOct2020FormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   lazy val onPageLoadUrl: String = routes.OnPayrollBefore30thOct2020Controller.onPageLoad().url
 
-  lazy val postAction: Call = routes.OnPayrollBefore30thOct2020Controller.onSubmit()
+  lazy val postAction: Call      = routes.OnPayrollBefore30thOct2020Controller.onSubmit()
   lazy val postActionUrl: String = routes.OnPayrollBefore30thOct2020Controller.onSubmit().url
 
   val controller = new OnPayrollBefore30thOct2020Controller(
@@ -68,7 +68,7 @@ class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs w
 
         val request = FakeRequest(GET, onPageLoadUrl).withCSRFToken
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-        val result = controller.onPageLoad()(request)
+        val result      = controller.onPageLoad()(request)
         val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
         status(result) mustEqual OK
@@ -81,8 +81,8 @@ class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs w
 
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
-        val request = FakeRequest(GET, onPageLoadUrl).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-        val result = controller.onPageLoad()(request)
+        val request     = FakeRequest(GET, onPageLoadUrl).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+        val result      = controller.onPageLoad()(request)
         val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
         status(result) mustEqual OK
@@ -95,7 +95,7 @@ class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs w
         when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
 
         val request = FakeRequest(GET, onPageLoadUrl).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-        val result = controller.onPageLoad()(request)
+        val result  = controller.onPageLoad()(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
@@ -136,8 +136,8 @@ class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs w
             .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
         }
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-        val result = controller.onSubmit()(request)
+        val boundForm   = form.bind(Map("value" -> "invalid value"))
+        val result      = controller.onSubmit()(request)
         val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
         status(result) mustEqual BAD_REQUEST

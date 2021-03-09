@@ -39,7 +39,7 @@ import scala.concurrent.Future
 class PartialPayBeforeFurloughControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   val formProvider = new FurloughPartialPayFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val pageLoadBeforeFurloughRoute = routes.PartialPayBeforeFurloughController.onPageLoad().url
 
@@ -54,12 +54,12 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseControllerSpecs wit
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withFormUrlEncodedBody(("value", "123"))
 
-  val payPeriod1 = LocalDate.of(2020, 3, 22)
-  val payPeriod2 = LocalDate.of(2020, 3, 29)
-  val payPeriod3 = LocalDate.of(2020, 4, 5)
+  val payPeriod1        = LocalDate.of(2020, 3, 22)
+  val payPeriod2        = LocalDate.of(2020, 3, 29)
+  val payPeriod3        = LocalDate.of(2020, 4, 5)
   val furloughStartDate = LocalDate.of(2020, 3, 27)
-  val claimPeriodEnd = LocalDate.of(2020, 4, 4)
-  val claimPeriodStart = LocalDate.of(2020, 3, 27)
+  val claimPeriodEnd    = LocalDate.of(2020, 4, 4)
+  val claimPeriodStart  = LocalDate.of(2020, 3, 27)
 
   val userAnswers = UserAnswers(userAnswersId)
     .withPaymentFrequency(Weekly)
@@ -70,23 +70,22 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseControllerSpecs wit
 
   val view = app.injector.instanceOf[VariableLengthPartialPayView]
 
-  val controller = new PartialPayBeforeFurloughController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PartialPayBeforeFurloughController(messagesApi,
+                                                          mockSessionRepository,
+                                                          navigator,
+                                                          identifier,
+                                                          dataRetrieval,
+                                                          dataRequired,
+                                                          formProvider,
+                                                          component,
+                                                          view)
 
   "PartialPayBeforeFurloughController" must {
 
     "return OK and the correct view for a GET" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val request = getRequest(pageLoadBeforeFurloughRoute)
-      val result = controller.onPageLoad()(request)
+      val request     = getRequest(pageLoadBeforeFurloughRoute)
+      val result      = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -99,8 +98,8 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseControllerSpecs wit
     "populate the view correctly on a GET when the question has previously been answered" in {
       val answers = userAnswers.withPartialPayBeforeFurlough(111)
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(answers))
-      val request = getRequest(pageLoadBeforeFurloughRoute)
-      val result = controller.onPageLoad()(request)
+      val request     = getRequest(pageLoadBeforeFurloughRoute)
+      val result      = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -165,8 +164,8 @@ class PartialPayBeforeFurloughControllerSpec extends SpecBaseControllerSpecs wit
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 
-      val boundForm = form.bind(Map("value" -> ""))
-      val result = controller.onSubmit()(request)
+      val boundForm   = form.bind(Map("value" -> ""))
+      val result      = controller.onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST

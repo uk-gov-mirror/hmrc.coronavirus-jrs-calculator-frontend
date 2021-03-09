@@ -28,9 +28,9 @@ import views.ViewUtils
 class EmployeeStartDateFormProvider @Inject() extends Mappings {
 
   val feb2nd2019: LocalDate = LocalDate.of(2019, 2, 2)
-  val march19th2020 = LocalDate.of(2020, 3, 19)
-  val oct30th2020 = LocalDate.of(2020, 10, 30)
-  val nov1st2020 = LocalDate.of(2020, 11, 1)
+  val march19th2020         = LocalDate.of(2020, 3, 19)
+  val oct30th2020           = LocalDate.of(2020, 10, 30)
+  val nov1st2020            = LocalDate.of(2020, 11, 1)
 
   def apply(furloughStart: LocalDate, claimStart: LocalDate)(implicit messages: Messages): Form[LocalDate] = {
 

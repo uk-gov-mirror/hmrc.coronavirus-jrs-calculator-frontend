@@ -48,9 +48,9 @@ class AdditionalPaymentAmountController @Inject()(
 )(implicit ec: ExecutionContext, eh: ErrorHandler)
     extends BaseController {
 
-  val form: Form[Amount] = formProvider()
+  val form: Form[Amount]                 = formProvider()
   val feature: FeatureFlagActionProvider = new FeatureFlagActionProviderImpl()
-  val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
+  val userAnswerPersistence              = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerOrRedirectV(AdditionalPaymentPeriodsPage) { additionalPaymentPeriods =>

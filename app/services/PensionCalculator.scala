@@ -22,10 +22,9 @@ import services.Calculators._
 
 trait PensionCalculator extends FurloughCapCalculator with CommonCalculationService with Calculators {
 
-  def calculatePensionGrant(
-    pensionStatus: PensionStatus,
-    frequency: PaymentFrequency,
-    furloughBreakdown: Seq[FurloughBreakdown]): PensionCalculationResult = {
+  def calculatePensionGrant(pensionStatus: PensionStatus,
+                            frequency: PaymentFrequency,
+                            furloughBreakdown: Seq[FurloughBreakdown]): PensionCalculationResult = {
     val pensionBreakdowns = furloughBreakdown.map {
       case fp: FullPeriodFurloughBreakdown =>
         calculateFullPeriodPension(pensionStatus, frequency, fp.grant, fp.paymentWithPeriod)
@@ -36,10 +35,9 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
     PensionCalculationResult(pensionBreakdowns.map(_.grant.value).sum, pensionBreakdowns)
   }
 
-  def phaseTwoPension(
-    furloughBreakdowns: Seq[PhaseTwoFurloughBreakdown],
-    frequency: PaymentFrequency,
-    pensionStatus: PensionStatus): PhaseTwoPensionCalculationResult = {
+  def phaseTwoPension(furloughBreakdowns: Seq[PhaseTwoFurloughBreakdown],
+                      frequency: PaymentFrequency,
+                      pensionStatus: PensionStatus): PhaseTwoPensionCalculationResult = {
     val breakdowns = furloughBreakdowns.map { furloughBreakdown =>
       val phaseTwoPeriod = furloughBreakdown.paymentWithPeriod.phaseTwoPeriod
 
@@ -71,19 +69,18 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
     PhaseTwoPensionCalculationResult(breakdowns.map(_.grant.value).sum, breakdowns)
   }
 
-  protected def calculatePartialPeriodPension(
-    pensionStatus: PensionStatus,
-    frequency: PaymentFrequency,
-    furloughPayment: Amount,
-    payment: PaymentWithPartialPeriod): PartialPeriodPensionBreakdown = {
+  protected def calculatePartialPeriodPension(pensionStatus: PensionStatus,
+                                              frequency: PaymentFrequency,
+                                              furloughPayment: Amount,
+                                              payment: PaymentWithPartialPeriod): PartialPeriodPensionBreakdown = {
 
     import payment.periodWithPaymentDate._
 
     val fullPeriodDays = period.original.countDays
-    val furloughDays = period.partial.countDays
-    val threshold = thresholdFinder(frequency, paymentDate, PensionRate())
+    val furloughDays   = period.partial.countDays
+    val threshold      = thresholdFinder(frequency, paymentDate, PensionRate())
 
-    val allowance = Amount((threshold.value / fullPeriodDays) * furloughDays).halfUp
+    val allowance              = Amount((threshold.value / fullPeriodDays) * furloughDays).halfUp
     val roundedFurloughPayment = furloughPayment.down
     val grant = pensionStatus match {
       case DoesContribute    => greaterThanAllowance(roundedFurloughPayment, allowance.value, PensionRate())
@@ -93,13 +90,12 @@ trait PensionCalculator extends FurloughCapCalculator with CommonCalculationServ
     PartialPeriodPensionBreakdown(grant, payment, threshold, allowance, pensionStatus)
   }
 
-  protected def calculateFullPeriodPension(
-    pensionStatus: PensionStatus,
-    frequency: PaymentFrequency,
-    furloughPayment: Amount,
-    payment: PaymentWithFullPeriod): FullPeriodPensionBreakdown = {
+  protected def calculateFullPeriodPension(pensionStatus: PensionStatus,
+                                           frequency: PaymentFrequency,
+                                           furloughPayment: Amount,
+                                           payment: PaymentWithFullPeriod): FullPeriodPensionBreakdown = {
 
-    val threshold = thresholdFinder(frequency, payment.periodWithPaymentDate.paymentDate, PensionRate())
+    val threshold              = thresholdFinder(frequency, payment.periodWithPaymentDate.paymentDate, PensionRate())
     val roundedFurloughPayment = furloughPayment.down
     val grant = pensionStatus match {
       case DoesContribute    => greaterThanAllowance(roundedFurloughPayment, threshold.value, PensionRate())

@@ -24,12 +24,12 @@ import utils.CoreTestData
 class PartTimeNormalHoursFormProviderSpec extends DoubleFieldBehaviours with CoreTestData {
 
   private val fullPeriodOne: FullPeriod = fullPeriod("2020,7,1", "2020,7,31")
-  val form = new PartTimeNormalHoursFormProvider()(fullPeriodOne)
+  val form                              = new PartTimeNormalHoursFormProvider()(fullPeriodOne)
 
   ".value" must {
 
-    val fieldName = "value"
-    val invalidKey = "partTimeNormalHours.error.nonNumeric"
+    val fieldName   = "value"
+    val invalidKey  = "partTimeNormalHours.error.nonNumeric"
     val requiredKey = "partTimeNormalHours.error.required"
 
     behave like doubleField(
@@ -48,8 +48,8 @@ class PartTimeNormalHoursFormProviderSpec extends DoubleFieldBehaviours with Cor
 
   "validate if normal hours is more than max allowed (eg 24*2=48) for 2 days" in {
     val twoDaysPartTime: FullPeriod = fullPeriod("2020,7,1", "2020,7,2")
-    val form = new PartTimeNormalHoursFormProvider()(twoDaysPartTime)
-    val hours = twoDaysPartTime.period.countHours
+    val form                        = new PartTimeNormalHoursFormProvider()(twoDaysPartTime)
+    val hours                       = twoDaysPartTime.period.countHours
 
     val data: Map[String, String] =
       Map("value" -> (hours + 1).toString)

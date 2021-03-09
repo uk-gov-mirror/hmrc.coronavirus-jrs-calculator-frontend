@@ -16,15 +16,14 @@
 
 package services
 
-import java.time.LocalDate
-
-import cats.data.{NonEmptyChain, Validated}
 import cats.data.Validated.Valid
+import cats.data.{NonEmptyChain, Validated}
 import config.FrontendAppConfig
-import models.{AnswerValidation, EmployeeRTISubmission}
 import models.EmployeeRTISubmission.No
+import models.PayMethod._
 import models.UserAnswers.AnswerV
 import models.requests.DataRequest
+import models.{AnswerValidation, EmployeeRTISubmission}
 import pages._
 
 class EmployeeTypeService() {
@@ -43,5 +42,4 @@ class EmployeeTypeService() {
       case _                         => false
     }
   }
-
 }

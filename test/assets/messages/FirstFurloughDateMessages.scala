@@ -19,7 +19,7 @@ package messages
 object FirstFurloughDateMessages {
 
   val heading = "When was this employee first furloughed?"
-  val p1 = "This is the date when the employee was first furloughed, on or after 1 November 2020."
+  val p1      = "This is the date when the employee was first furloughed, on or after 1 November 2020."
   val p2 =
     "We need this information because you told us this employee has been on more than one period of furlough since 1 November 2020, and was not eligible for the Coronavirus Job Retention Scheme before this date."
 

@@ -35,19 +35,21 @@ object LocalDateHelpers extends LocalDateHelpers {
 
   val mar19th2020 = LocalDate.of(2020, 3, 19)
 
-  val apr6th2019 = LocalDate.of(2019, 4, 6)
+  val apr6th2019  = LocalDate.of(2019, 4, 6)
   val mar20th2020 = LocalDate.of(2020, 3, 20)
-  val apr5th2020 = LocalDate.of(2020, 4, 5)
-  val apr6th2020 = LocalDate.of(2020, 4, 6)
+  val apr5th2020  = LocalDate.of(2020, 4, 5)
+  val apr6th2020  = LocalDate.of(2020, 4, 6)
   val july1st2020 = LocalDate.of(2020, 7, 1)
-  val aug1st2020 = LocalDate.of(2020, 8, 1)
-  val nov1st2020 = LocalDate.of(2020, 11, 1)
-  val nov8th2020 = LocalDate.of(2020, 11, 8)
-  val may8th2021 = LocalDate.of(2021, 5, 8)
-  val may1st2021 = LocalDate.of(2021, 5, 1)
+  val aug1st2020  = LocalDate.of(2020, 8, 1)
+  val oct30th2020 = LocalDate.of(2020, 10, 30)
+  val nov1st2020  = LocalDate.of(2020, 11, 1)
+  val nov8th2020  = LocalDate.of(2020, 11, 8)
+  val mar2nd2021  = LocalDate.of(2021, 3, 2)
+  val may8th2021  = LocalDate.of(2021, 5, 8)
+  val may1st2021  = LocalDate.of(2021, 5, 1)
 
   implicit class LocalDateHelper(val value: LocalDate) {
-    def isEqualOrAfter(localDate: LocalDate) = value.compareTo(localDate) >= 0
+    def isEqualOrAfter(localDate: LocalDate)  = value.compareTo(localDate) >= 0
     def isEqualOrBefore(localDate: LocalDate) = value.compareTo(localDate) <= 0
   }
 

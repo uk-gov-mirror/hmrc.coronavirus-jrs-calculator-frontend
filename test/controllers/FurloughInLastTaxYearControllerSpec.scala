@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class FurloughInLastTaxYearControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   val formProvider = new FurloughInLastTaxYearFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val view = app.injector.instanceOf[FurloughInLastTaxYearView]
 
@@ -120,7 +120,7 @@ class FurloughInLastTaxYearControllerSpec extends SpecBaseControllerSpecs with M
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST
