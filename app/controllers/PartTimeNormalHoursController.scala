@@ -66,7 +66,7 @@ class PartTimeNormalHoursController @Inject()(
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers
-                                   .set(PartTimeNormalHoursPage, UsualHours(partTimePeriod.period.end, value), Some(idx)))
+                  .set(PartTimeNormalHoursPage, UsualHours(partTimePeriod.period.end, value), Some(idx)))
                 _ <- sessionRepository.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(PartTimeNormalHoursPage, updatedAnswers, Some(idx)))
           )

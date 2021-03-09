@@ -32,7 +32,7 @@ class FurloughStartDateViewSpec extends QuestionViewBehaviours[LocalDate] {
 
   object Selectors extends BaseSelectors
 
-  val messageKeyPrefix = "furloughStartDate"
+  val messageKeyPrefix            = "furloughStartDate"
   val view: FurloughStartDateView = injector.instanceOf[FurloughStartDateView]
 
   val period = Period(

@@ -27,11 +27,10 @@ import views.html.CalculationUnsupportView
 
 import scala.concurrent.ExecutionContext
 
-class CalculationUnsupportedController @Inject()(
-  identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  calculationUnsupportedView: CalculationUnsupportView,
-  val controllerComponents: MessagesControllerComponents)(implicit ec: ExecutionContext)
+class CalculationUnsupportedController @Inject()(identify: IdentifierAction,
+                                                 getData: DataRetrievalAction,
+                                                 calculationUnsupportedView: CalculationUnsupportView,
+                                                 val controllerComponents: MessagesControllerComponents)(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
   def multipleFurloughUnsupported: Action[AnyContent] = (identify andThen getData) { implicit request =>

@@ -22,19 +22,18 @@ import views.ViewUtils._
 
 case class DetailedBreakdown(period: Periods, furlough: DetailedFurloughBreakdown, nic: NicBreakdown, pension: PensionBreakdown) {
   def payPeriodStart(implicit messages: Messages): String = dateToStringWithoutYear(period.period.start)
-  def payPeriodEnd(implicit messages: Messages): String = dateToString(period.period.end)
+  def payPeriodEnd(implicit messages: Messages): String   = dateToString(period.period.end)
 }
 
-case class PhaseTwoDetailedBreakdown(
-  period: Periods,
-  furlough: PhaseTwoFurloughBreakdown,
-  nic: PhaseTwoNicBreakdown,
-  pension: PhaseTwoPensionBreakdown) {
+case class PhaseTwoDetailedBreakdown(period: Periods,
+                                     furlough: PhaseTwoFurloughBreakdown,
+                                     nic: PhaseTwoNicBreakdown,
+                                     pension: PhaseTwoPensionBreakdown) {
   def payPeriodStart(implicit messages: Messages): String = dateToStringWithoutYear(period.period.start)
-  def payPeriodEnd(implicit messages: Messages): String = dateToString(period.period.end)
+  def payPeriodEnd(implicit messages: Messages): String   = dateToString(period.period.end)
 }
 
 case class NoNicAndPensionDetailedBreakdown(period: Periods, furlough: PhaseTwoFurloughBreakdown) {
   def payPeriodStart(implicit messages: Messages): String = dateToStringWithoutYear(period.period.start)
-  def payPeriodEnd(implicit messages: Messages): String = dateToString(period.period.end)
+  def payPeriodEnd(implicit messages: Messages): String   = dateToString(period.period.end)
 }

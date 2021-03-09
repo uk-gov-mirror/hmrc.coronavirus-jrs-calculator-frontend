@@ -37,14 +37,14 @@ import scala.concurrent.Future
 
 class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
-  val view = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
-  val noNicView = app.injector.instanceOf[NoNicAndPensionConfirmationView]
-  val phaseTwoView = app.injector.instanceOf[PhaseTwoConfirmationView]
-  val septView = app.injector.instanceOf[SeptemberConfirmationView]
-  val octView = app.injector.instanceOf[OctoberConfirmationView]
+  val view          = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
+  val noNicView     = app.injector.instanceOf[NoNicAndPensionConfirmationView]
+  val phaseTwoView  = app.injector.instanceOf[PhaseTwoConfirmationView]
+  val septView      = app.injector.instanceOf[SeptemberConfirmationView]
+  val octView       = app.injector.instanceOf[OctoberConfirmationView]
   val extensionView = app.injector.instanceOf[JrsExtensionConfirmationView]
-  val audit = app.injector.instanceOf[AuditService]
-  val service = app.injector.instanceOf[EmployeeTypeService]
+  val audit         = app.injector.instanceOf[AuditService]
+  val service       = app.injector.instanceOf[EmployeeTypeService]
 
   val controller = new ConfirmationController(
     messagesApi = messagesApi,
@@ -70,7 +70,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(dummyUserAnswers))
 
       val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(breakdown, meta.claimPeriod, calculatorVersionConf)(request, messages).toString
@@ -81,7 +81,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(phaseTwoJourney()))
 
       val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
-      val result: Future[Result] = controller.onPageLoad()(request)
+      val result: Future[Result]                       = controller.onPageLoad()(request)
       val payment: RegularPaymentWithPhaseTwoPeriod = {
         RegularPaymentWithPhaseTwoPeriod(
           regularPay = Amount(2000.00),
@@ -115,10 +115,10 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(march2021Journey()))
 
-      val employeeIncomeForPeriod: Amount = Amount(10000.00)
+      val employeeIncomeForPeriod: Amount   = Amount(10000.00)
       val maxMonthFurloughGrant: BigDecimal = 2500.00
-      val claimStartDate = "2021, 3, 1"
-      val claimEndDate = "2021, 3, 31"
+      val claimStartDate                    = "2021, 3, 1"
+      val claimEndDate                      = "2021, 3, 31"
 
       val payment: RegularPaymentWithPhaseTwoPeriod = {
         RegularPaymentWithPhaseTwoPeriod(
@@ -137,17 +137,16 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
           furlough = PhaseTwoFurloughCalculationResult(
             total = maxMonthFurloughGrant,
             periodBreakdowns = Seq(
-              PhaseTwoFurloughBreakdown(
-                grant = Amount(maxMonthFurloughGrant),
-                paymentWithPeriod = payment,
-                furloughCap = FullPeriodCap(maxMonthFurloughGrant))
+              PhaseTwoFurloughBreakdown(grant = Amount(maxMonthFurloughGrant),
+                                        paymentWithPeriod = payment,
+                                        furloughCap = FullPeriodCap(maxMonthFurloughGrant))
             )
           )
         )
       }
 
       val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
-      val result: Future[Result] = controller.onPageLoad()(request)
+      val result: Future[Result]                       = controller.onPageLoad()(request)
 
       val expected: String = contentAsString(result)
       val actual: String = extensionView(

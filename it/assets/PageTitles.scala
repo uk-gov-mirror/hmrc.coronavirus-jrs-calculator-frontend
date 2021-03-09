@@ -1,6 +1,8 @@
 package assets
 
 object PageTitles {
+
+  val regularLengthEmployed = "Was this employee on your payroll on or before 19 March 2020?"
   val claimPeriodStartDate = "What’s the start date of this claim?"
   val firstFurloughDate = "When was this employee first furloughed?"
   val previousFurloughPeriods = "Has this employee been furloughed more than once since 1 November 2020? - Job Retention Scheme calculator - GOV.UK"

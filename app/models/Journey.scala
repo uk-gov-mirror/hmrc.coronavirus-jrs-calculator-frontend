@@ -19,8 +19,8 @@ package models
 import java.time.LocalDate
 
 sealed trait Journey
-case object RegularPay extends Journey
-case object VariablePay extends Journey
+case object RegularPay          extends Journey
+case object VariablePay         extends Journey
 case object VariablePayWithCylb extends Journey
 
 case class BranchingQuestions(payMethod: PayMethod, employeeStarted: Option[EmployeeStarted], employeeStartDate: Option[LocalDate])
@@ -32,7 +32,7 @@ sealed trait ReferencePay {
 
   def furloughPeriod: FurloughWithinClaim = referencePayData.furloughPeriod
   def periods: Seq[PeriodWithPaymentDate] = referencePayData.periods
-  def frequency: PaymentFrequency = referencePayData.frequency
+  def frequency: PaymentFrequency         = referencePayData.frequency
 }
 
 case class RegularPayData(referencePayData: ReferencePayData, wage: Amount) extends ReferencePay
@@ -40,17 +40,16 @@ case class RegularPayData(referencePayData: ReferencePayData, wage: Amount) exte
 case class VariablePayData(referencePayData: ReferencePayData, grossPay: Amount, nonFurloughPay: NonFurloughPay, priorFurlough: Period)
     extends ReferencePay
 
-case class VariablePayWithCylbData(
-  referencePayData: ReferencePayData,
-  grossPay: Amount,
-  nonFurloughPay: NonFurloughPay,
-  priorFurlough: Period,
-  cylbPayments: Seq[LastYearPayment])
+case class VariablePayWithCylbData(referencePayData: ReferencePayData,
+                                   grossPay: Amount,
+                                   nonFurloughPay: NonFurloughPay,
+                                   priorFurlough: Period,
+                                   cylbPayments: Seq[LastYearPayment])
     extends ReferencePay
 
 sealed trait PhaseTwoJourney
-case object PhaseTwoRegularPay extends PhaseTwoJourney
-case object PhaseTwoVariablePay extends PhaseTwoJourney
+case object PhaseTwoRegularPay          extends PhaseTwoJourney
+case object PhaseTwoVariablePay         extends PhaseTwoJourney
 case object PhaseTwoVariablePayWithCylb extends PhaseTwoJourney
 
 case class PhaseTwoReferencePayData(furloughPeriod: FurloughWithinClaim, periods: Seq[PhaseTwoPeriod], frequency: PaymentFrequency)
@@ -59,8 +58,8 @@ sealed trait PhaseTwoReferencePay {
   val referencePayData: PhaseTwoReferencePayData
 
   def furloughPeriod: FurloughWithinClaim = referencePayData.furloughPeriod
-  def periods: Seq[PhaseTwoPeriod] = referencePayData.periods
-  def frequency: PaymentFrequency = referencePayData.frequency
+  def periods: Seq[PhaseTwoPeriod]        = referencePayData.periods
+  def frequency: PaymentFrequency         = referencePayData.frequency
 }
 
 case class PhaseTwoRegularPayData(referencePayData: PhaseTwoReferencePayData, wage: Amount) extends PhaseTwoReferencePay
@@ -68,9 +67,8 @@ case class PhaseTwoRegularPayData(referencePayData: PhaseTwoReferencePayData, wa
 case class PhaseTwoVariablePayData(referencePayData: PhaseTwoReferencePayData, annualPay: Amount, priorFurlough: Period)
     extends PhaseTwoReferencePay
 
-case class PhaseTwoVariablePayWithCylbData(
-  referencePayData: PhaseTwoReferencePayData,
-  annualPay: Amount,
-  priorFurlough: Period,
-  cylbPayments: Seq[LastYearPayment])
+case class PhaseTwoVariablePayWithCylbData(referencePayData: PhaseTwoReferencePayData,
+                                           annualPay: Amount,
+                                           priorFurlough: Period,
+                                           cylbPayments: Seq[LastYearPayment])
     extends PhaseTwoReferencePay

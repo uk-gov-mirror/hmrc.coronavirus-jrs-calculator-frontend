@@ -52,7 +52,7 @@ class FurloughPeriodQuestionController @Inject()(
   val form: Form[FurloughPeriodQuestion] = formProvider()
 
   override implicit val logger: Logger = LoggerFactory.getLogger(getClass)
-  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
+  protected val userAnswerPersistence  = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswersOrRestartJourneyV(FurloughStartDatePage, FurloughStatusPage) { (furloughStart, furloughStatus) =>

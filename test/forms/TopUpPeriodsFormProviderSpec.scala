@@ -32,7 +32,7 @@ class TopUpPeriodsFormProviderSpec extends CheckboxFieldBehaviours with Generato
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "topupPeriods.error.required"
 
     "bind valid values" in {

@@ -34,16 +34,15 @@ class LastPayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuit
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
-  lazy val form = new LastPayDateFormProvider()(minimiumDate)
+  lazy val form    = new LastPayDateFormProvider()(minimiumDate)
   val minimiumDate = LocalDate.now()
 
   ".value" should {
 
-    behave like dateFieldWithMin(
-      form,
-      "value",
-      minimiumDate.minusDays(90),
-      FormError("value", "lastPayDate.error.minimum", Array(ViewUtils.dateToString(minimiumDate.minusDays(90)))))
+    behave like dateFieldWithMin(form,
+                                 "value",
+                                 minimiumDate.minusDays(90),
+                                 FormError("value", "lastPayDate.error.minimum", Array(ViewUtils.dateToString(minimiumDate.minusDays(90)))))
 
     behave like mandatoryDateField(form, "value")
   }

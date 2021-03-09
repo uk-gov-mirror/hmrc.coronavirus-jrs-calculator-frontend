@@ -22,7 +22,7 @@ import play.api.data.FormError
 class PreviousFurloughPeriodsFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "previousFurloughPeriods.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new PreviousFurloughPeriodsFormProvider()()
 

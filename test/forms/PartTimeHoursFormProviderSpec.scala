@@ -33,10 +33,10 @@ class PartTimeHoursFormProviderSpec extends DoubleFieldBehaviours with CoreTestD
 
   ".value" must {
 
-    val fieldName = "value"
-    val invalidKey = "partTimeHours.error.nonNumeric"
+    val fieldName   = "value"
+    val invalidKey  = "partTimeHours.error.nonNumeric"
     val requiredKey = "partTimeHours.error.required"
-    val maxValue = usuals.head.hours.value
+    val maxValue    = usuals.head.hours.value
 
     behave like doubleField(
       form,

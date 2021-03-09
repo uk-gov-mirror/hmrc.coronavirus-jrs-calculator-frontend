@@ -24,25 +24,23 @@ import services.Calculators.AmountRounding
 
 trait CylbCalculator extends PreviousYearPeriod with Calculators {
 
-  def calculateCylb(
-    averagePayment: AveragePayment,
-    nonFurloughPay: NonFurloughPay,
-    frequency: PaymentFrequency,
-    cylbs: Seq[LastYearPayment],
-    period: PeriodWithPaymentDate): CylbPayment = {
+  def calculateCylb(averagePayment: AveragePayment,
+                    nonFurloughPay: NonFurloughPay,
+                    frequency: PaymentFrequency,
+                    cylbs: Seq[LastYearPayment],
+                    period: PeriodWithPaymentDate): CylbPayment = {
     val datesRequired = previousYearPeriod(frequency, period.period).map(_.end)
-    val nfp = determineNonFurloughPay(period.period, nonFurloughPay)
+    val nfp           = determineNonFurloughPay(period.period, nonFurloughPay)
 
     cylbsAmount(averagePayment, frequency, period, datesRequired, nfp, cylbs)
   }
 
-  def phaseTwoCylb(
-    averagePayment: AveragePaymentWithPhaseTwoPeriod,
-    frequency: PaymentFrequency,
-    cylbs: Seq[LastYearPayment],
-    phaseTwoPeriod: PhaseTwoPeriod): CylbPaymentWithPhaseTwoPeriod = {
+  def phaseTwoCylb(averagePayment: AveragePaymentWithPhaseTwoPeriod,
+                   frequency: PaymentFrequency,
+                   cylbs: Seq[LastYearPayment],
+                   phaseTwoPeriod: PhaseTwoPeriod): CylbPaymentWithPhaseTwoPeriod = {
     val datesRequired = previousYearPeriod(frequency, phaseTwoPeriod.periodWithPaymentDate.period).map(_.end)
-    val cylbOps = CylbDuration(frequency, phaseTwoPeriod.periodWithPaymentDate.period)
+    val cylbOps       = CylbDuration(frequency, phaseTwoPeriod.periodWithPaymentDate.period)
     val cylbBreakdown = previousYearFurlough(datesRequired, cylbs, cylbOps)
 
     val referencePay = Amount(averagePayment.referencePay.value.max(cylbBasedOnHours(cylbBreakdown.referencePay, phaseTwoPeriod).value))
@@ -57,14 +55,13 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
       cylbReferencePay
     }
 
-  private def cylbsAmount(
-    averagePayment: AveragePayment,
-    frequency: PaymentFrequency,
-    period: PeriodWithPaymentDate,
-    datesRequired: Seq[LocalDate],
-    nfp: Amount,
-    cylbs: Seq[LastYearPayment]): CylbPayment = {
-    val cylbOps: CylbDuration = CylbDuration(frequency, period.period)
+  private def cylbsAmount(averagePayment: AveragePayment,
+                          frequency: PaymentFrequency,
+                          period: PeriodWithPaymentDate,
+                          datesRequired: Seq[LocalDate],
+                          nfp: Amount,
+                          cylbs: Seq[LastYearPayment]): CylbPayment = {
+    val cylbOps: CylbDuration        = CylbDuration(frequency, period.period)
     val cylbBreakdown: CylbBreakdown = previousYearFurlough(datesRequired, cylbs, cylbOps)
 
     val referencePay = Amount(averagePayment.referencePay.value.max(cylbBreakdown.referencePay.value))
@@ -96,10 +93,9 @@ trait CylbCalculator extends PreviousYearPeriod with Calculators {
     }
   }
 
-  private def previousAndCurrent(
-    ops: CylbDuration,
-    lastYearPaymentOne: LastYearPayment,
-    lastYearPaymentTwo: LastYearPayment): TwoPeriodCylb = {
+  private def previousAndCurrent(ops: CylbDuration,
+                                 lastYearPaymentOne: LastYearPayment,
+                                 lastYearPaymentTwo: LastYearPayment): TwoPeriodCylb = {
     val periodOneAmount = Amount((lastYearPaymentOne.amount.value / ops.fullPeriodLength) * ops.previousPeriodDays).halfUp
     val periodTwoAmount = Amount((lastYearPaymentTwo.amount.value / ops.fullPeriodLength) * ops.equivalentPeriodDays).halfUp
 

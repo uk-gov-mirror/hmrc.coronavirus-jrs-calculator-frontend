@@ -55,7 +55,7 @@ class AdditionalPaymentPeriodsController @Inject()(
   val form: Form[List[LocalDate]] = formProvider()
 
   implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
-  val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
+  val userAnswerPersistence         = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     handleCalculationFurloughV(request.userAnswers)

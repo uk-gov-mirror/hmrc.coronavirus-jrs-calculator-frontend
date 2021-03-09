@@ -22,7 +22,7 @@ sealed trait FurloughDates {
   def start: LocalDate
 }
 
-final case class FurloughOngoing(start: LocalDate) extends FurloughDates
+final case class FurloughOngoing(start: LocalDate)               extends FurloughDates
 final case class FurloughEnded(start: LocalDate, end: LocalDate) extends FurloughDates
 
 final case class FurloughWithinClaim(start: LocalDate, end: LocalDate)

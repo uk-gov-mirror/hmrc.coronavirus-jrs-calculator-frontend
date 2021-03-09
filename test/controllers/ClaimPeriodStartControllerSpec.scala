@@ -36,9 +36,9 @@ import scala.concurrent.Future
 
 class ClaimPeriodStartControllerSpec extends SpecBaseControllerSpecs {
 
-  val formProvider = new ClaimPeriodStartFormProvider()
+  val formProvider                  = new ClaimPeriodStartFormProvider()
   private def form: Form[LocalDate] = formProvider()
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer                   = LocalDate.now(ZoneOffset.UTC)
 
   lazy val claimPeriodStartRoute = routes.ClaimPeriodStartController.onPageLoad().url
 
@@ -85,7 +85,7 @@ class ClaimPeriodStartControllerSpec extends SpecBaseControllerSpecs {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = UserAnswers(userAnswersId).set(ClaimPeriodStartPage, validAnswer).success.value
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -94,7 +94,7 @@ class ClaimPeriodStartControllerSpec extends SpecBaseControllerSpecs {
 
     "redirect to the next page when valid data is submitted and delete any existing mongo cache" in {
       val existingUserAnswers = emptyUserAnswers.copy(data = Json.obj(ClaimPeriodEndPage.toString -> JsString(validAnswer.toString)))
-      val result = controller(Some(existingUserAnswers)).onSubmit()(postRequest)
+      val result              = controller(Some(existingUserAnswers)).onSubmit()(postRequest)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual "/job-retention-scheme-calculator/claim-period-end"

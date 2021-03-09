@@ -26,7 +26,7 @@ sealed trait AdditionalPaymentStatus
 object AdditionalPaymentStatus extends Enumerable.Implicits {
 
   case object YesAdditionalPayments extends WithName("yesAdditionalPayments") with AdditionalPaymentStatus
-  case object NoAdditionalPayments extends WithName("noAdditionalPayments") with AdditionalPaymentStatus
+  case object NoAdditionalPayments  extends WithName("noAdditionalPayments") with AdditionalPaymentStatus
 
   val values: Seq[AdditionalPaymentStatus] = Seq(
     YesAdditionalPayments,

@@ -26,7 +26,7 @@ sealed trait RegularLengthEmployed
 object RegularLengthEmployed extends Enumerable.Implicits {
 
   case object Yes extends WithName("yes") with RegularLengthEmployed
-  case object No extends WithName("no") with RegularLengthEmployed
+  case object No  extends WithName("no") with RegularLengthEmployed
 
   val values: Seq[RegularLengthEmployed] = Seq(
     Yes,

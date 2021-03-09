@@ -33,7 +33,7 @@ class PartTimeNormalHoursViewSpec extends HoursViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  val messageKeyPrefix = "partTimeNormalHours"
+  val messageKeyPrefix              = "partTimeNormalHours"
   val view: PartTimeNormalHoursView = injector.instanceOf[PartTimeNormalHoursView]
 
   val period = Period(

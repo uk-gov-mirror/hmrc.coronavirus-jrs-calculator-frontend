@@ -44,7 +44,7 @@ class TopUpPeriodsControllerSpec extends SpecBaseControllerSpecs with MockitoSug
   lazy val getRequest = FakeRequest(GET, topupPeriodsRoute).withCSRFToken
     .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
   val formProvider = new TopUpPeriodsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val dates = List(LocalDate.of(2020, 3, 31), LocalDate.of(2020, 4, 30))
   val periodBreakdowns: Seq[FurloughBreakdown] = Seq(
@@ -71,22 +71,21 @@ class TopUpPeriodsControllerSpec extends SpecBaseControllerSpecs with MockitoSug
 
   val view = app.injector.instanceOf[TopUpPeriodsView]
 
-  val controller = new TopUpPeriodsController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new TopUpPeriodsController(messagesApi,
+                                              mockSessionRepository,
+                                              navigator,
+                                              identifier,
+                                              dataRetrieval,
+                                              dataRequired,
+                                              formProvider,
+                                              component,
+                                              view)
 
   "TopupPeriods Controller" must {
 
     "return OK and the correct view for a GET" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(baseUserAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
 
       status(result) mustEqual OK
@@ -116,7 +115,7 @@ class TopUpPeriodsControllerSpec extends SpecBaseControllerSpecs with MockitoSug
       val topUpPeriod = dates.map(TopUpPeriod(_, furloughGrant = Amount(100)))
       val userAnswers = baseUserAnswers.withTopUpPeriods(topUpPeriod)
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -143,8 +142,8 @@ class TopUpPeriodsControllerSpec extends SpecBaseControllerSpecs with MockitoSug
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value[0]", "invalid value"))
 
-      val boundForm = form.bind(Map("value[0]" -> "invalid value"))
-      val result = controller.onSubmit()(request)
+      val boundForm   = form.bind(Map("value[0]" -> "invalid value"))
+      val result      = controller.onSubmit()(request)
       val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
 
       status(result) mustEqual BAD_REQUEST
@@ -190,7 +189,7 @@ class TopUpPeriodsControllerSpec extends SpecBaseControllerSpecs with MockitoSug
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, topupPeriodsRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

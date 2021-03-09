@@ -30,11 +30,11 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
   }
 
   "Returns 0.00 for Pension grant if not eligible for Pension grant partial period" in new PensionCalculator {
-    val payment = regularPaymentWithPartialPeriod(
-      1000.00,
-      2000.00,
-      1000.00,
-      partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30"))
+    val payment =
+      regularPaymentWithPartialPeriod(1000.00,
+                                      2000.00,
+                                      1000.00,
+                                      partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30"))
     calculatePartialPeriodPension(DoesNotContribute, Monthly, Amount(800.00), payment).grant mustBe Amount(0.00)
   }
 
@@ -80,11 +80,10 @@ class PensionCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with 
     (
       Monthly,
       Amount(800.00),
-      regularPaymentWithPartialPeriod(
-        1000.00,
-        2000.00,
-        1000.00,
-        partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
+      regularPaymentWithPartialPeriod(1000.00,
+                                      2000.00,
+                                      1000.00,
+                                      partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
       Threshold(520.0, TaxYearEnding2021, Monthly),
       Amount(260.0),
       Amount(16.20)

@@ -25,9 +25,9 @@ class LastYearPayFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "lastYearPay.error.required"
-    val invalidKey = "lastYearPay.error.nonNumeric"
+    val invalidKey  = "lastYearPay.error.nonNumeric"
 
     "accept 0 as a valid input" in {
       val value = "0.0"

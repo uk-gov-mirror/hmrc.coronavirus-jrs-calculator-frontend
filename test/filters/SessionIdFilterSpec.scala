@@ -57,7 +57,7 @@ class SessionIdFilterSpec extends WordSpec with MustMatchers with OptionValues w
     lazy val router: Router = Router.from {
       case GET(p"/test") =>
         defaultActionBuilder.apply { request =>
-          val fromHeader = request.headers.get(HeaderNames.xSessionId).getOrElse("")
+          val fromHeader  = request.headers.get(HeaderNames.xSessionId).getOrElse("")
           val fromSession = request.session.get(SessionKeys.sessionId).getOrElse("")
           Results.Ok(
             Json.obj(

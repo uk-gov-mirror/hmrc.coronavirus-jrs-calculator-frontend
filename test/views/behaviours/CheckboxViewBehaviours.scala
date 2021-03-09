@@ -23,16 +23,15 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 trait CheckboxViewBehaviours[A] extends ViewBehaviours {
 
   //noinspection ScalaStyle
-  def checkboxPage(
-    form: Form[Set[A]],
-    createView: Form[Set[A]] => HtmlFormat.Appendable,
-    messageKeyPrefix: String,
-    options: Seq[CheckboxItem],
-    fieldKey: String = "value",
-    legend: Option[String] = None): Unit =
+  def checkboxPage(form: Form[Set[A]],
+                   createView: Form[Set[A]] => HtmlFormat.Appendable,
+                   messageKeyPrefix: String,
+                   options: Seq[CheckboxItem],
+                   fieldKey: String = "value",
+                   legend: Option[String] = None): Unit =
     "behave like a checkbox page" must {
       "contain a legend for the question" in {
-        val doc = asDocument(createView(form))
+        val doc     = asDocument(createView(form))
         val legends = doc.getElementsByTag("legend")
         legends.size mustBe 1
         legends.text contains legend.getOrElse(messages(s"$messageKeyPrefix.heading"))
@@ -69,7 +68,7 @@ trait CheckboxViewBehaviours[A] extends ViewBehaviours {
           s"have the '${option.value}' radio button selected" in {
 
             val formWithData = form.bind(Map("value" -> s"${option.value}"))
-            val doc = asDocument(createView(formWithData))
+            val doc          = asDocument(createView(formWithData))
 
             assertContainsRadioButton(doc, option.id.get, "value[]", option.value, true)
           }
@@ -83,7 +82,7 @@ trait CheckboxViewBehaviours[A] extends ViewBehaviours {
         }.toMap
 
         val formWithData = form.bind(valuesMap)
-        val doc = asDocument(createView(formWithData))
+        val doc          = asDocument(createView(formWithData))
 
         for (option <- options) {
           s"have ${option.value} value selected" in {
@@ -108,7 +107,7 @@ trait CheckboxViewBehaviours[A] extends ViewBehaviours {
       }
 
       "show an error associated with the value field" in {
-        val doc = asDocument(createView(form.withError(FormError(fieldKey, "error.invalid"))))
+        val doc       = asDocument(createView(form.withError(FormError(fieldKey, "error.invalid"))))
         val errorSpan = doc.getElementsByClass("govuk-error-message").first
         errorSpan.text mustBe (messages("error.browser.title.prefix") + " " + messages("error.invalid"))
         doc.getElementsByTag("fieldset").first.attr("aria-describedby") contains errorSpan.attr("id")

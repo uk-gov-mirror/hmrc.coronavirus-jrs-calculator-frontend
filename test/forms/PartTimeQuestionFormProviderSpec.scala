@@ -26,7 +26,7 @@ class PartTimeQuestionFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "partTimeQuestion.error.required"
 
     behave like optionsField[PartTimeQuestion](

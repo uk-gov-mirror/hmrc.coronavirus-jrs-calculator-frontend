@@ -160,7 +160,7 @@ trait PageBehaviours
           case (page, userAnswers) =>
             val updatedAnswers = userAnswers.remove(page).success.value
 
-            val error = EmptyAnswerError(page.path, emptyError(page.path), updatedAnswers.data)
+            val error      = EmptyAnswerError(page.path, emptyError(page.path), updatedAnswers.data)
             val foundError = updatedAnswers.getV(page).invalidValue.toNonEmptyList.head
 
             foundError mustEqual error

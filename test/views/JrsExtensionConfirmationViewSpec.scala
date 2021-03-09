@@ -40,30 +40,30 @@ import views.html.JrsExtensionConfirmationView
 class JrsExtensionConfirmationViewSpec
     extends ViewBehaviours with ConfirmationControllerRequestHandler with ValidatedValues with ValueFormatter {
 
-  val messageKeyPrefix = "confirmation"
+  val messageKeyPrefix                   = "confirmation"
   val view: JrsExtensionConfirmationView = injector.instanceOf[JrsExtensionConfirmationView]
 
   object RegularEmployeeTypeOneSelectors extends BaseSelectors {
     val nonGreenContentParagraphChild: Int => String = (i: Int) => s"#main-content > div > div > div > p:nth-child($i)"
-    val dateAndCalculatorVersion: String = nonGreenContentParagraphChild(2)
-    val disclaimer: String = nonGreenContentParagraphChild(4)
+    val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(2)
+    val disclaimer: String                           = nonGreenContentParagraphChild(4)
     val nextStepsNumberedList: Int => String =
       i => s"#main-content > div > div > div > ul.govuk-list.govuk-list--number > li:nth-child($i)"
-    val calculatePayList: Int => String = i => s"#main-content > div > div > div > ol:nth-child(15) > li:nth-child($i)"
-    val furloughGrantList: Int => String = i => s"#main-content > div > div > div > ol:nth-child(18) > li:nth-child($i)"
-    val breakdownParagraphOne: String = nonGreenContentParagraphChild(9)
-    val breakdownParagraphTwo: String = nonGreenContentParagraphChild(10)
-    val breakdownParagraphThree: String = nonGreenContentParagraphChild(11)
-    val h4CalculatePayParagraphOne: String = nonGreenContentParagraphChild(14)
-    val h4CalculatePayParagraphTwo: String = nonGreenContentParagraphChild(16)
-    val h4FurloughGrantParagraphOne: String = nonGreenContentParagraphChild(19)
-    val h4FurloughGrantParagraphTwo: String = nonGreenContentParagraphChild(20)
+    val calculatePayList: Int => String       = i => s"#main-content > div > div > div > ol:nth-child(15) > li:nth-child($i)"
+    val furloughGrantList: Int => String      = i => s"#main-content > div > div > div > ol:nth-child(18) > li:nth-child($i)"
+    val breakdownParagraphOne: String         = nonGreenContentParagraphChild(9)
+    val breakdownParagraphTwo: String         = nonGreenContentParagraphChild(10)
+    val breakdownParagraphThree: String       = nonGreenContentParagraphChild(11)
+    val h4CalculatePayParagraphOne: String    = nonGreenContentParagraphChild(14)
+    val h4CalculatePayParagraphTwo: String    = nonGreenContentParagraphChild(16)
+    val h4FurloughGrantParagraphOne: String   = nonGreenContentParagraphChild(19)
+    val h4FurloughGrantParagraphTwo: String   = nonGreenContentParagraphChild(20)
     val h4FurloughGrantParagraphThree: String = nonGreenContentParagraphChild(21)
-    val furloughGrantInset: String = "#total-furlough-grant"
-    val bottomDisclaimer: String = nonGreenContentParagraphChild(25)
-    val printLink: String = "#main-content div > p:nth-child(26) > a"
-    val webChatLink: String = "#main-content > div > div > div > p:nth-child(27) > a"
-    val feedbackLink: String = "#main-content > div > div > div > p:nth-child(28) > a"
+    val furloughGrantInset: String            = "#total-furlough-grant"
+    val bottomDisclaimer: String              = nonGreenContentParagraphChild(25)
+    val printLink: String                     = "#main-content div > p:nth-child(26) > a"
+    val webChatLink: String                   = "#main-content > div > div > div > p:nth-child(27) > a"
+    val feedbackLink: String                  = "#main-content > div > div > div > p:nth-child(28) > a"
   }
 
   val decClaimPeriod: Period = Period(
@@ -179,28 +179,28 @@ class JrsExtensionConfirmationViewSpec
 class EmployeeType5JrsExtensionConfirmationViewSpec
     extends ViewBehaviours with ConfirmationControllerRequestHandler with ValidatedValues with ValueFormatter {
 
-  val messageKeyPrefix = "confirmation"
+  val messageKeyPrefix                   = "confirmation"
   val view: JrsExtensionConfirmationView = injector.instanceOf[JrsExtensionConfirmationView]
 
   object VariableEmployeeTypeFiveSelectors extends BaseSelectors {
     val nonGreenContentParagraphChild: Int => String = (i: Int) => s"#main-content > div > div > div > p:nth-child($i)"
-    val dateAndCalculatorVersion: String = nonGreenContentParagraphChild(2)
-    val disclaimer: String = nonGreenContentParagraphChild(4)
+    val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(2)
+    val disclaimer: String                           = nonGreenContentParagraphChild(4)
     val nextStepsNumberedList: Int => String =
       i => s"#main-content > div > div > div > ul.govuk-list.govuk-list--number > li:nth-child($i)"
-    val calculatePayList: Int => String = i => s"#main-content > div > div > div > ol:nth-child(15) > li:nth-child($i)"
-    val furloughGrantList: Int => String = i => s"#main-content > div > div > div > ol:nth-child(18) > li:nth-child($i)"
-    val breakdownParagraphOne: String = nonGreenContentParagraphChild(9)
-    val breakdownParagraphTwo: String = nonGreenContentParagraphChild(10)
-    val breakdownParagraphThree: String = nonGreenContentParagraphChild(11)
-    val h4CalculatePayParagraphOne: String = nonGreenContentParagraphChild(14)
-    val h4CalculatePayParagraphTwo: String = nonGreenContentParagraphChild(16)
+    val calculatePayList: Int => String       = i => s"#main-content > div > div > div > ol:nth-child(15) > li:nth-child($i)"
+    val furloughGrantList: Int => String      = i => s"#main-content > div > div > div > ol:nth-child(18) > li:nth-child($i)"
+    val breakdownParagraphOne: String         = nonGreenContentParagraphChild(9)
+    val breakdownParagraphTwo: String         = nonGreenContentParagraphChild(10)
+    val breakdownParagraphThree: String       = nonGreenContentParagraphChild(11)
+    val h4CalculatePayParagraphOne: String    = nonGreenContentParagraphChild(14)
+    val h4CalculatePayParagraphTwo: String    = nonGreenContentParagraphChild(16)
     val h4FurloughGrantParagraphThree: String = nonGreenContentParagraphChild(21)
-    val furloughGrantInset: String = "#total-furlough-grant"
-    val bottomDisclaimer: String = nonGreenContentParagraphChild(22)
-    val printLink: String = "#main-content div > p:nth-child(23) > a"
-    val webChatLink: String = "#main-content > div > div > div > p:nth-child(24) > a"
-    val feedbackLink: String = "#main-content > div > div > div > p:nth-child(25) > a"
+    val furloughGrantInset: String            = "#total-furlough-grant"
+    val bottomDisclaimer: String              = nonGreenContentParagraphChild(22)
+    val printLink: String                     = "#main-content div > p:nth-child(23) > a"
+    val webChatLink: String                   = "#main-content > div > div > div > p:nth-child(24) > a"
+    val feedbackLink: String                  = "#main-content > div > div > div > p:nth-child(25) > a"
   }
 
   val novClaimPeriod: Period = Period(

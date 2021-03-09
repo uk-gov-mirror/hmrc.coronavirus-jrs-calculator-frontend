@@ -19,7 +19,6 @@ package controllers
 import cats.data.Validated.{Invalid, Valid}
 import controllers.actions._
 import forms.RegularPayAmountFormProvider
-import javax.inject.Inject
 import models.{RegularLengthEmployed, Salary}
 import navigation.Navigator
 import org.slf4j
@@ -32,55 +31,55 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.{RegularPayAmountExtView, RegularPayAmountView}
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RegularPayAmountController @Inject()(
-  override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
-  navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
-  formProvider: RegularPayAmountFormProvider,
-  val controllerComponents: MessagesControllerComponents,
-  view: RegularPayAmountView,
-  extView: RegularPayAmountExtView
-)(implicit ec: ExecutionContext)
+class RegularPayAmountController @Inject()(override val messagesApi: MessagesApi,
+                                           sessionRepository: SessionRepository,
+                                           navigator: Navigator,
+                                           identify: IdentifierAction,
+                                           getData: DataRetrievalAction,
+                                           requireData: DataRequiredAction,
+                                           formProvider: RegularPayAmountFormProvider,
+                                           val controllerComponents: MessagesControllerComponents,
+                                           view: RegularPayAmountView,
+                                           extView: RegularPayAmountExtView)(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
-
-  implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
 
   val form: Form[Salary] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val maybeSalary = request.userAnswers.getV(RegularPayAmountPage)
+  def onPageLoad(): Action[AnyContent] =
+    (identify andThen getData andThen requireData) { implicit request =>
+      val maybeSalary = request.userAnswers.getV(RegularPayAmountPage)
 
-    val preparedForm = maybeSalary match {
-      case Valid(sq)  => form.fill(sq)
-      case Invalid(e) => form
+      val preparedForm = maybeSalary match {
+        case Valid(sq)  => form.fill(sq)
+        case Invalid(e) => form
+      }
+
+      request.userAnswers.getV(RegularLengthEmployedPage) match {
+        case Valid(RegularLengthEmployed.No) => Ok(extView(preparedForm))
+        case _                               => Ok(view(preparedForm))
+      }
     }
 
-    request.userAnswers.getV(RegularLengthEmployedPage) match {
-      case Valid(RegularLengthEmployed.No) => Ok(extView(preparedForm))
-      case _                               => Ok(view(preparedForm))
+  def onSubmit(): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => {
+            request.userAnswers.getV(RegularLengthEmployedPage) match {
+              case Valid(RegularLengthEmployed.No) =>
+                Future.successful(BadRequest(extView(formWithErrors)))
+              case _ => Future.successful(BadRequest(view(formWithErrors)))
+            }
+          },
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(RegularPayAmountPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(RegularPayAmountPage, updatedAnswers))
+        )
     }
-  }
-
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => {
-          request.userAnswers.getV(RegularLengthEmployedPage) match {
-            case Valid(RegularLengthEmployed.No) => Future.successful(BadRequest(extView(formWithErrors)))
-            case _                               => Future.successful(BadRequest(view(formWithErrors)))
-          }
-        },
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RegularPayAmountPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(RegularPayAmountPage, updatedAnswers))
-      )
-  }
 }

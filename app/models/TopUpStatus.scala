@@ -25,7 +25,7 @@ sealed trait TopUpStatus
 
 object TopUpStatus extends Enumerable.Implicits {
 
-  case object ToppedUp extends WithName("toppedUp") with TopUpStatus
+  case object ToppedUp    extends WithName("toppedUp") with TopUpStatus
   case object NotToppedUp extends WithName("notToppedUp") with TopUpStatus
 
   val values: Seq[TopUpStatus] = Seq(

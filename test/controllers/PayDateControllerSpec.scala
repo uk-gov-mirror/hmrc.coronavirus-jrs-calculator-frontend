@@ -42,8 +42,8 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
     FakeRequest(GET, payDateRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val formProvider = new PayDateFormProvider()
-  val claimStartDate = LocalDate.of(2020, 3, 5)
+  val formProvider      = new PayDateFormProvider()
+  val claimStartDate    = LocalDate.of(2020, 3, 5)
   val furloughStartDate = LocalDate.of(2020, 3, 5)
   val userAnswersWithStartDate = emptyUserAnswers
     .withClaimPeriodStart("2020, 3, 5")
@@ -67,16 +67,15 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   val view = app.injector.instanceOf[PayDateView]
 
-  val controller = new PayDateController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PayDateController(messagesApi,
+                                         mockSessionRepository,
+                                         navigator,
+                                         identifier,
+                                         dataRetrieval,
+                                         dataRequired,
+                                         formProvider,
+                                         component,
+                                         view)
 
   "PayDate Controller" must {
 
@@ -84,7 +83,7 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
       "furlough start date is the same as claim start date" in {
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithStartDate))
-        val result = controller.onPageLoad(1)(getRequest)
+        val result      = controller.onPageLoad(1)(getRequest)
         val dataRequest = DataRequest(getRequest, userAnswersWithStartDate.id, userAnswersWithStartDate)
 
         status(result) mustEqual OK
@@ -97,7 +96,7 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
           .withFurloughStartDate(claimStartDate.minusDays(1).toString)
 
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
-        val result = controller.onPageLoad(1)(getRequest)
+        val result      = controller.onPageLoad(1)(getRequest)
         val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
 
         status(result) mustEqual OK
@@ -111,7 +110,7 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
 
-        val result = controller.onPageLoad(1)(getRequest)
+        val result      = controller.onPageLoad(1)(getRequest)
         val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
 
         status(result) mustEqual OK
@@ -123,7 +122,7 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = userAnswersWithStartDate.set(PayDatePage, validAnswer, Some(1)).success.value
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad(1)(getRequest)
+      val result      = controller.onPageLoad(1)(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -164,8 +163,8 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
             .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-        val result = controller.onSubmit(1)(request)
+        val boundForm   = form.bind(Map("value" -> "invalid value"))
+        val result      = controller.onSubmit(1)(request)
         val dataRequest = DataRequest(request, userAnswersWithStartDate.id, userAnswersWithStartDate)
 
         status(result) mustEqual BAD_REQUEST
@@ -177,7 +176,7 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
         val dateBeforeStart = claimStartDate.plusDays(1)
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersWithStartDate))
         val request = postRequest(dateBeforeStart)
-        val result = controller.onSubmit(1)(request)
+        val result  = controller.onSubmit(1)(request)
 
         status(result) mustEqual BAD_REQUEST
       }
@@ -189,7 +188,7 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
           .withFurloughStartDate(LocalDate.of(2020, 3, 2).toString)
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
         val request = postRequest(dateBeforeStart)
-        val result = controller.onSubmit(1)(request)
+        val result  = controller.onSubmit(1)(request)
 
         status(result) mustEqual BAD_REQUEST
       }
@@ -202,7 +201,7 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(modifiedUserAnswers))
         val request = postRequest(dateBeforeStart)
-        val result = controller.onSubmit(1)(request)
+        val result  = controller.onSubmit(1)(request)
 
         status(result) mustEqual BAD_REQUEST
       }
@@ -213,7 +212,7 @@ class PayDateControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
           .withPayDate(List(LocalDate.of(2020, 3, 3).toString))
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val request = postRequest(dateBeforePrevious, routes.PayDateController.onPageLoad(2).url)
-        val result = controller.onSubmit(2)(request)
+        val result  = controller.onSubmit(2)(request)
 
         status(result) mustEqual BAD_REQUEST
       }

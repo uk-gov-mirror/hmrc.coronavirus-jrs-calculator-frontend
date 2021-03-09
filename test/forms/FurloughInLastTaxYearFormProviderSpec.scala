@@ -22,7 +22,7 @@ import play.api.data.FormError
 class FurloughInLastTaxYearFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "furloughInLastTaxYear.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new FurloughInLastTaxYearFormProvider()()
 

@@ -25,7 +25,7 @@ sealed trait FurloughPeriodQuestion
 
 object FurloughPeriodQuestion extends Enumerable.Implicits {
 
-  case object FurloughedOnSamePeriod extends WithName("furloughedOnSamePeriod") with FurloughPeriodQuestion
+  case object FurloughedOnSamePeriod      extends WithName("furloughedOnSamePeriod") with FurloughPeriodQuestion
   case object FurloughedOnDifferentPeriod extends WithName("furloughedOnDifferentPeriod") with FurloughPeriodQuestion
 
   val values: Seq[FurloughPeriodQuestion] = Seq(

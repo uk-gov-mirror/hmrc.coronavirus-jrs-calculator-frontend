@@ -35,11 +35,11 @@ import scala.concurrent.Future
 
 class FurloughEndDateControllerSpec extends SpecBaseControllerSpecs {
 
-  val formProvider = new FurloughEndDateFormProvider()
+  val formProvider             = new FurloughEndDateFormProvider()
   private val claimPeriodStart = LocalDate.of(2020, 3, 1)
-  private val claimPeriodEnd = LocalDate.of(2020, 5, 1)
-  private val furloughStart = LocalDate.of(2020, 4, 1)
-  private def form = formProvider(Period(claimPeriodStart, claimPeriodEnd), furloughStart)
+  private val claimPeriodEnd   = LocalDate.of(2020, 5, 1)
+  private val furloughStart    = LocalDate.of(2020, 4, 1)
+  private def form             = formProvider(Period(claimPeriodStart, claimPeriodEnd), furloughStart)
 
   val validAnswer = furloughStart.plusDays(21)
 
@@ -84,7 +84,7 @@ class FurloughEndDateControllerSpec extends SpecBaseControllerSpecs {
   "FurloughEndDate Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = controller(Some(userAnswersWithClaimStartAndEnd)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswersWithClaimStartAndEnd)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
 
       status(result) mustEqual OK
@@ -97,7 +97,7 @@ class FurloughEndDateControllerSpec extends SpecBaseControllerSpecs {
         .withClaimPeriodEnd("2020, 7,14")
         .withFurloughStartDate("2020,7,1")
 
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -107,7 +107,7 @@ class FurloughEndDateControllerSpec extends SpecBaseControllerSpecs {
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = userAnswersWithClaimStartAndEnd.set(FurloughEndDatePage, validAnswer).success.value
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -127,8 +127,8 @@ class FurloughEndDateControllerSpec extends SpecBaseControllerSpecs {
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
-      val result = controller(Some(userAnswersWithClaimStartAndEnd)).onSubmit()(request)
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
+      val result      = controller(Some(userAnswersWithClaimStartAndEnd)).onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswersWithClaimStartAndEnd.id, userAnswersWithClaimStartAndEnd)
 
       status(result) mustEqual BAD_REQUEST

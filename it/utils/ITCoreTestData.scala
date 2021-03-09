@@ -69,6 +69,7 @@ trait ITCoreTestData extends ITUserAnswersBuilder {
       .withPayMethod(Variable)
       .withFurloughInLastTaxYear(false)
       .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+      .withOnPayrollBefore30thOct2020(true)
       .withEmployeeStartDate("2020, 3, 20")
 
   def hasEmployeeBeenFurloughedAfterNovember =

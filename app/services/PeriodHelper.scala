@@ -136,7 +136,7 @@ trait PeriodHelper {
     for {
       period <- periods
       actual = actuals.find(_.date == period.period.period.end).map(_.hours)
-      usual = usuals.find(_.date == period.period.period.end).map(_.hours)
+      usual  = usuals.find(_.date == period.period.period.end).map(_.hours)
     } yield PhaseTwoPeriod(period, actual, usual)
 
 }

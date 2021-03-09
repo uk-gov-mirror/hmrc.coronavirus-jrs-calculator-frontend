@@ -30,11 +30,11 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
   "PhaseTwoFurloughBreakdown" must {
     "detect if furlough has been capped" in {
       val referencePay: Amount = Amount(5000.00)
-      val grant: Amount = Amount(2500.00)
-      val payment = RegularPaymentWithPhaseTwoPeriod(
-        Amount(5000.0),
-        referencePay,
-        PhaseTwoPeriod(fullPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 31", "2020, 7, 31"), None, None))
+      val grant: Amount        = Amount(2500.00)
+      val payment =
+        RegularPaymentWithPhaseTwoPeriod(Amount(5000.0),
+                                         referencePay,
+                                         PhaseTwoPeriod(fullPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 31", "2020, 7, 31"), None, None))
       val furloughCap = FullPeriodCap(2500.00)
 
       val breakdown = PhaseTwoFurloughBreakdown(grant, payment, furloughCap)
@@ -44,11 +44,11 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
 
     "accurately calculate furlough" in {
       val referencePay: Amount = Amount(1337.33)
-      val grant: Amount = Amount(2500.00)
-      val payment = RegularPaymentWithPhaseTwoPeriod(
-        Amount(1337.33),
-        referencePay,
-        PhaseTwoPeriod(fullPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 31", "2020, 7, 31"), None, None))
+      val grant: Amount        = Amount(2500.00)
+      val payment =
+        RegularPaymentWithPhaseTwoPeriod(Amount(1337.33),
+                                         referencePay,
+                                         PhaseTwoPeriod(fullPeriodWithPaymentDate("2020, 7, 1", "2020, 7, 31", "2020, 7, 31"), None, None))
       val furloughCap = FullPeriodCap(2500.00)
 
       val breakdown = PhaseTwoFurloughBreakdown(grant, payment, furloughCap)
@@ -59,19 +59,19 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
 
   "PhaseTwoNicBreakdown" must {
 
-    val referencePay: Amount = Amount(300.00)
-    val grant: Amount = Amount(200.00)
-    val threshold: Threshold = Threshold(732.00, TaxYearEnding2021, Monthly)
+    val referencePay: Amount     = Amount(300.00)
+    val grant: Amount            = Amount(200.00)
+    val threshold: Threshold     = Threshold(732.00, TaxYearEnding2021, Monthly)
     val nicCategory: NicCategory = Payable
     val paymentDate: PaymentDate = PaymentDate(LocalDate.of(2020, 8, 1))
 
     "format messages correctly" when {
 
       "breakdown is a full period and full time" in {
-        val period = fullPeriod("2020,07,1", "2020,07,31")
-        val periodWithPaymentDate = FullPeriodWithPaymentDate(period, paymentDate)
-        val regularPay = Amount(250.00)
-        val phaseTwoPeriod = PhaseTwoPeriod(periodWithPaymentDate, None, None)
+        val period                    = fullPeriod("2020,07,1", "2020,07,31")
+        val periodWithPaymentDate     = FullPeriodWithPaymentDate(period, paymentDate)
+        val regularPay                = Amount(250.00)
+        val phaseTwoPeriod            = PhaseTwoPeriod(periodWithPaymentDate, None, None)
         val paymentWithPhaseTwoPeriod = RegularPaymentWithPhaseTwoPeriod(regularPay, referencePay, phaseTwoPeriod)
 
         val breakdown = PhaseTwoNicBreakdown(grant, paymentWithPhaseTwoPeriod, threshold, nicCategory)
@@ -80,12 +80,12 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
       }
 
       "breakdown is a partial period and full time" in {
-        val original = period("2020,07,1", "2020,07,31")
-        val partial = period("2020,07,15", "2020,07,31")
-        val partialPeriod = PartialPeriod(original, partial)
-        val periodWithPaymentDate = PartialPeriodWithPaymentDate(partialPeriod, paymentDate)
-        val regularPay = Amount(250.00)
-        val phaseTwoPeriod = PhaseTwoPeriod(periodWithPaymentDate, None, None)
+        val original                  = period("2020,07,1", "2020,07,31")
+        val partial                   = period("2020,07,15", "2020,07,31")
+        val partialPeriod             = PartialPeriod(original, partial)
+        val periodWithPaymentDate     = PartialPeriodWithPaymentDate(partialPeriod, paymentDate)
+        val regularPay                = Amount(250.00)
+        val phaseTwoPeriod            = PhaseTwoPeriod(periodWithPaymentDate, None, None)
         val paymentWithPhaseTwoPeriod = RegularPaymentWithPhaseTwoPeriod(regularPay, referencePay, phaseTwoPeriod)
 
         val breakdown = PhaseTwoNicBreakdown(grant, paymentWithPhaseTwoPeriod, threshold, nicCategory)
@@ -94,10 +94,10 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
       }
 
       "breakdown is a full period and part time" in {
-        val period = fullPeriod("2020,07,1", "2020,07,31")
-        val periodWithPaymentDate = FullPeriodWithPaymentDate(period, paymentDate)
-        val regularPay = Amount(250.00)
-        val phaseTwoPeriod = PhaseTwoPeriod(periodWithPaymentDate, Some(Hours(10.0)), Some(Hours(20.0)))
+        val period                    = fullPeriod("2020,07,1", "2020,07,31")
+        val periodWithPaymentDate     = FullPeriodWithPaymentDate(period, paymentDate)
+        val regularPay                = Amount(250.00)
+        val phaseTwoPeriod            = PhaseTwoPeriod(periodWithPaymentDate, Some(Hours(10.0)), Some(Hours(20.0)))
         val paymentWithPhaseTwoPeriod = RegularPaymentWithPhaseTwoPeriod(regularPay, referencePay, phaseTwoPeriod)
 
         val breakdown = PhaseTwoNicBreakdown(grant, paymentWithPhaseTwoPeriod, threshold, nicCategory)
@@ -106,12 +106,12 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
       }
 
       "breakdown is a partial period and part time" in {
-        val original = period("2020,07,1", "2020,07,31")
-        val partial = period("2020,07,15", "2020,07,31")
-        val partialPeriod = PartialPeriod(original, partial)
-        val periodWithPaymentDate = PartialPeriodWithPaymentDate(partialPeriod, paymentDate)
-        val regularPay = Amount(250.00)
-        val phaseTwoPeriod = PhaseTwoPeriod(periodWithPaymentDate, Some(Hours(10.0)), Some(Hours(20.0)))
+        val original                  = period("2020,07,1", "2020,07,31")
+        val partial                   = period("2020,07,15", "2020,07,31")
+        val partialPeriod             = PartialPeriod(original, partial)
+        val periodWithPaymentDate     = PartialPeriodWithPaymentDate(partialPeriod, paymentDate)
+        val regularPay                = Amount(250.00)
+        val phaseTwoPeriod            = PhaseTwoPeriod(periodWithPaymentDate, Some(Hours(10.0)), Some(Hours(20.0)))
         val paymentWithPhaseTwoPeriod = RegularPaymentWithPhaseTwoPeriod(regularPay, referencePay, phaseTwoPeriod)
 
         val breakdown = PhaseTwoNicBreakdown(grant, paymentWithPhaseTwoPeriod, threshold, nicCategory)
@@ -125,19 +125,19 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
 
   "PhaseTwoPensionBreakdown" must {
 
-    val referencePay: Amount = Amount(300.00)
-    val grant: Amount = Amount(200.00)
-    val threshold: Threshold = Threshold(500.00, TaxYearEnding2021, Monthly)
+    val referencePay: Amount         = Amount(300.00)
+    val grant: Amount                = Amount(200.00)
+    val threshold: Threshold         = Threshold(500.00, TaxYearEnding2021, Monthly)
     val pensionStatus: PensionStatus = DoesContribute
-    val paymentDate: PaymentDate = PaymentDate(LocalDate.of(2020, 8, 1))
+    val paymentDate: PaymentDate     = PaymentDate(LocalDate.of(2020, 8, 1))
 
     "format messages correctly" when {
 
       "breakdown is a full period and full time" in {
-        val period = fullPeriod("2020,07,1", "2020,07,31")
-        val periodWithPaymentDate = FullPeriodWithPaymentDate(period, paymentDate)
-        val regularPay = Amount(250.00)
-        val phaseTwoPeriod = PhaseTwoPeriod(periodWithPaymentDate, None, None)
+        val period                    = fullPeriod("2020,07,1", "2020,07,31")
+        val periodWithPaymentDate     = FullPeriodWithPaymentDate(period, paymentDate)
+        val regularPay                = Amount(250.00)
+        val phaseTwoPeriod            = PhaseTwoPeriod(periodWithPaymentDate, None, None)
         val paymentWithPhaseTwoPeriod = RegularPaymentWithPhaseTwoPeriod(regularPay, referencePay, phaseTwoPeriod)
 
         val breakdown = PhaseTwoPensionBreakdown(grant, paymentWithPhaseTwoPeriod, threshold, pensionStatus)
@@ -146,12 +146,12 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
       }
 
       "breakdown is a partial period and full time" in {
-        val original = period("2020,07,1", "2020,07,31")
-        val partial = period("2020,07,15", "2020,07,31")
-        val partialPeriod = PartialPeriod(original, partial)
-        val periodWithPaymentDate = PartialPeriodWithPaymentDate(partialPeriod, paymentDate)
-        val regularPay = Amount(250.00)
-        val phaseTwoPeriod = PhaseTwoPeriod(periodWithPaymentDate, None, None)
+        val original                  = period("2020,07,1", "2020,07,31")
+        val partial                   = period("2020,07,15", "2020,07,31")
+        val partialPeriod             = PartialPeriod(original, partial)
+        val periodWithPaymentDate     = PartialPeriodWithPaymentDate(partialPeriod, paymentDate)
+        val regularPay                = Amount(250.00)
+        val phaseTwoPeriod            = PhaseTwoPeriod(periodWithPaymentDate, None, None)
         val paymentWithPhaseTwoPeriod = RegularPaymentWithPhaseTwoPeriod(regularPay, referencePay, phaseTwoPeriod)
 
         val breakdown = PhaseTwoPensionBreakdown(grant, paymentWithPhaseTwoPeriod, threshold, pensionStatus)
@@ -160,10 +160,10 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
       }
 
       "breakdown is a full period and part time" in {
-        val period = fullPeriod("2020,07,1", "2020,07,31")
-        val periodWithPaymentDate = FullPeriodWithPaymentDate(period, paymentDate)
-        val regularPay = Amount(250.00)
-        val phaseTwoPeriod = PhaseTwoPeriod(periodWithPaymentDate, Some(Hours(10.0)), Some(Hours(20.0)))
+        val period                    = fullPeriod("2020,07,1", "2020,07,31")
+        val periodWithPaymentDate     = FullPeriodWithPaymentDate(period, paymentDate)
+        val regularPay                = Amount(250.00)
+        val phaseTwoPeriod            = PhaseTwoPeriod(periodWithPaymentDate, Some(Hours(10.0)), Some(Hours(20.0)))
         val paymentWithPhaseTwoPeriod = RegularPaymentWithPhaseTwoPeriod(regularPay, referencePay, phaseTwoPeriod)
 
         val breakdown = PhaseTwoPensionBreakdown(grant, paymentWithPhaseTwoPeriod, threshold, pensionStatus)
@@ -172,12 +172,12 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
       }
 
       "breakdown is a partial period and part time" in {
-        val original = period("2020,07,1", "2020,07,31")
-        val partial = period("2020,07,15", "2020,07,31")
-        val partialPeriod = PartialPeriod(original, partial)
-        val periodWithPaymentDate = PartialPeriodWithPaymentDate(partialPeriod, paymentDate)
-        val regularPay = Amount(250.00)
-        val phaseTwoPeriod = PhaseTwoPeriod(periodWithPaymentDate, Some(Hours(10.0)), Some(Hours(20.0)))
+        val original                  = period("2020,07,1", "2020,07,31")
+        val partial                   = period("2020,07,15", "2020,07,31")
+        val partialPeriod             = PartialPeriod(original, partial)
+        val periodWithPaymentDate     = PartialPeriodWithPaymentDate(partialPeriod, paymentDate)
+        val regularPay                = Amount(250.00)
+        val phaseTwoPeriod            = PhaseTwoPeriod(periodWithPaymentDate, Some(Hours(10.0)), Some(Hours(20.0)))
         val paymentWithPhaseTwoPeriod = RegularPaymentWithPhaseTwoPeriod(regularPay, referencePay, phaseTwoPeriod)
 
         val breakdown = PhaseTwoPensionBreakdown(grant, paymentWithPhaseTwoPeriod, threshold, pensionStatus)

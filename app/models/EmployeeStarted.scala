@@ -26,7 +26,7 @@ sealed trait EmployeeStarted
 object EmployeeStarted extends Enumerable.Implicits {
 
   case object OnOrBefore1Feb2019 extends WithName("onOrBefore1Feb2019") with EmployeeStarted
-  case object After1Feb2019 extends WithName("after1Feb2019") with EmployeeStarted
+  case object After1Feb2019      extends WithName("after1Feb2019") with EmployeeStarted
 
   val values: Seq[EmployeeStarted] = Seq(
     OnOrBefore1Feb2019,

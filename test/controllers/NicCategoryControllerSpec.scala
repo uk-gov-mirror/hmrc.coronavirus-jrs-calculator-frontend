@@ -39,20 +39,19 @@ class NicCategoryControllerSpec extends SpecBaseControllerSpecs with MockitoSuga
   lazy val nicCategoryRoute = routes.NicCategoryController.onPageLoad().url
 
   val formProvider = new NicCategoryFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val view = app.injector.instanceOf[NicCategoryView]
 
-  val controller = new NicCategoryController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new NicCategoryController(messagesApi,
+                                             mockSessionRepository,
+                                             navigator,
+                                             identifier,
+                                             dataRetrieval,
+                                             dataRequired,
+                                             formProvider,
+                                             component,
+                                             view)
 
   "NicCategory Controller" must {
 

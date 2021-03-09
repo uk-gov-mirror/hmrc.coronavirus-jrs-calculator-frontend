@@ -69,10 +69,10 @@ trait SpecBase
 
   lazy val messagesControllerComponents: MessagesControllerComponents = injector.instanceOf[MessagesControllerComponents]
 
-  val component: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
-  val identifier: FakeIdentifierAction = app.injector.instanceOf[FakeIdentifierAction]
-  val dataRequired: DataRequiredActionImpl = app.injector.instanceOf[DataRequiredActionImpl]
-  val navigator: Navigator = app.injector.instanceOf[Navigator]
+  val component: MessagesControllerComponents         = app.injector.instanceOf[MessagesControllerComponents]
+  val identifier: FakeIdentifierAction                = app.injector.instanceOf[FakeIdentifierAction]
+  val dataRequired: DataRequiredActionImpl            = app.injector.instanceOf[DataRequiredActionImpl]
+  val navigator: Navigator                            = app.injector.instanceOf[Navigator]
   lazy val dataRequiredAction: DataRequiredActionImpl = injector.instanceOf[DataRequiredActionImpl]
 
   val internalId = "id"

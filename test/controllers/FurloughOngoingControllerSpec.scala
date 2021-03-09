@@ -35,9 +35,9 @@ class FurloughOngoingControllerSpec extends SpecBaseControllerSpecs {
   lazy val furloughOngoingRoute = routes.FurloughOngoingController.onPageLoad().url
 
   val formProvider = new FurloughOngoingFormProvider()
-  val form = formProvider()
-  val phaseOne = period("2020,3,1", "2020,3,31")
-  val phaseTwo = period("2020,7,1", "2020,7,31")
+  val form         = formProvider()
+  val phaseOne     = period("2020,3,1", "2020,3,31")
+  val phaseTwo     = period("2020,7,1", "2020,7,31")
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, furloughOngoingRoute).withCSRFToken
@@ -67,7 +67,7 @@ class FurloughOngoingControllerSpec extends SpecBaseControllerSpecs {
       val userAnswers = emptyUserAnswers
         .withClaimPeriodStart(phaseOne.start.toString)
         .withClaimPeriodEnd(phaseOne.end.toString)
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -79,7 +79,7 @@ class FurloughOngoingControllerSpec extends SpecBaseControllerSpecs {
       val userAnswers = emptyUserAnswers
         .withClaimPeriodStart(phaseTwo.start.toString)
         .withClaimPeriodEnd(phaseTwo.end.toString)
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -93,7 +93,7 @@ class FurloughOngoingControllerSpec extends SpecBaseControllerSpecs {
         .withClaimPeriodStart(phaseOne.start.toString)
         .withClaimPeriodEnd(phaseOne.end.toString)
 
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -126,7 +126,7 @@ class FurloughOngoingControllerSpec extends SpecBaseControllerSpecs {
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST

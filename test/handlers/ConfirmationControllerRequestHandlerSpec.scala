@@ -33,14 +33,16 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
       FurloughCalculationResult(
         3200.00,
         Seq(
-          fullPeriodFurloughBreakdown(
-            1600.00,
-            regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
-            FullPeriodCap(2500.00)),
-          fullPeriodFurloughBreakdown(
-            1600.00,
-            regularPaymentWithFullPeriod(2000.00, 2000.00, fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
-            FullPeriodCap(2500.00))
+          fullPeriodFurloughBreakdown(1600.00,
+                                      regularPaymentWithFullPeriod(2000.00,
+                                                                   2000.00,
+                                                                   fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-20")),
+                                      FullPeriodCap(2500.00)),
+          fullPeriodFurloughBreakdown(1600.00,
+                                      regularPaymentWithFullPeriod(2000.00,
+                                                                   2000.00,
+                                                                   fullPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-20")),
+                                      FullPeriodCap(2500.00))
         )
       )
 
@@ -115,10 +117,11 @@ class ConfirmationControllerRequestHandlerSpec extends SpecBase with CoreTestDat
         List(
           PhaseTwoFurloughBreakdown(
             Amount(1600.0),
-            RegularPaymentWithPhaseTwoPeriod(
-              Amount(2000.0),
-              Amount(2000.0),
-              PhaseTwoPeriod(fullPeriodWithPaymentDate("2020-08-01", "2020-08-31", "2020-09-20"), None, None)),
+            RegularPaymentWithPhaseTwoPeriod(Amount(2000.0),
+                                             Amount(2000.0),
+                                             PhaseTwoPeriod(fullPeriodWithPaymentDate("2020-08-01", "2020-08-31", "2020-09-20"),
+                                                            None,
+                                                            None)),
             FullPeriodCap(2500.0)
           )
         )

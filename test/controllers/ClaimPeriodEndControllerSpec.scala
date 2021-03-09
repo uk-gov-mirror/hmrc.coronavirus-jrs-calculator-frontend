@@ -39,7 +39,7 @@ import scala.concurrent.Future
 class ClaimPeriodEndControllerSpec extends SpecBaseControllerSpecs {
 
   val formProvider = new ClaimPeriodEndFormProvider()
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer  = LocalDate.now(ZoneOffset.UTC)
 
   lazy val claimPeriodEndRoute = routes.ClaimPeriodEndController.onPageLoad().url
 
@@ -89,7 +89,7 @@ class ClaimPeriodEndControllerSpec extends SpecBaseControllerSpecs {
 
     "return OK and the correct view for a GET" in {
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form)(dataRequest, messages).toString
@@ -144,8 +144,8 @@ class ClaimPeriodEndControllerSpec extends SpecBaseControllerSpecs {
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST
