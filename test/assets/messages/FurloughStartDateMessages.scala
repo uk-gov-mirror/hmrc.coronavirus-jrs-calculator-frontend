@@ -18,9 +18,9 @@ package assets.messages
 
 object FurloughStartDateMessages {
 
-  val title = "When was this employee furloughed?"
+  val title   = "When was this employee furloughed?"
   val heading = "When was this employee furloughed?"
-  val p1 = "If this employee has been furloughed more than once it is the date they were most recently furloughed."
+  val p1      = "If this employee has been furloughed more than once it is the date they were most recently furloughed."
   val p2 =
     "If the employee was not on your payroll on 19 March 2020, in relation to Real Time Information (RTI) Full Payment Submission (FPS), and was furloughed before 1 November 2020, then use the date 1 November 2020."
   val extensionP2 =

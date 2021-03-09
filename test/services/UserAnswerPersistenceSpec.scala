@@ -32,12 +32,12 @@ class UserAnswerPersistenceSpec extends SpecBaseControllerSpecs with ScalaFuture
   override implicit val patienceConfig: PatienceConfig = PatienceConfig(scaled(Span(5, Seconds)), scaled(Span(1, Seconds)))
 
   "persist a user answer" in {
-    val additionalPaymentPeriod = LocalDate.of(2020, 3, 31)
-    val amount = Amount(100)
-    val additionalPayment = AdditionalPayment(additionalPaymentPeriod, amount) //TODO maybe use generator for different types of answers
+    val additionalPaymentPeriod                            = LocalDate.of(2020, 3, 31)
+    val amount                                             = Amount(100)
+    val additionalPayment                                  = AdditionalPayment(additionalPaymentPeriod, amount) //TODO maybe use generator for different types of answers
     val stubbedPersistence: UserAnswers => Future[Boolean] = _ => Future.successful(true)
 
-    val userAnswers = emptyUserAnswers
+    val userAnswers     = emptyUserAnswers
     val expectedAnswers = userAnswers.withAdditionalPaymentAmount(additionalPayment, Some(1))
     val eventualAnswers = new UserAnswerPersistence(stubbedPersistence)
       .persistAnswer(userAnswers, AdditionalPaymentAmountPage, additionalPayment, Some(1))

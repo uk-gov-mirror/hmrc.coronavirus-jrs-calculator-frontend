@@ -21,18 +21,17 @@ import play.twirl.api.HtmlFormat
 
 trait QuestionViewBehaviours[A] extends ViewBehaviours {
 
-  val errorKey = "value"
+  val errorKey     = "value"
   val errorMessage = "error.number"
-  val error = FormError(errorKey, errorMessage)
+  val error        = FormError(errorKey, errorMessage)
 
   val form: Form[A]
 
-  def pageWithTextFields(
-    form: Form[A],
-    createView: Form[A] => HtmlFormat.Appendable,
-    messageKeyPrefix: String,
-    expectedFormAction: String,
-    fields: String*) =
+  def pageWithTextFields(form: Form[A],
+                         createView: Form[A] => HtmlFormat.Appendable,
+                         messageKeyPrefix: String,
+                         expectedFormAction: String,
+                         fields: String*) =
     "behave like a question page" when {
 
       "rendered" must {
@@ -73,7 +72,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
 
           s"show an error associated with the field '$field'" in {
 
-            val doc = asDocument(createView(form.withError(FormError(field, "error"))))
+            val doc       = asDocument(createView(form.withError(FormError(field, "error"))))
             val errorSpan = doc.getElementsByClass("error-message").first
             doc.getElementById(field).attr("aria-describedby") contains errorSpan.attr("id")
             errorSpan.parent.attr("for") mustBe field

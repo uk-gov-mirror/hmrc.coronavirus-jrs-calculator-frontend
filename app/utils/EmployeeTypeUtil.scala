@@ -1,74 +1,104 @@
+/*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package utils
 
 import cats.data.Validated.Valid
+import config.FrontendAppConfig
+import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
 import models.PayMethod.{Regular, Variable}
 import models.{EmployeeRTISubmission, EmployeeStarted, RegularLengthEmployed}
 import models.requests.DataRequest
-import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, PayMethodPage, PreviousFurloughPeriodsPage, RegularLengthEmployedPage}
+import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, OnPayrollBefore30thOct2020Page, PayMethodPage, PreviousFurloughPeriodsPage, RegularLengthEmployedPage}
 import play.api.Logger.logger
 import uk.gov.hmrc.http.InternalServerException
 import utils.LocalDateHelpers.feb1st2020
+import utils.PagerDutyHelper.PagerDutyKeys.EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED
 
-trait EmployeeTypeUtil {
+trait EmployeeTypeUtil extends FeatureSwitching {
 
-  def regularPayResolver[T](type1EmployeeResult: Option[T], type2aEmployeeResult: Option[T], type2bEmployeeResult: Option[T])(
-    implicit request: DataRequest[_]): Option[T] =
+  def regularPayResolver[T](
+    type1EmployeeResult: Option[T] = None,
+    type2aEmployeeResult: Option[T] = None,
+    type2bEmployeeResult: Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): Option[T] =
     request.userAnswers.getV(RegularLengthEmployedPage) match {
       case Valid(RegularLengthEmployed.Yes) => type1EmployeeResult
-      case Valid(RegularLengthEmployed.No)  =>
-        //OnPayrollBefore30thOct2020Page
-        request.userAnswers.getV(PreviousFurloughPeriodsPage) match {
+      case Valid(RegularLengthEmployed.No) =>
+        request.userAnswers.getV(OnPayrollBefore30thOct2020Page) match {
           case Valid(true)  => type2aEmployeeResult
           case Valid(false) => type2bEmployeeResult
+          case _ =>
+            if (isEnabled(ExtensionTwoNewStarterFlow)) {
+              val logMsg = "[EmployeeTypeService][regularPayResolver] no valid answer for OnPayrollBefore30thOct2020Page"
+              PagerDutyHelper.alert(EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED, Some(logMsg))
+              throw new InternalServerException(logMsg)
+            } else {
+              type2aEmployeeResult
+            }
         }
       case _ =>
-        val logMsg = "[EmployeeTypeService][regularPayResolver] no valid answer for EmployeeStartDatePage"
-        logger.warn(logMsg)
-
-        //handle in flight users 2a by default
-
+        val logMsg = "[EmployeeTypeService][regularPayResolver] no valid answer for RegularLengthEmployedPage"
+        PagerDutyHelper.alert(EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED, Some(logMsg))
         throw new InternalServerException(logMsg)
     }
 
-  def variablePayResolver[T](type3EmployeeResult: Option[T],
-                             type4EmployeeResult: Option[T],
-                             type5aEmployeeResult: Option[T],
-                             type5bEmployeeResult: Option[T])(implicit request: DataRequest[_]): Option[T] =
+  def variablePayResolver[T](
+    type3EmployeeResult: Option[T] = None,
+    type4EmployeeResult: Option[T] = None,
+    type5aEmployeeResult: Option[T] = None,
+    type5bEmployeeResult: Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): Option[T] =
     request.userAnswers.getV(EmployeeStartedPage) match {
       case Valid(EmployeeStarted.OnOrBefore1Feb2019) => type3EmployeeResult
       case Valid(EmployeeStarted.After1Feb2019) =>
         (request.userAnswers.getV(EmployeeStartDatePage),
-          request.userAnswers.getV(EmployeeRTISubmissionPage),
-          //OnPayrollBefore30thOct2020Page
-          request.userAnswers.getV(PreviousFurloughPeriodsPage)) match {
-          case (Valid(startDate), Valid(rtiAns), _) if startDate.isBefore(feb1st2020) | rtiAns == EmployeeRTISubmission.Yes =>
+         request.userAnswers.getV(EmployeeRTISubmissionPage),
+         request.userAnswers.getV(OnPayrollBefore30thOct2020Page)) match {
+          case (Valid(startDate), rtiAns, _) if startDate.isBefore(feb1st2020) | rtiAns == Valid(EmployeeRTISubmission.Yes) =>
             type4EmployeeResult
-          case (_, _, Valid(true)) =>
+          case (Valid(_), _, Valid(true)) =>
             type5aEmployeeResult
-          case (_, _, Valid(false)) =>
+          case (Valid(_), _, Valid(false)) =>
             type5bEmployeeResult
+          case _ =>
+            if (isEnabled(ExtensionTwoNewStarterFlow)) {
+              val logMsg = "[EmployeeTypeService][variablePayResolver] variable pay employee type cannot be resolved"
+              logger.warn(logMsg)
+              throw new InternalServerException(logMsg)
+            } else {
+              type5aEmployeeResult
+            }
         }
       case _ =>
-        val logMsg = "[EmployeeTypeService][variablePayResolver] employee type could not be resolved"
-        logger.warn(logMsg)
-
-        //handle in flight users 5a by default
-
+        val logMsg = "[EmployeeTypeService][variablePayResolver] no valid answer for EmployeeStartedPage"
+        PagerDutyHelper.alert(EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED, Some(logMsg))
         throw new InternalServerException(logMsg)
     }
 
   //noinspection ScalaStyle
   def employeeTypeResolver[T](defaultResult: T,
-                              regularPayEmployeeResult: Option[T],
-                              variablePayEmployeeResult: Option[T],
-                              type1EmployeeResult: Option[T],
-                              type2aEmployeeResult: Option[T],
-                              type2bEmployeeResult: Option[T],
-                              type3EmployeeResult: Option[T],
-                              type4EmployeeResult: Option[T],
-                              type5aEmployeeResult: Option[T],
-                              type5bEmployeeResult: Option[T])(implicit request: DataRequest[_]): T = {
-    val defaultRegularResult: T = regularPayEmployeeResult.getOrElse(defaultResult)
+                              regularPayEmployeeResult: Option[T] = None,
+                              variablePayEmployeeResult: Option[T] = None,
+                              type1EmployeeResult: Option[T] = None,
+                              type2aEmployeeResult: Option[T] = None,
+                              type2bEmployeeResult: Option[T] = None,
+                              type3EmployeeResult: Option[T] = None,
+                              type4EmployeeResult: Option[T] = None,
+                              type5aEmployeeResult: Option[T] = None,
+                              type5bEmployeeResult: Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): T = {
+    val defaultRegularResult: T  = regularPayEmployeeResult.getOrElse(defaultResult)
     val defaultVariableResult: T = variablePayEmployeeResult.getOrElse(defaultResult)
     request.userAnswers.getV(PayMethodPage) match {
       case Valid(Regular) =>
@@ -78,7 +108,7 @@ trait EmployeeTypeUtil {
           defaultVariableResult)
       case _ =>
         val logMsg = "[EmployeeTypeService][employeeTypeResolver] no valid answer for PayMethodPage"
-        logger.warn(logMsg)
+        PagerDutyHelper.alert(EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED, Some(logMsg))
         throw new InternalServerException(logMsg)
     }
   }

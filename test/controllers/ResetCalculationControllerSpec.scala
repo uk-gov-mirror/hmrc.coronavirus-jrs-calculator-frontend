@@ -32,18 +32,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class ResetCalculationControllerSpec extends SpecBaseControllerSpecs with CoreTestData {
 
   lazy val resetCalculationRoute = routes.ResetCalculationController.onPageLoad().url
-  val view = app.injector.instanceOf[ResetCalculationView]
+  val view                       = app.injector.instanceOf[ResetCalculationView]
 
   "resetCalculation Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val controller = new ResetCalculationController(
-        messagesApi,
-        identifier,
-        new FakeDataRetrievalAction(Some(emptyUserAnswers)),
-        dataRequired,
-        component,
-        view)
+      val controller = new ResetCalculationController(messagesApi,
+                                                      identifier,
+                                                      new FakeDataRetrievalAction(Some(emptyUserAnswers)),
+                                                      dataRequired,
+                                                      component,
+                                                      view)
       val request = FakeRequest(GET, resetCalculationRoute).withCSRFToken
         .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
@@ -68,7 +67,7 @@ class ResetCalculationControllerSpec extends SpecBaseControllerSpecs with CoreTe
 
       val request = FakeRequest(GET, resetCalculationRoute)
 
-      val getResult = controller.onPageLoad()(request)
+      val getResult  = controller.onPageLoad()(request)
       val postResult = controller.onSubmit()(request)
 
       status(getResult) mustEqual SEE_OTHER

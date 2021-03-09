@@ -36,52 +36,46 @@ trait CoreTestDataBuilder extends TryValues {
   def regularPaymentWithFullPeriod(regularPay: BigDecimal, referencePay: BigDecimal, period: FullPeriodWithPaymentDate) =
     RegularPaymentWithFullPeriod(Amount(regularPay), Amount(referencePay), period)
 
-  def regularPaymentWithPartialPeriod(
-    nonFurloughPay: BigDecimal,
-    regularPay: BigDecimal,
-    referencePay: BigDecimal,
-    period: PartialPeriodWithPaymentDate) =
+  def regularPaymentWithPartialPeriod(nonFurloughPay: BigDecimal,
+                                      regularPay: BigDecimal,
+                                      referencePay: BigDecimal,
+                                      period: PartialPeriodWithPaymentDate) =
     RegularPaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(regularPay), Amount(referencePay), period)
 
-  def averagePaymentWithFullPeriod(
-    referencePay: BigDecimal,
-    period: FullPeriodWithPaymentDate,
-    annualPay: BigDecimal,
-    priorFurloughPeriod: Period) =
+  def averagePaymentWithFullPeriod(referencePay: BigDecimal,
+                                   period: FullPeriodWithPaymentDate,
+                                   annualPay: BigDecimal,
+                                   priorFurloughPeriod: Period) =
     AveragePaymentWithFullPeriod(Amount(referencePay), period, Amount(annualPay), priorFurloughPeriod)
 
-  def averagePaymentWithPartialPeriod(
-    nonFurloughPay: BigDecimal,
-    referencePay: BigDecimal,
-    period: PartialPeriodWithPaymentDate,
-    annualPay: BigDecimal,
-    priorFurloughPeriod: Period) =
+  def averagePaymentWithPartialPeriod(nonFurloughPay: BigDecimal,
+                                      referencePay: BigDecimal,
+                                      period: PartialPeriodWithPaymentDate,
+                                      annualPay: BigDecimal,
+                                      priorFurloughPeriod: Period) =
     AveragePaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(referencePay), period, Amount(annualPay), priorFurloughPeriod)
 
-  def cylbPaymentWithFullPeriod(
-    referencePay: BigDecimal,
-    period: FullPeriodWithPaymentDate,
-    averagePayment: AveragePayment,
-    cylbBreakdown: CylbBreakdown) =
+  def cylbPaymentWithFullPeriod(referencePay: BigDecimal,
+                                period: FullPeriodWithPaymentDate,
+                                averagePayment: AveragePayment,
+                                cylbBreakdown: CylbBreakdown) =
     CylbPaymentWithFullPeriod(Amount(referencePay), period, averagePayment, cylbBreakdown)
 
-  def cylbPaymentWithPartialPeriod(
-    nonFurloughPay: BigDecimal,
-    referencePay: BigDecimal,
-    period: PartialPeriodWithPaymentDate,
-    averagePayment: AveragePayment,
-    cylbBreakdown: CylbBreakdown) =
+  def cylbPaymentWithPartialPeriod(nonFurloughPay: BigDecimal,
+                                   referencePay: BigDecimal,
+                                   period: PartialPeriodWithPaymentDate,
+                                   averagePayment: AveragePayment,
+                                   cylbBreakdown: CylbBreakdown) =
     CylbPaymentWithPartialPeriod(Amount(nonFurloughPay), Amount(referencePay), period, averagePayment, cylbBreakdown)
 
   def fullPeriodWithPaymentDate(start: String, end: String, paymentDate: String): FullPeriodWithPaymentDate =
     FullPeriodWithPaymentDate(FullPeriod(period(start, end)), PaymentDate(paymentDate.toLocalDate))
 
-  def partialPeriodWithPaymentDate(
-    start: String,
-    end: String,
-    pstart: String,
-    pend: String,
-    paymentDate: String): PartialPeriodWithPaymentDate =
+  def partialPeriodWithPaymentDate(start: String,
+                                   end: String,
+                                   pstart: String,
+                                   pend: String,
+                                   paymentDate: String): PartialPeriodWithPaymentDate =
     PartialPeriodWithPaymentDate(PartialPeriod(period(start, end), period(pstart, pend)), PaymentDate(paymentDate.toLocalDate))
 
   def fullPeriodFurloughBreakdown(grant: BigDecimal, payment: PaymentWithFullPeriod, cap: FurloughCap): FullPeriodFurloughBreakdown =
@@ -98,24 +92,22 @@ trait CoreTestDataBuilder extends TryValues {
       cap
     )
 
-  def partialPeriodFurloughBreakdown(
-    grant: BigDecimal,
-    payment: PaymentWithPartialPeriod,
-    cap: FurloughCap): PartialPeriodFurloughBreakdown =
+  def partialPeriodFurloughBreakdown(grant: BigDecimal,
+                                     payment: PaymentWithPartialPeriod,
+                                     cap: FurloughCap): PartialPeriodFurloughBreakdown =
     PartialPeriodFurloughBreakdown(
       Amount(grant),
       payment,
       cap
     )
 
-  def fullPeriodNicBreakdown(
-    grant: BigDecimal,
-    topUp: BigDecimal,
-    additional: BigDecimal,
-    payment: PaymentWithFullPeriod,
-    threshold: Threshold,
-    nicCap: NicCap,
-    nicCategory: NicCategory): FullPeriodNicBreakdown =
+  def fullPeriodNicBreakdown(grant: BigDecimal,
+                             topUp: BigDecimal,
+                             additional: BigDecimal,
+                             payment: PaymentWithFullPeriod,
+                             threshold: Threshold,
+                             nicCap: NicCap,
+                             nicCategory: NicCategory): FullPeriodNicBreakdown =
     FullPeriodNicBreakdown(
       Amount(grant),
       Amount(topUp),
@@ -126,14 +118,13 @@ trait CoreTestDataBuilder extends TryValues {
       nicCategory
     )
 
-  def partialPeriodNicBreakdown(
-    grant: BigDecimal,
-    topUp: BigDecimal,
-    additional: BigDecimal,
-    payment: PaymentWithPartialPeriod,
-    threshold: Threshold,
-    nicCap: NicCap,
-    nicCategory: NicCategory): PartialPeriodNicBreakdown =
+  def partialPeriodNicBreakdown(grant: BigDecimal,
+                                topUp: BigDecimal,
+                                additional: BigDecimal,
+                                payment: PaymentWithPartialPeriod,
+                                threshold: Threshold,
+                                nicCap: NicCap,
+                                nicCategory: NicCategory): PartialPeriodNicBreakdown =
     PartialPeriodNicBreakdown(
       Amount(grant),
       Amount(topUp),
@@ -144,12 +135,11 @@ trait CoreTestDataBuilder extends TryValues {
       nicCategory
     )
 
-  def fullPeriodPensionBreakdown(
-    grant: BigDecimal,
-    payment: PaymentWithFullPeriod,
-    threshold: Threshold,
-    allowance: BigDecimal,
-    pensionStatus: PensionStatus): FullPeriodPensionBreakdown =
+  def fullPeriodPensionBreakdown(grant: BigDecimal,
+                                 payment: PaymentWithFullPeriod,
+                                 threshold: Threshold,
+                                 allowance: BigDecimal,
+                                 pensionStatus: PensionStatus): FullPeriodPensionBreakdown =
     FullPeriodPensionBreakdown(
       Amount(grant),
       payment,
@@ -158,12 +148,11 @@ trait CoreTestDataBuilder extends TryValues {
       pensionStatus
     )
 
-  def partialPeriodPensionBreakdown(
-    grant: BigDecimal,
-    payment: PaymentWithPartialPeriod,
-    threshold: Threshold,
-    allowance: BigDecimal,
-    pensionStatus: PensionStatus): PartialPeriodPensionBreakdown =
+  def partialPeriodPensionBreakdown(grant: BigDecimal,
+                                    payment: PaymentWithPartialPeriod,
+                                    threshold: Threshold,
+                                    allowance: BigDecimal,
+                                    pensionStatus: PensionStatus): PartialPeriodPensionBreakdown =
     PartialPeriodPensionBreakdown(
       Amount(grant),
       payment,

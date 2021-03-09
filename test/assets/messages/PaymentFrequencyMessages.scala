@@ -19,7 +19,7 @@ package assets.messages
 object PaymentFrequencyMessages {
 
   val heading = "How often do you pay this employee?"
-  val indent = "The employees current pay frequency is different from the pay frequency in the reference period"
+  val indent  = "The employees current pay frequency is different from the pay frequency in the reference period"
   val p1 = {
     "You cannot use the calculator if this employee is on fixed pay and their pay frequency has changed " +
       "between the reference period and the pay period you are calculating for. For example, " +

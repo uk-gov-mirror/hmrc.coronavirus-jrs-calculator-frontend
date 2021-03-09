@@ -37,9 +37,9 @@ import scala.concurrent.Future
 class ClaimPeriodQuestionControllerSpec extends SpecBaseControllerSpecs {
 
   private val formProvider = new ClaimPeriodQuestionFormProvider()
-  private val form = formProvider()
-  private val claimStart = LocalDate.now
-  private val claimEnd = claimStart.plusDays(30)
+  private val form         = formProvider()
+  private val claimStart   = LocalDate.now
+  private val claimEnd     = claimStart.plusDays(30)
 
   lazy val claimPeriodQuestionRoute = routes.ClaimPeriodQuestionController.onPageLoad().url
 
@@ -149,7 +149,7 @@ class ClaimPeriodQuestionControllerSpec extends SpecBaseControllerSpecs {
 
     "redirect to Session Expired for a GET if no existing data is found" in {
       val request = FakeRequest(GET, claimPeriodQuestionRoute)
-      val result = controller(None).onPageLoad()(request)
+      val result  = controller(None).onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

@@ -110,10 +110,9 @@ trait ViewBehaviours extends ViewSpecBase {
     s"behave like a page with bullet point$bullet" must {
 
       s"have a button with message '$msg'" in {
-        assertEqualsMessage(
-          document,
-          cssSelector = s"#main-content > div > div > div > ul > li:nth-child($bullet)",
-          expectedMessageKey = msg)
+        assertEqualsMessage(document,
+                            cssSelector = s"#main-content > div > div > div > ul > li:nth-child($bullet)",
+                            expectedMessageKey = msg)
       }
     }
 
@@ -129,10 +128,9 @@ trait ViewBehaviours extends ViewSpecBase {
     "behave like a page with a warning" must {
 
       s"have a warning message '$msg'" in {
-        assertEqualsMessage(
-          document,
-          "#main-content > div > div > div > form > div > strong > span.govuk-\\!-font-weight-bold > div:nth-child(1)",
-          msg)
+        assertEqualsMessage(document,
+                            "#main-content > div > div > div > form > div > strong > span.govuk-\\!-font-weight-bold > div:nth-child(1)",
+                            msg)
       }
     }
 

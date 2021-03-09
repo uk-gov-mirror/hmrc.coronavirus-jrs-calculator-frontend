@@ -38,9 +38,9 @@ import scala.concurrent.Future
 
 class FirstFurloughDateControllerSpec extends SpecBaseControllerSpecs {
 
-  val formProvider = new FirstFurloughDateFormProvider()
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
-  val furlouoghStartDate = validAnswer.plusMonths(1)
+  val formProvider                  = new FirstFurloughDateFormProvider()
+  val validAnswer                   = LocalDate.now(ZoneOffset.UTC)
+  val furlouoghStartDate            = validAnswer.plusMonths(1)
   private def form: Form[LocalDate] = formProvider(furlouoghStartDate)
 
   lazy val firstFurLoughDateStartRoute: String = routes.FirstFurloughDateController.onPageLoad().url

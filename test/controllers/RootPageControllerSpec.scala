@@ -49,8 +49,7 @@ class RootPageControllerSpec extends SpecBaseControllerSpecs with MockitoSugar w
       "return OK and the old view for a GET" in new Setup {
 
         disable(ShowNewStartPage)
-
-        val result = controller.start()(request)
+      val result  = controller.start()(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages).toString

@@ -28,9 +28,9 @@ import views.html.OnPayrollBefore30thOct2020View
 
 class OnPayrollBefore30thOct2020ViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "onPayrollBefore30thOct2020"
+  val messageKeyPrefix                     = "onPayrollBefore30thOct2020"
   val view: OnPayrollBefore30thOct2020View = injector.instanceOf[OnPayrollBefore30thOct2020View]
-  val form: Form[Boolean] = new OnPayrollBefore30thOct2020FormProvider()()
+  val form: Form[Boolean]                  = new OnPayrollBefore30thOct2020FormProvider()()
 
   object Selectors extends BaseSelectors
 

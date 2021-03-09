@@ -38,7 +38,7 @@ class EmployeeRTISubmissionControllerSpec extends SpecBaseControllerSpecs {
   lazy val employeeRTISubmissionRoute = routes.EmployeeRTISubmissionController.onPageLoad().url
 
   val formProvider = new EmployeeRTISubmissionFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val view = app.injector.instanceOf[EmployeeRTISubmissionView]
 
@@ -87,7 +87,7 @@ class EmployeeRTISubmissionControllerSpec extends SpecBaseControllerSpecs {
 
       val userAnswersUpdated = userAnswers.set(EmployeeRTISubmissionPage, EmployeeRTISubmission.values.head).success.value
 
-      val result = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
 
       status(result) mustEqual OK
@@ -112,7 +112,7 @@ class EmployeeRTISubmissionControllerSpec extends SpecBaseControllerSpecs {
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST

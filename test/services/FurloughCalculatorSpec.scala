@@ -61,151 +61,127 @@ class FurloughCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with
 
   private lazy val fullPeriodScenarios = Table(
     ("paymentFrequency", "payment", "cap", "expectedFurlough"),
-    (
-      Monthly,
-      regularPaymentWithFullPeriod(
-        2000.00,
-        2000.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-          PaymentDate(LocalDate.of(2020, 3, 31)))
-      ),
-      FullPeriodCap(2500.00),
-      Amount(1600.00)),
-    (
-      Monthly,
-      regularPaymentWithFullPeriod(
-        5000.00,
-        5000.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
-          PaymentDate(LocalDate.of(2020, 3, 31)))
-      ),
-      FullPeriodCap(2500.00),
-      Amount(2500.00)),
-    (
-      Monthly,
-      regularPaymentWithFullPeriod(
-        5000.00,
-        5000.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))),
-          PaymentDate(LocalDate.of(2020, 4, 30)))
-      ),
-      PeriodSpansMonthCap(2621.15, 17, 3, 80.65, 15, 4, 83.34),
-      Amount(2621.15)),
-    (
-      Weekly,
-      regularPaymentWithFullPeriod(
-        500.00,
-        500.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
-          PaymentDate(LocalDate.of(2020, 3, 21)))
-      ),
-      FullPeriodCap(576.92),
-      Amount(400.00)),
-    (
-      Weekly,
-      regularPaymentWithFullPeriod(
-        1000.00,
-        1000.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
-          PaymentDate(LocalDate.of(2020, 3, 21)))
-      ),
-      FullPeriodCap(576.92),
-      Amount(576.92)),
-    (
-      FortNightly,
-      regularPaymentWithFullPeriod(
-        1000.00,
-        2000.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
-          PaymentDate(LocalDate.of(2020, 3, 28)))
-      ),
-      FullPeriodCap(1153.84),
-      Amount(1153.84)),
-    (
-      FortNightly,
-      regularPaymentWithFullPeriod(
-        1000.00,
-        1000.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
-          PaymentDate(LocalDate.of(2020, 3, 28)))
-      ),
-      FullPeriodCap(1153.84),
-      Amount(800.00)),
-    (
-      FourWeekly,
-      regularPaymentWithFullPeriod(
-        5000.00,
-        5000.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
-          PaymentDate(LocalDate.of(2020, 4, 15)))
-      ),
-      FullPeriodCap(2307.68),
-      Amount(2307.68)),
-    (
-      FourWeekly,
-      regularPaymentWithFullPeriod(
-        2000.00,
-        2000.00,
-        FullPeriodWithPaymentDate(
-          FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
-          PaymentDate(LocalDate.of(2020, 4, 15)))
-      ),
-      FullPeriodCap(2307.68),
-      Amount(1600.00))
+    (Monthly,
+     regularPaymentWithFullPeriod(
+       2000.00,
+       2000.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+                                 PaymentDate(LocalDate.of(2020, 3, 31)))
+     ),
+     FullPeriodCap(2500.00),
+     Amount(1600.00)),
+    (Monthly,
+     regularPaymentWithFullPeriod(
+       5000.00,
+       5000.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31))),
+                                 PaymentDate(LocalDate.of(2020, 3, 31)))
+     ),
+     FullPeriodCap(2500.00),
+     Amount(2500.00)),
+    (Monthly,
+     regularPaymentWithFullPeriod(
+       5000.00,
+       5000.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))),
+                                 PaymentDate(LocalDate.of(2020, 4, 30)))
+     ),
+     PeriodSpansMonthCap(2621.15, 17, 3, 80.65, 15, 4, 83.34),
+     Amount(2621.15)),
+    (Weekly,
+     regularPaymentWithFullPeriod(
+       500.00,
+       500.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
+                                 PaymentDate(LocalDate.of(2020, 3, 21)))
+     ),
+     FullPeriodCap(576.92),
+     Amount(400.00)),
+    (Weekly,
+     regularPaymentWithFullPeriod(
+       1000.00,
+       1000.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 7))),
+                                 PaymentDate(LocalDate.of(2020, 3, 21)))
+     ),
+     FullPeriodCap(576.92),
+     Amount(576.92)),
+    (FortNightly,
+     regularPaymentWithFullPeriod(
+       1000.00,
+       2000.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
+                                 PaymentDate(LocalDate.of(2020, 3, 28)))
+     ),
+     FullPeriodCap(1153.84),
+     Amount(1153.84)),
+    (FortNightly,
+     regularPaymentWithFullPeriod(
+       1000.00,
+       1000.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 14))),
+                                 PaymentDate(LocalDate.of(2020, 3, 28)))
+     ),
+     FullPeriodCap(1153.84),
+     Amount(800.00)),
+    (FourWeekly,
+     regularPaymentWithFullPeriod(
+       5000.00,
+       5000.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
+                                 PaymentDate(LocalDate.of(2020, 4, 15)))
+     ),
+     FullPeriodCap(2307.68),
+     Amount(2307.68)),
+    (FourWeekly,
+     regularPaymentWithFullPeriod(
+       2000.00,
+       2000.00,
+       FullPeriodWithPaymentDate(FullPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 28))),
+                                 PaymentDate(LocalDate.of(2020, 4, 15)))
+     ),
+     FullPeriodCap(2307.68),
+     Amount(1600.00))
   )
 
   private lazy val partialPeriodScenarios = Table(
     ("payment", "cap", "expectedFurlough"),
-    (
-      regularPaymentWithPartialPeriod(
-        677.42,
-        1500.00,
-        822.58,
-        PartialPeriodWithPaymentDate(
-          PartialPeriod(
-            Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
-            Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))),
-          PaymentDate(LocalDate.of(2020, 3, 31))
-        )
-      ),
-      PartialPeriodCap(1371.05, 17, 3, 80.65),
-      Amount(658.06)),
-    (
-      regularPaymentWithPartialPeriod(
-        1580.65,
-        3420.00,
-        1919.35,
-        PartialPeriodWithPaymentDate(
-          PartialPeriod(
-            Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
-            Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))),
-          PaymentDate(LocalDate.of(2020, 3, 31))
-        )
-      ),
-      PartialPeriodCap(1371.05, 17, 3, 80.65),
-      Amount(1371.05)),
-    (
-      regularPaymentWithPartialPeriod(
-        1096.77,
-        2000.00,
-        903.23,
-        PartialPeriodWithPaymentDate(
-          PartialPeriod(
-            Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
-            Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28))),
-          PaymentDate(LocalDate.of(2020, 3, 31))
-        )
-      ),
-      PartialPeriodCap(1129.1, 14, 3, 80.65),
-      Amount(722.58))
+    (regularPaymentWithPartialPeriod(
+       677.42,
+       1500.00,
+       822.58,
+       PartialPeriodWithPaymentDate(
+         PartialPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
+                       Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))),
+         PaymentDate(LocalDate.of(2020, 3, 31))
+       )
+     ),
+     PartialPeriodCap(1371.05, 17, 3, 80.65),
+     Amount(658.06)),
+    (regularPaymentWithPartialPeriod(
+       1580.65,
+       3420.00,
+       1919.35,
+       PartialPeriodWithPaymentDate(
+         PartialPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
+                       Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 31))),
+         PaymentDate(LocalDate.of(2020, 3, 31))
+       )
+     ),
+     PartialPeriodCap(1371.05, 17, 3, 80.65),
+     Amount(1371.05)),
+    (regularPaymentWithPartialPeriod(
+       1096.77,
+       2000.00,
+       903.23,
+       PartialPeriodWithPaymentDate(
+         PartialPeriod(Period(LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31)),
+                       Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 3, 28))),
+         PaymentDate(LocalDate.of(2020, 3, 31))
+       )
+     ),
+     PartialPeriodCap(1129.1, 14, 3, 80.65),
+     Amount(722.58))
   )
 
   "Phase Two: apply apportioned furlough cap in the case of part time" in new FurloughCalculator {

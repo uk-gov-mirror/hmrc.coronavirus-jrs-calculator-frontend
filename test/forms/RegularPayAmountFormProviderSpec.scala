@@ -25,9 +25,9 @@ class RegularPayAmountFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "regularPayAmount.salary.error.required"
-    val invalidKey = "regularPayAmount.salary.error.invalid"
+    val invalidKey  = "regularPayAmount.salary.error.invalid"
 
     behave like bigDecimalField(
       form,

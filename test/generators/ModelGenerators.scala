@@ -199,7 +199,7 @@ trait ModelGenerators {
   } yield date
 
   val firstFurloughDatesGenStart = LocalDate.of(2020, 11, 10)
-  val firstFurloughDatesGenEnd = LocalDate.of(2021, 5, 31)
+  val firstFurloughDatesGenEnd   = LocalDate.of(2021, 5, 31)
 
   val firstFurloughDatesGen = for {
     date <- periodDatesBetween(firstFurloughDatesGenStart, firstFurloughDatesGenEnd)

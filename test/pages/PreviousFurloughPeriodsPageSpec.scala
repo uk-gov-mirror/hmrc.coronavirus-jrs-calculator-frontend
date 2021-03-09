@@ -32,7 +32,7 @@ class PreviousFurloughPeriodsPageSpec extends PageBehaviours {
 
     beRemovable[Boolean](PreviousFurloughPeriodsPage)
 
-    val emptyAnswers = UserAnswers("test")
+    val emptyAnswers    = UserAnswers("test")
     val testUserAnswers = emptyAnswers.set(FirstFurloughDatePage, LocalDate.of(2020, 1, 1)).get
 
     "remove the First Furlough Date when answer is false OR None" in {

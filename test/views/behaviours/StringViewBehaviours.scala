@@ -23,21 +23,20 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
 
   val answer = "answer"
 
-  def stringPage(
-    form: Form[String],
-    createView: Form[String] => HtmlFormat.Appendable,
-    messageKeyPrefix: String,
-    expectedFormAction: String,
-    expectedHintKey: Option[String] = None,
-    section: Option[String] = None,
-    headingArgs: Seq[String] = Seq()) =
+  def stringPage(form: Form[String],
+                 createView: Form[String] => HtmlFormat.Appendable,
+                 messageKeyPrefix: String,
+                 expectedFormAction: String,
+                 expectedHintKey: Option[String] = None,
+                 section: Option[String] = None,
+                 headingArgs: Seq[String] = Seq()) =
     "behave like a page with a string value field" when {
 
       "rendered" must {
 
         "contain a label for the value" in {
 
-          val doc = asDocument(createView(form))
+          val doc              = asDocument(createView(form))
           val expectedHintText = expectedHintKey map (k => messages(k))
           assertContainsLabel(doc, "value", messages(s"$messageKeyPrefix.heading", headingArgs: _*), expectedHintText)
         }
@@ -68,7 +67,7 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
 
         "show an error associated to the value field" in {
 
-          val doc = asDocument(createView(form.withError(error)))
+          val doc       = asDocument(createView(form.withError(error)))
           val errorSpan = doc.getElementsByClass("govuk-error-message").first
           errorSpan.text mustBe (messages("error.browser.title.prefix") + " " + messages(errorMessage))
         }
@@ -76,9 +75,9 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
         "show an error prefix in the browser title" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          assertEqualsValue(doc, "title", s"""${messages("error.browser.title.prefix")} ${title(
-            messages(s"$messageKeyPrefix.title", headingArgs: _*),
-            section)}""")
+          assertEqualsValue(doc, "title", s"""${messages("error.browser.title.prefix")} ${title(messages(s"$messageKeyPrefix.title",
+                                                                                                         headingArgs: _*),
+                                                                                                section)}""")
         }
       }
     }

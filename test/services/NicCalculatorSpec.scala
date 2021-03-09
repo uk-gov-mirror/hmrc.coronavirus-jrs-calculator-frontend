@@ -35,11 +35,10 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
         FullPeriodCap(2500.00)),
       partialPeriodFurloughBreakdown(
         1250.0,
-        regularPaymentWithPartialPeriod(
-          1750.0,
-          3500.0,
-          1750.0,
-          partialPeriodWithPaymentDate("2020,4,1", "2020, 4, 30", "2020,4,1", "2020, 4, 15", "2020, 4, 30")),
+        regularPaymentWithPartialPeriod(1750.0,
+                                        3500.0,
+                                        1750.0,
+                                        partialPeriodWithPaymentDate("2020,4,1", "2020, 4, 30", "2020,4,1", "2020, 4, 15", "2020, 4, 30")),
         PartialPeriodCap(1250.0, 15, 4, 83.34)
       )
     )
@@ -68,53 +67,48 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
 
   "For a partial period and variable average daily pay of £50.00 calculate nic grant" in new NicCalculator {
     val payment =
-      regularPaymentWithPartialPeriod(
-        950.0,
-        1400.0,
-        450.0,
-        partialPeriodWithPaymentDate("2020-03-01", "2020-03-28", "2020-03-20", "2020-03-28", "2020-03-28"))
+      regularPaymentWithPartialPeriod(950.0,
+                                      1400.0,
+                                      450.0,
+                                      partialPeriodWithPaymentDate("2020-03-01", "2020-03-28", "2020-03-20", "2020-03-28", "2020-03-28"))
 
-    val expected = partialPeriodNicBreakdown(
-      28.66,
-      0.00,
-      0.00,
-      payment,
-      Threshold(664.0, TaxYearEnding2020, FourWeekly),
-      NicCap(Amount(360.0), Amount(28.66), Amount(49.68)),
-      Payable)
+    val expected = partialPeriodNicBreakdown(28.66,
+                                             0.00,
+                                             0.00,
+                                             payment,
+                                             Threshold(664.0, TaxYearEnding2020, FourWeekly),
+                                             NicCap(Amount(360.0), Amount(28.66), Amount(49.68)),
+                                             Payable)
 
     calculatePartialPeriodNic(Payable, FourWeekly, Amount(360.0), payment, None, None) mustBe expected
   }
 
   "calculates Nic with additional payment and 0.0 top up for a partial period" in new NicCalculator {
     val payment =
-      regularPaymentWithPartialPeriod(
-        2200.0,
-        3100.0,
-        900.0,
-        partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-23", "2020-03-31", "2020-03-31"))
+      regularPaymentWithPartialPeriod(2200.0,
+                                      3100.0,
+                                      900.0,
+                                      partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-23", "2020-03-31", "2020-03-31"))
 
     calculatePartialPeriodNic(Payable, Monthly, Amount(720.0), payment, Some(Amount(300.00)), None).grant mustBe Amount(99.36)
   }
 
   "calculates Nic with top up and 0.0 additional payment for a partial period" in new NicCalculator {
     val payment =
-      regularPaymentWithPartialPeriod(
-        2200.0,
-        3100.0,
-        900.0,
-        partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-23", "2020-03-31", "2020-03-31"))
+      regularPaymentWithPartialPeriod(2200.0,
+                                      3100.0,
+                                      900.0,
+                                      partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-23", "2020-03-31", "2020-03-31"))
 
     calculatePartialPeriodNic(Payable, Monthly, Amount(720.0), payment, None, Some(Amount(200.0))).grant mustBe Amount(75.28)
   }
 
   "calculates Nic with additional payment plus top up for a partial period" in new NicCalculator {
     val payment =
-      regularPaymentWithPartialPeriod(
-        2200.0,
-        3100.0,
-        900.0,
-        partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-23", "2020-03-31", "2020-03-31"))
+      regularPaymentWithPartialPeriod(2200.0,
+                                      3100.0,
+                                      900.0,
+                                      partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-23", "2020-03-31", "2020-03-31"))
 
     calculatePartialPeriodNic(Payable, Monthly, Amount(720.0), payment, Some(Amount(300.0)), Some(Amount(200.0))).grant mustBe Amount(84.69)
   }
@@ -142,11 +136,10 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
 
   "Returns 0.00 for Nic grant if not eligible for Nic grant partial period" in new NicCalculator {
     val payment =
-      regularPaymentWithPartialPeriod(
-        2200.0,
-        3100.0,
-        900.0,
-        partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-23", "2020-03-31", "2020-03-31"))
+      regularPaymentWithPartialPeriod(2200.0,
+                                      3100.0,
+                                      900.0,
+                                      partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-23", "2020-03-31", "2020-03-31"))
 
     calculatePartialPeriodNic(Nonpayable, Monthly, Amount(720.0), payment, None, None).grant mustBe Amount(0.00)
   }
@@ -156,11 +149,10 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
     (
       Monthly,
       Amount(960.00),
-      regularPaymentWithPartialPeriod(
-        1200.00,
-        2400.00,
-        1200.00,
-        partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
+      regularPaymentWithPartialPeriod(1200.00,
+                                      2400.00,
+                                      1200.00,
+                                      partialPeriodWithPaymentDate("2020-04-01", "2020-04-30", "2020-04-16", "2020-04-30", "2020-04-30")),
       Threshold(732.0, TaxYearEnding2021, Monthly),
       NicCap(Amount(960.0), Amount(98.53), Amount(132.48)),
       Amount(98.53)
@@ -168,11 +160,10 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
     (
       Monthly,
       Amount(1774.30),
-      regularPaymentWithPartialPeriod(
-        1016.13,
-        3516.13,
-        2500.0,
-        partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-10", "2020-03-31", "2020-03-31")),
+      regularPaymentWithPartialPeriod(1016.13,
+                                      3516.13,
+                                      2500.0,
+                                      partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-10", "2020-03-31", "2020-03-31")),
       Threshold(719.0, TaxYearEnding2020, Monthly),
       NicCap(Amount(1774.30), Amount(202.83), Amount(244.85)),
       Amount(202.83)
@@ -180,11 +171,10 @@ class NicCalculatorSpec extends SpecBase with ScalaCheckPropertyChecks with Core
     (
       Monthly,
       Amount(496.0),
-      regularPaymentWithPartialPeriod(
-        180.0,
-        800.0,
-        620.0,
-        partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-10", "2020-03-31", "2020-03-31")),
+      regularPaymentWithPartialPeriod(180.0,
+                                      800.0,
+                                      620.0,
+                                      partialPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-10", "2020-03-31", "2020-03-31")),
       Threshold(719.0, TaxYearEnding2020, Monthly),
       NicCap(Amount(496.0), Amount(0.00), Amount(68.45)),
       Amount(0.00)

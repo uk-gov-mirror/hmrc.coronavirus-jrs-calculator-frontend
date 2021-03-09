@@ -32,8 +32,8 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  val messageKeyPrefix = "payFrequency"
-  val view: PaymentFrequencyView = injector.instanceOf[PaymentFrequencyView]
+  val messageKeyPrefix             = "payFrequency"
+  val view: PaymentFrequencyView   = injector.instanceOf[PaymentFrequencyView]
   val form: Form[PaymentFrequency] = new PaymentFrequencyFormProvider()()
 
   val expectedContent = Seq(
@@ -82,7 +82,7 @@ class PaymentFrequencyViewSpec extends ViewBehaviours {
             )
 
           val formWithData: Form[PaymentFrequency] = form.bind(Map("value" -> s"${option.value.get}"))
-          val doc = asDocument(applyView(formWithData, allRadioOptions(checked = true)))
+          val doc                                  = asDocument(applyView(formWithData, allRadioOptions(checked = true)))
 
           assertContainsRadioButton(doc, id = option.value.get, name = "value", value = option.value.get, isChecked = true)
         }

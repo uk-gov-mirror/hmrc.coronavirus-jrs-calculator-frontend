@@ -57,9 +57,9 @@ class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
         val gen = for {
           daysMinus <- Gen.choose(1, 100)
           validDates <- datesBetween(
-                         min = LocalDate.of(2020, 3, 1),
-                         max = LocalDate.of(2020, 5, 1)
-                       )
+            min = LocalDate.of(2020, 3, 1),
+            max = LocalDate.of(2020, 5, 1)
+          )
         } yield (validDates, daysMinus)
 
         forAll(gen -> "valid dates") {
@@ -83,9 +83,9 @@ class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
         val gen = for {
           daysPlus <- Gen.choose(1, 100)
           validDates <- datesBetween(
-                         min = LocalDate.of(2020, 3, 1),
-                         max = LocalDate.of(2020, 5, 1)
-                       )
+            min = LocalDate.of(2020, 3, 1),
+            max = LocalDate.of(2020, 5, 1)
+          )
         } yield (validDates, daysPlus)
 
         forAll(gen -> "valid dates") {
@@ -113,9 +113,9 @@ class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
         val gen = for {
           daysPlus <- Gen.choose(1, 100)
           validDates <- datesBetween(
-                         min = LocalDate.of(2020, 3, 1),
-                         max = LocalDate.of(2020, 5, 1)
-                       )
+            min = LocalDate.of(2020, 3, 1),
+            max = LocalDate.of(2020, 5, 1)
+          )
         } yield (validDates, daysPlus)
 
         forAll(gen -> "valid dates") {
@@ -139,9 +139,9 @@ class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
         val gen = for {
           daysPlus <- Gen.choose(1, 100)
           validDates <- datesBetween(
-                         min = LocalDate.of(2020, 3, 1),
-                         max = LocalDate.of(2020, 5, 1)
-                       )
+            min = LocalDate.of(2020, 3, 1),
+            max = LocalDate.of(2020, 5, 1)
+          )
         } yield (validDates, daysPlus)
 
         forAll(gen -> "valid dates") {
@@ -167,7 +167,7 @@ class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
 
       "return Valid if date is on or after lookback date as per paymentFrequency" in {
         val dateBefore = LocalDate.of(2020, 11, 1)
-        val pf = PaymentFrequency.Weekly
+        val pf         = PaymentFrequency.Weekly
 
         val formData = dateBefore.minusDays(7)
 
@@ -185,9 +185,9 @@ class PayDateFormProviderSpec extends DateBehaviours with GuiceOneAppPerSuite {
 
       "return InValid if date is before expected lookback date as per paymentFrequency" in {
         val dateBefore = LocalDate.of(2020, 11, 1)
-        val pf = PaymentFrequency.Weekly
+        val pf         = PaymentFrequency.Weekly
 
-        val formData = dateBefore.minusDays(8)
+        val formData            = dateBefore.minusDays(8)
         val lookBackDateAsPerPF = dateBefore.minusDays(7)
 
         val data = Map(

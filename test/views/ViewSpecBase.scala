@@ -93,22 +93,20 @@ trait ViewSpecBase extends SpecBase with BaseSelectors {
     assert(label.text().contains(expectedText), s"\n\nLabel for $forElement was not $expectedText")
 
     if (expectedHintText.isDefined) {
-      assert(
-        label.getElementsByClass("form-hint").first.text == expectedHintText.get,
-        s"\n\nLabel for $forElement did not contain hint text $expectedHintText")
+      assert(label.getElementsByClass("form-hint").first.text == expectedHintText.get,
+             s"\n\nLabel for $forElement did not contain hint text $expectedHintText")
     }
   }
 
   def assertElementHasClass(doc: Document, id: String, expectedClass: String) =
     assert(doc.getElementById(id).hasClass(expectedClass), s"\n\nElement $id does not have class $expectedClass")
 
-  def assertContainsRadioButton(
-    doc: Document,
-    id: String,
-    name: String,
-    value: String,
-    isChecked: Boolean,
-    hint: Option[Content] = None) = {
+  def assertContainsRadioButton(doc: Document,
+                                id: String,
+                                name: String,
+                                value: String,
+                                isChecked: Boolean,
+                                hint: Option[Content] = None) = {
     assertRenderedById(doc, id)
     val radio = doc.getElementById(id)
     assert(radio.attr("name") == name, s"\n\nElement $id does not have name $name")

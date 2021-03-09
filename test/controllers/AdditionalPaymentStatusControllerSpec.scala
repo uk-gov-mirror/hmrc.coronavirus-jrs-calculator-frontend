@@ -34,11 +34,11 @@ import scala.concurrent.Future
 
 class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs {
 
-  lazy val additionalPaymentStatusRoute = routes.AdditionalPaymentStatusController.onPageLoad().url
+  lazy val additionalPaymentStatusRoute     = routes.AdditionalPaymentStatusController.onPageLoad().url
   lazy val additionalPaymentStatusRoutePost = routes.AdditionalPaymentStatusController.onSubmit().url
 
   val formProvider = new AdditionalPaymentStatusFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, additionalPaymentStatusRoute).withCSRFToken
@@ -70,7 +70,7 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs {
 
     "return OK and the correct view for a GET" in {
       val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
-      val result = controller().onPageLoad()(getRequest)
+      val result      = controller().onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -79,8 +79,8 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val modifiedUserAnswers = UserAnswers("id").set(AdditionalPaymentStatusPage, validAnswer).success.value
-      val dataRequest = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
-      val result = controller(Some(modifiedUserAnswers)).onPageLoad()(getRequest)
+      val dataRequest         = DataRequest(getRequest, modifiedUserAnswers.id, modifiedUserAnswers)
+      val result              = controller(Some(modifiedUserAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -104,9 +104,9 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs {
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
-      val result = controller().onSubmit()(request)
+      val result      = controller().onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -115,7 +115,7 @@ class AdditionalPaymentStatusControllerSpec extends SpecBaseControllerSpecs {
 
     "redirect to Session Expired for a GET if no existing data is found" in {
       val request = FakeRequest(GET, additionalPaymentStatusRoute)
-      val result = controller(None).onPageLoad()(request)
+      val result  = controller(None).onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

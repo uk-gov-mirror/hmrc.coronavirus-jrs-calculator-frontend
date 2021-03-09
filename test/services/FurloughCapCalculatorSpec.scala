@@ -41,7 +41,7 @@ class FurloughCapCalculatorSpec extends SpecBase {
   }
 
   "Calculates monthly max where pay period spans two calendar months" in new FurloughCapCalculator {
-    val payPeriod = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))
+    val payPeriod    = Period(LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 15))
     val payPeriodTwo = Period(LocalDate.of(2020, 4, 20), LocalDate.of(2020, 5, 20))
 
     furloughCap(Monthly, payPeriod) mustBe PeriodSpansMonthCap(2621.15, 17, 3, 80.65, 15, 4, 83.34)

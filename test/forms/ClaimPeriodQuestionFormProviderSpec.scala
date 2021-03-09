@@ -23,8 +23,8 @@ import play.api.data.FormError
 class ClaimPeriodQuestionFormProviderSpec extends OptionFieldBehaviours {
 
   val requiredKey = "claimPeriodQuestion.error.required"
-  val invalidKey = "error.invalid"
-  val form = new ClaimPeriodQuestionFormProvider()()
+  val invalidKey  = "error.invalid"
+  val form        = new ClaimPeriodQuestionFormProvider()()
 
   ".value" must {
     val fieldName = "value"

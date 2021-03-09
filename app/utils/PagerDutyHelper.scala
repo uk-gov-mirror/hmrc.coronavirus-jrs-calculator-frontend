@@ -22,7 +22,8 @@ object PagerDutyHelper {
   val logger: Logger = Logger("PagerDutyLogger")
 
   object PagerDutyKeys extends Enumeration {
-    val CALCULATION_FAILED = Value
+    val CALCULATION_FAILED                  = Value
+    val EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED = Value
   }
 
   def alert(pagerDutyKey: PagerDutyKeys.Value, otherDetail: Option[String] = None): Unit =
