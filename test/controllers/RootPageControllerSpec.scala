@@ -17,28 +17,57 @@
 package controllers
 
 import base.SpecBaseControllerSpecs
+import config.FrontendAppConfig
+import config.featureSwitch.{FeatureSwitching, ShowNewStartPage}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.RootPageView
+import views.html.{RootPageView, StartPageView}
 
 import scala.concurrent.Future
 
-class RootPageControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class RootPageControllerSpec extends SpecBaseControllerSpecs with MockitoSugar with FeatureSwitching {
 
-  "RootPage Controller" must {
+  class Setup {
+    val view = injector.instanceOf[RootPageView]
+    val newStartView = injector.instanceOf[StartPageView]
+    val appConfig = injector.instanceOf[FrontendAppConfig]
 
-    "return OK and the correct view for a GET" in {
-      val view = app.injector.instanceOf[RootPageView]
-      val controller = new RootPageController(messagesApi, component, view)
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
-      val request = FakeRequest(GET, routes.RootPageController.onPageLoad().url)
-      val result = controller.start()(request)
+    val controller = new RootPageController(messagesApi, component, view, newStartView)(appConfig)
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages).toString
+    when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+
+    val request = FakeRequest(GET, routes.RootPageController.onPageLoad().url)
+  }
+
+  "RootPage Controller" when {
+
+    "The new start page feature switch is disabled" must {
+
+      "return OK and the old view for a GET" in new Setup {
+
+        disable(ShowNewStartPage)
+
+        val result = controller.start()(request)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(request, messages).toString
+      }
+    }
+
+    "The new start page feature switch is enabled" must {
+
+      "return OK and the new view for a GET" in new Setup {
+
+        enable(ShowNewStartPage)
+
+        val result = controller.start()(request)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual newStartView(controllers.routes.ClaimPeriodStartController.onPageLoad())(request, messages).toString
+      }
     }
   }
 }
