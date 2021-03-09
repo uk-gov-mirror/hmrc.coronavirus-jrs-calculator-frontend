@@ -136,53 +136,54 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
-      "go to RootPage after RegularLengthEmployedPage for claims starting before 01/11/2020 for Regular payMethods" in {
-
-        val userAnswers = emptyUserAnswers
-          .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-          .withClaimPeriodStart("2020-10-31")
-
-        navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.RootPageController.onPageLoad()
+      "go to PayDatesPage after RegularLengthEmployedPage for claims starting on or after 01/11/2020 for Regular payMethods" in {
+        navigator.nextPage(
+          RegularLengthEmployedPage,
+          emptyUserAnswers
+            .withPayMethod(Regular)
+            .withClaimPeriodStart("2020-11-01")
+            .withRegularLengthEmployed())
       }
 
-      "go to RootPage after RegularLengthEmployedPage for claims starting on or after 01/11/2020 for Regular payMethods" when {
+      "OnPayrollBefore30thOct2020Page" when {
 
-        "pay dates list is empty" in {
+        "claims starting before 01/11/2020 for Regular payMethods" in {
 
           val userAnswers = emptyUserAnswers
-            .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-            .withClaimPeriodStart("2020-11-01")
-
-          navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.PayDateController.onPageLoad(1)
+            .withOnPayrollBefore30thOct2020()
+            .withClaimPeriodStart("2020-10-31")
+          navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.RootPageController.onPageLoad()
         }
 
-        "RegularLengthEmployee answered Yes" in {
+        "OnPayrollBefore30thOct2020Page for claims starting on or after 01/11/2020 for Regular payMethods" when {
 
-          val userAnswers = emptyUserAnswers
-            .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-            .withClaimPeriodStart("2020-11-01")
-            .withPayDate(List("2020-11-01"))
+          "pay dates list is empty" in {
 
-          navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
-        }
+            val userAnswers = emptyUserAnswers
+              .withOnPayrollBefore30thOct2020()
+              .withClaimPeriodStart("2020-11-01")
 
-        "RegularLengthEmployee answered No" in {
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.PayDateController.onPageLoad(1)
+          }
 
-          val userAnswers = emptyUserAnswers
-            .withRegularLengthEmployed(RegularLengthEmployed.No)
-            .withClaimPeriodStart("2020-11-01")
-            .withPayDate(List("2020-11-01"))
+          "RegularLengthEmployee answered Yes" in {
 
-          navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.RegularPayAmountController.onPageLoad()
-        }
+            val userAnswers = emptyUserAnswers
+              .withOnPayrollBefore30thOct2020(true)
+              .withClaimPeriodStart("2020-11-01")
+              .withPayDate(List("2020-11-01"))
 
-        "RegularLengthEmployee NOT answered" in {
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.RegularPayAmountController.onPageLoad()
+          }
 
-          val userAnswers = emptyUserAnswers
-            .withClaimPeriodStart("2020-11-01")
-            .withPayDate(List("2020-11-01"))
+          "RegularLengthEmployee NOT answered" in {
 
-          navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.RegularLengthEmployedController.onPageLoad()
+            val userAnswers = emptyUserAnswers
+              .withClaimPeriodStart("2020-11-01")
+              .withPayDate(List("2020-11-01"))
+
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+          }
         }
       }
 
