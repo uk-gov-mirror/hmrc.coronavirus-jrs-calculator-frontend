@@ -353,17 +353,18 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def regularLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getV(RegularLengthEmployedPage), userAnswers.getV(ClaimPeriodStartPage), userAnswers.getList(PayDatePage)) match {
-      case (Valid(_), Valid(claimStartDate), dates) if claimStartDate.isEqualOrAfter(extensionStartDate) =>
-        if (dates.isEmpty) {
-          routes.PayDateController.onPageLoad(1)
-        } else {
-          routes.RegularPayAmountController.onPageLoad()
-        }
-      case (Valid(_), Valid(claimStartDate), _) =>
+      case (Valid(_), Valid(claimStartDate), _) if claimStartDate.isBefore(extensionStartDate) =>
         //if claim is not on or after 1/11/2020, then users should not have seen RegularLengthEmployedPage
         //something must have gone wrong
         routes.RootPageController.onPageLoad()
-      case (Invalid(_), _, _) => routes.RegularLengthEmployedController.onPageLoad()
+      case (Valid(_), _, Seq()) =>
+        routes.PayDateController.onPageLoad(1)
+      case (Valid(RegularLengthEmployed.Yes), _, _) =>
+        routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+      case (Valid(_), _, _) =>
+        routes.RegularPayAmountController.onPageLoad()
+      case (Invalid(_), _, _) =>
+        routes.RegularLengthEmployedController.onPageLoad()
     }
   }
 

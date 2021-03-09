@@ -136,13 +136,54 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
-      "go to PayDatesPage after RegularLengthEmployedPage for claims starting on or after 01/11/2020 for Regular payMethods" in {
-        navigator.nextPage(
-          RegularLengthEmployedPage,
-          emptyUserAnswers
-            .withPayMethod(Regular)
+      "go to RootPage after RegularLengthEmployedPage for claims starting before 01/11/2020 for Regular payMethods" in {
+
+        val userAnswers = emptyUserAnswers
+          .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+          .withClaimPeriodStart("2020-10-31")
+
+        navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.RootPageController.onPageLoad()
+      }
+
+      "go to RootPage after RegularLengthEmployedPage for claims starting on or after 01/11/2020 for Regular payMethods" when {
+
+        "pay dates list is empty" in {
+
+          val userAnswers = emptyUserAnswers
+            .withRegularLengthEmployed(RegularLengthEmployed.Yes)
             .withClaimPeriodStart("2020-11-01")
-            .withRegularLengthEmployed())
+
+          navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.PayDateController.onPageLoad(1)
+        }
+
+        "RegularLengthEmployee answered Yes" in {
+
+          val userAnswers = emptyUserAnswers
+            .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+            .withClaimPeriodStart("2020-11-01")
+            .withPayDate(List("2020-11-01"))
+
+          navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+        }
+
+        "RegularLengthEmployee answered No" in {
+
+          val userAnswers = emptyUserAnswers
+            .withRegularLengthEmployed(RegularLengthEmployed.No)
+            .withClaimPeriodStart("2020-11-01")
+            .withPayDate(List("2020-11-01"))
+
+          navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.RegularPayAmountController.onPageLoad()
+        }
+
+        "RegularLengthEmployee NOT answered" in {
+
+          val userAnswers = emptyUserAnswers
+            .withClaimPeriodStart("2020-11-01")
+            .withPayDate(List("2020-11-01"))
+
+          navigator.nextPage(RegularLengthEmployedPage, userAnswers) mustBe routes.RegularLengthEmployedController.onPageLoad()
+        }
       }
 
       "go to RegularPayAmountPage after PaymentQuestionPage" in {
