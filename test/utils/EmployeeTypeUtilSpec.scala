@@ -19,9 +19,10 @@ package utils
 import base.SpecBase
 import config.FrontendAppConfig
 import config.featureSwitch.ExtensionTwoNewStarterFlow
+import models.PayMethod.{Regular, Variable}
 import models.requests.DataRequest
 import models.{EmployeeRTISubmission, EmployeeStarted, RegularLengthEmployed, UserAnswers}
-import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, OnPayrollBefore30thOct2020Page, RegularLengthEmployedPage}
+import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, OnPayrollBefore30thOct2020Page, PayMethodPage, RegularLengthEmployedPage}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.LogCapturing
 import utils.LocalDateHelpers.feb1st2020
@@ -123,7 +124,7 @@ class EmployeeTypeUtilSpec extends SpecBase with EmployeeTypeUtil with LogCaptur
 
         "ExtensionTwoNewStarterFlow is enabled" must {
 
-          "throw ISE and pager duty" in {
+          "return None" in {
 
             enable(ExtensionTwoNewStarterFlow)
 
@@ -134,14 +135,7 @@ class EmployeeTypeUtilSpec extends SpecBase with EmployeeTypeUtil with LogCaptur
 
             implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-            withCaptureOfLoggingFrom(PagerDutyHelper.logger) { logs =>
-              intercept[InternalServerException] {
-                actualRegularPayResolverResult mustBe type2bEmployeeResult
-
-                logs.exists(_.getMessage == s"${PagerDutyHelper.PagerDutyKeys.EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED} " +
-                  s"[EmployeeTypeService][regularPayResolver] no valid answer for OnPayrollBefore30thOct2020Page") mustBe true
-              }
-            }
+            actualRegularPayResolverResult() mustBe None
           }
         }
 
@@ -264,7 +258,7 @@ class EmployeeTypeUtilSpec extends SpecBase with EmployeeTypeUtil with LogCaptur
 
         "ExtensionTwoNewStarterFlow is enabled" must {
 
-          "return ISE and throw pager duty" in {
+          "None" in {
 
             enable(ExtensionTwoNewStarterFlow)
 
@@ -278,14 +272,7 @@ class EmployeeTypeUtilSpec extends SpecBase with EmployeeTypeUtil with LogCaptur
 
             implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-            withCaptureOfLoggingFrom(PagerDutyHelper.logger) { logs =>
-              intercept[InternalServerException] {
-                actualRegularPayResolverResult mustBe type2bEmployeeResult
-
-                logs.exists(_.getMessage == s"${PagerDutyHelper.PagerDutyKeys.EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED} " +
-                  s"[EmployeeTypeService][variablePayResolver] variable pay employee type cannot be resolved") mustBe true
-              }
-            }
+            actualRegularPayResolverResult() mustBe None
           }
         }
 
@@ -305,6 +292,138 @@ class EmployeeTypeUtilSpec extends SpecBase with EmployeeTypeUtil with LogCaptur
             implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
             actualVariablePayResolverResult() mustBe type5aEmployeeResult
+          }
+        }
+      }
+    }
+  }
+
+  "employeeTypeResolver" when {
+
+    "pay type is regular" when {
+
+      "only the default result is provided" must {
+
+        "return the default result" in {
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(PayMethodPage, Regular)
+            .success
+            .value
+
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          employeeTypeResolver(defaultResult) mustBe defaultResult
+        }
+      }
+
+      "no result is provided for a specific regular type" must {
+
+        "return the default regular pay result" in {
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(PayMethodPage, Regular)
+            .success
+            .value
+
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          employeeTypeResolver(defaultResult, regularPayEmployeeResult) mustBe regularPayEmployeeResult.get
+        }
+      }
+
+      "the regularPayResolver determines it is a type 2a result" must {
+
+        "return the type 2a result" in {
+
+          enable(ExtensionTwoNewStarterFlow)
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(PayMethodPage, Regular)
+            .success
+            .value
+            .set(RegularLengthEmployedPage, RegularLengthEmployed.No)
+            .success
+            .value
+            .set(OnPayrollBefore30thOct2020Page, true)
+            .success
+            .value
+
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          actualEmployeeTypeResolverResult() mustBe type2aEmployeeResult.get
+        }
+      }
+    }
+
+    "pay type is variable" when {
+
+      "only the default result is provided" must {
+
+        "return the default result" in {
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(PayMethodPage, Variable)
+            .success
+            .value
+
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          employeeTypeResolver(defaultResult) mustBe defaultResult
+        }
+      }
+
+      "no result is provided for a specific variable type" must {
+
+        "return the default variable pay result" in {
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(PayMethodPage, Variable)
+            .success
+            .value
+
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          employeeTypeResolver(defaultResult, regularPayEmployeeResult, variablePayEmployeeResult) mustBe variablePayEmployeeResult.get
+        }
+      }
+
+      "the variablePayResolver determines it is a type 4 result" must {
+
+        "return the type 4 result" in {
+
+          enable(ExtensionTwoNewStarterFlow)
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(PayMethodPage, Variable)
+            .success
+            .value
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, feb1st2020.minusDays(1))
+            .success
+            .value
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          actualEmployeeTypeResolverResult() mustBe type4EmployeeResult.get
+        }
+      }
+    }
+
+    "no answer is given to PayMethodPage" must {
+
+      "return ise and throw pagerduty" in {
+
+        val userAnswers = UserAnswers(userAnswersId)
+
+        implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+        withCaptureOfLoggingFrom(PagerDutyHelper.logger) { logs =>
+          intercept[InternalServerException] {
+            actualEmployeeTypeResolverResult()
+            logs.exists(_.getMessage == s"${PagerDutyHelper.PagerDutyKeys.EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED} " +
+              s"[EmployeeTypeService][employeeTypeResolver] no valid answer for PayMethodPage") mustBe true
           }
         }
       }

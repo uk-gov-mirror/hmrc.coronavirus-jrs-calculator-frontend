@@ -20,9 +20,9 @@ import cats.data.Validated.Valid
 import config.FrontendAppConfig
 import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
 import models.PayMethod.{Regular, Variable}
-import models.{EmployeeRTISubmission, EmployeeStarted, RegularLengthEmployed}
 import models.requests.DataRequest
-import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, OnPayrollBefore30thOct2020Page, PayMethodPage, PreviousFurloughPeriodsPage, RegularLengthEmployedPage}
+import models.{EmployeeRTISubmission, EmployeeStarted, RegularLengthEmployed}
+import pages._
 import play.api.Logger.logger
 import uk.gov.hmrc.http.InternalServerException
 import utils.LocalDateHelpers.feb1st2020
@@ -43,16 +43,16 @@ trait EmployeeTypeUtil extends FeatureSwitching {
           case _ =>
             if (isEnabled(ExtensionTwoNewStarterFlow)) {
               val logMsg = "[EmployeeTypeService][regularPayResolver] no valid answer for OnPayrollBefore30thOct2020Page"
-              PagerDutyHelper.alert(EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED, Some(logMsg))
-              throw new InternalServerException(logMsg)
+              logger.debug(logMsg)
+              None
             } else {
               type2aEmployeeResult
             }
         }
       case _ =>
         val logMsg = "[EmployeeTypeService][regularPayResolver] no valid answer for RegularLengthEmployedPage"
-        PagerDutyHelper.alert(EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED, Some(logMsg))
-        throw new InternalServerException(logMsg)
+        logger.debug(logMsg)
+        None
     }
 
   def variablePayResolver[T](
@@ -76,15 +76,15 @@ trait EmployeeTypeUtil extends FeatureSwitching {
             if (isEnabled(ExtensionTwoNewStarterFlow)) {
               val logMsg = "[EmployeeTypeService][variablePayResolver] variable pay employee type cannot be resolved"
               logger.warn(logMsg)
-              throw new InternalServerException(logMsg)
+              None
             } else {
               type5aEmployeeResult
             }
         }
       case _ =>
         val logMsg = "[EmployeeTypeService][variablePayResolver] no valid answer for EmployeeStartedPage"
-        PagerDutyHelper.alert(EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED, Some(logMsg))
-        throw new InternalServerException(logMsg)
+        logger.debug(logMsg)
+        None
     }
 
   //noinspection ScalaStyle
