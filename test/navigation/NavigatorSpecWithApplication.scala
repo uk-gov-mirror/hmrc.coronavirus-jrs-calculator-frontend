@@ -1197,7 +1197,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual: Call = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
           val expected: Call = routes.LastPayDateController.onPageLoad()
 
           actual mustBe expected
@@ -1220,7 +1220,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual: Call = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
           val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
 
           actual mustBe expected
@@ -1242,7 +1242,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual: Call = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
           val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
 
           actual mustBe expected
@@ -1264,7 +1264,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual: Call = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
           val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
 
           actual mustBe expected
@@ -1286,7 +1286,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual: Call = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
           val expected: Call = routes.PayDateController.onPageLoad(1)
 
           actual mustBe expected
@@ -1297,7 +1297,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           enable(ExtensionTwoNewStarterFlow)
           val userAnswers: UserAnswers = {
             emptyUserAnswers
-              .set(FurloughStartDatePage, LocalDate.of(2021, 5, 7))
+              .set(FurloughStartDatePage, LocalDate.of(2021, 4, 7))
               .success
               .value
               .set(PayMethodPage, Variable)
@@ -1308,13 +1308,125 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
               .value
           }
 
-          val actual: Call = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
           val expected: Call = routes.PayDateController.onPageLoad(1)
 
           actual mustBe expected
           disable(ExtensionTwoNewStarterFlow)
         }
       }
+    }
+
+    ".routeToEmployeeFirstFurloughed" should {
+      "route to the PreviousFurloughPeriods page" when {
+        "the feature switch is disabled and the furlough start date is after 8th Nov 2020" in {
+          disable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2020, 12, 7))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          enable(ExtensionTwoNewStarterFlow)
+        }
+
+        "the feature switch is enabled - and the furlough start date is after the 8th Nov 2020 and was on payroll before 30th Oct 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2021, 5, 7))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+
+        "the feature switch is enabled - and the furlough start date is after the 8th May 2021 and was not on payroll before 30th Oct 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2021, 5, 9))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, false)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+      }
+
+      "route to the LastPayDate page" when {
+
+        "the feature switch is enabled - and it doesn't fall into the above categories" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2020, 10, 9))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PayDateController.onPageLoad(1)
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+
+        "the feature switch is disabled - and the furlough start date is before Nov 8th 2020" in {
+          disable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2020, 10, 9))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PayDateController.onPageLoad(1)
+
+          actual mustBe expected
+          enable(ExtensionTwoNewStarterFlow)
+        }
+      }
+
     }
 
   }

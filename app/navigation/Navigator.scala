@@ -303,7 +303,7 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
     }
   }
 
-  private[this] def routeToEmployeeFirstFurloughed(userAnswers: UserAnswers): Call =
+  private[navigation] def routeToEmployeeFirstFurloughed(userAnswers: UserAnswers): Call =
     (userAnswers.getV(FurloughStartDatePage), userAnswers.getV(OnPayrollBefore30thOct2020Page), isEnabled(ExtensionTwoNewStarterFlow)) match {
       case (Valid(furloughStartDate), _, false) if furloughStartDate.isAfter(nov8th2020) =>
         routes.PreviousFurloughPeriodsController.onPageLoad()
