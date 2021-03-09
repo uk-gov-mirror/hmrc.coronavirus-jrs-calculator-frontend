@@ -23,6 +23,7 @@ import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
 import controllers.actions.DataRetrievalActionImpl
 import forms.PreviousFurloughPeriodsFormProvider
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
+import models.PayMethod.Variable
 import models.requests.DataRequest
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -89,6 +90,8 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
 
   def userAnswersEmployedBefore1stFeb2019(): UserAnswers =
     UserAnswers(userAnswersId)
+      .withPayMethod(Variable)
+      .withEmployeeStartDate("2019,1,1")
       .set(EmployeeStartedPage, OnOrBefore1Feb2019)
       .success
       .value
@@ -102,6 +105,8 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
   def userAnswersEmployedAfter1stFeb2019(isOnPayrollBefore30thOct: Boolean): UserAnswers =
     UserAnswers(userAnswersId)
       .withEmployeeStartedAfter1Feb2019()
+      .withEmployeeStartDate("2020,3,1")
+      .withPayMethod(Variable)
       .set(OnPayrollBefore30thOct2020Page, isOnPayrollBefore30thOct)
       .success
       .value
@@ -109,8 +114,10 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
   "PreviousFurloughPeriods Controller" must {
 
     "return OK and the correct view for a GET - showing 1st November 2020 when Feature Switch is disabled" in {
+      val userAnswers = emptyUserAnswers
+        .withEmployeeStartedAfter1Feb2019()
       disable(ExtensionTwoNewStarterFlow)
-      val result = controller(Some(emptyUserAnswers)).onPageLoad()(getRequest)
+      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
