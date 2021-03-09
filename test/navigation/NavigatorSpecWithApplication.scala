@@ -1206,6 +1206,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "user has selected the 'Variable' pay option" must {
         "route to the employee first furloughed page when the furlough start date is after November 8th and was on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
           val userAnswers: UserAnswers = {
             emptyUserAnswers
               .set(FurloughStartDatePage, LocalDate.of(2020, 11, 10))
@@ -1223,9 +1224,11 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
 
           actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
         }
 
         "route to the employee first furloughed page when the furlough start date is after May 8th and was not on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
           val userAnswers: UserAnswers = {
             emptyUserAnswers
               .set(FurloughStartDatePage, LocalDate.of(2021, 5, 10))
@@ -1243,9 +1246,11 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
 
           actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
         }
 
         "route to the employee first furloughed page when the furlough start date is after May 8th and was on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
           val userAnswers: UserAnswers = {
             emptyUserAnswers
               .set(FurloughStartDatePage, LocalDate.of(2021, 5, 10))
@@ -1263,9 +1268,11 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
 
           actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
         }
 
         "route to the last pay date page when the furlough start date is before November 8th and was on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
           val userAnswers: UserAnswers = {
             emptyUserAnswers
               .set(FurloughStartDatePage, LocalDate.of(2020, 11, 7))
@@ -1280,12 +1287,14 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           }
 
           val actual: Call = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
-          val expected: Call = routes.LastPayDateController.onPageLoad()
+          val expected: Call = routes.PayDateController.onPageLoad(1)
 
           actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
         }
 
         "route to the last pay date page when the furlough start date is before May 8th 2021 and was not on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
           val userAnswers: UserAnswers = {
             emptyUserAnswers
               .set(FurloughStartDatePage, LocalDate.of(2021, 5, 7))
@@ -1300,9 +1309,10 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           }
 
           val actual: Call = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
-          val expected: Call = routes.LastPayDateController.onPageLoad()
+          val expected: Call = routes.PayDateController.onPageLoad(1)
 
           actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
         }
       }
     }

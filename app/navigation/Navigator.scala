@@ -284,7 +284,6 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
   //TODO Refactor cyclomatic complexity or leave as is.
   private[this] def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
     val payDateRoutes = handlePayDateRoutes(userAnswers)
-
     userAnswers.getV(ClaimPeriodStartPage) match {
       case Valid(claimPeriodStart) if claimPeriodStart.isEqualOrAfter(nov1st2020) =>
         userAnswers.getV(EmployeeStartDatePage) match {
@@ -305,9 +304,23 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
   }
 
   private[this] def routeToEmployeeFirstFurloughed(userAnswers: UserAnswers): Call =
-    userAnswers.getV(FurloughStartDatePage) match {
-      case Valid(startDate) if startDate.isAfter(nov8th2020) => routes.PreviousFurloughPeriodsController.onPageLoad()
-      case _                                                 => handlePayDateRoutes(userAnswers)
+    (
+      userAnswers.getV(PayMethodPage),
+      userAnswers.getV(FurloughStartDatePage),
+      userAnswers.getV(OnPayrollBefore30thOct2020Page),
+      isEnabled(ExtensionTwoNewStarterFlow)) match {
+      case (_, Valid(furloughStartDate), _, false) if furloughStartDate.isAfter(nov8th2020) =>
+        routes.PreviousFurloughPeriodsController.onPageLoad()
+      case (_, _, _, false) => handlePayDateRoutes(userAnswers)
+      case (Valid(Variable), Valid(furloughStartDate), Valid(isOnPayrollBefore30thOct2020Page), true)
+          if (isOnPayrollBefore30thOct2020Page && furloughStartDate.isAfter(nov8th2020)) =>
+        routes.PreviousFurloughPeriodsController.onPageLoad()
+      case (Valid(Variable), Valid(furloughStartDate), Valid(isOnPayrollBefore30thOct2020Page), true)
+          if (!isOnPayrollBefore30thOct2020Page && furloughStartDate.isAfter(may8th2021)) =>
+        routes.PreviousFurloughPeriodsController.onPageLoad()
+      case (Valid(Variable), Valid(_), Valid(_), true) => handlePayDateRoutes(userAnswers)
+      case _ =>
+        handlePayDateRoutes(userAnswers)
     }
 
   //scalastyle:on
@@ -520,16 +533,9 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
   }
 
   private[navigation] def onPayrollBefore30thOct2020Routes: UserAnswers => Call = { userAnswers =>
-    (userAnswers.getV(PayMethodPage), userAnswers.getV(FurloughStartDatePage), userAnswers.getV(OnPayrollBefore30thOct2020Page)) match {
-      case (Valid(Variable), Valid(furloughStartDate), Valid(isOnPayrollBefore30thOct2020Page))
-          if (isOnPayrollBefore30thOct2020Page && furloughStartDate.isAfter(nov8th2020)) =>
-        routeToEmployeeFirstFurloughed(userAnswers)
-      case (Valid(Variable), Valid(furloughStartDate), Valid(isOnPayrollBefore30thOct2020Page))
-          if (!isOnPayrollBefore30thOct2020Page && furloughStartDate.isAfter(may8th2021)) =>
-        routeToEmployeeFirstFurloughed(userAnswers)
-      case (Valid(Variable), Valid(_), Valid(_)) => routes.LastPayDateController.onPageLoad()
-      case _ =>
-        routes.LastPayDateController.onPageLoad()
+    userAnswers.getV(PayMethodPage) match {
+      case Valid(Variable) => routeToEmployeeFirstFurloughed(userAnswers)
+      case Valid(Regular)  => routes.LastPayDateController.onPageLoad()
     }
   }
 

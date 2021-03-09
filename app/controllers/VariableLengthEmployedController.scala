@@ -64,7 +64,6 @@ class VariableLengthEmployedController @Inject()(
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value => {
-          println(Console.BLUE + value + Console.RESET)
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
             _              <- sessionRepository.set(updatedAnswers)
