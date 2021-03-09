@@ -31,9 +31,9 @@ import scala.concurrent.Future
 class RootPageControllerSpec extends SpecBaseControllerSpecs with MockitoSugar with FeatureSwitching {
 
   class Setup {
-    val view = injector.instanceOf[RootPageView]
+    val view         = injector.instanceOf[RootPageView]
     val newStartView = injector.instanceOf[StartPageView]
-    val appConfig = injector.instanceOf[FrontendAppConfig]
+    val appConfig    = injector.instanceOf[FrontendAppConfig]
 
     val controller = new RootPageController(messagesApi, component, view, newStartView)(appConfig)
 
@@ -49,7 +49,7 @@ class RootPageControllerSpec extends SpecBaseControllerSpecs with MockitoSugar w
       "return OK and the old view for a GET" in new Setup {
 
         disable(ShowNewStartPage)
-      val result  = controller.start()(request)
+        val result = controller.start()(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages).toString

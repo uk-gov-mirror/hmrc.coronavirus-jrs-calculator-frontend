@@ -60,7 +60,7 @@ object WelshLanguageFeature extends BooleanFeatureSwitch {
 }
 
 object ShowNewStartPage extends BooleanFeatureSwitch {
-  override val name: String = s"$prefix.showNewStartPage"
+  override val name: String        = s"$prefix.showNewStartPage"
   override val displayText: String = "Enable or Disable the new Start Page content"
 }
 

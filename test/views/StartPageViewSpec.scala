@@ -27,14 +27,14 @@ class StartPageViewSpec extends ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     val whatCanYouClaim = "#whatCanYouClaim"
-    val about = "#about"
-    val whoCanUse = "#whoCanUse"
-    val whoCannotUse = "#whoCannotUse"
-    val beforeYouStart = "#beforeYouStart"
-    val julyOnwards = "#julyOnwards"
+    val about           = "#about"
+    val whoCanUse       = "#whoCanUse"
+    val whoCannotUse    = "#whoCannotUse"
+    val beforeYouStart  = "#beforeYouStart"
+    val julyOnwards     = "#julyOnwards"
   }
 
-  val messageKeyPrefix = "startPage"
+  val messageKeyPrefix    = "startPage"
   val view: StartPageView = injector.instanceOf[StartPageView]
 
   val expectedContent = Seq(
