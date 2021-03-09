@@ -53,7 +53,7 @@ class AnnualPayAmountController @Inject()(
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with SchemeConfiguration with I18nSupport {
 
-  val form: Form[AnnualPayAmount] = formProvider()
+  val form: Form[AnnualPayAmount]     = formProvider()
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   private def getRequiredData(f: (LocalDate, EmployeeStarted, LocalDate) => Future[Result])(implicit request: DataRequest[_]) =
@@ -105,8 +105,8 @@ class AnnualPayAmountController @Inject()(
     val isExt: Boolean = claimStart.isEqualOrAfter(extensionStartDate)
 
     val employeeStartDate: AnswerV[LocalDate] = userAnswers.getV(EmployeeStartDatePage)
-    val isRTISubmissionRequired = rtiSubmissionRequired(userAnswers)
-    val rtiSubmission = userAnswers.getV(EmployeeRTISubmissionPage)
+    val isRTISubmissionRequired               = rtiSubmissionRequired(userAnswers)
+    val rtiSubmission                         = userAnswers.getV(EmployeeRTISubmissionPage)
 
     if (isExt) {
 

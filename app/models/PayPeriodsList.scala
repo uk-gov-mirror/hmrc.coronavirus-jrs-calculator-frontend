@@ -26,7 +26,7 @@ sealed trait PayPeriodsList
 object PayPeriodsList extends Enumerable.Implicits {
 
   case object Yes extends WithName("yes") with PayPeriodsList
-  case object No extends WithName("no") with PayPeriodsList
+  case object No  extends WithName("no") with PayPeriodsList
 
   val values: Seq[PayPeriodsList] = Seq(
     Yes,

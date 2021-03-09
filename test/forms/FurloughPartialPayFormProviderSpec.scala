@@ -25,9 +25,9 @@ class FurloughPartialPayFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "FurloughPartialPay.error.required"
-    val invalidKey = "FurloughPartialPay.error.invalid"
+    val invalidKey  = "FurloughPartialPay.error.invalid"
 
     "accept 0 as a valid input" in {
       val value = "0.0"

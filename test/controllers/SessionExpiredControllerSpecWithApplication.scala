@@ -37,7 +37,7 @@ class SessionExpiredControllerSpecWithApplication extends SpecBaseControllerSpec
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, routes.SessionExpiredController.onPageLoad().url)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual

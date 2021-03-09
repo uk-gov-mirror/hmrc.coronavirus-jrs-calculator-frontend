@@ -82,7 +82,7 @@ class LastPayDateControllerSpec extends SpecBaseControllerSpecs {
 
     "return OK and the correct view for a GET" in {
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -91,8 +91,8 @@ class LastPayDateControllerSpec extends SpecBaseControllerSpecs {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswersUpdated = userAnswers.set(LastPayDatePage, LocalDate.now()).success.value
-      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
-      val result = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
+      val dataRequest        = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+      val result             = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -119,9 +119,9 @@ class LastPayDateControllerSpec extends SpecBaseControllerSpecs {
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual

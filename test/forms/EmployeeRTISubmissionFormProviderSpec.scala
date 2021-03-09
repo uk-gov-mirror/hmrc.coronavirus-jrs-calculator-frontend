@@ -26,7 +26,7 @@ class EmployeeRTISubmissionFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "employeeRTISubmission.error.required"
 
     behave like optionsField[EmployeeRTISubmission](

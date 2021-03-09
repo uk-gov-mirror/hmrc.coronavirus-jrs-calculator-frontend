@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class UnauthorisedControllerSpecWithApplication extends SpecBaseControllerSpecs {
 
-  val view = app.injector.instanceOf[UnauthorisedView]
+  val view       = app.injector.instanceOf[UnauthorisedView]
   val controller = new UnauthorisedController(component, view)
 
   "Unauthorised Controller" must {
@@ -35,7 +35,7 @@ class UnauthorisedControllerSpecWithApplication extends SpecBaseControllerSpecs 
     "return OK and the correct view for a GET" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request = FakeRequest(GET, routes.UnauthorisedController.onPageLoad().url)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view()(request, messages).toString

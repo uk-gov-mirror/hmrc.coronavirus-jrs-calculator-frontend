@@ -32,7 +32,7 @@ class PartTimePeriodsFormProviderSpec extends CheckboxFieldBehaviours with Gener
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "partTimePeriods.error.required"
 
     "bind valid values" in {

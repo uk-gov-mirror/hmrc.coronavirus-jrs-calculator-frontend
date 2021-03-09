@@ -57,7 +57,7 @@ trait PreviousYearPeriod {
       case Monthly => Seq(period.substractYears(period.yearsBetweenPolicyStartAndPeriodEnd + 1))
       case _ =>
         val equivalent = period.substract52Weeks(period.yearsBetweenPolicyStartAndPeriodEnd + 1)
-        val previous = equivalent.substractDays(paymentFrequencyDays(frequency))
+        val previous   = equivalent.substractDays(paymentFrequencyDays(frequency))
         Seq(previous, equivalent)
     }
 }

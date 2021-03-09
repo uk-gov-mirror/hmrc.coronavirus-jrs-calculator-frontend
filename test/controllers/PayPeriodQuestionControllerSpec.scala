@@ -41,11 +41,11 @@ import scala.concurrent.Future
 
 class PayPeriodQuestionControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-  private lazy val payPeriodQuestionRoute = routes.PayPeriodQuestionController.onPageLoad().url
+  private lazy val payPeriodQuestionRoute     = routes.PayPeriodQuestionController.onPageLoad().url
   private lazy val payPeriodQuestionRoutePost = routes.PayPeriodQuestionController.onSubmit().url
 
   val formProvider = new PayPeriodQuestionFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val baseUserAnswers = emptyUserAnswers
     .withClaimPeriodStart("2020, 3, 1")
@@ -66,16 +66,15 @@ class PayPeriodQuestionControllerSpec extends SpecBaseControllerSpecs with Mocki
 
   val view = app.injector.instanceOf[PayPeriodQuestionView]
 
-  val controller = new PayPeriodQuestionController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PayPeriodQuestionController(messagesApi,
+                                                   mockSessionRepository,
+                                                   navigator,
+                                                   identifier,
+                                                   dataRetrieval,
+                                                   dataRequired,
+                                                   formProvider,
+                                                   component,
+                                                   view)
 
   "PayPeriodQuestion Controller" must {
 
@@ -85,7 +84,7 @@ class PayPeriodQuestionControllerSpec extends SpecBaseControllerSpecs with Mocki
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(baseUserAnswers))
       val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -100,7 +99,7 @@ class PayPeriodQuestionControllerSpec extends SpecBaseControllerSpecs with Mocki
       val userAnswersUpdated = baseUserAnswers.withPayPeriodQuestion(PayPeriodQuestion.values.head)
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswersUpdated))
       val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -126,9 +125,9 @@ class PayPeriodQuestionControllerSpec extends SpecBaseControllerSpecs with Mocki
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
       val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
-      val result = controller.onSubmit()(request)
+      val result      = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -138,7 +137,7 @@ class PayPeriodQuestionControllerSpec extends SpecBaseControllerSpecs with Mocki
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, payPeriodQuestionRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

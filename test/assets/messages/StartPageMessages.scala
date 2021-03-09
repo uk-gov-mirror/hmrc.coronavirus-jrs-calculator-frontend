@@ -30,12 +30,12 @@ object StartPageMessages {
       val column1Heading = "Claim month"
       val column2Heading = "Government contribution: wages for hours not worked"
       val column3Heading = "Employer contribution: wages for hours not worked"
-      val naughtPercent = "0%"
-      val mayJunGovt = "80% up to £2,500"
-      val julGovt = "70% up to £2,187.50"
-      val augSepGovt = "60% up to £1,8750"
-      val julyEmp = "10% up to £312.50"
-      val augSepEmp = "20% up to £625"
+      val naughtPercent  = "0%"
+      val mayJunGovt     = "80% up to £2,500"
+      val julGovt        = "70% up to £2,187.50"
+      val augSepGovt     = "60% up to £1,8750"
+      val julyEmp        = "10% up to £312.50"
+      val augSepEmp      = "20% up to £625"
     }
 
     val p3 =
@@ -50,7 +50,7 @@ object StartPageMessages {
       "You will need to use the calculator for each employee on full or flexible furlough and add up the results of each claim amount for the claim period. For your records, the calculator will also break down the calculations for each pay period."
 
     object UseItFor {
-      val h3 = "You can use this calculator for:"
+      val h3      = "You can use this calculator for:"
       val bullet1 = "employees who are fully furloughed and therefore not working any hours"
       val bullet2 = "employees brought back to work for some of their normal hours from 1 July"
       val bullet3 = "most employees who are paid weekly, two weekly, four weekly or monthly in fixed pay periods"
@@ -58,7 +58,7 @@ object StartPageMessages {
     }
 
     object CannotBeUsedFor {
-      val h3 = "The calculator cannot be used for employees if they:"
+      val h3      = "The calculator cannot be used for employees if they:"
       val bullet1 = "started a notice period or went back off a notice period in the same claim period on or after 1 December 2020"
       val bullet2 = "have an annual pay period"
       val bullet3 = "have been transferred under The Transfer of Undertakings Protection of Employment (TUPE)"
@@ -74,15 +74,15 @@ object StartPageMessages {
       val bullet10 =
         "started employment with their employer during a calendar period in the 2019-20 tax year which corresponds with part or all of the period being claimed for"
       val bullet11 = "are on fixed pay and have had a change in payment frequency, for example from monthly pay to weekly pay"
-      val p1 = "In these cases, you must work out what you can claim manually using the calculation guidance or seek professional advice."
-      val p2 = "It is your responsibility to check that the amount you’re claiming for is correct."
+      val p1       = "In these cases, you must work out what you can claim manually using the calculation guidance or seek professional advice."
+      val p2       = "It is your responsibility to check that the amount you’re claiming for is correct."
     }
 
   }
 
   object BeforeYouStart {
-    val h2 = "Before you start"
-    val p1 = "You will need:"
+    val h2      = "Before you start"
+    val p1      = "You will need:"
     val bullet1 = "claim start date (for your first claim, this is when the first employee started furlough)"
     val bullet2 = "claim end date"
     val bullet3 = "pay dates (when the employee gets their pay)"
@@ -90,7 +90,7 @@ object StartPageMessages {
     val bullet5 = "regular payment amounts"
     val bullet6 = "additional payments (such as tips, discretionary bonuses, non-cash payments)"
     val bullet7 = "date furlough ended, if it is not ongoing"
-    val p2 = "From 1 July, if the employee is flexibly furloughed, you will also need:"
+    val p2      = "From 1 July, if the employee is flexibly furloughed, you will also need:"
     object JulyOnwardBullets {
       val bullet1 = "employee’s usual hours"
       val bullet2 = "actual hours worked"

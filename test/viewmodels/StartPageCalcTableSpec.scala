@@ -22,7 +22,7 @@ import views.behaviours.ViewBehaviours
 
 class StartPageCalcTableSpec extends ViewBehaviours {
 
-  lazy val calcTable = app.injector.instanceOf[StartPageCalcTable]
+  lazy val calcTable         = app.injector.instanceOf[StartPageCalcTable]
   implicit lazy val document = asDocument(calcTable.renderTable)
 
   object Selectors extends BaseSelectors

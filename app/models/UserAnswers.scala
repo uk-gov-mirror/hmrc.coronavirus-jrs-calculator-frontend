@@ -54,10 +54,9 @@ final case class UserAnswers(
   def getList[A](page: Gettable[A])(implicit rds: Reads[A]): Seq[A] =
     page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
 
-  def setListItemWithInvalidation[A](page: Settable[A] with Gettable[A], value: A, idx: Int)(
-    implicit writes: Writes[A],
-    rds: Reads[A]): Try[UserAnswers] = {
-    val list = page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
+  def setListItemWithInvalidation[A](page: Settable[A] with Gettable[A], value: A, idx: Int)(implicit writes: Writes[A],
+                                                                                             rds: Reads[A]): Try[UserAnswers] = {
+    val list        = page.path.read[Seq[A]].reads(data).getOrElse(Seq.empty)
     val amendedList = list.patch(idx - 1, Seq(value), list.size)
 
     val updatedData =

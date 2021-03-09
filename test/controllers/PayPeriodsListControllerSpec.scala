@@ -39,20 +39,19 @@ class PayPeriodsListControllerSpec extends SpecBaseControllerSpecs with MockitoS
     .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   val formProvider = new PayPeriodsListFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val view = app.injector.instanceOf[PayPeriodsListView]
 
-  val controller = new PayPeriodsListController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PayPeriodsListController(messagesApi,
+                                                mockSessionRepository,
+                                                navigator,
+                                                identifier,
+                                                dataRetrieval,
+                                                dataRequired,
+                                                formProvider,
+                                                component,
+                                                view)
 
   "PayPeriodsList Controller" must {
 
@@ -66,7 +65,7 @@ class PayPeriodsListControllerSpec extends SpecBaseControllerSpecs with MockitoS
         .withPayDate(List("2020, 6, 30", "2020, 7, 31"))
 
       val claimPeriod = period("2020, 7, 1", "2020, 7, 31")
-      val periods = Seq(fullPeriod("2020, 7, 1", "2020, 7, 31"))
+      val periods     = Seq(fullPeriod("2020, 7, 1", "2020, 7, 31"))
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request = DataRequest(getRequest, userAnswers.id, userAnswers)
@@ -88,11 +87,11 @@ class PayPeriodsListControllerSpec extends SpecBaseControllerSpecs with MockitoS
         .withPayPeriodsList()
 
       val claimPeriod = period("2020, 7, 1", "2020, 7, 31")
-      val periods = Seq(fullPeriod("2020, 7, 1", "2020, 7, 31"))
+      val periods     = Seq(fullPeriod("2020, 7, 1", "2020, 7, 31"))
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request = getRequest
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -108,7 +107,7 @@ class PayPeriodsListControllerSpec extends SpecBaseControllerSpecs with MockitoS
         .withPayDate(List("2020, 6, 30", "2020, 7, 31"))
 
       val claimPeriod = period("2020, 7, 1", "2020, 7, 31")
-      val periods = Seq(fullPeriod("2020, 7, 1", "2020, 7, 31"))
+      val periods     = Seq(fullPeriod("2020, 7, 1", "2020, 7, 31"))
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request =
         FakeRequest(POST, payPeriodsListRoute).withCSRFToken
@@ -116,7 +115,7 @@ class PayPeriodsListControllerSpec extends SpecBaseControllerSpecs with MockitoS
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
-      val result = controller.onSubmit()(request)
+      val result    = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -126,7 +125,7 @@ class PayPeriodsListControllerSpec extends SpecBaseControllerSpecs with MockitoS
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, payPeriodsListRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

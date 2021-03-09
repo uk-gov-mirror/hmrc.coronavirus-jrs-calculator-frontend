@@ -37,34 +37,31 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     val input = VariablePayData(defaultReferencePayData, Amount(10000.0), NonFurloughPay(None, None), period("2019-12-01", "2020-02-29"))
 
     val expected = Seq(
-      averagePaymentWithFullPeriod(
-        3406.59,
-        fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"),
-        10000.0,
-        period("2019-12-01", "2020-02-29"))
+      averagePaymentWithFullPeriod(3406.59,
+                                   fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"),
+                                   10000.0,
+                                   period("2019-12-01", "2020-02-29"))
     )
 
     calculateReferencePay(input) mustBe expected
   }
 
   "calculate reference pay for a given VariablePayWithCylbData" in new ReferencePayCalculator {
-    val cylbPaymentsOne = Seq(LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1000.0)))
+    val cylbPaymentsOne  = Seq(LastYearPayment(LocalDate.of(2019, 3, 31), Amount(1000.0)))
     val cylbBreakdownOne = OnePeriodCylb(Amount(1000.0), Amount(1000.0), 31, 31, LocalDate.of(2019, 3, 31))
-    val cylbPaymentsTwo = Seq(LastYearPayment(LocalDate.of(2019, 3, 31), Amount(5000.0)))
+    val cylbPaymentsTwo  = Seq(LastYearPayment(LocalDate.of(2019, 3, 31), Amount(5000.0)))
     val cylbBreakdownTwo = OnePeriodCylb(Amount(5000.0), Amount(5000.0), 31, 31, LocalDate.of(2019, 3, 31))
 
-    val inputAvgGreater = VariablePayWithCylbData(
-      defaultReferencePayData,
-      Amount(10000.0),
-      NonFurloughPay(None, None),
-      period("2019-12-01", "2020-02-29"),
-      cylbPaymentsOne)
-    val inputCylbGreater = VariablePayWithCylbData(
-      defaultReferencePayData,
-      Amount(10000.0),
-      NonFurloughPay(None, None),
-      period("2019-12-01", "2020-02-29"),
-      cylbPaymentsTwo)
+    val inputAvgGreater = VariablePayWithCylbData(defaultReferencePayData,
+                                                  Amount(10000.0),
+                                                  NonFurloughPay(None, None),
+                                                  period("2019-12-01", "2020-02-29"),
+                                                  cylbPaymentsOne)
+    val inputCylbGreater = VariablePayWithCylbData(defaultReferencePayData,
+                                                   Amount(10000.0),
+                                                   NonFurloughPay(None, None),
+                                                   period("2019-12-01", "2020-02-29"),
+                                                   cylbPaymentsTwo)
 
     val averagePayment = averagePaymentWithFullPeriod(
       3406.59,
@@ -74,19 +71,17 @@ class ReferencePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
     )
 
     val expectedAvgGreater = Seq(
-      cylbPaymentWithFullPeriod(
-        3406.59,
-        fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"),
-        averagePayment,
-        cylbBreakdownOne)
+      cylbPaymentWithFullPeriod(3406.59,
+                                fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"),
+                                averagePayment,
+                                cylbBreakdownOne)
     )
 
     val expectedCylbGreater = Seq(
-      cylbPaymentWithFullPeriod(
-        5000.0,
-        fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"),
-        averagePayment,
-        cylbBreakdownTwo)
+      cylbPaymentWithFullPeriod(5000.0,
+                                fullPeriodWithPaymentDate("2020-03-01", "2020-03-31", "2020-03-31"),
+                                averagePayment,
+                                cylbBreakdownTwo)
     )
 
     calculateReferencePay(inputAvgGreater) mustBe expectedAvgGreater

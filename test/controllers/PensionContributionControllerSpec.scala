@@ -35,22 +35,21 @@ import scala.concurrent.Future
 
 class PensionContributionControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-  val formProvider = new PensionContributionFormProvider()
-  val form = formProvider()
+  val formProvider                  = new PensionContributionFormProvider()
+  val form                          = formProvider()
   lazy val pensionContributionRoute = routes.PensionContributionController.onPageLoad().url
 
   val view = app.injector.instanceOf[PensionContributionView]
 
-  val controller = new PensionContributionController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PensionContributionController(messagesApi,
+                                                     mockSessionRepository,
+                                                     navigator,
+                                                     identifier,
+                                                     dataRetrieval,
+                                                     dataRequired,
+                                                     formProvider,
+                                                     component,
+                                                     view)
 
   "PensionContributionController" must {
 
@@ -58,7 +57,7 @@ class PensionContributionControllerSpec extends SpecBaseControllerSpecs with Moc
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
       val request = FakeRequest(GET, pensionContributionRoute).withCSRFToken
         .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-      val result = controller.onPageLoad()(request)
+      val result      = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual OK
@@ -70,7 +69,7 @@ class PensionContributionControllerSpec extends SpecBaseControllerSpecs with Moc
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val request = FakeRequest(GET, pensionContributionRoute).withCSRFToken
         .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-      val result = controller.onPageLoad()(request)
+      val result      = controller.onPageLoad()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -99,8 +98,8 @@ class PensionContributionControllerSpec extends SpecBaseControllerSpecs with Moc
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", ""))
 
-      val boundForm = form.bind(Map("value" -> ""))
-      val result = controller.onSubmit()(request)
+      val boundForm   = form.bind(Map("value" -> ""))
+      val result      = controller.onSubmit()(request)
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual BAD_REQUEST
@@ -111,7 +110,7 @@ class PensionContributionControllerSpec extends SpecBaseControllerSpecs with Moc
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, pensionContributionRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

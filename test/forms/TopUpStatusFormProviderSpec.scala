@@ -26,7 +26,7 @@ class TopUpStatusFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "topUpStatus.error.required"
 
     behave like optionsField[TopUpStatus](

@@ -40,13 +40,13 @@ import scala.concurrent.Future
 
 class PartTimeNormalHoursControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-  val formProvider = new PartTimeNormalHoursFormProvider()
+  val formProvider                      = new PartTimeNormalHoursFormProvider()
   private val fullPeriodOne: FullPeriod = fullPeriod("2020,3,1", "2020,3,31")
 
   val form = formProvider(fullPeriodOne)
 
   def partTimeNormalHoursRoute(idx: Int) = routes.PartTimeNormalHoursController.onPageLoad(idx).url
-  val partTimePeriods: List[Periods] = List(fullPeriodOne, fullPeriod("2020,4,1", "2020,4,30"))
+  val partTimePeriods: List[Periods]     = List(fullPeriodOne, fullPeriod("2020,4,1", "2020,4,30"))
 
   val userAnswers = emptyUserAnswers
     .withClaimPeriodStart("2020, 3, 1")
@@ -70,23 +70,22 @@ class PartTimeNormalHoursControllerSpec extends SpecBaseControllerSpecs with Moc
 
   val view = app.injector.instanceOf[PartTimeNormalHoursView]
 
-  val controller = new PartTimeNormalHoursController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PartTimeNormalHoursController(messagesApi,
+                                                     mockSessionRepository,
+                                                     navigator,
+                                                     identifier,
+                                                     dataRetrieval,
+                                                     dataRequired,
+                                                     formProvider,
+                                                     component,
+                                                     view)
 
   "PartTimeNormalHours Controller" must {
 
     "return OK and the correct view for a GET" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val request = getRequest("GET", 1)
-      val result = controller.onPageLoad(1)(request)
+      val request     = getRequest("GET", 1)
+      val result      = controller.onPageLoad(1)(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -94,8 +93,8 @@ class PartTimeNormalHoursControllerSpec extends SpecBaseControllerSpecs with Moc
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
-      val date = LocalDate.of(2020, 3, 31)
-      val preValue = UsualHours(date, Hours(10.5))
+      val date           = LocalDate.of(2020, 3, 31)
+      val preValue       = UsualHours(date, Hours(10.5))
       val updatedAnswers = userAnswers.set(PartTimeNormalHoursPage, preValue, Some(1)).success.value
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(updatedAnswers))
       val request = getRequest("GET", 1)
@@ -124,7 +123,7 @@ class PartTimeNormalHoursControllerSpec extends SpecBaseControllerSpecs with Moc
       "index is negative" in {
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val request = getRequest("GET", -1)
-        val result = controller.onPageLoad(-1)(request)
+        val result  = controller.onPageLoad(-1)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
@@ -133,7 +132,7 @@ class PartTimeNormalHoursControllerSpec extends SpecBaseControllerSpecs with Moc
       "index is 0" in {
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val request = getRequest("GET", 0)
-        val result = controller.onPageLoad(0)(request)
+        val result  = controller.onPageLoad(0)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
@@ -142,7 +141,7 @@ class PartTimeNormalHoursControllerSpec extends SpecBaseControllerSpecs with Moc
       "index is too high" in {
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val request = getRequest("GET", 4)
-        val result = controller.onPageLoad(4)(request)
+        val result  = controller.onPageLoad(4)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.ErrorController.somethingWentWrong().url
@@ -156,7 +155,7 @@ class PartTimeNormalHoursControllerSpec extends SpecBaseControllerSpecs with Moc
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
-      val result = controller.onSubmit(1)(request)
+      val result    = controller.onSubmit(1)(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -166,7 +165,7 @@ class PartTimeNormalHoursControllerSpec extends SpecBaseControllerSpecs with Moc
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = getRequest("GET", 1)
-      val result = controller.onPageLoad(1)(request)
+      val result  = controller.onPageLoad(1)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

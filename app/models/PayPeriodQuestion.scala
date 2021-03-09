@@ -25,7 +25,7 @@ sealed trait PayPeriodQuestion
 
 object PayPeriodQuestion extends Enumerable.Implicits {
 
-  case object UseSamePayPeriod extends WithName("useSamePayPeriod") with PayPeriodQuestion
+  case object UseSamePayPeriod      extends WithName("useSamePayPeriod") with PayPeriodQuestion
   case object UseDifferentPayPeriod extends WithName("useDifferentPayPeriod") with PayPeriodQuestion
 
   val values: Seq[PayPeriodQuestion] = Seq(

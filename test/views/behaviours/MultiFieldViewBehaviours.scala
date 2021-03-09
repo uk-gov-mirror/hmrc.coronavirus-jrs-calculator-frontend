@@ -27,7 +27,7 @@ trait MultiFieldViewBehaviours[T <: Form[_]] extends ViewBehaviours {
       "rendered" should {
 
         "contain a label for each of the inputs" in {
-          val labels = doc.select("label")
+          val labels   = doc.select("label")
           val forAttrs = labels.eachAttr("for")
 
           expectedLabels.map {

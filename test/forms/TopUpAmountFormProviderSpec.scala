@@ -21,9 +21,9 @@ import play.api.data.FormError
 
 class TopUpAmountFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val fieldName = "value"
+  val fieldName   = "value"
   val requiredKey = "topUpAmount.error.required"
-  val invalidKey = "topUpAmount.error.nonNumeric"
+  val invalidKey  = "topUpAmount.error.nonNumeric"
 
   val form = new TopUpAmountFormProvider()()
 

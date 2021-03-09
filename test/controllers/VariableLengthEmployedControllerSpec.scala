@@ -34,8 +34,8 @@ import scala.concurrent.Future
 
 class VariableLengthEmployedControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
   lazy val variableLengthEmployedRoute = routes.VariableLengthEmployedController.onPageLoad().url
-  val formProvider = new VariableLengthEmployedFormProvider()
-  val form = formProvider()
+  val formProvider                     = new VariableLengthEmployedFormProvider()
+  val form                             = formProvider()
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, variableLengthEmployedRoute).withCSRFToken
@@ -43,22 +43,21 @@ class VariableLengthEmployedControllerSpec extends SpecBaseControllerSpecs with 
 
   val view = app.injector.instanceOf[VariableLengthEmployedView]
 
-  val controller = new VariableLengthEmployedController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new VariableLengthEmployedController(messagesApi,
+                                                        mockSessionRepository,
+                                                        navigator,
+                                                        identifier,
+                                                        dataRetrieval,
+                                                        dataRequired,
+                                                        formProvider,
+                                                        component,
+                                                        view)
 
   "VariableLengthEmployed Controller" must {
     "return OK and the correct view for a GET" in {
       val userAnswers = emptyUserAnswers.withClaimPeriodStart("2020,3,1")
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual OK
@@ -70,7 +69,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseControllerSpecs with 
         .withClaimPeriodStart("2020,3,1")
         .withEmployeeStartedOnOrBefore1Feb2019()
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -103,8 +102,8 @@ class VariableLengthEmployedControllerSpec extends SpecBaseControllerSpecs with 
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
-      val result = controller.onSubmit()(request)
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
+      val result      = controller.onSubmit()(request)
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual BAD_REQUEST
@@ -115,7 +114,7 @@ class VariableLengthEmployedControllerSpec extends SpecBaseControllerSpecs with 
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, variableLengthEmployedRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

@@ -25,7 +25,7 @@ sealed trait ClaimPeriodQuestion
 
 object ClaimPeriodQuestion extends Enumerable.Implicits {
 
-  case object ClaimOnSamePeriod extends WithName("claimOnSamePeriod") with ClaimPeriodQuestion
+  case object ClaimOnSamePeriod      extends WithName("claimOnSamePeriod") with ClaimPeriodQuestion
   case object ClaimOnDifferentPeriod extends WithName("claimOnDifferentPeriod") with ClaimPeriodQuestion
 
   val values: Seq[ClaimPeriodQuestion] = Seq(

@@ -35,9 +35,9 @@ import scala.concurrent.Future
 
 class EmployeeStartDateControllerSpec extends SpecBaseControllerSpecs {
 
-  val validAnswer = LocalDate.of(2020, 2, 1)
+  val validAnswer   = LocalDate.of(2020, 2, 1)
   val furloughStart = LocalDate.of(2020, 3, 18)
-  val claimStart = LocalDate.of(2020, 3, 1)
+  val claimStart    = LocalDate.of(2020, 3, 1)
 
   val formProvider = new EmployeeStartDateFormProvider()
   private def form = formProvider(furloughStart, claimStart)
@@ -90,8 +90,8 @@ class EmployeeStartDateControllerSpec extends SpecBaseControllerSpecs {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers1 = userAnswers.set(EmployeeStartDatePage, validAnswer).success.value
-      val result = controller(Some(userAnswers1)).onPageLoad()(getRequest)
-      val dataRequest = DataRequest(getRequest, userAnswers1.id, userAnswers1)
+      val result       = controller(Some(userAnswers1)).onPageLoad()(getRequest)
+      val dataRequest  = DataRequest(getRequest, userAnswers1.id, userAnswers1)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill(validAnswer))(dataRequest, messages).toString
@@ -112,7 +112,7 @@ class EmployeeStartDateControllerSpec extends SpecBaseControllerSpecs {
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST

@@ -35,7 +35,7 @@ class DataExtractorSpec extends SpecBase with CoreTestData with CoreTestDataBuil
 
     "employee start date is present" in new DataExtractor {
       val userAnswers = dummyUserAnswers.withEmployeeStartDate("2020-12-01")
-      val expected = period("2020, 12, 1", "2020, 2, 29")
+      val expected    = period("2020, 12, 1", "2020, 2, 29")
 
       extractPriorFurloughPeriodV(userAnswers) mustBe Valid(expected)
     }

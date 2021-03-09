@@ -25,7 +25,7 @@ sealed trait NicCategory
 
 object NicCategory extends Enumerable.Implicits {
 
-  case object Payable extends WithName("payable") with NicCategory
+  case object Payable    extends WithName("payable") with NicCategory
   case object Nonpayable extends WithName("nonPayable") with NicCategory
 
   val values: Seq[NicCategory] = Seq(

@@ -61,7 +61,7 @@ class FurloughPeriodExtractorSpec
 
   "extractFurloughWithinClaim" must {
     val policyStart: LocalDate = LocalDate.of(2020, 3, 1)
-    val policyEnd: LocalDate = LocalDate.of(2020, 6, 30)
+    val policyEnd: LocalDate   = LocalDate.of(2020, 6, 30)
 
     "use claim period start if after furlough start" in new FurloughPeriodExtractor {
       val userAnswers = emptyUserAnswers

@@ -97,7 +97,7 @@ class PartTimePeriodsController @Inject()(
   private def saveAndRedirect(userAnswers: UserAnswers, selectedEndDates: List[LocalDate]): Future[Result] =
     extractFurloughWithinClaimV(userAnswers) match {
       case Valid(furlough) =>
-        val endDates = userAnswers.getList(PayDatePage)
+        val endDates        = userAnswers.getList(PayDatePage)
         val selectedPeriods = generatePeriodsWithFurlough(endDates, furlough).filter(p => selectedEndDates.contains(p.period.end)).toList
 
         for {

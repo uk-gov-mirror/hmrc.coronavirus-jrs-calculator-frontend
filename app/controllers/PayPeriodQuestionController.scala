@@ -47,7 +47,7 @@ class PayPeriodQuestionController @Inject()(
 )(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
     extends BaseController with I18nSupport with FastJourneyUserAnswersHandler {
 
-  override val logger: Logger = LoggerFactory.getLogger(getClass)
+  override val logger: Logger       = LoggerFactory.getLogger(getClass)
   val form: Form[PayPeriodQuestion] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>

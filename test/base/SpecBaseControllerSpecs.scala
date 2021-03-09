@@ -42,13 +42,13 @@ import scala.concurrent.Future
 
 trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with CoreTestData with MockitoSugar {
 
-  def injector: Injector = app.injector
-  def messagesApi = injector.instanceOf[MessagesApi]
-  val component = injector.instanceOf[MessagesControllerComponents]
-  val identifier = injector.instanceOf[FakeIdentifierAction]
-  val dataRequired = injector.instanceOf[DataRequiredActionImpl]
-  val navigator = injector.instanceOf[Navigator]
-  val dataRetrieval = new DataRetrievalActionImpl(mockSessionRepository)
+  def injector: Injector                  = app.injector
+  def messagesApi                         = injector.instanceOf[MessagesApi]
+  val component                           = injector.instanceOf[MessagesControllerComponents]
+  val identifier                          = injector.instanceOf[FakeIdentifierAction]
+  val dataRequired                        = injector.instanceOf[DataRequiredActionImpl]
+  val navigator                           = injector.instanceOf[Navigator]
+  val dataRetrieval                       = new DataRetrievalActionImpl(mockSessionRepository)
   implicit val errorHandler: ErrorHandler = injector.instanceOf[ErrorHandler]
   implicit val appConf: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 

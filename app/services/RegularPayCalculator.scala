@@ -25,7 +25,7 @@ trait RegularPayCalculator extends Calculators {
       case fp: FullPeriodWithPaymentDate => RegularPaymentWithFullPeriod(regularPay, regularPay, fp)
       case pp: PartialPeriodWithPaymentDate =>
         val furloughAmount = partialPeriodDailyCalculation(regularPay, pp.period)
-        val nonFurlough = Amount(regularPay.value - furloughAmount.value)
+        val nonFurlough    = Amount(regularPay.value - furloughAmount.value)
         RegularPaymentWithPartialPeriod(nonFurlough, regularPay, furloughAmount, pp)
     }
 

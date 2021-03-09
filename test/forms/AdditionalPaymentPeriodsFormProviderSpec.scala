@@ -32,7 +32,7 @@ class AdditionalPaymentPeriodsFormProviderSpec extends CheckboxFieldBehaviours w
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "additionalPaymentPeriods.error.required"
 
     "bind valid values" in {

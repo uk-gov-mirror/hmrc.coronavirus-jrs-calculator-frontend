@@ -21,9 +21,9 @@ import play.api.data.FormError
 
 class AdditionalPaymentAmountFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val fieldName = "value"
+  val fieldName   = "value"
   val requiredKey = "additionalPaymentAmount.error.required"
-  val invalidKey = "additionalPaymentAmount.error.nonNumeric"
+  val invalidKey  = "additionalPaymentAmount.error.nonNumeric"
 
   val form = new AdditionalPaymentAmountFormProvider()()
 

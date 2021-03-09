@@ -42,7 +42,7 @@ class PartTimePeriodsControllerSpec extends SpecBaseControllerSpecs with Mockito
   lazy val getRequest = FakeRequest(GET, partTimePeriodsRoute).withCSRFToken
     .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
   val formProvider = new PartTimePeriodsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val validAnswer: List[Periods] = List(fullPeriod("2020,3,1", "2020,3,31"), fullPeriod("2020,4,1", "2020,4,30"))
 
@@ -59,22 +59,21 @@ class PartTimePeriodsControllerSpec extends SpecBaseControllerSpecs with Mockito
 
   val view = app.injector.instanceOf[PartTimePeriodsView]
 
-  val controller = new PartTimePeriodsController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PartTimePeriodsController(messagesApi,
+                                                 mockSessionRepository,
+                                                 navigator,
+                                                 identifier,
+                                                 dataRetrieval,
+                                                 dataRequired,
+                                                 formProvider,
+                                                 component,
+                                                 view)
 
   "PartTimePeriodsController" must {
 
     "return OK and the correct view for a GET" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(baseUserAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, baseUserAnswers.id, baseUserAnswers)
 
       status(result) mustEqual OK
@@ -107,7 +106,7 @@ class PartTimePeriodsControllerSpec extends SpecBaseControllerSpecs with Mockito
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -134,9 +133,9 @@ class PartTimePeriodsControllerSpec extends SpecBaseControllerSpecs with Mockito
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value[0]", "invalid value"))
 
-      val boundForm = form.bind(Map("value[0]" -> "invalid value"))
+      val boundForm   = form.bind(Map("value[0]" -> "invalid value"))
       val dataRequest = DataRequest(request, baseUserAnswers.id, baseUserAnswers)
-      val result = controller.onSubmit()(request)
+      val result      = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual

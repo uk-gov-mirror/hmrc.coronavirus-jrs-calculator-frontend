@@ -39,7 +39,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
   lazy val partTimeQuestionRoute = routes.PartTimeQuestionController.onPageLoad().url
 
   val formProvider = new PartTimeQuestionFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, partTimeQuestionRoute).withCSRFToken
@@ -47,16 +47,15 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
 
   val view = app.injector.instanceOf[PartTimeQuestionView]
 
-  val controller = new PartTimeQuestionController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PartTimeQuestionController(messagesApi,
+                                                  mockSessionRepository,
+                                                  navigator,
+                                                  identifier,
+                                                  dataRetrieval,
+                                                  dataRequired,
+                                                  formProvider,
+                                                  component,
+                                                  view)
 
   "PartTimeQuestion Controller" must {
 
@@ -68,7 +67,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
         .withFurloughStatus(FurloughStatus.FurloughEnded)
         .withFurloughEndDate("2020,7,15")
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -128,7 +127,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       val result = controller.onSubmit()(request)
@@ -141,7 +140,7 @@ class PartTimeQuestionControllerSpec extends SpecBaseControllerSpecs with Mockit
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, partTimeQuestionRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

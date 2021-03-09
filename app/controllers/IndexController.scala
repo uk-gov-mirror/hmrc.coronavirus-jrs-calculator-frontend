@@ -26,11 +26,10 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.ExecutionContext
 
-class IndexController @Inject()(
-  identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  sessionRepository: SessionRepository,
-  val controllerComponents: MessagesControllerComponents)(implicit ec: ExecutionContext)
+class IndexController @Inject()(identify: IdentifierAction,
+                                getData: DataRetrievalAction,
+                                sessionRepository: SessionRepository,
+                                val controllerComponents: MessagesControllerComponents)(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
   def keepalive: Action[AnyContent] = (identify andThen getData).async { implicit request =>

@@ -26,7 +26,7 @@ class PensionContributionFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "pensionContribution.error.required"
 
     behave like optionsField[PensionStatus](

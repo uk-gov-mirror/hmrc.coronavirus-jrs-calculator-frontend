@@ -37,19 +37,19 @@ import scala.concurrent.Future
 
 class FurloughPeriodQuestionControllerSpec extends SpecBaseControllerSpecs {
 
-  lazy val furloughPeriodQuestionRoute = routes.FurloughPeriodQuestionController.onPageLoad().url
+  lazy val furloughPeriodQuestionRoute     = routes.FurloughPeriodQuestionController.onPageLoad().url
   lazy val furloughPeriodQuestionRoutePost = routes.FurloughPeriodQuestionController.onSubmit().url
 
   val formProvider = new FurloughPeriodQuestionFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, furloughPeriodQuestionRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val claimStart = LocalDate.of(2020, 4, 1)
-  val furloughStart = LocalDate.of(2020, 4, 1)
-  val furloughEnd = furloughStart.plusDays(20)
+  val claimStart     = LocalDate.of(2020, 4, 1)
+  val furloughStart  = LocalDate.of(2020, 4, 1)
+  val furloughEnd    = furloughStart.plusDays(20)
   val furloughStatus = FurloughOngoing
 
   val userAnswers = dummyUserAnswers
@@ -78,7 +78,7 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseControllerSpecs {
   "FurloughPeriodQuestion Controller" must {
 
     "return OK and the correct view for a GET when Furlough is Ongoing" in {
-      val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswers)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -95,7 +95,7 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseControllerSpecs {
         .withFurloughStatus(FurloughEnded)
         .withPayDate(List(furloughEnd.toString))
 
-      val result = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
+      val result      = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
 
       status(result) mustEqual OK
@@ -120,8 +120,8 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseControllerSpecs {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswersUpdated = userAnswers.set(FurloughPeriodQuestionPage, FurloughPeriodQuestion.values.head).success.value
-      val dataRequest = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
-      val result = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
+      val dataRequest        = DataRequest(getRequest, userAnswersUpdated.id, userAnswersUpdated)
+      val result             = controller(Some(userAnswersUpdated)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -145,9 +145,9 @@ class FurloughPeriodQuestionControllerSpec extends SpecBaseControllerSpecs {
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
-      val result = controller(Some(userAnswers)).onSubmit()(request)
+      val result      = controller(Some(userAnswers)).onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual

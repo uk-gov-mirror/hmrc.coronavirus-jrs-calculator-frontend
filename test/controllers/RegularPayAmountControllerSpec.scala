@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class RegularPayAmountControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
   val formProvider = new RegularPayAmountFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val regularPayAmountRoute = routes.RegularPayAmountController.onPageLoad().url
 
@@ -53,27 +53,26 @@ class RegularPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockit
     FakeRequest(GET, regularPayAmountRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val view = app.injector.instanceOf[RegularPayAmountView]
+  val view    = app.injector.instanceOf[RegularPayAmountView]
   val extView = app.injector.instanceOf[RegularPayAmountExtView]
 
-  val controller = new RegularPayAmountController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view,
-    extView)
+  val controller = new RegularPayAmountController(messagesApi,
+                                                  mockSessionRepository,
+                                                  navigator,
+                                                  identifier,
+                                                  dataRetrieval,
+                                                  dataRequired,
+                                                  formProvider,
+                                                  component,
+                                                  view,
+                                                  extView)
 
   "RegularPayAmountController" must {
 
     "return OK and the correct view for a GET" in {
       val userAnswers = emptyUserAnswers
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
@@ -100,8 +99,8 @@ class RegularPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockit
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
-      val result = controller.onSubmit()(request)
+      val boundForm   = form.bind(Map("value" -> "invalid value"))
+      val result      = controller.onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
 
       status(result) mustEqual BAD_REQUEST
@@ -112,7 +111,7 @@ class RegularPayAmountControllerSpec extends SpecBaseControllerSpecs with Mockit
     "redirect to Session Expired for a GET if no existing data is found" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request = FakeRequest(GET, regularPayAmountRoute)
-      val result = controller.onPageLoad()(request)
+      val result  = controller.onPageLoad()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url

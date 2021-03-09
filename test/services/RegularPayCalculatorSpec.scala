@@ -22,7 +22,7 @@ import models.{Amount, Hours, PhaseTwoPeriod, RegularPaymentWithPhaseTwoPeriod}
 class RegularPayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
   "assign user entered salary to each pay period" in new RegularPayCalculator {
-    val wage = Amount(1000.0)
+    val wage    = Amount(1000.0)
     val periods = defaultReferencePayData.periods
 
     val expected = Seq(
@@ -33,7 +33,7 @@ class RegularPayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
   }
 
   "apportion the user entered salary for partial periods" in new RegularPayCalculator {
-    val wage = Amount(2000.0)
+    val wage    = Amount(2000.0)
     val partial = partialPeriodWithPaymentDate("2020, 4, 1", "2020, 4, 30", "2020, 4, 1", "2020, 4, 15", "2020, 4, 30")
     val periods = defaultReferencePayData.periods :+ partial
 
@@ -84,10 +84,9 @@ class RegularPayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
   "Phase Two: assign user entered salary if partial period and part time" in new RegularPayCalculator {
     val regularPay = Amount(700.0)
     val periods = Seq(
-      PhaseTwoPeriod(
-        partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"),
-        Some(Hours(12.0)),
-        Some(Hours(30.0)))
+      PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"),
+                     Some(Hours(12.0)),
+                     Some(Hours(30.0)))
     )
     val expected = Seq(
       RegularPaymentWithPhaseTwoPeriod(Amount(700.0), Amount(300.0), periods.head)

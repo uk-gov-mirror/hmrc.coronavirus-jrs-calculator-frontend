@@ -51,7 +51,7 @@ class LastYearPayController @Inject()(
 
   implicit val logger: Logger = LoggerFactory.getLogger(getClass)
 
-  val form: Form[Amount] = formProvider()
+  val form: Form[Amount]              = formProvider()
   protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(idx: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>

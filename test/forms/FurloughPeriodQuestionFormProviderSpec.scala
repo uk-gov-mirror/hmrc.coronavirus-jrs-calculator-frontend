@@ -26,7 +26,7 @@ class FurloughPeriodQuestionFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" must {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "furloughPeriodQuestion.error.required"
 
     behave like optionsField[FurloughPeriodQuestion](

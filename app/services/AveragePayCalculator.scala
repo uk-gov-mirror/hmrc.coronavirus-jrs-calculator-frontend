@@ -22,11 +22,10 @@ import services.Calculators._
 
 trait AveragePayCalculator extends Calculators {
 
-  def calculateAveragePay(
-    nonFurloughPay: NonFurloughPay,
-    priorFurloughPeriod: Period,
-    periods: Seq[PeriodWithPaymentDate],
-    annualPay: Amount): Seq[AveragePayment] =
+  def calculateAveragePay(nonFurloughPay: NonFurloughPay,
+                          priorFurloughPeriod: Period,
+                          periods: Seq[PeriodWithPaymentDate],
+                          annualPay: Amount): Seq[AveragePayment] =
     periods map {
       case fp: FullPeriodWithPaymentDate =>
         AveragePaymentWithFullPeriod(daily(fp.period.period, priorFurloughPeriod, annualPay), fp, annualPay, priorFurloughPeriod)
@@ -35,10 +34,9 @@ trait AveragePayCalculator extends Calculators {
         AveragePaymentWithPartialPeriod(nfp, daily(pp.period.partial, priorFurloughPeriod, annualPay), pp, annualPay, priorFurloughPeriod)
     }
 
-  def phaseTwoAveragePay(
-    annualPay: Amount,
-    priorFurloughPeriod: Period,
-    periods: Seq[PhaseTwoPeriod]): Seq[AveragePaymentWithPhaseTwoPeriod] =
+  def phaseTwoAveragePay(annualPay: Amount,
+                         priorFurloughPeriod: Period,
+                         periods: Seq[PhaseTwoPeriod]): Seq[AveragePaymentWithPhaseTwoPeriod] =
     periods.map { phaseTwoPeriod =>
       val basedOnDays = phaseTwoPeriod.periodWithPaymentDate match {
         case fp: FullPeriodWithPaymentDate    => daily(fp.period.period, priorFurloughPeriod, annualPay)

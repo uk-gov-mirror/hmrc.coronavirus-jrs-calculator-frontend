@@ -26,7 +26,7 @@ sealed trait EmployeeRTISubmission
 object EmployeeRTISubmission extends Enumerable.Implicits {
 
   case object Yes extends WithName("yes") with EmployeeRTISubmission
-  case object No extends WithName("no") with EmployeeRTISubmission
+  case object No  extends WithName("no") with EmployeeRTISubmission
 
   val values: Seq[EmployeeRTISubmission] = Seq(
     Yes,

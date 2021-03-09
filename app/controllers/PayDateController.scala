@@ -79,7 +79,7 @@ class PayDateController @Inject()(
     getRequiredAnswersV(ClaimPeriodStartPage, FurloughStartDatePage) { (claimStartDate, furloughStartDate) =>
       val effectiveStartDate = utils.LocalDateHelpers.latestOf(claimStartDate, furloughStartDate)
 
-      val messageDate = messageDateFrom(effectiveStartDate, request.userAnswers, idx)
+      val messageDate         = messageDateFrom(effectiveStartDate, request.userAnswers, idx)
       val dayBeforeClaimStart = effectiveStartDate.minusDays(1)
       val latestDate = request.userAnswers
         .getList(PayDatePage)

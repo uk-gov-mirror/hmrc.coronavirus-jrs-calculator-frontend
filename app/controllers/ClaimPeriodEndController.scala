@@ -48,11 +48,11 @@ class ClaimPeriodEndController @Inject()(
     extends FrontendBaseController with I18nSupport {
 
   def form(claimStart: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(claimStart)
-  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
+  protected val userAnswerPersistence                                           = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val maybeClaimStart = request.userAnswers.getV(ClaimPeriodStartPage)
-    val maybeClaimEnd = request.userAnswers.getV(ClaimPeriodEndPage)
+    val maybeClaimEnd   = request.userAnswers.getV(ClaimPeriodEndPage)
 
     (maybeClaimStart, maybeClaimEnd) match {
       case (Valid(claimStart), Valid(end)) => Ok(view(form(claimStart).fill(end)))

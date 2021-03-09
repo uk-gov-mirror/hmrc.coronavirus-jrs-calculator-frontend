@@ -35,11 +35,11 @@ import scala.concurrent.Future
 
 class PaymentFrequencyControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-  lazy val paymentFrequencyRoute = routes.PaymentFrequencyController.onPageLoad().url
+  lazy val paymentFrequencyRoute     = routes.PaymentFrequencyController.onPageLoad().url
   lazy val paymentFrequencyRoutePost = routes.PaymentFrequencyController.onSubmit().url
 
   val formProvider = new PaymentFrequencyFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, paymentFrequencyRoute).withCSRFToken
@@ -54,22 +54,21 @@ class PaymentFrequencyControllerSpec extends SpecBaseControllerSpecs with Mockit
 
   val view = app.injector.instanceOf[PaymentFrequencyView]
 
-  val controller = new PaymentFrequencyController(
-    messagesApi,
-    mockSessionRepository,
-    navigator,
-    identifier,
-    dataRetrieval,
-    dataRequired,
-    formProvider,
-    component,
-    view)
+  val controller = new PaymentFrequencyController(messagesApi,
+                                                  mockSessionRepository,
+                                                  navigator,
+                                                  identifier,
+                                                  dataRetrieval,
+                                                  dataRequired,
+                                                  formProvider,
+                                                  component,
+                                                  view)
 
   "PaymentFrequency Controller" must {
 
     "return OK and the correct view for a GET" in {
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, emptyUserAnswers.id, emptyUserAnswers)
 
       status(result) mustEqual OK
@@ -84,15 +83,14 @@ class PaymentFrequencyControllerSpec extends SpecBaseControllerSpecs with Mockit
     "populate the view correctly on a GET when the question has previously been answered" in {
       val userAnswers = UserAnswers(userAnswersId).withPaymentFrequency(PaymentFrequency.values.head)
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-      val result = controller.onPageLoad()(getRequest)
+      val result      = controller.onPageLoad()(getRequest)
       val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(
-          form = form.fill(PaymentFrequency.values.head),
-          postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
-          radioItems = allRadioOptions())(dataRequest, messages).toString
+        view(form = form.fill(PaymentFrequency.values.head),
+             postAction = controllers.routes.PaymentFrequencyController.onSubmit(),
+             radioItems = allRadioOptions())(dataRequest, messages).toString
     }
 
     "redirect to the next page when valid data is submitted" in {
@@ -112,7 +110,7 @@ class PaymentFrequencyControllerSpec extends SpecBaseControllerSpecs with Mockit
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
-      val result = controller.onSubmit()(request)
+      val result      = controller.onSubmit()(request)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual

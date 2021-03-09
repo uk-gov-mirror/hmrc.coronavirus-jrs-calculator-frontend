@@ -29,16 +29,15 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import javax.inject.Inject
 import scala.collection.immutable.ListMap
 
-class FeatureSwitchController @Inject()(
-  controllerComponents: MessagesControllerComponents,
-  view: feature_switch,
-  implicit val appConfig: FrontendAppConfig)
+class FeatureSwitchController @Inject()(controllerComponents: MessagesControllerComponents,
+                                        view: feature_switch,
+                                        implicit val appConfig: FrontendAppConfig)
     extends FrontendController(controllerComponents) with FeatureSwitching with I18nSupport {
 
   def show: Action[AnyContent] = Action { implicit req =>
-    val bfs: Map[BooleanFeatureSwitch, Boolean] = ListMap(booleanFeatureSwitches map (switch => switch           -> isEnabled(switch)): _*)
-    val cfs: Map[CustomValueFeatureSwitch, Set[String]] = ListMap(customValueFeatureSwitch map (switch => switch -> switch.values): _*)
-    val configurableConstants: Map[String, String] = ListMap(configurableConstantsKeys map (constant => constant -> getValue(constant)): _*)
+    val bfs: Map[BooleanFeatureSwitch, Boolean]         = ListMap(booleanFeatureSwitches map (switch => switch        -> isEnabled(switch)): _*)
+    val cfs: Map[CustomValueFeatureSwitch, Set[String]] = ListMap(customValueFeatureSwitch map (switch => switch      -> switch.values): _*)
+    val configurableConstants: Map[String, String]      = ListMap(configurableConstantsKeys map (constant => constant -> getValue(constant)): _*)
     Ok(view(bfs, cfs, configurableConstants, FeatureSwitchController.submit()))
   }
 
@@ -54,7 +53,7 @@ class FeatureSwitchController @Inject()(
 
     Logger.debug(s"[FeatureSwitchController][submit] frontendFeatureSwitches > $frontendFeatureSwitches")
 
-    val bfs: Map[BooleanFeatureSwitch, Boolean] = frontendFeatureSwitches.collect { case (a: BooleanFeatureSwitch, b)        => a -> b.toBoolean }
+    val bfs: Map[BooleanFeatureSwitch, Boolean]    = frontendFeatureSwitches.collect { case (a: BooleanFeatureSwitch, b)     => a -> b.toBoolean }
     val cfs: Map[CustomValueFeatureSwitch, String] = frontendFeatureSwitches.collect { case (a: CustomValueFeatureSwitch, b) => a -> b }
     val configurableConstants: Map[String, String] =
       submittedData

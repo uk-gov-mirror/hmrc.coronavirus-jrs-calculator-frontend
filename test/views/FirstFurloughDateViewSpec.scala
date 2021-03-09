@@ -31,9 +31,9 @@ class FirstFurloughDateViewSpec extends QuestionViewBehaviours[LocalDate] {
 
   object Selectors extends BaseSelectors
 
-  val messageKeyPrefix = "firstFurloughStartDate"
+  val messageKeyPrefix            = "firstFurloughStartDate"
   val view: FirstFurloughDateView = injector.instanceOf[FirstFurloughDateView]
-  val form = new FirstFurloughDateFormProvider()(LocalDate.now())
+  val form                        = new FirstFurloughDateFormProvider()(LocalDate.now())
 
   val expectedContent = Seq(
     Selectors.h1   -> FirstFurloughDateMessages.heading,
