@@ -18,6 +18,7 @@ package controllers
 
 import assets.BaseITConstants
 import assets.PageTitles.onPayrollBefore30thOct2020
+import models.PaymentFrequency.Monthly
 import models.UserAnswers
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -67,20 +68,100 @@ class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with
 
   "POST /october-payroll" when {
 
-    "enters a valid answer" when {
+    "claim period start is before 2020-11-01" when {
 
-      "redirect to <next page> page" in {
+      "redirect to RootPageController page" in {
 
-        val res = postRequest(
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020, 10, 31")
+          .withClaimPeriodEnd("2020, 11, 30")
+          .withFurloughStartDate("2020, 11, 1")
+          .withFurloughStatus()
+          .withPaymentFrequency(Monthly)
+          .withNiCategory()
+          .withPensionStatus()
+          .withPayMethod()
+          .withLastPayDate("2020, 10, 31")
+          .withPayDate(List("2020, 10, 31"))
+
+        setAnswers(userAnswers)
+
+        val res = postRequestHeader(
           path = "/october-payroll",
           formJson = Json.obj("value" -> "true")
-        )()
+        )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
 
 
         whenReady(res) { result =>
           result should have(
             httpStatus(SEE_OTHER),
-            redirectLocation(controllers.routes.SessionExpiredController.onPageLoad().url) //TODO: Update when routing is added!
+            redirectLocation(controllers.routes.RootPageController.onPageLoad().url)
+          )
+        }
+      }
+    }
+
+    "pay dates is empty" when {
+
+      "redirect to PayDate page" in {
+
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020, 11, 1")
+          .withClaimPeriodEnd("2020, 11, 30")
+          .withFurloughStartDate("2020, 11, 1")
+          .withFurloughStatus()
+          .withPaymentFrequency(Monthly)
+          .withNiCategory()
+          .withPensionStatus()
+          .withPayMethod()
+          .withLastPayDate("2020, 10, 31")
+          .withPayDate(List())
+
+        setAnswers(userAnswers)
+
+        val res = postRequestHeader(
+          path = "/october-payroll",
+          formJson = Json.obj("value" -> "true")
+        )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+
+        whenReady(res) { result =>
+          result should have(
+            httpStatus(SEE_OTHER),
+            redirectLocation(controllers.routes.PayDateController.onPageLoad(1).url)
+          )
+        }
+      }
+    }
+
+    "pay dates is not an empty list" when {
+
+      "redirect to RegularPayAmount page" in {
+
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .withClaimPeriodStart("2020, 11, 1")
+          .withClaimPeriodEnd("2020, 11, 30")
+          .withFurloughStartDate("2020, 11, 1")
+          .withFurloughStatus()
+          .withPaymentFrequency(Monthly)
+          .withNiCategory()
+          .withPensionStatus()
+          .withPayMethod()
+          .withLastPayDate("2020, 10, 31")
+          .withPayDate(List("2020, 10, 31"))
+
+        setAnswers(userAnswers)
+
+        val res = postRequestHeader(
+          path = "/october-payroll",
+          formJson = Json.obj("value" -> "true")
+        )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+
+        whenReady(res) { result =>
+          result should have(
+            httpStatus(SEE_OTHER),
+            redirectLocation(controllers.routes.RegularPayAmountController.onPageLoad().url)
           )
         }
       }
