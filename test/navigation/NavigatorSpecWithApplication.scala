@@ -143,7 +143,7 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
           "claim period start date is on or after 01/11/2020" should {
 
-            "go to OnPayrollBefore30thOct2020Page" in {
+            "go to OnPayrollBefore30thOct2020Page if PayDate is defined & answer == No" in {
 
               enable(ExtensionTwoNewStarterFlow)
 
@@ -187,7 +187,21 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
           "claim period start date is on or after 01/11/2020" should {
 
-            "go to PayDatePage" in {
+            "go to RegularPayAmountPage if PayDate is defined & answer == Yes" in {
+
+              disable(ExtensionTwoNewStarterFlow)
+
+              navigator.nextPage(
+                RegularLengthEmployedPage,
+                emptyUserAnswers
+                  .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+                  .withPayMethod(Regular)
+                  .withClaimPeriodStart("2020-11-01")
+                  .withPayDate(List("2020-10-31"))
+              ) mustBe routes.RegularPayAmountController.onPageLoad()
+            }
+
+            "go to RegularPayAmountPage if PayDate is defined & answer == No" in {
 
               disable(ExtensionTwoNewStarterFlow)
 
@@ -195,18 +209,6 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
                 RegularLengthEmployedPage,
                 emptyUserAnswers
                   .withRegularLengthEmployed(RegularLengthEmployed.No)
-                  .withPayMethod(Regular)
-                  .withClaimPeriodStart("2020-11-01")
-              ) mustBe routes.PayDateController.onPageLoad(1)
-            }
-
-            "go to RegularPayAmountPage if PayDate is defined" in {
-
-              disable(ExtensionTwoNewStarterFlow)
-              navigator.nextPage(
-                RegularLengthEmployedPage,
-                emptyUserAnswers
-                  .withRegularLengthEmployed(RegularLengthEmployed.Yes)
                   .withPayMethod(Regular)
                   .withClaimPeriodStart("2020-11-01")
                   .withPayDate(List("2020-10-31"))

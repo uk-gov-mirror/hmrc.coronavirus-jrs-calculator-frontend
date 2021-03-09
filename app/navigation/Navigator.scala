@@ -360,7 +360,8 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
 
   private[this] def regularLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getV(RegularLengthEmployedPage), userAnswers.getV(ClaimPeriodStartPage), userAnswers.getList(PayDatePage)) match {
-      case (Valid(RegularLengthEmployed.No), _, _) if isEnabled(ExtensionTwoNewStarterFlow) =>
+      case (Valid(RegularLengthEmployed.No), Valid(claimStartDate), _)
+          if claimStartDate.isEqualOrAfter(extensionStartDate) && isEnabled(ExtensionTwoNewStarterFlow) =>
         routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
       case (Valid(_), Valid(claimStartDate), dates) if claimStartDate.isEqualOrAfter(extensionStartDate) && dates.isEmpty =>
         routes.PayDateController.onPageLoad(1)
