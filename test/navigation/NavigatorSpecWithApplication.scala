@@ -19,6 +19,7 @@ package navigation
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
+import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
 import controllers.routes
 import models.ClaimPeriodQuestion._
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
@@ -28,7 +29,7 @@ import models._
 import pages._
 import play.api.mvc.Call
 
-class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTestDataBuilder {
+class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTestDataBuilder with FeatureSwitching {
 
   override val navigator = new Navigator()
 
@@ -136,36 +137,110 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         navigator.nextPage(PayMethodPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
 
-      "go to PayDatePage for claims starting on or after 01/11/2020 for Regular payMethods if PayDate is not defined" in {
-        navigator.nextPage(
-          RegularLengthEmployedPage,
-          emptyUserAnswers
-            .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-            .withPayMethod(Regular)
-            .withClaimPeriodStart("2020-11-01")
-        ) mustBe routes.PayDateController.onPageLoad(1)
-      }
+      "RegularLengthEmployedPage" when {
 
-      "go to RegularPayAmountPage for claims starting on or after 01/11/2020 for Regular payMethods if PayDate is defined" in {
-        navigator.nextPage(
-          RegularLengthEmployedPage,
-          emptyUserAnswers
-            .withRegularLengthEmployed(RegularLengthEmployed.Yes)
-            .withPayMethod(Regular)
-            .withClaimPeriodStart("2020-11-01")
-            .withPayDate(List("2020-10-31"))
-        ) mustBe routes.RegularPayAmountController.onPageLoad()
-      }
+        "the ExtensionTwoNewStarterFlow switch is enable" when {
 
-      "go to OnPayrollBefore30thOct2020Page after RegularLengthEmployedPage for claims starting on or after 01/11/2020 for Regular payMethods" in {
+          "claim period start date is on or after 01/11/2020" should {
 
-        navigator.nextPage(
-          RegularLengthEmployedPage,
-          emptyUserAnswers
-            .withRegularLengthEmployed(RegularLengthEmployed.No)
-            .withPayMethod(Regular)
-            .withClaimPeriodStart("2020-11-01")
-        ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+            "go to OnPayrollBefore30thOct2020Page" in {
+
+              enable(ExtensionTwoNewStarterFlow)
+
+              navigator.nextPage(
+                RegularLengthEmployedPage,
+                emptyUserAnswers
+                  .withRegularLengthEmployed(RegularLengthEmployed.No)
+                  .withPayMethod(Regular)
+                  .withClaimPeriodStart("2020-11-01")
+              ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+            }
+
+            "go to RegularPayAmountPage if PayDate is defined" in {
+
+              disable(ExtensionTwoNewStarterFlow)
+              navigator.nextPage(
+                RegularLengthEmployedPage,
+                emptyUserAnswers
+                  .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+                  .withPayMethod(Regular)
+                  .withClaimPeriodStart("2020-11-01")
+                  .withPayDate(List("2020-10-31"))
+              ) mustBe routes.RegularPayAmountController.onPageLoad()
+            }
+
+            "go to PayDatePage if PayDate is not defined" in {
+
+              enable(ExtensionTwoNewStarterFlow)
+              navigator.nextPage(
+                RegularLengthEmployedPage,
+                emptyUserAnswers
+                  .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+                  .withPayMethod(Regular)
+                  .withClaimPeriodStart("2020-11-01")
+              ) mustBe routes.PayDateController.onPageLoad(1)
+            }
+          }
+        }
+
+        "the ExtensionTwoNewStarterFlow switch is disabled" when {
+
+          "claim period start date is on or after 01/11/2020" should {
+
+            "go to PayDatePage" in {
+
+              disable(ExtensionTwoNewStarterFlow)
+
+              navigator.nextPage(
+                RegularLengthEmployedPage,
+                emptyUserAnswers
+                  .withRegularLengthEmployed(RegularLengthEmployed.No)
+                  .withPayMethod(Regular)
+                  .withClaimPeriodStart("2020-11-01")
+              ) mustBe routes.PayDateController.onPageLoad(1)
+            }
+
+            "go to RegularPayAmountPage if PayDate is defined" in {
+
+              disable(ExtensionTwoNewStarterFlow)
+              navigator.nextPage(
+                RegularLengthEmployedPage,
+                emptyUserAnswers
+                  .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+                  .withPayMethod(Regular)
+                  .withClaimPeriodStart("2020-11-01")
+                  .withPayDate(List("2020-10-31"))
+              ) mustBe routes.RegularPayAmountController.onPageLoad()
+            }
+
+            "go to PayDatePage if PayDate is not defined" in {
+
+              disable(ExtensionTwoNewStarterFlow)
+              navigator.nextPage(
+                RegularLengthEmployedPage,
+                emptyUserAnswers
+                  .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+                  .withPayMethod(Regular)
+                  .withClaimPeriodStart("2020-11-01")
+              ) mustBe routes.PayDateController.onPageLoad(1)
+            }
+          }
+        }
+
+        "the date is before 01/11/2020" should {
+
+          "go to the Root Page" in {
+
+            navigator.nextPage(
+              RegularLengthEmployedPage,
+              emptyUserAnswers
+                .withRegularLengthEmployed(RegularLengthEmployed.No)
+                .withPayMethod(Regular)
+                .withClaimPeriodStart("2020-10-01")
+            ) mustBe routes.RootPageController.onPageLoad()
+
+          }
+        }
       }
 
       "go to RegularPayAmountPage after PaymentQuestionPage" in {
@@ -542,105 +617,151 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         ) mustBe routes.EmployeeStartDateController.onPageLoad()
       }
 
-      "go to correct page after EmployeeStartDatePage" in {
+      "EmployeeStartDatePage" when {
 
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          emptyUserAnswers
-            .withEmployeeStartDate("2020,3,20")
-            .withClaimPeriodStart("2020,11,1")
-        ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+        "the ExtensionTwoNewStarterFlow switch is enabled" should {
 
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          emptyUserAnswers
-            .withEmployeeStartDate("2020,4,1")
-            .withFurloughStartDate("2020,11,10")
-            .withClaimPeriodStart("2020,11,1")
-        ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+          "and the employee start date is after the 19th March 2020, return the OnPayrollBefore30thOct2020 page" in {
 
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          emptyUserAnswers
-            .withEmployeeStartDate("2020,2,2")
-            .withClaimPeriodStart("2020,11,1")
-        ) mustBe routes.EmployeeRTISubmissionController.onPageLoad()
+            enable(ExtensionTwoNewStarterFlow)
 
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          emptyUserAnswers
-            .withEmployeeStartDate("2020,2,3")
-            .withClaimPeriodStart("2020,11,1")
-        ) mustBe routes.EmployeeRTISubmissionController.onPageLoad()
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withEmployeeStartDate("2020,3,20")
+                .withClaimPeriodStart("2020,11,1")
+            ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+          }
 
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          emptyUserAnswers
-            .withEmployeeStartDate("2019,8,1")
-            .withPayDate(List("2020,4,1", "2020,4,30"))
-            .withClaimPeriodStart("2020,11,1")
-        ) mustBe routes.LastPayDateController.onPageLoad()
+        }
 
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          emptyUserAnswers
-            .withPayMethod()
-            .withClaimPeriodStart("2020,11,1")
-            .withEmployeeStartDate("2019, 8, 1")
-            .withPayDate(List("2020,3,1", "2020,3,7"))
-            .withLastPayDate("2020,3,7")
-        ) mustBe routes.RegularPayAmountController.onPageLoad()
+        "the ExtensionTwoNewStarterFlow switch is disabled" should {
 
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          emptyUserAnswers
-            .withPayMethod(PayMethod.Variable)
-            .withPaymentFrequency(PaymentFrequency.Weekly)
-            .withEmployeeStartedAfter1Feb2019()
-            .withClaimPeriodStart("2020,11,1")
-            .withClaimPeriodEnd("2020,11,8")
-            .withFurloughStartDate("2020,11,1")
-            .withEmployeeStartDate("2019, 8, 1")
-            .withPayDate(List("2020,10,31", "2020,11,7"))
-            .withLastPayDate("2020,11,7")
-        ) mustBe routes.LastYearPayController.onPageLoad(1)
+          "go to correct next page" in {
 
-        navigator.nextPage(
-          EmployeeStartDatePage,
-          emptyUserAnswers
-            .withPayMethod(PayMethod.Variable)
-            .withPaymentFrequency(PaymentFrequency.Weekly)
-            .withEmployeeStartedAfter1Feb2019()
-            .withClaimPeriodStart("2020,11,1")
-            .withClaimPeriodEnd("2020,11,8")
-            .withEmployeeStartDate("2019, 3, 30")
-            .withPayDate(List("2020,10,31", "2020,11,7"))
-            .withLastPayDate("2020,11,7")
-            .withFurloughStartDate("2020,11,1")
-        ) mustBe routes.LastYearPayController.onPageLoad(1)
+            disable(ExtensionTwoNewStarterFlow)
+
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withEmployeeStartDate("2020,3,20")
+                .withClaimPeriodStart("2020,11,1")
+            ) mustBe routes.PayDateController.onPageLoad(1)
+
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withEmployeeStartDate("2020,4,1")
+                .withFurloughStartDate("2020,11,10")
+                .withClaimPeriodStart("2020,11,1")
+            ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
+
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withEmployeeStartDate("2020,2,2")
+                .withClaimPeriodStart("2020,11,1")
+            ) mustBe routes.EmployeeRTISubmissionController.onPageLoad()
+
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withEmployeeStartDate("2020,2,3")
+                .withClaimPeriodStart("2020,11,1")
+            ) mustBe routes.EmployeeRTISubmissionController.onPageLoad()
+
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withEmployeeStartDate("2019,8,1")
+                .withPayDate(List("2020,4,1", "2020,4,30"))
+                .withClaimPeriodStart("2020,11,1")
+            ) mustBe routes.LastPayDateController.onPageLoad()
+
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withPayMethod()
+                .withClaimPeriodStart("2020,11,1")
+                .withEmployeeStartDate("2019, 8, 1")
+                .withPayDate(List("2020,3,1", "2020,3,7"))
+                .withLastPayDate("2020,3,7")
+            ) mustBe routes.RegularPayAmountController.onPageLoad()
+
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withPayMethod(PayMethod.Variable)
+                .withPaymentFrequency(PaymentFrequency.Weekly)
+                .withEmployeeStartedAfter1Feb2019()
+                .withClaimPeriodStart("2020,11,1")
+                .withClaimPeriodEnd("2020,11,8")
+                .withFurloughStartDate("2020,11,1")
+                .withEmployeeStartDate("2019, 8, 1")
+                .withPayDate(List("2020,10,31", "2020,11,7"))
+                .withLastPayDate("2020,11,7")
+            ) mustBe routes.LastYearPayController.onPageLoad(1)
+
+            navigator.nextPage(
+              EmployeeStartDatePage,
+              emptyUserAnswers
+                .withPayMethod(PayMethod.Variable)
+                .withPaymentFrequency(PaymentFrequency.Weekly)
+                .withEmployeeStartedAfter1Feb2019()
+                .withClaimPeriodStart("2020,11,1")
+                .withClaimPeriodEnd("2020,11,8")
+                .withEmployeeStartDate("2019, 3, 30")
+                .withPayDate(List("2020,10,31", "2020,11,7"))
+                .withLastPayDate("2020,11,7")
+                .withFurloughStartDate("2020,11,1")
+            ) mustBe routes.LastYearPayController.onPageLoad(1)
+          }
+        }
       }
 
-      "go to correct page after EmployeeSRTISubmissionPage" in {
+      "EmployeeSRTISubmissionPage" when {
 
-        navigator.nextPage(
-          EmployeeRTISubmissionPage,
-          emptyUserAnswers.withRtiSubmission(EmployeeRTISubmission.Yes)
-        ) mustBe routes.PayDateController.onPageLoad(1)
+        "the ExtensionTwoNewStarterFlow switch is enabled" should {
 
-        navigator.nextPage(
-          EmployeeRTISubmissionPage,
-          emptyUserAnswers
-            .withFurloughStartDate("2020,11,15")
-            .withRtiSubmission(EmployeeRTISubmission.Yes)
-        ) mustBe routes.PayDateController.onPageLoad(1)
+          "return the OnPayrollBefore30thOct2020 page" in {
 
-        navigator.nextPage(
-          EmployeeRTISubmissionPage,
-          emptyUserAnswers
-            .withFurloughStartDate("2020,11,15")
-            .withRtiSubmission(EmployeeRTISubmission.No)
-        ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+            enable(ExtensionTwoNewStarterFlow)
 
+            navigator.nextPage(
+              EmployeeRTISubmissionPage,
+              emptyUserAnswers
+                .withFurloughStartDate("2020,11,15")
+                .withRtiSubmission(EmployeeRTISubmission.No)
+            ) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+          }
+        }
+
+        "the ExtensionTwoNewStarterFlow switch is disabled" should {
+
+          "return the correct page" in {
+
+            disable(ExtensionTwoNewStarterFlow)
+
+            navigator.nextPage(
+              EmployeeRTISubmissionPage,
+              emptyUserAnswers.withRtiSubmission(EmployeeRTISubmission.Yes)
+            ) mustBe routes.PayDateController.onPageLoad(1)
+
+            navigator.nextPage(
+              EmployeeRTISubmissionPage,
+              emptyUserAnswers
+                .withFurloughStartDate("2020,11,15")
+                .withRtiSubmission(EmployeeRTISubmission.Yes)
+            ) mustBe routes.PayDateController.onPageLoad(1)
+
+            navigator.nextPage(
+              EmployeeRTISubmissionPage,
+              emptyUserAnswers
+                .withFurloughStartDate("2020,11,15")
+                .withRtiSubmission(EmployeeRTISubmission.No)
+            ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
+          }
+        }
       }
 
       "go to PartialPayBeforeFurloughPage loop after variable gross pay page" in {
