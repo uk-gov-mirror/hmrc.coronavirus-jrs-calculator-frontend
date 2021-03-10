@@ -68,8 +68,6 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       furloughInLastTaxYearRoutes
     case RegularLengthEmployedPage =>
       regularLengthEmployedRoutes
-    case OnPayrollBefore30thOct2020Page =>
-      onPayrollBefore30thOct2020Routes
     case PayPeriodsListPage =>
       payPeriodsListRoute
     case RegularPayAmountPage =>
@@ -387,7 +385,7 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
     }
   }
 
-  private[this] def onPayrollBefore30thOct2020Routes: UserAnswers => Call = { userAnswers =>
+  private[this] def regularPayOnPayrollBefore30thOct2020Routes(userAnswers: UserAnswers): Call =
     (userAnswers.getV(OnPayrollBefore30thOct2020Page), userAnswers.getV(ClaimPeriodStartPage), userAnswers.getList(PayDatePage)) match {
       case (Valid(_), Valid(claimStartDate), _) if claimStartDate.isBefore(extensionStartDate) =>
         //if claim is not on or after 1/11/2020, then users should not have seen RegularLengthEmployedPage
@@ -400,7 +398,6 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       case (Invalid(_), _, _) =>
         routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
     }
-  }
 
   private[this] def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getV(EmployeeStartedPage), userAnswers.getList(PayDatePage)) match {
@@ -530,7 +527,12 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
   private[navigation] def onPayrollBefore30thOct2020Routes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(PayMethodPage) match {
       case Valid(Variable) => routeToEmployeeFirstFurloughed(userAnswers)
-      case Valid(Regular)  => routes.LastPayDateController.onPageLoad()
+      case Valid(Regular)  => regularPayOnPayrollBefore30thOct2020Routes(userAnswers)
+      case Invalid(_) => {
+        logger.info(
+          "[Navigator][onPayrollBefore30thOct2020Routes] - User tried to route from 'onPayrollBefore30thOct2020' page but did not have a valid answer for 'PayMethodPage'")
+        routes.RootPageController.onPageLoad()
+      }
     }
   }
 
