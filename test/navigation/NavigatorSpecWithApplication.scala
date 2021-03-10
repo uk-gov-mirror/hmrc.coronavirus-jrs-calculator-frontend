@@ -242,6 +242,48 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         }
       }
 
+      "OnPayrollBefore30thOct2020Page" when {
+
+        "claims starting before 01/11/2020 for Regular payMethods" in {
+
+          val userAnswers = emptyUserAnswers
+            .withOnPayrollBefore30thOct2020()
+            .withClaimPeriodStart("2020-10-31")
+          navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.RootPageController.onPageLoad()
+        }
+
+        "OnPayrollBefore30thOct2020Page for claims starting on or after 01/11/2020 for Regular payMethods" when {
+
+          "pay dates list is empty" in {
+
+            val userAnswers = emptyUserAnswers
+              .withOnPayrollBefore30thOct2020()
+              .withClaimPeriodStart("2020-11-01")
+
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.PayDateController.onPageLoad(1)
+          }
+
+          "RegularLengthEmployee answered Yes" in {
+
+            val userAnswers = emptyUserAnswers
+              .withOnPayrollBefore30thOct2020(true)
+              .withClaimPeriodStart("2020-11-01")
+              .withPayDate(List("2020-11-01"))
+
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.RegularPayAmountController.onPageLoad()
+          }
+
+          "RegularLengthEmployee NOT answered" in {
+
+            val userAnswers = emptyUserAnswers
+              .withClaimPeriodStart("2020-11-01")
+              .withPayDate(List("2020-11-01"))
+
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+          }
+        }
+      }
+
       "go to RegularPayAmountPage after PaymentQuestionPage" in {
         navigator.nextPage(PaymentFrequencyPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }

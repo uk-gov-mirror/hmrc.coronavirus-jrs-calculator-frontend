@@ -68,6 +68,8 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       furloughInLastTaxYearRoutes
     case RegularLengthEmployedPage =>
       regularLengthEmployedRoutes
+    case OnPayrollBefore30thOct2020Page =>
+      onPayrollBefore30thOct2020Routes
     case PayPeriodsListPage =>
       payPeriodsListRoute
     case RegularPayAmountPage =>
@@ -372,6 +374,21 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
         //something must have gone wrong
         routes.RootPageController.onPageLoad()
       case _ => routes.RegularLengthEmployedController.onPageLoad()
+    }
+  }
+
+  private[this] def onPayrollBefore30thOct2020Routes: UserAnswers => Call = { userAnswers =>
+    (userAnswers.getV(OnPayrollBefore30thOct2020Page), userAnswers.getV(ClaimPeriodStartPage), userAnswers.getList(PayDatePage)) match {
+      case (Valid(_), Valid(claimStartDate), _) if claimStartDate.isBefore(extensionStartDate) =>
+        //if claim is not on or after 1/11/2020, then users should not have seen RegularLengthEmployedPage
+        //something must have gone wrong
+        routes.RootPageController.onPageLoad()
+      case (Valid(_), _, Seq()) =>
+        routes.PayDateController.onPageLoad(1)
+      case (Valid(_), _, _) =>
+        routes.RegularPayAmountController.onPageLoad()
+      case (Invalid(_), _, _) =>
+        routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
     }
   }
 
