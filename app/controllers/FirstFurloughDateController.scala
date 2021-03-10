@@ -19,19 +19,21 @@ package controllers
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.FirstFurloughDateFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
-import models.UserAnswers
+import models.requests.DataRequest
 import navigation.Navigator
 import pages.{FirstFurloughDatePage, FurloughStartDatePage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import play.api.data.Form
 import services.UserAnswerPersistence
+import utils.EmployeeTypeUtil
+import utils.LocalDateHelpers.{mar1st2020, may1st2021, nov1st2020}
 import views.html.FirstFurloughDateView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,11 +48,12 @@ class FirstFurloughDateController @Inject()(
   formProvider: FirstFurloughDateFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: FirstFurloughDateView
-)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
-    extends BaseController with I18nSupport {
+)(implicit ec: ExecutionContext, appConfig: FrontendAppConfig, errorHandler: ErrorHandler)
+    extends BaseController with I18nSupport with EmployeeTypeUtil {
 
   def form(startDate: LocalDate)(implicit messages: Messages): Form[LocalDate] = formProvider(startDate)
-  protected val userAnswerPersistence                                          = new UserAnswerPersistence(sessionRepository.set)
+
+  protected val userAnswerPersistence = new UserAnswerPersistence(sessionRepository.set)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     getRequiredAnswerV(FurloughStartDatePage) { startDate =>
@@ -58,7 +61,7 @@ class FirstFurloughDateController @Inject()(
         case Invalid(_)   => form(startDate)
         case Valid(value) => form(startDate).fill(value)
       }
-      Future(Ok(view(preparedForm)))
+      Future(renderPage(Ok, preparedForm))
     }
   }
 
@@ -67,7 +70,7 @@ class FirstFurloughDateController @Inject()(
       form(startDate)
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+          formWithErrors => Future.successful(renderPage(BadRequest, formWithErrors)),
           value =>
             userAnswerPersistence
               .persistAnswer(request.userAnswers, FirstFurloughDatePage, value, None)
@@ -77,5 +80,13 @@ class FirstFurloughDateController @Inject()(
         )
     }
   }
+
+  private def renderPage(successfulCallStatus: Status, preparedForm: Form[LocalDate])(implicit request: DataRequest[_]): Result =
+    variablePayResolver[LocalDate](
+      type3EmployeeResult = Some(mar1st2020),
+      type5aEmployeeResult = Some(nov1st2020),
+      type5bEmployeeResult = Some(may1st2021)).fold(InternalServerError(errorHandler.internalServerErrorTemplate(request)))(
+      dateToShow => successfulCallStatus(view(preparedForm, dateToShow))
+    )
 
 }

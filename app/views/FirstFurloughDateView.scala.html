@@ -15,6 +15,7 @@
  *@
 
 @import pages.FirstFurloughDatePage
+@import java.time.LocalDate
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -26,7 +27,7 @@
     h1: components.h1
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], contextDate: LocalDate)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(title(form, "firstFurloughStartDate.title")), timeout = false, thisPage = FirstFurloughDatePage ) {
 
@@ -36,7 +37,7 @@
 
       @h1(messages("firstFurloughStartDate.heading"))
 
-       @p(Html(messages("firstFurloughStartDate.p1")))
+       @p(Html(messages("firstFurloughStartDate.p1", contextDate)))
 
        @p(Html(messages("firstFurloughStartDate.p2")))
 
