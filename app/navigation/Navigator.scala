@@ -19,10 +19,12 @@ package navigation
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
-import config.SchemeConfiguration
+import config.featureSwitch.ExtensionTwoNewStarterFlow
+import config.featureSwitch.FeatureSwitching.isEnabled
+import config.{FrontendAppConfig, SchemeConfiguration}
 import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import models.EmployeeRTISubmission.{No, Yes}
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
@@ -38,7 +40,8 @@ import utils.LocalDateHelpers
 import utils.LocalDateHelpers._
 
 @Singleton
-class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor with SchemeConfiguration {
+class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
+    extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor with SchemeConfiguration {
 
   implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
 
@@ -114,6 +117,8 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       firstFurloughedRoutes
     case FirstFurloughDatePage =>
       handlePayDateRoutes
+    case OnPayrollBefore30thOct2020Page =>
+      onPayrollBefore30thOct2020Routes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -277,11 +282,12 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
   //TODO Refactor cyclomatic complexity or leave as is.
   private[this] def employeeStartDateRoutes: UserAnswers => Call = { userAnswers =>
     val payDateRoutes = handlePayDateRoutes(userAnswers)
-
     userAnswers.getV(ClaimPeriodStartPage) match {
       case Valid(claimPeriodStart) if claimPeriodStart.isEqualOrAfter(nov1st2020) =>
         userAnswers.getV(EmployeeStartDatePage) match {
-          case Valid(empStartDate) if empStartDate.isBefore(feb1st2019)                                            => payDateRoutes
+          case Valid(empStartDate) if empStartDate.isBefore(feb1st2019) => payDateRoutes
+          case Valid(empStartDate) if empStartDate.isAfter(mar19th2020) && isEnabled(ExtensionTwoNewStarterFlow) =>
+            routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
           case Valid(empStartDate) if empStartDate.isAfter(mar19th2020)                                            => routeToEmployeeFirstFurloughed(userAnswers)
           case Valid(empStartDate) if empStartDate.isEqualOrAfter(feb1st2019) && empStartDate.isBefore(feb1st2020) => payDateRoutes
           case Valid(empStartDate) if empStartDate.isEqualOrAfter(feb1st2020) && empStartDate.isEqualOrBefore(mar19th2020) =>
@@ -295,10 +301,19 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
     }
   }
 
-  private[this] def routeToEmployeeFirstFurloughed(userAnswers: UserAnswers): Call =
-    userAnswers.getV(FurloughStartDatePage) match {
-      case Valid(startDate) if startDate.isAfter(nov8th2020) => routes.PreviousFurloughPeriodsController.onPageLoad()
-      case _                                                 => handlePayDateRoutes(userAnswers)
+  private[navigation] def routeToEmployeeFirstFurloughed(userAnswers: UserAnswers): Call =
+    (userAnswers.getV(FurloughStartDatePage), userAnswers.getV(OnPayrollBefore30thOct2020Page), isEnabled(ExtensionTwoNewStarterFlow)) match {
+      case (Valid(furloughStartDate), _, false) if furloughStartDate.isAfter(nov8th2020) =>
+        routes.PreviousFurloughPeriodsController.onPageLoad()
+      case (_, _, false) => handlePayDateRoutes(userAnswers)
+      case (Valid(furloughStartDate), Valid(isOnPayrollBefore30thOct2020Page), true)
+          if (isOnPayrollBefore30thOct2020Page && furloughStartDate.isAfter(nov8th2020)) =>
+        routes.PreviousFurloughPeriodsController.onPageLoad()
+      case (Valid(furloughStartDate), Valid(isOnPayrollBefore30thOct2020Page), true)
+          if (!isOnPayrollBefore30thOct2020Page && furloughStartDate.isAfter(may8th2021)) =>
+        routes.PreviousFurloughPeriodsController.onPageLoad()
+      case _ =>
+        handlePayDateRoutes(userAnswers)
     }
 
   //scalastyle:on
@@ -313,8 +328,10 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def employeeRTISubmissionRoutes: UserAnswers => Call = { userAnswers =>
     userAnswers.getV(EmployeeRTISubmissionPage) match {
-      case Valid(Yes) => handlePayDateRoutes(userAnswers)
-      case Valid(No)  => routeToEmployeeFirstFurloughed(userAnswers)
+      case Valid(Yes)                                         => handlePayDateRoutes(userAnswers)
+      case Valid(No) if isEnabled(ExtensionTwoNewStarterFlow) => routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+      case Valid(No)                                          => routeToEmployeeFirstFurloughed(userAnswers)
+
     }
   }
 
@@ -353,19 +370,34 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
 
   private[this] def regularLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getV(RegularLengthEmployedPage), userAnswers.getV(ClaimPeriodStartPage), userAnswers.getList(PayDatePage)) match {
-      case (Valid(_), Valid(claimStartDate), dates) if claimStartDate.isEqualOrAfter(extensionStartDate) =>
-        if (dates.isEmpty) {
-          routes.PayDateController.onPageLoad(1)
-        } else {
-          routes.RegularPayAmountController.onPageLoad()
-        }
+      case (Valid(RegularLengthEmployed.No), Valid(claimStartDate), _)
+          if claimStartDate.isEqualOrAfter(extensionStartDate) && isEnabled(ExtensionTwoNewStarterFlow) =>
+        routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+      case (Valid(_), Valid(claimStartDate), dates) if claimStartDate.isEqualOrAfter(extensionStartDate) && dates.isEmpty =>
+        routes.PayDateController.onPageLoad(1)
+      case (Valid(_), Valid(claimStartDate), _) if claimStartDate.isEqualOrAfter(extensionStartDate) =>
+        routes.RegularPayAmountController.onPageLoad()
       case (Valid(_), Valid(claimStartDate), _) =>
         //if claim is not on or after 1/11/2020, then users should not have seen RegularLengthEmployedPage
         //something must have gone wrong
         routes.RootPageController.onPageLoad()
-      case (Invalid(_), _, _) => routes.RegularLengthEmployedController.onPageLoad()
+      case _ => routes.RegularLengthEmployedController.onPageLoad()
     }
   }
+
+  private[this] def regularPayOnPayrollBefore30thOct2020Routes(userAnswers: UserAnswers): Call =
+    (userAnswers.getV(OnPayrollBefore30thOct2020Page), userAnswers.getV(ClaimPeriodStartPage), userAnswers.getList(PayDatePage)) match {
+      case (Valid(_), Valid(claimStartDate), _) if claimStartDate.isBefore(extensionStartDate) =>
+        //if claim is not on or after 1/11/2020, then users should not have seen RegularLengthEmployedPage
+        //something must have gone wrong
+        routes.RootPageController.onPageLoad()
+      case (Valid(_), _, Seq()) =>
+        routes.PayDateController.onPageLoad(1)
+      case (Valid(_), _, _) =>
+        routes.RegularPayAmountController.onPageLoad()
+      case (Invalid(_), _, _) =>
+        routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+    }
 
   private[this] def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
     (userAnswers.getV(EmployeeStartedPage), userAnswers.getList(PayDatePage)) match {
@@ -489,6 +521,18 @@ class Navigator extends LastYearPayControllerRequestHandler with LocalDateHelper
       routes.LastPayDateController.onPageLoad()
     } else {
       lastPayDateRoutes(userAnswers)
+    }
+  }
+
+  private[navigation] def onPayrollBefore30thOct2020Routes: UserAnswers => Call = { userAnswers =>
+    userAnswers.getV(PayMethodPage) match {
+      case Valid(Variable) => routeToEmployeeFirstFurloughed(userAnswers)
+      case Valid(Regular)  => regularPayOnPayrollBefore30thOct2020Routes(userAnswers)
+      case Invalid(_) => {
+        logger.info(
+          "[Navigator][onPayrollBefore30thOct2020Routes] - User tried to route from 'onPayrollBefore30thOct2020' page but did not have a valid answer for 'PayMethodPage'")
+        routes.RootPageController.onPageLoad()
+      }
     }
   }
 

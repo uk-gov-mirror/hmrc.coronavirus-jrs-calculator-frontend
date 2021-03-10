@@ -74,6 +74,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withRegularLengthEmployed(res: RegularLengthEmployed = RegularLengthEmployed.Yes): UserAnswers =
       userAnswers.setValue(RegularLengthEmployedPage, res)
 
+    def withOnPayrollBefore30thOct2020(res: Boolean = true): UserAnswers =
+      userAnswers.setValue(OnPayrollBefore30thOct2020Page, res)
+
     def withPaymentFrequency(frequency: PaymentFrequency): UserAnswers =
       userAnswers.setValue(PaymentFrequencyPage, frequency)
 

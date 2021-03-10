@@ -63,11 +63,12 @@ class VariableLengthEmployedController @Inject()(
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
+        value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(EmployeeStartedPage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(EmployeeStartedPage, updatedAnswers))
+        }
       )
   }
 }
