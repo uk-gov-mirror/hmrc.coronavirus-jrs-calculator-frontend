@@ -113,7 +113,7 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
   }
 
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    may
+    november ++ december ++ january ++ february ++ march ++ april ++ may
   }
 
   "GET /confirmation" should {
