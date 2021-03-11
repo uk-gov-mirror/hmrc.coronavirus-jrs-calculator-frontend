@@ -795,7 +795,7 @@ phaseTwoReferencePayBreakdown.average.days.l2 = Divide by {0} (days employed).
 phaseTwoReferencePayBreakdown.average.days.l3 = Multiply by {0} (furlough days).
 
 phaseTwoReferencePayBreakdown.average.extension.days.l1 = Start with £{0} (total pay from 6 April 2020 to the day before furlough started on or after 1 November 2020).
-phaseTwoReferencePayBreakdown.average.extension.days.l2 = Divide by {0} (days employed since the start of the tax year).
+phaseTwoReferencePayBreakdown.average.extension.days.l2 = Divide by {0} (days employed since 6 April 2020).
 phaseTwoReferencePayBreakdown.average.extension.days.l3 = Multiply by {0} (furlough days in pay period).
 
 phaseTwoReferencePayBreakdown.average.daysResult = Total pay based on furlough days = £{0}
