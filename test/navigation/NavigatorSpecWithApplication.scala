@@ -242,48 +242,6 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
         }
       }
 
-      "OnPayrollBefore30thOct2020Page" when {
-
-        "claims starting before 01/11/2020 for Regular payMethods" in {
-
-          val userAnswers = emptyUserAnswers
-            .withOnPayrollBefore30thOct2020()
-            .withClaimPeriodStart("2020-10-31")
-          navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.RootPageController.onPageLoad()
-        }
-
-        "OnPayrollBefore30thOct2020Page for claims starting on or after 01/11/2020 for Regular payMethods" when {
-
-          "pay dates list is empty" in {
-
-            val userAnswers = emptyUserAnswers
-              .withOnPayrollBefore30thOct2020()
-              .withClaimPeriodStart("2020-11-01")
-
-            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.PayDateController.onPageLoad(1)
-          }
-
-          "RegularLengthEmployee answered Yes" in {
-
-            val userAnswers = emptyUserAnswers
-              .withOnPayrollBefore30thOct2020(true)
-              .withClaimPeriodStart("2020-11-01")
-              .withPayDate(List("2020-11-01"))
-
-            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.RegularPayAmountController.onPageLoad()
-          }
-
-          "RegularLengthEmployee NOT answered" in {
-
-            val userAnswers = emptyUserAnswers
-              .withClaimPeriodStart("2020-11-01")
-              .withPayDate(List("2020-11-01"))
-
-            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
-          }
-        }
-      }
-
       "go to RegularPayAmountPage after PaymentQuestionPage" in {
         navigator.nextPage(PaymentFrequencyPage, emptyUserAnswers) mustBe routes.PayMethodController.onPageLoad()
       }
@@ -1180,6 +1138,297 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           val expected: Call = routes.RegularPayAmountController.onPageLoad()
 
           actual mustBe expected
+        }
+      }
+    }
+
+    ".onPayrollBefore30thOct2020Routes()" when {
+      "user has selected the 'Regular' pay option" must {
+        "claims starting before 01/11/2020 for Regular payMethods" in {
+
+          val userAnswers = emptyUserAnswers
+            .withPayMethod(Regular)
+            .withOnPayrollBefore30thOct2020()
+            .withClaimPeriodStart("2020-10-31")
+          navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.RootPageController.onPageLoad()
+        }
+
+        "OnPayrollBefore30thOct2020Page for claims starting on or after 01/11/2020 for Regular payMethods" when {
+
+          "pay dates list is empty" in {
+
+            val userAnswers = emptyUserAnswers
+              .withPayMethod(Regular)
+              .withOnPayrollBefore30thOct2020()
+              .withClaimPeriodStart("2020-11-01")
+
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.PayDateController.onPageLoad(1)
+          }
+
+          "RegularLengthEmployee answered Yes" in {
+
+            val userAnswers = emptyUserAnswers
+              .withPayMethod(Regular)
+              .withOnPayrollBefore30thOct2020(true)
+              .withClaimPeriodStart("2020-11-01")
+              .withPayDate(List("2020-11-01"))
+
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.RegularPayAmountController.onPageLoad()
+          }
+
+          "RegularLengthEmployee NOT answered" in {
+
+            val userAnswers = emptyUserAnswers
+              .withPayMethod(Regular)
+              .withClaimPeriodStart("2020-11-01")
+              .withPayDate(List("2020-11-01"))
+
+            navigator.nextPage(OnPayrollBefore30thOct2020Page, userAnswers) mustBe routes.OnPayrollBefore30thOct2020Controller.onPageLoad()
+          }
+        }
+      }
+
+      "user has selected the 'Variable' pay option" must {
+        "route to the employee first furloughed page when the furlough start date is after November 8th and was on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2020, 11, 10))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+
+        "route to the employee first furloughed page when the furlough start date is after May 8th and was not on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2021, 5, 10))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, false)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+
+        "route to the employee first furloughed page when the furlough start date is after May 8th and was on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2021, 5, 10))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+
+        "route to the last pay date page when the furlough start date is before November 8th and was on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2020, 11, 7))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val expected: Call = routes.PayDateController.onPageLoad(1)
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+
+        "route to the last pay date page when the furlough start date is before May 8th 2021 and was not on payroll before 30th October 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2021, 4, 7))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, false)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val expected: Call = routes.PayDateController.onPageLoad(1)
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+      }
+
+      "user has not selected a PayMethod option" must {
+        "route the user back to the starting page" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2021, 4, 7))
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, false)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.onPayrollBefore30thOct2020Routes(userAnswers)
+          val expected: Call = routes.RootPageController.onPageLoad()
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+      }
+    }
+
+    ".routeToEmployeeFirstFurloughed" should {
+      "route to the PreviousFurloughPeriods page" when {
+        "the feature switch is disabled and the furlough start date is after 8th Nov 2020" in {
+          disable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2020, 12, 7))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          enable(ExtensionTwoNewStarterFlow)
+        }
+
+        "the feature switch is enabled - and the furlough start date is after the 8th Nov 2020 and was on payroll before 30th Oct 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2021, 5, 7))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+
+        "the feature switch is enabled - and the furlough start date is after the 8th May 2021 and was not on payroll before 30th Oct 2020" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2021, 5, 9))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, false)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PreviousFurloughPeriodsController.onPageLoad()
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+      }
+
+      "route to the LastPayDate page" when {
+
+        "the feature switch is enabled - and it doesn't fall into the above categories" in {
+          enable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2020, 10, 9))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PayDateController.onPageLoad(1)
+
+          actual mustBe expected
+          disable(ExtensionTwoNewStarterFlow)
+        }
+
+        "the feature switch is disabled - and the furlough start date is before Nov 8th 2020" in {
+          disable(ExtensionTwoNewStarterFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(FurloughStartDatePage, LocalDate.of(2020, 10, 9))
+              .success
+              .value
+              .set(PayMethodPage, Variable)
+              .success
+              .value
+          }
+
+          val actual: Call   = navigator.routeToEmployeeFirstFurloughed(userAnswers)
+          val expected: Call = routes.PayDateController.onPageLoad(1)
+
+          actual mustBe expected
+          enable(ExtensionTwoNewStarterFlow)
         }
       }
     }

@@ -18,6 +18,7 @@ package controllers
 
 import base.SpecBaseControllerSpecs
 import forms.OnPayrollBefore30thOct2020FormProvider
+import models.PayMethod.Variable
 import models.UserAnswers
 import models.requests.DataRequest
 import org.mockito.Matchers.any
@@ -57,6 +58,9 @@ class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs w
     controllerComponents = component,
     view = view
   )
+
+  val userAnswers = emptyUserAnswers
+    .withPayMethod(Variable)
 
   "OnPayrollBefore30thOct2020 Controller" must {
 
@@ -106,8 +110,6 @@ class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs w
 
       "redirect to the next page when valid data is submitted" in {
 
-        val userAnswers = emptyUserAnswers
-
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
         val request = {
@@ -124,8 +126,6 @@ class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs w
       }
 
       "return a Bad Request and errors when invalid data is submitted" in {
-
-        val userAnswers = emptyUserAnswers
 
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
 
