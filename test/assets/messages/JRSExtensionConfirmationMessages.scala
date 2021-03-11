@@ -162,7 +162,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
       messageNumber match {
         case 1 =>
           s"Start with ${currencyFormatter(pay)} (total pay from 6 April 2020 to the day before furlough started on or after 1 November 2020)."
-        case 2 => s"Divide by $daysInPeriod (days employed since the start of the tax year)."
+        case 2 => s"Divide by $daysInPeriod (days employed since 6 April 2020)."
         case 3 => s"Multiply by $numberOfDaysFurloughed (furlough days in pay period)."
         case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
       }
