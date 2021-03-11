@@ -945,7 +945,7 @@ startPage.whatCanYouClaim.table.column3Heading = Employer contribution: wages fo
 startPage.whatCanYouClaim.table.naughtPercent = 0%
 startPage.whatCanYouClaim.table.mayJunGovt = 80% up to £2,500
 startPage.whatCanYouClaim.table.julGovt = 70% up to £2,187.50
-startPage.whatCanYouClaim.table.augSepGovt = 60% up to £1,8750
+startPage.whatCanYouClaim.table.augSepGovt = 60% up to £1,875
 startPage.whatCanYouClaim.table.julyEmp = 10% up to £312.50
 startPage.whatCanYouClaim.table.augSepEmp = 20% up to £625
 

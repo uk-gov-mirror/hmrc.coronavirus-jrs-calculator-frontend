@@ -33,7 +33,7 @@ object StartPageMessages {
       val naughtPercent  = "0%"
       val mayJunGovt     = "80% up to £2,500"
       val julGovt        = "70% up to £2,187.50"
-      val augSepGovt     = "60% up to £1,8750"
+      val augSepGovt     = "60% up to £1,875"
       val julyEmp        = "10% up to £312.50"
       val augSepEmp      = "20% up to £625"
     }
