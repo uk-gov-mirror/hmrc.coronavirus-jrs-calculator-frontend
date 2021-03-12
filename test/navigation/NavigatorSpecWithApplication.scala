@@ -596,22 +596,50 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
           .onPageLoad()
       }
 
-      "go to last-year-pay after EmployedStartedPage in a fast journey if pay dates are persisted and OnOrBefore1Feb2019" in {
-        navigator.nextPage(
-          EmployeeStartedPage,
-          emptyUserAnswers
-            .withEmployeeStartedOnOrBefore1Feb2019()
-            .withPayDate(List("2019-12-12"))
-        ) mustBe routes.LastYearPayController.onPageLoad(1)
-      }
+      "EmployedStartedPage" when {
 
-      "go to EmployedStartedPage after `variable-length-employed` in a fast journey if pay dates are persisted and After1Feb2019" in {
-        navigator.nextPage(
-          EmployeeStartedPage,
-          emptyUserAnswers
-            .withEmployeeStartedAfter1Feb2019()
-            .withPayDate(List("2019-12-12"))
-        ) mustBe routes.EmployeeStartDateController.onPageLoad()
+        "employee was working OnOrBefore1Feb2019 and the furlough start date is after 1st March 2020" should {
+
+          "redirect to the PreviousFurloughPeriods page" in {
+            navigator.nextPage(
+              EmployeeStartedPage,
+              emptyUserAnswers
+                .withFurloughStartDate("2020, 3, 20")
+                .withEmployeeStartedOnOrBefore1Feb2019()
+                .withPayDate(List("2019-12-12"))
+            ) mustBe routes.PreviousFurloughPeriodsController.onPageLoad()
+          }
+        }
+
+        "employee was working OnOrBefore1Feb2019 and the PayDatePage is not empty" should {
+
+          "redirect to the LastYearPay page" in {
+            navigator.nextPage(
+              EmployeeStartedPage,
+              emptyUserAnswers
+                .withEmployeeStartedOnOrBefore1Feb2019()
+                .withPayDate(List("2019-12-12"))
+            ) mustBe routes.LastYearPayController.onPageLoad(1)
+          }
+        }
+
+        "go to last-year-pay after EmployedStartedPage in a fast journey if pay dates are persisted and OnOrBefore1Feb2019" in {
+          navigator.nextPage(
+            EmployeeStartedPage,
+            emptyUserAnswers
+              .withEmployeeStartedOnOrBefore1Feb2019()
+              .withPayDate(List("2019-12-12"))
+          ) mustBe routes.LastYearPayController.onPageLoad(1)
+        }
+
+        "go to EmployedStartedPage when employee was working After1Feb2019 and PayDatePage answerers are defined" in {
+          navigator.nextPage(
+            EmployeeStartedPage,
+            emptyUserAnswers
+              .withEmployeeStartedAfter1Feb2019()
+              .withPayDate(List("2019-12-12"))
+          ) mustBe routes.EmployeeStartDateController.onPageLoad()
+        }
       }
 
       "EmployeeStartDatePage" when {
