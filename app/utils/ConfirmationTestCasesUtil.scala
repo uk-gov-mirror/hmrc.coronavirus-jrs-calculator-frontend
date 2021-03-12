@@ -20,10 +20,7 @@ import cats.data.Validated.Valid
 import models.EmployeeStarted.OnOrBefore1Feb2019
 import models.UserAnswers
 import models.UserAnswers.AnswerV
-import pages.{AnnualPayAmountPage, ClaimPeriodEndPage, ClaimPeriodStartPage, EmployeeRTISubmissionPage,
-  EmployeeStartDatePage, EmployeeStartedPage, FurloughEndDatePage, FurloughInLastTaxYearPage, FurloughStartDatePage,
-  FurloughStatusPage, LastYearPayPage, PartTimeHoursPage, PartTimeNormalHoursPage, PartTimePeriodsPage, PartTimeQuestionPage,
-  PayDatePage, PayMethodPage, PayPeriodsListPage, PaymentFrequencyPage, RegularLengthEmployedPage, RegularPayAmountPage}
+import pages._
 import viewmodels.{ConfirmationDataResult, ConfirmationDataResultWithoutNicAndPension}
 
 import scala.util.matching.Regex
@@ -51,6 +48,9 @@ object ConfirmationTestCasesUtil {
                  |      ${userAnswers.getO(FurloughStatusPage).flatMap(x => x.toOption.map(x => ".withFurloughStatus(FurloughStatus." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(EmployeeStartDatePage).flatMap(x => x.toOption.map(x => ".withEmployeeStartDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(FurloughEndDatePage).flatMap(x => x.toOption.map(x => ".withFurloughEndDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(OnPayrollBefore30thOct2020Page).flatMap(x => x.toOption.map(x => ".withOnPayrollBefore30thOct2020(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(PreviousFurloughPeriodsPage).flatMap(x => x.toOption.map(x => ".withPreviousFurloughedPeriodsAnswer(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(FirstFurloughDatePage).flatMap(x => x.toOption.map(x => ".withFirstFurloughDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(PaymentFrequencyPage).flatMap(x => x.toOption.map(x => ".withPaymentFrequency(" + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(EmployeeStartedPage).map { x =>
       if (x.exists(_.equals(OnOrBefore1Feb2019))) {
