@@ -29,18 +29,18 @@
         whatToInclude: helper.whatToInclude
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], postAction: Call, cutOffDate: String)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "regularPayAmount.title")), thisPage = RegularPayAmountPage) {
+@govukLayout(pageTitle = Some(title(form, "regularPayAmount.title", titleMessageArgs = Seq(cutOffDate))), thisPage = RegularPayAmountPage) {
 
 
-    @formHelper(action = RegularPayAmountController.onSubmit(), args = 'novalidate -> "novalidate") {
+    @formHelper(action = postAction, args = 'novalidate -> "novalidate") {
 
         @errorSummary(form.errors)
 
-        @h1(messages("regularPayAmount.heading"))
+        @h1(messages("regularPayAmount.heading", cutOffDate))
 
-        @p(Html(messages("regularPayAmount.p1")))
+        @p(Html(messages("regularPayAmount.p1", cutOffDate)))
 
         @p(Html(messages("regularPayAmount.p2")))
 
@@ -52,7 +52,7 @@
             form,
             id = "value",
             name = "value",
-            label = messages("regularPayAmount.heading"),
+            label = messages("regularPayAmount.label", cutOffDate),
             labelClasses = Some("govuk-visually-hidden"),
             isPageHeading = false,
             classes = Some("govuk-input--width-10")

@@ -17,34 +17,39 @@
 package controllers
 
 import cats.data.Validated.{Invalid, Valid}
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.RegularPayAmountFormProvider
-import models.{RegularLengthEmployed, Salary}
+import handlers.ErrorHandler
+import models.Salary
+import models.requests.DataRequest
 import navigation.Navigator
-import org.slf4j
-import org.slf4j.LoggerFactory
-import pages.{RegularLengthEmployedPage, RegularPayAmountPage}
+import pages.RegularPayAmountPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.{RegularPayAmountExtView, RegularPayAmountView}
+import utils.EmployeeTypeUtil
+import utils.LocalDateHelpers.{mar19th2020, mar2nd2021, oct30th2020}
+import views.ViewUtils.dateToString
+import views.html.RegularPayAmountView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RegularPayAmountController @Inject()(override val messagesApi: MessagesApi,
-                                           sessionRepository: SessionRepository,
-                                           navigator: Navigator,
-                                           identify: IdentifierAction,
-                                           getData: DataRetrievalAction,
-                                           requireData: DataRequiredAction,
-                                           formProvider: RegularPayAmountFormProvider,
-                                           val controllerComponents: MessagesControllerComponents,
-                                           view: RegularPayAmountView,
-                                           extView: RegularPayAmountExtView)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+class RegularPayAmountController @Inject()(
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: RegularPayAmountFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: RegularPayAmountView)(implicit ec: ExecutionContext, appconfig: FrontendAppConfig, errorHandler: ErrorHandler)
+    extends FrontendBaseController with I18nSupport with EmployeeTypeUtil {
 
   val form: Form[Salary] = formProvider()
 
@@ -57,23 +62,19 @@ class RegularPayAmountController @Inject()(override val messagesApi: MessagesApi
         case Invalid(e) => form
       }
 
-      request.userAnswers.getV(RegularLengthEmployedPage) match {
-        case Valid(RegularLengthEmployed.No) => Ok(extView(preparedForm))
-        case _                               => Ok(view(preparedForm))
-      }
+      val postAction = controllers.routes.RegularPayAmountController.onSubmit()
+
+      Ok(view(preparedForm, postAction, cutoffDateResolver))
     }
 
-  def onSubmit(): Action[AnyContent] =
+  def onSubmit(): Action[AnyContent] = {
+    val postAction = controllers.routes.RegularPayAmountController.onSubmit()
     (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
           formWithErrors => {
-            request.userAnswers.getV(RegularLengthEmployedPage) match {
-              case Valid(RegularLengthEmployed.No) =>
-                Future.successful(BadRequest(extView(formWithErrors)))
-              case _ => Future.successful(BadRequest(view(formWithErrors)))
-            }
+            Future.successful(BadRequest(view(formWithErrors, postAction, cutoffDateResolver)))
           },
           value =>
             for {
@@ -82,4 +83,14 @@ class RegularPayAmountController @Inject()(override val messagesApi: MessagesApi
             } yield Redirect(navigator.nextPage(RegularPayAmountPage, updatedAnswers))
         )
     }
+  }
+
+  def cutoffDateResolver()(implicit request: DataRequest[_]): String =
+    regularPayResolver[String](
+      type1EmployeeResult = Some(dateToString(mar19th2020)),
+      type2aEmployeeResult = Some(dateToString(oct30th2020)),
+      type2bEmployeeResult = Some(dateToString(mar2nd2021))
+    ).fold(
+      throw new InternalServerException("[RegularPayAmountController][cutoffResolver] result could not be resolved")
+    )(identity)
 }

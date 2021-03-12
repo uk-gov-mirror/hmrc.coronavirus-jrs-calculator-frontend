@@ -251,12 +251,10 @@ reviewPayDates.heading = Dyddiadau cyflog o fewn y cyfnod hawlio
 reviewPayDates.addMore = A oes angen i chi ychwanegu dyddiad cyflog arall ar gyfer y cyfnod hawlio hwn?
 reviewPayDates.error.required = Dewiswch ‘Iawn’ os reviewPayDates
 
-regularPayAmount.title = What was the employee paid in the last pay period ending on or before 19 March 2020?
-regularPayAmount.title.ext = What was the employee paid in the last pay period ending on or before 30 October 2020?
-regularPayAmount.heading = What was the employee paid in the last pay period ending on or before 19 March 2020?
-regularPayAmount.heading.ext = What was the employee paid in the last pay period ending on or before 30 October 2020?
-regularPayAmount.p1 = This is the gross amount paid in the last pay period ending on or before 19 March, before deductions.
-regularPayAmount.p1.ext = This is the gross amount paid in the last pay period ending on or before 30 October, before deductions.
+regularPayAmount.title = What was the employee paid in the last pay period ending on or before {0}?
+regularPayAmount.heading = What was the employee paid in the last pay period ending on or before {0}?
+regularPayAmount.label = What was the employee paid in the last pay period ending on or before {0}?
+regularPayAmount.p1 = This is the gross amount paid in the last pay period ending on or before {0}, before deductions.
 regularPayAmount.p2 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 regularPayAmount.inset = Os dechreuodd y cyflogai hwn ei gyflogaeth gyda chi yn ystod y cyfnod cyflog hwn, nodwch y swm y byddai wedi’i gael pe bai’n gyfnod cyflog llawn.
 regularPayAmount.salary.error.required = Nodwch swm dilys

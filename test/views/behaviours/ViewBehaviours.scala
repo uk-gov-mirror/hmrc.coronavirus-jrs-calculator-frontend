@@ -166,4 +166,7 @@ trait ViewBehaviours extends ViewSpecBase {
         document.select(selector).attr("href") mustBe url
       }
     }
+
+  def pageWithWhatToInclude()(implicit doc: Document) =
+    doc.select("#what-to-include").isEmpty mustBe false
 }

@@ -125,7 +125,7 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
   }
 
   private[this] def regularPayAmountRoute: UserAnswers => Call = { userAnswer =>
-    if (isPhaseTwo(userAnswer)) {
+    if (isPhaseTwoOnwards(userAnswer)) {
       routes.PartTimeQuestionController.onPageLoad()
     } else {
       routes.TopUpStatusController.onPageLoad()
@@ -467,7 +467,7 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
 
   private def annualPayAmountRoutes: UserAnswers => Call =
     userAnswers =>
-      if (isPhaseTwo(userAnswers)) {
+      if (isPhaseTwoOnwards(userAnswers)) {
         routes.PartTimeQuestionController.onPageLoad()
       } else {
         phaseOneAnnualPayAmountRoute(userAnswers)
@@ -536,6 +536,6 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
     }
   }
 
-  private def isPhaseTwo: UserAnswers => Boolean =
+  private def isPhaseTwoOnwards: UserAnswers => Boolean =
     userAnswer => userAnswer.getV(ClaimPeriodStartPage).exists(!_.isBefore(phaseTwoStartDate))
 }

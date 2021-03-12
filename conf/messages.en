@@ -243,14 +243,12 @@ reviewPayDates.addMore = Do you need to add another pay date for this claim peri
 reviewPayDates.error.required = Select yes if reviewPayDates
 
 
-regularPayAmount.title = What was the employee paid in the last pay period ending on or before 19 March 2020?
-regularPayAmount.title.ext = What was the employee paid in the last pay period ending on or before 30 October 2020?
-regularPayAmount.heading = What was the employee paid in the last pay period ending on or before 19 March 2020?
-regularPayAmount.heading.ext = What was the employee paid in the last pay period ending on or before 30 October 2020?
-regularPayAmount.p1 = This is the gross amount paid in the last pay period ending on or before 19 March, before deductions.
-regularPayAmount.p1.ext = This is the gross amount paid in the last pay period ending on or before 30 October, before deductions.
+regularPayAmount.title = What was the employee paid in the last pay period ending on or before {0}?
+regularPayAmount.heading = What was the employee paid in the last pay period ending on or before {0}?
+regularPayAmount.label = What was the employee paid in the last pay period ending on or before {0}?
+regularPayAmount.p1 = This is the gross amount paid in the last pay period ending on or before {0}, before deductions.
 regularPayAmount.p2 = Do not include discretionary payments, non-cash payments or non-monetary benefits.
-regularPayAmount.inset = If this employee started their employment with you during the pay period, enter the amount they would have received if it was a full pay period.
+regularPayAmount.inset = If this employee started their employment with you during the pay period, enter the amount they would have received if it was a full pay period
 regularPayAmount.salary.error.required = Enter a valid amount
 regularPayAmount.salary.error.invalid = Enter a valid amount
 
