@@ -35,28 +35,78 @@ class FirstFurloughDateViewSpec extends QuestionViewBehaviours[LocalDate] {
   val view: FirstFurloughDateView = injector.instanceOf[FirstFurloughDateView]
   val form                        = new FirstFurloughDateFormProvider()(LocalDate.now())
 
-  val expectedContent = Seq(
-    Selectors.h1   -> FirstFurloughDateMessages.heading,
-    Selectors.p(1) -> FirstFurloughDateMessages.p1,
-    Selectors.p(2) -> FirstFurloughDateMessages.p2
+  val expectedContent = (date: LocalDate) =>
+    Seq(
+      Selectors.h1   -> FirstFurloughDateMessages.heading,
+      Selectors.p(1) -> FirstFurloughDateMessages.p1(date),
   )
+
+  val expectedContentWithSecondP = (date: LocalDate) =>
+    Seq(
+      Selectors.h1   -> FirstFurloughDateMessages.heading,
+      Selectors.p(1) -> FirstFurloughDateMessages.p1(date),
+      Selectors.p(2) -> FirstFurloughDateMessages.p2
+  )
+
+  val nov1st2020            = LocalDate.of(2020, 11, 1)
+  val mar1st2020: LocalDate = LocalDate.of(2020, 3, 1)
+  val may1st2021: LocalDate = LocalDate.of(2021, 5, 1)
 
   "FirstFurloughDateViewSpec" when {
 
-    def applyView(form: Form[_]): HtmlFormat.Appendable = {
-      val view = viewFor[FirstFurloughDateView](Some(emptyUserAnswers))
-      view.apply(form)(fakeRequest, messages)
+    "making a calculation for a variable pay (3) new starter " when {
+
+      def applyView(form: Form[_]): HtmlFormat.Appendable = {
+        val view = viewFor[FirstFurloughDateView](Some(emptyUserAnswers))
+        view.apply(form, mar1st2020)(fakeRequest, messages)
+      }
+
+      implicit val doc: Document = asDocument(applyView(form))
+
+      behave like normalPage(messageKeyPrefix)
+
+      behave like pageWithSubmitButton(BaseMessages.continue)
+
+      behave like pageWithHeading(heading = FirstFurloughDateMessages.heading)
+
+      behave like pageWithExpectedMessages(expectedContent(mar1st2020))
     }
 
-    implicit val doc: Document = asDocument(applyView(form))
+    "making a calculation for a variable pay (5A) new starter " when {
 
-    behave like normalPage(messageKeyPrefix)
+      def applyView(form: Form[_]): HtmlFormat.Appendable = {
+        val view = viewFor[FirstFurloughDateView](Some(emptyUserAnswers))
+        view.apply(form, nov1st2020)(fakeRequest, messages)
+      }
 
-    behave like pageWithSubmitButton(BaseMessages.continue)
+      implicit val doc: Document = asDocument(applyView(form))
 
-    behave like pageWithHeading(heading = FirstFurloughDateMessages.heading)
+      behave like normalPage(messageKeyPrefix)
 
-    behave like pageWithExpectedMessages(expectedContent)
+      behave like pageWithSubmitButton(BaseMessages.continue)
+
+      behave like pageWithHeading(heading = FirstFurloughDateMessages.heading)
+
+      behave like pageWithExpectedMessages(expectedContentWithSecondP(nov1st2020))
+    }
+
+    "making a calculation for a variable pay (5B) new starter " when {
+      def applyView(form: Form[_]): HtmlFormat.Appendable = {
+        val view = viewFor[FirstFurloughDateView](Some(emptyUserAnswers))
+        view.apply(form, may1st2021)(fakeRequest, messages)
+      }
+
+      implicit val doc: Document = asDocument(applyView(form))
+
+      behave like normalPage(messageKeyPrefix)
+
+      behave like pageWithSubmitButton(BaseMessages.continue)
+
+      behave like pageWithHeading(heading = FirstFurloughDateMessages.heading)
+
+      behave like pageWithExpectedMessages(expectedContent(may1st2021))
+    }
+
   }
 
 }
