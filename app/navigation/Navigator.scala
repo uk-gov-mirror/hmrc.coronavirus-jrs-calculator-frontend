@@ -26,7 +26,7 @@ import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
 import javax.inject.{Inject, Singleton}
 import models.EmployeeRTISubmission.{No, Yes}
-import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
+import models.EmployeeStarted._
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
 import models.PayMethod.{Regular, Variable}
 import models.{UserAnswers, _}
@@ -400,11 +400,17 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
     }
 
   private[this] def variableLengthEmployedRoutes: UserAnswers => Call = { userAnswers =>
-    (userAnswers.getV(EmployeeStartedPage), userAnswers.getList(PayDatePage)) match {
-      case (Valid(EmployeeStarted.OnOrBefore1Feb2019), dates) if dates.isEmpty => routes.PayDateController.onPageLoad(1)
-      case (Valid(EmployeeStarted.OnOrBefore1Feb2019), _)                      => routes.LastYearPayController.onPageLoad(1)
-      case (Valid(EmployeeStarted.After1Feb2019), _)                           => routes.EmployeeStartDateController.onPageLoad()
-      case _                                                                   => routes.VariableLengthEmployedController.onPageLoad()
+    (userAnswers.getV(EmployeeStartedPage), userAnswers.getList(PayDatePage), userAnswers.getV(FurloughStartDatePage)) match {
+      case (Valid(OnOrBefore1Feb2019), _, Valid(furloughDate)) if furloughDate.isAfter(mar8th2020) =>
+        routes.PreviousFurloughPeriodsController.onPageLoad()
+      case (Valid(OnOrBefore1Feb2019), payDate, _) if payDate.isEmpty =>
+        routes.PayDateController.onPageLoad(1)
+      case (Valid(OnOrBefore1Feb2019), _, _) =>
+        routes.LastYearPayController.onPageLoad(1)
+      case (Valid(After1Feb2019), _, _) =>
+        routes.EmployeeStartDateController.onPageLoad()
+      case _ =>
+        routes.VariableLengthEmployedController.onPageLoad()
     }
   }
 
@@ -439,9 +445,9 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       case Valid(Regular) => routes.RegularPayAmountController.onPageLoad()
       case Valid(Variable) =>
         userAnswers.getV(EmployeeStartedPage) match {
-          case Valid(EmployeeStarted.OnOrBefore1Feb2019) =>
+          case Valid(OnOrBefore1Feb2019) =>
             routes.LastYearPayController.onPageLoad(1)
-          case Valid(EmployeeStarted.After1Feb2019) =>
+          case Valid(After1Feb2019) =>
             userAnswers.getV(EmployeeStartDatePage) match {
               case Valid(_) if hasStartDateWithinFirstLookbackPeriod(userAnswers) =>
                 routes.CalculationUnsupportedController.startDateWithinLookbackUnsupported()
