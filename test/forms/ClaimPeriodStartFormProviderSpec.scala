@@ -66,7 +66,7 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
       val result = form.bind(data)
 
       result.errors shouldBe List(
-        FormError("startDate", "claimPeriodStart.error.outofrange", Seq("1 March 2020", "30 June 2021")),
+        FormError("startDate", "claimPeriodStart.error.outofrange", Seq("1 March 2020", "30 April 2021")),
       )
     }
 
@@ -81,7 +81,7 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
       val result = form.bind(data)
 
       result.errors shouldBe List(
-        FormError(key = "startDate", message = "claimPeriodStart.error.outofrange", args = Seq("1 March 2020", "30 June 2021")),
+        FormError(key = "startDate", message = "claimPeriodStart.error.outofrange", args = Seq("1 March 2020", "30 April 2021")),
       )
     }
   }
