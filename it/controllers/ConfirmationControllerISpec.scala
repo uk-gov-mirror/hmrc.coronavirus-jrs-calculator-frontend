@@ -30,6 +30,7 @@ import controllers.scenarios.FebruaryConfirmationScenarios._
 import controllers.scenarios.DecemberConfirmationScenarios._
 import controllers.scenarios.NovemberConfirmationScenarios._
 import controllers.scenarios.AprilConfirmationScenarios._
+import controllers.scenarios.MayConfirmationScenarios._
 
 class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
   with BaseITConstants with ITCoreTestData {
@@ -100,8 +101,19 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       aprilVariableFourWeeklyScenarios
   }
 
+  val may: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    mayFixedFourWeeklyScenarios ++
+    mayFixedMonthlyScenarios ++
+    mayFixedTwoWeeklyScenarios ++
+    mayFixedWeeklyScenarios ++
+    mayVariableFourWeeklyScenarios ++
+    mayVariableMonthlyScenarios ++
+    mayVariableTwoWeeklyScenarios ++
+    mayVariableWeeklyScenarios
+  }
+
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    november ++ december ++ january ++ february ++ march ++ april
+    november ++ december ++ january ++ february ++ march ++ april ++ may
   }
 
   "GET /confirmation" should {
