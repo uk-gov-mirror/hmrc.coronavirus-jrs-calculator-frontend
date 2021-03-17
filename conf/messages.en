@@ -1000,3 +1000,22 @@ onPayrollBefore30thOct2020.title = Was this employee on your payroll on or befor
 onPayrollBefore30thOct2020.heading = Was this employee on your payroll on or before 30 October 2020?
 onPayrollBefore30thOct2020.hint = Enter Yes if you have made a payment of earnings to them in the tax year 2020/2021, which was reported to HMRC on a Real Time Information (RTi) Full Payment Submission (FPS) on or before 30 October 2020
 onPayrollBefore30thOct2020.error.required = Select yes if this employee on your payroll on or before 30 October 2020?
+
+
+# StatutoryLeavePayPage Messages
+# ------------------------------------------------
+statutoryLeavePay.title = How much was this employee paid for the periods of statutory leave?
+statutoryLeavePay.heading = How much was this employee paid for the periods of statutory leave?
+statutoryLeavePay.checkYourAnswersLabel = StatutoryLeavePay
+statutoryLeavePay.error.required = Enter the amount this employee was paid for the periods of statutory leave
+statutoryLeavePay.error.invalid = Enter a valid amount
+statutoryLeavePay.error.moreThan0 = The amount this employee was paid for the periods of statutory leave must be more than 0
+# To be decided
+statutoryLeavePay.error.lessThan = The amount this employee was paid for the periods of statutory leave must be less than {0}
+statutoryLeavePay.details.title = What does statutory leave include?
+statutoryLeavePay.details.p1 = For this calculation, statutory leave only includes:
+statutoryLeavePay.details.l1 = statutory sick pay related leave
+statutoryLeavePay.details.l2 = family related statutory leave, for example paternity leave
+statutoryLeavePay.details.l3 = reduced rate paid leave following a period of statutory sick pay related leave
+statutoryLeavePay.details.l4 = reduced rate paid leave following a period of family related statutory leave
+

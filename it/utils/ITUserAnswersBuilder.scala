@@ -66,6 +66,9 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
     def withFurloughInLastTaxYear(answer: Boolean): UserAnswers =
       userAnswers.setValue(FurloughInLastTaxYearPage, answer)
 
+    def withStatutoryLeavePay(amount: Amount): UserAnswers =
+      userAnswers.setValue(StatutoryLeavePayPage, amount)
+
     def withVariableLengthEmployed(answer: EmployeeStarted): UserAnswers =
       userAnswers.setValue(EmployeeStartedPage, answer)
 

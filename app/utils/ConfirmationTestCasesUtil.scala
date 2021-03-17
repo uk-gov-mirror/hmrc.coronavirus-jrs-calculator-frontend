@@ -68,6 +68,7 @@ object ConfirmationTestCasesUtil {
                  |      ${userAnswers.getO(ClaimPeriodStartPage).flatMap(x => x.toOption.map(x => ".withClaimPeriodStart(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
                  |      ${".withLastYear(" + userAnswers.getList(LastYearPayPage).toString.replace("Valid(", "").replaceAll("\\)\\), LastYearPayment\\(",",").replaceAll("LastYearPayment\\(","").replaceAll(",Amount\\("," -> ") + ")"}
                  |      ${userAnswers.getO(FurloughInLastTaxYearPage).flatMap(x => x.toOption.map(x => ".withFurloughInLastTaxYear(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${userAnswers.getO(StatutoryLeavePayPage).flatMap(x => x.toOption.map(x => ".withStatutoryLeavePay(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(PayPeriodsListPage).flatMap(x => x.toOption.map(x => ".withPayPeriodsList(PayPeriodsList." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(PartTimePeriodsPage).flatMap(x => x.toOption.map(x => ".withPartTimePeriods(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(PayMethodPage).flatMap(x => x.toOption.map(x => ".withPayMethod(PayMethod." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
