@@ -974,7 +974,6 @@ onPayrollBefore30thOct2020.error.required = Select yes if this employee on your 
 # ------------------------------------------------
 statutoryLeavePay.title = How much was this employee paid for the periods of statutory leave?
 statutoryLeavePay.heading = How much was this employee paid for the periods of statutory leave?
-statutoryLeavePay.checkYourAnswersLabel = StatutoryLeavePay
 statutoryLeavePay.error.required = Enter the amount this employee was paid for the periods of statutory leave
 statutoryLeavePay.error.invalid = Enter a valid amount
 statutoryLeavePay.error.moreThan0 = The amount this employee was paid for the periods of statutory leave must be more than 0

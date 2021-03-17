@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import pages.RegularLengthEmployedPage
+@import pages.StatutoryLeavePayPage
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -28,7 +28,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "statutoryLeavePay.title")), thisPage = RegularLengthEmployedPage) {
+@govukLayout(pageTitle = Some(title(form, "statutoryLeavePay.title")), thisPage = StatutoryLeavePayPage) {
 
     @formHelper(action = routes.StatutoryLeavePayController.onSubmit(), 'autoComplete -> "off") {
 
