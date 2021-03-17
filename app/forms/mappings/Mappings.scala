@@ -38,8 +38,10 @@ trait Mappings extends Formatters with Constraints {
   protected def bigDecimal(requiredKey: String = "error.required", nonNumericKey: String = "error.nonNumeric"): FieldMapping[BigDecimal] =
     of(bigDecimalFormatter(requiredKey, nonNumericKey))
 
-  protected def boolean(requiredKey: String = "error.required", invalidKey: String = "error.boolean"): FieldMapping[Boolean] =
-    of(booleanFormatter(requiredKey, invalidKey))
+  protected def boolean(requiredKey: String = "error.required",
+                        invalidKey: String = "error.boolean",
+                        args: Seq[String] = Seq()): FieldMapping[Boolean] =
+    of(booleanFormatter(requiredKey, invalidKey, args))
 
   protected def enumerable[A](requiredKey: String = "error.required", invalidKey: String = "error.invalid")(
     implicit ev: Enumerable[A]): FieldMapping[A] =

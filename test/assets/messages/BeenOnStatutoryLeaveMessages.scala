@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package assets.messages
 
-import javax.inject.Inject
+object BeenOnStatutoryLeaveMessages {
 
-import forms.mappings.Mappings
-import play.api.data.Form
+  val dayEmploymentStarted = "the day their employment started"
 
-class HasEmployeeBeenOnStatutoryLeaveFormProvider @Inject() extends Mappings {
-
-  def apply(boundaryStart: String, boundaryEnd: String): Form[Boolean] =
-    Form(
-      "value" -> boolean(
-        requiredKey = "hasEmployeeBeenOnStatutoryLeave.error.required",
-        args = Seq(boundaryStart, boundaryEnd)
-      )
-    )
 }
