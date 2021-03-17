@@ -19,7 +19,7 @@ package navigation
 import java.time.LocalDate
 
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
-import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
+import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching, StatutoryLeaveFlow}
 import controllers.routes
 import models.ClaimPeriodQuestion._
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
@@ -1433,5 +1433,58 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
       }
     }
 
+    ".statutoryLeavePayRoutes" when {
+      "feature switch is enabled" should {
+        "route to the next page (PartTimeQuestionPage) when the answer to the StatutoryLeavePayPage is valid" in {
+          enable(StatutoryLeaveFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(ClaimPeriodStartPage, LocalDate.of(2021, 5, 1))
+              .success
+              .value
+              .set(ClaimPeriodEndPage, LocalDate.of(2021, 5, 31))
+              .success
+              .value
+              .set(StatutoryLeavePayPage, Amount(BigDecimal(30.10)))
+              .success
+              .value
+          }
+          val actual: Call   = navigator.statutoryLeavePayRoutes(userAnswers)
+          val expected: Call = routes.PartTimeQuestionController.onPageLoad()
+
+          actual mustBe expected
+          disable(StatutoryLeaveFlow)
+        }
+
+        "stay on the same page StatutoryLeavePayPage - when the answer is invalid" in {
+          enable(StatutoryLeaveFlow)
+          val userAnswers: UserAnswers = {
+            emptyUserAnswers
+              .set(ClaimPeriodStartPage, LocalDate.of(2021, 5, 1))
+              .success
+              .value
+              .set(ClaimPeriodEndPage, LocalDate.of(2021, 5, 31))
+              .success
+              .value
+          }
+          val actual: Call   = navigator.statutoryLeavePayRoutes(userAnswers)
+          val expected: Call = routes.StatutoryLeavePayController.onPageLoad()
+
+          actual mustBe expected
+          disable(StatutoryLeaveFlow)
+        }
+      }
+
+      "feature switch is disabled" should {
+        "route back to the RootPage" in {
+          disable(StatutoryLeaveFlow)
+          val actual: Call   = navigator.statutoryLeavePayRoutes(emptyUserAnswers)
+          val expected: Call = routes.RootPageController.onPageLoad()
+
+          actual mustBe expected
+          enable(StatutoryLeaveFlow)
+        }
+      }
+    }
   }
 }
