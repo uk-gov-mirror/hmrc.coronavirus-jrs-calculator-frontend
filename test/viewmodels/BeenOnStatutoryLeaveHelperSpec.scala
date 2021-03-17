@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package forms
+package viewmodels
 
-import javax.inject.Inject
+import base.SpecBase
+import utils.LocalDateHelpers
+import utils.LocalDateHelpers._
 
-import forms.mappings.Mappings
-import play.api.data.Form
+class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers {
 
-class HasEmployeeBeenOnStatutoryLeaveFormProvider @Inject() extends Mappings {
+  "type3And4BoundaryEnd" in {
 
-  def apply(boundaryStart: String, boundaryEnd: String): Form[Boolean] =
-    Form(
-      "value" -> boolean(
-        requiredKey = "hasEmployeeBeenOnStatutoryLeave.error.required",
-        args = Seq(boundaryStart, boundaryEnd)
-      )
-    )
+    earliestOf(apr5th2020, apr6th2019) mustBe apr6th2019
+  }
 }

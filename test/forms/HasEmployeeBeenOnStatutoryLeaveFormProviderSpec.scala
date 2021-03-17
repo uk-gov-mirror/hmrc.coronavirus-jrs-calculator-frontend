@@ -24,7 +24,10 @@ class HasEmployeeBeenOnStatutoryLeaveFormProviderSpec extends BooleanFieldBehavi
   val requiredKey = "hasEmployeeBeenOnStatutoryLeave.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new HasEmployeeBeenOnStatutoryLeaveFormProvider()()
+  val boundaryStart = "6 April 2019"
+  val boundaryEnd   = "5 April 2020"
+
+  val form = new HasEmployeeBeenOnStatutoryLeaveFormProvider()(boundaryStart, boundaryEnd)
 
   ".value" must {
 
@@ -33,13 +36,13 @@ class HasEmployeeBeenOnStatutoryLeaveFormProviderSpec extends BooleanFieldBehavi
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(boundaryStart, boundaryEnd))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(boundaryStart, boundaryEnd))
     )
   }
 }

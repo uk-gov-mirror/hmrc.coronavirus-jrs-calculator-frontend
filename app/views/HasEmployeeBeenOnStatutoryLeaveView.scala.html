@@ -21,18 +21,38 @@
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
         yesNoRadio: components.yesNoRadio,
+        h1: components.h1,
+        p: components.p,
+        bullets: components.bullets,
         button: components.button
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], postAction: Call, boundaryStart: String, boundaryEnd: String)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "hasEmployeeBeenOnStatutoryLeave.title")), thisPage = HasEmployeeBeenOnStatutoryLeavePage) {
+@govukLayout(pageTitle = Some(title(form, "hasEmployeeBeenOnStatutoryLeave.title", titleMessageArgs = Seq(boundaryStart, boundaryEnd))), thisPage = HasEmployeeBeenOnStatutoryLeavePage) {
 
-    @formHelper(action = HasEmployeeBeenOnStatutoryLeaveController.onSubmit()) {
+    @formHelper(action = postAction) {
 
         @errorSummary(form.errors)
 
-        @yesNoRadio(form, "hasEmployeeBeenOnStatutoryLeave.heading")
+        @h1(messages("hasEmployeeBeenOnStatutoryLeave.heading", boundaryStart, boundaryEnd))
+
+        @p(Html(messages("hasEmployeeBeenOnStatutoryLeave.p")))
+
+        @bullets(Seq(
+            Html(messages("hasEmployeeBeenOnStatutoryLeave.bullet1")),
+            Html(messages("hasEmployeeBeenOnStatutoryLeave.bullet2")),
+            Html(messages("hasEmployeeBeenOnStatutoryLeave.bullet3")),
+            Html(messages("hasEmployeeBeenOnStatutoryLeave.bullet4"))
+        ))
+
+        @yesNoRadio(
+            form = form,
+            headingKey = "hasEmployeeBeenOnStatutoryLeave.heading",
+            headingMessageArgs = Seq(boundaryStart, boundaryEnd),
+            isPageHeading = false,
+            classes = "govuk-visually-hidden",
+        )
 
         @button("site.saveAndContinue")
     }

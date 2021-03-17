@@ -998,3 +998,4 @@ hasEmployeeBeenOnStatutoryLeave.bullet1 = statutory sick pay related leave
 hasEmployeeBeenOnStatutoryLeave.bullet2 = family related statutory leave, for example paternity leave
 hasEmployeeBeenOnStatutoryLeave.bullet3 = reduced rate paid leave following a period of statutory sick pay related leave
 hasEmployeeBeenOnStatutoryLeave.bullet4 = reduced rate paid leave following a period of family related statutory leave
+hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted = the day their employment started
