@@ -25,7 +25,8 @@ object FeatureSwitch {
   val switches: Seq[FeatureSwitch] = Seq(
     WelshLanguageFeature,
     ShowNewStartPage,
-    ExtensionTwoNewStarterFlow
+    ExtensionTwoNewStarterFlow,
+    StatutoryLeaveFlow
   )
 
   val booleanFeatureSwitches: Seq[BooleanFeatureSwitch]       = switches.collect { case a: BooleanFeatureSwitch => a }
@@ -67,4 +68,9 @@ object ShowNewStartPage extends BooleanFeatureSwitch {
 object ExtensionTwoNewStarterFlow extends BooleanFeatureSwitch {
   override val name: String        = s"$prefix.extensionTwoNewStarterFlow"
   override val displayText: String = "Enable or Disable the Extension Two New Start Flow"
+}
+
+object StatutoryLeaveFlow extends BooleanFeatureSwitch {
+  override val name: String        = s"$prefix.statutoryLeaveFlow"
+  override val displayText: String = "Enables the Statutory Leave flow (if selected)"
 }
