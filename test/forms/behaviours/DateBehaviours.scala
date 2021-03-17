@@ -37,6 +37,7 @@ class DateBehaviours extends FieldBehaviours {
 
         val result = form.bind(data)
 
+        result.errors shouldEqual Seq()
         result.value.value shouldEqual date
       }
     }
