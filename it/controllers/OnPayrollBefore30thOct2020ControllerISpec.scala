@@ -46,20 +46,41 @@ class OnPayrollBefore30thOct2020ControllerISpec extends IntegrationSpecBase with
       }
     }
 
-    "is a Variable Journey" should {
+    "is a Variable Journey" when {
 
-      "return correct page & title, Status: 200" in {
+      "employee started before 1 September 2020" must {
 
-        val userAnswers: UserAnswers = hasEmployeeBeenFurloughedAfterNovember
-        setAnswers(userAnswers)
+        "return correct page & title, Status: 200" in {
 
-        val res = getRequestHeaders("/october-payroll")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+          val userAnswers: UserAnswers = hasEmployeeBeenFurloughedAfterNovember.withEmployeeStartDate("2020, 8, 30")
+          setAnswers(userAnswers)
 
-        whenReady(res) { result =>
-          result should have(
-            httpStatus(OK),
-            titleOf(onPayrollBefore30thOct2020)
-          )
+          val res = getRequestHeaders("/october-payroll")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(SEE_OTHER),
+              redirectLocation(controllers.routes.PreviousFurloughPeriodsController.onPageLoad().url)
+            )
+          }
+        }
+      }
+
+      "employee started between 1 Setepmber 2020 and 30th October 2020" must {
+
+        "return correct page & title, Status: 200" in {
+
+          val userAnswers: UserAnswers = hasEmployeeBeenFurloughedAfterNovember.withEmployeeStartDate("2020, 9, 1")
+          setAnswers(userAnswers)
+
+          val res = getRequestHeaders("/october-payroll")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(OK),
+              titleOf(onPayrollBefore30thOct2020)
+            )
+          }
         }
       }
     }
