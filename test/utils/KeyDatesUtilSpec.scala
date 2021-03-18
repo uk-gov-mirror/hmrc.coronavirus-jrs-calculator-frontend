@@ -53,7 +53,7 @@ class KeyDatesUtilSpec extends SpecBase with KeyDatesUtil {
       "return the answer to FurloughStartDatePage" in {
 
         val userAnswers = UserAnswers(userAnswersId)
-          .set(FirstFurloughDatePage, furloughStartDate)
+          .set(FurloughStartDatePage, furloughStartDate)
           .success
           .value
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
