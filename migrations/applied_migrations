@@ -1,36 +1,33 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration NumberOfStatLeaveDays"
+echo "Applying migration OnPayrollBefore30thOct2020"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /numberOfStatLeaveDays                  controllers.NumberOfStatLeaveDaysController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /numberOfStatLeaveDays                  controllers.NumberOfStatLeaveDaysController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /onPayrollBefore30thOct2020                        controllers.OnPayrollBefore30thOct2020Controller.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /onPayrollBefore30thOct2020                        controllers.OnPayrollBefore30thOct2020Controller.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeNumberOfStatLeaveDays                        controllers.NumberOfStatLeaveDaysController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeNumberOfStatLeaveDays                        controllers.NumberOfStatLeaveDaysController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeOnPayrollBefore30thOct2020                  controllers.OnPayrollBefore30thOct2020Controller.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeOnPayrollBefore30thOct2020                  controllers.OnPayrollBefore30thOct2020Controller.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "numberOfStatLeaveDays.title = NumberOfStatLeaveDays" >> ../conf/messages.en
-echo "numberOfStatLeaveDays.heading = NumberOfStatLeaveDays" >> ../conf/messages.en
-echo "numberOfStatLeaveDays.checkYourAnswersLabel = NumberOfStatLeaveDays" >> ../conf/messages.en
-echo "numberOfStatLeaveDays.error.nonNumeric = Enter your numberOfStatLeaveDays using numbers" >> ../conf/messages.en
-echo "numberOfStatLeaveDays.error.required = Enter your numberOfStatLeaveDays" >> ../conf/messages.en
-echo "numberOfStatLeaveDays.error.wholeNumber = Enter your numberOfStatLeaveDays using whole numbers" >> ../conf/messages.en
-echo "numberOfStatLeaveDays.error.outOfRange = NumberOfStatLeaveDays must be between {0} and {1}" >> ../conf/messages.en
+echo "onPayrollBefore30thOct2020.title = onPayrollBefore30thOct2020" >> ../conf/messages.en
+echo "onPayrollBefore30thOct2020.heading = onPayrollBefore30thOct2020" >> ../conf/messages.en
+echo "onPayrollBefore30thOct2020.checkYourAnswersLabel = onPayrollBefore30thOct2020" >> ../conf/messages.en
+echo "onPayrollBefore30thOct2020.error.required = Select yes if onPayrollBefore30thOct2020" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryNumberOfStatLeaveDaysUserAnswersEntry: Arbitrary[(NumberOfStatLeaveDaysPage.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryOnPayrollBefore30thOct2020UserAnswersEntry: Arbitrary[(OnPayrollBefore30thOct2020Page.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[NumberOfStatLeaveDaysPage.type]";\
-    print "        value <- arbitrary[Int].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[OnPayrollBefore30thOct2020Page.type]";\
+    print "        value <- arbitrary[Boolean].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -39,14 +36,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryNumberOfStatLeaveDaysPage: Arbitrary[NumberOfStatLeaveDaysPage.type] =";\
-    print "    Arbitrary(NumberOfStatLeaveDaysPage)";\
+    print "  implicit lazy val arbitraryOnPayrollBefore30thOct2020Page: Arbitrary[OnPayrollBefore30thOct2020Page.type] =";\
+    print "    Arbitrary(OnPayrollBefore30thOct2020Page)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(NumberOfStatLeaveDaysPage.type, JsValue)] ::";\
+    print "    arbitrary[(OnPayrollBefore30thOct2020Page.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration NumberOfStatLeaveDays completed"
+echo "Migration OnPayrollBefore30thOct2020 completed"

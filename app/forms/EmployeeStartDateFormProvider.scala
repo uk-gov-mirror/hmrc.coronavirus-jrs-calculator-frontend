@@ -30,11 +30,18 @@ class EmployeeStartDateFormProvider @Inject() extends Mappings {
   val feb2nd2019: LocalDate = LocalDate.of(2019, 2, 2)
   val march19th2020         = LocalDate.of(2020, 3, 19)
   val oct30th2020           = LocalDate.of(2020, 10, 30)
-  val nov1st2020            = LocalDate.of(2020, 11, 1)
+  val march2nd2021          = LocalDate.of(2021, 3, 2)
+  val novemberExtension     = LocalDate.of(2020, 11, 1)
+  val may2021Extension      = LocalDate.of(2021, 5, 1)
 
   def apply(furloughStart: LocalDate, claimStart: LocalDate)(implicit messages: Messages): Form[LocalDate] = {
 
-    val cutoff = if (claimStart.isEqualOrAfter(nov1st2020)) oct30th2020 else march19th2020
+    val cutoff =
+      (claimStart.isEqualOrAfter(may2021Extension), claimStart.isEqualOrAfter(novemberExtension)) match {
+        case (true, _)     => march2nd2021
+        case (false, true) => oct30th2020
+        case _             => march19th2020
+      }
 
     val maxValidStart = earliestOf(furloughStart.minusDays(1), cutoff)
 

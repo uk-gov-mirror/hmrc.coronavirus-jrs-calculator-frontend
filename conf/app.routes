@@ -152,5 +152,8 @@ GET         /october-payroll                                 controllers.OnPayro
 POST        /october-payroll                                 controllers.OnPayrollBefore30thOct2020Controller.onSubmit()
 
 
+GET        /been-on-statutory-leave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad()
+POST       /been-on-statutory-leave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onSubmit()
+
 GET        /number-of-days-on-statutory-leave                  controllers.NumberOfStatLeaveDaysController.onPageLoad()
 POST       /number-of-days-on-statutory-leave                  controllers.NumberOfStatLeaveDaysController.onSubmit()
