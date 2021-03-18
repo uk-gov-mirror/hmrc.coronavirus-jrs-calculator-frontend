@@ -31,6 +31,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.OnPayrollBefore30thOct2020View
 import play.api.http.{Status => StatusCode}
+import utils.LocalDateHelpers._
 
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
@@ -50,12 +51,15 @@ class OnPayrollBefore30thOct2020Controller @Inject()(
 
   val form: Form[Boolean] = formProvider()
 
-  val october30th2020 = LocalDate.of(2020, 10, 30)
+  val september1st2020 = LocalDate.of(2020, 9, 1)
+  val october30th2020  = LocalDate.of(2020, 10, 30)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     request.userAnswers.getV(EmployeeStartDatePage) match {
-      case Valid(startDate) if !startDate.isBefore(october30th2020) =>
+      case Valid(startDate) if startDate.isAfter(october30th2020) =>
         saveAndRedirect(answer = false)
+      case Valid(startDate) if startDate.isBefore(september1st2020) =>
+        saveAndRedirect(answer = true)
       case _ => {
         renderView(StatusCode.OK)(request.userAnswers.getV(OnPayrollBefore30thOct2020Page) match {
           case Invalid(_)   => form

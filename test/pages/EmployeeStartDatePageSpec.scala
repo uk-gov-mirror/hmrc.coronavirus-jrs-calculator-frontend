@@ -37,7 +37,7 @@ class EmployeeStartDatePageSpec extends PageBehaviours {
 
       val resultantAnswers = EmployeeStartDatePage.cleanup(None, userAnswers)
 
-      resultantAnswers mustBe
+      resultantAnswers.get.getO(OnPayrollBefore30thOct2020Page) mustBe None
     }
   }
 }
