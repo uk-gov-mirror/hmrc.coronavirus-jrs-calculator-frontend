@@ -21,10 +21,10 @@ site.getHelpWithThisPage = Help gyda’r dudalen hon
 site.notProvided = Heb ei ddarparu
 site.incomplete = Anghyflawn
 
-site.service_banner.top=Help improve GOV.UK
-site.service_banner.content=Help improve digital services by joining the HMRC user panel (opens in a new window).
+site.service_banner.top=Helpwch i wella GOV.UK
+site.service_banner.content=Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor mewn tab newydd).
 site.service_banner.href=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=JRSCalc&utm_source=Other&utm_medium=other&t=HMRC&id=248
-site.service_banner.dismiss=No thanks
+site.service_banner.dismiss=Dim diolch
 
 footer.accessibility   = Datganiad Hygyrchedd
 footer.cookies         = Cwcis
@@ -319,7 +319,7 @@ confirmation.nextSteps.li.4.2 = gwasanaeth hawlio ar-lein y Cynllun Cadw Swyddi 
 confirmation.startAgain = Dechrau cyfrifiad arall
 confirmation.webchat = Help drwy gael sgwrs dros y we (yn agor ffenestr neu dab newydd)
 
-confirmation.no.nic.pension.insert.t1 = You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these
+confirmation.no.nic.pension.insert.t1 = Ni allwch hawlio cyfraniadau Yswiriant Gwladol a chyfraniadau pensiwn y cyflogwr, ond mae’n rhaid i’r cyflogwr dalu’r rhain o hyd
 confirmation.no.nic.pension.title = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.no.nic.pension.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.no.nic.pension.p1 = Grant ffyrlo
@@ -419,8 +419,8 @@ furloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo?
 furloughStartDate.p1 = Os yw’r cyflogai hwn wedi’i roi ar ffyrlo fwy nag unwaith, dyma’r dyddiad diweddaraf y cafodd ei roi ar ffyrlo.
 furloughStartDate.p2 = Os nad oedd y cyflogai ar eich cyflogres ar 19 Mawrth 2020, mewn perthynas â Chyflwyniad Taliad Llawn (FPS) Gwybodaeth Amser Real (RTI), a chafodd ei roi ar ffyrlo cyn 1 Tachwedd 2020, defnyddiwch y dyddiad 1 Tachwedd 2020.
-furloughStartDate.extension.p2 = If this employee was not on your payroll on 30 October 2020 and was furloughed before 1 May 2021, then use the date 1 May 2021.
-furloughStartDate.extension.p3 = Employees must be on your payroll and therefore appear in your Real Time Information (RTI) Full Payment Submissions (FPS) on or before 2 March 2021 to be eligible.
+furloughStartDate.extension.p2 = Os nad oedd y cyflogai hwn ar eich cyflogres ar 30 Hydref 2020 a chafodd ei roi ar ffyrlo cyn 1 Mai 2021, defnyddiwch y dyddiad 1 Mai 2021.
+furloughStartDate.extension.p3 = Mae’n rhaid i gyflogeion fod ar eich cyflogres ac felly wedi ymddangos ar eich Cyflwyniadau Taliadau Llawn (FPS) Gwybodaeth Amser Real (RTI) ar neu cyn 2 Mawrth 2021 i fod yn gymwys.
 
 furloughStartDate.error.required.all = Nodwch ddyddiad dechrau’r ffyrlo
 furloughStartDate.error.required.two = Mae’n rhaid i ddyddiad dechrau’r ffyrlo gynnwys {0} a {1}
@@ -877,19 +877,19 @@ employeeRTISubmission.error.required = Dewiswch un o’r opsiynau isod
 
 furloughInLastTaxYear.title = A yw’r cyflogai hwn wedi cael unrhyw gyfnodau ffyrlo blaenorol a ddechreuodd yn ystod blwyddyn dreth 2019/20?
 furloughInLastTaxYear.heading = A yw’r cyflogai hwn wedi cael unrhyw gyfnodau ffyrlo blaenorol a ddechreuodd yn ystod blwyddyn dreth 2019/20?
-furloughInLastTaxYear.error.required = Select one of the options below
+furloughInLastTaxYear.error.required = Dewiswch un o’r opsiynau isod
 
 calculationUnsupported.heading = Ni ellir cefnogi’r cyfrifiad hwn ar hyn o bryd
 calculationUnsupported.p1 = Gallwch wneud y cyfrifiad hwn â llaw.
 calculationUnsupported.startAgain = Dechrau cyfrifiad newydd
 
-previousFurloughPeriods.title = Has this employee been furloughed more than once since {0}?
-previousFurloughPeriods.heading = Has this employee been furloughed more than once since {0}?
+previousFurloughPeriods.title = A yw’r cyflogai hwn wedi’i roi ar ffyrlo mwy nag unwaith ers {0}?
+previousFurloughPeriods.heading = A yw’r cyflogai hwn wedi’i roi ar ffyrlo mwy nag unwaith ers {0}?
 previousFurloughPeriods.error.required = Select yes if this employee has been furloughed more than once since {0}
 
-firstFurloughStartDate.title = When was this employee first furloughed?
-firstFurloughStartDate.heading = When was this employee first furloughed?
-firstFurloughStartDate.p1 = This is the date when the employee was first furloughed, on or after {0}.
+firstFurloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo am y tro cyntaf?
+firstFurloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo am y tro cyntaf?
+firstFurloughStartDate.p1 = Dyma’r dyddiad pan gafodd y cyflogai ei roi ar ffyrlo am y tro cyntaf, ar neu ar ôl {0}.
 firstFurloughStartDate.p2 = We need this information because you told us this employee has been on more than one period of furlough since 1 November 2020, and was not eligible for the Coronavirus Job Retention Scheme before this date.
 firstFurloughStartDate.error.invalid = The date the employee was first furloughed must be on or after 1 November 2020
 firstFurloughStartDate.hint = For example, 30 11 2020
@@ -899,55 +899,55 @@ firstFurloughStartDate.error.afterStartDate = The date the employee was first fu
 
 # New Start Page Content - May Onwards #
 # -------------------------------------#
-startPage.title = Job Retention Scheme calculator
-startPage.heading = Job Retention Scheme calculator
+startPage.title = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
+startPage.heading = Cyfrifiannell y Cynllun Cadw Swyddi yn sgil Coronafeirws
 
-startPage.whatCanYouClaim.h2 = What you can claim
-startPage.whatCanYouClaim.p1 = The Coronavirus Job Retention Scheme has been extended until 30 September 2021. For claim periods between 1 November 2020 and 30 April 2021, you can claim 80% of an employee’s usual salary for hours not worked, up to a maximum of £2,500 per month.
-startPage.whatCanYouClaim.p2 = From 1 July 2021, the amount you can claim for is changing:
+startPage.whatCanYouClaim.h2 = Yr hyn y gallwch ei hawlio
+startPage.whatCanYouClaim.p1 = Mae’r Cynllun Cadw Swyddi yn sgil Coronafeirws wedi’i ymestyn tan 30 Medi 2021. Ar gyfer cyfnodau hawlio rhwng 1 Tachwedd 2020 a 30 Ebrill 2021, gallwch hawlio 80% o gyflog arferol cyflogai ar gyfer oriau na chawsant eu gweithio, hyd at uchafswm o £2,500 y mis.
+startPage.whatCanYouClaim.p2 = O 1 Gorffennaf 2021 ymlaen, mae’r swm y gallwch ei hawlio’n newid:
 
 startPage.whatCanYouClaim.table.column1HeadingHidden = Claim month
-startPage.whatCanYouClaim.table.column2Heading = Government contribution: wages for hours not worked
-startPage.whatCanYouClaim.table.column3Heading = Employer contribution: wages for hours not worked
+startPage.whatCanYouClaim.table.column2Heading = Cyfraniad y llywodraeth: cyflog am oriau na chawsant eu gweithio
+startPage.whatCanYouClaim.table.column3Heading = Cyfraniad y cyflogwr: cyflog am oriau na chawsant eu gweithio
 startPage.whatCanYouClaim.table.naughtPercent = 0%
-startPage.whatCanYouClaim.table.mayJunGovt = 80% up to £2,500
-startPage.whatCanYouClaim.table.julGovt = 70% up to £2,187.50
-startPage.whatCanYouClaim.table.augSepGovt = 60% up to £1,8750
-startPage.whatCanYouClaim.table.julyEmp = 10% up to £312.50
-startPage.whatCanYouClaim.table.augSepEmp = 20% up to £625
+startPage.whatCanYouClaim.table.mayJunGovt = 80% hyd at £2,500
+startPage.whatCanYouClaim.table.julGovt = 70% hyd at £2,187.50
+startPage.whatCanYouClaim.table.augSepGovt = 60% hyd at £1,8750
+startPage.whatCanYouClaim.table.julyEmp = 10% hyd at £312.50
+startPage.whatCanYouClaim.table.augSepEmp = 20% hyd at £625
 
-startPage.whatCanYouClaim.p3 = To be eligible for the grant you must continue to pay your furloughed employees at least 80% of their wages for the time they are on furlough. You can choose to pay them more than this, but you do not have to.
-startPage.whatCanYouClaim.p4 = You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these.
+startPage.whatCanYouClaim.p3 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi barhau i dalu 80% o’u cyflog i’ch cyflogeion sydd ar ffyrlo, hyd at uchafswm o £2,500 y mis, am y cyfnod y maent ar ffyrlo.
+startPage.whatCanYouClaim.p4 = Ni allwch hawlio cyfraniadau Yswiriant Gwladol a chyfraniadau pensiwn y cyflogwr, ond mae’n rhaid i’r cyflogwr dalu’r rhain o hyd.
 
-startPage.about.h2 = About the calculator
-startPage.about.p1 = Use this calculator to work out the figures you will need when you make a Coronavirus Job Retention Scheme claim.
-startPage.about.p2 = You will need to use the calculator for each employee on full or flexible furlough and add up the results of each claim amount for the claim period. For your records, the calculator will also break down the calculations for each pay period.
+startPage.about.h2 = Ynglŷn â’r gyfrifiannell
+startPage.about.p1 = Defnyddiwch y gyfrifiannell hon i gyfrifo’r ffigurau y bydd eu hangen arnoch pan fyddwch yn hawlio drwy’r Cynllun Cadw Swyddi yn sgil Coronafeirws.
+startPage.about.p2 = Bydd yn rhaid i chi ddefnyddio’r gyfrifiannell ar gyfer pob cyflogai sydd ar ffyrlo llawn neu ffyrlo hyblyg, ac adio canlyniadau swm pob hawliad ar gyfer y cyfnod hawlio. Ar gyfer eich cofnodion, bydd y gyfrifiannell hefyd yn dadansoddi’r cyfrifiadau ar gyfer pob cyfnod cyflog.
 
-startPage.about.whoCanUse.h3 = You can use this calculator for:
-startPage.about.whoCanUse.l1 = employees who are fully furloughed and therefore not working any hours
-startPage.about.whoCanUse.l2 = employees brought back to work for some of their normal hours from 1 July
-startPage.about.whoCanUse.l3 = most employees who are paid weekly, two weekly, four weekly or monthly in fixed pay periods
-startPage.about.whoCanUse.l4 = employees who have returned from statutory leave from 1 August 2020 onwards, for example, maternity leave
+startPage.about.whoCanUse.h3 = Gallwch ddefnyddio’r gyfrifiannell hon ar gyfer y canlynol:
+startPage.about.whoCanUse.l1 = cyflogeion sydd ar ffyrlo llawn ac felly sydd heb weithio unrhyw oriau
+startPage.about.whoCanUse.l2 = cyflogeion a ddaeth yn ôl i’r gwaith am rai o’u horiau arferol o 1 Gorffennaf ymlaen
+startPage.about.whoCanUse.l3 = y mwyafrif o gyflogeion sy’n cael eu talu’n wythnosol, bob pythefnos, bob pedair wythnos neu’n fisol mewn cyfnodau cyflog sefydlog
+startPage.about.whoCanUse.l4 = cyflogeion sydd wedi dychwelyd o absenoldeb statudol o 1 Awst 2020 ymlaen, er enghraifft, absenoldeb mamolaeth
 
-startPage.about.whoCannotUse.h3 = The calculator cannot be used for employees if they:
-startPage.about.whoCannotUse.l1 = started a notice period or went back off a notice period in the same claim period on or after 1 December 2020
-startPage.about.whoCannotUse.l2 = have an annual pay period
-startPage.about.whoCannotUse.l3 = have been transferred under The Transfer of Undertakings Protection of Employment (TUPE)
-startPage.about.whoCannotUse.l4 = were not employed continuously before their furlough started
-startPage.about.whoCannotUse.l5 = returned from statutory leave such as maternity leave in the last 3 months (if the claim period is in July 2020 or earlier)
-startPage.about.whoCannotUse.l6 = receive employer pension contributions outside of an auto-enrolment pension scheme
-startPage.about.whoCannotUse.l7 = ended furlough then began again during the same claim period
-startPage.about.whoCannotUse.l8 = were variably paid, and have been on more than one period of furlough where any part of any of the periods of furlough was in the 2019/20 tax year
-startPage.about.whoCannotUse.l9 = have variable pay, started employment before 6 April 2020 and were not on their employer’s payroll on or before 19 March 2020
-startPage.about.whoCannotUse.l10 = started employment with their employer during a calendar period in the 2019-20 tax year which corresponds with part or all of the period being claimed for
-startPage.about.whoCannotUse.l11 = are on fixed pay and have had a change in payment frequency, for example from monthly pay to weekly pay
+startPage.about.whoCannotUse.h3 = Ni ellir defnyddio’r gyfrifiannell ar gyfer cyflogeion os yw’r canlynol yn wir:
+startPage.about.whoCannotUse.l1 = gwnaethant ddechrau cyfnod rhybudd neu roedd yn ofynnol iddynt ddychwelyd i’r gwaith yn ystod cyfnod rhybudd i weithio yn yr un cyfnod hawlio, ar neu ar ôl 1 Rhagfyr 2020
+startPage.about.whoCannotUse.l2 = mae ganddynt gyfnod cyflog blynyddol
+startPage.about.whoCannotUse.l3 = maent wedi’u trosglwyddo o dan reoliadau Trosglwyddo Ymgymeriadau Diogelu Cyflogaeth (TUPE)
+startPage.about.whoCannotUse.l4 = heb fod mewn cyflogaeth barhaus cyn i’w ffyrlo ddechrau
+startPage.about.whoCannotUse.l5 = wedi dychwelyd o absenoldeb megis absenoldeb mamolaeth yn ystod y 3 mis diwethaf (os yw’r cyfnod hawlio ym mis Gorffennaf 2020 neu’n gynt)
+startPage.about.whoCannotUse.l6 = yn cael cyfraniadau pensiwn y cyflogwr y tu allan i gynllun pensiwn cofrestru awtomatig
+startPage.about.whoCannotUse.l7 = daeth ei ffyrlo i ben ac yna dechreuodd ei ffyrlo eto yn ystod yr un cyfnod hawlio
+startPage.about.whoCannotUse.l8 = cawsant eu talu ar ffurf amrywiol ac maent wedi bod ar fwy nag un cyfnod o ffyrlo lle’r oedd unrhyw ran o’r cyfnodau ffyrlo yn ystod blwyddyn dreth 2019/20
+startPage.about.whoCannotUse.l9 = mae ganddynt gyflog amrywiol, gwnaethant ddechrau gweithio cyn 6 Ebrill 2020 ac nid oeddent ar gyflogres eu cyflogwr ar neu cyn 19 Mawrth 2020
+startPage.about.whoCannotUse.l10 = gwnaethant ddechrau gweithio i’w cyflogwr yn ystod cyfnod calendr ym mlwyddyn dreth 2019-20 sy’n cydfynd â’r holl gyfnod neu ran ohono
+startPage.about.whoCannotUse.l11 = maent ar gyflog sefydlog ac wedi newid amlder y taliadau, er enghraifft o gyflog misol i gyflog wythnosol
 
-startPage.about.whoCannotUse.p4 = In these cases, you must work out what you can claim manually using the {0} or seek professional advice.
-startPage.about.whoCannotUse.p4.link = calculation guidance
-startPage.about.whoCannotUse.p5 = It is your responsibility to check that the amount you’re claiming for is correct.
+startPage.about.whoCannotUse.p4 = Yn yr achosion hyn, mae’n rhaid i chi gyfrifo’r hyn y gallwch ei hawlio â llaw gan ddefnyddio’r {0} neu ceisiwch gyngor proffesiynol.
+startPage.about.whoCannotUse.p4.link = arweiniad cyfrifo
+startPage.about.whoCannotUse.p5 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y swm rydych yn ei hawlio yn gywir.
 
-startPage.beforeYouStart.h2 = Before you start
-startPage.beforeYouStart.p1 = You will need:
+startPage.beforeYouStart.h2 = Cyn i chi ddechrau
+startPage.beforeYouStart.p1 = Bydd angen y canlynol arnoch:
 startPage.beforeYouStart.p1.l1 = claim start date (for your first claim, this is when the first employee started furlough)
 startPage.beforeYouStart.p1.l2 = claim end date
 startPage.beforeYouStart.p1.l3 = pay dates (when the employee gets their pay)
@@ -955,17 +955,17 @@ startPage.beforeYouStart.p1.l4 = dates of pay periods (the time periods that the
 startPage.beforeYouStart.p1.l5 = regular payment amounts
 startPage.beforeYouStart.p1.l6 = additional payments (such as tips, discretionary bonuses, non-cash payments)
 startPage.beforeYouStart.p1.l7 = date furlough ended, if it is not ongoing
-startPage.beforeYouStart.p2 = From 1 July, if the employee is flexibly furloughed, you will also need:
+startPage.beforeYouStart.p2 = O 1 Gorffennaf ymlaen, os yw’r cyflogai ar ffyrlo hyblyg, bydd hefyd angen y canlynol arnoch:
 startPage.beforeYouStart.p2.l1 = {0}
-startPage.beforeYouStart.p2.l1.link = employee’s usual hours
-startPage.beforeYouStart.p2.l2 = actual hours worked
-startPage.beforeYouStart.p2.l3 = hours furloughed
-startPage.beforeYouStart.p3 = Read more about {0}
-startPage.beforeYouStart.p3.link = steps to take before calculating your claim
+startPage.beforeYouStart.p2.l1.link = oriau arferol y cyflogai
+startPage.beforeYouStart.p2.l2 = yr oriau gwirioneddol a weithiwyd
+startPage.beforeYouStart.p2.l3 = yr oriau ar ffyrlo
+startPage.beforeYouStart.p3 = Darllenwch ragor am y {0}
+startPage.beforeYouStart.p3.link = camau i’w cymryd cyn cyfrifo’ch hawliad
 
 # OnPayrollBefore30thOct2020 Messages
 # ------------------------------------------------
-onPayrollBefore30thOct2020.title = Was this employee on your payroll on or before 30 October 2020?
-onPayrollBefore30thOct2020.heading = Was this employee on your payroll on or before 30 October 2020?
+onPayrollBefore30thOct2020.title = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 30 October 2020?
+onPayrollBefore30thOct2020.heading = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 30 October 2020?
 onPayrollBefore30thOct2020.hint = Enter Yes if you have made a payment of earnings to them in the tax year 2020/2021, which was reported to HMRC on a Real Time Information (RTi) Full Payment Submission (FPS) on or before 30 October 2020
 onPayrollBefore30thOct2020.error.required = Select yes if this employee on your payroll on or before 30 October 2020?
