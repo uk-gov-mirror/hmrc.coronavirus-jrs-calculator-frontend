@@ -16,13 +16,19 @@
 
 package pages
 
-import java.time.LocalDate
+import models.UserAnswers
 
+import java.time.LocalDate
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object EmployeeStartDatePage extends QuestionPage[LocalDate] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "employeeStartDate"
+
+  override def cleanup(value: Option[LocalDate], userAnswers: UserAnswers): Try[UserAnswers] =
+    userAnswers.remove(OnPayrollBefore30thOct2020Page)
 }

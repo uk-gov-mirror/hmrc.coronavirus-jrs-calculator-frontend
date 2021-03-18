@@ -16,8 +16,9 @@
 
 package pages
 
-import java.time.LocalDate
+import models.UserAnswers
 
+import java.time.LocalDate
 import pages.behaviours.PageBehaviours
 
 class EmployeeStartDatePageSpec extends PageBehaviours {
@@ -29,5 +30,14 @@ class EmployeeStartDatePageSpec extends PageBehaviours {
     beSettable[LocalDate](EmployeeStartDatePage)
 
     beRemovable[LocalDate](EmployeeStartDatePage)
+
+    "remove the answer for the furloughed before 30th October page" in {
+
+      val userAnswers = UserAnswers("foo").set(OnPayrollBefore30thOct2020Page, true).get
+
+      val resultantAnswers = EmployeeStartDatePage.cleanup(None, userAnswers)
+
+      resultantAnswers mustBe
+    }
   }
 }
