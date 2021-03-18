@@ -1000,3 +1000,13 @@ onPayrollBefore30thOct2020.title = Was this employee on your payroll on or befor
 onPayrollBefore30thOct2020.heading = Was this employee on your payroll on or before 30 October 2020?
 onPayrollBefore30thOct2020.hint = Enter Yes if you have made a payment of earnings to them in the tax year 2020/2021, which was reported to HMRC on a Real Time Information (RTi) Full Payment Submission (FPS) on or before 30 October 2020
 onPayrollBefore30thOct2020.error.required = Select yes if this employee on your payroll on or before 30 October 2020?
+
+numberOfStatLeaveDays.title = NumberOfStatLeaveDays
+numberOfStatLeaveDays.heading = How many days was this employee on statutory leave between 6 April 2019 and 5 April 2020
+numberOfStatLeaveDays.checkYourAnswersLabel = NumberOfStatLeaveDays
+numberOfStatLeaveDays.error.nonNumeric = Enter your numberOfStatLeaveDays using numbers
+numberOfStatLeaveDays.error.required = Enter your numberOfStatLeaveDays
+numberOfStatLeaveDays.error.wholeNumber = Enter your numberOfStatLeaveDays using whole numbers
+numberOfStatLeaveDays.error.outOfRange = NumberOfStatLeaveDays must be between {0} and {1}
+numberOfStatLeaveDays.details.title = What does statutory leave include?
+numberOfStatLeaveDays.details.p1 = For this calculation, statutory leave only includes:
