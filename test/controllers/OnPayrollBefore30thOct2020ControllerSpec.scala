@@ -22,15 +22,17 @@ import models.PayMethod.Variable
 import models.UserAnswers
 import models.requests.DataRequest
 import org.mockito.Matchers.any
+import org.mockito.Matchers.{eq => argEqual}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.OnPayrollBefore30thOct2020Page
+import pages.{EmployeeStartDatePage, OnPayrollBefore30thOct2020Page}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.OnPayrollBefore30thOct2020View
 
+import java.time.LocalDate
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -64,34 +66,111 @@ class OnPayrollBefore30thOct2020ControllerSpec extends SpecBaseControllerSpecs w
 
   "OnPayrollBefore30thOct2020 Controller" must {
 
-    "calling onPageLoad()" should {
+    "calling onPageLoad()" when {
 
-      "return OK and the correct view for a GET" in {
+      "employee start date is after 30th October" must {
 
-        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+        "set the answer to false and redirect to the next page as determined by the navigator" in {
 
-        val request = FakeRequest(GET, onPageLoadUrl).withCSRFToken
-          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-        val result      = controller.onPageLoad()(request)
-        val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+          val userAnswers    = emptyUserAnswers.set(EmployeeStartDatePage, LocalDate.of(2020, 10, 31)).get
+          val updatedAnswers = userAnswers.set(OnPayrollBefore30thOct2020Page, false).get
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, postAction)(dataRequest, messages).toString
+          when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+          when(mockSessionRepository.set(argEqual(updatedAnswers))) thenReturn Future.successful(true)
+
+          val request = FakeRequest(GET, onPageLoadUrl).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+          val result  = controller.onPageLoad()(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(navigator.nextPage(OnPayrollBefore30thOct2020Page, updatedAnswers).url)
+        }
       }
 
-      "populate the view correctly on a GET when the question has previously been answered" in {
+      "employee start date is before 1st September 2020" must {
 
-        val userAnswers = UserAnswers(userAnswersId).set(OnPayrollBefore30thOct2020Page, true).success.value
+        "set the answer to true and redirect to the next page as determined by the navigator" in {
 
-        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+          val userAnswers    = emptyUserAnswers.set(EmployeeStartDatePage, LocalDate.of(2020, 8, 30)).get
+          val updatedAnswers = userAnswers.set(OnPayrollBefore30thOct2020Page, true).get
 
-        val request     = FakeRequest(GET, onPageLoadUrl).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-        val result      = controller.onPageLoad()(request)
-        val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+          when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+          when(mockSessionRepository.set(argEqual(updatedAnswers))) thenReturn Future.successful(true)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual
-          view(form.fill(true), postAction)(dataRequest, messages).toString
+          val request = FakeRequest(GET, onPageLoadUrl).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+          val result  = controller.onPageLoad()(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(navigator.nextPage(OnPayrollBefore30thOct2020Page, updatedAnswers).url)
+        }
+      }
+
+      "employee start date is between 1st and 30th October" must {
+
+        "return OK and the correct view for a GET" in {
+
+          val userAnswers = emptyUserAnswers.set(EmployeeStartDatePage, LocalDate.of(2020, 9, 1)).get
+
+          when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+
+          val request = FakeRequest(GET, onPageLoadUrl).withCSRFToken
+            .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+          val result      = controller.onPageLoad()(request)
+          val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, postAction)(dataRequest, messages).toString
+        }
+
+        "populate the view correctly on a GET when the question has previously been answered" in {
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(EmployeeStartDatePage, LocalDate.of(2020, 9, 1))
+            .get
+            .set(OnPayrollBefore30thOct2020Page, true)
+            .success
+            .value
+
+          when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+
+          val request     = FakeRequest(GET, onPageLoadUrl).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+          val result      = controller.onPageLoad()(request)
+          val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual
+            view(form.fill(true), postAction)(dataRequest, messages).toString
+        }
+      }
+
+      "employee start date is not answered" must {
+
+        "return OK and the correct view for a GET" in {
+
+          when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+
+          val request = FakeRequest(GET, onPageLoadUrl).withCSRFToken
+            .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+          val result      = controller.onPageLoad()(request)
+          val dataRequest = DataRequest(request, emptyUserAnswers.id, emptyUserAnswers)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, postAction)(dataRequest, messages).toString
+        }
+
+        "populate the view correctly on a GET when the question has previously been answered" in {
+
+          val userAnswers = UserAnswers(userAnswersId).set(OnPayrollBefore30thOct2020Page, true).success.value
+
+          when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+
+          val request     = FakeRequest(GET, onPageLoadUrl).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+          val result      = controller.onPageLoad()(request)
+          val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual
+            view(form.fill(true), postAction)(dataRequest, messages).toString
+        }
       }
 
       "redirect to Session Expired for a GET if no existing data is found" in {
