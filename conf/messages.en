@@ -622,13 +622,13 @@ furloughBreakdown.l1 = Take £{0} (pay based on furlough days).
 furloughBreakdown.l2 = Multiply by 80%.
 furloughBreakdown.total = Total furlough grant for pay period = £{0}
 furloughBreakdown.furloughCap.p1 = Calculated furlough grant = £{0}
-furloughBreakdown.furloughCap.p2 = The calculated furlough grant is more than the maximum furlough grant for this pay period. Because of this, you must use the maximum furlough grant, which is £{0}.
+furloughBreakdown.furloughCap.p2 = The calculated furlough grant is more than the maximum furlough grant for this pay period. Because of this, you must use the maximum furlough grant, which is {0}
 furloughBreakdown.furloughCap.fullPeriodCap = £{0}
 furloughBreakdown.september.furloughCap.fullPeriodCap = £{0} (September cap).
 furloughBreakdown.october.furloughCap.fullPeriodCap = £{0} (October cap).
 furloughBreakdown.furloughCap.periodSpansMonthCap = {0} furlough days in {1} at £{2} + {3} furlough days in {4} at £{5} = £{6}.
 furloughBreakdown.furloughCap.partialPeriodCap ={0} furlough days in {1} at £{2} = £{3}
-furloughBreakdown.furloughCap.p3 = Actual furlough grant = £{0}
+furloughBreakdown.furloughCap.p3 = Actual furlough grant = {0}
 
 nicBreakdown.h4 = Employer National Insurance contributions
 nicBreakdown.l1 = Start with £{0} (furlough grant).
@@ -836,11 +836,11 @@ phaseTwoFurloughBreakdown.september.l2 = Multiply by 70% (September rate).
 phaseTwoFurloughBreakdown.october.l2 = Multiply by 60% (October rate).
 phaseTwoFurloughBreakdown.total = Total furlough grant for pay period = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p1 = Calculated furlough grant = £{0}
-phaseTwoFurloughBreakdown.furloughCap.p2 = The calculated furlough grant is more than the maximum furlough grant for this pay period. Because of this, you must use the maximum furlough grant, which is £{0}.
+phaseTwoFurloughBreakdown.furloughCap.p2 = The calculated furlough grant is more than the maximum furlough grant for this pay period. Because of this, you must use the maximum furlough grant, which is {0}
 phaseTwoFurloughBreakdown.furloughCap.fullPeriodCap.partTime = £{0} divided by {1} usual hours multiplied by {2} furlough hours = £{3}
 phaseTwoFurloughBreakdown.furloughCap.periodSpansMonthCap.partTime = {0} furlough days in {1} at £{2} + {3} furlough days in {4} at £{5} divided by {6} usual hours multiplied by {7} usual hours = £{8}.
 phaseTwoFurloughBreakdown.furloughCap.partialPeriodCap.partTime ={0} furlough days in {1} at £{2} divided by {3} usual hours multiplied by {4} furlough hours = £{5}.
-phaseTwoFurloughBreakdown.furloughCap.p3 = Actual furlough grant = £{0}
+phaseTwoFurloughBreakdown.furloughCap.p3 = Actual furlough grant = {0}
 
 phaseTwoNicBreakdown.h4 = Employer National Insurance contributions
 phaseTwoNicBreakdown.l1 = Start with £{0} (furlough grant).
