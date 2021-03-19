@@ -1,33 +1,36 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration OnPayrollBefore30thOct2020"
+echo "Applying migration StatutoryLeavePay"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /onPayrollBefore30thOct2020                        controllers.OnPayrollBefore30thOct2020Controller.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /onPayrollBefore30thOct2020                        controllers.OnPayrollBefore30thOct2020Controller.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /statutoryLeavePay                  controllers.StatutoryLeavePayController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /statutoryLeavePay                  controllers.StatutoryLeavePayController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeOnPayrollBefore30thOct2020                  controllers.OnPayrollBefore30thOct2020Controller.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeOnPayrollBefore30thOct2020                  controllers.OnPayrollBefore30thOct2020Controller.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeStatutoryLeavePay                        controllers.StatutoryLeavePayController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeStatutoryLeavePay                        controllers.StatutoryLeavePayController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "onPayrollBefore30thOct2020.title = onPayrollBefore30thOct2020" >> ../conf/messages.en
-echo "onPayrollBefore30thOct2020.heading = onPayrollBefore30thOct2020" >> ../conf/messages.en
-echo "onPayrollBefore30thOct2020.checkYourAnswersLabel = onPayrollBefore30thOct2020" >> ../conf/messages.en
-echo "onPayrollBefore30thOct2020.error.required = Select yes if onPayrollBefore30thOct2020" >> ../conf/messages.en
+echo "statutoryLeavePay.title = StatutoryLeavePay" >> ../conf/messages.en
+echo "statutoryLeavePay.heading = StatutoryLeavePay" >> ../conf/messages.en
+echo "statutoryLeavePay.checkYourAnswersLabel = StatutoryLeavePay" >> ../conf/messages.en
+echo "statutoryLeavePay.error.nonNumeric = Enter your statutoryLeavePay using numbers" >> ../conf/messages.en
+echo "statutoryLeavePay.error.required = Enter your statutoryLeavePay" >> ../conf/messages.en
+echo "statutoryLeavePay.error.wholeNumber = Enter your statutoryLeavePay using whole numbers" >> ../conf/messages.en
+echo "statutoryLeavePay.error.outOfRange = StatutoryLeavePay must be between {0} and {1}" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryOnPayrollBefore30thOct2020UserAnswersEntry: Arbitrary[(OnPayrollBefore30thOct2020Page.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryStatutoryLeavePayUserAnswersEntry: Arbitrary[(StatutoryLeavePayPage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[OnPayrollBefore30thOct2020Page.type]";\
-    print "        value <- arbitrary[Boolean].map(Json.toJson(_))";\
+    print "        page  <- arbitrary[StatutoryLeavePayPage.type]";\
+    print "        value <- arbitrary[Int].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
     next }1' ../test/generators/UserAnswersEntryGenerators.scala > tmp && mv tmp ../test/generators/UserAnswersEntryGenerators.scala
@@ -36,14 +39,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryOnPayrollBefore30thOct2020Page: Arbitrary[OnPayrollBefore30thOct2020Page.type] =";\
-    print "    Arbitrary(OnPayrollBefore30thOct2020Page)";\
+    print "  implicit lazy val arbitraryStatutoryLeavePayPage: Arbitrary[StatutoryLeavePayPage.type] =";\
+    print "    Arbitrary(StatutoryLeavePayPage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(OnPayrollBefore30thOct2020Page.type, JsValue)] ::";\
+    print "    arbitrary[(StatutoryLeavePayPage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration OnPayrollBefore30thOct2020 completed"
+echo "Migration StatutoryLeavePay completed"

@@ -162,6 +162,13 @@ trait ModelGenerators {
       } yield Salary(salary)
     }
 
+  implicit lazy val arbitraryStatutoryLeavePay: Arbitrary[Amount] =
+    Arbitrary {
+      for {
+        amount <- Arbitrary.arbitrary[BigDecimal]
+      } yield Amount(amount)
+    }
+
   implicit lazy val arbitraryCylbpayMethod: Arbitrary[LastYearPayment] =
     Arbitrary {
       for {
