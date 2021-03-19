@@ -22,11 +22,13 @@ import play.api.data.Form
 
 class NumberOfStatLeaveDaysFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  def apply(boundaryStart: String, boundaryEnd: String): Form[Int] =
     Form(
-      "value" -> int("numberOfStatLeaveDays.error.required",
-                     "numberOfStatLeaveDays.error.wholeNumber",
-                     "numberOfStatLeaveDays.error.nonNumeric")
-        .verifying(inRange(0, 10, "numberOfStatLeaveDays.error.outOfRange"))
+      "value" -> int(
+        "numberOfStatLeaveDays.error.required",
+        "numberOfStatLeaveDays.error.wholeNumber",
+        "numberOfStatLeaveDays.error.nonNumeric",
+        args = Seq(boundaryStart, boundaryEnd)
+      ).verifying(inRange(0, 10, "numberOfStatLeaveDays.error.outOfRange"))
     )
 }

@@ -25,15 +25,15 @@
         details: components.details
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], postAction: Call, boundaryStart: String, boundaryEnd: String)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(pageTitle = Some(title(form, "numberOfStatLeaveDays.title")), timeout = false, thisPage = NumberOfStatLeaveDaysPage) {
+@govukLayout(pageTitle = Some(title(form, "numberOfStatLeaveDays.title", titleMessageArgs = Seq(boundaryStart, boundaryEnd))), timeout = false, thisPage = NumberOfStatLeaveDaysPage) {
 
-    @formHelper(action = NumberOfStatLeaveDaysController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = postAction) {
 
         @errorSummary(form.errors)
 
-        @h1("numberOfStatLeaveDays.heading")
+        @h1(messages("numberOfStatLeaveDays.heading", boundaryStart, boundaryEnd))
 
         @details(
         summaryText = Messages("numberOfStatLeaveDays.details.title")

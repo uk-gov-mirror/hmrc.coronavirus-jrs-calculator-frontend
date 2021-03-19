@@ -30,6 +30,9 @@ import views.html.NumberOfStatLeaveDaysView
 
 import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
+import config.FrontendAppConfig
+import play.api.data.Form
+import viewmodels.BeenOnStatutoryLeaveHelper
 
 class NumberOfStatLeaveDaysController @Inject()(
   override val messagesApi: MessagesApi,
@@ -39,27 +42,29 @@ class NumberOfStatLeaveDaysController @Inject()(
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: NumberOfStatLeaveDaysFormProvider,
+  helper: BeenOnStatutoryLeaveHelper,
   val controllerComponents: MessagesControllerComponents,
   view: NumberOfStatLeaveDaysView
-)(implicit ec: ExecutionContext)
+)(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
     extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val form: Form[Int] = formProvider(helper.boundaryStart(), helper.boundaryEnd())
     val preparedForm = request.userAnswers.getV(NumberOfStatLeaveDaysPage) match {
       case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
-
-    Ok(view(preparedForm))
+    val postAction = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
+    Ok(view(preparedForm, postAction, helper.boundaryStart(), helper.boundaryEnd()))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val postAction      = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
+    val form: Form[Int] = formProvider(helper.boundaryStart(), helper.boundaryEnd())
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, postAction, helper.boundaryStart(), helper.boundaryEnd()))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(NumberOfStatLeaveDaysPage, value))
