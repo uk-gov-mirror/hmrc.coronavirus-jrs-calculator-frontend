@@ -25,7 +25,7 @@ import models.{EmployeeRTISubmission, EmployeeStarted, RegularLengthEmployed}
 import pages._
 import play.api.Logger.logger
 import uk.gov.hmrc.http.InternalServerException
-import utils.LocalDateHelpers.{feb1st2020, july1st2020, nov1st2020}
+import utils.LocalDateHelpers.{feb1st2020, nov1st2020}
 import utils.PagerDutyHelper.PagerDutyKeys.EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED
 
 trait EmployeeTypeUtil extends FeatureSwitching {
@@ -73,7 +73,9 @@ trait EmployeeTypeUtil extends FeatureSwitching {
     type5aEmployeeResult: Option[T] = None,
     type5bEmployeeResult: Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): Option[T] =
     request.userAnswers.getV(EmployeeStartedPage) match {
-      case Valid(EmployeeStarted.OnOrBefore1Feb2019) => type3EmployeeResult
+      case Valid(EmployeeStarted.OnOrBefore1Feb2019) =>
+        logger.debug("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee")
+        type3EmployeeResult
       case Valid(EmployeeStarted.After1Feb2019) =>
         (request.userAnswers.getV(EmployeeStartDatePage),
          request.userAnswers.getV(EmployeeRTISubmissionPage),

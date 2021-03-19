@@ -153,3 +153,6 @@ POST        /october-payroll                                 controllers.OnPayro
 
 GET         /amount-paid-for-statutory-leave                 controllers.StatutoryLeavePayController.onPageLoad()
 POST        /amount-paid-for-statutory-leave                 controllers.StatutoryLeavePayController.onSubmit()
+
+GET        /been-on-statutory-leave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad()
+POST       /been-on-statutory-leave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onSubmit()
