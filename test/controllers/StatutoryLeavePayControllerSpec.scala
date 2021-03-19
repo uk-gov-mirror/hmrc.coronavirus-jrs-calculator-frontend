@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBaseControllerSpecs
+import config.featureSwitch.{FeatureSwitching, StatutoryLeaveFlow}
 import forms.StatutoryLeavePayFormProvider
 import models.requests.DataRequest
 import models.{Amount, NormalMode, UserAnswers}
@@ -36,7 +37,7 @@ import views.html.StatutoryLeavePayView
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
+class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with MockitoSugar with FeatureSwitching {
 
   val formProvider = new StatutoryLeavePayFormProvider()
   val form         = formProvider()
@@ -113,8 +114,23 @@ class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with Mocki
 
         status(result) mustEqual SEE_OTHER
 
-        //TODO: change to next page when routing implemented
+        redirectLocation(result).value mustEqual routes.PartTimeQuestionController.onPageLoad().url
+      }
+
+      "redirect to the root page when the feature switch is disabled" in {
+        disable(StatutoryLeaveFlow)
+        val userAnswers = emptyUserAnswers
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+        val request =
+          FakeRequest(POST, statutoryLeavePayRoute)
+            .withFormUrlEncodedBody(("value", "111"))
+
+        val result = controller.onSubmit()(request)
+
+        status(result) mustEqual SEE_OTHER
+
         redirectLocation(result).value mustEqual routes.RootPageController.onPageLoad().url
+        enable(StatutoryLeaveFlow)
       }
 
       "return a Bad Request and errors when invalid data is submitted" in {
