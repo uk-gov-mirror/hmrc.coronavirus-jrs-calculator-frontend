@@ -327,7 +327,7 @@ class FurloughPeriodExtractorSpec
 
     "not supplied any answers" should {
 
-      "" in new FurloughPeriodExtractor {
+      "return invalid" in new FurloughPeriodExtractor {
 
         val userAnswers = emptyUserAnswers
 
