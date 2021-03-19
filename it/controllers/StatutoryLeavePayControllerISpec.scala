@@ -76,8 +76,7 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
         whenReady(res) { result =>
           result should have(
             httpStatus(SEE_OTHER),
-            // TODO: Add when routing is in place
-            // redirectLocation(controllers.routes.PartTimeQuestionController.onPageLoad().url)
+            redirectLocation(controllers.routes.PartTimeQuestionController.onPageLoad().url)
           )
         }
       }
