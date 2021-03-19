@@ -41,7 +41,7 @@
         ) {
             <p>@messages("statutoryLeavePay.details.p1")</p>
 
-            <ul>
+            <ul class="govuk-list govuk-list--bullet">
                 <li>@messages("statutoryLeavePay.details.l1")</li>
                 <li>@messages("statutoryLeavePay.details.l2")</li>
                 <li>@messages("statutoryLeavePay.details.l3")</li>
@@ -53,7 +53,7 @@
             form,
             id = "value",
             name = "value",
-            label = messages("statutoryLeavePay.heading"),
+            label = messages("statutoryLeavePay.label"),
             labelClasses = Some("govuk-visually-hidden"),
             isPageHeading = false,
             classes = Some("govuk-input--width-10")
