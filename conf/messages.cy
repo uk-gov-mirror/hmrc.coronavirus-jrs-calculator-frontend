@@ -272,6 +272,9 @@ pensionContribution.doesContribute = Iawn
 pensionContribution.doesNotContribute = Na
 pensionContribution.error.required = Dewiswch ‘Iawn’ os ydych yn talu cyfraniadau pensiwn ar gyfer y cyflogai hwn
 
+# ConfirmationPage Messages
+# ----------------------------------------------------------
+
 confirmation.title = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.confirmation.p1 = Y swm a delir i’r cyflogai hwn sydd ar ffyrlo
@@ -324,12 +327,12 @@ confirmation.no.nic.pension.title = Yr hyn y gallwch ei hawlio ar gyfer y cyflog
 confirmation.no.nic.pension.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.no.nic.pension.p1 = Grant ffyrlo
 confirmation.no.nic.pension.nextSteps.li.1 = eich cofnodion
-confirmation.no.nic.pension.nextSteps.li.2 = Make a note of the amount you can claim for this employee and the claim period.
-confirmation.no.nic.pension.nextSteps.li.3 = 3. Defnyddiwch y gyfrifiannell eto ar gyfer unrhyw gyflogeion eraill sydd ar ffyrlo yn ystod y cyfnod hawlio hwn {0} i {1}, a gwnewch nodyn o’r canlyniadau.
+confirmation.no.nic.pension.nextSteps.li.2 = Gwnewch nodyn o’r swm y gallwch ei hawlio ar gyfer y cyflogai hwn a’r cyfnod hawlio.
+confirmation.no.nic.pension.nextSteps.li.3 = Defnyddiwch y gyfrifiannell eto ar gyfer unrhyw gyflogeion eraill sydd ar ffyrlo yn ystod y cyfnod hawlio hwn {0} i {1}, a gwnewch nodyn o’r canlyniadau.
 confirmation.no.nic.pension.nextSteps.li.3.2 = Cyfrifwch y cyfanswm y gallwch ei hawlio ar gyfer cyfraniadau Yswiriant Gwladol y cyflogwr (yn agor ffenestr neu dab newydd).
-confirmation.no.nic.pension.nextSteps.li.4 = Add all the results for each employee furloughed in this claim period together to get the total amount you can claim.
-confirmation.no.nic.pension.nextSteps.li.4.1 = Make a claim through the {0}
-confirmation.no.nic.pension.nextSteps.li.4.2 = Coronavirus Job Retention Scheme (opens in a new window or tab)
+confirmation.no.nic.pension.nextSteps.li.4 = Ychwanegwch yr holl ganlyniadau ar gyfer pob cyflogai a roddwyd ar ffyrlo yn ystod y cyfnod hawlio hwn at ei gilydd i gael y cyfanswm y gallwch ei hawlio.
+confirmation.no.nic.pension.nextSteps.li.4.1 = Gwneud hawliad drwy’r {0}
+confirmation.no.nic.pension.nextSteps.li.4.2 = Cynllun Cadw Swyddi yn sgil Coronafeirws (yn agor tab newydd)
 confirmation.no.nic.pension.breakdown.summary = Dadansoddiad o gyfrifiadau
 confirmation.no.nic.pension.disclaimer = Mae canlyniadau’r cyfrifiad yn dibynnu ar gywirdeb yr wybodaeth a nodwyd gennych, yr ydych yn gyfrifol amdani. Ni allwch hawlio am fwy o arian nag yr ydych yn mynd i’w dalu allan o dan y cynllun.
 
@@ -364,7 +367,7 @@ claimPeriodStart.error.invalid = Nodwch ddyddiad dechrau go iawn
 claimPeriodStart.error.outofrange = Nodwch ddyddiad rhwng {0} a {1}
 claimPeriodStart.legend = Dyddiad dechrau
 claimPeriodStart.hint = Er enghraifft, 1 3 2020
-confirmation.breakdown.heading = Breakdown of calculations
+confirmation.breakdown.heading = Dadansoddiad o’r cyfrifiadau
 confirmation.breakdown.p2 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog
 
 claimPeriodEnd.title = Beth yw dyddiad dod i ben yr hawliad hwn?
@@ -589,7 +592,7 @@ referencePayBreakdown.result = Cyfanswm y cyflog yn seiliedig ar ddiwrnodau ffyr
 
 referencePayBreakdown.regular.p1 = Ystyriwch y cyflog yn y cyfnod cyflog:
 referencePayBreakdown.regular.l1 = Dechreuwch gyda £{0} (o’r cyfnod cyflog)
-referencePayBreakdown.regular.l2 = Divide by {0} (number of days in the pay period).
+referencePayBreakdown.regular.l2 = Rhannwch â {0} (nifer y diwrnodau yn y cyfnod cyflog).
 referencePayBreakdown.regular.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 
 referencePayBreakdown.regular.employerFunded.h4 = Cyfrifo’r cyflog a ariennir gan y cyflogwr
@@ -598,42 +601,42 @@ referencePayBreakdown.regular.employerFunded.l2 = Llai £{0} (cyflog yn seiliedi
 referencePayBreakdown.regular.employerFunded.result = Cyflog a ariennir gan y cyflogwr am y {0} o ddiwrnodau sy’n weddill yn y cyfnod cyflog = £{1}
 
 referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, whichever is earlier) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
-referencePayBreakdown.average.p1.partOfCylb = Method 2: take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) up to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+referencePayBreakdown.average.p1.partOfCylb = Dull 2: cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 referencePayBreakdown.average.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog).
 referencePayBreakdown.average.l2 = Rhannwch â {0} (o ddiwrnodau y’i cyflogwyd).
 referencePayBreakdown.average.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 referencePayBreakdown.average.result = Cyfanswm y cyflog cyfartalog y flwyddyn ddiwethaf = £{0}
 
-referencePayBreakdown.cylb.p1 = Method 1: take the employee’s pay from the same dates in {0}.
+referencePayBreakdown.cylb.p1 = Dull 1: cymerwch gyflog y cyflogai o’r un dyddiadau yn {0}.
 
-referencePayBreakdown.cylb.twoPeriods.p1 = In {0}, these dates overlap more than one pay period. In period one you should:
-referencePayBreakdown.cylb.p2.march2021 = Because this claim is for {0} you must use the calendar lookback method to look back to 2019
+referencePayBreakdown.cylb.twoPeriods.p1 = Yn {0}, mae’r dyddiadau hyn yn gorgyffwrdd â mwy nag un cyfnod cyflog. Yng nghyfnod un, dylech wneud y canlynol:
+referencePayBreakdown.cylb.p2.march2021 = Gan fod yr hawliad hwn ar gyfer {0} mae’n rhaid i chi ddefnyddio’r dull ‘edrych yn ôl ar galendr’ i edrych yn ôl at 2019.
 
 referencePayBreakdown.cylb.twoPeriods = Mae dyddiadau’r flwyddyn ddiwethaf yn gorgyffwrdd â dau gyfnod cyflog, felly yng nghyfnod un:
 referencePayBreakdown.cylb.l1 = Dechreuwch gyda £{0} (o ddyddiad cyflog {1} y flwyddyn ddiwethaf).
-referencePayBreakdown.cylb.l2 = Divide by {0} (number of days in the pay period).
+referencePayBreakdown.cylb.l2 = Rhannwch â {0} (nifer y diwrnodau yn y cyfnod cyflog).
 referencePayBreakdown.cylb.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 referencePayBreakdown.cylb.periodTotal = Cyfanswm ar gyfer cyfnod un = £{0}
 referencePayBreakdown.cylb.then = Yna:
 referencePayBreakdown.cylb.thenPeriodTwo = Yna, yng nghyfnod dau:
-referencePayBreakdown.cylb.addTotals = Then you should add the totals from both pay periods (£{0} + £{1}).
-referencePayBreakdown.cylb.result = Total pay across these periods = £{0}
+referencePayBreakdown.cylb.addTotals = Yna, dylech ychwanegu’r cyfansymiau o’r ddau gyfnod cyflog (£{0} + £{1}).
+referencePayBreakdown.cylb.result = Cyfanswm y cyflog ar draws y cyfnodau hyn = £{0}
 referencePayBreakdown.cylb.higherOf = Yna, ystyriwch y ffigur uchaf o ddulliau 1 a 2:
-referencePayBreakdown.cylb.higherOf.cylb = £{0} (method 1: pay from same dates in {1}).
-referencePayBreakdown.cylb.higherOf.average = £{0} (method 2: average pay in {1}).
+referencePayBreakdown.cylb.higherOf.cylb = £{0} (dull 1: cyflog o’r un dyddiadau yn {1}).
+referencePayBreakdown.cylb.higherOf.average = £{0} (dull 2: cyflog cyfartalog yn {1}).
 
 furloughBreakdown.h4 = Grant ffyrlo
-furloughBreakdown.l1 = Ystyriwch £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo).
+furloughBreakdown.l1 = Cymerwch £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo).
 furloughBreakdown.l2 = Lluoswch â 80%.
 furloughBreakdown.total = Cyfanswm y grant ffyrlo ar gyfer y cyfnod cyflog = £{0}
 furloughBreakdown.furloughCap.p1 = Grant ffyrlo wedi’i gyfrifo = £{0}
-furloughBreakdown.furloughCap.p2 = The calculated furlough grant is more than the maximum furlough grant for this pay period. Because of this, you must use the maximum furlough grant, which is {0}
+furloughBreakdown.furloughCap.p2 = Mae’r grant ffyrlo amcangyfrifedig yn fwy na’r grant ffyrlo uchaf ar gyfer y cyfnod cyflog hwn. Oherwydd hyn, mae’n rhaid i chi ddefnyddio’r grant ffyrlo uchaf, sef £{0}.
 furloughBreakdown.furloughCap.fullPeriodCap = £{0}
 furloughBreakdown.september.furloughCap.fullPeriodCap = £{0} (September cap).
 furloughBreakdown.october.furloughCap.fullPeriodCap = £{0} (October cap).
 furloughBreakdown.furloughCap.periodSpansMonthCap = {0} o ddiwrnodau ffyrlo ym mis {1} ar £{2} + {3} o ddiwrnodau ffyrlo ym mis {4} ar £{5} = £{6}.
 furloughBreakdown.furloughCap.partialPeriodCap ={0} o ddiwrnodau ffyrlo ym mis {1} ar £{2} = £{3}
-furloughBreakdown.furloughCap.p3 = Actual furlough grant = {0}
+furloughBreakdown.furloughCap.p3 = Grant ffyrlo gwirioneddol = £{0}
 
 nicBreakdown.h4 = Cyfraniadau Yswiriant Gwladol y cyflogwr
 nicBreakdown.l1 = Dechreuwch gyda £{0} (grant ffyrlo).
@@ -644,7 +647,7 @@ nicBreakdown.l5 = Talgrynnwch i lawr i’r bunt agosaf.
 nicBreakdown.l6.20 = Didynnwch £{0} (trothwy CYG ar gyfer blwyddyn dreth 2019/20).
 nicBreakdown.l6.21 = Didynnwch £{0} (trothwy CYG ar gyfer blwyddyn dreth 2020/21).
 nicBreakdown.l7 = Lluoswch â 13.8%.
-nicBreakdown.l8 = Divide by {0} (number of days in the pay period).
+nicBreakdown.l8 = Rhannwch â {0} (nifer y diwrnodau yn y cyfnod cyflog).
 nicBreakdown.l9 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 nicBreakdown.l10 = Rhannwch â £{0} (cyflog yn seiliedig ar gyflog ffyrlo ynghyd ag ychwanegiad at y cyflog).
 nicBreakdown.l11 = Lluoswch â £{0} (grant ffyrlo).
@@ -736,6 +739,14 @@ phaseTwoDetailedBreakdown.october.p1.regular = Rhoesoch wybod i ni fod y cyfloga
 phaseTwoDetailedBreakdown.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 80% o hyn.
 phaseTwoDetailedBreakdown.september.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 70% o hyn.
 phaseTwoDetailedBreakdown.october.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 60% o hyn.
+
+# Variable Pay, Employee Type 5 - Eligible for CJRS Extension claims only - Messages for Post-1st of November 2020
+# ----------------------------------------------------------
+
+phaseTwoDetailedBreakdown.no.nic.p1.extension = Gwnaethoch roi gwybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro ac nad oedd ar eich cyflogres cyn 19 Mawrth 2020. Rydym wedi cyfrifo’i enillion dyddiol cyfartalog drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2020 (neu’r dyddiad y dechreuodd ei gyflogaeth, p’un bynnag sydd hwyraf) a’r diwrnod cyn iddo gael ei roi ar ffyrlo am y tro cyntaf ar neu ar ôl 1 Tachwedd 2020. Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo a’r oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn cyfateb i 80% o hyn.
+
+# ----------------------------------------------------------
+
 phaseTwoDetailedBreakdown.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 80% o hyn.
 phaseTwoDetailedBreakdown.p1.cylb.2 = Method 1: we’ve used the calendar lookback method to take the amounts the employee was paid in equivalent pay periods. We then applied this to the number of furlough days in each pay period.
 phaseTwoDetailedBreakdown.p1.cylb.3 = Dull 2: rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn ystod y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog.
@@ -751,11 +762,11 @@ phaseTwoDetailedBreakdown.p2.a.href = https://www.gov.uk/guidance/calculate-how-
 phaseTwoDetailedBreakdown.p3 = Mae cyfrifiadau’n cael eu talgrynnu i’r geiniog agosaf, oni nodir yn wahanol.
 phaseTwoDetailedBreakdown.h3 = Ar gyfer cyfnod cyflog {0} i {1}
 
-phaseTwoReferencePayBreakdown.h4 = Calculate the employee’s pay based on their furlough days
+phaseTwoReferencePayBreakdown.h4 = Cyfrifwch gyflog y cyflogai yn seiliedig ar ei ddiwrnodau ffyrlo
 
 phaseTwoReferencePayBreakdown.regular.p1 = Ystyriwch y cyflog yn y cyfnod cyflog:
 phaseTwoReferencePayBreakdown.regular.days.l1 = Dechreuwch gyda £{0} (o’r cyfnod cyflog)
-phaseTwoReferencePayBreakdown.regular.days.l2 = Divide by {0} (number of days in the pay period).
+phaseTwoReferencePayBreakdown.regular.days.l2 = Rhannwch â {0} (nifer y diwrnodau yn y cyfnod cyflog).
 phaseTwoReferencePayBreakdown.regular.days.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 phaseTwoReferencePayBreakdown.regular.daysResult = Cyfanswm y cyflog yn seiliedig ar ddiwrnodau ffyrlo = £{0}
 phaseTwoReferencePayBreakdown.regular.then = Yna:
@@ -764,11 +775,16 @@ phaseTwoReferencePayBreakdown.regular.hours.l2 = Rhannwch â {0} (oriau arferol)
 phaseTwoReferencePayBreakdown.regular.hours.l3 = Lluoswch â {0} (oriau ffyrlo).
 phaseTwoReferencePayBreakdown.regular.hoursResult = Cyfanswm cyflog yn seiliedig ar oriau a weithiwyd yn y cyfnod cyflog hwn = £{0}
 
-phaseTwoReferencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, whichever is earlier) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
-phaseTwoReferencePayBreakdown.average.p1.partOfCylb = Method 2: take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) up to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+phaseTwoReferencePayBreakdown.average.p1 = Cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019, p’un bynnag sydd gynharaf) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
+phaseTwoReferencePayBreakdown.average.p1.partOfCylb = Dull 2: cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 phaseTwoReferencePayBreakdown.average.days.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog).
 phaseTwoReferencePayBreakdown.average.days.l2 = Rhannwch â {0} (o ddiwrnodau y’i cyflogwyd).
 phaseTwoReferencePayBreakdown.average.days.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
+
+phaseTwoReferencePayBreakdown.average.extension.days.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog o 6 Ebrill 2020 hyd at y diwrnod cyn i’r ffyrlo ddechrau ar neu ar ôl 1 Tachwedd 2020).
+phaseTwoReferencePayBreakdown.average.extension.days.l2 = Rhannwch â {0} (nifer y diwrnodau y’i cyflogwyd ers dechrau’r flwyddyn dreth).
+phaseTwoReferencePayBreakdown.average.extension.days.l3 = Lluoswch â {0} (nifer y diwrnodau ffyrlo yn ystod y cyfnod cyflog).
+
 phaseTwoReferencePayBreakdown.average.daysResult = Cyfanswm y cyflog yn seiliedig ar ddiwrnodau ffyrlo = £{0}
 phaseTwoReferencePayBreakdown.average.then = Yna:
 phaseTwoReferencePayBreakdown.average.hours.l1 = Dechreuwch gyda £{0} (Cyfanswm y cyflog yn seiliedig ar ddiwrnodau ffyrlo).
@@ -776,40 +792,43 @@ phaseTwoReferencePayBreakdown.average.hours.l2 = Rhannwch â {0} (oriau arferol)
 phaseTwoReferencePayBreakdown.average.hours.l3 = Lluoswch â {0} (oriau ffyrlo).
 phaseTwoReferencePayBreakdown.average.hoursResult = Cyfanswm cyflog yn seiliedig ar oriau a weithiwyd yn y cyfnod cyflog hwn = £{0}
 
-phaseTwoReferencePayBreakdown.cylb.p1 = Method 1: take the employee’s pay from the same dates in {0}.
+phaseTwoReferencePayBreakdown.extension.p1.strong = Dull cyfartalu:
+phaseTwoReferencePayBreakdown.extension.p1 = cymerwch gyfanswm cyflog y cyflogai o 6 Ebrill 2020 (neu’r dyddiad y dechreuodd y gyflogaeth, p’un bynnag sydd hwyraf) hyd at y diwrnod cyn i’r ffyrlo ddechrau ar neu ar ôl 1 Tachwedd 2020.
+
+phaseTwoReferencePayBreakdown.cylb.p1 = Dull 1: cymerwch gyflog y cyflogai o’r un dyddiadau yn {0}.
 phaseTwoReferencePayBreakdown.cylb.twoPeriods = Mae dyddiadau’r flwyddyn ddiwethaf yn gorgyffwrdd â dau gyfnod cyflog, felly yng nghyfnod un:
 phaseTwoReferencePayBreakdown.cylb.l1 = Dechreuwch gyda £{0} (o ddyddiad cyflog {1} y flwyddyn ddiwethaf).
-phaseTwoReferencePayBreakdown.cylb.l2 = Divide by {0} (number of days in the pay period).
+phaseTwoReferencePayBreakdown.cylb.l2 = Rhannwch â {0} (nifer y diwrnodau yn y cyfnod cyflog).
 phaseTwoReferencePayBreakdown.cylb.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 phaseTwoReferencePayBreakdown.cylb.periodOneTotal = Cyfanswm ar gyfer cyfnod un = £{0}
 phaseTwoReferencePayBreakdown.cylb.then = Yna:
 phaseTwoReferencePayBreakdown.cylb.thenPeriodTwo = Yna, yng nghyfnod dau:
 phaseTwoReferencePayBreakdown.cylb.periodTwoTotal = Cyfanswm ar gyfer cyfnod dau = £{0}
 phaseTwoReferencePayBreakdown.cylb.addTotals = Adiwch £{0} + £{1} (y cyfansymiau o’r ddau gyfnod cyflog).
-phaseTwoReferencePayBreakdown.cylb.daysResult = Total pay across these periods = £{0}
+phaseTwoReferencePayBreakdown.cylb.daysResult = Cyfanswm y cyflog ar draws y cyfnodau hyn = £{0}
 phaseTwoReferencePayBreakdown.cylb.hours.l1 = Dechreuwch gyda £{0} (Cyfanswm y cyflog o’r un dyddiadau’r flwyddyn ddiwethaf ).
 phaseTwoReferencePayBreakdown.cylb.hours.l2 = Rhannwch â {0} (oriau arferol).
 phaseTwoReferencePayBreakdown.cylb.hours.l3 = Lluoswch â {0} (oriau ffyrlo).
 phaseTwoReferencePayBreakdown.cylb.hoursResult = Cyfanswm cyflog yn seiliedig ar oriau a weithiwyd yn y cyfnod cyflog hwn = £{0}
 
-phaseTwoReferencePayBreakdown.cylb.higherOf = Then take the higher amount from the two methods:
-phaseTwoReferencePayBreakdown.cylb.higherOf.cylb = £{0} (method 1: pay from same dates in {1}).
-phaseTwoReferencePayBreakdown.cylb.higherOf.average = £{0} (method 2: average pay in {1}).
+phaseTwoReferencePayBreakdown.cylb.higherOf = Yna, cymerwch y swm uchaf o’r ddau ddull:
+phaseTwoReferencePayBreakdown.cylb.higherOf.cylb = £{0} (dull 1: cyflog o’r un dyddiadau yn {1}).
+phaseTwoReferencePayBreakdown.cylb.higherOf.average = £{0} (dull 2: cyflog cyfartalog yn {1}).
 phaseTwoReferencePayBreakdown.cylb.higherOf.result = Cyfanswm cyflog yn seiliedig ar oriau a weithiwyd yn y cyfnod cyflog hwn = £{0}
 
 phaseTwoFurloughBreakdown.h4 = Grant ffyrlo
-phaseTwoFurloughBreakdown.l1 = Ystyriwch £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo).
+phaseTwoFurloughBreakdown.l1 = Cymerwch £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo).
 phaseTwoFurloughBreakdown.l1.partTime = Cymerwch £{0} (cyflog yn seiliedig ar yr oriau a weithiwyd yn ystod y cyfnod cyflog hwn).
 phaseTwoFurloughBreakdown.l2 = Lluoswch â 80%.
 phaseTwoFurloughBreakdown.september.l2 = Lluoswch â 70% (cyfradd mis Medi).
 phaseTwoFurloughBreakdown.october.l2 = Lluoswch â 60% (cyfradd mis Hydref).
 phaseTwoFurloughBreakdown.total = Cyfanswm y grant ffyrlo ar gyfer y cyfnod cyflog = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p1 = Grant ffyrlo wedi’i gyfrifo = £{0}
-phaseTwoFurloughBreakdown.furloughCap.p2 = The calculated furlough grant is more than the maximum furlough grant for this pay period. Because of this, you must use the maximum furlough grant, which is {0}
+phaseTwoFurloughBreakdown.furloughCap.p2 = Mae’r grant ffyrlo amcangyfrifedig yn fwy na’r grant ffyrlo uchaf ar gyfer y cyfnod cyflog hwn. Oherwydd hyn, mae’n rhaid i chi ddefnyddio’r grant ffyrlo uchaf, sef £{0}.
 phaseTwoFurloughBreakdown.furloughCap.fullPeriodCap.partTime = £{0} wedi’u rhannu â {1} o oriau arferol wedi’u lluosi â {2} o oriau ffyrlo = £{3}
 phaseTwoFurloughBreakdown.furloughCap.periodSpansMonthCap.partTime = {0} o ddiwrnodau ffyrlo yn {1} ar £{2} + {3} o ddiwrnodau ffyrlo yn {4} ar £{5} wedi’u rhannu â {6} o oriau arferol wedi’u lluosi â {7} o oriau arferol = £{8}.
 phaseTwoFurloughBreakdown.furloughCap.partialPeriodCap.partTime = {0} o ddiwrnodau ffyrlo yn {1} ar £{2} wedi’u rhannu â {3} o oriau arferol wedi’u lluosi â {4} o oriau ffyrlo = £{5}.
-phaseTwoFurloughBreakdown.furloughCap.p3 = Actual furlough grant = {0}
+phaseTwoFurloughBreakdown.furloughCap.p3 = Grant ffyrlo gwirioneddol = £{0}
 
 phaseTwoNicBreakdown.h4 = Cyfraniadau Yswiriant Gwladol y cyflogwr
 phaseTwoNicBreakdown.l1 = Dechreuwch gyda £{0} (grant ffyrlo).
