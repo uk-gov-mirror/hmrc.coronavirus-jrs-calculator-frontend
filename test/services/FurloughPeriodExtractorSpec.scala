@@ -19,6 +19,7 @@ package services
 import java.time.LocalDate
 
 import base.SpecBase
+import cats.data.{Chain, Validated}
 import cats.scalatest.{ValidatedMatchers, ValidatedValues}
 import generators.Generators
 import models.{FurloughEnded, FurloughOngoing, FurloughWithinClaim, UserAnswers}
@@ -29,7 +30,7 @@ import utils.CoreTestData
 class FurloughPeriodExtractorSpec
     extends SpecBase with CoreTestData with ScalaCheckPropertyChecks with ValidatedMatchers with ValidatedValues with Generators {
 
-  "extractFurloughPeriod" must {
+  "calling the .extractFurloughPeriod()" must {
 
     "span furlough start to furlough end if furlough start and end is set" in new FurloughPeriodExtractor {
       val userAnswers = emptyUserAnswers
@@ -59,11 +60,13 @@ class FurloughPeriodExtractorSpec
     }
   }
 
-  "extractFurloughWithinClaim" must {
+  "calling the .extractFurloughWithinClaim()" must {
+
     val policyStart: LocalDate = LocalDate.of(2020, 3, 1)
     val policyEnd: LocalDate   = LocalDate.of(2020, 6, 30)
 
     "use claim period start if after furlough start" in new FurloughPeriodExtractor {
+
       val userAnswers = emptyUserAnswers
         .withFurloughStartDate("2020, 3, 1")
         .withClaimPeriodStart("2020, 3, 2")
@@ -248,9 +251,89 @@ class FurloughPeriodExtractorSpec
 
         extractFurloughWithinClaimV(userAnswers) mustBe invalid
       }
+    }
+
+  }
+
+  "calling the .extractFurloughPeriodDatesV()" when {
+
+    "determining the furlough start date" should {
+
+      "the furlough start date should just be the furlough start date" in new FurloughPeriodExtractor {
+
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodEnd("2020, 3, 31")
+          .withFurloughStartDate("2020, 3, 1")
+
+        extractFurloughPeriodDatesV(userAnswers).value.start mustBe LocalDate.of(2020, 3, 1)
+      }
 
     }
 
+    "determining the furlough end date" should {
+
+      "user answers furlough is 'FurloughEnded', the furlough end date should be set to the answered furlough end date" in new FurloughPeriodExtractor {
+
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodEnd("2020, 3, 31")
+          .withFurloughStartDate("2020, 3, 1")
+          .withFurloughEndDate("2020, 3, 20")
+
+        extractFurloughPeriodDatesV(userAnswers).value.`end` mustBe
+          LocalDate.of(2020, 3, 20)
+
+      }
+
+      "user answers furlough is 'FurloughOngoing', the furlough end date should be set to the claim period end date" in new FurloughPeriodExtractor {
+
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodEnd("2020, 3, 31")
+          .withFurloughStartDate("2020, 3, 1")
+
+        extractFurloughPeriodDatesV(userAnswers).value.`end` mustBe
+          LocalDate.of(2020, 3, 31)
+
+      }
+    }
+
+    "supplied all answers should build a correct FurloughWithinClaim model" should {
+
+      "user answers furlough is 'FurloughEnded', the furlough end date should be set to the answered furlough end date" in new FurloughPeriodExtractor {
+
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodEnd("2020, 3, 31")
+          .withFurloughStartDate("2020, 3, 5")
+          .withFurloughEndDate("2020, 3, 20")
+
+        extractFurloughPeriodDatesV(userAnswers).value mustBe
+          FurloughWithinClaim(
+            start = LocalDate.of(2020, 3, 5),
+            end = LocalDate.of(2020, 3, 20)
+          )
+      }
+
+      "user answers furlough is 'FurloughOngoing', the furlough end date should be set to the claim period end date" in new FurloughPeriodExtractor {
+
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodEnd("2020, 3, 31")
+          .withFurloughStartDate("2020, 3, 1")
+
+        extractFurloughPeriodDatesV(userAnswers).value mustBe FurloughWithinClaim(
+          start = LocalDate.of(2020, 3, 1),
+          end = LocalDate.of(2020, 3, 31)
+        )
+      }
+    }
+
+    "not supplied any answers" should {
+
+      "" in new FurloughPeriodExtractor {
+
+        val userAnswers = emptyUserAnswers
+
+        extractFurloughPeriodDatesV(userAnswers) mustBe invalid
+      }
+    }
   }
 
 }
