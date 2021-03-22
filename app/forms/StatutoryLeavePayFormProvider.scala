@@ -17,19 +17,24 @@
 package forms
 
 import forms.mappings.Mappings
+
 import javax.inject.Inject
 import models.Amount
 import play.api.data.Form
 import play.api.data.Forms.mapping
+import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.i18n.Messages
+import utils.CurrencyFormatter
 
-class StatutoryLeavePayFormProvider @Inject() extends Mappings {
+class StatutoryLeavePayFormProvider @Inject() extends Mappings with CurrencyFormatter {
 
-  def apply(): Form[Amount] =
+  def apply(referencePay: BigDecimal)(implicit messages: Messages): Form[Amount] =
     Form(
       mapping(
         "value" -> bigDecimal("statutoryLeavePay.error.required", "statutoryLeavePay.error.invalid")
-          .verifying(greaterThan(BigDecimal(0.0), "statutoryLeavePay.error.moreThan0"))
           .verifying(maxTwoDecimals())
+          .verifying(greaterThan(BigDecimal(0.0), "statutoryLeavePay.error.moreThan0"))
+          .verifying(lessThan(referencePay, "statutoryLeavePay.error.lessThan", currencyFormatAsNonHTMLString(referencePay)))
       )(Amount.apply)(Amount.unapply)
     )
 }

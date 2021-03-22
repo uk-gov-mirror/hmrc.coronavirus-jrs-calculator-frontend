@@ -20,12 +20,13 @@ import base.SpecBaseControllerSpecs
 import config.featureSwitch.{FeatureSwitching, StatutoryLeaveFlow}
 import forms.StatutoryLeavePayFormProvider
 import models.requests.DataRequest
-import models.{Amount, NormalMode, UserAnswers}
+import models.{Amount, AnnualPayAmount, NormalMode, UserAnswers}
 import navigation.Navigator
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.StatutoryLeavePayPage
+import pages.{AnnualPayAmountPage, StatutoryLeavePayPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
@@ -39,8 +40,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with MockitoSugar with FeatureSwitching {
 
-  val formProvider = new StatutoryLeavePayFormProvider()
-  val form         = formProvider()
+  val formProvider                                 = new StatutoryLeavePayFormProvider()
+  def form(referencePay: BigDecimal): Form[Amount] = formProvider(referencePay)
 
   lazy val statutoryLeavePayRoute = routes.StatutoryLeavePayController.onPageLoad().url
 
@@ -63,9 +64,13 @@ class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with Mocki
   "StatutoryLeavePay Controller" must {
 
     "onPageLoad" should {
+      val referencePay = BigDecimal(420.00)
 
       "return OK and the correct view for a GET" in {
         val userAnswers = emptyUserAnswers
+          .set(AnnualPayAmountPage, AnnualPayAmount(referencePay))
+          .success
+          .value
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val result = controller.onPageLoad()(getRequest)
 
@@ -73,13 +78,17 @@ class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with Mocki
         val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
         contentAsString(result) mustEqual
-          view(form)(dataRequest, messages).toString
+          view(form(referencePay))(dataRequest, messages).toString
       }
 
       "populate the view correctly on a GET when the question has previously been answered" in {
         val amountThatShouldBePrePopulated = BigDecimal(420.10)
+
         val userAnswers = emptyUserAnswers
           .set(StatutoryLeavePayPage, Amount(amountThatShouldBePrePopulated.bigDecimal))
+          .success
+          .value
+          .set(AnnualPayAmountPage, AnnualPayAmount(BigDecimal(420.20)))
           .success
           .value
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
@@ -89,7 +98,7 @@ class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with Mocki
         val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
 
         contentAsString(result) mustEqual
-          view(form.fill(Amount(amountThatShouldBePrePopulated.bigDecimal)))(dataRequest, messages).toString
+          view(form(referencePay).fill(Amount(amountThatShouldBePrePopulated.bigDecimal)))(dataRequest, messages).toString
       }
 
       "redirect to Session Expired for a GET if no existing data is found" in {
@@ -99,16 +108,27 @@ class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with Mocki
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
       }
+
+      "show an ISE when the user hasn't entered the AnnualPayAmount previously" in {
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+        val result = controller.onPageLoad()(getRequest)
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+      }
     }
 
     "onSubmit" should {
+      val referencePay = BigDecimal(420.01)
 
       "redirect to the next page when valid data is submitted" in {
         val userAnswers = emptyUserAnswers
+          .set(AnnualPayAmountPage, AnnualPayAmount(BigDecimal(420.20)))
+          .success
+          .value
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val request =
           FakeRequest(POST, statutoryLeavePayRoute)
-            .withFormUrlEncodedBody(("value", "111"))
+            .withFormUrlEncodedBody(("value", "420.19"))
 
         val result = controller.onSubmit()(request)
 
@@ -120,6 +140,9 @@ class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with Mocki
       "redirect to the root page when the feature switch is disabled" in {
         disable(StatutoryLeaveFlow)
         val userAnswers = emptyUserAnswers
+          .set(AnnualPayAmountPage, AnnualPayAmount(BigDecimal(420.20)))
+          .success
+          .value
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val request =
           FakeRequest(POST, statutoryLeavePayRoute)
@@ -135,12 +158,57 @@ class StatutoryLeavePayControllerSpec extends SpecBaseControllerSpecs with Mocki
 
       "return a Bad Request and errors when invalid data is submitted" in {
         val userAnswers = emptyUserAnswers
+          .set(AnnualPayAmountPage, AnnualPayAmount(BigDecimal(420.01)))
+          .success
+          .value
         when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
         val request =
           FakeRequest(POST, statutoryLeavePayRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form(referencePay).bind(Map("value" -> "invalid value"))
+
+        val result      = controller.onSubmit()(request)
+        val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+        status(result) mustEqual BAD_REQUEST
+
+        contentAsString(result) mustEqual
+          view(boundForm)(dataRequest, messages).toString
+      }
+
+      "return a Bad Request and errors when the value entered is EQUAL to the reference pay" in {
+        val userAnswers = emptyUserAnswers
+          .set(AnnualPayAmountPage, AnnualPayAmount(BigDecimal(420.01)))
+          .success
+          .value
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+        val request =
+          FakeRequest(POST, statutoryLeavePayRoute)
+            .withFormUrlEncodedBody(("value", "420.01"))
+
+        val boundForm = form(referencePay).bind(Map("value" -> "420.01"))
+
+        val result      = controller.onSubmit()(request)
+        val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+        status(result) mustEqual BAD_REQUEST
+
+        contentAsString(result) mustEqual
+          view(boundForm)(dataRequest, messages).toString
+      }
+
+      "return a Bad Request and errors when the value entered is MORE THAN the reference pay" in {
+        val userAnswers = emptyUserAnswers
+          .set(AnnualPayAmountPage, AnnualPayAmount(BigDecimal(420.01)))
+          .success
+          .value
+        when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+        val request =
+          FakeRequest(POST, statutoryLeavePayRoute)
+            .withFormUrlEncodedBody(("value", "420.02"))
+
+        val boundForm = form(referencePay).bind(Map("value" -> "420.02"))
 
         val result      = controller.onSubmit()(request)
         val dataRequest = DataRequest(request, userAnswers.id, userAnswers)

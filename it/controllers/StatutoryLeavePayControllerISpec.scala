@@ -39,6 +39,7 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
           .withClaimPeriodEnd("2020, 11, 30")
           .withFurloughStartDate("2020, 11, 1")
           .withFurloughStatus()
+          .withAnnualPayAmount(BigDecimal(50000))
           .withPayMethod(Variable)
 
       setAnswers(userAnswers)
@@ -63,6 +64,7 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
           .withFurloughStartDate("2020, 11, 1")
           .withFurloughStatus()
           .withPaymentFrequency(Monthly)
+          .withAnnualPayAmount(BigDecimal(50000))
           .withPayMethod(Variable)
 
         setAnswers(userAnswers)
@@ -90,6 +92,7 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
           .withFurloughStartDate("2020, 11, 1")
           .withFurloughStatus()
           .withPaymentFrequency(Monthly)
+          .withAnnualPayAmount(BigDecimal(50000))
           .withPayMethod(Variable)
 
         setAnswers(userAnswers)
@@ -119,6 +122,7 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
           .withFurloughStartDate("2020, 11, 1")
           .withFurloughStatus()
           .withPaymentFrequency(Monthly)
+          .withAnnualPayAmount(BigDecimal(50000))
           .withPayMethod(Variable)
 
         setAnswers(userAnswers)
@@ -133,7 +137,7 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
           result should have(
             httpStatus(BAD_REQUEST),
             titleOf(statutoryLeavePay),
-            contentExists("The amount this employee was paid for the periods of statutory leave must be more than 0")
+            contentExists("The amount this employee was paid for the periods of statutory leave must be more than £0")
           )
         }
       }
@@ -148,6 +152,7 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
             .withFurloughStartDate("2020, 11, 1")
             .withFurloughStatus()
             .withPaymentFrequency(Monthly)
+            .withAnnualPayAmount(BigDecimal(50000))
             .withPayMethod(Variable)
 
           setAnswers(userAnswers)
@@ -161,7 +166,63 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
           whenReady(res) { result =>
             result should have(
               httpStatus(BAD_REQUEST),
-              contentExists("The amount this employee was paid for the periods of statutory leave must be more than 0")
+              contentExists("The amount this employee was paid for the periods of statutory leave must be more than £0")
+            )
+          }
+        }
+      }
+
+      "a value that is EQUAL to the reference pay is entered" should {
+        "show the page with errors" in {
+          val userAnswers: UserAnswers = emptyUserAnswers
+            .withClaimPeriodStart("2020, 10, 31")
+            .withClaimPeriodEnd("2020, 11, 30")
+            .withFurloughStartDate("2020, 11, 1")
+            .withFurloughStatus()
+            .withPaymentFrequency(Monthly)
+            .withAnnualPayAmount(BigDecimal(50000.01))
+            .withPayMethod(Variable)
+
+          setAnswers(userAnswers)
+
+          val res = postRequestHeader(
+            path = "/amount-paid-for-statutory-leave",
+            formJson = Json.obj("value" -> "50000.01")
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(BAD_REQUEST),
+              contentExists("The amount this employee was paid for the periods of statutory leave must be less than £50,000")
+            )
+          }
+        }
+      }
+
+      "a value that is MORE THAN the reference pay is entered" should {
+        "show the page with errors" in {
+          val userAnswers: UserAnswers = emptyUserAnswers
+            .withClaimPeriodStart("2020, 10, 31")
+            .withClaimPeriodEnd("2020, 11, 30")
+            .withFurloughStartDate("2020, 11, 1")
+            .withFurloughStatus()
+            .withPaymentFrequency(Monthly)
+            .withAnnualPayAmount(BigDecimal(50000.01))
+            .withPayMethod(Variable)
+
+          setAnswers(userAnswers)
+
+          val res = postRequestHeader(
+            path = "/amount-paid-for-statutory-leave",
+            formJson = Json.obj("value" -> "50000.02")
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(BAD_REQUEST),
+              contentExists("The amount this employee was paid for the periods of statutory leave must be less than £50,000.01")
             )
           }
         }
@@ -175,6 +236,7 @@ class StatutoryLeavePayControllerISpec extends IntegrationSpecBase with CreateRe
             .withFurloughStartDate("2020, 11, 1")
             .withFurloughStatus()
             .withPaymentFrequency(Monthly)
+            .withAnnualPayAmount(BigDecimal(50000))
             .withPayMethod(Variable)
 
           setAnswers(userAnswers)
