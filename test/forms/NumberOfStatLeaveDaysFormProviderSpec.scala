@@ -18,11 +18,14 @@ package forms
 
 import forms.behaviours.IntFieldBehaviours
 import play.api.data.FormError
+import java.time._
 
-class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours {
+import base.SpecBaseControllerSpecs
 
-  val boundaryStart = "6 April 2019"
-  val boundaryEnd   = "5 April 2020"
+class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with SpecBaseControllerSpecs {
+
+  val boundaryStart = LocalDate.of(2019, 4, 6)
+  val boundaryEnd   = LocalDate.of(2020, 4, 5)
 
   val form = new NumberOfStatLeaveDaysFormProvider()(boundaryStart, boundaryEnd)
 
