@@ -24,7 +24,8 @@
         h1: components.h1,
         p: components.p,
         bullets: components.bullets,
-        button: components.button
+        button: components.button,
+        insetText: components.panelIndent
 )
 
 @(form: Form[_], postAction: Call, boundaryStart: String, boundaryEnd: String)(implicit request: Request[_], messages: Messages)
@@ -45,6 +46,8 @@
             Html(messages("hasEmployeeBeenOnStatutoryLeave.bullet3")),
             Html(messages("hasEmployeeBeenOnStatutoryLeave.bullet4"))
         ))
+
+        @insetText(Html(messages("hasEmployeeBeenOnStatutoryLeave.insetText")))
 
         @yesNoRadio(
             form = form,
