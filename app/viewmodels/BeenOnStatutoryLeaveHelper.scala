@@ -16,6 +16,8 @@
 
 package viewmodels
 
+import java.time.LocalDate
+
 import cats.data.Validated.Valid
 import config.FrontendAppConfig
 import models.requests.DataRequest
@@ -68,4 +70,45 @@ class BeenOnStatutoryLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
     Logger.debug(s"[BeenOnStatutoryLeaveHelper][type3And4BoundaryEnd] dayBeforeFirstFurlough: $dayBeforeFirstFurlough")
     dateToString(earliestOf(apr5th2020, dayBeforeFirstFurlough))
   }
+
+  def boundaryStartDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
+
+    val type5BoundaryStartDate: LocalDate = request.userAnswers.getV(EmployeeStartDatePage) match {
+      case Valid(startDate) if !startDate.isAfter(apr6th2020) =>
+        Logger.debug(s"[BeenOnStatutoryLeaveHelper][type5BoundaryStart] start date: $startDate")
+        apr6th2020
+      case _ =>
+        Logger.debug("[BeenOnStatutoryLeaveHelper][type5BoundaryStart] no answer for EmployeeStartDatePage")
+        apr5th2020
+    }
+
+    variablePayResolver[LocalDate](
+      type3EmployeeResult = Some(apr6th2019),
+      type4EmployeeResult = Some(apr5th2020),
+      type5aEmployeeResult = Some(type5BoundaryStartDate),
+      type5bEmployeeResult = Some(type5BoundaryStartDate)
+    ).fold(
+      throw new InternalServerException("[BeenOnStatutoryLeaveHelper][boundaryStart] failed to resolve employee type")
+    )(identity)
+  }
+
+  def boundaryEndDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
+
+    val dayBeforeFirstFurlough: LocalDate = firstFurloughDate().minusDays(1)
+
+    val type3And4BoundaryEnd: LocalDate = {
+      Logger.debug(s"[BeenOnStatutoryLeaveHelper][type3And4BoundaryEnd] dayBeforeFirstFurlough: $dayBeforeFirstFurlough")
+      earliestOf(apr5th2020, dayBeforeFirstFurlough)
+    }
+
+    variablePayResolver[LocalDate](
+      type3EmployeeResult = Some(type3And4BoundaryEnd),
+      type4EmployeeResult = Some(type3And4BoundaryEnd),
+      type5aEmployeeResult = Some(firstFurloughDate().minusDays(1)),
+      type5bEmployeeResult = Some(firstFurloughDate().minusDays(1))
+    ).fold(
+      throw new InternalServerException("[BeenOnStatutoryLeaveHelper][boundaryEnd] failed to resolve employee type")
+    )(identity)
+  }
+
 }

@@ -32,26 +32,27 @@ import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
 import config.FrontendAppConfig
 import play.api.data.Form
+import utils.EmployeeTypeUtil
 import viewmodels.BeenOnStatutoryLeaveHelper
 
 class NumberOfStatLeaveDaysController @Inject()(
-  override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
-  navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
-  formProvider: NumberOfStatLeaveDaysFormProvider,
-  helper: BeenOnStatutoryLeaveHelper,
-  val controllerComponents: MessagesControllerComponents,
-  view: NumberOfStatLeaveDaysView
-)(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
-    extends FrontendBaseController with I18nSupport {
+                                                 override val messagesApi: MessagesApi,
+                                                 sessionRepository: SessionRepository,
+                                                 navigator: Navigator,
+                                                 identify: IdentifierAction,
+                                                 getData: DataRetrievalAction,
+                                                 requireData: DataRequiredAction,
+                                                 formProvider: NumberOfStatLeaveDaysFormProvider,
+                                                 helper: BeenOnStatutoryLeaveHelper,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: NumberOfStatLeaveDaysView
+                                               )(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
+  extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val form: Form[Int] = formProvider(helper.boundaryStart(), helper.boundaryEnd())
+    val form: Form[Int] = formProvider(boundaryStart = helper.boundaryStartDate, boundaryEnd = helper.boundaryEndDate)
     val preparedForm = request.userAnswers.getV(NumberOfStatLeaveDaysPage) match {
-      case Invalid(_)   => form
+      case Invalid(_) => form
       case Valid(value) => form.fill(value)
     }
     val postAction = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
@@ -59,16 +60,22 @@ class NumberOfStatLeaveDaysController @Inject()(
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val postAction      = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
-    val form: Form[Int] = formProvider(helper.boundaryStart(), helper.boundaryEnd())
+    val postAction = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
+    val form: Form[Int] = formProvider(helper.boundaryStartDate, helper.boundaryEndDate)
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, postAction, helper.boundaryStart(), helper.boundaryEnd()))),
+        formWithErrors =>
+          Future.successful(BadRequest(view(
+            form = formWithErrors,
+            postAction = postAction,
+            boundaryStart = helper.boundaryStart(),
+            boundaryEnd = helper.boundaryEnd())
+          )),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(NumberOfStatLeaveDaysPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
+            _ <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(NumberOfStatLeaveDaysPage, updatedAnswers))
       )
   }

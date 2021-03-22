@@ -16,19 +16,30 @@
 
 package forms
 
+import java.time.LocalDate
+import java.time.Duration
+
 import forms.mappings.Mappings
 import javax.inject.Inject
 import play.api.data.Form
+import play.api.i18n.Messages
+import views.ViewUtils.dateToString
 
 class NumberOfStatLeaveDaysFormProvider @Inject() extends Mappings {
 
-  def apply(boundaryStart: String, boundaryEnd: String): Form[Int] =
+  def apply(boundaryStart: LocalDate, boundaryEnd: LocalDate)(implicit messages: Messages): Form[Int] =
     Form(
       "value" -> int(
         "numberOfStatLeaveDays.error.required",
         "numberOfStatLeaveDays.error.wholeNumber",
         "numberOfStatLeaveDays.error.nonNumeric",
-        args = Seq(boundaryStart, boundaryEnd)
-      ).verifying(inRange(0, 10, "numberOfStatLeaveDays.error.outOfRange"))
+        args = Seq(dateToString(boundaryStart), dateToString(boundaryEnd))
+      ).verifying(firstError(
+        maximumValue[Int](maximum = daysBetween(boundaryStart, boundaryEnd), errorKey = "numberOfStatLeaveDays.error.maximum"),
+        minimumValue[Int](minimum = 1, errorKey = "numberOfStatLeaveDays.error.minimum")
+      ))
     )
+
+  def daysBetween(boundaryStart: LocalDate, boundaryEnd: LocalDate): Int =
+    Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt
 }

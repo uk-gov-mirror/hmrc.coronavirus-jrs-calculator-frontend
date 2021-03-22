@@ -156,3 +156,6 @@ POST        /amount-paid-for-statutory-leave                 controllers.Statuto
 
 GET        /been-on-statutory-leave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad()
 POST       /been-on-statutory-leave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onSubmit()
+
+GET        /number-of-days-on-statutory-leave                controllers.NumberOfStatLeaveDaysController.onPageLoad()
+POST       /number-of-days-on-statutory-leave                controllers.NumberOfStatLeaveDaysController.onSubmit()
