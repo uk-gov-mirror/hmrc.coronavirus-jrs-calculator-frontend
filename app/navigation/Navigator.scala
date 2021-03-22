@@ -19,7 +19,7 @@ package navigation
 import java.time.LocalDate
 
 import cats.data.Validated.{Invalid, Valid}
-import config.featureSwitch.ExtensionTwoNewStarterFlow
+import config.featureSwitch.{ExtensionTwoNewStarterFlow, StatutoryLeaveFlow}
 import config.featureSwitch.FeatureSwitching.isEnabled
 import config.{FrontendAppConfig, SchemeConfiguration}
 import controllers.routes
@@ -119,6 +119,8 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       handlePayDateRoutes
     case OnPayrollBefore30thOct2020Page =>
       onPayrollBefore30thOct2020Routes
+    case StatutoryLeavePayPage =>
+      statutoryLeavePayRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -538,4 +540,16 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
 
   private def isPhaseTwoOnwards: UserAnswers => Boolean =
     userAnswer => userAnswer.getV(ClaimPeriodStartPage).exists(!_.isBefore(phaseTwoStartDate))
+
+  private[navigation] def statutoryLeavePayRoutes: UserAnswers => Call = { userAnswers =>
+    if (isEnabled(StatutoryLeaveFlow)) {
+      userAnswers.getV(StatutoryLeavePayPage) match {
+        case Valid(_)   => routes.PartTimeQuestionController.onPageLoad()
+        case Invalid(_) => routes.StatutoryLeavePayController.onPageLoad()
+      }
+    } else {
+      routes.RootPageController.onPageLoad()
+    }
+
+  }
 }

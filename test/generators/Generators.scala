@@ -18,6 +18,7 @@ package generators
 
 import java.time.{Instant, LocalDate, ZoneOffset}
 
+import models.Amount
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalacheck.{Arbitrary, Gen, Shrink}
@@ -80,6 +81,24 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     Gen.frequency(
       (10, genWholeBigDecimal),
       (10, genSmallBigDecimal),
+    )
+  }
+
+  implicit val arbAmount: Arbitrary[Amount] = Arbitrary {
+    val long: Gen[Long] =
+      Gen.choose(1, Long.MaxValue)
+
+    val genWholeAmount: Gen[Amount] =
+      long.map(Amount(_))
+
+    val genSmallAmount: Gen[Amount] =
+      for {
+        d <- long
+      } yield Amount(d)
+
+    Gen.frequency(
+      (10, genWholeAmount),
+      (10, genSmallAmount),
     )
   }
 

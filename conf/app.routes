@@ -151,9 +151,8 @@ POST        /first-furlough-date                             controllers.FirstFu
 GET         /october-payroll                                 controllers.OnPayrollBefore30thOct2020Controller.onPageLoad()
 POST        /october-payroll                                 controllers.OnPayrollBefore30thOct2020Controller.onSubmit()
 
+GET         /amount-paid-for-statutory-leave                 controllers.StatutoryLeavePayController.onPageLoad()
+POST        /amount-paid-for-statutory-leave                 controllers.StatutoryLeavePayController.onSubmit()
 
 GET        /been-on-statutory-leave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad()
 POST       /been-on-statutory-leave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onSubmit()
-
-GET        /number-of-days-on-statutory-leave                  controllers.NumberOfStatLeaveDaysController.onPageLoad()
-POST       /number-of-days-on-statutory-leave                  controllers.NumberOfStatLeaveDaysController.onSubmit()
