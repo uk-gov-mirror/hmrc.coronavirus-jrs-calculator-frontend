@@ -1032,3 +1032,4 @@ hasEmployeeBeenOnStatutoryLeave.bullet2 = family related statutory leave, for ex
 hasEmployeeBeenOnStatutoryLeave.bullet3 = reduced rate paid leave following a period of statutory sick pay related leave
 hasEmployeeBeenOnStatutoryLeave.bullet4 = reduced rate paid leave following a period of family related statutory leave
 hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted = the day their employment started
+hasEmployeeBeenOnStatutoryLeave.insetText = If the employee was on statutory leave for the full period between these dates, you must answer ‘no’.
