@@ -25,5 +25,6 @@ object BeenOnStatutoryLeaveMessages {
   val bullet3                                        = "reduced rate paid leave following a period of statutory sick pay related leave"
   val bullet4                                        = "reduced rate paid leave following a period of family related statutory leave"
   val dayEmploymentStarted                           = "the day their employment started"
+  val insetText                                      = "If the employee was on statutory leave for the full period between these dates, you must answer ‘no’."
 
 }
