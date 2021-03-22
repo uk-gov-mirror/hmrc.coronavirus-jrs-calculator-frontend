@@ -1,32 +1,32 @@
 #!/bin/bash
 
 echo ""
-echo "Applying migration OnPayrollBefore30thOct2020"
+echo "Applying migration HasEmployeeBeenOnStatutoryLeave"
 
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /onPayrollBefore30thOct2020                        controllers.OnPayrollBefore30thOct2020Controller.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /onPayrollBefore30thOct2020                        controllers.OnPayrollBefore30thOct2020Controller.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /hasEmployeeBeenOnStatutoryLeave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /hasEmployeeBeenOnStatutoryLeave                        controllers.HasEmployeeBeenOnStatutoryLeaveController.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /changeOnPayrollBefore30thOct2020                  controllers.OnPayrollBefore30thOct2020Controller.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /changeOnPayrollBefore30thOct2020                  controllers.OnPayrollBefore30thOct2020Controller.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /changeHasEmployeeBeenOnStatutoryLeave                  controllers.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /changeHasEmployeeBeenOnStatutoryLeave                  controllers.HasEmployeeBeenOnStatutoryLeaveController.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
-echo "onPayrollBefore30thOct2020.title = onPayrollBefore30thOct2020" >> ../conf/messages.en
-echo "onPayrollBefore30thOct2020.heading = onPayrollBefore30thOct2020" >> ../conf/messages.en
-echo "onPayrollBefore30thOct2020.checkYourAnswersLabel = onPayrollBefore30thOct2020" >> ../conf/messages.en
-echo "onPayrollBefore30thOct2020.error.required = Select yes if onPayrollBefore30thOct2020" >> ../conf/messages.en
+echo "hasEmployeeBeenOnStatutoryLeave.title = hasEmployeeBeenOnStatutoryLeave" >> ../conf/messages.en
+echo "hasEmployeeBeenOnStatutoryLeave.heading = hasEmployeeBeenOnStatutoryLeave" >> ../conf/messages.en
+echo "hasEmployeeBeenOnStatutoryLeave.checkYourAnswersLabel = hasEmployeeBeenOnStatutoryLeave" >> ../conf/messages.en
+echo "hasEmployeeBeenOnStatutoryLeave.error.required = Select yes if hasEmployeeBeenOnStatutoryLeave" >> ../conf/messages.en
 
 echo "Adding to UserAnswersEntryGenerators"
 awk '/trait UserAnswersEntryGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryOnPayrollBefore30thOct2020UserAnswersEntry: Arbitrary[(OnPayrollBefore30thOct2020Page.type, JsValue)] =";\
+    print "  implicit lazy val arbitraryHasEmployeeBeenOnStatutoryLeaveUserAnswersEntry: Arbitrary[(HasEmployeeBeenOnStatutoryLeavePage.type, JsValue)] =";\
     print "    Arbitrary {";\
     print "      for {";\
-    print "        page  <- arbitrary[OnPayrollBefore30thOct2020Page.type]";\
+    print "        page  <- arbitrary[HasEmployeeBeenOnStatutoryLeavePage.type]";\
     print "        value <- arbitrary[Boolean].map(Json.toJson(_))";\
     print "      } yield (page, value)";\
     print "    }";\
@@ -36,14 +36,14 @@ echo "Adding to PageGenerators"
 awk '/trait PageGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitraryOnPayrollBefore30thOct2020Page: Arbitrary[OnPayrollBefore30thOct2020Page.type] =";\
-    print "    Arbitrary(OnPayrollBefore30thOct2020Page)";\
+    print "  implicit lazy val arbitraryHasEmployeeBeenOnStatutoryLeavePage: Arbitrary[HasEmployeeBeenOnStatutoryLeavePage.type] =";\
+    print "    Arbitrary(HasEmployeeBeenOnStatutoryLeavePage)";\
     next }1' ../test/generators/PageGenerators.scala > tmp && mv tmp ../test/generators/PageGenerators.scala
 
 echo "Adding to UserAnswersGenerator"
 awk '/val generators/ {\
     print;\
-    print "    arbitrary[(OnPayrollBefore30thOct2020Page.type, JsValue)] ::";\
+    print "    arbitrary[(HasEmployeeBeenOnStatutoryLeavePage.type, JsValue)] ::";\
     next }1' ../test/generators/UserAnswersGenerator.scala > tmp && mv tmp ../test/generators/UserAnswersGenerator.scala
 
-echo "Migration OnPayrollBefore30thOct2020 completed"
+echo "Migration HasEmployeeBeenOnStatutoryLeave completed"

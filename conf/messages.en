@@ -1001,6 +1001,7 @@ onPayrollBefore30thOct2020.heading = Was this employee on your payroll on or bef
 onPayrollBefore30thOct2020.hint = Enter Yes if you have made a payment of earnings to them in the tax year 2020/2021, which was reported to HMRC on a Real Time Information (RTi) Full Payment Submission (FPS) on or before 30 October 2020
 onPayrollBefore30thOct2020.error.required = Select yes if this employee on your payroll on or before 30 October 2020?
 
+
 # HasEmployeeBeenOnStatutoryLeave Messages
 # ------------------------------------------------
 hasEmployeeBeenOnStatutoryLeave.title = Has this employee been on statutory leave between {0} and {1}

@@ -21,7 +21,10 @@ import play.api.data.FormError
 
 class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours {
 
-  val form = new NumberOfStatLeaveDaysFormProvider()()
+  val boundaryStart = "6 April 2019"
+  val boundaryEnd   = "5 April 2020"
+
+  val form = new NumberOfStatLeaveDaysFormProvider()(boundaryStart, boundaryEnd)
 
   ".value" must {
 
