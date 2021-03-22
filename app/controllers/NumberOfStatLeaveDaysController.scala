@@ -53,7 +53,7 @@ class NumberOfStatLeaveDaysController @Inject()(
       case Valid(value) => form.fill(value)
     }
     val postAction = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
-    Ok(view(preparedForm, postAction, helper.boundaryStart(), helper.boundaryEnd()))
+    Ok(view(preparedForm, postAction, helper.boundaryStartDateMessage(), helper.boundaryEndMessage()))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
@@ -67,8 +67,8 @@ class NumberOfStatLeaveDaysController @Inject()(
             BadRequest(
               view(form = formWithErrors,
                    postAction = postAction,
-                   boundaryStart = helper.boundaryStart(),
-                   boundaryEnd = helper.boundaryEnd()))),
+                   boundaryStart = helper.boundaryStartDateMessage(),
+                   boundaryEnd = helper.boundaryEndMessage()))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(NumberOfStatLeaveDaysPage, value))

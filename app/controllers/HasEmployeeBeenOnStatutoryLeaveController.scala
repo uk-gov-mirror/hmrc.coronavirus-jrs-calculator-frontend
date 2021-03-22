@@ -50,23 +50,24 @@ class HasEmployeeBeenOnStatutoryLeaveController @Inject()(
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     Logger.debug(
       s"[HasEmployeeBeenOnStatutoryLeaveController][onPageLoad] " +
-        s"boundaryStart: ${helper.boundaryStart()}, boundaryEnd: ${helper.boundaryEnd()}")
-    val form: Form[Boolean] = formProvider(helper.boundaryStart(), helper.boundaryEnd())
+        s"boundaryStart: ${helper.boundaryStartDateMessage()}, boundaryEnd: ${helper.boundaryEndMessage()}")
+    val form: Form[Boolean] = formProvider(helper.boundaryStartDateMessage(), helper.boundaryEndMessage())
     val preparedForm = request.userAnswers.getV(HasEmployeeBeenOnStatutoryLeavePage) match {
       case Invalid(_)   => form
       case Valid(value) => form.fill(value)
     }
     val postAction = controllers.routes.HasEmployeeBeenOnStatutoryLeaveController.onSubmit()
-    Ok(view(preparedForm, postAction, helper.boundaryStart(), helper.boundaryEnd()))
+    Ok(view(preparedForm, postAction, helper.boundaryStartDateMessage(), helper.boundaryEndMessage()))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val postAction          = controllers.routes.HasEmployeeBeenOnStatutoryLeaveController.onSubmit()
-    val form: Form[Boolean] = formProvider(helper.boundaryStart(), helper.boundaryEnd())
+    val form: Form[Boolean] = formProvider(helper.boundaryStartDateMessage(), helper.boundaryEndMessage())
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, postAction, helper.boundaryStart(), helper.boundaryEnd()))),
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors, postAction, helper.boundaryStartDateMessage(), helper.boundaryEndMessage()))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(HasEmployeeBeenOnStatutoryLeavePage, value))

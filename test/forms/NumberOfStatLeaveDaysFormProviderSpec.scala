@@ -16,13 +16,17 @@
 
 package forms
 
-import forms.behaviours.IntFieldBehaviours
-import play.api.data.FormError
 import java.time._
 
 import base.SpecBaseControllerSpecs
+import forms.behaviours.IntFieldBehaviours
+import play.api.data.FormError
 
-class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with SpecBaseControllerSpecs {
+class NumberOfStatLeaveDaysFormProviderSpec extends SpecBaseControllerSpecs {
+
+  val intFieldBehaviours = new IntFieldBehaviours
+
+  import intFieldBehaviours._
 
   val boundaryStart = LocalDate.of(2019, 4, 6)
   val boundaryEnd   = LocalDate.of(2020, 4, 5)
@@ -34,7 +38,7 @@ class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with Spec
     val fieldName = "value"
 
     val minimum = 0
-    val maximum = 10
+    val maximum = Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt
 
     val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
 
