@@ -17,7 +17,6 @@
 package navigation
 
 import java.time.LocalDate
-
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
 import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching, StatutoryLeaveFlow}
 import controllers.routes
@@ -304,14 +303,30 @@ class NavigatorSpecWithApplication extends SpecBaseControllerSpecs with CoreTest
 
       "go to PartTimeQuestionPage after AnnualPayAmountPage if phase two started and furlough has ended" in {
         val userAnswers = emptyUserAnswers
-          .withClaimPeriodStart(LocalDate.now)
+          .withClaimPeriodStart(LocalDate.of(2021, 3, 1))
           .withFurloughStatus(FurloughStatus.FurloughEnded)
 
-        val navigator = new Navigator() {
-          override lazy val phaseTwoStartDate: LocalDate = LocalDate.now
-        }
+        navigator.nextPage(AnnualPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
+      }
+
+      "go to PartTimeQuestionPage after AnnualPayAmountPage if May onwards claim AND Stat Leave journey is disabled" in {
+
+        disable(StatutoryLeaveFlow)
+
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart(LocalDate.of(2021, 5, 1))
 
         navigator.nextPage(AnnualPayAmountPage, userAnswers) mustBe routes.PartTimeQuestionController.onPageLoad()
+      }
+
+      "go to StatutoryLeavePage after AnnualPayAmountPage if May onwards claim AND Stat Leave journey is enabled" in {
+
+        enable(StatutoryLeaveFlow)
+
+        val userAnswers = emptyUserAnswers
+          .withClaimPeriodStart(LocalDate.of(2021, 5, 1))
+
+        navigator.nextPage(AnnualPayAmountPage, userAnswers) mustBe routes.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad()
       }
 
       "go to PartTimeHours after PartTimePeriods" in {
