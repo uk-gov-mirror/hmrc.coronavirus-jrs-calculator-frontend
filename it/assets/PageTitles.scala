@@ -12,5 +12,5 @@ object PageTitles {
   val onPayrollBefore30thOct2020 = "Was this employee on your payroll on or before 30 October 2020?"
 
   def hasEmployeeBeenOnStatutoryLeave(boundaryStart: String, boundaryEnd: String) =
-    s"Has this employee been on statutory leave between $boundaryStart and $boundaryEnd"
+    s"Has this employee been on statutory leave for part of the period between $boundaryStart and $boundaryEnd"
 }

@@ -1008,11 +1008,11 @@ statutoryLeavePay.details.l4 = reduced rate paid leave following a period of fam
 
 # HasEmployeeBeenOnStatutoryLeave Messages
 # ------------------------------------------------
-hasEmployeeBeenOnStatutoryLeave.title = Has this employee been on statutory leave between {0} and {0}
-hasEmployeeBeenOnStatutoryLeave.heading = Has this employee been on statutory leave between {0} and {0}
+hasEmployeeBeenOnStatutoryLeave.title = Has this employee been on statutory leave for part of the period between {0} and {1}?
+hasEmployeeBeenOnStatutoryLeave.heading = Has this employee been on statutory leave for part of the period between {0} and {1}?
 hasEmployeeBeenOnStatutoryLeave.checkYourAnswersLabel = Has employee been on statutory leave
-hasEmployeeBeenOnStatutoryLeave.error.required = Select yes if this employee been on statutory leave
-hasEmployeeBeenOnStatutoryLeave.p = Statutory leave only includes:
+hasEmployeeBeenOnStatutoryLeave.error.required = Select yes if this employee has been on statutory leave for part of the period between {0} and {1}
+hasEmployeeBeenOnStatutoryLeave.p = For this calculation, statutory leave only includes:
 hasEmployeeBeenOnStatutoryLeave.bullet1 = statutory sick pay related leave
 hasEmployeeBeenOnStatutoryLeave.bullet2 = family related statutory leave, for example paternity leave
 hasEmployeeBeenOnStatutoryLeave.bullet3 = reduced rate paid leave following a period of statutory sick pay related leave
