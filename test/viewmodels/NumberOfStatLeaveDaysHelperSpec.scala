@@ -19,19 +19,20 @@ package viewmodels
 import java.time.LocalDate
 
 import models.{EmployeeRTISubmission, EmployeeStarted, UserAnswers}
+import utils.LocalDateHelpers._
 import models.requests.DataRequest
-import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, FirstFurloughDatePage, FurloughStartDatePage, OnPayrollBefore30thOct2020Page}
+import pages._
 import play.api.Logger
 import utils.LocalDateHelpers._
 import base.SpecBase
 import uk.gov.hmrc.play.test.LogCapturing
 import utils.LocalDateHelpers
 
-class NumberOfDaysOnStatLeaveHelperSpec extends SpecBase with LocalDateHelpers with LogCapturing {
+class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers with LogCapturing {
 
-  val helper = app.injector.instanceOf[NumberOfDaysOnStatLeaveHelper]
+  val helper = app.injector.instanceOf[NumberOfStatLeaveDaysHelper]
 
-  "boundaryStartDate" when {
+  ".boundaryStartDate()" when {
 
     "employee is type 3" must {
 
@@ -41,10 +42,14 @@ class NumberOfDaysOnStatLeaveHelperSpec extends SpecBase with LocalDateHelpers w
           .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
           .success
           .value
+          .set(EmployeeStartDatePage, apr5th2020.plusDays(1))
+          .success
+          .value
+
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr6th2019
+          helper.boundaryStartDate() mustBe apr5th2020.plusDays(1)
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee") mustBe true
         }
       }
@@ -137,6 +142,63 @@ class NumberOfDaysOnStatLeaveHelperSpec extends SpecBase with LocalDateHelpers w
       }
     }
 
+  }
+
+  ".boundaryEndDate()" when {
+
+    "employee is type 3" when {
+
+      "only the FirstFurloughDatePage has been answered" when {
+
+        "the first furlough date == apr1st2020, and earlier than apr5th2020" should {
+
+          "return apr1st2020" in {
+
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
+
+            val userAnswers = UserAnswers(userAnswersId)
+              .set(FirstFurloughDatePage, apr1st2020)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+
+            implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+            withCaptureOfLoggingFrom(Logger) { logs =>
+              helper.boundaryEndDate() mustBe apr1st2020.minusDays(1)
+              logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee") mustBe true
+            }
+          }
+        }
+
+        "the first furlough date == apr10th2020, and after than apr5th2020" should {
+
+          "return apr5th2020" in {
+
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
+
+            val userAnswers = UserAnswers(userAnswersId)
+              .set(FirstFurloughDatePage, apr1st2020)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+
+            implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+            withCaptureOfLoggingFrom(Logger) { logs =>
+              helper.boundaryEndDate() mustBe apr1st2020.minusDays(1)
+              logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee") mustBe true
+            }
+          }
+        }
+
+      }
+
+    }
   }
 
 }

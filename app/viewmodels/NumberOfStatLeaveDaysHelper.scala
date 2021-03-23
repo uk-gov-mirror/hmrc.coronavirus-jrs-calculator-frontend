@@ -28,7 +28,7 @@ import uk.gov.hmrc.http.InternalServerException
 import utils.LocalDateHelpers._
 import utils.{EmployeeTypeUtil, KeyDatesUtil}
 
-class NumberOfDaysOnStatLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
+class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
 
   def boundaryStartDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
 
@@ -54,12 +54,12 @@ class NumberOfDaysOnStatLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
 
   def boundaryEndDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
 
-    def earliestOfDayBeforeFirstFurloughAndDefaultDate(defaultDate: LocalDate): LocalDate =
+    def determineFirstFurloughOrDefaultDate(defaultDate: LocalDate)(f: (LocalDate, Seq[LocalDate]) => LocalDate): LocalDate =
       request.userAnswers.getV(FirstFurloughDatePage) match {
-        case Valid(firstFurloughDate) => earliestOf(defaultDate, firstFurloughDate.minusDays(1))
+        case Valid(firstFurloughDate) => f(v1 = defaultDate, v2 = Seq(firstFurloughDate.minusDays(1)))
         case _ =>
           request.userAnswers.getV(FurloughStartDatePage) match {
-            case Valid(furloughStartDate) => earliestOf(defaultDate, furloughStartDate.minusDays(1))
+            case Valid(furloughStartDate) => f(defaultDate, Seq(furloughStartDate.minusDays(1)))
             case _ =>
               throw new InternalServerException(
                 "[NumberOfDaysOnStatLeaveHelper][earliestOfDayBeforeFirstFurloughAndDefaultDate] could not determine first furlough date"
@@ -68,10 +68,10 @@ class NumberOfDaysOnStatLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
       }
 
     variablePayResolver[LocalDate](
-      type3EmployeeResult = Some(earliestOfDayBeforeFirstFurloughAndDefaultDate(apr5th2020)),
-      type4EmployeeResult = Some(earliestOfDayBeforeFirstFurloughAndDefaultDate(apr5th2020)),
-      type5aEmployeeResult = Some(apr6th2020), // TODO: waiting on reply for precedence
-      type5bEmployeeResult = Some(apr6th2020) // TODO: waiting on reply for precedence
+      type3EmployeeResult = Some(determineFirstFurloughOrDefaultDate(apr5th2020)(earliestOf)),
+      type4EmployeeResult = Some(determineFirstFurloughOrDefaultDate(apr5th2020)(earliestOf)),
+      type5aEmployeeResult = Some(determineFirstFurloughOrDefaultDate(apr6th2020)(latestOf)),
+      type5bEmployeeResult = Some(determineFirstFurloughOrDefaultDate(apr6th2020)(latestOf))
     ).fold(
       throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryEndDate] failed to resolve employee type")
     )(identity)

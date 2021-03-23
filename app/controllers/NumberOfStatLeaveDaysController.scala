@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
 import config.FrontendAppConfig
 import play.api.data.Form
-import viewmodels.NumberOfDaysOnStatLeaveHelper
+import viewmodels.NumberOfStatLeaveDaysHelper
 import views.ViewUtils.dateToString
 
 class NumberOfStatLeaveDaysController @Inject()(
@@ -42,7 +42,7 @@ class NumberOfStatLeaveDaysController @Inject()(
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: NumberOfStatLeaveDaysFormProvider,
-  helper: NumberOfDaysOnStatLeaveHelper,
+  helper: NumberOfStatLeaveDaysHelper,
   val controllerComponents: MessagesControllerComponents,
   view: NumberOfStatLeaveDaysView
 )(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
@@ -55,7 +55,13 @@ class NumberOfStatLeaveDaysController @Inject()(
       case Valid(value) => form.fill(value)
     }
     val postAction = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
-    Ok(view(preparedForm, postAction, dateToString(helper.boundaryStartDate), dateToString(helper.boundaryEndDate)))
+    Ok(
+      view(
+        form = preparedForm,
+        postAction = postAction,
+        boundaryStart = dateToString(helper.boundaryStartDate),
+        boundaryEnd = dateToString(helper.boundaryEndDate)
+      ))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
@@ -69,8 +75,9 @@ class NumberOfStatLeaveDaysController @Inject()(
             BadRequest(
               view(form = formWithErrors,
                    postAction = postAction,
-                   boundaryStart = helper.boundaryStartDateMessage(),
-                   boundaryEnd = helper.boundaryEndMessage()))),
+                   boundaryStart = dateToString(helper.boundaryStartDate()),
+                   boundaryEnd = dateToString(helper.boundaryEndDate())))
+        ),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(NumberOfStatLeaveDaysPage, value))
