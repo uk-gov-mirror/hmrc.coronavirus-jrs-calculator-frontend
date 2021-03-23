@@ -18,8 +18,11 @@ package viewmodels
 
 import java.time.LocalDate
 
+import cats.Semigroupal
+import cats.data.Validated
 import cats.data.Validated.Valid
 import config.FrontendAppConfig
+import models.UserAnswers.AnswerV
 import models.requests.DataRequest
 import pages.{EmployeeStartDatePage, FirstFurloughDatePage, FurloughStartDatePage}
 import play.api.Logger
@@ -54,7 +57,7 @@ class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
 
   def boundaryEndDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
 
-    def determineFirstFurloughOrDefaultDate(defaultDate: LocalDate)(f: (LocalDate, Seq[LocalDate]) => LocalDate): LocalDate =
+    def dayBeforeFirstFurloughOrDefaultDate(defaultDate: LocalDate)(f: (LocalDate, Seq[LocalDate]) => LocalDate): LocalDate =
       request.userAnswers.getV(FirstFurloughDatePage) match {
         case Valid(firstFurloughDate) => f(v1 = defaultDate, v2 = Seq(firstFurloughDate.minusDays(1)))
         case _ =>
@@ -62,16 +65,16 @@ class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
             case Valid(furloughStartDate) => f(defaultDate, Seq(furloughStartDate.minusDays(1)))
             case _ =>
               throw new InternalServerException(
-                "[NumberOfDaysOnStatLeaveHelper][earliestOfDayBeforeFirstFurloughAndDefaultDate] could not determine first furlough date"
+                "[NumberOfDaysOnStatLeaveHelper][dayBeforeFirstFurloughOrDefaultDate] could not determine first furlough date"
               )
           }
       }
 
     variablePayResolver[LocalDate](
-      type3EmployeeResult = Some(determineFirstFurloughOrDefaultDate(apr5th2020)(earliestOf)),
-      type4EmployeeResult = Some(determineFirstFurloughOrDefaultDate(apr5th2020)(earliestOf)),
-      type5aEmployeeResult = Some(determineFirstFurloughOrDefaultDate(apr6th2020)(latestOf)),
-      type5bEmployeeResult = Some(determineFirstFurloughOrDefaultDate(apr6th2020)(latestOf))
+      type3EmployeeResult = Some(dayBeforeFirstFurloughOrDefaultDate(apr5th2020)(earliestOf)),
+      type4EmployeeResult = Some(dayBeforeFirstFurloughOrDefaultDate(apr5th2020)(earliestOf)),
+      type5aEmployeeResult = Some(dayBeforeFirstFurloughOrDefaultDate(apr6th2020)(latestOf)),
+      type5bEmployeeResult = Some(dayBeforeFirstFurloughOrDefaultDate(apr6th2020)(latestOf))
     ).fold(
       throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryEndDate] failed to resolve employee type")
     )(identity)
