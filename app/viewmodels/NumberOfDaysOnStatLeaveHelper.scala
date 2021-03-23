@@ -17,13 +17,12 @@
 package viewmodels
 
 import utils.{EmployeeTypeUtil, KeyDatesUtil}
-
 import java.time.LocalDate
 
 import cats.data.Validated.Valid
 import config.FrontendAppConfig
 import models.requests.DataRequest
-import pages.EmployeeStartDatePage
+import pages.{EmployeeStartDatePage, FirstFurloughDatePage, FurloughStartDatePage}
 import play.api.Logger
 import play.api.i18n.Messages
 import uk.gov.hmrc.http.InternalServerException
@@ -40,7 +39,7 @@ class NumberOfDaysOnStatLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
       type5aEmployeeResult = type5BoundaryStartMessage(),
       type5bEmployeeResult = type5BoundaryStartMessage()
     ).fold(
-      throw new InternalServerException("[BeenOnStatutoryLeaveHelper][boundaryStart] failed to resolve employee type")
+      throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryStartDateMessage] failed to resolve employee type")
     )(identity)
 
   def boundaryEndMessage()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): String =
@@ -50,26 +49,26 @@ class NumberOfDaysOnStatLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
       type5aEmployeeResult = Some(dateToString(firstFurloughDate().minusDays(1))),
       type5bEmployeeResult = Some(dateToString(firstFurloughDate().minusDays(1)))
     ).fold(
-      throw new InternalServerException("[BeenOnStatutoryLeaveHelper][boundaryEnd] failed to resolve employee type")
+      throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryEndMessage] failed to resolve employee type")
     )(identity)
 
-  def type5BoundaryStartMessage()(implicit request: DataRequest[_], messages: Messages): Option[String] =
+  private def type5BoundaryStartMessage()(implicit request: DataRequest[_], messages: Messages): Option[String] =
     request.userAnswers.getV(EmployeeStartDatePage) match {
       case Valid(startDate) =>
-        Logger.debug(s"[BeenOnStatutoryLeaveHelper][type5BoundaryStart] start date: $startDate")
+        Logger.debug(s"[NumberOfDaysOnStatLeaveHelper][type5BoundaryStart] start date: $startDate")
         if (startDate.isAfter(apr6th2020)) {
           Some(messages("hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted"))
         } else {
           Some(dateToString(apr6th2020))
         }
       case _ =>
-        Logger.debug("[BeenOnStatutoryLeaveHelper][type5BoundaryStart] no answer for EmployeeStartDatePage")
+        Logger.debug("[NumberOfDaysOnStatLeaveHelper][type5BoundaryStart] no answer for EmployeeStartDatePage")
         None
     }
 
-  def type3And4BoundaryEndMessage()(implicit request: DataRequest[_], messages: Messages): String = {
+  private def type3And4BoundaryEndMessage()(implicit request: DataRequest[_], messages: Messages): String = {
     val dayBeforeFirstFurlough = firstFurloughDate().minusDays(1)
-    Logger.debug(s"[BeenOnStatutoryLeaveHelper][type3And4BoundaryEnd] dayBeforeFirstFurlough: $dayBeforeFirstFurlough")
+    Logger.debug(s"[NumberOfDaysOnStatLeaveHelper][type3And4BoundaryEnd] dayBeforeFirstFurlough: $dayBeforeFirstFurlough")
     dateToString(earliestOf(apr5th2020, dayBeforeFirstFurlough))
   }
 
@@ -78,8 +77,8 @@ class NumberOfDaysOnStatLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
     val employeeStartDate: Option[LocalDate] = request.userAnswers.getV(EmployeeStartDatePage).toOption
 
     val type5BoundaryStartDate: Option[LocalDate] = {
-      Logger.debug(s"[BeenOnStatutoryLeaveHelper][boundaryStartDate] type5BoundaryStartDate: $employeeStartDate")
-      employeeStartDate.map(employeeStartDate => earliestOf(apr6th2020, employeeStartDate))
+      Logger.debug(s"[NumberOfDaysOnStatLeaveHelper][boundaryStartDate] type5BoundaryStartDate: $employeeStartDate")
+      employeeStartDate.map(employeeStartDate => latestOf(apr6th2020, employeeStartDate))
     }
 
     variablePayResolver[LocalDate](
@@ -88,18 +87,21 @@ class NumberOfDaysOnStatLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
       type5aEmployeeResult = type5BoundaryStartDate,
       type5bEmployeeResult = type5BoundaryStartDate,
     ).fold(
-      throw new InternalServerException("[BeenOnStatutoryLeaveHelper][boundaryStart] failed to resolve employee type")
+      throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryStart] failed to resolve employee type")
     )(identity)
   }
 
   def boundaryEndDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
 
-    val dayBeforeFirstFurlough: LocalDate = firstFurloughDate().minusDays(1)
-
-    val earliestOfApr5th2020OrDayBeforeFirstFurlough: LocalDate = {
-      Logger.debug(s"[BeenOnStatutoryLeaveHelper][boundaryEndDate] earliestOfApr5th2020OrDayBeforeFirstFurlough: $dayBeforeFirstFurlough")
-      earliestOf(apr5th2020, dayBeforeFirstFurlough)
-    }
+    val earliestOfApr5th2020OrDayBeforeFirstFurlough: LocalDate =
+      request.userAnswers.getV(FirstFurloughDatePage) match {
+        case Valid(firstFurloughDate) => firstFurloughDate.minusDays(1)
+        case _ =>
+          request.userAnswers.getV(FurloughStartDatePage) match {
+            case Valid(furloughStartDate) => furloughStartDate.minusDays(1)
+            case _                        => apr5th2020
+          }
+      }
 
     earliestOfApr5th2020OrDayBeforeFirstFurlough
   }

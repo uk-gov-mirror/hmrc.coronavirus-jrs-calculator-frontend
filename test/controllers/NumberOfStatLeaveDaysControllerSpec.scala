@@ -36,6 +36,7 @@ import assets.messages.BeenOnStatutoryLeaveMessages
 import models.requests.DataRequest
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import play.api.data.Form
 import utils.LocalDateHelpers.{apr5th2020, apr6th2019, apr6th2020, feb1st2020}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -48,7 +49,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
   val postAction   = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
   val formProvider = new NumberOfStatLeaveDaysFormProvider()
 
-  def form(boundaryStart: LocalDate, boundaryEnd: LocalDate) = formProvider(boundaryStart, boundaryEnd)
+  def form(boundaryStart: LocalDate, boundaryEnd: LocalDate): Form[Int] = formProvider(boundaryStart, boundaryEnd)
 
   lazy val numberOfDaysOnStatutoryLeaveRoute = routes.NumberOfStatLeaveDaysController.onPageLoad().url
 
@@ -56,16 +57,18 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
     FakeRequest(GET, numberOfDaysOnStatutoryLeaveRoute).withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  val controller = new NumberOfStatLeaveDaysController(messagesApi,
-                                                       mockSessionRepository,
-                                                       navigator,
-                                                       identifier,
-                                                       dataRetrieval,
-                                                       dataRequired,
-                                                       formProvider,
-                                                       helper,
-                                                       component,
-                                                       view)
+  val controller = new NumberOfStatLeaveDaysController(
+    messagesApi,
+    sessionRepository = mockSessionRepository,
+    navigator = navigator,
+    identify = identifier,
+    getData = dataRetrieval,
+    requireData = dataRequired,
+    formProvider = formProvider,
+    helper = helper,
+    controllerComponents = component,
+    view = view
+  )
 
   "NumberOfDaysOnStatLeave Controller" when {
 
@@ -150,8 +153,6 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val furloughStartDate = LocalDate.parse("2021-03-01")
             val boundaryStartDate = feb1st2020.minusDays(1)
             val boundaryEndDate   = firstFurloughDate.minusDays(1)
-            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
-            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
 
             val userAnswers = emptyUserAnswers
               .set(FurloughStartDatePage, furloughStartDate)
@@ -173,7 +174,12 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+              view(
+                form = form(boundaryStartDate, boundaryEndDate),
+                postAction = postAction,
+                boundaryStart = dateToString(boundaryStartDate),
+                boundaryEnd = dateToString(boundaryEndDate)
+              )(dataRequest, messages).toString
           }
         }
 
@@ -184,8 +190,6 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val employeeStartDate = feb1st2020.minusDays(1)
             val firstFurloughDate = LocalDate.parse("2020-04-06")
             val furloughStartDate = LocalDate.parse("2021-03-01")
-            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
-            val boundaryEnd       = dateToString(apr5th2020)
             val boundaryStartDate = employeeStartDate
             val boundaryEndDate   = apr5th2020
 
@@ -209,7 +213,9 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString()
+              view(form(boundaryStartDate, boundaryEndDate), postAction, dateToString(boundaryStartDate), dateToString(boundaryEndDate))(
+                dataRequest,
+                messages).toString
           }
         }
       }
@@ -223,8 +229,6 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val employeeStartDate = apr6th2020.minusDays(1)
             val firstFurloughDate = LocalDate.parse("2021-01-01")
             val furloughStartDate = LocalDate.parse("2021-03-01")
-            val boundaryStart     = dateToString(apr6th2020)
-            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
             val boundaryStartDate = apr6th2020
             val boundaryEndDate   = firstFurloughDate.minusDays(1)
 
@@ -251,7 +255,9 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString()
+              view(form(boundaryStartDate, boundaryEndDate), postAction, dateToString(boundaryStartDate), dateToString(boundaryEndDate))(
+                dataRequest,
+                messages).toString()
           }
         }
         "employment started after 6 April 2020 and first furloughed 1 Jan 2021" must {
@@ -261,8 +267,6 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val employeeStartDate = apr6th2020.plusDays(1)
             val firstFurloughDate = LocalDate.parse("2021-01-01")
             val furloughStartDate = LocalDate.parse("2021-03-01")
-            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
-            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
             val boundaryStartDate = apr6th2020.plusDays(1)
             val boundaryEndDate   = firstFurloughDate.minusDays(1)
 
@@ -289,8 +293,9 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
-
+              view(form(boundaryStartDate, boundaryEndDate), postAction, dateToString(boundaryStartDate), dateToString(boundaryEndDate))(
+                dataRequest,
+                messages).toString
           }
 
         }
@@ -344,8 +349,6 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val employeeStartDate = apr6th2020.plusDays(1)
             val firstFurloughDate = LocalDate.parse("2021-05-01")
             val furloughStartDate = LocalDate.parse("2021-05-21")
-            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
-            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
             val boundaryStartDate = employeeStartDate
             val boundaryEndDate   = firstFurloughDate.minusDays(1)
 
@@ -372,13 +375,18 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+              view(
+                form = form(boundaryStartDate, boundaryEndDate),
+                postAction = postAction,
+                boundaryStart = dateToString(boundaryStartDate),
+                boundaryEnd = dateToString(boundaryEndDate)
+              )(dataRequest, messages).toString
           }
         }
       }
     }
 
-    "OnSubmit" when {
+    "onSubmit" when {
 
       "employeeType is type3" must {
 
@@ -410,6 +418,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
           }
+
           "return a Bad Request and errors when invalid data is submitted" in {
 
             val firstFurloughDate = LocalDate.parse("2020-04-05")
@@ -657,6 +666,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
           }
         }
       }
+
       "employeeType is type5a" must {
 
         "employment started before 6 April 2020 and first furloughed 1 Jan 2021" must {
@@ -687,7 +697,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
             val request =
               FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
-                .withFormUrlEncodedBody(("value", "10"))
+                .withFormUrlEncodedBody(("value", "5"))
 
             val result = controller.onSubmit()(request)
 

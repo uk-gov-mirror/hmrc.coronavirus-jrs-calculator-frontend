@@ -26,11 +26,13 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.NumberOfStatLeaveDaysView
+
 import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
 import config.FrontendAppConfig
 import play.api.data.Form
 import viewmodels.NumberOfDaysOnStatLeaveHelper
+import views.ViewUtils.dateToString
 
 class NumberOfStatLeaveDaysController @Inject()(
   override val messagesApi: MessagesApi,
@@ -53,7 +55,7 @@ class NumberOfStatLeaveDaysController @Inject()(
       case Valid(value) => form.fill(value)
     }
     val postAction = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
-    Ok(view(preparedForm, postAction, helper.boundaryStartDateMessage(), helper.boundaryEndMessage()))
+    Ok(view(preparedForm, postAction, dateToString(helper.boundaryStartDate), dateToString(helper.boundaryEndDate)))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>

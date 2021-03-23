@@ -40,10 +40,11 @@ import scala.concurrent.Future
 
 class HasEmployeeBeenOnStatutoryLeaveControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-  val helper                                           = app.injector.instanceOf[BeenOnStatutoryLeaveHelper]
-  val view                                             = app.injector.instanceOf[HasEmployeeBeenOnStatutoryLeaveView]
-  val postAction                                       = controllers.routes.HasEmployeeBeenOnStatutoryLeaveController.onSubmit()
-  val formProvider                                     = new HasEmployeeBeenOnStatutoryLeaveFormProvider()
+  val helper       = app.injector.instanceOf[BeenOnStatutoryLeaveHelper]
+  val view         = app.injector.instanceOf[HasEmployeeBeenOnStatutoryLeaveView]
+  val postAction   = controllers.routes.HasEmployeeBeenOnStatutoryLeaveController.onSubmit()
+  val formProvider = new HasEmployeeBeenOnStatutoryLeaveFormProvider()
+
   def form(boundaryStart: String, boundaryEnd: String) = formProvider(boundaryStart, boundaryEnd)
 
   lazy val hasEmployeeBeenOnStatutoryLeaveRoute = routes.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad().url
@@ -660,9 +661,8 @@ class HasEmployeeBeenOnStatutoryLeaveControllerSpec extends SpecBaseControllerSp
               .value
 
             when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
-            val request =
-              FakeRequest(POST, hasEmployeeBeenOnStatutoryLeaveRoute)
-                .withFormUrlEncodedBody(("value", "true"))
+            val request = FakeRequest(POST, hasEmployeeBeenOnStatutoryLeaveRoute)
+              .withFormUrlEncodedBody(("value", "true"))
 
             val result = controller.onSubmit()(request)
 
@@ -961,7 +961,7 @@ class HasEmployeeBeenOnStatutoryLeaveControllerSpec extends SpecBaseControllerSp
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(None)
       val request =
-        FakeRequest(POST, hasEmployeeBeenOnStatutoryLeaveRoute)
+        FakeRequest(method = POST, path = hasEmployeeBeenOnStatutoryLeaveRoute)
           .withFormUrlEncodedBody(("value", "111"))
 
       val result = controller.onSubmit()(request)

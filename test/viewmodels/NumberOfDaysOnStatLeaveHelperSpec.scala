@@ -30,6 +30,7 @@ import utils.LocalDateHelpers
 class NumberOfDaysOnStatLeaveHelperSpec extends SpecBase with LocalDateHelpers with LogCapturing {
 
   val helper = app.injector.instanceOf[NumberOfDaysOnStatLeaveHelper]
+
   "boundaryStartDate" when {
 
     "employee is type 3" must {
@@ -66,7 +67,7 @@ class NumberOfDaysOnStatLeaveHelperSpec extends SpecBase with LocalDateHelpers w
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr5th2020
+          helper.boundaryStartDate() mustBe feb1st2020.plusDays(1)
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
         }
       }
@@ -130,7 +131,7 @@ class NumberOfDaysOnStatLeaveHelperSpec extends SpecBase with LocalDateHelpers w
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr6th2020
+          helper.boundaryStartDate() mustBe apr6th2020.plusDays(1)
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
         }
       }
