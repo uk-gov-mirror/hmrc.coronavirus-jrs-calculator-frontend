@@ -31,7 +31,7 @@ class StatutoryLeavePayViewSpec extends AmountViewBehaviours {
 
   val messageKeyPrefix            = "statutoryLeavePay"
   val view: StatutoryLeavePayView = injector.instanceOf[StatutoryLeavePayView]
-  val form: Form[Amount]          = new StatutoryLeavePayFormProvider()()
+  val form: Form[Amount]          = new StatutoryLeavePayFormProvider()(BigDecimal(200.00))
   val postAction                  = controllers.routes.StatutoryLeavePayController.onSubmit()
 
   implicit val request: DataRequest[_] = fakeDataRequest()
