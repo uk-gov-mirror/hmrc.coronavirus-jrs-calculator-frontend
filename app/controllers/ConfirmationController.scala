@@ -94,7 +94,7 @@ class ConfirmationController @Inject()(
                 claimPeriod = data.metaData.claimPeriod,
                 version = calculatorVersionConf,
                 isNewStarterType5 = employeeTypeService.isType5NewStarter(),
-                generosityRate = rateHelper(yearMonth)
+                generosityRate = jrsExtensionRateHelper(yearMonth)
               )))
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
@@ -106,7 +106,7 @@ class ConfirmationController @Inject()(
     }
   }
 
-  private def rateHelper(yearMonth: YearMonth): Int =
+  private def jrsExtensionRateHelper(yearMonth: YearMonth): Int =
     yearMonth match {
       case yearMonth if yearMonth == YearMonth.of(2021, Month.JULY)      => 70
       case yearMonth if yearMonth == YearMonth.of(2021, Month.AUGUST)    => 60
