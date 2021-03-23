@@ -20,6 +20,7 @@ import assets.constants.ConfirmationConstants._
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
 import config.CalculatorVersionConfiguration
 import models.NicCategory.Payable
+import models.PartTimeQuestion.PartTimeNo
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.DoesContribute
 import models._
@@ -153,12 +154,80 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         cvb = breakdown,
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
         version = calculatorVersionConf,
-        isNewStarterType5 = false
+        isNewStarterType5 = false,
+        generosityRate = 80
       )(request, messages).toString
 
       status(result) mustEqual OK
       expected mustEqual actual
 
     }
+
+    "return OK and the JRSExtension view with calculations, for a GET for dates 1st to 31st August 2021" in new CalculatorVersionConfiguration {
+
+      val employeeIncomeForPeriod: Amount   = Amount(10000.00)
+      val maxMonthFurloughGrant: BigDecimal = 2500.00
+      val claimStartDate                    = "2021, 8, 1"
+      val claimEndDate                      = "2021, 8, 31"
+
+      val userAnswers = emptyUserAnswers
+        .withClaimPeriodStart(claimStartDate)
+        .withClaimPeriodEnd(claimEndDate)
+        .withFurloughStartDate("2020, 8, 20")
+        .withFurloughStatus()
+        .withPaymentFrequency(Monthly)
+        .withNiCategory()
+        .withPensionStatus()
+        .withPayMethod()
+        .withPreviousFurloughedPeriodsAnswer(false)
+        .withPayDate(List("2021, 7, 31", "2021, 8, 31"))
+        .withLastPayDate("2021, 8, 31")
+        .withPartTimeQuestion(PartTimeNo)
+        .withRegularPayAmount(10000.00)
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+
+      val payment: RegularPaymentWithPhaseTwoPeriod = {
+        RegularPaymentWithPhaseTwoPeriod(
+          regularPay = employeeIncomeForPeriod,
+          referencePay = employeeIncomeForPeriod,
+          phaseTwoPeriod = PhaseTwoPeriod(
+            periodWithPaymentDate = fullPeriodWithPaymentDate(start = claimStartDate, end = claimEndDate, paymentDate = claimEndDate),
+            actualHours = None,
+            usualHours = None
+          )
+        )
+      }
+
+      val breakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        ConfirmationViewBreakdownWithoutNicAndPension(
+          furlough = PhaseTwoFurloughCalculationResult(
+            total = maxMonthFurloughGrant,
+            periodBreakdowns = Seq(
+              PhaseTwoFurloughBreakdown(grant = Amount(maxMonthFurloughGrant),
+                                        paymentWithPeriod = payment,
+                                        furloughCap = FullPeriodCap(maxMonthFurloughGrant))
+            )
+          )
+        )
+      }
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val result: Future[Result]                       = controller.onPageLoad()(request)
+
+      val expected: String = contentAsString(result)
+      val actual: String = extensionView(
+        cvb = breakdown,
+        claimPeriod = period(start = claimStartDate, end = claimEndDate),
+        version = calculatorVersionConf,
+        isNewStarterType5 = false,
+        generosityRate = 60
+      )(request, messages).toString
+
+      status(result) mustEqual OK
+      expected mustEqual actual
+
+    }
+
   }
 }

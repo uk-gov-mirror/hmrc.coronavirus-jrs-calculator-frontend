@@ -37,7 +37,12 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String, isNewStarterType5:Boolean)(implicit request: Request[_], messages: Messages)
+@(cvb: ConfirmationViewBreakdownWithoutNicAndPension,
+  claimPeriod: Period,
+  version: String,
+  isNewStarterType5:Boolean,
+  generosityRate: Int
+)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
@@ -49,7 +54,7 @@
             <p>
                 @messages("confirmation.no.nic.pension.p1")
                 <br>
-                @messages("confirmation.extension.p2")
+                @messages("confirmation.extension.p2", 70)
             </p>
             <p class="govuk-panel__title">&pound;@cvb.furlough.total.formatted("%.2f")</p>
         </div>

@@ -44,6 +44,8 @@ class JrsExtensionConfirmationViewSpec
   val view: JrsExtensionConfirmationView = injector.instanceOf[JrsExtensionConfirmationView]
 
   object RegularEmployeeTypeOneSelectors extends BaseSelectors {
+    val greenPanelGenerosityRate =
+      "#main-content > div > div > div > div.govuk-panel.govuk-panel--confirmation > div > div > p:nth-child(1)"
     val nonGreenContentParagraphChild: Int => String = (i: Int) => s"#main-content > div > div > div > p:nth-child($i)"
     val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(2)
     val disclaimer: String                           = nonGreenContentParagraphChild(4)
@@ -101,6 +103,7 @@ class JrsExtensionConfirmationViewSpec
   }
 
   val expectedContent = Seq(
+    RegularEmployeeTypeOneSelectors.greenPanelGenerosityRate      -> RegularType1.greenPanelGenerosityRate(70),
     RegularEmployeeTypeOneSelectors.h1                            -> RegularType1.heading,
     RegularEmployeeTypeOneSelectors.dateAndCalculatorVersion      -> RegularType1.dateAndCalculatorVersion(dateToString(LocalDate.now())),
     RegularEmployeeTypeOneSelectors.indent                        -> RegularType1.indent,
@@ -138,7 +141,7 @@ class JrsExtensionConfirmationViewSpec
   implicit val request: DataRequest[_] = fakeDataRequest()
 
   def applyView(): HtmlFormat.Appendable =
-    view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2", isNewStarterType5 = false)
+    view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2", isNewStarterType5 = false, generosityRate = 80)
 
   implicit val doc: Document = asDocument(applyView())
 
@@ -278,7 +281,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
   implicit val request: DataRequest[_] = fakeDataRequest()
 
   def applyView(): HtmlFormat.Appendable =
-    view(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = true)
+    view(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = true, generosityRate = 80)
 
   implicit val doc: Document = asDocument(applyView())
 

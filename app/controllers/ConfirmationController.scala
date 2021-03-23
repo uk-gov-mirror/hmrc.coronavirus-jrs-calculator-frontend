@@ -16,7 +16,7 @@
 
 package controllers
 
-import java.time.LocalDate
+import java.time.{LocalDate, Month, YearMonth}
 
 import cats.data.{NonEmptyChain, Validated}
 import cats.data.Validated.{Invalid, Valid}
@@ -34,7 +34,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{AuditService, EmployeeTypeService}
 import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
-import utils.PagerDutyHelper
+import utils.{EmployeeTypeUtil, PagerDutyHelper, YearMonthHelper}
 import utils.PagerDutyHelper.PagerDutyKeys._
 import viewmodels.{ConfirmationDataResult, ConfirmationDataResultWithoutNicAndPension, ConfirmationViewBreakdownWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult, ViewBreakdown}
 import views.html._
@@ -56,13 +56,14 @@ class ConfirmationController @Inject()(
   extensionView: JrsExtensionConfirmationView,
   auditService: AuditService,
   val navigator: Navigator)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext, appConfig: FrontendAppConfig)
-    extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
+    extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration with EmployeeTypeUtil
+    with YearMonthHelper {
 
   //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     /** Uncomment line to create integration test cases when going through journeys, either manually or via test packs.
       * Set the number of cases to the amount of cases that will be executed. */
-//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 6)
+    //    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 6)
 
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>
@@ -72,28 +73,29 @@ class ConfirmationController @Inject()(
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
         Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
       case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
-        data.metaData.claimPeriod.start.getMonthValue match {
-          case 8 =>
+        data.metaData.claimPeriod.start.getYearMonth match {
+          case yearMonth if yearMonth == YearMonth.of(2020, Month.SEPTEMBER) =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
-          case 9 =>
+          case yearMonth if yearMonth == YearMonth.of(2020, Month.OCTOBER) =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(
               Ok(septemberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
-          case 10 =>
+          case yearMonth if yearMonth == YearMonth.of(2020, Month.DECEMBER) =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
-          case 11 | 12 | 1 | 2 | 3 | 4 | 5 =>
+          case yearMonth
+              if yearMonth.isAfter(YearMonth.of(2020, Month.OCTOBER)) &&
+                yearMonth.isBefore(YearMonth.of(2021, Month.OCTOBER)) =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(
-              Ok(
-                extensionView(
-                  data.confirmationViewBreakdown,
-                  data.metaData.claimPeriod,
-                  calculatorVersionConf,
-                  employeeTypeService.isType5NewStarter()
-                ))
-            )
+              Ok(extensionView(
+                cvb = data.confirmationViewBreakdown,
+                claimPeriod = data.metaData.claimPeriod,
+                version = calculatorVersionConf,
+                isNewStarterType5 = employeeTypeService.isType5NewStarter(),
+                generosityRate = rateHelper(yearMonth)
+              )))
           case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
       case Invalid(e) =>
@@ -103,5 +105,13 @@ class ConfirmationController @Inject()(
         Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
     }
   }
+
+  private def rateHelper(yearMonth: YearMonth): Int =
+    yearMonth match {
+      case yearMonth if yearMonth == YearMonth.of(2021, Month.JULY)      => 70
+      case yearMonth if yearMonth == YearMonth.of(2021, Month.AUGUST)    => 60
+      case yearMonth if yearMonth == YearMonth.of(2021, Month.SEPTEMBER) => 60
+      case _                                                             => 80
+    }
 
 }

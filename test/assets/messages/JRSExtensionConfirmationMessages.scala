@@ -28,6 +28,8 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
     val heading = "What you can claim for this employee"
 
+    val greenPanelGenerosityRate = (percentage: Int) => s"Furlough grant ($percentage% of wages)"
+
     val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
 
     val indent = "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
