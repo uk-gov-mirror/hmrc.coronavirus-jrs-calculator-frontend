@@ -16,7 +16,6 @@
 
 package viewmodels
 
-import utils.{EmployeeTypeUtil, KeyDatesUtil}
 import java.time.LocalDate
 
 import cats.data.Validated.Valid
@@ -28,82 +27,55 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.http.InternalServerException
 import utils.LocalDateHelpers._
 import utils.{EmployeeTypeUtil, KeyDatesUtil}
-import views.ViewUtils.dateToString
 
 class NumberOfDaysOnStatLeaveHelper extends EmployeeTypeUtil with KeyDatesUtil {
-
-  def boundaryStartDateMessage()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): String =
-    variablePayResolver[String](
-      type3EmployeeResult = Some(dateToString(apr6th2019)),
-      type4EmployeeResult = Some(messages("hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted")),
-      type5aEmployeeResult = type5BoundaryStartMessage(),
-      type5bEmployeeResult = type5BoundaryStartMessage()
-    ).fold(
-      throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryStartDateMessage] failed to resolve employee type")
-    )(identity)
-
-  def boundaryEndMessage()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): String =
-    variablePayResolver[String](
-      type3EmployeeResult = Some(type3And4BoundaryEndMessage()),
-      type4EmployeeResult = Some(type3And4BoundaryEndMessage()),
-      type5aEmployeeResult = Some(dateToString(firstFurloughDate().minusDays(1))),
-      type5bEmployeeResult = Some(dateToString(firstFurloughDate().minusDays(1)))
-    ).fold(
-      throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryEndMessage] failed to resolve employee type")
-    )(identity)
-
-  private def type5BoundaryStartMessage()(implicit request: DataRequest[_], messages: Messages): Option[String] =
-    request.userAnswers.getV(EmployeeStartDatePage) match {
-      case Valid(startDate) =>
-        Logger.debug(s"[NumberOfDaysOnStatLeaveHelper][type5BoundaryStart] start date: $startDate")
-        if (startDate.isAfter(apr6th2020)) {
-          Some(messages("hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted"))
-        } else {
-          Some(dateToString(apr6th2020))
-        }
-      case _ =>
-        Logger.debug("[NumberOfDaysOnStatLeaveHelper][type5BoundaryStart] no answer for EmployeeStartDatePage")
-        None
-    }
-
-  private def type3And4BoundaryEndMessage()(implicit request: DataRequest[_], messages: Messages): String = {
-    val dayBeforeFirstFurlough = firstFurloughDate().minusDays(1)
-    Logger.debug(s"[NumberOfDaysOnStatLeaveHelper][type3And4BoundaryEnd] dayBeforeFirstFurlough: $dayBeforeFirstFurlough")
-    dateToString(earliestOf(apr5th2020, dayBeforeFirstFurlough))
-  }
 
   def boundaryStartDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
 
     val employeeStartDate: Option[LocalDate] = request.userAnswers.getV(EmployeeStartDatePage).toOption
 
-    val type5BoundaryStartDate: Option[LocalDate] = {
-      Logger.debug(s"[NumberOfDaysOnStatLeaveHelper][boundaryStartDate] type5BoundaryStartDate: $employeeStartDate")
-      employeeStartDate.map(employeeStartDate => latestOf(apr6th2020, employeeStartDate))
+    def latestOfEmployeeStartDateOrDefaultDate(defaultDate: LocalDate): Option[LocalDate] = {
+      Logger.debug(
+        s"[NumberOfDaysOnStatLeaveHelper][boundaryStartDate] " +
+          s"\n - defaultDate: $defaultDate" +
+          s"\n - employeeStartDate: $employeeStartDate")
+      employeeStartDate.map(employeeStartDate => latestOf(defaultDate, employeeStartDate))
     }
 
     variablePayResolver[LocalDate](
-      type3EmployeeResult = Some(apr6th2019),
-      type4EmployeeResult = employeeStartDate,
-      type5aEmployeeResult = type5BoundaryStartDate,
-      type5bEmployeeResult = type5BoundaryStartDate,
+      type3EmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2019),
+      type4EmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2019),
+      type5aEmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2020),
+      type5bEmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2020)
     ).fold(
-      throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryStart] failed to resolve employee type")
+      throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryStartDate] failed to resolve employee type")
     )(identity)
   }
 
   def boundaryEndDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
 
-    val earliestOfApr5th2020OrDayBeforeFirstFurlough: LocalDate =
+    def earliestOfDayBeforeFirstFurloughAndDefaultDate(defaultDate: LocalDate): LocalDate =
       request.userAnswers.getV(FirstFurloughDatePage) match {
-        case Valid(firstFurloughDate) => firstFurloughDate.minusDays(1)
+        case Valid(firstFurloughDate) => earliestOf(defaultDate, firstFurloughDate.minusDays(1))
         case _ =>
           request.userAnswers.getV(FurloughStartDatePage) match {
-            case Valid(furloughStartDate) => furloughStartDate.minusDays(1)
-            case _                        => apr5th2020
+            case Valid(furloughStartDate) => earliestOf(defaultDate, furloughStartDate.minusDays(1))
+            case _ =>
+              throw new InternalServerException(
+                "[NumberOfDaysOnStatLeaveHelper][earliestOfDayBeforeFirstFurloughAndDefaultDate] could not determine first furlough date"
+              )
           }
       }
 
-    earliestOfApr5th2020OrDayBeforeFirstFurlough
+    variablePayResolver[LocalDate](
+      type3EmployeeResult = Some(earliestOfDayBeforeFirstFurloughAndDefaultDate(apr5th2020)),
+      type4EmployeeResult = Some(earliestOfDayBeforeFirstFurloughAndDefaultDate(apr5th2020)),
+      type5aEmployeeResult = Some(apr6th2020), // TODO: waiting on reply for precedence
+      type5bEmployeeResult = Some(apr6th2020) // TODO: waiting on reply for precedence
+    ).fold(
+      throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryEndDate] failed to resolve employee type")
+    )(identity)
+
   }
 
 }
