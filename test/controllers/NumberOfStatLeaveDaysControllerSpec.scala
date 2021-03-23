@@ -18,9 +18,9 @@ package controllers
 
 import base.SpecBaseControllerSpecs
 import forms.NumberOfStatLeaveDaysFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{EmployeeStarted, NormalMode, UserAnswers}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.NumberOfStatLeaveDaysPage
+import pages.{EmployeeStartDatePage, EmployeeStartedPage, FirstFurloughDatePage, FurloughStartDatePage, HasEmployeeBeenOnStatutoryLeavePage, NumberOfStatLeaveDaysPage, OnPayrollBefore30thOct2020Page}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
@@ -28,135 +28,675 @@ import play.api.test.CSRFTokenHelper._
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.NumberOfStatLeaveDaysView
+import viewmodels.NumberOfDaysOnStatLeaveHelper
+import views.ViewUtils.dateToString
+import java.time.LocalDate
 
+import assets.messages.BeenOnStatutoryLeaveMessages
+import models.requests.DataRequest
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import utils.LocalDateHelpers.{apr5th2020, apr6th2019, apr6th2020, feb1st2020}
+
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-//  val formProvider = new NumberOfStatLeaveDaysFormProvider()
-//  val form         = formProvider()
-//
-//  def onwardRoute = Call("GET", "/foo")
-//
-//  val validAnswer = 0
-//
-//  lazy val numberOfStatLeaveDaysRoute = routes.NumberOfStatLeaveDaysController.onPageLoad(NormalMode).url
-//
-//  "NumberOfStatLeaveDays Controller" must {
-//
-//    "return OK and the correct view for a GET" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-//
-//      val request = FakeRequest(GET, numberOfStatLeaveDaysRoute).withCSRFToken
-//
-//      val result = route(application, request).value
-//
-//      val view = application.injector.instanceOf[NumberOfStatLeaveDaysView]
-//
-//      status(result) mustEqual OK
-//
-//      contentAsString(result) mustEqual
-//        view(form, NormalMode)(request, messages).toString
-//
-//      application.stop()
-//    }
-//
-//    "populate the view correctly on a GET when the question has previously been answered" in {
-//
-//      val userAnswers = UserAnswers(userAnswersId).set(NumberOfStatLeaveDaysPage, validAnswer).success.value
-//
-//      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-//
-//      val request = FakeRequest(GET, numberOfStatLeaveDaysRoute).withCSRFToken
-//
-//      val view = application.injector.instanceOf[NumberOfStatLeaveDaysView]
-//
-//      val result = route(application, request).value
-//
-//      status(result) mustEqual OK
-//
-//      contentAsString(result) mustEqual
-//        view(form.fill(validAnswer), NormalMode)(request, messages).toString
-//
-//      application.stop()
-//    }
-//
-//    "redirect to the next page when valid data is submitted" in {
-//
-//      val application =
-//        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-//          .overrides(
-//            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-//            bind[SessionRepository].toInstance(mockSessionRepository)
-//          )
-//          .build()
-//
-//      val request =
-//        FakeRequest(POST, numberOfStatLeaveDaysRoute)
-//          .withFormUrlEncodedBody(("value", validAnswer.toString))
-//
-//      val result = route(application, request).value
-//
-//      status(result) mustEqual SEE_OTHER
-//
-//      redirectLocation(result).value mustEqual onwardRoute.url
-//
-//      application.stop()
-//    }
-//
-//    "return a Bad Request and errors when invalid data is submitted" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-//
-//      val request =
-//        FakeRequest(POST, numberOfStatLeaveDaysRoute).withCSRFToken
-//          .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-//          .withFormUrlEncodedBody(("value", "invalid value"))
-//
-//      val boundForm = form.bind(Map("value" -> "invalid value"))
-//
-//      val view = application.injector.instanceOf[NumberOfStatLeaveDaysView]
-//
-//      val result = route(application, request).value
-//
-//      status(result) mustEqual BAD_REQUEST
-//
-//      contentAsString(result) mustEqual
-//        view(boundForm, NormalMode)(request, messages).toString
-//
-//      application.stop()
-//    }
-//
-//    "redirect to Session Expired for a GET if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      val request = FakeRequest(GET, numberOfStatLeaveDaysRoute)
-//
-//      val result = route(application, request).value
-//
-//      status(result) mustEqual SEE_OTHER
-//      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-//
-//      application.stop()
-//    }
-//
-//    "redirect to Session Expired for a POST if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      val request =
-//        FakeRequest(POST, numberOfStatLeaveDaysRoute)
-//          .withFormUrlEncodedBody(("value", validAnswer.toString))
-//
-//      val result = route(application, request).value
-//
-//      status(result) mustEqual SEE_OTHER
-//
-//      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-//
-//      application.stop()
-//    }
-//  }
+  val helper       = app.injector.instanceOf[NumberOfDaysOnStatLeaveHelper]
+  val view         = app.injector.instanceOf[NumberOfStatLeaveDaysView]
+  val postAction   = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
+  val formProvider = new NumberOfStatLeaveDaysFormProvider()
+
+  def form(boundaryStart: LocalDate, boundaryEnd: LocalDate) = formProvider(boundaryStart, boundaryEnd)
+
+  lazy val numberOfDaysOnStatutoryLeaveRoute = routes.NumberOfStatLeaveDaysController.onPageLoad().url
+
+  val getRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(GET, numberOfDaysOnStatutoryLeaveRoute).withCSRFToken
+      .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+  val controller = new NumberOfStatLeaveDaysController(messagesApi,
+                                                       mockSessionRepository,
+                                                       navigator,
+                                                       identifier,
+                                                       dataRetrieval,
+                                                       dataRequired,
+                                                       formProvider,
+                                                       helper,
+                                                       component,
+                                                       view)
+
+  "NumberOfDaysOnStatLeave Controller" when {
+
+    "onPageLoad" when {
+
+      "employee is type 3" when {
+
+        "the day before employee is frst furloughed is before the 5th April 2020" must {
+
+          "return OK and the correct value for a GET" in {
+
+            val firstFurloughDate = LocalDate.parse("2020-04-05")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStartDate = apr6th2019
+            val boundaryEndDate   = firstFurloughDate.minusDays(1)
+            val boundaryStart     = dateToString(apr6th2019)
+            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val result      = controller.onPageLoad()(getRequest)
+            val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual
+              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+
+          }
+        }
+
+        "day before employee is first furloughed is after 5th Aptil 2020" must {
+
+          "return OK and the correct view for a GET" in {
+
+            val firstFurloughDate = LocalDate.parse("2020-04-06")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStartDate = apr6th2019
+            val boundaryEndDate   = apr5th2020
+            val boundaryStart     = dateToString(apr6th2019)
+            val boundaryEnd       = dateToString(apr5th2020)
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val result      = controller.onPageLoad()(getRequest)
+            val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual
+              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+          }
+        }
+      }
+
+      "employee is type 4" when {
+
+        "the day before employee is first furloughed in before 5th April 2020" must {
+
+          "return OK and the correct view for a GET" in {
+
+            val employeeStartDate = feb1st2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2020-04-05")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStartDate = feb1st2020.minusDays(1)
+            val boundaryEndDate   = firstFurloughDate.minusDays(1)
+            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
+            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val result      = controller.onPageLoad()(getRequest)
+            val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual
+              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+          }
+        }
+
+        "the day before the employee is first furloughed is after 5th April 2020" must {
+
+          "return OK and the correct view for a GET" in {
+
+            val employeeStartDate = feb1st2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2020-04-06")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
+            val boundaryEnd       = dateToString(apr5th2020)
+            val boundaryStartDate = employeeStartDate
+            val boundaryEndDate   = apr5th2020
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val result      = controller.onPageLoad()(getRequest)
+            val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual
+              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString()
+          }
+        }
+      }
+
+      "employee is type 5a" when {
+
+        "employee started before the 6 April 2020 and first furloughed 1 Jan 2021" must {
+
+          "return OK and the correct view for a GET " in {
+
+            val employeeStartDate = apr6th2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2021-01-01")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStart     = dateToString(apr6th2020)
+            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
+            val boundaryStartDate = apr6th2020
+            val boundaryEndDate   = firstFurloughDate.minusDays(1)
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val result      = controller.onPageLoad()(getRequest)
+            val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual
+              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString()
+          }
+        }
+        "employment started after 6 April 2020 and first furloughed 1 Jan 2021" must {
+
+          "return OK and the correct view for a GET" in {
+
+            val employeeStartDate = apr6th2020.plusDays(1)
+            val firstFurloughDate = LocalDate.parse("2021-01-01")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
+            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
+            val boundaryStartDate = apr6th2020.plusDays(1)
+            val boundaryEndDate   = firstFurloughDate.minusDays(1)
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val result      = controller.onPageLoad()(getRequest)
+            val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual
+              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+
+          }
+
+        }
+      }
+
+      "employee is type 5b" when {
+
+        "employment started before 6 April 2020 and first furloughed 01 May 2021" must {
+
+          "return OK and get the correct view for a GET" in {
+
+            val employeeStartDate = apr6th2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2021-05-01")
+            val furloughStartDate = LocalDate.parse("2021-05-21")
+            val boundaryStart     = dateToString(apr6th2020)
+            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
+            val boundaryStartDate = apr6th2020
+            val boundaryEndDate   = firstFurloughDate.minusDays(1)
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, false)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val result      = controller.onPageLoad()(getRequest)
+            val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual
+              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString()
+
+          }
+        }
+        "employment started after 6 April 2020 and first furloughed 01 May 2021" must {
+
+          "return OK and the correct view for a GET" in {
+
+            val employeeStartDate = apr6th2020.plusDays(1)
+            val firstFurloughDate = LocalDate.parse("2021-05-01")
+            val furloughStartDate = LocalDate.parse("2021-05-21")
+            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
+            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
+            val boundaryStartDate = employeeStartDate
+            val boundaryEndDate   = firstFurloughDate.minusDays(1)
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, false)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val result      = controller.onPageLoad()(getRequest)
+            val dataRequest = DataRequest(getRequest, userAnswers.id, userAnswers)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual
+              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+          }
+        }
+      }
+    }
+
+    "OnSubmit" when {
+
+      "employeeType is type3" must {
+
+        "day before employee is first furloughed is before 5th April 2020" must {
+
+          "redirect to the next page when valid data is submitted" in {
+
+            val firstFurloughDate = LocalDate.parse("2020-04-05")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .withFormUrlEncodedBody(("value", "20"))
+
+            val result = controller.onSubmit()(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+          }
+          "return a Bad Request and errors when invalid data is submitted" in {
+
+            val firstFurloughDate = LocalDate.parse("2020-04-05")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStart     = dateToString(apr6th2019)
+            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
+            val boundaryStartDate = apr6th2019
+            val boundaryEndDate   = firstFurloughDate.minusDays(1)
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+                .withFormUrlEncodedBody(("value", "invalid value"))
+
+            val boundForm   = form(boundaryStartDate, boundaryEndDate).bind(Map("value" -> "invalid value"))
+            val result      = controller.onSubmit()(request)
+            val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+            status(result) mustEqual BAD_REQUEST
+            contentAsString(result) mustEqual
+              view(boundForm, postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+          }
+        }
+
+        "day before employee is first furloughed is after 5th April 2020" must {
+
+          "redirect to the next page when valid data is submitted" in {
+
+            val firstFurloughDate = LocalDate.parse("2020-04-06")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+
+            val userAnswers = emptyUserAnswers
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .withFormUrlEncodedBody(("value", "10"))
+
+            val result = controller.onSubmit()(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+          }
+
+          "return a Bad Request and errors when invalid data is submitted" in {
+
+            val firstFurloughDate = LocalDate.parse("2020-04-06")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStart     = dateToString(apr6th2019)
+            val boundaryEnd       = dateToString(apr5th2020)
+            val boundaryStartDate = apr6th2019
+            val boundaryEndDate   = apr5th2020
+
+            val userAnswers = emptyUserAnswers
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+                .withFormUrlEncodedBody(("value", "invalid value"))
+
+            val boundForm   = form(boundaryStartDate, boundaryEndDate).bind(Map("value" -> "invalid value"))
+            val result      = controller.onSubmit()(request)
+            val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+            status(result) mustEqual BAD_REQUEST
+            contentAsString(result) mustEqual
+              view(boundForm, postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+          }
+        }
+      }
+
+      "employeeType is type4" must {
+
+        "day before employee is first furloughed is before 5th April 2020" must {
+
+          "redirect to the next page when valid data is submitted" in {
+
+            val employeeStartDate = feb1st2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2020-04-05")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .withFormUrlEncodedBody(("value", "5"))
+
+            val result = controller.onSubmit()(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+          }
+          "return a Bad Request and errors when invalid data is submitted" in {
+
+            val employeeStartDate = feb1st2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2020-04-05")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
+            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
+            val boundaryStartDate = employeeStartDate
+            val boundaryEndDate   = firstFurloughDate.minusDays(1)
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+                .withFormUrlEncodedBody(("value", "invalid value"))
+
+            val boundForm   = form(boundaryStartDate, boundaryEndDate).bind(Map("value" -> "invalid value"))
+            val result      = controller.onSubmit()(request)
+            val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+            status(result) mustEqual BAD_REQUEST
+            contentAsString(result) mustEqual
+              view(boundForm, postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+          }
+        }
+        "the day before the employee is first furloughed is after 5th April 2020" must {
+
+          "redirect to the next page when valid data is submitted" in {
+
+            val employeeStartDate = feb1st2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2020-04-06")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+
+            val userAnswers = emptyUserAnswers
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .withFormUrlEncodedBody(("value", "20"))
+
+            val result = controller.onSubmit()(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+          }
+          "return a Bad Request and errors when invalid data is submitted" in {
+
+            val employeeStartDate = feb1st2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2020-04-06")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+            val boundaryStart     = BeenOnStatutoryLeaveMessages.dayEmploymentStarted
+            val boundaryEnd       = dateToString(apr5th2020)
+            val boundaryStartDate = employeeStartDate
+            val boundaryEndDate   = apr5th2020
+
+            val userAnswers = emptyUserAnswers
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+                .withFormUrlEncodedBody(("value", "invalid value"))
+
+            val boundForm   = form(boundaryStartDate, boundaryEndDate).bind(Map("value" -> "invalid value"))
+            val result      = controller.onSubmit()(request)
+            val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
+
+            status(result) mustEqual BAD_REQUEST
+            contentAsString(result) mustEqual
+              view(boundForm, postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+          }
+        }
+      }
+      "employeeType is type5a" must {
+
+        "employment started before 6 April 2020 and first furloughed 1 Jan 2021" must {
+
+          "redirect to the net page when valid data is submitted" in {
+
+            val employeeStartDate = apr6th2020.minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2021-01-01")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, true)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .withFormUrlEncodedBody(("value", "10"))
+
+            val result = controller.onSubmit()(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+          }
+        }
+
+      }
+    }
+  }
 }

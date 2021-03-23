@@ -46,7 +46,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDateMessage() mustBe dateToString(apr6th2019)
+          helper.boundaryStart() mustBe dateToString(apr6th2019)
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee") mustBe true
         }
       }
@@ -69,7 +69,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDateMessage() mustBe BeenOnStatutoryLeaveMessages.dayEmploymentStarted
+          helper.boundaryStart() mustBe BeenOnStatutoryLeaveMessages.dayEmploymentStarted
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
         }
       }
@@ -101,7 +101,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDateMessage() mustBe dateToString(apr6th2020)
+          helper.boundaryStart() mustBe dateToString(apr6th2020)
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5a Employee") mustBe true
         }
       }
@@ -133,7 +133,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDateMessage() mustBe BeenOnStatutoryLeaveMessages.dayEmploymentStarted
+          helper.boundaryStart() mustBe BeenOnStatutoryLeaveMessages.dayEmploymentStarted
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
         }
       }
@@ -157,7 +157,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryEndMessage() mustBe dateToString(apr5th2020)
+          helper.boundaryEnd() mustBe dateToString(apr5th2020)
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee") mustBe true
         }
       }
@@ -180,7 +180,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryEndMessage() mustBe dateToString(apr5th2020.minusDays(1))
+          helper.boundaryEnd() mustBe dateToString(apr5th2020.minusDays(1))
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
         }
       }
@@ -212,7 +212,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryEndMessage() mustBe dateToString(firstFurloughDateAns.minusDays(1))
+          helper.boundaryEnd() mustBe dateToString(firstFurloughDateAns.minusDays(1))
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5a Employee") mustBe true
         }
       }
@@ -244,7 +244,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryEndMessage() mustBe dateToString(firstFurloughDateAns.minusDays(1))
+          helper.boundaryEnd() mustBe dateToString(firstFurloughDateAns.minusDays(1))
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
         }
       }
@@ -264,7 +264,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
           .value
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-        helper.type5BoundaryStartMessage mustBe Some(BeenOnStatutoryLeaveMessages.dayEmploymentStarted)
+        helper.type5BoundaryStart mustBe Some(BeenOnStatutoryLeaveMessages.dayEmploymentStarted)
       }
     }
 
@@ -278,7 +278,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
           .value
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-        helper.type5BoundaryStartMessage mustBe Some(dateToString(apr6th2020))
+        helper.type5BoundaryStart mustBe Some(dateToString(apr6th2020))
       }
     }
 
@@ -292,7 +292,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
           .value
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-        helper.type5BoundaryStartMessage mustBe Some(dateToString(apr6th2020))
+        helper.type5BoundaryStart mustBe Some(dateToString(apr6th2020))
       }
     }
 
@@ -303,7 +303,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
         val userAnswers                      = emptyUserAnswers
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-        helper.type5BoundaryStartMessage mustBe None
+        helper.type5BoundaryStart mustBe None
       }
     }
   }
@@ -320,7 +320,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
           .value
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-        helper.type3And4BoundaryEndMessage mustBe dateToString(apr5th2020.minusDays(1))
+        helper.type3And4BoundaryEnd mustBe dateToString(apr5th2020.minusDays(1))
       }
     }
 
@@ -334,7 +334,7 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
           .value
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-        helper.type3And4BoundaryEndMessage mustBe dateToString(apr5th2020)
+        helper.type3And4BoundaryEnd mustBe dateToString(apr5th2020)
       }
     }
 
@@ -348,117 +348,9 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
           .value
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
-        helper.type3And4BoundaryEndMessage mustBe dateToString(apr5th2020)
+        helper.type3And4BoundaryEnd mustBe dateToString(apr5th2020)
       }
     }
-  }
-
-  "boundaryStartDate" when {
-
-    "employee is type 3" must {
-
-      "return type3EmployeeResult" in {
-
-        val userAnswers = UserAnswers(userAnswersId)
-          .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
-          .success
-          .value
-        implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
-
-        withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr6th2019
-          logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee") mustBe true
-        }
-      }
-    }
-
-    "employee is type 4" must {
-
-      "return type4EmployeeResult" in {
-
-        val userAnswers = UserAnswers(userAnswersId)
-          .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
-          .success
-          .value
-          .set(EmployeeStartDatePage, feb1st2020.plusDays(1))
-          .success
-          .value
-          .set(EmployeeRTISubmissionPage, EmployeeRTISubmission.Yes)
-          .success
-          .value
-        implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
-
-        withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr5th2020
-          logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
-        }
-      }
-    }
-
-    "employee is type 5a" must {
-
-      "return type5aEmployeeResult" in {
-
-        val firstFurloughDateAns = LocalDate.parse("2020-11-01")
-        val furloughStartDate    = LocalDate.parse("2021-01-13")
-
-        val userAnswers = UserAnswers(userAnswersId)
-          .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
-          .success
-          .value
-          .set(EmployeeStartDatePage, apr6th2020.minusDays(1))
-          .success
-          .value
-          .set(OnPayrollBefore30thOct2020Page, true)
-          .success
-          .value
-          .set(FirstFurloughDatePage, firstFurloughDateAns)
-          .success
-          .value
-          .set(FurloughStartDatePage, furloughStartDate)
-          .success
-          .value
-        implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
-
-        withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr6th2020
-          logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5a Employee") mustBe true
-        }
-      }
-    }
-
-    "employee is type 5b" must {
-
-      "return type5bEmployeeResult" in {
-
-        val firstFurloughDateAns = LocalDate.parse("2021-05-01")
-        val furloughStartDate    = LocalDate.parse("2021-05-13")
-
-        val userAnswers = UserAnswers(userAnswersId)
-          .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
-          .success
-          .value
-          .set(EmployeeStartDatePage, apr6th2020.plusDays(1))
-          .success
-          .value
-          .set(OnPayrollBefore30thOct2020Page, false)
-          .success
-          .value
-          .set(FirstFurloughDatePage, firstFurloughDateAns)
-          .success
-          .value
-          .set(FurloughStartDatePage, furloughStartDate)
-          .success
-          .value
-        implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
-
-        withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr6th2020
-          logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
-        }
-      }
-    }
-
   }
 
 }

@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
 import config.FrontendAppConfig
 import play.api.data.Form
-import viewmodels.BeenOnStatutoryLeaveHelper
+import viewmodels.NumberOfDaysOnStatLeaveHelper
 
 class NumberOfStatLeaveDaysController @Inject()(
   override val messagesApi: MessagesApi,
@@ -40,7 +40,7 @@ class NumberOfStatLeaveDaysController @Inject()(
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: NumberOfStatLeaveDaysFormProvider,
-  helper: BeenOnStatutoryLeaveHelper,
+  helper: NumberOfDaysOnStatLeaveHelper,
   val controllerComponents: MessagesControllerComponents,
   view: NumberOfStatLeaveDaysView
 )(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
