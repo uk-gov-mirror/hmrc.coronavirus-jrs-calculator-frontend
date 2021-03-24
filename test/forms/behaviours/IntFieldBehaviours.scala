@@ -18,7 +18,7 @@ package forms.behaviours
 
 import play.api.data.{Form, FormError}
 
-class IntFieldBehaviours extends FieldBehaviours {
+trait IntFieldBehaviours extends FieldBehaviours {
 
   def intField(form: Form[_], fieldName: String, nonNumericError: FormError, wholeNumberError: FormError): Unit = {
 
