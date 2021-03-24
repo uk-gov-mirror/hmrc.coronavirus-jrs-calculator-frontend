@@ -72,7 +72,8 @@ class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with Guic
       form = form,
       fieldName = fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "numberOfStatLeaveDays.error.maximum", Seq(maximum))
+      expectedError =
+        FormError(fieldName, "numberOfStatLeaveDays.error.maximum", Seq(maximum, dateToString(boundaryStart), dateToString(boundaryEnd)))
     )
 
     behave like mandatoryField(
