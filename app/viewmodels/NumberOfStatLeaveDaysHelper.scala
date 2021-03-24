@@ -18,11 +18,8 @@ package viewmodels
 
 import java.time.LocalDate
 
-import cats.Semigroupal
-import cats.data.Validated
 import cats.data.Validated.Valid
 import config.FrontendAppConfig
-import models.UserAnswers.AnswerV
 import models.requests.DataRequest
 import pages.{EmployeeStartDatePage, FirstFurloughDatePage, FurloughStartDatePage}
 import play.api.Logger
@@ -59,10 +56,14 @@ class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
 
     def dayBeforeFirstFurloughOrDefaultDate(defaultDate: LocalDate)(f: (LocalDate, Seq[LocalDate]) => LocalDate): LocalDate =
       request.userAnswers.getV(FirstFurloughDatePage) match {
-        case Valid(firstFurloughDate) => f(v1 = defaultDate, v2 = Seq(firstFurloughDate.minusDays(1)))
+        case Valid(firstFurloughDate) =>
+          println(firstFurloughDate.minusDays(1) + "firstFurloughDate")
+          f(v1 = defaultDate, v2 = Seq(firstFurloughDate.minusDays(1)))
         case _ =>
           request.userAnswers.getV(FurloughStartDatePage) match {
-            case Valid(furloughStartDate) => f(defaultDate, Seq(furloughStartDate.minusDays(1)))
+            case Valid(furloughStartDate) =>
+              println(furloughStartDate.minusDays(1))
+              f(defaultDate, Seq(furloughStartDate.minusDays(1)))
             case _ =>
               throw new InternalServerException(
                 "[NumberOfDaysOnStatLeaveHelper][dayBeforeFirstFurloughOrDefaultDate] could not determine first furlough date"
