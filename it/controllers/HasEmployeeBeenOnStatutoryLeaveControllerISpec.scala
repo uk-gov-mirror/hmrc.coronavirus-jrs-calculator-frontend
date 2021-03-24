@@ -1,6 +1,7 @@
 package controllers
 
 import assets.{BaseITConstants, PageTitles}
+import config.featureSwitch.{FeatureSwitching, StatutoryLeaveFlow}
 import models.{EmployeeStarted, UserAnswers}
 import pages._
 import play.api.http.Status._
@@ -12,7 +13,7 @@ import views.ViewUtils.dateToString
 import java.time.LocalDate
 
 class HasEmployeeBeenOnStatutoryLeaveControllerISpec
-    extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants with ITCoreTestData {
+    extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants with ITCoreTestData with FeatureSwitching {
 
   val dayEmploymentStarted = "the day their employment started"
 
@@ -239,7 +240,7 @@ class HasEmployeeBeenOnStatutoryLeaveControllerISpec
 
     "user answers true" should {
 
-      "redirect to how many days on statutory leave page" in {
+      "redirect to how many days on statutory leave page - feature switch enabled" in {
 
         val employeeStartDate = feb1st2020.minusDays(1)
         val firstFurloughDate = LocalDate.parse("2020-04-05")
@@ -268,8 +269,46 @@ class HasEmployeeBeenOnStatutoryLeaveControllerISpec
         whenReady(res) { result =>
           result should have(
             httpStatus(SEE_OTHER),
-            redirectLocation(controllers.routes.RootPageController.onPageLoad().url)
+            redirectLocation(controllers.routes.NumberOfStatLeaveDaysController.onPageLoad().url)
           )
+        }
+      }
+
+      "redirect to the root page" when {
+        "StatutoryLeaveFlow feature switch is disabled" in {
+          disable(StatutoryLeaveFlow)
+          val employeeStartDate = feb1st2020.minusDays(1)
+          val firstFurloughDate = LocalDate.parse("2020-04-05")
+          val furloughStartDate = LocalDate.parse("2021-03-01")
+
+          val userAnswers = emptyUserAnswers
+            .set(FurloughStartDatePage, furloughStartDate)
+            .success
+            .value
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, employeeStartDate)
+            .success
+            .value
+            .set(FirstFurloughDatePage, firstFurloughDate)
+            .success
+            .value
+
+          setAnswers(userAnswers)
+
+          val res = postRequest("/been-on-statutory-leave",
+            Json.obj("value" -> "true")
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(SEE_OTHER),
+              redirectLocation(controllers.routes.RootPageController.onPageLoad().url)
+            )
+          }
+
+          enable(StatutoryLeaveFlow)
         }
       }
     }
@@ -305,15 +344,53 @@ class HasEmployeeBeenOnStatutoryLeaveControllerISpec
         whenReady(res) { result =>
           result should have(
             httpStatus(SEE_OTHER),
-            redirectLocation(controllers.routes.RootPageController.onPageLoad().url)
+            redirectLocation(controllers.routes.PartTimeQuestionController.onPageLoad().url)
           )
+        }
+      }
+
+      "redirect root page" when {
+        "StatutoryLeaveFlow feature switch is disabled" in {
+          disable(StatutoryLeaveFlow)
+          val employeeStartDate = feb1st2020.minusDays(1)
+          val firstFurloughDate = LocalDate.parse("2020-04-05")
+          val furloughStartDate = LocalDate.parse("2021-03-01")
+
+          val userAnswers = emptyUserAnswers
+            .set(FurloughStartDatePage, furloughStartDate)
+            .success
+            .value
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, employeeStartDate)
+            .success
+            .value
+            .set(FirstFurloughDatePage, firstFurloughDate)
+            .success
+            .value
+
+          setAnswers(userAnswers)
+
+          val res = postRequest("/been-on-statutory-leave",
+            Json.obj("value" -> "false")
+          )("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
+          whenReady(res) { result =>
+            result should have(
+              httpStatus(SEE_OTHER),
+              redirectLocation(controllers.routes.RootPageController.onPageLoad().url)
+            )
+          }
+
+          enable(StatutoryLeaveFlow)
         }
       }
     }
 
     "user answer is invalid" should {
 
-      "redirect to how many days on statutory leave page" in {
+      "show BadRequest errors on page" in {
 
         val employeeStartDate = feb1st2020.minusDays(1)
         val firstFurloughDate = LocalDate.parse("2020-04-05")

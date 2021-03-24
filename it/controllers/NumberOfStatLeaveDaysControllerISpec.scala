@@ -188,7 +188,7 @@ class NumberOfStatLeaveDaysControllerISpec extends IntegrationSpecBase with Crea
           whenReady(res) { result =>
             result should have(
               httpStatus(SEE_OTHER),
-              redirectLocation(controllers.routes.RootPageController.onPageLoad().url) //TODO: Update when routing is in
+              redirectLocation(controllers.routes.StatutoryLeavePayController.onPageLoad().url)
             )
           }
         }
@@ -309,7 +309,7 @@ class NumberOfStatLeaveDaysControllerISpec extends IntegrationSpecBase with Crea
           whenReady(res) { result =>
             result should have(
               httpStatus(SEE_OTHER),
-              redirectLocation(controllers.routes.RootPageController.onPageLoad().url) //TODO: Update when routing is in
+              redirectLocation(controllers.routes.StatutoryLeavePayController.onPageLoad().url)
             )
           }
         }
