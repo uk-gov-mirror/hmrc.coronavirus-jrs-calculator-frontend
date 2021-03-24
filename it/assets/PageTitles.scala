@@ -13,4 +13,8 @@ object PageTitles {
 
   def hasEmployeeBeenOnStatutoryLeave(boundaryStart: String, boundaryEnd: String) =
     s"Has this employee been on statutory leave for part of the period between $boundaryStart and $boundaryEnd"
+
+  def numberOfStatLeaveDays(boundaryStart: String, boundaryEnd: String) = {
+    s"How many days was this employee on statutory leave between $boundaryStart and $boundaryEnd?"
+  }
 }
