@@ -52,91 +52,197 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
       }
     }
 
-    "employee is type 4" must {
+    "employee is type 4" when {
 
-      "return type4EmployeeResult" in {
+      "the employee started date is later than the default date" should {
 
-        val userAnswers = UserAnswers(userAnswersId)
-          .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
-          .success
-          .value
-          .set(EmployeeStartDatePage, feb1st2020.plusDays(1))
-          .success
-          .value
-          .set(EmployeeRTISubmissionPage, EmployeeRTISubmission.Yes)
-          .success
-          .value
-        implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+        "return the employee start date (feb2nd2020) " in {
 
-        withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe feb1st2020.plusDays(1)
-          logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
+          val feb2nd2020 = LocalDate.of(2020, 2, 2)
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, feb2nd2020)
+            .success
+            .value
+            .set(EmployeeRTISubmissionPage, EmployeeRTISubmission.Yes)
+            .success
+            .value
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          withCaptureOfLoggingFrom(Logger) { logs =>
+            helper.boundaryStartDate() mustBe feb2nd2020
+            logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
+          }
         }
       }
+
+      "the employee started date is earlier than the default date" should {
+
+        "return the apr6th2019" in {
+
+          val feb2nd2020 = LocalDate.of(2019, 2, 2)
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, feb2nd2020)
+            .success
+            .value
+            .set(EmployeeRTISubmissionPage, EmployeeRTISubmission.Yes)
+            .success
+            .value
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          withCaptureOfLoggingFrom(Logger) { logs =>
+            helper.boundaryStartDate() mustBe apr6th2019
+            logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
+          }
+        }
+      }
+
     }
 
-    "employee is type 5a" must {
+    "employee is type 5a" when {
 
-      "return type5aEmployeeResult" in {
+      "the employee start date is earlier than the default start date" should {
 
-        val firstFurloughDateAns = LocalDate.parse("2020-11-01")
-        val furloughStartDate    = LocalDate.parse("2021-01-13")
+        "return the default date apr6th2020" in {
 
-        val userAnswers = UserAnswers(userAnswersId)
-          .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
-          .success
-          .value
-          .set(EmployeeStartDatePage, apr6th2020)
-          .success
-          .value
-          .set(OnPayrollBefore30thOct2020Page, true)
-          .success
-          .value
-          .set(FirstFurloughDatePage, firstFurloughDateAns)
-          .success
-          .value
-          .set(FurloughStartDatePage, furloughStartDate)
-          .success
-          .value
-        implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+          val firstFurloughDateAns = LocalDate.parse("2020-11-01")
+          val furloughStartDate = LocalDate.parse("2021-01-13")
 
-        withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr6th2020
-          logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5a Employee") mustBe true
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, apr6th2020)
+            .success
+            .value
+            .set(OnPayrollBefore30thOct2020Page, true)
+            .success
+            .value
+            .set(FirstFurloughDatePage, firstFurloughDateAns)
+            .success
+            .value
+            .set(FurloughStartDatePage, furloughStartDate)
+            .success
+            .value
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          withCaptureOfLoggingFrom(Logger) { logs =>
+            helper.boundaryStartDate() mustBe apr6th2020
+            logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5a Employee") mustBe true
+          }
         }
       }
+
+      "the employee start date is later than the default start date" should {
+
+        "return the employee start date (may1st2020)" in {
+
+          val firstFurloughDateAns = LocalDate.parse("2020-11-01")
+          val furloughStartDate = LocalDate.parse("2021-01-13")
+          val employeeStartDate = LocalDate.parse("2020-05-01")
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, employeeStartDate)
+            .success
+            .value
+            .set(OnPayrollBefore30thOct2020Page, true)
+            .success
+            .value
+            .set(FirstFurloughDatePage, firstFurloughDateAns)
+            .success
+            .value
+            .set(FurloughStartDatePage, furloughStartDate)
+            .success
+            .value
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          withCaptureOfLoggingFrom(Logger) { logs =>
+            helper.boundaryStartDate() mustBe employeeStartDate
+            logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5a Employee") mustBe true
+          }
+        }
+      }
+
     }
 
-    "employee is type 5b" must {
+    "employee is type 5b" when {
 
-      "return type5bEmployeeResult" in {
+      "the employee start date is later than the default date" should {
 
-        val firstFurloughDateAns = LocalDate.parse("2021-05-01")
-        val furloughStartDate    = LocalDate.parse("2021-05-13")
+        "return the employee start date (may1st2020)" in {
 
-        val userAnswers = UserAnswers(userAnswersId)
-          .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
-          .success
-          .value
-          .set(EmployeeStartDatePage, apr6th2020.plusDays(1))
-          .success
-          .value
-          .set(OnPayrollBefore30thOct2020Page, false)
-          .success
-          .value
-          .set(FirstFurloughDatePage, firstFurloughDateAns)
-          .success
-          .value
-          .set(FurloughStartDatePage, furloughStartDate)
-          .success
-          .value
-        implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+          val firstFurloughDateAns = LocalDate.parse("2021-05-01")
+          val furloughStartDate = LocalDate.parse("2021-05-13")
+          val employeeStartDate = LocalDate.parse("2020-05-01")
 
-        withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr6th2020.plusDays(1)
-          logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, employeeStartDate)
+            .success
+            .value
+            .set(OnPayrollBefore30thOct2020Page, false)
+            .success
+            .value
+            .set(FirstFurloughDatePage, firstFurloughDateAns)
+            .success
+            .value
+            .set(FurloughStartDatePage, furloughStartDate)
+            .success
+            .value
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          withCaptureOfLoggingFrom(Logger) { logs =>
+            helper.boundaryStartDate() mustBe employeeStartDate
+            logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
+          }
         }
       }
+
+      "the employee start date is earlier than the default date" should {
+
+        "return the default date (apr6th2020)" in {
+
+          val firstFurloughDateAns = LocalDate.parse("2021-05-01")
+          val furloughStartDate = LocalDate.parse("2021-05-13")
+          val employeeStartDate = LocalDate.parse("2020-05-01")
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, employeeStartDate)
+            .success
+            .value
+            .set(OnPayrollBefore30thOct2020Page, false)
+            .success
+            .value
+            .set(FirstFurloughDatePage, firstFurloughDateAns)
+            .success
+            .value
+            .set(FurloughStartDatePage, furloughStartDate)
+            .success
+            .value
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          withCaptureOfLoggingFrom(Logger) { logs =>
+            helper.boundaryStartDate() mustBe apr6th2020
+            logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
+          }
+        }
+      }
+
     }
   }
 
@@ -150,7 +256,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return march31st2020 the earliest date" in {
 
-            val apr1st2020    = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val march31st2020 = apr1st2020.minusDays(1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -200,7 +306,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return march31st2020 the earliest date" in {
 
-            val apr1st2020    = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val march31st2020 = apr1st2020.minusDays(1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -250,7 +356,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return the first furlough date not the furlough start date and minus 1 day - (march31st2020)" in {
 
-            val apr1st2020    = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val march31st2020 = apr1st2020.minusDays(1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -278,7 +384,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           "return the default date of apr5th2020" in {
 
             val apr10th2020 = LocalDate.of(2020, 4, 10)
-            val apr7th2020  = LocalDate.of(2020, 4, 7)
+            val apr7th2020 = LocalDate.of(2020, 4, 7)
 
             val userAnswers = UserAnswers(userAnswersId)
               .set(FirstFurloughDatePage, apr10th2020)
@@ -310,8 +416,8 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return march31st2020 the earlier of the two dates" in {
 
-            val apr1st2020       = LocalDate.of(2020, 4, 1)
-            val march31st2020    = apr1st2020.minusDays(1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
+            val march31st2020 = apr1st2020.minusDays(1)
             val before1stFeb2020 = LocalDate.of(2020, 1, 1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -341,7 +447,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr5th2020 the earliest date" in {
 
-            val apr10th2020      = LocalDate.of(2020, 4, 10)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
             val before1stFeb2020 = LocalDate.of(2020, 1, 1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -374,8 +480,8 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return march31st2020 the earliest date" in {
 
-            val apr1st2020       = LocalDate.of(2020, 4, 1)
-            val march31st2020    = apr1st2020.minusDays(1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
+            val march31st2020 = apr1st2020.minusDays(1)
             val before1stFeb2020 = LocalDate.of(2020, 1, 1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -405,7 +511,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr5th2020 the earliest date" in {
 
-            val apr10th2020      = LocalDate.of(2020, 4, 10)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
             val before1stFeb2020 = LocalDate.of(2020, 1, 1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -438,8 +544,8 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return the first furlough date not the furlough start date and minus 1 day - (march31st2020)" in {
 
-            val apr1st2020       = LocalDate.of(2020, 4, 1)
-            val march31st2020    = apr1st2020.minusDays(1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
+            val march31st2020 = apr1st2020.minusDays(1)
             val before1stFeb2020 = LocalDate.of(2020, 1, 1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -472,8 +578,8 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return the default date of apr5th2020" in {
 
-            val apr10th2020      = LocalDate.of(2020, 4, 10)
-            val apr7th2020       = LocalDate.of(2020, 4, 7)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr7th2020 = LocalDate.of(2020, 4, 7)
             val before1stFeb2020 = LocalDate.of(2020, 1, 1)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -512,7 +618,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr6th2020 the later of the two dates" in {
 
-            val apr1st2020      = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -545,8 +651,8 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr9th2020 the later of the two dates" in {
 
-            val apr10th2020     = LocalDate.of(2020, 4, 10)
-            val apr9th2020      = apr10th2020.minusDays(1)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr9th2020 = apr10th2020.minusDays(1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -582,7 +688,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr6th2020 the later of the two dates" in {
 
-            val apr1st2020      = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -615,8 +721,8 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr10th2020 the later of the two dates" in {
 
-            val apr10th2020     = LocalDate.of(2020, 4, 10)
-            val apr9th2020      = apr10th2020.minusDays(1)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr9th2020 = apr10th2020.minusDays(1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -652,7 +758,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return the default day, the later of the dates - (apr6th2020)" in {
 
-            val apr1st2020      = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -688,9 +794,9 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return the latest first furlough date" in {
 
-            val apr10th2020     = LocalDate.of(2020, 4, 10)
-            val apr9th2020      = apr10th2020.minusDays(1)
-            val apr7th2020      = LocalDate.of(2020, 4, 7)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr9th2020 = apr10th2020.minusDays(1)
+            val apr7th2020 = LocalDate.of(2020, 4, 7)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -732,7 +838,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr6th2020 the later of the two dates" in {
 
-            val apr1st2020      = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -765,8 +871,8 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr9th2020 the later of the two dates" in {
 
-            val apr10th2020     = LocalDate.of(2020, 4, 10)
-            val apr9th2020      = apr10th2020.minusDays(1)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr9th2020 = apr10th2020.minusDays(1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -802,7 +908,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr6th2020 the later of the two dates" in {
 
-            val apr1st2020      = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -835,8 +941,8 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return apr10th2020 the later of the two dates" in {
 
-            val apr10th2020     = LocalDate.of(2020, 4, 10)
-            val apr9th2020      = apr10th2020.minusDays(1)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr9th2020 = apr10th2020.minusDays(1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -872,7 +978,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return the default day, the later of the dates - (apr6th2020)" in {
 
-            val apr1st2020      = LocalDate.of(2020, 4, 1)
+            val apr1st2020 = LocalDate.of(2020, 4, 1)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -908,9 +1014,9 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
           "return the latest first furlough date" in {
 
-            val apr10th2020     = LocalDate.of(2020, 4, 10)
-            val apr9th2020      = apr10th2020.minusDays(1)
-            val apr7th2020      = LocalDate.of(2020, 4, 7)
+            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr9th2020 = apr10th2020.minusDays(1)
+            val apr7th2020 = LocalDate.of(2020, 4, 7)
             val after1stFeb2020 = LocalDate.of(2020, 2, 2)
 
             val userAnswers = UserAnswers(userAnswersId)
