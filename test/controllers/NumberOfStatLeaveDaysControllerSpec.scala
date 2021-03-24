@@ -58,7 +58,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   val controller = new NumberOfStatLeaveDaysController(
-    messagesApi,
+    messagesApi = messagesApi,
     sessionRepository = mockSessionRepository,
     navigator = navigator,
     identify = identifier,
@@ -682,7 +682,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
         "employment started before 6 April 2020 and first furloughed 1 Jan 2021" must {
 
-          "redirect to the net page when valid data is submitted" in {
+          "redirect to the next page when valid data is submitted" in {
 
             val employeeStartDate = apr6th2020.minusDays(1)
             val firstFurloughDate = LocalDate.parse("2021-01-01")
@@ -718,6 +718,47 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
         }
 
       }
+
+      "employeeType is type5b" must {
+
+        "employment started after 30 Oct 2020 and first furloughed 1 Jan 2021" must {
+
+          "redirect to the next page when valid data is submitted" in {
+
+            val employeeStartDate = LocalDate.of(2020, 11, 1).minusDays(1)
+            val firstFurloughDate = LocalDate.parse("2021-01-01")
+            val furloughStartDate = LocalDate.parse("2021-03-01")
+
+            val userAnswers = emptyUserAnswers
+              .set(FurloughStartDatePage, furloughStartDate)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+              .success
+              .value
+              .set(EmployeeStartDatePage, employeeStartDate)
+              .success
+              .value
+              .set(OnPayrollBefore30thOct2020Page, false)
+              .success
+              .value
+              .set(FirstFurloughDatePage, firstFurloughDate)
+              .success
+              .value
+
+            when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+            val request =
+              FakeRequest(POST, numberOfDaysOnStatutoryLeaveRoute)
+                .withFormUrlEncodedBody(("value", "5"))
+
+            val result = controller.onSubmit()(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+          }
+        }
+      }
+
     }
   }
 }

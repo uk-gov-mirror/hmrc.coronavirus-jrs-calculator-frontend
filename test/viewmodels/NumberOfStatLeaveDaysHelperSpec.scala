@@ -18,16 +18,15 @@ package viewmodels
 
 import java.time.LocalDate
 
-import models.{EmployeeRTISubmission, EmployeeStarted, UserAnswers}
-import utils.LocalDateHelpers._
-import models.requests.DataRequest
-import pages._
-import play.api.Logger
-import utils.LocalDateHelpers._
 import base.SpecBase
 import models.EmployeeRTISubmission._
+import models.requests.DataRequest
+import models.{EmployeeRTISubmission, EmployeeStarted, UserAnswers}
+import pages._
+import play.api.Logger
 import uk.gov.hmrc.play.test.LogCapturing
 import utils.LocalDateHelpers
+import utils.LocalDateHelpers._
 
 class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers with LogCapturing {
 

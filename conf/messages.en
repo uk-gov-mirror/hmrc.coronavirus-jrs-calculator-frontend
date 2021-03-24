@@ -1033,15 +1033,20 @@ hasEmployeeBeenOnStatutoryLeave.bullet4 = reduced rate paid leave following a pe
 hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted = the day their employment started
 hasEmployeeBeenOnStatutoryLeave.insetText = If the employee was on statutory leave for the full period between these dates, you must answer ‘no’.
 
-# NumberofStatLeaveDays Messages
+# NumberOfStatLeaveDays Messages
 #------------------------------------------------
-numberOfStatLeaveDays.title = NumberOfStatLeaveDays
-numberOfStatLeaveDays.heading = How many days was this employee on statutory leave between {0} and {1}
-numberOfStatLeaveDays.checkYourAnswersLabel = NumberOfStatLeaveDays
-numberOfStatLeaveDays.error.nonNumeric = Enter your numberOfStatLeaveDays using numbers
+numberOfStatLeaveDays.title = How many days was this employee on statutory leave between {0} and {1}?
+numberOfStatLeaveDays.heading = How many days was this employee on statutory leave between {0} and {1}?
+numberOfStatLeaveDays.label = How many days was this employee on statutory leave between {0} and {1}?
+numberOfStatLeaveDays.error.nonNumeric = Enter your the number of statutory leave days using numbers
 numberOfStatLeaveDays.error.required = Enter the number of days this employee was on statutory leave between 6 April 2019 and day before furlough start date OR “5 April 2020"
-numberOfStatLeaveDays.error.wholeNumber = Enter your numberOfStatLeaveDays using whole numbers
+numberOfStatLeaveDays.error.wholeNumber = Enter your number of statutory leave days using whole numbers
 numberOfStatLeaveDays.error.minimum = The number of days this employee was on statutory leave must be {0} or more days
-numberOfStatLeaveDays.error.maximum = The number of days this employee was on statutory leave must be less than total number of days between 6 April 2019 and day before furlough start date OR “5 April 2020   max{0}”
+numberOfStatLeaveDays.error.maximum = The number of days this employee was on statutory leave must be less than {0} days
 numberOfStatLeaveDays.details.title = What does statutory leave include?
 numberOfStatLeaveDays.details.p1 = For this calculation, statutory leave only includes:
+numberOfStatLeaveDays.details.bullet1 = statutory sick pay related leave
+numberOfStatLeaveDays.details.bullet2 = family related statutory leave, for example paternity leave
+numberOfStatLeaveDays.details.bullet3 = reduced rate paid leave following a period of statutory sick pay related leave
+numberOfStatLeaveDays.details.bullet4 = reduced rate paid leave following a period of family related statutory leave
+

@@ -21,6 +21,8 @@
         errorSummary: components.errorSummary,
         inputNumber: components.inputNumber,
         h1: components.h1,
+        p: components.p,
+        bullets: components.bullets,
         button: components.button,
         details: components.details
 )
@@ -38,7 +40,13 @@
         @details(
             summaryText = Messages("numberOfStatLeaveDays.details.title")
         ) {
-            <p>@Messages("numberOfStatLeaveDays.details.p1")</p>
+            @p(Html(messages("numberOfStatLeaveDays.details.p1")))
+            @bullets(Seq(
+                Html(messages("numberOfStatLeaveDays.details.bullet1")),
+                Html(messages("numberOfStatLeaveDays.details.bullet2")),
+                Html(messages("numberOfStatLeaveDays.details.bullet3")),
+                Html(messages("numberOfStatLeaveDays.details.bullet4"))
+            ))
         }
 
         @inputNumber(
@@ -46,7 +54,7 @@
             id = "value",
             name = "value",
             label = "numberOfStatLeaveDays.heading",
-            classes = Some("govuk-input--width-10")
+            classes = Some("govuk-input--width-5")
         )
 
         @button("site.saveAndContinue")
