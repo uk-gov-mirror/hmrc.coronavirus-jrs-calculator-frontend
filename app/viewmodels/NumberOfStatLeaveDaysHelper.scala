@@ -43,7 +43,7 @@ class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
     }
 
     variablePayResolver[LocalDate](
-      type3EmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2019),
+      type3EmployeeResult = Some(apr6th2019),
       type4EmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2019),
       type5aEmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2020),
       type5bEmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2020)
@@ -57,12 +57,10 @@ class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
     def dayBeforeFirstFurloughOrDefaultDate(defaultDate: LocalDate)(f: (LocalDate, Seq[LocalDate]) => LocalDate): LocalDate =
       request.userAnswers.getV(FirstFurloughDatePage) match {
         case Valid(firstFurloughDate) =>
-          println(firstFurloughDate.minusDays(1) + "firstFurloughDate")
           f(v1 = defaultDate, v2 = Seq(firstFurloughDate.minusDays(1)))
         case _ =>
           request.userAnswers.getV(FurloughStartDatePage) match {
             case Valid(furloughStartDate) =>
-              println(furloughStartDate.minusDays(1))
               f(defaultDate, Seq(furloughStartDate.minusDays(1)))
             case _ =>
               throw new InternalServerException(
