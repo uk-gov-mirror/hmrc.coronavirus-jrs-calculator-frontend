@@ -127,9 +127,8 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
 
   def extractStatutoryLeaveData(userAnswers: UserAnswers): AnswerV[Option[StatutoryLeaveData]] = {
     for {
-      pay <- userAnswers.getO(StatutoryLeavePayPage)
-      //days <- userAnswers.getO(StatutoryLeaveDaysPage) TODO: Add in when ready
-      days <- Some(Valid(0)) //TODO: Remove - for testing only
+      pay  <- userAnswers.getO(StatutoryLeavePayPage)
+      days <- userAnswers.getO(NumberOfStatLeaveDaysPage)
     } yield (pay, days).mapN { case (amount, days) => StatutoryLeaveData(days, amount.value) }
   }.sequence
 
