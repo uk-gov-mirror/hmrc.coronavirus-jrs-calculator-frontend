@@ -65,19 +65,19 @@ class NumberOfStatLeaveDaysViewSpec extends IntViewBehaviours {
   "NumberOfStatLeaveDaysView" when {
 
     "employee is type 3" must {
-      viewTests(apr6th2019, apr5th2020)
+      viewTests(boundaryStart = apr6th2019, boundaryEnd = apr5th2020)
     }
 
     "employee is type 4" must {
-      viewTests(feb1st2020.plusDays(1), apr5th2020)
+      viewTests(boundaryStart = feb1st2020.plusDays(1), boundaryEnd = apr5th2020)
     }
 
     "employee is type 5a" must {
-      viewTests(apr6th2020, nov8th2020.plusDays(1))
+      viewTests(boundaryStart = apr6th2020, boundaryEnd = nov8th2020.plusDays(1))
     }
 
     "employee is type 5b" must {
-      viewTests(apr6th2020, may8th2021.plusDays(1))
+      viewTests(boundaryStart = apr6th2020, boundaryEnd = may8th2021.plusDays(1))
     }
   }
 

@@ -26,6 +26,8 @@ object NumberOfStatLeaveDaysMessages {
   def h1(boundaryStart: LocalDate, boundaryEnd: LocalDate)(implicit messages: Messages) =
     s"How many days was this employee on statutory leave between ${dateToString(boundaryStart)} and ${dateToString(boundaryEnd)}?"
 
+  val dayEmploymentStarted = "the day their employment started"
+
   val dropDown          = "What does statutory leave include?"
   val dropDownParagraph = "For this calculation, statutory leave only includes:"
   val bullet1           = "statutory sick pay related leave"

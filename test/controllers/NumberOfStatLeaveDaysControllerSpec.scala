@@ -16,38 +16,37 @@
 
 package controllers
 
-import base.SpecBaseControllerSpecs
-import forms.NumberOfStatLeaveDaysFormProvider
-import models.{EmployeeStarted, NormalMode, UserAnswers}
-import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmployeeStartDatePage, EmployeeStartedPage, FirstFurloughDatePage, FurloughStartDatePage, HasEmployeeBeenOnStatutoryLeavePage, NumberOfStatLeaveDaysPage, OnPayrollBefore30thOct2020Page}
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, Call}
-import play.api.test.FakeRequest
-import play.api.test.CSRFTokenHelper._
-import play.api.test.Helpers._
-import repositories.SessionRepository
-import views.html.NumberOfStatLeaveDaysView
-import viewmodels.NumberOfStatLeaveDaysHelper
-import views.ViewUtils.dateToString
 import java.time.LocalDate
 
-import assets.messages.BeenOnStatutoryLeaveMessages
+import base.SpecBaseControllerSpecs
+import forms.NumberOfStatLeaveDaysFormProvider
+import messages.NumberOfStatLeaveDaysMessages
+import models.EmployeeStarted
 import models.requests.DataRequest
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
+import pages._
 import play.api.data.Form
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.CSRFTokenHelper._
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import utils.LocalDateHelpers.{apr5th2020, apr6th2019, apr6th2020, feb1st2020}
+import viewmodels.{BeenOnStatutoryLeaveHelper, NumberOfStatLeaveDaysHelper}
+import views.ViewUtils.dateToString
+import views.html.NumberOfStatLeaveDaysView
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with MockitoSugar {
 
-  val helper       = app.injector.instanceOf[NumberOfStatLeaveDaysHelper]
-  val view         = app.injector.instanceOf[NumberOfStatLeaveDaysView]
-  val postAction   = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
-  val formProvider = new NumberOfStatLeaveDaysFormProvider()
+  val formHelper    = app.injector.instanceOf[NumberOfStatLeaveDaysHelper]
+  val contentHelper = app.injector.instanceOf[BeenOnStatutoryLeaveHelper]
+  val view          = app.injector.instanceOf[NumberOfStatLeaveDaysView]
+  val postAction    = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
+  val formProvider  = new NumberOfStatLeaveDaysFormProvider()
 
   def form(boundaryStart: LocalDate, boundaryEnd: LocalDate): Form[Int] = formProvider(boundaryStart, boundaryEnd)
 
@@ -65,7 +64,8 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
     getData = dataRetrieval,
     requireData = dataRequired,
     formProvider = formProvider,
-    helper = helper,
+    formHelper = formHelper,
+    contentHelper = contentHelper,
     controllerComponents = component,
     view = view
   )
@@ -177,7 +177,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
               view(
                 form = form(boundaryStartDate, boundaryEndDate),
                 postAction = postAction,
-                boundaryStart = dateToString(boundaryStartDate),
+                boundaryStart = NumberOfStatLeaveDaysMessages.dayEmploymentStarted,
                 boundaryEnd = dateToString(boundaryEndDate)
               )(dataRequest, messages).toString
           }
@@ -213,9 +213,12 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, dateToString(boundaryStartDate), dateToString(boundaryEndDate))(
-                dataRequest,
-                messages).toString
+              view(
+                form(boundaryStartDate, boundaryEndDate),
+                postAction,
+                NumberOfStatLeaveDaysMessages.dayEmploymentStarted,
+                dateToString(boundaryEndDate)
+              )(dataRequest, messages).toString
           }
         }
       }
@@ -260,6 +263,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
                 messages).toString()
           }
         }
+
         "employment started after 6 April 2020 and first furloughed 1 Jan 2021" must {
 
           "return OK and the correct view for a GET" in {
@@ -293,9 +297,12 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, dateToString(boundaryStartDate), dateToString(boundaryEndDate))(
-                dataRequest,
-                messages).toString
+              view(
+                form(boundaryStartDate, boundaryEndDate),
+                postAction,
+                boundaryStart = NumberOfStatLeaveDaysMessages.dayEmploymentStarted,
+                dateToString(boundaryEndDate)
+              )(dataRequest, messages).toString
           }
 
         }
@@ -338,10 +345,16 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString()
+              view(
+                form = form(boundaryStartDate, boundaryEndDate),
+                postAction = postAction,
+                boundaryStart = boundaryStart,
+                boundaryEnd = boundaryEnd
+              )(dataRequest, messages).toString()
 
           }
         }
+
         "employment started after 6 April 2020 and first furloughed 01 May 2021" must {
 
           "return OK and the correct view for a GET" in {
@@ -378,7 +391,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
               view(
                 form = form(boundaryStartDate, boundaryEndDate),
                 postAction = postAction,
-                boundaryStart = dateToString(boundaryStartDate),
+                boundaryStart = NumberOfStatLeaveDaysMessages.dayEmploymentStarted,
                 boundaryEnd = dateToString(boundaryEndDate)
               )(dataRequest, messages).toString
           }
@@ -599,7 +612,12 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual BAD_REQUEST
             contentAsString(result) mustEqual
-              view(boundForm, postAction, dateToString(boundaryStartDate), dateToString(boundaryEndDate))(dataRequest, messages).toString
+              view(
+                form = boundForm,
+                postAction = postAction,
+                boundaryStart = NumberOfStatLeaveDaysMessages.dayEmploymentStarted,
+                boundaryEnd = dateToString(boundaryEndDate)
+              )(dataRequest, messages).toString
           }
         }
         "the day before the employee is first furloughed is after 5th April 2020" must {
@@ -671,7 +689,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
               view(
                 form = boundForm,
                 postAction = postAction,
-                boundaryStart = dateToString(boundaryStartDate),
+                boundaryStart = NumberOfStatLeaveDaysMessages.dayEmploymentStarted,
                 boundaryEnd = dateToString(boundaryEndDate)
               )(dataRequest, messages).toString
           }
