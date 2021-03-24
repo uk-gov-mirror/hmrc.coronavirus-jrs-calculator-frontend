@@ -1009,8 +1009,7 @@ statutoryLeavePay.heading = How much was this employee paid for the periods of s
 statutoryLeavePay.label = How much was this employee paid for the periods of statutory leave?
 statutoryLeavePay.error.required = Enter the amount this employee was paid for the periods of statutory leave
 statutoryLeavePay.error.invalid = Enter a valid amount
-statutoryLeavePay.error.moreThan0 = The amount this employee was paid for the periods of statutory leave must be more than 0
-# To be decided
+statutoryLeavePay.error.moreThan0 = The amount this employee was paid for the periods of statutory leave must be more than £0
 statutoryLeavePay.error.lessThan = The amount this employee was paid for the periods of statutory leave must be less than {0}
 statutoryLeavePay.details.title = What does statutory leave include?
 statutoryLeavePay.details.p1 = For this calculation, statutory leave only includes:
@@ -1022,16 +1021,17 @@ statutoryLeavePay.details.l4 = reduced rate paid leave following a period of fam
 
 # HasEmployeeBeenOnStatutoryLeave Messages
 # ------------------------------------------------
-hasEmployeeBeenOnStatutoryLeave.title = Has this employee been on statutory leave between {0} and {1}
-hasEmployeeBeenOnStatutoryLeave.heading = Has this employee been on statutory leave between {0} and {1}
+hasEmployeeBeenOnStatutoryLeave.title = Has this employee been on statutory leave for part of the period between {0} and {1}?
+hasEmployeeBeenOnStatutoryLeave.heading = Has this employee been on statutory leave for part of the period between {0} and {1}?
 hasEmployeeBeenOnStatutoryLeave.checkYourAnswersLabel = Has employee been on statutory leave
-hasEmployeeBeenOnStatutoryLeave.error.required = Select yes if this employee has been on statutory leave between {0} and {1}
-hasEmployeeBeenOnStatutoryLeave.p = Statutory leave only includes:
+hasEmployeeBeenOnStatutoryLeave.error.required = Select yes if this employee has been on statutory leave for part of the period between {0} and {1}
+hasEmployeeBeenOnStatutoryLeave.p = For this calculation, statutory leave only includes:
 hasEmployeeBeenOnStatutoryLeave.bullet1 = statutory sick pay related leave
 hasEmployeeBeenOnStatutoryLeave.bullet2 = family related statutory leave, for example paternity leave
 hasEmployeeBeenOnStatutoryLeave.bullet3 = reduced rate paid leave following a period of statutory sick pay related leave
 hasEmployeeBeenOnStatutoryLeave.bullet4 = reduced rate paid leave following a period of family related statutory leave
 hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted = the day their employment started
+hasEmployeeBeenOnStatutoryLeave.insetText = If the employee was on statutory leave for the full period between these dates, you must answer ‘no’.
 
 # NumberofStatLeaveDays Messages
 #------------------------------------------------

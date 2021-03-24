@@ -517,7 +517,6 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           "return apr6th2020 the later of the two dates" in {
 
             val apr1st2020       = LocalDate.of(2020, 4, 1)
-            val march31st2020    = apr1st2020.minusDays(1)
             val before1stFeb2020 = LocalDate.of(2020, 1, 1)
 
             val userAnswers = UserAnswers(userAnswersId)

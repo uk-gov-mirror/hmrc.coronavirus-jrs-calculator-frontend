@@ -18,10 +18,11 @@ package controllers
 
 import controllers.actions._
 import forms.StatutoryLeavePayFormProvider
+
 import javax.inject.Inject
 import navigation.Navigator
-import pages.StatutoryLeavePayPage
-import play.api.i18n.{I18nSupport, MessagesApi}
+import pages.{AnnualPayAmountPage, StatutoryLeavePayPage}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -29,41 +30,53 @@ import views.html.StatutoryLeavePayView
 
 import scala.concurrent.{ExecutionContext, Future}
 import cats.data.Validated.{Invalid, Valid}
+import handlers.ErrorHandler
+import models.Amount
+import play.api.data.Form
 
 class StatutoryLeavePayController @Inject()(
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
-  navigator: Navigator,
+  val navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: StatutoryLeavePayFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: StatutoryLeavePayView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext, errorHandler: ErrorHandler)
+    extends BaseController with I18nSupport {
 
-  val form = formProvider()
+  def form(referencePay: BigDecimal)(implicit messages: Messages): Form[Amount] =
+    formProvider(referencePay)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.getV(StatutoryLeavePayPage) match {
-      case Invalid(e)   => form
-      case Valid(value) => form.fill(value)
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    getRequiredAnswerV(AnnualPayAmountPage) { annualPayAmount =>
+      {
+        val preparedForm = request.userAnswers.getV(StatutoryLeavePayPage) match {
+          case Invalid(e)   => form(annualPayAmount.amount)
+          case Valid(value) => form(annualPayAmount.amount).fill(value)
+        }
+
+        Future(Ok(view(preparedForm)))
+      }
     }
-
-    Ok(view(preparedForm))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(StatutoryLeavePayPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(StatutoryLeavePayPage, updatedAnswers))
-      )
+    getRequiredAnswerV(AnnualPayAmountPage) { annualPayAmount =>
+      {
+        form(annualPayAmount.amount)
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(StatutoryLeavePayPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(StatutoryLeavePayPage, updatedAnswers))
+          )
+      }
+    }
   }
 }

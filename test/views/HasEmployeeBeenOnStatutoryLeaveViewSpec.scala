@@ -49,7 +49,8 @@ class HasEmployeeBeenOnStatutoryLeaveViewSpec extends YesNoViewBehaviours with L
     Selectors.bullet(1) -> BeenOnStatutoryLeaveMessages.bullet1,
     Selectors.bullet(2) -> BeenOnStatutoryLeaveMessages.bullet2,
     Selectors.bullet(3) -> BeenOnStatutoryLeaveMessages.bullet3,
-    Selectors.bullet(4) -> BeenOnStatutoryLeaveMessages.bullet4
+    Selectors.bullet(4) -> BeenOnStatutoryLeaveMessages.bullet4,
+    Selectors.indent    -> BeenOnStatutoryLeaveMessages.insetText
   )
 
   implicit val doc = asDocument(applyView()(form))
