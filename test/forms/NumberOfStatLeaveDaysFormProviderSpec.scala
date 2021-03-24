@@ -37,35 +37,41 @@ class NumberOfStatLeaveDaysFormProviderSpec extends SpecBaseControllerSpecs {
 
     val fieldName = "value"
 
-    val minimum = 0
+    val minimum = 1
     val maximum = Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt
 
     val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
 
     behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      validDataGenerator
+      form = form,
+      fieldName = fieldName,
+      validDataGenerator = validDataGenerator
     )
 
     behave like intField(
-      form,
-      fieldName,
+      form = form,
+      fieldName = fieldName,
       nonNumericError = FormError(fieldName, "numberOfStatLeaveDays.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "numberOfStatLeaveDays.error.wholeNumber")
     )
 
-    behave like intFieldWithRange(
-      form,
-      fieldName,
+    behave like intFieldWithMinimum(
+      form = form,
+      fieldName = fieldName,
       minimum = minimum,
+      expectedError = FormError(fieldName, "numberOfStatLeaveDays.error.minimum", Seq(minimum, maximum))
+    )
+
+    behave like intFieldWithMaximum(
+      form = form,
+      fieldName = fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "numberOfStatLeaveDays.error.outOfRange", Seq(minimum, maximum))
+      expectedError = FormError(fieldName, "numberOfStatLeaveDays.error.minimum", Seq(minimum, maximum))
     )
 
     behave like mandatoryField(
-      form,
-      fieldName,
+      form = form,
+      fieldName = fieldName,
       requiredError = FormError(fieldName, "numberOfStatLeaveDays.error.required")
     )
   }
