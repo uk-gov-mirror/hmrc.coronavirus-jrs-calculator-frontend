@@ -19,6 +19,7 @@ package viewmodels
 import java.time.LocalDate
 
 import cats.data.Validated.Valid
+import cats.implicits._
 import config.FrontendAppConfig
 import models.requests.DataRequest
 import pages.{EmployeeStartDatePage, FirstFurloughDatePage, FurloughStartDatePage}
@@ -36,7 +37,7 @@ class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
 
     def latestOfEmployeeStartDateOrDefaultDate(defaultDate: LocalDate): Option[LocalDate] = {
       Logger.debug(
-        s"[NumberOfDaysOnStatLeaveHelper][boundaryStartDate] " +
+        s"[NumberOfDaysOnStatLeaveHelper][latestOfEmployeeStartDateOrDefaultDate] " +
           s"\n - defaultDate: $defaultDate" +
           s"\n - employeeStartDate: $employeeStartDate")
       employeeStartDate.map(employeeStartDate => latestOf(defaultDate, employeeStartDate))
@@ -52,7 +53,7 @@ class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
     )(identity)
   }
 
-  def boundaryEndDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
+  def boundaryEndDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages) = {
 
     def dayBeforeFirstFurloughOrDefaultDate(defaultDate: LocalDate)(f: (LocalDate, Seq[LocalDate]) => LocalDate): LocalDate =
       request.userAnswers.getV(FirstFurloughDatePage) match {

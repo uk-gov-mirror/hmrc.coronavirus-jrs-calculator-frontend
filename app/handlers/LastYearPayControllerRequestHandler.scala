@@ -19,7 +19,7 @@ package handlers
 import java.time.LocalDate
 
 import cats.data.Validated.Valid
-import models.{Period, PeriodWithPaymentDate, UserAnswers}
+import models.{Period, PeriodWithPaymentDate, Periods, UserAnswers}
 import models.UserAnswers.AnswerV
 import pages._
 import services.PreviousYearPeriod
