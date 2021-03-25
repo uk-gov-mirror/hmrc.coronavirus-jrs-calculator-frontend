@@ -88,7 +88,7 @@ class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with Guic
 
     "given 2 dates with more than 0 days between them" should {
 
-      "return the number of days between them as 10" in {
+      "return the number of days between them as 11" in {
 
         val startDate = LocalDate.of(2020, 1, 10)
         val endDate   = LocalDate.of(2020, 1, 20)
