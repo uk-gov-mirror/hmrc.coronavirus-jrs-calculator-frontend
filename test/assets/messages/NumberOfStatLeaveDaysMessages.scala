@@ -26,17 +26,19 @@ object NumberOfStatLeaveDaysMessages {
 
   def h1(boundaryStart: LocalDate, boundaryEnd: LocalDate, employeeType: EmployeeType)(implicit messages: Messages): String =
     employeeType match {
-      case Type4 => s"How many days was this employee on statutory leave between the day their employment started and ${dateToString(boundaryEnd)}?"
-      case _ => s"How many days was this employee on statutory leave between ${dateToString(boundaryStart)} and ${dateToString(boundaryEnd)}?"
+      case Type4 =>
+        s"How many days was this employee on statutory leave between the day their employment started and ${dateToString(boundaryEnd)}?"
+      case _ =>
+        s"How many days was this employee on statutory leave between ${dateToString(boundaryStart)} and ${dateToString(boundaryEnd)}?"
     }
 
   val dayEmploymentStarted = "the day their employment started"
 
-  val dropDown = "What does statutory leave include?"
+  val dropDown          = "What does statutory leave include?"
   val dropDownParagraph = "For this calculation, statutory leave only includes:"
-  val bullet1 = "statutory sick pay related leave"
-  val bullet2 = "family related statutory leave, for example paternity leave"
-  val bullet3 = "reduced rate paid leave following a period of statutory sick pay related leave"
-  val bullet4 = "reduced rate paid leave following a period of family related statutory leave"
+  val bullet1           = "statutory sick pay related leave"
+  val bullet2           = "family related statutory leave, for example paternity leave"
+  val bullet3           = "reduced rate paid leave following a period of statutory sick pay related leave"
+  val bullet4           = "reduced rate paid leave following a period of family related statutory leave"
 
 }

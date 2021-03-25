@@ -34,10 +34,10 @@ import views.html.NumberOfStatLeaveDaysView
 
 class NumberOfStatLeaveDaysViewSpec extends IntViewBehaviours {
 
-  val messageKeyPrefix = "numberOfStatLeaveDays"
-  val form: Form[Int] = new NumberOfStatLeaveDaysFormProvider()(apr6th2019, apr5th2020)
+  val messageKeyPrefix                = "numberOfStatLeaveDays"
+  val form: Form[Int]                 = new NumberOfStatLeaveDaysFormProvider()(apr6th2019, apr5th2020)
   val view: NumberOfStatLeaveDaysView = injector.instanceOf[NumberOfStatLeaveDaysView]
-  val postAction: Call = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
+  val postAction: Call                = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
 
   implicit val request: DataRequest[_] = fakeDataRequest()
 
@@ -46,21 +46,20 @@ class NumberOfStatLeaveDaysViewSpec extends IntViewBehaviours {
       view(
         form = form,
         postAction = postAction,
-        boundaryStart =
-          if (employeeType == Type4) {
-            messages("hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted")
-          } else {
-            dateToString(boundaryStart)
-          },
+        boundaryStart = if (employeeType == Type4) {
+          messages("hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted")
+        } else {
+          dateToString(boundaryStart)
+        },
         boundaryEnd = dateToString(boundaryEnd)
       )(fakeRequest, messages)
 
   object Selectors extends BaseSelectors
 
   def expectedContent(boundaryStart: LocalDate, boundaryEnd: LocalDate, employeeType: EmployeeType) = Seq(
-    Selectors.h1 -> NumberOfStatLeaveDaysMessages.h1(boundaryStart, boundaryEnd, employeeType),
-    Selectors.detail -> NumberOfStatLeaveDaysMessages.dropDown,
-    Selectors.p(1) -> NumberOfStatLeaveDaysMessages.dropDownParagraph,
+    Selectors.h1        -> NumberOfStatLeaveDaysMessages.h1(boundaryStart, boundaryEnd, employeeType),
+    Selectors.detail    -> NumberOfStatLeaveDaysMessages.dropDown,
+    Selectors.p(1)      -> NumberOfStatLeaveDaysMessages.dropDownParagraph,
     Selectors.bullet(1) -> NumberOfStatLeaveDaysMessages.bullet1,
     Selectors.bullet(2) -> NumberOfStatLeaveDaysMessages.bullet2,
     Selectors.bullet(3) -> NumberOfStatLeaveDaysMessages.bullet3,

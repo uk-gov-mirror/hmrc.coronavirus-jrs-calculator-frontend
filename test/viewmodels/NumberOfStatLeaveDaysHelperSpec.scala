@@ -276,14 +276,14 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           }
         }
 
-        "the first furlough date == apr10th2020, and is after apr5th2020" should {
+        "the first furlough date == apr7th2020, and is after apr5th2020" should {
 
           "return apr5th2020 the earliest date" in {
 
-            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr7th2020 = LocalDate.of(2020, 4, 7)
 
             val userAnswers = UserAnswers(userAnswersId)
-              .set(FirstFurloughDatePage, apr10th2020)
+              .set(FirstFurloughDatePage, apr7th2020)
               .success
               .value
               .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
@@ -298,6 +298,30 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
             }
           }
         }
+
+        "the first furlough date == apr6th2020, so day before first furlough is equal to the apr5th2020" should {
+
+          "return apr5th2020" in {
+
+            val apr6th2020 = LocalDate.of(2020, 4, 6)
+
+            val userAnswers = UserAnswers(userAnswersId)
+              .set(FirstFurloughDatePage, apr6th2020)
+              .success
+              .value
+              .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)
+              .success
+              .value
+
+            implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+            withCaptureOfLoggingFrom(Logger) { logs =>
+              helper.boundaryEndDate() mustBe apr5th2020
+              logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee") mustBe true
+            }
+          }
+        }
+
       }
 
       "only the FurloughStartDatePage has been answered" when {
@@ -326,14 +350,14 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           }
         }
 
-        "the first furlough date == apr10th2020, and is after apr5th2020" should {
+        "the first furlough date == apr7th2020, and is after apr5th2020" should {
 
           "return apr5th2020 the earliest date" in {
 
-            val apr10th2020 = LocalDate.of(2020, 4, 10)
+            val apr7th2020 = LocalDate.of(2020, 4, 7)
 
             val userAnswers = UserAnswers(userAnswersId)
-              .set(FurloughStartDatePage, apr10th2020)
+              .set(FurloughStartDatePage, apr7th2020)
               .success
               .value
               .set(EmployeeStartedPage, EmployeeStarted.OnOrBefore1Feb2019)

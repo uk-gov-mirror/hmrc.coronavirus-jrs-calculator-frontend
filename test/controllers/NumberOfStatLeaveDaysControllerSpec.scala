@@ -84,8 +84,6 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val furloughStartDate = LocalDate.parse("2021-03-01")
             val boundaryStartDate = apr6th2019
             val boundaryEndDate   = firstFurloughDate.minusDays(1)
-            val boundaryStart     = dateToString(apr6th2019)
-            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
 
             val userAnswers = emptyUserAnswers
               .set(FurloughStartDatePage, furloughStartDate)
@@ -104,12 +102,14 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual
-              view(form(boundaryStartDate, boundaryEndDate), postAction, boundaryStart, boundaryEnd)(dataRequest, messages).toString
+              view(form(boundaryStartDate, boundaryEndDate), postAction, dateToString(boundaryStartDate), dateToString(boundaryEndDate))(
+                dataRequest,
+                messages).toString
 
           }
         }
 
-        "day before employee is first furloughed is after 5th Aptil 2020" must {
+        "day before employee is first furloughed is after 5th April 2020" must {
 
           "return OK and the correct view for a GET" in {
 
@@ -151,7 +151,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val employeeStartDate = feb1st2020.minusDays(1)
             val firstFurloughDate = LocalDate.parse("2020-04-05")
             val furloughStartDate = LocalDate.parse("2021-03-01")
-            val boundaryStartDate = feb1st2020.minusDays(1)
+            val boundaryStartDate = employeeStartDate
             val boundaryEndDate   = firstFurloughDate.minusDays(1)
 
             val userAnswers = emptyUserAnswers
@@ -271,7 +271,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val employeeStartDate = apr6th2020.plusDays(1)
             val firstFurloughDate = LocalDate.parse("2021-01-01")
             val furloughStartDate = LocalDate.parse("2021-03-01")
-            val boundaryStartDate = apr6th2020.plusDays(1)
+            val boundaryStartDate = employeeStartDate
             val boundaryEndDate   = firstFurloughDate.minusDays(1)
 
             val userAnswers = emptyUserAnswers
@@ -317,8 +317,6 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val employeeStartDate = apr6th2020.minusDays(1)
             val firstFurloughDate = LocalDate.parse("2021-05-01")
             val furloughStartDate = LocalDate.parse("2021-05-21")
-            val boundaryStart     = dateToString(apr6th2020)
-            val boundaryEnd       = dateToString(firstFurloughDate.minusDays(1))
             val boundaryStartDate = apr6th2020
             val boundaryEndDate   = firstFurloughDate.minusDays(1)
 
@@ -348,8 +346,8 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
               view(
                 form = form(boundaryStartDate, boundaryEndDate),
                 postAction = postAction,
-                boundaryStart = boundaryStart,
-                boundaryEnd = boundaryEnd
+                boundaryStart = dateToString(boundaryStartDate),
+                boundaryEnd = dateToString(boundaryEndDate)
               )(dataRequest, messages).toString()
 
           }
