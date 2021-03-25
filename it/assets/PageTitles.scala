@@ -1,20 +1,26 @@
 package assets
 
+import java.time.LocalDate
+
+import models.{EmployeeType, Type4}
+import play.api.i18n.Messages
+import views.ViewUtils.dateToString
+
 object PageTitles {
   def regularPayAmount(cutOffDate: String) = s"What was the employee paid in the last pay period ending on or before ${cutOffDate}?"
 
   val regularLengthEmployed = "Was this employee on your payroll on or before 19 March 2020?"
   val statutoryLeavePay = "How much was this employee paid for the periods of statutory leave?"
-  val claimPeriodStartDate  = "What’s the start date of this claim?"
-  val firstFurloughDate     = "When was this employee first furloughed?"
-  val previousFurloughPeriods =
-    "Has this employee been furloughed more than once since 1 November 2020? - Job Retention Scheme calculator - GOV.UK"
+  val claimPeriodStartDate = "What’s the start date of this claim?"
+  val firstFurloughDate = "When was this employee first furloughed?"
+  val previousFurloughPeriods = "Has this employee been furloughed more than once since 1 November 2020? - Job Retention Scheme calculator - GOV.UK"
   val onPayrollBefore30thOct2020 = "Was this employee on your payroll on or before 30 October 2020?"
 
   def hasEmployeeBeenOnStatutoryLeave(boundaryStart: String, boundaryEnd: String) =
     s"Has this employee been on statutory leave for part of the period between $boundaryStart and $boundaryEnd"
 
-  def numberOfStatLeaveDays(boundaryStart: Option[String], boundaryEnd: String) = {
+  def numberOfStatLeaveDays(boundaryStart: Option[String], boundaryEnd: String): String = {
     s"How many days was this employee on statutory leave between ${boundaryStart.fold("the day their employment started")(identity)} and $boundaryEnd?"
   }
+
 }
