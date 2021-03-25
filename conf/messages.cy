@@ -600,7 +600,7 @@ referencePayBreakdown.regular.employerFunded.l1 = Dechreuwch gyda £{0} (o’r c
 referencePayBreakdown.regular.employerFunded.l2 = Llai £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo)
 referencePayBreakdown.regular.employerFunded.result = Cyflog a ariennir gan y cyflogwr am y {0} o ddiwrnodau sy’n weddill yn y cyfnod cyflog = £{1}
 
-referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, whichever is earlier) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 referencePayBreakdown.average.p1.partOfCylb = Dull 2: cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 referencePayBreakdown.average.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog).
 referencePayBreakdown.average.l2 = Rhannwch â {0} (o ddiwrnodau y’i cyflogwyd).
@@ -775,7 +775,7 @@ phaseTwoReferencePayBreakdown.regular.hours.l2 = Rhannwch â {0} (oriau arferol)
 phaseTwoReferencePayBreakdown.regular.hours.l3 = Lluoswch â {0} (oriau ffyrlo).
 phaseTwoReferencePayBreakdown.regular.hoursResult = Cyfanswm cyflog yn seiliedig ar oriau a weithiwyd yn y cyfnod cyflog hwn = £{0}
 
-phaseTwoReferencePayBreakdown.average.p1 = Cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019, p’un bynnag sydd gynharaf) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
+phaseTwoReferencePayBreakdown.average.p1 = Cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 phaseTwoReferencePayBreakdown.average.p1.partOfCylb = Dull 2: cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 phaseTwoReferencePayBreakdown.average.days.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog).
 phaseTwoReferencePayBreakdown.average.days.l2 = Rhannwch â {0} (o ddiwrnodau y’i cyflogwyd).
