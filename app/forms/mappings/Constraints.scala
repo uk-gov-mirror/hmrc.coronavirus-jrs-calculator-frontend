@@ -119,9 +119,9 @@ trait Constraints {
     if (value > minimum) Valid else Invalid(errorKey)
   }
 
-  protected def lessThan[A](minimum: A, errorKey: String, args: Any*)(implicit ev: Ordering[A]): Constraint[A] = Constraint { value =>
+  protected def lessThan[A](maximum: A, errorKey: String, args: Any*)(implicit ev: Ordering[A]): Constraint[A] = Constraint { value =>
     import ev._
-    if (value < minimum) Valid else Invalid(errorKey, args: _*)
+    if (value < maximum) Valid else Invalid(errorKey, args: _*)
   }
 
   protected def maxTwoDecimals(errorKey: Option[String] = None): Constraint[BigDecimal] = Constraint { value =>

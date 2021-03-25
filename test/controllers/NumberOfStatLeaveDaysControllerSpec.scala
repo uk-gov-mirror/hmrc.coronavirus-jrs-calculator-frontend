@@ -431,7 +431,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val result = controller.onSubmit()(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+            redirectLocation(result).value mustEqual routes.StatutoryLeavePayController.onPageLoad().url
           }
 
           "return a Bad Request and errors when invalid data is submitted" in {
@@ -501,7 +501,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val result = controller.onSubmit()(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+            redirectLocation(result).value mustEqual routes.StatutoryLeavePayController.onPageLoad().url
           }
 
           "return a Bad Request and errors when invalid data is submitted" in {
@@ -574,7 +574,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val result = controller.onSubmit()(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+            redirectLocation(result).value mustEqual routes.StatutoryLeavePayController.onPageLoad().url
           }
           "return a Bad Request and errors when invalid data is submitted" in {
 
@@ -648,7 +648,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val result = controller.onSubmit()(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+            redirectLocation(result).value mustEqual routes.StatutoryLeavePayController.onPageLoad().url
           }
           "return a Bad Request and errors when invalid data is submitted" in {
 
@@ -729,7 +729,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val result = controller.onSubmit()(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+            redirectLocation(result).value mustEqual routes.StatutoryLeavePayController.onPageLoad().url
           }
         }
 
@@ -770,7 +770,7 @@ class NumberOfStatLeaveDaysControllerSpec extends SpecBaseControllerSpecs with M
             val result = controller.onSubmit()(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual "/job-retention-scheme-calculator"
+            redirectLocation(result).value mustEqual routes.StatutoryLeavePayController.onPageLoad().url
           }
         }
       }

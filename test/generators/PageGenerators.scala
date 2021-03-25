@@ -21,11 +21,11 @@ import pages._
 
 trait PageGenerators {
 
-  implicit lazy val arbitraryStatutoryLeavePayPage: Arbitrary[StatutoryLeavePayPage.type] =
-    Arbitrary(StatutoryLeavePayPage)
-
   implicit lazy val arbitraryHasEmployeeBeenOnStatutoryLeavePage: Arbitrary[HasEmployeeBeenOnStatutoryLeavePage.type] =
     Arbitrary(HasEmployeeBeenOnStatutoryLeavePage)
+
+  implicit lazy val arbitraryStatutoryLeavePayPage: Arbitrary[StatutoryLeavePayPage.type] =
+    Arbitrary(StatutoryLeavePayPage)
 
   implicit lazy val arbitraryNumberOfStatLeaveDaysPage: Arbitrary[NumberOfStatLeaveDaysPage.type] =
     Arbitrary(NumberOfStatLeaveDaysPage)
