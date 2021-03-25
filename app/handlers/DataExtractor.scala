@@ -16,17 +16,15 @@
 
 package handlers
 
-import java.time.LocalDate
-
 import cats.data.Validated.{Invalid, Valid}
+import cats.implicits._
 import models.UserAnswers.AnswerV
 import models._
 import pages._
 import services.{FurloughPeriodExtractor, PeriodHelper}
-import cats.syntax.apply._
-import cats.syntax.validated._
-import cats.syntax.semigroupk._
 import utils.LocalDateHelpers._
+
+import java.time.LocalDate
 
 trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
 
@@ -127,11 +125,19 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
       ReferencePayData(furloughPeriod, assigned, frequency)
     }
 
+  def extractStatutoryLeaveData(userAnswers: UserAnswers): AnswerV[Option[StatutoryLeaveData]] = {
+    for {
+      pay  <- userAnswers.getO(StatutoryLeavePayPage)
+      days <- userAnswers.getO(NumberOfStatLeaveDaysPage)
+    } yield (pay, days).mapN { case (amount, days) => StatutoryLeaveData(days, amount.value) }
+  }.sequence
+
   def extractPhaseTwoReferencePayDataV(userAnswers: UserAnswers): AnswerV[PhaseTwoReferencePayData] =
     (
       extractFurloughWithinClaimV(userAnswers),
-      extractPaymentFrequencyV(userAnswers)
-    ).mapN { (furloughPeriod, frequency) =>
+      extractPaymentFrequencyV(userAnswers),
+      extractStatutoryLeaveData(userAnswers)
+    ).mapN { (furloughPeriod, frequency, statLeave) =>
       val payDates                      = userAnswers.getList(PayDatePage)
       val actuals                       = userAnswers.getList(PartTimeHoursPage)
       val usuals: Seq[UsualHours]       = userAnswers.getList(PartTimeNormalHoursPage)
@@ -140,7 +146,7 @@ trait DataExtractor extends FurloughPeriodExtractor with PeriodHelper {
       val assigned                      = assignPayDates(frequency, periods, lastPayDay)
       val phaseTwo: Seq[PhaseTwoPeriod] = assignPartTimeHours(assigned, actuals, usuals)
 
-      PhaseTwoReferencePayData(furloughPeriod, phaseTwo, frequency)
+      PhaseTwoReferencePayData(furloughPeriod, phaseTwo, frequency, statLeave)
     }
 
   def determineLastPayDay(userAnswers: UserAnswers, periods: Seq[Periods]): LocalDate =

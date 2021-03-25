@@ -132,6 +132,12 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
     def withPartTimeQuestion(question: PartTimeQuestion): UserAnswers =
       userAnswers.setValue(PartTimeQuestionPage, question)
 
+    def withStatutoryLeaveData(days: Int, amount: BigDecimal): UserAnswers =
+      userAnswers
+        .setValue(HasEmployeeBeenOnStatutoryLeavePage, true)
+        .setValue(NumberOfStatLeaveDaysPage, days)
+        .setValue(StatutoryLeavePayPage, Amount(amount))
+
     def withAdditionalPaymentAmount(payment: AdditionalPayment, idx: Option[Int]): UserAnswers =
       userAnswers.setValue(AdditionalPaymentAmountPage, payment, idx)
 
