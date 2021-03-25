@@ -593,7 +593,7 @@ referencePayBreakdown.regular.employerFunded.l1 = Start with £{0} (from pay per
 referencePayBreakdown.regular.employerFunded.l2 = Minus £{0} (pay based on furlough days).
 referencePayBreakdown.regular.employerFunded.result = Employer-funded pay for the remaining {0} days in pay period = £{1}
 
-referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, whichever is earlier) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 referencePayBreakdown.average.p1.partOfCylb = Method 2: take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) up to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 referencePayBreakdown.average.l1 = Start with £{0} (total pay).
 referencePayBreakdown.average.l2 = Divide by {0} (days employed).
@@ -786,7 +786,7 @@ phaseTwoReferencePayBreakdown.regular.hours.l2 = Divide by {0} (usual hours).
 phaseTwoReferencePayBreakdown.regular.hours.l3 = Multiply by {0} (furlough hours).
 phaseTwoReferencePayBreakdown.regular.hoursResult = Total pay based on hours worked in this pay period = £{0}
 
-phaseTwoReferencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, whichever is earlier) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+phaseTwoReferencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 phaseTwoReferencePayBreakdown.average.p1.partOfCylb = Method 2: take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) up to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 phaseTwoReferencePayBreakdown.average.days.l1 = Start with £{0} (total pay).
 phaseTwoReferencePayBreakdown.average.days.l2 = Divide by {0} (days employed).

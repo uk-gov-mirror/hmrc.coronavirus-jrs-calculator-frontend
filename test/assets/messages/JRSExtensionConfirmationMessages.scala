@@ -16,8 +16,6 @@
 
 package messages
 
-import java.time.LocalDate
-
 import models.Period
 import play.api.i18n.Messages
 import utils.ValueFormatter
@@ -107,6 +105,13 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     val feedbackLink = "What do you think of this service?"
 
     val startAnotherCalculation = "Start another calculation"
+  }
+
+  object Type4 {
+
+    val averageP1 =
+      "Take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier)."
+
   }
 
   object VariableExtensionType5 {
