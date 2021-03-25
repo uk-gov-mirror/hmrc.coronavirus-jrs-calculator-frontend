@@ -18,6 +18,7 @@ package viewmodels
 
 import java.time.LocalDate
 
+import cats.data.Writer
 import config.FrontendAppConfig
 import models.requests.DataRequest
 import pages.EmployeeStartDatePage
@@ -26,10 +27,11 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.http.InternalServerException
 import utils.LocalDateHelpers._
 import utils.{EmployeeTypeUtil, KeyDatesUtil}
+import views.ViewUtils.dateToString
 
 class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
 
-  def boundaryStartDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): LocalDate = {
+  def boundaryStartDate()(implicit request: DataRequest[_], appConfig: FrontendAppConfig, messages: Messages): Writer[String, LocalDate] = {
 
     val employeeStartDate: Option[LocalDate] = request.userAnswers.getV(EmployeeStartDatePage).toOption
 
@@ -41,11 +43,25 @@ class NumberOfStatLeaveDaysHelper extends EmployeeTypeUtil with KeyDatesUtil {
       employeeStartDate.map(employeeStartDate => latestOf(defaultDate, employeeStartDate))
     }
 
-    variablePayResolver[LocalDate](
-      type3EmployeeResult = Some(apr6th2019),
-      type4EmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2019),
-      type5aEmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2020),
-      type5bEmployeeResult = latestOfEmployeeStartDateOrDefaultDate(apr6th2020)
+    lazy val type4Date: Option[Writer[String, LocalDate]] = latestOfEmployeeStartDateOrDefaultDate(apr6th2019).map((startDate: LocalDate) =>
+      Writer(l = messages("hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted"), v = startDate))
+
+    lazy val type5Date: Option[Writer[String, LocalDate]] = latestOfEmployeeStartDateOrDefaultDate(apr6th2020).map(
+      (startDate: LocalDate) =>
+        Writer(
+          l = if (startDate.isAfter(apr6th2020)) {
+            messages("hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted")
+          } else {
+            dateToString(apr6th2020)
+          },
+          v = startDate
+      ))
+
+    variablePayResolver[Writer[String, LocalDate]](
+      type3EmployeeResult = Option(Writer(dateToString(apr6th2019), apr6th2019)),
+      type4EmployeeResult = type4Date,
+      type5aEmployeeResult = type5Date,
+      type5bEmployeeResult = type5Date
     ).fold(
       throw new InternalServerException("[NumberOfDaysOnStatLeaveHelper][boundaryStartDate] failed to resolve employee type")
     )(identity)

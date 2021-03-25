@@ -29,6 +29,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import viewmodels.{BeenOnStatutoryLeaveHelper, NumberOfStatLeaveDaysHelper}
+import views.ViewUtils.dateToString
 import views.html.NumberOfStatLeaveDaysView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,15 +42,14 @@ class NumberOfStatLeaveDaysController @Inject()(
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: NumberOfStatLeaveDaysFormProvider,
-  formHelper: NumberOfStatLeaveDaysHelper,
-  contentHelper: BeenOnStatutoryLeaveHelper,
+  helper: NumberOfStatLeaveDaysHelper,
   val controllerComponents: MessagesControllerComponents,
   view: NumberOfStatLeaveDaysView
 )(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
     extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val form: Form[Int] = formProvider(boundaryStart = formHelper.boundaryStartDate, boundaryEnd = formHelper.boundaryEndDate)
+    val form: Form[Int] = formProvider(boundaryStart = helper.boundaryStartDate.value, boundaryEnd = helper.boundaryEndDate)
     val preparedForm = request.userAnswers.getV(NumberOfStatLeaveDaysPage) match {
       case Invalid(_)   => form
       case Valid(value) => form.fill(value)
@@ -59,14 +59,14 @@ class NumberOfStatLeaveDaysController @Inject()(
       view(
         form = preparedForm,
         postAction = postAction,
-        boundaryStart = contentHelper.boundaryStart(),
-        boundaryEnd = contentHelper.boundaryEnd()
+        boundaryStart = helper.boundaryStartDate.written,
+        boundaryEnd = dateToString(helper.boundaryEndDate)
       ))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val postAction      = controllers.routes.NumberOfStatLeaveDaysController.onSubmit()
-    val form: Form[Int] = formProvider(formHelper.boundaryStartDate, formHelper.boundaryEndDate)
+    val form: Form[Int] = formProvider(helper.boundaryStartDate.value, helper.boundaryEndDate)
     form
       .bindFromRequest()
       .fold(
@@ -76,8 +76,8 @@ class NumberOfStatLeaveDaysController @Inject()(
               view(
                 form = formWithErrors,
                 postAction = postAction,
-                boundaryStart = contentHelper.boundaryStart(),
-                boundaryEnd = contentHelper.boundaryEnd()
+                boundaryStart = helper.boundaryStartDate.written,
+                boundaryEnd = dateToString(helper.boundaryEndDate)
               ))),
         value =>
           for {

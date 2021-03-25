@@ -19,6 +19,8 @@ package viewmodels
 import java.time.LocalDate
 
 import base.SpecBase
+import cats.data.Writer
+import messages.NumberOfStatLeaveDaysMessages
 import models.EmployeeRTISubmission._
 import models.requests.DataRequest
 import models.{EmployeeRTISubmission, EmployeeStarted, UserAnswers}
@@ -27,6 +29,7 @@ import play.api.Logger
 import uk.gov.hmrc.play.test.LogCapturing
 import utils.LocalDateHelpers
 import utils.LocalDateHelpers._
+import views.ViewUtils.dateToString
 
 class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers with LogCapturing {
 
@@ -46,7 +49,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
         implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
         withCaptureOfLoggingFrom(Logger) { logs =>
-          helper.boundaryStartDate() mustBe apr6th2019
+          helper.boundaryStartDate() mustBe Writer(dateToString(apr6th2019), apr6th2019)
           logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee") mustBe true
         }
       }
@@ -54,34 +57,9 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
     "employee is type 4" when {
 
-      "the employee started date is later than the default date" should {
-
-        "return the employee start date (feb2nd2020) " in {
-
-          val feb2nd2020 = LocalDate.of(2020, 2, 2)
-
-          val userAnswers = UserAnswers(userAnswersId)
-            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
-            .success
-            .value
-            .set(EmployeeStartDatePage, feb2nd2020)
-            .success
-            .value
-            .set(EmployeeRTISubmissionPage, EmployeeRTISubmission.Yes)
-            .success
-            .value
-          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
-
-          withCaptureOfLoggingFrom(Logger) { logs =>
-            helper.boundaryStartDate() mustBe feb2nd2020
-            logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
-          }
-        }
-      }
-
       "the employee started date is earlier than the default date" should {
 
-        "return the apr6th2019" in {
+        "return the start date message and apr6th2019" in {
 
           val feb2nd2020 = LocalDate.of(2019, 2, 2)
 
@@ -98,19 +76,44 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
           withCaptureOfLoggingFrom(Logger) { logs =>
-            helper.boundaryStartDate() mustBe apr6th2019
+            helper.boundaryStartDate().value mustBe apr6th2019
+            helper.boundaryStartDate() mustBe Writer(NumberOfStatLeaveDaysMessages.dayEmploymentStarted, apr6th2019)
             logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
           }
         }
       }
 
+      "the employee started date is later than the default date" should {
+
+        "return the start date message and employee start date (feb2nd2020)" in {
+
+          val feb2nd2020 = LocalDate.of(2020, 2, 2)
+
+          val userAnswers = UserAnswers(userAnswersId)
+            .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
+            .success
+            .value
+            .set(EmployeeStartDatePage, feb2nd2020)
+            .success
+            .value
+            .set(EmployeeRTISubmissionPage, EmployeeRTISubmission.Yes)
+            .success
+            .value
+          implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+          withCaptureOfLoggingFrom(Logger) { logs =>
+            helper.boundaryStartDate() mustBe Writer(NumberOfStatLeaveDaysMessages.dayEmploymentStarted, feb2nd2020)
+            logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 4 Employee") mustBe true
+          }
+        }
+      }
     }
 
     "employee is type 5a" when {
 
       "the employee start date is earlier than the default start date" should {
 
-        "return the default date apr6th2020" in {
+        "return the string formatted date and default date apr6th2020" in {
 
           val firstFurloughDateAns = LocalDate.parse("2020-11-01")
           val furloughStartDate    = LocalDate.parse("2021-01-13")
@@ -134,7 +137,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
           withCaptureOfLoggingFrom(Logger) { logs =>
-            helper.boundaryStartDate() mustBe apr6th2020
+            helper.boundaryStartDate() mustBe Writer(dateToString(apr6th2020), apr6th2020)
             logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5a Employee") mustBe true
           }
         }
@@ -142,7 +145,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
       "the employee start date is later than the default start date" should {
 
-        "return the employee start date (may1st2020)" in {
+        "return the start date message and employee start date (may1st2020)" in {
 
           val firstFurloughDateAns = LocalDate.parse("2020-11-01")
           val furloughStartDate    = LocalDate.parse("2021-01-13")
@@ -167,23 +170,22 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
           withCaptureOfLoggingFrom(Logger) { logs =>
-            helper.boundaryStartDate() mustBe employeeStartDate
+            helper.boundaryStartDate() mustBe Writer(NumberOfStatLeaveDaysMessages.dayEmploymentStarted, employeeStartDate)
             logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5a Employee") mustBe true
           }
         }
       }
-
     }
 
     "employee is type 5b" when {
 
-      "the employee start date is later than the default date" should {
+      "the employee start date is later than the default date (apr6th2020)" should {
 
-        "return the employee start date (may1st2020)" in {
+        "return the string start date message and employee start date (apr7th2020)" in {
 
           val firstFurloughDateAns = LocalDate.parse("2021-05-01")
           val furloughStartDate    = LocalDate.parse("2021-05-13")
-          val employeeStartDate    = LocalDate.parse("2020-05-01")
+          val employeeStartDate    = LocalDate.parse("2020-04-07")
 
           val userAnswers = UserAnswers(userAnswersId)
             .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
@@ -204,7 +206,7 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
           withCaptureOfLoggingFrom(Logger) { logs =>
-            helper.boundaryStartDate() mustBe employeeStartDate
+            helper.boundaryStartDate() mustBe Writer(NumberOfStatLeaveDaysMessages.dayEmploymentStarted, employeeStartDate)
             logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
           }
         }
@@ -212,11 +214,11 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
 
       "the employee start date is earlier than the default date" should {
 
-        "return the default date (apr6th2020)" in {
+        "return the string formatted date and default date (apr6th2020)" in {
 
           val firstFurloughDateAns = LocalDate.parse("2021-05-01")
           val furloughStartDate    = LocalDate.parse("2021-05-13")
-          val employeeStartDate    = LocalDate.parse("2020-04-01")
+          val employeeStartDate    = LocalDate.parse("2020-04-05")
 
           val userAnswers = UserAnswers(userAnswersId)
             .set(EmployeeStartedPage, EmployeeStarted.After1Feb2019)
@@ -237,12 +239,11 @@ class NumberOfStatLeaveDaysHelperSpec extends SpecBase with LocalDateHelpers wit
           implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
 
           withCaptureOfLoggingFrom(Logger) { logs =>
-            helper.boundaryStartDate() mustBe apr6th2020
+            helper.boundaryStartDate() mustBe Writer(dateToString(apr6th2020), apr6th2020)
             logs.map(_.getMessage).contains("[EmployeeTypeUtil][variablePayResolver] Type 5b Employee") mustBe true
           }
         }
       }
-
     }
   }
 
