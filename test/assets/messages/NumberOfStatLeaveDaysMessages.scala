@@ -18,13 +18,19 @@ package messages
 
 import java.time.LocalDate
 
+import models.{EmployeeType, Type4}
 import play.api.i18n.Messages
 import views.ViewUtils._
 
 object NumberOfStatLeaveDaysMessages {
 
-  def h1(boundaryStart: LocalDate, boundaryEnd: LocalDate)(implicit messages: Messages) =
-    s"How many days was this employee on statutory leave between ${dateToString(boundaryStart)} and ${dateToString(boundaryEnd)}?"
+  def h1(boundaryStart: LocalDate, boundaryEnd: LocalDate, employeeType: EmployeeType)(implicit messages: Messages): String =
+    employeeType match {
+      case Type4 =>
+        s"How many days was this employee on statutory leave between the day their employment started and ${dateToString(boundaryEnd)}?"
+      case _ =>
+        s"How many days was this employee on statutory leave between ${dateToString(boundaryStart)} and ${dateToString(boundaryEnd)}?"
+    }
 
   val dayEmploymentStarted = "the day their employment started"
 

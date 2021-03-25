@@ -43,7 +43,7 @@ class NumberOfStatLeaveDaysControllerISpec extends IntegrationSpecBase with Crea
         whenReady(res) { result =>
           result should have(
             httpStatus(OK),
-            titleOf(PageTitles.numberOfStatLeaveDays(boundaryStart, boundaryEnd))
+            titleOf(PageTitles.numberOfStatLeaveDays(Some(boundaryStart), boundaryEnd))
           )
         }
       }
@@ -56,7 +56,6 @@ class NumberOfStatLeaveDaysControllerISpec extends IntegrationSpecBase with Crea
         val employeeStartDate = "2020, 01, 31"
         val furloughStartDate: String = "2021, 03, 01"
         val firstFurloughDate: String = "2020, 04, 05"
-        val boundaryStart: String = dateToString(feb1st2020.minusDays(1))
         val boundaryEnd: String = dateToString(LocalDate.of(2020, 4, 4))
 
         val userAnswers: UserAnswers =
@@ -80,7 +79,7 @@ class NumberOfStatLeaveDaysControllerISpec extends IntegrationSpecBase with Crea
         whenReady(res) { result =>
           result should have(
             httpStatus(OK),
-            titleOf(PageTitles.numberOfStatLeaveDays(boundaryStart, boundaryEnd))
+            titleOf(PageTitles.numberOfStatLeaveDays(None, boundaryEnd))
           )
         }
       }
