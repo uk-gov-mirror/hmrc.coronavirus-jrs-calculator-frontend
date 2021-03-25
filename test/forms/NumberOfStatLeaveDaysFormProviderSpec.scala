@@ -20,7 +20,7 @@ import java.time._
 
 import forms.behaviours.IntFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.data.FormError
+import play.api.data.{Form, FormError}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
 import play.api.mvc.AnyContentAsEmpty
@@ -37,13 +37,13 @@ class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with Guic
   val boundaryStart = LocalDate.of(2019, 4, 6)
   val boundaryEnd   = LocalDate.of(2020, 4, 5)
 
-  val form = new NumberOfStatLeaveDaysFormProvider()(boundaryStart, boundaryEnd)
+  val form: Form[Int] = new NumberOfStatLeaveDaysFormProvider()(boundaryStart, boundaryEnd)
 
   ".value" must {
 
     val fieldName          = "value"
     val minimum            = 1
-    val maximum            = Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt + 1
+    val maximum            = Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt
     val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
 
     behave like fieldThatBindsValidData(
@@ -82,5 +82,37 @@ class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with Guic
       requiredError =
         FormError(fieldName, "numberOfStatLeaveDays.error.required", Seq(dateToString(boundaryStart), dateToString(boundaryEnd)))
     )
+  }
+
+  ".daysBetween()" when {
+
+    "given 2 dates with more than 0 days between them" should {
+
+      "return the number of days between them as 10" in {
+
+        val startDate = LocalDate.of(2020, 1, 10)
+        val endDate   = LocalDate.of(2020, 1, 20)
+
+        val actual: Int = new NumberOfStatLeaveDaysFormProvider().daysBetween(startDate, endDate)
+        val expected    = 10
+
+        actual shouldEqual expected
+      }
+    }
+
+    "given 2 dates that are the same" should {
+
+      "return the number of days between them as 1" in {
+
+        val startDate = LocalDate.of(2020, 1, 10)
+        val endDate   = LocalDate.of(2020, 1, 10)
+
+        val actual: Int = new NumberOfStatLeaveDaysFormProvider().daysBetween(startDate, endDate)
+        val expected    = 1
+
+        actual shouldEqual expected
+      }
+    }
+
   }
 }

@@ -44,6 +44,11 @@ class NumberOfStatLeaveDaysFormProvider @Inject() extends Mappings {
       ))
     )
 
-  def daysBetween(boundaryStart: LocalDate, boundaryEnd: LocalDate): Int =
-    Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt + 1
+  private[forms] def daysBetween(boundaryStart: LocalDate, boundaryEnd: LocalDate): Int =
+    if (Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt == 0) {
+      1
+    } else {
+      Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt
+    }
+
 }
