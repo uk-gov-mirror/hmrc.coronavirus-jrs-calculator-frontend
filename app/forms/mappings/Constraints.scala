@@ -52,6 +52,17 @@ trait Constraints {
       }
     }
 
+  protected def maximumValueWithArgs[A](maximum: A, errorKey: String, args: Seq[Any])(implicit ev: Ordering[A]): Constraint[A] =
+    Constraint { input =>
+      import ev._
+
+      if (input <= maximum) {
+        Valid
+      } else {
+        Invalid(errorKey, args: _*)
+      }
+    }
+
   protected def inRange[A](minimum: A, maximum: A, errorKey: String)(implicit ev: Ordering[A]): Constraint[A] =
     Constraint { input =>
       import ev._

@@ -352,4 +352,5 @@ class BeenOnStatutoryLeaveHelperSpec extends SpecBase with LocalDateHelpers with
       }
     }
   }
+
 }
