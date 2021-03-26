@@ -43,7 +43,7 @@ class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with Guic
 
     val fieldName          = "value"
     val minimum            = 1
-    val maximum            = Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt + 1
+    val maximum            = Duration.between(boundaryStart.atStartOfDay(), boundaryEnd.atStartOfDay()).toDays.toInt
     val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
 
     behave like fieldThatBindsValidData(
@@ -88,13 +88,13 @@ class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with Guic
 
     "given 2 dates with more than 0 days between them" should {
 
-      "return the number of days between them as 11" in {
+      "return the number of days between them as 10" in {
 
         val startDate = LocalDate.of(2020, 1, 10)
         val endDate   = LocalDate.of(2020, 1, 20)
 
         val actual: Int = new NumberOfStatLeaveDaysFormProvider().daysBetween(startDate, endDate)
-        val expected    = 11
+        val expected    = 10
 
         actual shouldEqual expected
       }
@@ -102,13 +102,13 @@ class NumberOfStatLeaveDaysFormProviderSpec extends IntFieldBehaviours with Guic
 
     "given 2 dates that are the same" should {
 
-      "return the number of days between them as 1" in {
+      "return the number of days between them as 0" in {
 
         val startDate = LocalDate.of(2020, 1, 10)
         val endDate   = LocalDate.of(2020, 1, 10)
 
         val actual: Int = new NumberOfStatLeaveDaysFormProvider().daysBetween(startDate, endDate)
-        val expected    = 1
+        val expected    = 0
 
         actual shouldEqual expected
       }

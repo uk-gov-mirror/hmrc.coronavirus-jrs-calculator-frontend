@@ -17,7 +17,7 @@
 package navigation
 
 import cats.data.Validated.{Invalid, Valid}
-import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching, StatutoryLeaveFlow}
+import config.featureSwitch._
 import config.{FrontendAppConfig, SchemeConfiguration}
 import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
@@ -121,6 +121,10 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       onPayrollBefore30thOct2020Routes
     case StatutoryLeavePayPage =>
       statutoryLeavePayRoutes
+    case NumberOfStatLeaveDaysPage =>
+      numberOfStatLeaveDaysRoutes
+    case HasEmployeeBeenOnStatutoryLeavePage =>
+      hasBeenOnStatutoryLeaveRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -542,6 +546,25 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
     }
   }
 
+  private[navigation] def numberOfStatLeaveDaysRoutes: UserAnswers => Call = { userAnswers =>
+    (userAnswers.getV(NumberOfStatLeaveDaysPage), isEnabled(StatutoryLeaveFlow)) match {
+      //TODO: remove this feature switch check when feature switch is deprecated
+      case (_, false)      => routes.RootPageController.onPageLoad()
+      case (Valid(_), _)   => routes.StatutoryLeavePayController.onPageLoad()
+      case (Invalid(_), _) => routes.NumberOfStatLeaveDaysController.onPageLoad()
+    }
+  }
+
+  private[navigation] def hasBeenOnStatutoryLeaveRoutes: UserAnswers => Call = { userAnswers =>
+    (userAnswers.getV(HasEmployeeBeenOnStatutoryLeavePage), isEnabled(StatutoryLeaveFlow)) match {
+      //TODO: remove this feature switch check when feature switch is deprecated
+      case (_, false)        => routes.RootPageController.onPageLoad()
+      case (Valid(false), _) => routes.PartTimeQuestionController.onPageLoad()
+      case (Valid(true), _)  => routes.NumberOfStatLeaveDaysController.onPageLoad()
+      case (Invalid(_), _)   => routes.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad()
+    }
+  }
+
   private[navigation] def statutoryLeavePayRoutes: UserAnswers => Call = { userAnswers =>
     if (isEnabled(StatutoryLeaveFlow)) {
       userAnswers.getV(StatutoryLeavePayPage) match {
@@ -551,7 +574,6 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
     } else {
       routes.RootPageController.onPageLoad()
     }
-
   }
 
   private def isPhaseTwoOnwards: UserAnswers => Boolean =

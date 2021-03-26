@@ -19,6 +19,7 @@ package utils
 import cats.data.Validated.Valid
 import config.FrontendAppConfig
 import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
+import handlers.DataExtractor
 import models.PayMethod.{Regular, Variable}
 import models.requests.DataRequest
 import models.{EmployeeRTISubmission, EmployeeStarted, RegularLengthEmployed}
@@ -28,7 +29,7 @@ import uk.gov.hmrc.http.InternalServerException
 import utils.LocalDateHelpers.{feb1st2020, nov1st2020}
 import utils.PagerDutyHelper.PagerDutyKeys.EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED
 
-trait EmployeeTypeUtil extends FeatureSwitching {
+trait EmployeeTypeUtil extends FeatureSwitching with DataExtractor {
 
   def regularPayResolver[T](
     type1EmployeeResult: Option[T] = None,
@@ -130,4 +131,10 @@ trait EmployeeTypeUtil extends FeatureSwitching {
         throw new InternalServerException(logMsg)
     }
   }
+
+  def hasStatutoryLeaveData()(implicit request: DataRequest[_]): Boolean =
+    extractStatutoryLeaveData(request.userAnswers) match {
+      case Valid(Some(_)) => true
+      case _              => false
+    }
 }
