@@ -16,7 +16,11 @@
 
 package viewmodels
 
+import config.FrontendAppConfig
 import models._
+import models.requests.DataRequest
+import play.api.i18n.Messages
+
 import java.time.LocalDate
 import services.{AuditBreakdown, AuditCalculationResult, AuditPeriodBreakdown}
 
@@ -178,27 +182,35 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
     )
   }
 
-  def detailedBreakdownMessageKeys(isNewStarterType5: Boolean): Seq[String] =
+  def detailedBreakdownMessageKeys(
+    isNewStarterType5: Boolean)(implicit messages: Messages, dataRequest: DataRequest[_], appConfig: FrontendAppConfig): Seq[String] = {
+    val helper = new BeenOnStatutoryLeaveHelper()
+
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
           case _: RegularPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.p1.regular"
+              messages("phaseTwoDetailedBreakdown.p1.regular")
             )
           case avg: AveragePaymentWithPhaseTwoPeriod if isNewStarterType5 =>
-            Seq("phaseTwoDetailedBreakdown.no.nic.p1.extension")
+            Seq(
+              messages("phaseTwoDetailedBreakdown.no.nic.p1.extension")
+            )
           case _: AveragePaymentWithPhaseTwoPeriod =>
-            Seq("phaseTwoDetailedBreakdown.p1.average")
+            Seq(
+              messages("phaseTwoDetailedBreakdown.p1.average")
+            )
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1",
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
+              messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1"),
+              messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2"),
+              messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3", helper.boundaryEnd())
             )
         }
       }
       .getOrElse(Seq())
+  }
 
   def detailedBreakdownMessageKeysSept: Seq[String] =
     furlough.periodBreakdowns.headOption
