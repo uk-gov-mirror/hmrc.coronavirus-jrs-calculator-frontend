@@ -109,9 +109,6 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
   object Type3 {
 
-    val OLDmethod2BreadownSummary =
-      "Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days in each pay period."
-
     def method2BreadownSummary(boundaryEnd: String) =
       s"Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and $boundaryEnd. Then we’ve multiplied that by the number of furlough days in each pay period."
 
