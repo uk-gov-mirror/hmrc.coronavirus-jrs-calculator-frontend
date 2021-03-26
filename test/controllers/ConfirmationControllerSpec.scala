@@ -170,6 +170,25 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         )
       }
 
+      def userAnswers(): UserAnswers =
+        emptyUserAnswers
+          .withClaimPeriodStart("2020, 11, 1")
+          .withClaimPeriodEnd("2020, 11, 30")
+          .withFurloughStartDate("2020, 11, 15")
+          .withFurloughStatus(FurloughOngoing)
+          .withPaymentFrequency(Monthly)
+          .withNiCategory()
+          .withPensionStatus()
+          .withPayMethod(Variable)
+          .withFurloughInLastTaxYear(false)
+          .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+          .withEmployeeStartDate("2020, 1, 31")
+          .withPreviousFurloughedPeriodsAnswer(true)
+          .withFirstFurloughDate("2020, 11, 10")
+          .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
+          .withAnnualPayAmount(10000.00)
+          .withPartTimeQuestion(PartTimeNo)
+
       val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
       val dataRequest                                  = DataRequest(request, userAnswers().id, userAnswers())
 
