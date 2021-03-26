@@ -12,6 +12,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-05-05")
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughEndDate("2020, 11, 14")
       .withPaymentFrequency(Weekly)
       .withEmployeeStartedAfter1Feb2019()
@@ -44,6 +45,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-04-01")
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughEndDate("2020, 11, 14")
       .withPaymentFrequency(Weekly)
       .withEmployeeStartedAfter1Feb2019()
@@ -76,6 +78,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-04-01")
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughEndDate("2020, 11, 14")
       .withPaymentFrequency(Weekly)
       .withEmployeeStartedAfter1Feb2019()
@@ -154,6 +157,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-08-27")
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughEndDate("2020, 11, 30")
       .withPaymentFrequency(FortNightly)
       .withEmployeeStartedAfter1Feb2019()
@@ -192,6 +196,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-03-20")
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughEndDate("2020, 11, 25")
       .withPaymentFrequency(FortNightly)
       .withEmployeeStartedAfter1Feb2019()
@@ -228,6 +233,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withRtiSubmission(EmployeeRTISubmission.Yes)
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-03-19")
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughEndDate("2020, 11, 25")
       .withPaymentFrequency(FortNightly)
       .withEmployeeStartedAfter1Feb2019()
@@ -264,6 +270,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withRtiSubmission(EmployeeRTISubmission.No)
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-03-19")
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughEndDate("2020, 11, 25")
       .withPaymentFrequency(FortNightly)
       .withEmployeeStartedAfter1Feb2019()
@@ -341,6 +348,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       ))
       .withEmployeeStartDate("2020-08-01")
       .withEmployeeStartedAfter1Feb2019()
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughInLastTaxYear(false)
       -> 1625.00,
     emptyUserAnswers
@@ -367,6 +375,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
         PartTimeHours("2020, 11, 30".toLocalDate, Hours(14.0))
       ))
       .withEmployeeStartDate("2020-04-01")
+      .withOnPayrollBefore30thOct2020(true)
       .withEmployeeStartedAfter1Feb2019()
       .withFurloughInLastTaxYear(false)
       -> 746.46,
@@ -393,6 +402,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       .withFurloughEndDate("2020, 11, 30")
       .withPaymentFrequency(Monthly)
       .withEmployeeStartedAfter1Feb2019()
+      .withOnPayrollBefore30thOct2020(true)
       .withClaimPeriodStart("2020, 11, 1")
       .withFurloughInLastTaxYear(false)
       .withPayPeriodsList(PayPeriodsList.Yes)
@@ -437,6 +447,7 @@ object NovemberConfirmationScenarios extends IntegrationSpecBase with CreateRequ
       ))
       .withEmployeeStartDate("2020-10-29")
       .withEmployeeStartedAfter1Feb2019()
+      .withOnPayrollBefore30thOct2020(true)
       .withFurloughInLastTaxYear(false)
       -> 1629.30,
     emptyUserAnswers

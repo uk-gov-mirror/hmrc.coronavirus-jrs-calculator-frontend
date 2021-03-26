@@ -19,6 +19,7 @@ package controllers
 import assets.constants.ConfirmationConstants._
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
 import config.CalculatorVersionConfiguration
+import messages.JRSExtensionConfirmationMessages.VariableExtensionType5
 import models.FurloughStatus.FurloughOngoing
 import models.NicCategory.Payable
 import models.PartTimeQuestion.PartTimeNo
@@ -138,7 +139,27 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
 
     "return OK and the JRSExtension view with calculations, for a GET for dates 1st to 31st March 2021" in new CalculatorVersionConfiguration {
 
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(march2021Journey()))
+      def userAnswers(): UserAnswers =
+        emptyUserAnswers
+          .withClaimPeriodStart("2020, 11, 1")
+          .withClaimPeriodEnd("2020, 11, 30")
+          .withFurloughStartDate("2020, 11, 15")
+          .withFurloughStatus(FurloughOngoing)
+          .withPaymentFrequency(Monthly)
+          .withNiCategory()
+          .withPensionStatus()
+          .withPayMethod(Variable)
+          .withFurloughInLastTaxYear(false)
+          .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+          .withEmployeeStartDate("2020, 1, 31")
+          .withPreviousFurloughedPeriodsAnswer(true)
+          .withFirstFurloughDate("2020, 11, 10")
+          .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
+          .withAnnualPayAmount(10000.00)
+          .withPartTimeQuestion(PartTimeNo)
+          .withOnPayrollBefore30thOct2020()
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers()))
 
       val employeeIncomeForPeriod: Amount   = Amount(10000.00)
       val maxMonthFurloughGrant: BigDecimal = 2500.00
@@ -184,7 +205,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       )(dataRequest, messages, appConf).toString
 
       status(result) mustEqual OK
-      expected mustEqual actual
+      actual must include(VariableExtensionType5.heading)
 
     }
   }

@@ -21,6 +21,7 @@ import models._
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import services.{AuditBreakdown, AuditCalculationResult, AuditPeriodBreakdown}
+import utils.EmployeeTypeUtil
 
 sealed trait ConfirmationDataResult
 
@@ -165,7 +166,8 @@ case class PhaseTwoConfirmationViewBreakdown(furlough: PhaseTwoFurloughCalculati
   }
 }
 
-case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurloughCalculationResult) extends ViewBreakdown {
+case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurloughCalculationResult)
+    extends ViewBreakdown with EmployeeTypeUtil {
 
   val auditFurlough = AuditCalculationResult(
     furlough.total,
@@ -196,7 +198,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
             )
           case avg: AveragePaymentWithPhaseTwoPeriod if isNewStarterType5 =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.no.nic.p1.extension")
+              messages("phaseTwoDetailedBreakdown.no.nic.p1.extension", helper.boundaryStart(), helper.boundaryEnd())
             )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
@@ -212,6 +214,21 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
       }
       .getOrElse(Seq())
   }
+
+  def statLeaveOnlyMessageKeys()(implicit messages: Messages, dataRequest: DataRequest[_], appConfig: FrontendAppConfig): Option[String] =
+    if (hasStatutoryLeaveData()) {
+
+      lazy val helper = new BeenOnStatutoryLeaveHelper()
+      lazy val start  = helper.boundaryStart()
+      lazy val end    = helper.boundaryEnd()
+
+      variablePayResolver(
+        type3EmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave.method2", start, end)),
+        type4EmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end)),
+        type5aEmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end)),
+        type5bEmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end))
+      )
+    } else None
 
   def detailedBreakdownMessageKeysSept()(implicit messages: Messages,
                                          dataRequest: DataRequest[_],
