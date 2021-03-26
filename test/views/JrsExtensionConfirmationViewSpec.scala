@@ -255,12 +255,12 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
     VariableEmployeeTypeFiveSelectors.breakdownParagraphThree  -> VariableExtensionType5.breakDownParagraphThree,
     VariableEmployeeTypeFiveSelectors.h3(1)                    -> VariableExtensionType5.h3PayPeriod(novClaimPeriod),
     VariableEmployeeTypeFiveSelectors.h4(1)                    -> VariableExtensionType5.h4CalculatePay,
-    VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphOne -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1(
-      isType5 = true),
-    VariableEmployeeTypeFiveSelectors.calculatePayList(1) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod
-      .numbered1(10000, hasStatLeave = false),
-    VariableEmployeeTypeFiveSelectors.calculatePayList(2) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod
-      .numbered2(218, hasStatLeave = false),
+    VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphOne ->
+      PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1(isType5 = true),
+    VariableEmployeeTypeFiveSelectors.calculatePayList(1) ->
+      PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(10000, hasStatLeave = false),
+    VariableEmployeeTypeFiveSelectors.calculatePayList(2) ->
+      PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(218, hasStatLeave = false),
     VariableEmployeeTypeFiveSelectors.calculatePayList(3)        -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered3(16),
     VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphTwo -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p2(733.92),
     VariableEmployeeTypeFiveSelectors.h4(2)                      -> VariableExtensionType5.h4FurloughGrant,
