@@ -16,6 +16,7 @@
 
 package views.confirmation
 
+import assets.messages.BeenOnStatutoryLeaveMessages
 import base.SpecBase
 import cats.scalatest.ValidatedValues
 import handlers.ConfirmationControllerRequestHandler
@@ -28,6 +29,7 @@ import models.requests.DataRequest
 import models.{EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
+import utils.LocalDateHelpers.apr6th2020
 import utils.ValueFormatter
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, ConfirmationViewBreakdownWithoutNicAndPension}
 import views.behaviours.ViewBehaviours
@@ -70,7 +72,7 @@ class ConfirmationType5EmployeeViewSpec
       .withAnnualPayAmount(10000.00)
       .withPartTimeQuestion(PartTimeNo)
 
-  def nov2020Type5bJourney(): UserAnswers =
+  def may2021Type5bJourney(): UserAnswers =
     emptyUserAnswers
       .withClaimPeriodStart("2021, 5, 10")
       .withClaimPeriodEnd("2021, 5, 25")
@@ -85,7 +87,7 @@ class ConfirmationType5EmployeeViewSpec
       .withEmployeeStartDate("2021, 1, 1")
       .withOnPayrollBefore30thOct2020(false)
       .withPreviousFurloughedPeriodsAnswer(true)
-      .withFirstFurloughDate("2021, 5, 1")
+      .withFirstFurloughDate("2021, 5, 2")
       .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
       .withAnnualPayAmount(10000.00)
       .withPartTimeQuestion(PartTimeNo)
@@ -107,8 +109,7 @@ class ConfirmationType5EmployeeViewSpec
 
       implicit val doc: Document = asDocument(applyView())
 
-      //old
-      doc.toString.contains(breakDownParagraphOne) mustBe true
+      doc.toString.contains(breakdownP1(dateToString(apr6th2020), dateToString(LocalDate.parse("2020-11-09")))) mustBe true
     }
   }
 
@@ -116,7 +117,7 @@ class ConfirmationType5EmployeeViewSpec
 
     "display the correct text for the breakdown explanation paragraph" in {
 
-      val userAnswers: UserAnswers = nov2020Type5bJourney()
+      val userAnswers: UserAnswers = may2021Type5bJourney()
 
       implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
 
@@ -129,8 +130,7 @@ class ConfirmationType5EmployeeViewSpec
 
       implicit val doc: Document = asDocument(applyView())
 
-      //old
-      doc.toString.contains(breakDownParagraphOne) mustBe true
+      doc.toString.contains(breakdownP1(BeenOnStatutoryLeaveMessages.dayEmploymentStarted, dateToString(LocalDate.parse("2021-05-01")))) mustBe true
     }
   }
 }

@@ -16,8 +16,9 @@
 
 package views
 
-import java.time.LocalDate
+import assets.messages.BeenOnStatutoryLeaveMessages
 
+import java.time.LocalDate
 import cats.scalatest.ValidatedValues
 import handlers.ConfirmationControllerRequestHandler
 import messages.JRSExtensionConfirmationMessages.RegularType1
@@ -32,13 +33,14 @@ import models.requests.DataRequest
 import models.{EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
-import utils.ValueFormatter
+import utils.LocalDateHelpers.apr6th2020
+import utils.{LocalDateHelpers, ValueFormatter}
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, ConfirmationViewBreakdownWithoutNicAndPension}
 import views.behaviours.ViewBehaviours
 import views.html.JrsExtensionConfirmationView
 
 class JrsExtensionConfirmationViewSpec
-    extends ViewBehaviours with ConfirmationControllerRequestHandler with ValidatedValues with ValueFormatter {
+    extends ViewBehaviours with ConfirmationControllerRequestHandler with ValidatedValues with ValueFormatter with LocalDateHelpers {
 
   val messageKeyPrefix                   = "confirmation"
   val view: JrsExtensionConfirmationView = injector.instanceOf[JrsExtensionConfirmationView]
@@ -81,6 +83,10 @@ class JrsExtensionConfirmationViewSpec
       .withNiCategory()
       .withPensionStatus()
       .withPayMethod()
+      .withFurloughInLastTaxYear(false)
+      .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+      .withEmployeeStartDate("2020, 3, 20")
+      .withOnPayrollBefore30thOct2020()
       .withPayDate(List("2020, 11, 30", "2020, 12, 31"))
       .withLastPayDate("2020, 11, 30")
       .withPartTimeQuestion(PartTimeNo)
@@ -135,7 +141,7 @@ class JrsExtensionConfirmationViewSpec
     RegularEmployeeTypeOneSelectors.feedbackLink                  -> RegularType1.feedbackLink
   )
 
-  implicit val request: DataRequest[_] = fakeDataRequest()
+  implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
 
   def applyView(): HtmlFormat.Appendable =
     view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2", isNewStarterType5 = false)
@@ -221,6 +227,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
       .withFurloughInLastTaxYear(false)
       .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
       .withEmployeeStartDate("2020, 3, 20")
+      .withOnPayrollBefore30thOct2020()
       .withPreviousFurloughedPeriodsAnswer(true)
       .withFirstFurloughDate("2020, 11, 10")
       .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
@@ -242,16 +249,17 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
     VariableEmployeeTypeFiveSelectors.h1 -> VariableExtensionType5.heading,
     VariableEmployeeTypeFiveSelectors.dateAndCalculatorVersion -> VariableExtensionType5.dateAndCalculatorVersion(
       dateToString(LocalDate.now())),
-    VariableEmployeeTypeFiveSelectors.indent                     -> VariableExtensionType5.indent,
-    VariableEmployeeTypeFiveSelectors.disclaimer                 -> VariableExtensionType5.disclaimerTopPage,
-    VariableEmployeeTypeFiveSelectors.h2(1)                      -> VariableExtensionType5.h2NextSteps,
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(1)   -> nextStepsListMessage(1),
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(2)   -> nextStepsListMessage(2),
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(3)   -> nextStepsListMessage(3),
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(4)   -> nextStepsListMessage(4),
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(5)   -> nextStepsListMessage(5),
-    VariableEmployeeTypeFiveSelectors.h2(2)                      -> VariableExtensionType5.h2BreakdownOfCalculations,
-    VariableEmployeeTypeFiveSelectors.breakdownParagraphOne      -> VariableExtensionType5.breakDownParagraphOne,
+    VariableEmployeeTypeFiveSelectors.indent                   -> VariableExtensionType5.indent,
+    VariableEmployeeTypeFiveSelectors.disclaimer               -> VariableExtensionType5.disclaimerTopPage,
+    VariableEmployeeTypeFiveSelectors.h2(1)                    -> VariableExtensionType5.h2NextSteps,
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(1) -> nextStepsListMessage(1),
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(2) -> nextStepsListMessage(2),
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(3) -> nextStepsListMessage(3),
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(4) -> nextStepsListMessage(4),
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(5) -> nextStepsListMessage(5),
+    VariableEmployeeTypeFiveSelectors.h2(2)                    -> VariableExtensionType5.h2BreakdownOfCalculations,
+    VariableEmployeeTypeFiveSelectors.breakdownParagraphOne -> VariableExtensionType5
+      .breakdownP1(dateToString(apr6th2020), dateToString(LocalDate.parse("2020-11-09"))),
     VariableEmployeeTypeFiveSelectors.breakdownParagraphTwo      -> VariableExtensionType5.breakDownParagraphTwo,
     VariableEmployeeTypeFiveSelectors.breakdownParagraphThree    -> VariableExtensionType5.breakDownParagraphThree,
     VariableEmployeeTypeFiveSelectors.h3(1)                      -> VariableExtensionType5.h3PayPeriod(novClaimPeriod),
@@ -275,7 +283,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
     loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
   }
 
-  implicit val request: DataRequest[_] = fakeDataRequest()
+  implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
 
   def applyView(): HtmlFormat.Appendable =
     view(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = true)
