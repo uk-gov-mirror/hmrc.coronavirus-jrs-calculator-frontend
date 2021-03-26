@@ -18,6 +18,8 @@
 @import org.apache.commons.lang3.StringUtils._
 @import viewmodels.ConfirmationViewBreakdownWithoutNicAndPension
 @import pages.info.ConfirmationPage
+@import models.requests.DataRequest
+@import config.FrontendAppConfig
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -37,7 +39,7 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String, isNewStarterType5:Boolean = false)(implicit request: Request[_], messages: Messages)
+@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String, isNewStarterType5:Boolean = false)(implicit request: DataRequest[_], messages: Messages, appConfig: FrontendAppConfig)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
@@ -82,9 +84,9 @@
 
 
 
-@for(messageKey <- cvb.detailedBreakdownMessageKeys(isNewStarterType5)) {
-    @p(Html(messages(messageKey)))
-}
+    @for(text <- cvb.detailedBreakdownMessageKeys(isNewStarterType5)) {
+        @p(Html(text))
+    }
 
 <p class="govuk-body">
     @messages("phaseTwoDetailedBreakdown.no.nic.pension.p2")

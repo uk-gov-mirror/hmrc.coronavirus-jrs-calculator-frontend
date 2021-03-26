@@ -16,29 +16,21 @@
 
 package controllers
 
-import java.time.LocalDate
-
-import cats.data.{NonEmptyChain, Validated}
 import cats.data.Validated.{Invalid, Valid}
 import config.{CalculatorVersionConfiguration, FrontendAppConfig}
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
-import javax.inject.Inject
-import models.EmployeeRTISubmission._
-import models.{AnswerValidation, EmployeeRTISubmission, Period, UserAnswers}
-import models.UserAnswers.AnswerV
-import models.requests.DataRequest
+import models.UserAnswers
 import navigation.Navigator
-import pages.{EmployeeRTISubmissionPage, EmployeeStartDatePage, PreviousFurloughPeriodsPage}
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, EmployeeTypeService}
-import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
 import utils.PagerDutyHelper
 import utils.PagerDutyHelper.PagerDutyKeys._
-import viewmodels.{ConfirmationDataResult, ConfirmationDataResultWithoutNicAndPension, ConfirmationViewBreakdownWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult, ViewBreakdown}
+import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
 import views.html._
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ConfirmationController @Inject()(
