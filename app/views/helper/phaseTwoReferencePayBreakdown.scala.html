@@ -63,14 +63,14 @@
     }
       @if(isNewStarterType5) {
             <ol class="govuk-list govuk-list--number">
-                <li>@messages("phaseTwoReferencePayBreakdown.average.extension.days.l1", average.annualPay.value.formatted("%.2f"))</li>
-                <li>@messages("phaseTwoReferencePayBreakdown.average.extension.days.l2", average.priorFurloughPeriod.countDays)</li>
+                <li>@messages("phaseTwoReferencePayBreakdown.average.extension.days.l1", average.payMinusStatLeavePay.formatted("%.2f"))</li>
+                <li>@messages("phaseTwoReferencePayBreakdown.average.extension.days.l2", average.priorPeriodFurloughMinusStatLeaveDays)</li>
                 <li>@messages("phaseTwoReferencePayBreakdown.average.extension.days.l3", average.furloughDays)</li>
             </ol>
         } else {
             <ol class="govuk-list govuk-list--number">
-                <li>@messages("phaseTwoReferencePayBreakdown.average.days.l1", average.annualPay.value.formatted("%.2f"))</li>
-                <li>@messages("phaseTwoReferencePayBreakdown.average.days.l2", average.priorFurloughPeriod.countDays)</li>
+                <li>@messages("phaseTwoReferencePayBreakdown.average.days.l1", average.payMinusStatLeavePay.formatted("%.2f"))</li>
+                <li>@messages("phaseTwoReferencePayBreakdown.average.days.l2", average.priorPeriodFurloughMinusStatLeaveDays)</li>
                 <li>@messages("phaseTwoReferencePayBreakdown.average.days.l3", average.furloughDays)</li>
             </ol>
         }

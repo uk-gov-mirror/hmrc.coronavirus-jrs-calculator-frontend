@@ -17,9 +17,8 @@
 package services
 
 import java.time.LocalDate
-
 import base.{CoreTestDataBuilder, SpecBase}
-import models.{Amount, AveragePaymentWithPhaseTwoPeriod, Hours, NonFurloughPay, Period, PeriodWithPaymentDate, PhaseTwoPeriod}
+import models.{Amount, AveragePaymentWithPhaseTwoPeriod, Hours, NonFurloughPay, Period, PeriodWithPaymentDate, PhaseTwoPeriod, StatutoryLeaveData}
 
 class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
 
@@ -78,7 +77,7 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), None, None)
     )
     val expected = Seq(
-      AveragePaymentWithPhaseTwoPeriod(Amount(603.47), Amount(20000.0), priorFurloughPeriod, periods.head)
+      AveragePaymentWithPhaseTwoPeriod(Amount(603.47), Amount(20000.0), priorFurloughPeriod, periods.head, None)
     )
 
     phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods, None) mustBe expected
@@ -91,7 +90,7 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(40.0)), Some(Hours(40.0)))
     )
     val expected = Seq(
-      AveragePaymentWithPhaseTwoPeriod(Amount(0.00), Amount(20000.0), priorFurloughPeriod, periods.head)
+      AveragePaymentWithPhaseTwoPeriod(Amount(0.00), Amount(20000.0), priorFurloughPeriod, periods.head, None)
     )
 
     phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods, None) mustBe expected
@@ -104,7 +103,7 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"), None, None)
     )
     val expected = Seq(
-      AveragePaymentWithPhaseTwoPeriod(Amount(431.05), Amount(20000.0), priorFurloughPeriod, periods.head)
+      AveragePaymentWithPhaseTwoPeriod(Amount(431.05), Amount(20000.0), priorFurloughPeriod, periods.head, None)
     )
 
     phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods, None) mustBe expected
@@ -117,7 +116,7 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
       PhaseTwoPeriod(fullPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,7"), Some(Hours(24.0)), Some(Hours(40.0)))
     )
     val expected = Seq(
-      AveragePaymentWithPhaseTwoPeriod(Amount(241.39), Amount(20000.0), priorFurloughPeriod, periods.head)
+      AveragePaymentWithPhaseTwoPeriod(Amount(241.39), Amount(20000.0), priorFurloughPeriod, periods.head, None)
     )
 
     phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods, None) mustBe expected
@@ -132,9 +131,44 @@ class AveragePayCalculatorSpec extends SpecBase with CoreTestDataBuilder {
                      Some(Hours(40.0)))
     )
     val expected = Seq(
-      AveragePaymentWithPhaseTwoPeriod(Amount(323.29), Amount(20000.0), priorFurloughPeriod, periods.head)
+      AveragePaymentWithPhaseTwoPeriod(Amount(323.29), Amount(20000.0), priorFurloughPeriod, periods.head, None)
     )
 
-    phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods, None) mustBe expected
+    val result = phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods, None)
+
+    result mustBe expected
+    result.foreach { period =>
+      period.payMinusStatLeavePay mustBe 20000
+      period.priorPeriodFurloughMinusStatLeaveDays mustBe priorFurloughPeriod.countDays
+    }
+  }
+
+  "Phase Two: assign user entered salary if partial period and part time (with Statutory Leave Data increasing grant)" in new AveragePayCalculator {
+    val annualPay           = Amount(20000.0)
+    val priorFurloughPeriod = period("2019,8,1", "2020,3,19")
+    val statutoryLeaveData  = StatutoryLeaveData(5, 200)
+
+    val periods = Seq(
+      PhaseTwoPeriod(partialPeriodWithPaymentDate("2020,7,1", "2020,7,7", "2020,7,1", "2020,7,5", "2020,7,7"),
+                     Some(Hours(10.0)),
+                     Some(Hours(40.0)))
+    )
+    val expected = Seq(
+      AveragePaymentWithPhaseTwoPeriod(
+        Amount(327.08),
+        Amount(20000.0),
+        priorFurloughPeriod,
+        periods.head,
+        Some(statutoryLeaveData)
+      )
+    )
+
+    val result = phaseTwoAveragePay(annualPay, priorFurloughPeriod, periods, Some(statutoryLeaveData))
+
+    result mustBe expected
+    result.foreach { period =>
+      period.payMinusStatLeavePay mustBe 20000 - 200
+      period.priorPeriodFurloughMinusStatLeaveDays mustBe priorFurloughPeriod.countDays - 5
+    }
   }
 }
