@@ -760,7 +760,7 @@ phaseTwoDetailedBreakdown.october.p1.average = You told us your employee gets pa
 # Variable Pay, Employee Type 5 - Eligible for CJRS Extension claims only - Messages for Post-1st of November 2020
 # ----------------------------------------------------------
 
-phaseTwoDetailedBreakdown.no.nic.p1.extension = You told us your employee gets paid a variable amount each time and was not on your payroll before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2020 (or the date their employment started, whichever is later) and the day before they were first furloughed on or after 1 November 2020. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
+phaseTwoDetailedBreakdown.no.nic.p1.extension = You told us your employee gets paid a variable amount each time and was not on your payroll before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between {0} and {1}. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
 
 # Shared Breakdown Section Messages
 # ----------------------------------------------------------

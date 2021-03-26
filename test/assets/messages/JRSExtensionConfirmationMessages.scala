@@ -160,6 +160,12 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     val h2NextSteps               = "Next steps"
     val h2BreakdownOfCalculations = "Breakdown of calculations"
 
+    def breakdownP1(boundaryStart: String, boundaryEnd: String) =
+      "You told us your employee gets paid a variable amount each time and was not on your payroll " +
+        "before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar" +
+        s" days between $boundaryStart and $boundaryEnd. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period." +
+        " The furlough grant is 80% of this."
+
     def statLeaveOnly(date1: Option[String], date2: String) =
       s"You told us this employee was on statutory leave between ${date1.getOrElse("the day their employment started")} and $date2. Because of this, we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation."
 
