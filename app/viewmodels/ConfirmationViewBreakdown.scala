@@ -20,9 +20,9 @@ import config.FrontendAppConfig
 import models._
 import models.requests.DataRequest
 import play.api.i18n.Messages
-
 import java.time.LocalDate
 import services.{AuditBreakdown, AuditCalculationResult, AuditPeriodBreakdown}
+import utils.EmployeeTypeUtil
 
 sealed trait ConfirmationDataResult
 
@@ -164,7 +164,8 @@ case class PhaseTwoConfirmationViewBreakdown(furlough: PhaseTwoFurloughCalculati
   }
 }
 
-case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurloughCalculationResult) extends ViewBreakdown {
+case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurloughCalculationResult)
+    extends ViewBreakdown with EmployeeTypeUtil {
 
   val auditFurlough = AuditCalculationResult(
     furlough.total,
@@ -210,6 +211,20 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
         }
       }
       .getOrElse(Seq())
+  }
+
+  def statLeaveOnlyMessageKeys()(implicit messages: Messages, dataRequest: DataRequest[_], appConfig: FrontendAppConfig): Option[String] = {
+
+    val helper = new BeenOnStatutoryLeaveHelper()
+    val start  = helper.boundaryStart()
+    val end    = helper.boundaryEnd()
+
+    variablePayResolver(
+      type3EmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave.method2", start, end)),
+      type4EmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end)),
+      type5aEmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end)),
+      type5bEmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end))
+    )
   }
 
   def detailedBreakdownMessageKeysSept()(implicit messages: Messages,

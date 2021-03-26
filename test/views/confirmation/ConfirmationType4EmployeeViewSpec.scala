@@ -19,7 +19,7 @@ package views.confirmation
 import base.SpecBase
 import cats.scalatest.ValidatedValues
 import handlers.ConfirmationControllerRequestHandler
-import messages.JRSExtensionConfirmationMessages.Type4.averageP1
+import messages.JRSExtensionConfirmationMessages.Type4._
 import models.FurloughStatus.FurloughOngoing
 import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
@@ -28,6 +28,7 @@ import models.requests.DataRequest
 import models.{EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
+import utils.LocalDateHelpers._
 import utils.ValueFormatter
 import viewmodels.ConfirmationDataResultWithoutNicAndPension
 import views.behaviours.ViewBehaviours
@@ -68,7 +69,7 @@ class ConfirmationType4EmployeeViewSpec
 
     val userAnswers: UserAnswers = nov2020Type4Journey()
 
-    implicit val request: DataRequest[_] = fakeDataRequest()
+    implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
 
     val noNicAndPensionBreakdown = {
       loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
@@ -80,5 +81,6 @@ class ConfirmationType4EmployeeViewSpec
     implicit val doc: Document = asDocument(applyView())
 
     doc.toString.contains(averageP1) mustBe true
+//    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-05")))) mustBe true
   }
 }

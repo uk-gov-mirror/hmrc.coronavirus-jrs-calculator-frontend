@@ -90,6 +90,10 @@
         @p(Html(text))
     }
 
+    @cvb.statLeaveOnlyMessageKeys().map { text =>
+        @p(Html(text))
+    }
+
     @p{
         @messages("phaseTwoDetailedBreakdown.no.nic.pension.p2")
         @link(messages("phaseTwoDetailedBreakdown.p2.a.href"), messages("phaseTwoDetailedBreakdown.p2.a"), attrTarget = true)
