@@ -29,6 +29,7 @@ import models.requests.DataRequest
 import models.{EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
+import utils.LocalDateHelpers._
 import utils.ValueFormatter
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, ConfirmationViewBreakdownWithoutNicAndPension}
 import views.behaviours.ViewBehaviours
@@ -81,6 +82,7 @@ class ConfirmationType4EmployeeViewSpec
     implicit val doc: Document = asDocument(applyView())
 
     doc.toString.contains(averageP1) mustBe true
+//    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-05")))) mustBe true
   }
 
   "display the correct text for the breakdown explanation paragraph" in {

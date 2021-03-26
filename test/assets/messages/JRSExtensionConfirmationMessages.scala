@@ -112,6 +112,9 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     def method2BreadownSummary(boundaryEnd: String) =
       s"Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and $boundaryEnd. Then we’ve multiplied that by the number of furlough days in each pay period."
 
+    def statLeaveOnly(date1: String, date2: String) =
+      s"You told us this employee was on statutory leave between $date1 and $date2. Because of this, for Method 2 we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation."
+
   }
 
   object Type4 {
@@ -125,6 +128,8 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     val averageP1 =
       "Take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier)."
 
+    def statLeaveOnly(date: String) =
+      s"You told us this employee was on statutory leave between the day their employment started and $date. Because of this, we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation."
   }
 
   object VariableExtensionType5 {
@@ -154,6 +159,9 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
     val h2NextSteps               = "Next steps"
     val h2BreakdownOfCalculations = "Breakdown of calculations"
+
+    def statLeaveOnly(date1: String, date2: String) =
+      s"You told us this employee was on statutory leave between $date1 and $date2. Because of this, we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation."
 
     val breakDownParagraphOne: String = "You told us your employee gets paid a variable amount each time and was not on your payroll " +
       "before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar" +

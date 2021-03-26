@@ -28,7 +28,7 @@ import models.requests.DataRequest
 import models.{EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
-import utils.LocalDateHelpers.{apr5th2020, apr6th2019}
+import utils.LocalDateHelpers._
 import utils.{LocalDateHelpers, ValueFormatter}
 import viewmodels.ConfirmationDataResultWithoutNicAndPension
 import views.behaviours.ViewBehaviours
@@ -82,5 +82,6 @@ class ConfirmationType3EmployeeViewSpec
     implicit val doc: Document = asDocument(applyView())
 
     doc.toString.contains(method2BreadownSummary(dateToString(LocalDate.parse("2020-04-01")))) mustBe true
+    doc.toString.contains(statLeaveOnly(dateToString(apr6th2019), dateToString(LocalDate.parse("2020-04-01")))) mustBe true
   }
 }
