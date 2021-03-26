@@ -34,6 +34,7 @@ import views.behaviours.ViewBehaviours
 import views.html.JrsExtensionConfirmationView
 
 import java.time.LocalDate
+import utils.LocalDateHelpers._
 
 class ConfirmationType5EmployeeViewSpec
     extends SpecBase with ConfirmationControllerRequestHandler with ValidatedValues with ValueFormatter with ViewBehaviours {
@@ -109,6 +110,27 @@ class ConfirmationType5EmployeeViewSpec
 
       //old
       doc.toString.contains(breakDownParagraphOne) mustBe true
+      doc.toString.contains(statLeaveOnly(Some(dateToString(apr6th2020)), dateToString(LocalDate.parse("2020-11-09")))) mustBe false
+    }
+
+    "show the stat leave only section" in {
+
+      val userAnswers: UserAnswers = nov2020Type5aJourney()
+        .withStatutoryLeaveDays(1)
+        .withStatutoryLeaveAmount(100)
+
+      implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
+
+      val noNicAndPensionBreakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
+      }
+
+      def applyView(): HtmlFormat.Appendable =
+        extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = true)
+
+      implicit val doc: Document = asDocument(applyView())
+
+      doc.toString.contains(statLeaveOnly(Some(dateToString(apr6th2020)), dateToString(LocalDate.parse("2020-11-09")))) mustBe true
     }
   }
 
@@ -131,6 +153,26 @@ class ConfirmationType5EmployeeViewSpec
 
       //old
       doc.toString.contains(breakDownParagraphOne) mustBe true
+      doc.toString.contains(statLeaveOnly(None, dateToString(LocalDate.parse("2021-04-30")))) mustBe false
+    }
+
+    "display stat leave only section" in {
+
+      val userAnswers: UserAnswers = nov2020Type5bJourney()
+        .withStatutoryLeaveDays(1)
+        .withStatutoryLeaveAmount(100)
+
+      implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
+
+      val noNicAndPensionBreakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
+      }
+
+      def applyView(): HtmlFormat.Appendable =
+        extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = mayClaimPeriod, version = "2", isNewStarterType5 = true)
+
+      implicit val doc: Document = asDocument(applyView())
+      doc.toString.contains(statLeaveOnly(None, dateToString(LocalDate.parse("2021-04-30")))) mustBe true
     }
   }
 }

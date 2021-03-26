@@ -82,7 +82,7 @@ class ConfirmationType4EmployeeViewSpec
     implicit val doc: Document = asDocument(applyView())
 
     doc.toString.contains(averageP1) mustBe true
-    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-01")))) mustBe true
+    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-01")))) mustBe false
   }
 
   "display the correct text for the breakdown explanation paragraph" in {
@@ -102,7 +102,26 @@ class ConfirmationType4EmployeeViewSpec
 
     doc.toString.contains(calculationBreakdownSummary(BeenOnStatutoryLeaveMessages.dayEmploymentStarted,
                                                       dateToString(LocalDate.parse("2020-04-01")))) mustBe true
-    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-01")))) mustBe true
+    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-01")))) mustBe false
+  }
 
+  "show the Stat Leave only section" in {
+
+    val userAnswers: UserAnswers = nov2020Type4Journey()
+      .withStatutoryLeaveDays(1)
+      .withStatutoryLeaveAmount(100)
+
+    implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
+
+    val noNicAndPensionBreakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+      loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
+    }
+
+    def applyView(): HtmlFormat.Appendable =
+      extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = false)
+
+    implicit val doc: Document = asDocument(applyView())
+
+    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-01")))) mustBe true
   }
 }

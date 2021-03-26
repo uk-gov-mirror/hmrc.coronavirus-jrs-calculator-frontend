@@ -221,12 +221,14 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
     val start  = helper.boundaryStart()
     val end    = helper.boundaryEnd()
 
-    variablePayResolver(
-      type3EmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave.method2", start, end)),
-      type4EmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end)),
-      type5aEmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end)),
-      type5bEmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end))
-    )
+    if (hasStatutoryLeaveData()) {
+      variablePayResolver(
+        type3EmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave.method2", start, end)),
+        type4EmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end)),
+        type5aEmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end)),
+        type5bEmployeeResult = Some(messages("phaseTwoDetailedBreakdown.statLeave", start, end))
+      )
+    } else None
   }
 
   def detailedBreakdownMessageKeysSept()(implicit messages: Messages,
