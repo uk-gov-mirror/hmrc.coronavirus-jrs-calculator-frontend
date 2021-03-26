@@ -18,6 +18,8 @@
 @import org.apache.commons.lang3.StringUtils._
 @import viewmodels.ConfirmationViewBreakdownWithoutNicAndPension
 @import pages.info.ConfirmationPage
+@import models.requests.DataRequest
+@import config.FrontendAppConfig
 
 @this(
 govukLayout: templates.GovukLayoutWrapper,
@@ -35,7 +37,7 @@ link: components.link,
 appConfig: config.FrontendAppConfig
 )
 
-@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: Request[_], messages: Messages)
+@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: DataRequest[_], messages: Messages, appConfig: FrontendAppConfig)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.october.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
@@ -91,8 +93,8 @@ appConfig: config.FrontendAppConfig
 
 
 
-@for(messageKey <- cvb.detailedBreakdownMessageKeysOct) {
-    @p(Html(messages(messageKey)))
+@for(text <- cvb.detailedBreakdownMessageKeysOct) {
+    @p(Html(text))
 }
 
 <p class="govuk-body">

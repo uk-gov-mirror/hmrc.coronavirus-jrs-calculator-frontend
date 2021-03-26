@@ -744,7 +744,6 @@ phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1 = You told us your em
 
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2 = Method 1: we’ve used the calendar lookback method to take the amounts the employee was paid in equivalent pay periods. We then applied this to the number of furlough days in each pay period.
 
-OLDphaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days in each pay period.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and {0}. Then we’ve multiplied that by the number of furlough days in each pay period.
 
 # Variable Pay, Employee Type 4 - Worked Less Than Full Year Pre Covid (Averages the pay) - Messages for Pre-Sept, Sept, & Oct

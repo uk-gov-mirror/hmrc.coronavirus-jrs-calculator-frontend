@@ -28,7 +28,7 @@ import models.requests.DataRequest
 import models.{EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
-import utils.LocalDateHelpers.apr6th2019
+import utils.LocalDateHelpers.{apr5th2020, apr6th2019}
 import utils.{LocalDateHelpers, ValueFormatter}
 import viewmodels.ConfirmationDataResultWithoutNicAndPension
 import views.behaviours.ViewBehaviours
@@ -60,7 +60,7 @@ class ConfirmationType3EmployeeViewSpec
       .withFurloughInLastTaxYear(false)
       .withVariableLengthEmployed(EmployeeStarted.OnOrBefore1Feb2019)
       .withPreviousFurloughedPeriodsAnswer(true)
-      .withFirstFurloughDate("2020, 11, 10")
+      .withFirstFurloughDate("2020, 4, 2")
       .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
       //go through flow to find what the actual values are
 
@@ -87,6 +87,6 @@ class ConfirmationType3EmployeeViewSpec
 
     implicit val doc: Document = asDocument(applyView())
 
-    doc.toString.contains(method2BreadownSummary(dateToString(apr6th2019))) mustBe true
+    doc.toString.contains(method2BreadownSummary(dateToString(LocalDate.parse("2020-04-01")))) mustBe true
   }
 }
