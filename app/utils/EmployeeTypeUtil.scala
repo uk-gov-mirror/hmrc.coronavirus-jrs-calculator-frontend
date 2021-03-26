@@ -32,9 +32,9 @@ import utils.PagerDutyHelper.PagerDutyKeys.EMPLOYEE_TYPE_COULD_NOT_BE_RESOLVED
 trait EmployeeTypeUtil extends FeatureSwitching with DataExtractor {
 
   def regularPayResolver[T](
-    type1EmployeeResult: Option[T] = None,
-    type2aEmployeeResult: Option[T] = None,
-    type2bEmployeeResult: Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): Option[T] =
+    type1EmployeeResult: => Option[T] = None,
+    type2aEmployeeResult: => Option[T] = None,
+    type2bEmployeeResult: => Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): Option[T] =
     (request.userAnswers.getV(RegularLengthEmployedPage), request.userAnswers.getV(ClaimPeriodStartPage)) match {
       case (Valid(RegularLengthEmployed.Yes), _) =>
         logger.debug("[EmployeeTypeUtil][regularPayResolver] Type 1 Employee")
@@ -69,10 +69,10 @@ trait EmployeeTypeUtil extends FeatureSwitching with DataExtractor {
     }
 
   def variablePayResolver[T](
-    type3EmployeeResult: Option[T] = None,
-    type4EmployeeResult: Option[T] = None,
-    type5aEmployeeResult: Option[T] = None,
-    type5bEmployeeResult: Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): Option[T] =
+    type3EmployeeResult: => Option[T] = None,
+    type4EmployeeResult: => Option[T] = None,
+    type5aEmployeeResult: => Option[T] = None,
+    type5bEmployeeResult: => Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): Option[T] =
     request.userAnswers.getV(EmployeeStartedPage) match {
       case Valid(EmployeeStarted.OnOrBefore1Feb2019) =>
         logger.debug("[EmployeeTypeUtil][variablePayResolver] Type 3 Employee")
@@ -107,16 +107,17 @@ trait EmployeeTypeUtil extends FeatureSwitching with DataExtractor {
     }
 
   //noinspection ScalaStyle
-  def employeeTypeResolver[T](defaultResult: T,
-                              regularPayEmployeeResult: Option[T] = None,
-                              variablePayEmployeeResult: Option[T] = None,
-                              type1EmployeeResult: Option[T] = None,
-                              type2aEmployeeResult: Option[T] = None,
-                              type2bEmployeeResult: Option[T] = None,
-                              type3EmployeeResult: Option[T] = None,
-                              type4EmployeeResult: Option[T] = None,
-                              type5aEmployeeResult: Option[T] = None,
-                              type5bEmployeeResult: Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): T = {
+  def employeeTypeResolver[T](
+    defaultResult: => T,
+    regularPayEmployeeResult: => Option[T] = None,
+    variablePayEmployeeResult: => Option[T] = None,
+    type1EmployeeResult: => Option[T] = None,
+    type2aEmployeeResult: => Option[T] = None,
+    type2bEmployeeResult: => Option[T] = None,
+    type3EmployeeResult: => Option[T] = None,
+    type4EmployeeResult: => Option[T] = None,
+    type5aEmployeeResult: => Option[T] = None,
+    type5bEmployeeResult: => Option[T] = None)(implicit request: DataRequest[_], appConfig: FrontendAppConfig): T = {
     val defaultRegularResult: T  = regularPayEmployeeResult.getOrElse(defaultResult)
     val defaultVariableResult: T = variablePayEmployeeResult.getOrElse(defaultResult)
     request.userAnswers.getV(PayMethodPage) match {
