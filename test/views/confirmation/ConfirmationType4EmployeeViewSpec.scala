@@ -82,7 +82,7 @@ class ConfirmationType4EmployeeViewSpec
     implicit val doc: Document = asDocument(applyView())
 
     doc.toString.contains(averageP1) mustBe true
-//    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-05")))) mustBe true
+    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-01")))) mustBe true
   }
 
   "display the correct text for the breakdown explanation paragraph" in {
@@ -102,5 +102,7 @@ class ConfirmationType4EmployeeViewSpec
 
     doc.toString.contains(calculationBreakdownSummary(BeenOnStatutoryLeaveMessages.dayEmploymentStarted,
                                                       dateToString(LocalDate.parse("2020-04-01")))) mustBe true
+    doc.toString.contains(statLeaveOnly(dateToString(LocalDate.parse("2020-04-01")))) mustBe true
+
   }
 }

@@ -198,7 +198,7 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
             )
           case avg: AveragePaymentWithPhaseTwoPeriod if isNewStarterType5 =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.no.nic.p1.extension")
+              messages("phaseTwoDetailedBreakdown.no.nic.p1.extension", helper.boundaryStart(), helper.boundaryEnd())
             )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
