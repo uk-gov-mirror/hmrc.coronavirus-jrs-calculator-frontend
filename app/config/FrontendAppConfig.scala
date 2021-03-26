@@ -81,10 +81,11 @@ trait SchemeConfiguration extends CamelCaseConf {
 
   lazy val schemeConf: SchemeConf = ConfigSource.default.at("scheme").loadOrThrow[SchemeConf]
 
-  lazy val schemeStartDate    = LocalDate.parse(schemeConf.startDate)
-  lazy val schemeEndDate      = LocalDate.parse(schemeConf.endDate)
-  lazy val phaseTwoStartDate  = LocalDate.parse(schemeConf.phaseTwoStartDate)
-  lazy val extensionStartDate = LocalDate.parse(schemeConf.extensionStartDate)
+  lazy val schemeStartDate           = LocalDate.parse(schemeConf.startDate)
+  lazy val schemeEndDate             = LocalDate.parse(schemeConf.endDate)
+  lazy val phaseTwoStartDate         = LocalDate.parse(schemeConf.phaseTwoStartDate)
+  lazy val extensionStartDate        = LocalDate.parse(schemeConf.extensionStartDate)
+  lazy val may2021extensionStartDate = LocalDate.parse(schemeConf.may2021extensionStartDate)
 }
 
 trait MongoConfiguration extends CamelCaseConf {
@@ -95,6 +96,10 @@ trait CalculatorVersionConfiguration extends CamelCaseConf {
   lazy val calculatorVersionConf: String = ConfigSource.default.at("calculator.version").loadOrThrow[String]
 }
 
-final case class SchemeConf(startDate: String, endDate: String, phaseTwoStartDate: String, extensionStartDate: String)
+final case class SchemeConf(startDate: String,
+                            endDate: String,
+                            phaseTwoStartDate: String,
+                            extensionStartDate: String,
+                            may2021extensionStartDate: String)
 
 final case class MongoConf(uri: String, timeToLiveInSeconds: Int)

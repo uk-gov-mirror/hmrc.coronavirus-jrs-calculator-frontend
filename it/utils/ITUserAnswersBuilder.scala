@@ -66,6 +66,9 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
     def withFurloughInLastTaxYear(answer: Boolean): UserAnswers =
       userAnswers.setValue(FurloughInLastTaxYearPage, answer)
 
+    def withStatutoryLeavePay(amount: Amount): UserAnswers =
+      userAnswers.setValue(StatutoryLeavePayPage, amount)
+
     def withVariableLengthEmployed(answer: EmployeeStarted): UserAnswers =
       userAnswers.setValue(EmployeeStartedPage, answer)
 
@@ -128,6 +131,12 @@ trait ITUserAnswersBuilder extends ITCoreTestDataBuilder {
 
     def withPartTimeQuestion(question: PartTimeQuestion): UserAnswers =
       userAnswers.setValue(PartTimeQuestionPage, question)
+
+    def withStatutoryLeaveData(days: Int, amount: BigDecimal): UserAnswers =
+      userAnswers
+        .setValue(HasEmployeeBeenOnStatutoryLeavePage, true)
+        .setValue(NumberOfStatLeaveDaysPage, days)
+        .setValue(StatutoryLeavePayPage, Amount(amount))
 
     def withAdditionalPaymentAmount(payment: AdditionalPayment, idx: Option[Int]): UserAnswers =
       userAnswers.setValue(AdditionalPaymentAmountPage, payment, idx)

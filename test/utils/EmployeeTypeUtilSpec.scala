@@ -21,8 +21,8 @@ import config.FrontendAppConfig
 import config.featureSwitch.ExtensionTwoNewStarterFlow
 import models.PayMethod.{Regular, Variable}
 import models.requests.DataRequest
-import models.{EmployeeRTISubmission, EmployeeStarted, RegularLengthEmployed, UserAnswers}
-import pages.{ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, OnPayrollBefore30thOct2020Page, PayMethodPage, RegularLengthEmployedPage}
+import models.{Amount, EmployeeRTISubmission, EmployeeStarted, RegularLengthEmployed, UserAnswers}
+import pages.{ClaimPeriodStartPage, EmployeeRTISubmissionPage, EmployeeStartDatePage, EmployeeStartedPage, NumberOfStatLeaveDaysPage, OnPayrollBefore30thOct2020Page, PayMethodPage, RegularLengthEmployedPage, StatutoryLeavePayPage}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.LogCapturing
 import utils.LocalDateHelpers.{feb1st2020, july1st2020, nov1st2020}
@@ -456,6 +456,45 @@ class EmployeeTypeUtilSpec extends SpecBase with EmployeeTypeUtil with LogCaptur
           }
         }
       }
+    }
+  }
+
+  "hasStatutoryLeaveData" must {
+
+    "return true when there is statutoryLeaveData" in {
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(StatutoryLeavePayPage, Amount(500))
+        .success
+        .value
+        .set(NumberOfStatLeaveDaysPage, 4)
+        .success
+        .value
+
+      implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+      hasStatutoryLeaveData() mustBe true
+    }
+
+    "return false when there is NO statutoryLeaveData" in {
+
+      val userAnswers = UserAnswers(userAnswersId)
+
+      implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+      hasStatutoryLeaveData() mustBe false
+    }
+
+    "return false when statutoryLeaveData is incomplete" in {
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(StatutoryLeavePayPage, Amount(500))
+        .success
+        .value
+
+      implicit val request: DataRequest[_] = DataRequest(fakeDataRequest, userAnswers.id, userAnswers)
+
+      hasStatutoryLeaveData() mustBe false
     }
   }
 }

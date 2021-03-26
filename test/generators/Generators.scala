@@ -18,6 +18,7 @@ package generators
 
 import java.time.{Instant, LocalDate, ZoneOffset}
 
+import models.Amount
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalacheck.{Arbitrary, Gen, Shrink}
@@ -79,7 +80,25 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
 
     Gen.frequency(
       (10, genWholeBigDecimal),
-      (10, genSmallBigDecimal),
+      (10, genSmallBigDecimal)
+    )
+  }
+
+  implicit val arbAmount: Arbitrary[Amount] = Arbitrary {
+    val long: Gen[Long] =
+      Gen.choose(1, Long.MaxValue)
+
+    val genWholeAmount: Gen[Amount] =
+      long.map(Amount(_))
+
+    val genSmallAmount: Gen[Amount] =
+      for {
+        d <- long
+      } yield Amount(d)
+
+    Gen.frequency(
+      (10, genWholeAmount),
+      (10, genSmallAmount),
     )
   }
 
@@ -88,6 +107,20 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
   def positiveDoublesWithMax(maxValue: Double): Gen[Double] = Gen.choose[Double](1.0, maxValue)
 
   def positiveBigDecimals: Gen[BigDecimal] = arbitrary[BigDecimal] suchThat (_ >= 0)
+
+  def positiveBigDecimalsWithMaxAnd2DP(maxValue: BigDecimal): Gen[BigDecimal] =
+    for {
+      value <- arbitrary[BigDecimal] suchThat (bd => bd > 0 && bd < maxValue)
+    } yield {
+      value.setScale(2, RoundingMode.HALF_UP)
+    }
+
+  def positiveBigDecimalsWithMaxAndMoreThan2DP(maxValue: BigDecimal): Gen[BigDecimal] =
+    for {
+      value <- arbitrary[BigDecimal] suchThat (bd => bd > 0 && bd < maxValue)
+    } yield {
+      value.setScale(3, RoundingMode.HALF_UP)
+    }
 
   def positiveBigDecimalsWith2dp: Gen[BigDecimal] =
     for {

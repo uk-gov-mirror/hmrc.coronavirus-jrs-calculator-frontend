@@ -1,6 +1,7 @@
 package utils
 
 import models.UserAnswers
+import navigation.Navigator
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.{TryValues, _}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite

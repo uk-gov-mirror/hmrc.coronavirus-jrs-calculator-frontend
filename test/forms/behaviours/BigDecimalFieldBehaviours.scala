@@ -44,4 +44,28 @@ trait BigDecimalFieldBehaviours extends FieldBehaviours {
       }
     }
   }
+
+  def bigDecimalFieldWithMax(form: Form[_], fieldName: String, error: FormError, max: BigDecimal): Unit = {
+
+    "bind all big decimal values with decimal places <= 2" in {
+      forAll(positiveBigDecimalsWithMaxAnd2DP(max) -> "bigDecimals") { bigDecimal =>
+        val result = form.bind(Map(fieldName -> bigDecimal.toString)).apply(fieldName)
+        result.errors shouldEqual Seq.empty
+      }
+    }
+
+    "not bind all big decimal values with decimal places > 2" in {
+      forAll(positiveBigDecimalsWithMaxAndMoreThan2DP(max) -> "bigDecimals") { bigDecimal: BigDecimal =>
+        val result = form.bind(Map(fieldName -> bigDecimal.toString)).apply(fieldName)
+        result.errors shouldEqual Seq(FormError("value", "amount.error.max.2.decimals"))
+      }
+    }
+
+    "not bind non-numeric numbers" in {
+      forAll(nonNumerics -> "nonNumeric") { nonNumeric =>
+        val result = form.bind(Map(fieldName -> nonNumeric)).apply(fieldName)
+        result.errors shouldEqual Seq(error)
+      }
+    }
+  }
 }

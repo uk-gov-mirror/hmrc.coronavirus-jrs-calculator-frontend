@@ -52,14 +52,20 @@ case object PhaseTwoRegularPay          extends PhaseTwoJourney
 case object PhaseTwoVariablePay         extends PhaseTwoJourney
 case object PhaseTwoVariablePayWithCylb extends PhaseTwoJourney
 
-case class PhaseTwoReferencePayData(furloughPeriod: FurloughWithinClaim, periods: Seq[PhaseTwoPeriod], frequency: PaymentFrequency)
+case class StatutoryLeaveData(days: Int, pay: BigDecimal)
+
+case class PhaseTwoReferencePayData(furloughPeriod: FurloughWithinClaim,
+                                    periods: Seq[PhaseTwoPeriod],
+                                    frequency: PaymentFrequency,
+                                    statutoryLeave: Option[StatutoryLeaveData] = None)
 
 sealed trait PhaseTwoReferencePay {
   val referencePayData: PhaseTwoReferencePayData
 
-  def furloughPeriod: FurloughWithinClaim = referencePayData.furloughPeriod
-  def periods: Seq[PhaseTwoPeriod]        = referencePayData.periods
-  def frequency: PaymentFrequency         = referencePayData.frequency
+  def furloughPeriod: FurloughWithinClaim        = referencePayData.furloughPeriod
+  def periods: Seq[PhaseTwoPeriod]               = referencePayData.periods
+  def frequency: PaymentFrequency                = referencePayData.frequency
+  def statutoryLeave: Option[StatutoryLeaveData] = referencePayData.statutoryLeave
 }
 
 case class PhaseTwoRegularPayData(referencePayData: PhaseTwoReferencePayData, wage: Amount) extends PhaseTwoReferencePay

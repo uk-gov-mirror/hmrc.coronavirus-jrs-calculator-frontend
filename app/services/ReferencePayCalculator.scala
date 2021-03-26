@@ -31,10 +31,11 @@ trait ReferencePayCalculator extends RegularPayCalculator with AveragePayCalcula
   }
 
   def phaseTwoReferencePay(data: PhaseTwoReferencePay): Seq[PaymentWithPhaseTwoPeriod] = data match {
-    case rpd: PhaseTwoRegularPayData  => phaseTwoRegularPay(rpd.wage, rpd.referencePayData.periods)
-    case vpd: PhaseTwoVariablePayData => phaseTwoAveragePay(vpd.annualPay, vpd.priorFurlough, vpd.referencePayData.periods)
+    case rpd: PhaseTwoRegularPayData => phaseTwoRegularPay(rpd.wage, rpd.referencePayData.periods)
+    case vpd: PhaseTwoVariablePayData =>
+      phaseTwoAveragePay(vpd.annualPay, vpd.priorFurlough, vpd.referencePayData.periods, vpd.referencePayData.statutoryLeave)
     case lbd: PhaseTwoVariablePayWithCylbData => {
-      val avg = phaseTwoAveragePay(lbd.annualPay, lbd.priorFurlough, lbd.referencePayData.periods)
+      val avg = phaseTwoAveragePay(lbd.annualPay, lbd.priorFurlough, lbd.referencePayData.periods, lbd.referencePayData.statutoryLeave)
 
       phaseTwoWithCylb(avg, lbd)
     }

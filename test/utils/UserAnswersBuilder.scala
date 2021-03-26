@@ -164,6 +164,9 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
         }
       rec(userAnswers, zipped)
     }
+
+    def withStatutoryLeaveDays(days: Int): UserAnswers            = userAnswers.setValue(NumberOfStatLeaveDaysPage, days)
+    def withStatutoryLeaveAmount(amount: BigDecimal): UserAnswers = userAnswers.setValue(StatutoryLeavePayPage, Amount(amount))
   }
 
   private implicit class UserAnswersHelper(val userAnswers: UserAnswers) {

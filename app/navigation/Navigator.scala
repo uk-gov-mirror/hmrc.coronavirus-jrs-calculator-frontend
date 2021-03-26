@@ -16,15 +16,11 @@
 
 package navigation
 
-import java.time.LocalDate
-
 import cats.data.Validated.{Invalid, Valid}
-import config.featureSwitch.ExtensionTwoNewStarterFlow
-import config.featureSwitch.FeatureSwitching.isEnabled
+import config.featureSwitch._
 import config.{FrontendAppConfig, SchemeConfiguration}
 import controllers.routes
 import handlers.LastYearPayControllerRequestHandler
-import javax.inject.{Inject, Singleton}
 import models.EmployeeRTISubmission.{No, Yes}
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.PartTimeQuestion.{PartTimeNo, PartTimeYes}
@@ -39,9 +35,13 @@ import services.PartialPayExtractor
 import utils.LocalDateHelpers
 import utils.LocalDateHelpers._
 
+import java.time.LocalDate
+import javax.inject.{Inject, Singleton}
+
 @Singleton
 class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
-    extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor with SchemeConfiguration {
+    extends LastYearPayControllerRequestHandler with LocalDateHelpers with PartialPayExtractor with SchemeConfiguration
+    with FeatureSwitching {
 
   implicit val logger: slf4j.Logger = LoggerFactory.getLogger(getClass)
 
@@ -119,6 +119,12 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
       handlePayDateRoutes
     case OnPayrollBefore30thOct2020Page =>
       onPayrollBefore30thOct2020Routes
+    case StatutoryLeavePayPage =>
+      statutoryLeavePayRoutes
+    case NumberOfStatLeaveDaysPage =>
+      numberOfStatLeaveDaysRoutes
+    case HasEmployeeBeenOnStatutoryLeavePage =>
+      hasBeenOnStatutoryLeaveRoutes
     case _ =>
       _ =>
         routes.RootPageController.onPageLoad()
@@ -468,7 +474,11 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
   private def annualPayAmountRoutes: UserAnswers => Call =
     userAnswers =>
       if (isPhaseTwoOnwards(userAnswers)) {
-        routes.PartTimeQuestionController.onPageLoad()
+        if (isMayExtensionOnwards(userAnswers) && isEnabled(StatutoryLeaveFlow)) {
+          routes.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad()
+        } else {
+          routes.PartTimeQuestionController.onPageLoad()
+        }
       } else {
         phaseOneAnnualPayAmountRoute(userAnswers)
     }
@@ -536,6 +546,39 @@ class Navigator @Inject()(implicit frontendAppConfig: FrontendAppConfig)
     }
   }
 
+  private[navigation] def numberOfStatLeaveDaysRoutes: UserAnswers => Call = { userAnswers =>
+    (userAnswers.getV(NumberOfStatLeaveDaysPage), isEnabled(StatutoryLeaveFlow)) match {
+      //TODO: remove this feature switch check when feature switch is deprecated
+      case (_, false)      => routes.RootPageController.onPageLoad()
+      case (Valid(_), _)   => routes.StatutoryLeavePayController.onPageLoad()
+      case (Invalid(_), _) => routes.NumberOfStatLeaveDaysController.onPageLoad()
+    }
+  }
+
+  private[navigation] def hasBeenOnStatutoryLeaveRoutes: UserAnswers => Call = { userAnswers =>
+    (userAnswers.getV(HasEmployeeBeenOnStatutoryLeavePage), isEnabled(StatutoryLeaveFlow)) match {
+      //TODO: remove this feature switch check when feature switch is deprecated
+      case (_, false)        => routes.RootPageController.onPageLoad()
+      case (Valid(false), _) => routes.PartTimeQuestionController.onPageLoad()
+      case (Valid(true), _)  => routes.NumberOfStatLeaveDaysController.onPageLoad()
+      case (Invalid(_), _)   => routes.HasEmployeeBeenOnStatutoryLeaveController.onPageLoad()
+    }
+  }
+
+  private[navigation] def statutoryLeavePayRoutes: UserAnswers => Call = { userAnswers =>
+    if (isEnabled(StatutoryLeaveFlow)) {
+      userAnswers.getV(StatutoryLeavePayPage) match {
+        case Valid(_)   => routes.PartTimeQuestionController.onPageLoad()
+        case Invalid(_) => routes.StatutoryLeavePayController.onPageLoad()
+      }
+    } else {
+      routes.RootPageController.onPageLoad()
+    }
+  }
+
   private def isPhaseTwoOnwards: UserAnswers => Boolean =
     userAnswer => userAnswer.getV(ClaimPeriodStartPage).exists(!_.isBefore(phaseTwoStartDate))
+
+  private def isMayExtensionOnwards: UserAnswers => Boolean =
+    userAnswer => userAnswer.getV(ClaimPeriodStartPage).exists(!_.isBefore(may2021extensionStartDate))
 }

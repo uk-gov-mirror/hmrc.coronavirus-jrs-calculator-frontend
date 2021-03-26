@@ -18,17 +18,22 @@ package controllers
 
 import controllers.actions._
 import forms.OnPayrollBefore30thOct2020FormProvider
+
 import javax.inject.Inject
 import cats.data.Validated.{Invalid, Valid}
+import models.requests.DataRequest
 import navigation.Navigator
-import pages.OnPayrollBefore30thOct2020Page
+import pages.{EmployeeStartDatePage, OnPayrollBefore30thOct2020Page}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.OnPayrollBefore30thOct2020View
+import play.api.http.{Status => StatusCode}
+import utils.LocalDateHelpers._
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class OnPayrollBefore30thOct2020Controller @Inject()(
@@ -46,27 +51,39 @@ class OnPayrollBefore30thOct2020Controller @Inject()(
 
   val form: Form[Boolean] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm: Form[Boolean] = request.userAnswers.getV(OnPayrollBefore30thOct2020Page) match {
-      case Invalid(_)   => form
-      case Valid(value) => form.fill(value)
-    }
+  val september1st2020 = LocalDate.of(2020, 9, 1)
+  val october30th2020  = LocalDate.of(2020, 10, 30)
 
-    Ok(view(preparedForm, postAction = controllers.routes.OnPayrollBefore30thOct2020Controller.onSubmit()))
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    request.userAnswers.getV(EmployeeStartDatePage) match {
+      case Valid(startDate) if startDate.isAfter(october30th2020) =>
+        saveAndRedirect(answer = false)
+      case Valid(startDate) if startDate.isBefore(september1st2020) =>
+        saveAndRedirect(answer = true)
+      case _ => {
+        renderView(StatusCode.OK)(request.userAnswers.getV(OnPayrollBefore30thOct2020Page) match {
+          case Invalid(_)   => form
+          case Valid(value) => form.fill(value)
+        })
+      }
+    }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors =>
-          Future.successful(
-            BadRequest(view(formWithErrors, postAction = controllers.routes.OnPayrollBefore30thOct2020Controller.onSubmit()))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(OnPayrollBefore30thOct2020Page, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(OnPayrollBefore30thOct2020Page, updatedAnswers))
+        renderView(StatusCode.BAD_REQUEST),
+        saveAndRedirect
       )
   }
+
+  private def renderView(status: Int)(form: Form[Boolean])(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(Status(status)(view(form, postAction = controllers.routes.OnPayrollBefore30thOct2020Controller.onSubmit())))
+
+  private def saveAndRedirect(answer: Boolean)(implicit request: DataRequest[_]): Future[Result] =
+    for {
+      updatedAnswers <- Future.fromTry(request.userAnswers.set(OnPayrollBefore30thOct2020Page, answer))
+      _              <- sessionRepository.set(updatedAnswers)
+    } yield Redirect(navigator.nextPage(OnPayrollBefore30thOct2020Page, updatedAnswers))
 }

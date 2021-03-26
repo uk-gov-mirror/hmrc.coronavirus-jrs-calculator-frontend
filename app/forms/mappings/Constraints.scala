@@ -52,6 +52,17 @@ trait Constraints {
       }
     }
 
+  protected def maximumValueWithArgs[A](maximum: A, errorKey: String, args: Seq[Any])(implicit ev: Ordering[A]): Constraint[A] =
+    Constraint { input =>
+      import ev._
+
+      if (input <= maximum) {
+        Valid
+      } else {
+        Invalid(errorKey, args: _*)
+      }
+    }
+
   protected def inRange[A](minimum: A, maximum: A, errorKey: String)(implicit ev: Ordering[A]): Constraint[A] =
     Constraint { input =>
       import ev._
@@ -106,6 +117,11 @@ trait Constraints {
   protected def greaterThan[A](minimum: A, errorKey: String)(implicit ev: Ordering[A]): Constraint[A] = Constraint { value =>
     import ev._
     if (value > minimum) Valid else Invalid(errorKey)
+  }
+
+  protected def lessThan[A](maximum: A, errorKey: String, args: Any*)(implicit ev: Ordering[A]): Constraint[A] = Constraint { value =>
+    import ev._
+    if (value < maximum) Valid else Invalid(errorKey, args: _*)
   }
 
   protected def maxTwoDecimals(errorKey: Option[String] = None): Constraint[BigDecimal] = Constraint { value =>
