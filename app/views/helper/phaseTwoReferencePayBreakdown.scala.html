@@ -78,15 +78,18 @@
       @p(Html(messages("phaseTwoReferencePayBreakdown.average.daysResult", average.basedOnDays)))
 
     @if(average.phaseTwoPeriod.isPartTime) {
-      @p(Html(messages("phaseTwoReferencePayBreakdown.average.then")))
+        <div id="partTimeHours">
 
-      <ol class="govuk-list govuk-list--number">
-          <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l1", average.basedOnDays)</li>
-          <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l2", average.phaseTwoPeriod.usual.formatted("%.2f"))</li>
-          <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l3", average.phaseTwoPeriod.furloughed.formatted("%.2f"))</li>
-      </ol>
+          @p(Html(messages("phaseTwoReferencePayBreakdown.average.then")))
 
-      @p(Html(messages("phaseTwoReferencePayBreakdown.regular.hoursResult", average.basedOnHours)))
+          <ol class="govuk-list govuk-list--number">
+              <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l1", average.basedOnDays)</li>
+              <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l2", average.phaseTwoPeriod.usual.formatted("%.2f"))</li>
+              <li>@messages("phaseTwoReferencePayBreakdown.average.hours.l3", average.phaseTwoPeriod.furloughed.formatted("%.2f"))</li>
+          </ol>
+
+          @p(Html(messages("phaseTwoReferencePayBreakdown.regular.hoursResult", average.basedOnHours)))
+        </div>
     }
   }
 

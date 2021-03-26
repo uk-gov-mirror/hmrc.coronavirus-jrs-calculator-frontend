@@ -20,14 +20,21 @@ import base.SpecBase
 import models.UserAnswers
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.info.ConfirmationPage
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent, Text}
+import views.html.templates.GovukLayoutWrapper
 
 import scala.reflect.ClassTag
 
 trait ViewSpecBase extends SpecBase with BaseSelectors {
 
   def viewFor[A](data: Option[UserAnswers] = None)(implicit tag: ClassTag[A]): A = app.injector.instanceOf[A]
+
+  val govukWrapper = injector.instanceOf[GovukLayoutWrapper]
+
+  //Create dummy view with helper as main body content (to support CSS Selectors
+  def dummyView(content: Html) = govukWrapper(thisPage = ConfirmationPage)(content)(fakeRequest, messages)
 
   implicit class ContentExtension(x: Content) {
     def text: String = x match {
