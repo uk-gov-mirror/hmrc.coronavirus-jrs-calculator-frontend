@@ -212,49 +212,57 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
       .getOrElse(Seq())
   }
 
-  def detailedBreakdownMessageKeysSept: Seq[String] =
+  def detailedBreakdownMessageKeysSept()(implicit messages: Messages,
+                                         dataRequest: DataRequest[_],
+                                         appConfig: FrontendAppConfig): Seq[String] = {
+    val helper = new BeenOnStatutoryLeaveHelper()
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
           case _: RegularPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.september.p1.regular"
+              messages("phaseTwoDetailedBreakdown.september.p1.regular")
             )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.september.p1.average"
+              messages("phaseTwoDetailedBreakdown.september.p1.average")
             )
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1",
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
+              messages("phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1"),
+              messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2"),
+              messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3", helper.boundaryEnd())
             )
         }
       }
       .getOrElse(Seq())
+  }
 
-  def detailedBreakdownMessageKeysOct: Seq[String] =
+  def detailedBreakdownMessageKeysOct()(implicit messages: Messages,
+                                        dataRequest: DataRequest[_],
+                                        appConfig: FrontendAppConfig): Seq[String] = {
+    val helper = new BeenOnStatutoryLeaveHelper()
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
           case _: RegularPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.october.p1.regular"
+              messages("phaseTwoDetailedBreakdown.october.p1.regular")
             )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.october.p1.average"
+              messages("phaseTwoDetailedBreakdown.october.p1.average")
             )
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
-              "phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1",
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2",
-              "phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3"
+              messages("phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1"),
+              messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2"),
+              messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3", helper.boundaryEnd())
             )
         }
       }
       .getOrElse(Seq())
+  }
 }
 
 sealed trait Metadata
