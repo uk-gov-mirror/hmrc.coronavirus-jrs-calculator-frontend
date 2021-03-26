@@ -47,8 +47,8 @@ trait UserAnswersBuilder extends CoreTestDataBuilder {
     def withFurloughStartDate(startDate: String): UserAnswers =
       userAnswers.setValue(FurloughStartDatePage, startDate.toLocalDate)
 
-    def withFurloughEndDate(startDate: String): UserAnswers =
-      userAnswers.setValue(FurloughEndDatePage, startDate.toLocalDate)
+    def withFurloughEndDate(endDate: String): UserAnswers =
+      userAnswers.setValue(FurloughEndDatePage, endDate.toLocalDate)
 
     def withFurloughInLastTaxYear(answer: Boolean): UserAnswers =
       userAnswers.setValue(FurloughInLastTaxYearPage, answer)

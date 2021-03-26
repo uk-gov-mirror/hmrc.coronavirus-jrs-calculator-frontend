@@ -154,7 +154,7 @@ trait FastJourneyUserAnswersHandler extends DataExtractor with UserAnswersHelper
 
   private val keepFurloughPeriod: Kleisli[Option, UserAnswersState, UserAnswersState] = Kleisli(answersState =>
     for {
-      furlough  <- extractFurloughWithinClaimV(answersState.original).toOption
+      furlough  <- extractFurloughPeriodDatesV(answersState.original).toOption
       withStart <- answersState.updated.set(FurloughStartDatePage, furlough.start).toOption
       withEnd   <- withStart.set(FurloughEndDatePage, furlough.end).toOption
     } yield UserAnswersState(withEnd, answersState.original))
