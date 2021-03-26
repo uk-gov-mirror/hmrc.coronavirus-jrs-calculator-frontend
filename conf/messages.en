@@ -749,9 +749,10 @@ phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Method 2: we’ve worked ou
 # Variable Pay, Employee Type 4 - Worked Less Than Full Year Pre Covid (Averages the pay) - Messages for Pre-Sept, Sept, & Oct
 # ----------------------------------------------------------
 
-phaseTwoDetailedBreakdown.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough started (or 5 April 2020, whichever is earlier) Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
+phaseTwoDetailedBreakdown.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between {0} and {1}. Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
 phaseTwoDetailedBreakdown.september.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020, whichever is earlier). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 70% of this.
 phaseTwoDetailedBreakdown.october.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020, whichever is earlier). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 60% of this.
+
 
 # Variable Pay, Employee Type 5 - Eligible for CJRS Extension claims only - Messages for Post-1st of November 2020
 # ----------------------------------------------------------

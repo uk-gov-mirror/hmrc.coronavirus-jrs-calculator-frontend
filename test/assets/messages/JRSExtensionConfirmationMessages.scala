@@ -116,6 +116,12 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
   object Type4 {
 
+    val oldCalculationBreakdownSummary =
+      "You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough started (or 5 April 2020, whichever is earlier) Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this."
+
+    def calculationBreakdownSummary(boundaryStart: String, boundaryEnd: String) =
+      s"You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between $boundaryStart and $boundaryEnd. Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this."
+
     val averageP1 =
       "Take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier)."
 

@@ -16,10 +16,11 @@
 
 package views.confirmation
 
+import assets.messages.BeenOnStatutoryLeaveMessages
 import base.SpecBase
 import cats.scalatest.ValidatedValues
 import handlers.ConfirmationControllerRequestHandler
-import messages.JRSExtensionConfirmationMessages.Type4.averageP1
+import messages.JRSExtensionConfirmationMessages.Type4._
 import models.FurloughStatus.FurloughOngoing
 import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
@@ -29,7 +30,7 @@ import models.{EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
 import utils.ValueFormatter
-import viewmodels.ConfirmationDataResultWithoutNicAndPension
+import viewmodels.{ConfirmationDataResultWithoutNicAndPension, ConfirmationViewBreakdownWithoutNicAndPension}
 import views.behaviours.ViewBehaviours
 import views.html.JrsExtensionConfirmationView
 
@@ -59,7 +60,7 @@ class ConfirmationType4EmployeeViewSpec
       .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
       .withEmployeeStartDate("2020, 1, 31")
       .withPreviousFurloughedPeriodsAnswer(true)
-      .withFirstFurloughDate("2020, 11, 10")
+      .withFirstFurloughDate("2020, 04, 02")
       .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
       .withAnnualPayAmount(10000.00)
       .withPartTimeQuestion(PartTimeNo)
@@ -68,7 +69,7 @@ class ConfirmationType4EmployeeViewSpec
 
     val userAnswers: UserAnswers = nov2020Type4Journey()
 
-    implicit val request: DataRequest[_] = fakeDataRequest()
+    implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
 
     val noNicAndPensionBreakdown = {
       loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
@@ -80,5 +81,24 @@ class ConfirmationType4EmployeeViewSpec
     implicit val doc: Document = asDocument(applyView())
 
     doc.toString.contains(averageP1) mustBe true
+  }
+
+  "display the correct text for the breakdown explanation paragraph" in {
+
+    val userAnswers: UserAnswers = nov2020Type4Journey()
+
+    implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
+
+    val noNicAndPensionBreakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+      loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
+    }
+
+    def applyView(): HtmlFormat.Appendable =
+      extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = false)
+
+    implicit val doc: Document = asDocument(applyView())
+
+    doc.toString.contains(calculationBreakdownSummary(BeenOnStatutoryLeaveMessages.dayEmploymentStarted,
+                                                      dateToString(LocalDate.parse("2020-04-01")))) mustBe true
   }
 }

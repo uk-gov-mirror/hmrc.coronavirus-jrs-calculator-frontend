@@ -17,6 +17,8 @@
 @import java.time.LocalDate
 @import viewmodels.PhaseTwoConfirmationViewBreakdown
 @import pages.info.ConfirmationPage
+@import models.requests.DataRequest
+@import config.FrontendAppConfig
 
 @this(
         govukLayout: templates.GovukLayoutWrapper,
@@ -34,7 +36,7 @@
         appConfig: config.FrontendAppConfig
 )
 
-@(cvb: PhaseTwoConfirmationViewBreakdown, claimPeriod: Period, version: String, isNewStarterType5:Boolean = false)(implicit request: Request[_], messages: Messages)
+@(cvb: PhaseTwoConfirmationViewBreakdown, claimPeriod: Period, version: String, isNewStarterType5:Boolean = false)(implicit request: DataRequest[_], messages: Messages, appConfig: FrontendAppConfig)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false, thisPage = ConfirmationPage) {
 

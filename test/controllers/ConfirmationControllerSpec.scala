@@ -67,6 +67,25 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
     navigator = navigator
   )
 
+  def userAnswers(): UserAnswers =
+    emptyUserAnswers
+      .withClaimPeriodStart("2020, 11, 1")
+      .withClaimPeriodEnd("2020, 11, 30")
+      .withFurloughStartDate("2020, 11, 15")
+      .withFurloughStatus(FurloughOngoing)
+      .withPaymentFrequency(Monthly)
+      .withNiCategory()
+      .withPensionStatus()
+      .withPayMethod(Variable)
+      .withFurloughInLastTaxYear(false)
+      .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+      .withEmployeeStartDate("2020, 1, 31")
+      .withPreviousFurloughedPeriodsAnswer(true)
+      .withFirstFurloughDate("2020, 11, 10")
+      .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
+      .withAnnualPayAmount(10000.00)
+      .withPartTimeQuestion(PartTimeNo)
+
   "Confirmation Controller" must {
 
     "return OK and the confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
@@ -84,8 +103,9 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(phaseTwoJourney()))
 
-      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
-      val result: Future[Result]                       = controller.onPageLoad()(request)
+      val request: FakeRequest[AnyContentAsEmpty.type]     = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val result: Future[Result]                           = controller.onPageLoad()(request)
+      val dataRequest: DataRequest[AnyContentAsEmpty.type] = DataRequest(request, userAnswers().id, userAnswers())
       val payment: RegularPaymentWithPhaseTwoPeriod = {
         RegularPaymentWithPhaseTwoPeriod(
           regularPay = Amount(2000.00),
@@ -111,8 +131,9 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual phaseTwoView(breakdown, period("2020, 7, 1", "2020, 7, 31"), calculatorVersionConf)(
-        request,
-        messages).toString
+        dataRequest,
+        messages,
+        appConf).toString
     }
 
     "return OK and the JRSExtension view with calculations, for a GET for dates 1st to 31st March 2021" in new CalculatorVersionConfiguration {
@@ -148,25 +169,6 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
           )
         )
       }
-
-      def userAnswers(): UserAnswers =
-        emptyUserAnswers
-          .withClaimPeriodStart("2020, 11, 1")
-          .withClaimPeriodEnd("2020, 11, 30")
-          .withFurloughStartDate("2020, 11, 15")
-          .withFurloughStatus(FurloughOngoing)
-          .withPaymentFrequency(Monthly)
-          .withNiCategory()
-          .withPensionStatus()
-          .withPayMethod(Variable)
-          .withFurloughInLastTaxYear(false)
-          .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
-          .withEmployeeStartDate("2020, 1, 31")
-          .withPreviousFurloughedPeriodsAnswer(true)
-          .withFirstFurloughDate("2020, 11, 10")
-          .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
-          .withAnnualPayAmount(10000.00)
-          .withPartTimeQuestion(PartTimeNo)
 
       val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
       val dataRequest                                  = DataRequest(request, userAnswers().id, userAnswers())
