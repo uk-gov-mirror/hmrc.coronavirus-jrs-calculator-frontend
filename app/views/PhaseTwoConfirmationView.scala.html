@@ -92,8 +92,8 @@
     @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
 
     @h3(Messages("confirmation.breakdown.summary"))
-    @for(messageKey <- cvb.detailedBreakdownMessageKeys(isNewStarterType5)) {
-    @p(Html(messages(messageKey)))
+    @for(text <- cvb.detailedBreakdownMessageKeys(isNewStarterType5)) {
+        @p(Html(text))
     }
 
     <p class="govuk-body">

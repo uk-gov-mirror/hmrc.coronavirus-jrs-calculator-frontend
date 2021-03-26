@@ -19,10 +19,14 @@ package controllers
 import assets.constants.ConfirmationConstants._
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
 import config.CalculatorVersionConfiguration
+import models.FurloughStatus.FurloughOngoing
 import models.NicCategory.Payable
+import models.PartTimeQuestion.PartTimeNo
+import models.PayMethod.Variable
 import models.PaymentFrequency.Monthly
 import models.PensionStatus.DoesContribute
 import models._
+import models.requests.DataRequest
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import play.api.mvc.{AnyContentAsEmpty, Result}
@@ -145,8 +149,29 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         )
       }
 
+      def userAnswers(): UserAnswers =
+        emptyUserAnswers
+          .withClaimPeriodStart("2020, 11, 1")
+          .withClaimPeriodEnd("2020, 11, 30")
+          .withFurloughStartDate("2020, 11, 15")
+          .withFurloughStatus(FurloughOngoing)
+          .withPaymentFrequency(Monthly)
+          .withNiCategory()
+          .withPensionStatus()
+          .withPayMethod(Variable)
+          .withFurloughInLastTaxYear(false)
+          .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+          .withEmployeeStartDate("2020, 1, 31")
+          .withPreviousFurloughedPeriodsAnswer(true)
+          .withFirstFurloughDate("2020, 11, 10")
+          .withPayDate(List("2020, 10, 31", "2020, 12, 1"))
+          .withAnnualPayAmount(10000.00)
+          .withPartTimeQuestion(PartTimeNo)
+
       val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
-      val result: Future[Result]                       = controller.onPageLoad()(request)
+      val dataRequest                                  = DataRequest(request, userAnswers().id, userAnswers())
+
+      val result: Future[Result] = controller.onPageLoad()(request)
 
       val expected: String = contentAsString(result)
       val actual: String = extensionView(
@@ -154,7 +179,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
         version = calculatorVersionConf,
         isNewStarterType5 = false
-      )(request, messages).toString
+      )(dataRequest, messages, appConf).toString
 
       status(result) mustEqual OK
       expected mustEqual actual
