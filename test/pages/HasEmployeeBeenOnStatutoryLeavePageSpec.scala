@@ -16,7 +16,10 @@
 
 package pages
 
+import models.{Amount, UserAnswers}
 import pages.behaviours.PageBehaviours
+
+import scala.util.Success
 
 class HasEmployeeBeenOnStatutoryLeavePageSpec extends PageBehaviours {
 
@@ -27,5 +30,33 @@ class HasEmployeeBeenOnStatutoryLeavePageSpec extends PageBehaviours {
     beSettable[Boolean](HasEmployeeBeenOnStatutoryLeavePage)
 
     beRemovable[Boolean](HasEmployeeBeenOnStatutoryLeavePage)
+
+    "cleanup the stat leave answers when false" in {
+
+      val userAnswers =
+        UserAnswers("foo")
+          .set(StatutoryLeavePayPage, Amount(1000))
+          .get
+          .set(NumberOfStatLeaveDaysPage, 5)
+          .get
+
+      val result = HasEmployeeBeenOnStatutoryLeavePage.cleanup(Some(false), userAnswers)
+
+      result mustBe Success(UserAnswers("foo"))
+    }
+
+    "NOT cleanup the stat leave answers when true" in {
+
+      val userAnswers =
+        UserAnswers("foo")
+          .set(StatutoryLeavePayPage, Amount(1000))
+          .get
+          .set(NumberOfStatLeaveDaysPage, 5)
+          .get
+
+      val result = HasEmployeeBeenOnStatutoryLeavePage.cleanup(Some(true), userAnswers)
+
+      result mustBe Success(userAnswers)
+    }
   }
 }
