@@ -781,9 +781,9 @@ phaseTwoReferencePayBreakdown.average.days.l1 = Dechreuwch gyda £{0} (cyfanswm 
 phaseTwoReferencePayBreakdown.average.days.l2 = Rhannwch â {0} (o ddiwrnodau y’i cyflogwyd).
 phaseTwoReferencePayBreakdown.average.days.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 
-phaseTwoReferencePayBreakdown.average.extension.days.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog o 6 Ebrill 2020 hyd at y diwrnod cyn i’r ffyrlo ddechrau ar neu ar ôl 1 Tachwedd 2020).
-phaseTwoReferencePayBreakdown.average.extension.days.l2 = Rhannwch â {0} (nifer y diwrnodau y’i cyflogwyd ers dechrau’r flwyddyn dreth).
-phaseTwoReferencePayBreakdown.average.extension.days.l3 = Lluoswch â {0} (nifer y diwrnodau ffyrlo yn ystod y cyfnod cyflog).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l1 = Start with £{0} (total pay minus the amount paid for periods of statutory leave).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l2 = Divide by {0} (days employed minus the number of days on statutory leave).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l3 = Multiply by {0} (furlough days).
 
 phaseTwoReferencePayBreakdown.average.daysResult = Cyfanswm y cyflog yn seiliedig ar ddiwrnodau ffyrlo = £{0}
 phaseTwoReferencePayBreakdown.average.then = Yna:

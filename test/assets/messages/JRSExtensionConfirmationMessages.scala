@@ -172,19 +172,6 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
     val h4CalculatePay = "Calculate the employee’s pay based on their furlough days"
 
-    val h4ParagraphOne =
-      "Averaging method: take the employee’s total pay from 6 April 2020 (or the date the employment started, whichever is later), up to the day before the furlough started on or after 1 November 2020."
-
-    def calculatePayListMessages(messageNumber: Int, pay: BigDecimal, daysInPeriod: Int, numberOfDaysFurloughed: Int)(
-      implicit messages: Messages): String =
-      messageNumber match {
-        case 1 =>
-          s"Start with ${currencyFormatter(pay)} (total pay from 6 April 2020 to the day before furlough started on or after 1 November 2020)."
-        case 2 => s"Divide by $daysInPeriod (days employed since 6 April 2020)."
-        case 3 => s"Multiply by $numberOfDaysFurloughed (furlough days in pay period)."
-        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
-      }
-
     val h4ParagraphTwo: BigDecimal => String = (pay: BigDecimal) => s"Total pay based on furlough days = ${currencyFormatter(pay)}"
 
     val h4FurloughGrant = "Furlough grant"

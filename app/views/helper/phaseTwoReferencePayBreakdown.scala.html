@@ -61,11 +61,11 @@
             ))) }
         }
     }
-      @if(isNewStarterType5) {
+      @if(average.statutoryLeaveData.isDefined) {
             <ol class="govuk-list govuk-list--number">
-                <li>@messages("phaseTwoReferencePayBreakdown.average.extension.days.l1", average.payMinusStatLeavePay.formatted("%.2f"))</li>
-                <li>@messages("phaseTwoReferencePayBreakdown.average.extension.days.l2", average.priorPeriodFurloughMinusStatLeaveDays)</li>
-                <li>@messages("phaseTwoReferencePayBreakdown.average.extension.days.l3", average.furloughDays)</li>
+                <li>@messages("phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l1", average.payMinusStatLeavePay.formatted("%.2f"))</li>
+                <li>@messages("phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l2", average.priorPeriodFurloughMinusStatLeaveDays)</li>
+                <li>@messages("phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l3", average.furloughDays)</li>
             </ol>
         } else {
             <ol class="govuk-list govuk-list--number">

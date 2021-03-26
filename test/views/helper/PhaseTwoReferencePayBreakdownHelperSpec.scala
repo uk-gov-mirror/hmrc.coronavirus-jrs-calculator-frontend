@@ -77,9 +77,9 @@ class PhaseTwoReferencePayBreakdownHelperSpec extends ViewBehaviours {
           pageWithExpectedMessages(
             Seq(
               Selectors.h4(1)       -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.h4,
-              Selectors.p(1)        -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1,
-              Selectors.numbered(1) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(30000),
-              Selectors.numbered(2) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(366),
+              Selectors.p(1)        -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1(isType5 = false),
+              Selectors.numbered(1) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(30000, hasStatLeave = false),
+              Selectors.numbered(2) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(366, hasStatLeave = false),
               Selectors.numbered(3) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered3(31),
               Selectors.p(2)        -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p2(2541.07)
             )
@@ -126,9 +126,9 @@ class PhaseTwoReferencePayBreakdownHelperSpec extends ViewBehaviours {
           pageWithExpectedMessages(
             Seq(
               Selectors.h4(1)       -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.h4,
-              Selectors.p(1)        -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1,
-              Selectors.numbered(1) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(29800),
-              Selectors.numbered(2) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(361),
+              Selectors.p(1)        -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1(isType5 = false),
+              Selectors.numbered(1) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(29800, hasStatLeave = true),
+              Selectors.numbered(2) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(361, hasStatLeave = true),
               Selectors.numbered(3) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered3(31),
               Selectors.p(2)        -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p2(2559.05)
             )
@@ -178,9 +178,9 @@ class PhaseTwoReferencePayBreakdownHelperSpec extends ViewBehaviours {
           pageWithExpectedMessages(
             Seq(
               Selectors.h4(1)                         -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.h4,
-              Selectors.p(1)                          -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1,
-              Selectors.numbered(1)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(30000),
-              Selectors.numbered(2)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(366),
+              Selectors.p(1)                          -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1(isType5 = false),
+              Selectors.numbered(1)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(30000, hasStatLeave = false),
+              Selectors.numbered(2)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(366, hasStatLeave = false),
               Selectors.numbered(3)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered3(31),
               Selectors.p(2)                          -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p2(2541.07),
               Selectors.p("#partTimeHours", 1)        -> PhaseTwoReferencePayBreakdownHelperMessages.PartTimeHours.p1,
@@ -232,9 +232,9 @@ class PhaseTwoReferencePayBreakdownHelperSpec extends ViewBehaviours {
           pageWithExpectedMessages(
             Seq(
               Selectors.h4(1)                         -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.h4,
-              Selectors.p(1)                          -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1,
-              Selectors.numbered(1)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(29800),
-              Selectors.numbered(2)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(361),
+              Selectors.p(1)                          -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1(isType5 = false),
+              Selectors.numbered(1)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered1(29800, hasStatLeave = true),
+              Selectors.numbered(2)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered2(361, hasStatLeave = true),
               Selectors.numbered(3)                   -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered3(31),
               Selectors.p(2)                          -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p2(2559.05),
               Selectors.p("#partTimeHours", 1)        -> PhaseTwoReferencePayBreakdownHelperMessages.PartTimeHours.p1,

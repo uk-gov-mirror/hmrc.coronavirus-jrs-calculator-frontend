@@ -16,8 +16,9 @@
 
 package views
 
-import java.time.LocalDate
+import assets.messages.PhaseTwoReferencePayBreakdownHelperMessages
 
+import java.time.LocalDate
 import cats.scalatest.ValidatedValues
 import handlers.ConfirmationControllerRequestHandler
 import messages.JRSExtensionConfirmationMessages.RegularType1
@@ -231,9 +232,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
 
   val nextStepsListMessage: Int => String =
     (bullet: Int) => VariableExtensionType5.nextStepsListMessages(bullet, novClaimPeriod)
-  val calculatePayListMessage: Int => String = { (bullet: Int) =>
-    VariableExtensionType5.calculatePayListMessages(bullet, 10000, 218, 16)
-  }
+
   val furloughGrantListMessage: Int => String = { (bullet: Int) =>
     VariableExtensionType5.furloughGrantListMessages(bullet, 733.92, 80)
   }
@@ -242,25 +241,28 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
     VariableEmployeeTypeFiveSelectors.h1 -> VariableExtensionType5.heading,
     VariableEmployeeTypeFiveSelectors.dateAndCalculatorVersion -> VariableExtensionType5.dateAndCalculatorVersion(
       dateToString(LocalDate.now())),
-    VariableEmployeeTypeFiveSelectors.indent                     -> VariableExtensionType5.indent,
-    VariableEmployeeTypeFiveSelectors.disclaimer                 -> VariableExtensionType5.disclaimerTopPage,
-    VariableEmployeeTypeFiveSelectors.h2(1)                      -> VariableExtensionType5.h2NextSteps,
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(1)   -> nextStepsListMessage(1),
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(2)   -> nextStepsListMessage(2),
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(3)   -> nextStepsListMessage(3),
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(4)   -> nextStepsListMessage(4),
-    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(5)   -> nextStepsListMessage(5),
-    VariableEmployeeTypeFiveSelectors.h2(2)                      -> VariableExtensionType5.h2BreakdownOfCalculations,
-    VariableEmployeeTypeFiveSelectors.breakdownParagraphOne      -> VariableExtensionType5.breakDownParagraphOne,
-    VariableEmployeeTypeFiveSelectors.breakdownParagraphTwo      -> VariableExtensionType5.breakDownParagraphTwo,
-    VariableEmployeeTypeFiveSelectors.breakdownParagraphThree    -> VariableExtensionType5.breakDownParagraphThree,
-    VariableEmployeeTypeFiveSelectors.h3(1)                      -> VariableExtensionType5.h3PayPeriod(novClaimPeriod),
-    VariableEmployeeTypeFiveSelectors.h4(1)                      -> VariableExtensionType5.h4CalculatePay,
-    VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphOne -> VariableExtensionType5.h4ParagraphOne,
-    VariableEmployeeTypeFiveSelectors.calculatePayList(1)        -> calculatePayListMessage(1),
-    VariableEmployeeTypeFiveSelectors.calculatePayList(2)        -> calculatePayListMessage(2),
-    VariableEmployeeTypeFiveSelectors.calculatePayList(3)        -> calculatePayListMessage(3),
-    VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphTwo -> VariableExtensionType5.h4ParagraphTwo(733.92),
+    VariableEmployeeTypeFiveSelectors.indent                   -> VariableExtensionType5.indent,
+    VariableEmployeeTypeFiveSelectors.disclaimer               -> VariableExtensionType5.disclaimerTopPage,
+    VariableEmployeeTypeFiveSelectors.h2(1)                    -> VariableExtensionType5.h2NextSteps,
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(1) -> nextStepsListMessage(1),
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(2) -> nextStepsListMessage(2),
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(3) -> nextStepsListMessage(3),
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(4) -> nextStepsListMessage(4),
+    VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(5) -> nextStepsListMessage(5),
+    VariableEmployeeTypeFiveSelectors.h2(2)                    -> VariableExtensionType5.h2BreakdownOfCalculations,
+    VariableEmployeeTypeFiveSelectors.breakdownParagraphOne    -> VariableExtensionType5.breakDownParagraphOne,
+    VariableEmployeeTypeFiveSelectors.breakdownParagraphTwo    -> VariableExtensionType5.breakDownParagraphTwo,
+    VariableEmployeeTypeFiveSelectors.breakdownParagraphThree  -> VariableExtensionType5.breakDownParagraphThree,
+    VariableEmployeeTypeFiveSelectors.h3(1)                    -> VariableExtensionType5.h3PayPeriod(novClaimPeriod),
+    VariableEmployeeTypeFiveSelectors.h4(1)                    -> VariableExtensionType5.h4CalculatePay,
+    VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphOne -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p1(
+      isType5 = true),
+    VariableEmployeeTypeFiveSelectors.calculatePayList(1) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod
+      .numbered1(10000, hasStatLeave = false),
+    VariableEmployeeTypeFiveSelectors.calculatePayList(2) -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod
+      .numbered2(218, hasStatLeave = false),
+    VariableEmployeeTypeFiveSelectors.calculatePayList(3)        -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.numbered3(16),
+    VariableEmployeeTypeFiveSelectors.h4CalculatePayParagraphTwo -> PhaseTwoReferencePayBreakdownHelperMessages.AveragingMethod.p2(733.92),
     VariableEmployeeTypeFiveSelectors.h4(2)                      -> VariableExtensionType5.h4FurloughGrant,
     VariableEmployeeTypeFiveSelectors.furloughGrantList(1)       -> furloughGrantListMessage(1),
     VariableEmployeeTypeFiveSelectors.furloughGrantList(2)       -> furloughGrantListMessage(2),
