@@ -16,6 +16,7 @@
 
 package pages
 
+import cats.data.Validated.Valid
 import models.{Amount, UserAnswers}
 import pages.behaviours.PageBehaviours
 
@@ -42,7 +43,8 @@ class HasEmployeeBeenOnStatutoryLeavePageSpec extends PageBehaviours {
 
       val result = HasEmployeeBeenOnStatutoryLeavePage.cleanup(Some(false), userAnswers)
 
-      result mustBe Success(UserAnswers("foo"))
+      result.get.getO(StatutoryLeavePayPage) mustBe None
+      result.get.getO(NumberOfStatLeaveDaysPage) mustBe None
     }
 
     "NOT cleanup the stat leave answers when true" in {
@@ -56,7 +58,8 @@ class HasEmployeeBeenOnStatutoryLeavePageSpec extends PageBehaviours {
 
       val result = HasEmployeeBeenOnStatutoryLeavePage.cleanup(Some(true), userAnswers)
 
-      result mustBe Success(userAnswers)
+      result.get.getO(StatutoryLeavePayPage) mustBe Some(Valid(Amount(1000)))
+      result.get.getO(NumberOfStatLeaveDaysPage) mustBe Some(Valid(5))
     }
   }
 }
