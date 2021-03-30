@@ -20,11 +20,13 @@ import base.SpecBaseControllerSpecs
 import forms.behaviours.DateBehaviours
 import forms.mappings.LocalDateFormatter
 import play.api.data.FormError
+import views.ViewUtils.dateToString
 
 class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
 
   val form           = new ClaimPeriodStartFormProvider()()
   val dateBehaviours = new DateBehaviours
+  val policyEndDate  = appConf.schemeEndDate
 
   import dateBehaviours._
 
@@ -66,7 +68,7 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
       val result = form.bind(data)
 
       result.errors shouldBe List(
-        FormError("startDate", "claimPeriodStart.error.outofrange", Seq("1 March 2020", "31 May 2021")),
+        FormError("startDate", "claimPeriodStart.error.outofrange", Seq("1 March 2020", dateToString(policyEndDate))),
       )
     }
 
@@ -81,7 +83,9 @@ class ClaimPeriodStartFormProviderSpec extends SpecBaseControllerSpecs {
       val result = form.bind(data)
 
       result.errors shouldBe List(
-        FormError(key = "startDate", message = "claimPeriodStart.error.outofrange", args = Seq("1 March 2020", "31 May 2021")),
+        FormError(key = "startDate",
+                  message = "claimPeriodStart.error.outofrange",
+                  args = Seq("1 March 2020", dateToString(policyEndDate))),
       )
     }
   }

@@ -32,8 +32,8 @@ import controllers.scenarios.NovemberConfirmationScenarios._
 import controllers.scenarios.AprilConfirmationScenarios._
 import controllers.scenarios.MayConfirmationScenarios._
 
-class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
-  with BaseITConstants with ITCoreTestData {
+class ConfirmationControllerISpec
+    extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants with ITCoreTestData {
 
   val november: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     novemberFourWeeklyScenarios ++
@@ -103,13 +103,13 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
 
   val may: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     mayFixedFourWeeklyScenarios ++
-    mayFixedMonthlyScenarios ++
-    mayFixedTwoWeeklyScenarios ++
-    mayFixedWeeklyScenarios ++
-    mayVariableFourWeeklyScenarios ++
-    mayVariableMonthlyScenarios ++
-    mayVariableTwoWeeklyScenarios ++
-    mayVariableWeeklyScenarios
+      mayFixedMonthlyScenarios ++
+      mayFixedTwoWeeklyScenarios ++
+      mayFixedWeeklyScenarios ++
+      mayVariableFourWeeklyScenarios ++
+      mayVariableMonthlyScenarios ++
+      mayVariableTwoWeeklyScenarios ++
+      mayVariableWeeklyScenarios
   }
 
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
@@ -122,10 +122,8 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
 
       scenarios.foreach {
         case (scenarioSummary, scenarios) =>
-
           scenarios.zipWithIndex.foreach {
             case ((scenario, outcome), index) =>
-
               s"the user has answered the questions relating to $scenarioSummary for scenario ${index + 1}" in {
                 val userAnswers: UserAnswers = scenario
 
@@ -206,7 +204,6 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
         }
       }
     }
-
 
     "redirect to another page" when {
 
