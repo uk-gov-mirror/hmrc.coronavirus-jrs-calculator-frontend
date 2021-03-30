@@ -110,7 +110,7 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
 
   def positiveBigDecimalsWithMaxAnd2DP(maxValue: BigDecimal): Gen[BigDecimal] =
     for {
-      value <- arbitrary[BigDecimal] suchThat (bd => bd.setScale(0, RoundingMode.FLOOR).compareTo(BigDecimal(0)) >= 0.01 && bd < maxValue)
+      value <- arbitrary[BigDecimal] suchThat (bd => bd.setScale(0, RoundingMode.FLOOR).compareTo(BigDecimal(0)) > 0 && bd < maxValue)
     } yield {
       value.setScale(2, RoundingMode.HALF_UP)
     }
