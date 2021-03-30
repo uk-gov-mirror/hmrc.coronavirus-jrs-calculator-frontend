@@ -17,14 +17,26 @@
 package forms
 
 import forms.behaviours.BooleanFieldBehaviours
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.Injector
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import utils.LocalDateHelpers.nov1st2020
+import views.ViewUtils.dateToString
 
-class PreviousFurloughPeriodsFormProviderSpec extends BooleanFieldBehaviours {
+class PreviousFurloughPeriodsFormProviderSpec extends BooleanFieldBehaviours with GuiceOneAppPerSuite {
 
   val requiredKey = "previousFurloughPeriods.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new PreviousFurloughPeriodsFormProvider()()
+  lazy val injector: Injector                               = app.injector
+  implicit lazy val messagesApi: MessagesApi                = injector.instanceOf[MessagesApi]
+  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("", "")
+  implicit val messages: Messages                           = messagesApi.preferred(fakeRequest)
+
+  val form = new PreviousFurloughPeriodsFormProvider()(nov1st2020)
 
   ".value" must {
 
@@ -33,13 +45,13 @@ class PreviousFurloughPeriodsFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(dateToString(nov1st2020)))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(dateToString(nov1st2020)))
     )
   }
 }

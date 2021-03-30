@@ -17,14 +17,17 @@
 package forms
 
 import javax.inject.Inject
-
 import forms.mappings.Mappings
 import play.api.data.Form
+import play.api.i18n.Messages
+import views.ViewUtils.dateToString
+
+import java.time.LocalDate
 
 class PreviousFurloughPeriodsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(dateToShowOnError: LocalDate)(implicit messages: Messages): Form[Boolean] =
     Form(
-      "value" -> boolean("previousFurloughPeriods.error.required")
+      "value" -> boolean("previousFurloughPeriods.error.required", args = Seq(dateToString(dateToShowOnError)))
     )
 }
