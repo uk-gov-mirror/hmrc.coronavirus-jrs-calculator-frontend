@@ -593,7 +593,7 @@ referencePayBreakdown.regular.employerFunded.l1 = Start with £{0} (from pay per
 referencePayBreakdown.regular.employerFunded.l2 = Minus £{0} (pay based on furlough days).
 referencePayBreakdown.regular.employerFunded.result = Employer-funded pay for the remaining {0} days in pay period = £{1}
 
-referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, whichever is earlier) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 referencePayBreakdown.average.p1.partOfCylb = Method 2: take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) up to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 referencePayBreakdown.average.l1 = Start with £{0} (total pay).
 referencePayBreakdown.average.l2 = Divide by {0} (days employed).
@@ -742,20 +742,25 @@ phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1 = You told us your employee g
 phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 70% of this.
 phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 60% of this.
 
+phaseTwoDetailedBreakdown.statLeave.method2 = You told us this employee was on statutory leave between {0} and {1}. Because of this, for Method 2 we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation.
+phaseTwoDetailedBreakdown.statLeave = You told us this employee was on statutory leave between {0} and {1}. Because of this, we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation.
+
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2 = Method 1: we’ve used the calendar lookback method to take the amounts the employee was paid in equivalent pay periods. We then applied this to the number of furlough days in each pay period.
-phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days in each pay period.
+
+phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and {0}. Then we’ve multiplied that by the number of furlough days in each pay period.
 
 # Variable Pay, Employee Type 4 - Worked Less Than Full Year Pre Covid (Averages the pay) - Messages for Pre-Sept, Sept, & Oct
 # ----------------------------------------------------------
 
-phaseTwoDetailedBreakdown.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough started (or 5 April 2020, whichever is earlier) Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
+phaseTwoDetailedBreakdown.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between {0} and {1}. Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
 phaseTwoDetailedBreakdown.september.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020, whichever is earlier). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 70% of this.
 phaseTwoDetailedBreakdown.october.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020, whichever is earlier). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 60% of this.
+
 
 # Variable Pay, Employee Type 5 - Eligible for CJRS Extension claims only - Messages for Post-1st of November 2020
 # ----------------------------------------------------------
 
-phaseTwoDetailedBreakdown.no.nic.p1.extension = You told us your employee gets paid a variable amount each time and was not on your payroll before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2020 (or the date their employment started, whichever is later) and the day before they were first furloughed on or after 1 November 2020. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
+phaseTwoDetailedBreakdown.no.nic.p1.extension = You told us your employee gets paid a variable amount each time and was not on your payroll before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between {0} and {1}. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
 
 # Shared Breakdown Section Messages
 # ----------------------------------------------------------
@@ -786,15 +791,15 @@ phaseTwoReferencePayBreakdown.regular.hours.l2 = Divide by {0} (usual hours).
 phaseTwoReferencePayBreakdown.regular.hours.l3 = Multiply by {0} (furlough hours).
 phaseTwoReferencePayBreakdown.regular.hoursResult = Total pay based on hours worked in this pay period = £{0}
 
-phaseTwoReferencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, whichever is earlier) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+phaseTwoReferencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 phaseTwoReferencePayBreakdown.average.p1.partOfCylb = Method 2: take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) up to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 phaseTwoReferencePayBreakdown.average.days.l1 = Start with £{0} (total pay).
 phaseTwoReferencePayBreakdown.average.days.l2 = Divide by {0} (days employed).
 phaseTwoReferencePayBreakdown.average.days.l3 = Multiply by {0} (furlough days).
 
-phaseTwoReferencePayBreakdown.average.extension.days.l1 = Start with £{0} (total pay from 6 April 2020 to the day before furlough started on or after 1 November 2020).
-phaseTwoReferencePayBreakdown.average.extension.days.l2 = Divide by {0} (days employed since 6 April 2020).
-phaseTwoReferencePayBreakdown.average.extension.days.l3 = Multiply by {0} (furlough days in pay period).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l1 = Start with £{0} (total pay minus the amount paid for periods of statutory leave).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l2 = Divide by {0} (days employed minus the number of days on statutory leave).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l3 = Multiply by {0} (furlough days).
 
 phaseTwoReferencePayBreakdown.average.daysResult = Total pay based on furlough days = £{0}
 phaseTwoReferencePayBreakdown.average.then = Then:

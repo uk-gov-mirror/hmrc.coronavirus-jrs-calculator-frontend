@@ -600,7 +600,7 @@ referencePayBreakdown.regular.employerFunded.l1 = Dechreuwch gyda £{0} (o’r c
 referencePayBreakdown.regular.employerFunded.l2 = Llai £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo)
 referencePayBreakdown.regular.employerFunded.result = Cyflog a ariennir gan y cyflogwr am y {0} o ddiwrnodau sy’n weddill yn y cyfnod cyflog = £{1}
 
-referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (or 6 April 2019, whichever is earlier) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
 referencePayBreakdown.average.p1.partOfCylb = Dull 2: cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 referencePayBreakdown.average.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog).
 referencePayBreakdown.average.l2 = Rhannwch â {0} (o ddiwrnodau y’i cyflogwyd).
@@ -736,7 +736,7 @@ partTimeNormalHours.link = gyfrifo oriau arferol ac oriau ffyrlo eich cyflogai (
 phaseTwoDetailedBreakdown.p1.regular = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog rheolaidd bob tro. Rydym wedi cyfrifo ei enillion dyddiol ac wedi’u lluosi â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 80% o hyn.
 phaseTwoDetailedBreakdown.september.p1.regular = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog rheolaidd bob tro. Rydym wedi cyfrifo ei enillion dyddiol ac wedi’u lluosi â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 70% o hyn.
 phaseTwoDetailedBreakdown.october.p1.regular = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog rheolaidd bob tro. Rydym wedi cyfrifo ei enillion dyddiol ac wedi’u lluosi â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 60% o hyn.
-phaseTwoDetailedBreakdown.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 80% o hyn.
+phaseTwoDetailedBreakdown.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between {0} and {1}. Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
 phaseTwoDetailedBreakdown.september.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 70% o hyn.
 phaseTwoDetailedBreakdown.october.p1.average = Rhoesoch wybod i ni fod y cyflogai hwn yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am lai na 12 mis. Rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm y cyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn 60% o hyn.
 
@@ -754,7 +754,7 @@ phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1 = Rhoesoch wybod i ni fod eic
 phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 70% o hyn.
 phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 60% o hyn.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2 = Dull 1: rydym wedi ystyried y symiau a dalwyd iddo ar gyfer cyfnodau cyflog cyfatebol yn y flwyddyn dreth flaenorol, ac wedi defnyddio’r rhain wrth ystyried nifer y diwrnodau ffyrlo a’r oriau ffyrlo ym mhob cyfnod cyflog.
-phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Dull 2: rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn ystod y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog.
+phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Dull 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and {0}. Then we’ve multiplied that by the number of furlough days in each pay period.
 phaseTwoDetailedBreakdown.p2 = Mae yna uchafswm y gallwch ei hawlio am grant ffyrlo a chyfraniadau Yswiriant Gwladol y cyflogwr. Os yw hyn yn effeithio ar eich hawliad, rydym wedi addasu’r cyfrifiadau.
 phaseTwoDetailedBreakdown.no.nic.pension.p2 = Mae yna uchafswm y gallwch chi ei hawlio. Os yw hyn yn effeithio ar eich cais, rydym wedi addasu’r cyfrifiadau.
 phaseTwoDetailedBreakdown.p2.a = Cyfrifwch yr uchafswm cyflog y gallwch ei hawlio (yn agor tab newydd).
@@ -775,15 +775,15 @@ phaseTwoReferencePayBreakdown.regular.hours.l2 = Rhannwch â {0} (oriau arferol)
 phaseTwoReferencePayBreakdown.regular.hours.l3 = Lluoswch â {0} (oriau ffyrlo).
 phaseTwoReferencePayBreakdown.regular.hoursResult = Cyfanswm cyflog yn seiliedig ar oriau a weithiwyd yn y cyfnod cyflog hwn = £{0}
 
-phaseTwoReferencePayBreakdown.average.p1 = Cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019, p’un bynnag sydd gynharaf) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
+phaseTwoReferencePayBreakdown.average.p1 = Cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 phaseTwoReferencePayBreakdown.average.p1.partOfCylb = Dull 2: cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 phaseTwoReferencePayBreakdown.average.days.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog).
 phaseTwoReferencePayBreakdown.average.days.l2 = Rhannwch â {0} (o ddiwrnodau y’i cyflogwyd).
 phaseTwoReferencePayBreakdown.average.days.l3 = Lluoswch â {0} (o ddiwrnodau ffyrlo).
 
-phaseTwoReferencePayBreakdown.average.extension.days.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog o 6 Ebrill 2020 hyd at y diwrnod cyn i’r ffyrlo ddechrau ar neu ar ôl 1 Tachwedd 2020).
-phaseTwoReferencePayBreakdown.average.extension.days.l2 = Rhannwch â {0} (nifer y diwrnodau y’i cyflogwyd ers dechrau’r flwyddyn dreth).
-phaseTwoReferencePayBreakdown.average.extension.days.l3 = Lluoswch â {0} (nifer y diwrnodau ffyrlo yn ystod y cyfnod cyflog).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l1 = Start with £{0} (total pay minus the amount paid for periods of statutory leave).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l2 = Divide by {0} (days employed minus the number of days on statutory leave).
+phaseTwoReferencePayBreakdown.average.statutoryLeave.days.l3 = Multiply by {0} (furlough days).
 
 phaseTwoReferencePayBreakdown.average.daysResult = Cyfanswm y cyflog yn seiliedig ar ddiwrnodau ffyrlo = £{0}
 phaseTwoReferencePayBreakdown.average.then = Yna:

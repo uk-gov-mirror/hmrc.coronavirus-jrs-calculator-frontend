@@ -16,11 +16,24 @@
 
 package pages
 
+import models.UserAnswers
 import play.api.libs.json.JsPath
+
+import scala.util.{Success, Try}
 
 case object HasEmployeeBeenOnStatutoryLeavePage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "hasEmployeeBeenOnStatutoryLeave"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      for {
+        updateOne <- userAnswers.remove(NumberOfStatLeaveDaysPage)
+        updateTwo <- updateOne.remove(StatutoryLeavePayPage)
+      } yield updateTwo
+    } else {
+      Success(userAnswers)
+    }
 }

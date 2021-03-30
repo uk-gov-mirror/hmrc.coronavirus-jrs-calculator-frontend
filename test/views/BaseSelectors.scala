@@ -35,6 +35,8 @@ trait BaseSelectors {
   val hint                                                 = "main span.govuk-hint"
   val bullet: Int => String                                = i => s"main ul.govuk-list.govuk-list--bullet li:nth-of-type($i)"
   def bullet(section: String, i: Int)                      = s"main $section ul.govuk-list.govuk-list--bullet li:nth-of-type($i)"
+  val numbered: Int => String                              = i => s"main ol.govuk-list.govuk-list--number li:nth-of-type($i)"
+  def numbered(section: String, i: Int)                    = s"main $section ol.govuk-list.govuk-list--number li:nth-of-type($i)"
   val label                                                = "main label.govuk-label"
   val nthLabel: Int => String                              = i => s"form > div > div:nth-child($i) > label"
   val nthLabelHint: Int => String                          = i => s"form > div > div:nth-child($i) span.govuk-hint"
@@ -52,6 +54,7 @@ trait BaseSelectors {
   val h3: Int => String                                    = i => hN(level = 3, i)
   def h3(section: String, i: Int)                          = hN(level = 3, i, section)
   val h4: Int => String                                    = i => hN(level = 4, i)
+  def h4(section: String, i: Int)                          = hN(level = 4, i, section)
   val h5: Int => String                                    = i => hN(level = 5, i)
   val dropdown                                             = "#main-content summary"
   val dropdownP: Int => String                             = i => s"#main-content details > div > p:nth-child($i)"

@@ -17,9 +17,8 @@
 package models
 
 import java.time.LocalDate
-
 import play.api.libs.json.{Format, Json}
-import services.PeriodHelper
+import services.{AveragePayCalculator, PeriodHelper}
 import services.Calculators._
 
 case class PaymentDate(value: LocalDate)
@@ -158,10 +157,12 @@ sealed trait PaymentWithPhaseTwoPeriod {
 
   def periodDays: Int = phaseTwoPeriod.periodWithPaymentDate.period.period.countDays
 
-  def furloughDays: Int = phaseTwoPeriod.periodWithPaymentDate.period match {
-    case fp: FullPeriod    => fp.period.countDays
-    case pp: PartialPeriod => pp.partial.countDays
+  def furloughPeriod: Period = phaseTwoPeriod.periodWithPaymentDate.period match {
+    case fp: FullPeriod    => fp.period
+    case pp: PartialPeriod => pp.partial
   }
+
+  def furloughDays: Int = furloughPeriod.countDays
 }
 
 case class RegularPaymentWithPhaseTwoPeriod(regularPay: Amount, referencePay: Amount, phaseTwoPeriod: PhaseTwoPeriod)
@@ -173,12 +174,17 @@ case class RegularPaymentWithPhaseTwoPeriod(regularPay: Amount, referencePay: Am
 case class AveragePaymentWithPhaseTwoPeriod(referencePay: Amount,
                                             annualPay: Amount,
                                             priorFurloughPeriod: Period,
-                                            phaseTwoPeriod: PhaseTwoPeriod)
-    extends PaymentWithPhaseTwoPeriod {
-  def basedOnDays: String = {
-    val daily = Amount(annualPay.value / priorFurloughPeriod.countDays).halfUp
-    (daily.value * furloughDays).formatted("%.2f")
-  }
+                                            phaseTwoPeriod: PhaseTwoPeriod,
+                                            statutoryLeaveData: Option[StatutoryLeaveData])
+    extends PaymentWithPhaseTwoPeriod with AveragePayCalculator {
+
+  def payMinusStatLeavePay: BigDecimal = annualPay.value - statutoryLeaveData.map(_.pay).getOrElse(0)
+
+  def priorPeriodFurloughMinusStatLeaveDays: Int = priorFurloughPeriod.countDays - statutoryLeaveData.map(_.days).getOrElse(0)
+
+  def basedOnDays: String =
+    daily(furloughPeriod, priorFurloughPeriod, annualPay, statutoryLeaveData).value.formatted("%.2f")
+
   def basedOnHours: String = referencePay.value.formatted("%.2f")
 }
 

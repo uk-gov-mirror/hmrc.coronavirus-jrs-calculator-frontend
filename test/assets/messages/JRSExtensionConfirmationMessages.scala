@@ -16,8 +16,6 @@
 
 package messages
 
-import java.time.LocalDate
-
 import models.Period
 import play.api.i18n.Messages
 import utils.ValueFormatter
@@ -109,6 +107,31 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     val startAnotherCalculation = "Start another calculation"
   }
 
+  object Type3 {
+
+    def method2BreadownSummary(boundaryEnd: String) =
+      s"Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and $boundaryEnd. Then we’ve multiplied that by the number of furlough days in each pay period."
+
+    def statLeaveOnly(date1: String, date2: String) =
+      s"You told us this employee was on statutory leave between $date1 and $date2. Because of this, for Method 2 we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation."
+
+  }
+
+  object Type4 {
+
+    val oldCalculationBreakdownSummary =
+      "You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough started (or 5 April 2020, whichever is earlier) Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this."
+
+    def calculationBreakdownSummary(boundaryStart: String, boundaryEnd: String) =
+      s"You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between $boundaryStart and $boundaryEnd. Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this."
+
+    val averageP1 =
+      "Take the total pay from the employee’s start date (or 6 April 2019, if they started earlier than this date) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier)."
+
+    def statLeaveOnly(date: String) =
+      s"You told us this employee was on statutory leave between the day their employment started and $date. Because of this, we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation."
+  }
+
   object VariableExtensionType5 {
 
     val heading = "What you can claim for this employee"
@@ -137,6 +160,15 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     val h2NextSteps               = "Next steps"
     val h2BreakdownOfCalculations = "Breakdown of calculations"
 
+    def breakdownP1(boundaryStart: String, boundaryEnd: String) =
+      "You told us your employee gets paid a variable amount each time and was not on your payroll " +
+        "before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar" +
+        s" days between $boundaryStart and $boundaryEnd. Then, we’ve multiplied that by the number of furlough days and furlough hours in each pay period." +
+        " The furlough grant is 80% of this."
+
+    def statLeaveOnly(date1: Option[String], date2: String) =
+      s"You told us this employee was on statutory leave between ${date1.getOrElse("the day their employment started")} and $date2. Because of this, we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation."
+
     val breakDownParagraphOne: String = "You told us your employee gets paid a variable amount each time and was not on your payroll " +
       "before 19 March 2020. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar" +
       " days between 6 April 2020 (or the date their employment started, whichever is later) and the day before they were first" +
@@ -153,19 +185,6 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
       s"For pay period ${dateToStringWithoutYear(claimPeriod.start)} to ${dateToString(claimPeriod.`end`)}"
 
     val h4CalculatePay = "Calculate the employee’s pay based on their furlough days"
-
-    val h4ParagraphOne =
-      "Averaging method: take the employee’s total pay from 6 April 2020 (or the date the employment started, whichever is later), up to the day before the furlough started on or after 1 November 2020."
-
-    def calculatePayListMessages(messageNumber: Int, pay: BigDecimal, daysInPeriod: Int, numberOfDaysFurloughed: Int)(
-      implicit messages: Messages): String =
-      messageNumber match {
-        case 1 =>
-          s"Start with ${currencyFormatter(pay)} (total pay from 6 April 2020 to the day before furlough started on or after 1 November 2020)."
-        case 2 => s"Divide by $daysInPeriod (days employed since 6 April 2020)."
-        case 3 => s"Multiply by $numberOfDaysFurloughed (furlough days in pay period)."
-        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
-      }
 
     val h4ParagraphTwo: BigDecimal => String = (pay: BigDecimal) => s"Total pay based on furlough days = ${currencyFormatter(pay)}"
 
