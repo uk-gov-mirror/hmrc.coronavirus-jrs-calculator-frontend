@@ -52,5 +52,6 @@ class FurloughCapCalculatorSpec extends SpecBase {
     dailyMax(Month.MARCH) mustBe 80.65
     dailyMax(Month.APRIL) mustBe 83.34
     dailyMax(Month.MAY) mustBe 80.65
+    dailyMax(Month.JUNE) mustBe 83.34
   }
 }
