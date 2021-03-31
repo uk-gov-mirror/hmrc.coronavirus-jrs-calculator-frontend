@@ -168,10 +168,10 @@ payFrequency.heading = Pa mor aml yr ydych yn talu’r cyflogai hwn?
 
 # Needs welsh
 # ----------------------------------------------------------
-payFrequency.panelIndent = The employees current pay frequency is different from the pay frequency in the reference period
-payFrequency.p1 = You cannot use the calculator if this employee is on fixed pay and their pay frequency has changed between the reference period and the pay period you are calculating for. For example, if they have changed from monthly pay to weekly pay. You will need to manually work out what you can claim.
-payFrequency.p2 = You can
-payFrequency.link = read about the reference period and how to work out what you can claim manually using the calculation guidance (opens in a new tab).
+payFrequency.panelIndent = Mae amlder cyflog presennol y cyflogai yn wahanol i’r amlder cyflog yn y cyfnod cyfeirio
+payFrequency.p1 = Ni allwch ddefnyddio’r gyfrifiannell os yw’r cyflogai hwn ar gyflog sefydlog a bod ei amlder cyflog wedi newid rhwng y cyfnod cyfeirio a’r cyfnod cyflog rydych yn cyfrifo ar ei gyfer. Er enghraifft, os yw’r cyflogai wedi newid o gyflog misol i gyflog wythnosol. Bydd angen i chi weithio allan yr hyn y gallwch ei hawlio â llaw.
+payFrequency.p2 = Gallwch
+payFrequency.link = ddarllen am y cyfnod cyfeirio a sut i weithio allan yr hyn y gallwch ei hawlio â llaw gan ddefnyddio’r arweiniad cyfrifo (yn agor tab newydd).
 
 payFrequency.weekly = Bob wythnos
 payFrequency.fortnightly = Bob 2 wythnos
@@ -251,10 +251,10 @@ reviewPayDates.heading = Dyddiadau cyflog o fewn y cyfnod hawlio
 reviewPayDates.addMore = A oes angen i chi ychwanegu dyddiad cyflog arall ar gyfer y cyfnod hawlio hwn?
 reviewPayDates.error.required = Dewiswch ‘Iawn’ os reviewPayDates
 
-regularPayAmount.title = What was the employee paid in the last pay period ending on or before {0}?
-regularPayAmount.heading = What was the employee paid in the last pay period ending on or before {0}?
-regularPayAmount.label = What was the employee paid in the last pay period ending on or before {0}?
-regularPayAmount.p1 = This is the gross amount paid in the last pay period ending on or before {0}, before deductions.
+regularPayAmount.title = Faint a dalwyd i’r cyflogai yn ystod y cyfnod cyflog diwethaf a ddaeth i ben ar neu cyn {0}?
+regularPayAmount.heading = Faint a dalwyd i’r cyflogai yn ystod y cyfnod cyflog diwethaf a ddaeth i ben ar neu cyn {0}?
+regularPayAmount.label = Faint a dalwyd i’r cyflogai yn ystod y cyfnod cyflog diwethaf a ddaeth i ben ar neu cyn {0}?
+regularPayAmount.p1 = Dyma’r swm gros a dalwyd, cyn didyniadau, yn ystod y cyfnod cyflog diwethaf a ddaeth i ben ar neu cyn {0}.
 regularPayAmount.p2 = Peidiwch â chynnwys taliadau dewisol, taliadau nad ydynt yn arian parod na buddiannau nad ydynt yn ariannol.
 regularPayAmount.inset = Os dechreuodd y cyflogai hwn ei gyflogaeth gyda chi yn ystod y cyfnod cyflog hwn, nodwch y swm y byddai wedi’i gael pe bai’n gyfnod cyflog llawn.
 regularPayAmount.salary.error.required = Nodwch swm dilys
@@ -341,18 +341,18 @@ confirmation.september.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai 
 confirmation.september.p1 = Grant ffyrlo
 confirmation.september.p2 = (Cyfradd mis Medi: 70% o gyflogau)
 confirmation.september.inset.p1.1 = Mae’n rhaid i chi dalu
-confirmation.september.inset.p1.2 = in addition to the furlough grant of £{0}. This adds up to 80% of their usual wage (£{1}).
+confirmation.september.inset.p1.2 = yn ychwanegol at y grant ffyrlo o £{0}. Mae hyn yn cynrychioli 80% o’i gyflog arferol (£{1}).
 confirmation.september.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
-confirmation.september.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
+confirmation.september.eligibility = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu 80% o gyflog cyflogeion sydd ar ffyrlo am y cyfnod y maent ar ffyrlo (hyd at uchafswm o £2,500 y mis). Y swm y mae’n rhaid i chi ei dalu i’r cyflogai hwn yn ogystal â’r grant yw
 
 confirmation.october.title = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.october.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.october.p1 = Grant ffyrlo
 confirmation.october.p2 = (Cyfradd mis Hydref: 60% o gyflogau)
 confirmation.october.inset.p1.1 = Mae’n rhaid i chi dalu
-confirmation.october.inset.p1.2 = in addition to the furlough grant of £{0}. This adds up to 80% of their usual wage (£{1}).
+confirmation.october.inset.p1.2 = yn ychwanegol at y grant ffyrlo o £{0}. Mae hyn yn cynrychioli 80% o’i gyflog arferol (£{1}).
 confirmation.october.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
-confirmation.october.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
+confirmation.october.eligibility = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu 80% o gyflog cyflogeion sydd ar ffyrlo am y cyfnod y maent ar ffyrlo (hyd at uchafswm o £2,500 y mis). Y swm y mae’n rhaid i chi ei dalu i’r cyflogai hwn yn ogystal â’r grant yw
 
 confirmation.extension.p2 = (Cyfradd yr Estyniad i’r Cynllun Cadw Swyddi yn sgil Coronafeirws: 80% o gyflogau)
 
@@ -600,7 +600,7 @@ referencePayBreakdown.regular.employerFunded.l1 = Dechreuwch gyda £{0} (o’r c
 referencePayBreakdown.regular.employerFunded.l2 = Llai £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo)
 referencePayBreakdown.regular.employerFunded.result = Cyflog a ariennir gan y cyflogwr am y {0} o ddiwrnodau sy’n weddill yn y cyfnod cyflog = £{1}
 
-referencePayBreakdown.average.p1 = Take the total pay from the employee’s start date (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) to the day before the employee’s furlough start date (or 5 April 2020, whichever is earlier).
+referencePayBreakdown.average.p1 = Cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019, p’un bynnag sydd gynharaf) hyd at y diwrnod cyn dyddiad dechrau ffyrlo’r cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 referencePayBreakdown.average.p1.partOfCylb = Dull 2: cymerwch gyfanswm y cyflog o ddyddiad dechrau’r cyflogai (neu 6 Ebrill 2019 os dechreuodd yn gynharach na’r dyddiad hwn) hyd at y diwrnod cyn dyddiad dechrau ffyrlo y cyflogai (neu 5 Ebrill 2020, p’un bynnag sydd gynharaf).
 referencePayBreakdown.average.l1 = Dechreuwch gyda £{0} (cyfanswm y cyflog).
 referencePayBreakdown.average.l2 = Rhannwch â {0} (o ddiwrnodau y’i cyflogwyd).
@@ -632,8 +632,8 @@ furloughBreakdown.total = Cyfanswm y grant ffyrlo ar gyfer y cyfnod cyflog = £{
 furloughBreakdown.furloughCap.p1 = Grant ffyrlo wedi’i gyfrifo = £{0}
 furloughBreakdown.furloughCap.p2 = Mae’r grant ffyrlo amcangyfrifedig yn fwy na’r grant ffyrlo uchaf ar gyfer y cyfnod cyflog hwn. Oherwydd hyn, mae’n rhaid i chi ddefnyddio’r grant ffyrlo uchaf, sef £{0}.
 furloughBreakdown.furloughCap.fullPeriodCap = £{0}
-furloughBreakdown.september.furloughCap.fullPeriodCap = £{0} (September cap).
-furloughBreakdown.october.furloughCap.fullPeriodCap = £{0} (October cap).
+furloughBreakdown.september.furloughCap.fullPeriodCap = £{0} (uchafswm mis Medi)
+furloughBreakdown.october.furloughCap.fullPeriodCap = £{0} (uchafswm mis Hydref)
 furloughBreakdown.furloughCap.periodSpansMonthCap = {0} o ddiwrnodau ffyrlo ym mis {1} ar £{2} + {3} o ddiwrnodau ffyrlo ym mis {4} ar £{5} = £{6}.
 furloughBreakdown.furloughCap.partialPeriodCap ={0} o ddiwrnodau ffyrlo ym mis {1} ar £{2} = £{3}
 furloughBreakdown.furloughCap.p3 = Grant ffyrlo gwirioneddol = £{0}
@@ -693,8 +693,8 @@ payPeriodQuestion.useDifferentPayPeriod = Na
 payPeriodQuestion.error.required = Dewiswch un o’r opsiynau isod
 payPeriodQuestion.period.text = o {0} i {1}
 
-partTimePeriods.title = When did this employee work during the claim period?
-partTimePeriods.heading = When did this employee work during the claim period?
+partTimePeriods.title = Pryd dechreuodd y cyflogai hwn weithio yn ystod y cyfnod hawlio?
+partTimePeriods.heading = Pryd dechreuodd y cyflogai hwn weithio yn ystod y cyfnod hawlio?
 partTimePeriods.hint = Dewiswch bob un sy’n berthnasol.
 partTimePeriods.fullPeriod = Cyfnod cyflog: {0} i {1}
 partTimePeriods.partialPeriod = Cyfnod cyflog: {0} to {1} (rhannol)
@@ -748,7 +748,7 @@ phaseTwoDetailedBreakdown.no.nic.p1.extension = Gwnaethoch roi gwybod i ni fod e
 # ----------------------------------------------------------
 
 phaseTwoDetailedBreakdown.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 80% o hyn.
-phaseTwoDetailedBreakdown.p1.cylb.2 = Method 1: we’ve used the calendar lookback method to take the amounts the employee was paid in equivalent pay periods. We then applied this to the number of furlough days in each pay period.
+phaseTwoDetailedBreakdown.p1.cylb.2 = Dull 1: rydym wedi defnyddio’r dull ‘edrych yn ôl ar y calendr’ i ystyried y symiau a dalwyd i’r cyflogai yn ystod cyfnodau cyflog cyfatebol. Yna, gwnaethom ddefnyddio hyn wrth ystyried nifer y diwrnodau ffyrlo ym mhob cyfnod cyflog.
 phaseTwoDetailedBreakdown.p1.cylb.3 = Dull 2: rydym wedi cyfrifo ei enillion dyddiol cyfartalog yn ystod y flwyddyn dreth ddiwethaf, drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2019 a’r diwrnod cyn y ffyrlo (neu 5 Ebrill 2020 os yw hynny’n hwyrach). Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo ac oriau ffyrlo ym mhob cyfnod cyflog.
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 80% o hyn.
 phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1 = Rhoesoch wybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro a’i fod wedi gweithio i chi am fwy na 12 mis. Mae’r cyflogai wedi gweithio yn ystod y cyfnod hawlio. Mae 2 ddull y gallwn eu defnyddio i gyfrifo cyflog. Rydym wedi defnyddio’r un a roddodd y ffigur uchaf. Mae’r grant ffyrlo yn 70% o hyn.
@@ -904,16 +904,16 @@ calculationUnsupported.startAgain = Dechrau cyfrifiad newydd
 
 previousFurloughPeriods.title = A yw’r cyflogai hwn wedi’i roi ar ffyrlo mwy nag unwaith ers {0}?
 previousFurloughPeriods.heading = A yw’r cyflogai hwn wedi’i roi ar ffyrlo mwy nag unwaith ers {0}?
-previousFurloughPeriods.error.required = Select yes if this employee has been furloughed more than once since {0}
+previousFurloughPeriods.error.required = Dewiswch ‘Iawn’ os yw’r cyflogai hwn wedi cael ei roi ar ffyrlo fwy nag unwaith ers {0}
 
 firstFurloughStartDate.title = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo am y tro cyntaf?
 firstFurloughStartDate.heading = Pryd cafodd y cyflogai hwn ei roi ar ffyrlo am y tro cyntaf?
 firstFurloughStartDate.p1 = Dyma’r dyddiad pan gafodd y cyflogai ei roi ar ffyrlo am y tro cyntaf, ar neu ar ôl {0}.
-firstFurloughStartDate.p2 = We need this information because you told us this employee has been on more than one period of furlough since 1 November 2020, and was not eligible for the Coronavirus Job Retention Scheme before this date.
-firstFurloughStartDate.error.invalid = The date the employee was first furloughed must be on or after 1 November 2020
-firstFurloughStartDate.hint = For example, 30 11 2020
-firstFurloughStartDate.error.beforeExtensionDate = The date the employee was first furloughed must be on or after 1 November 2020
-firstFurloughStartDate.error.afterStartDate = The date the employee was first furloughed must be before {0}
+firstFurloughStartDate.p2 = Mae angen yr wybodaeth hon arnom oherwydd i chi ddweud wrthym fod y cyflogai hwn wedi bod ar fwy nag un cyfnod ffyrlo ers 1 Tachwedd 2020, ac nad oedd yn gymwys ar gyfer y Cynllun Cadw Swyddi yn sgil Coronafeirws cyn y dyddiad hwn.
+firstFurloughStartDate.error.invalid = Mae’n rhaid i'r dyddiad y cafodd y cyflogai ei roi ar ffyrlo am y tro cyntaf fod ar 1 Tachwedd 2020 neu ar ôl hynny
+firstFurloughStartDate.hint = Er enghraifft, 30 11 2020
+firstFurloughStartDate.error.beforeExtensionDate = Mae’n rhaid i'r dyddiad y cafodd y cyflogai ei roi ar ffyrlo am y tro cyntaf fod ar 1 Tachwedd 2020 neu ar ôl hynny
+firstFurloughStartDate.error.afterStartDate = Mae’n rhaid i'r dyddiad y cafodd y cyflogai ei roi ar ffyrlo am y tro cyntaf fod cyn {0}
 
 
 # New Start Page Content - May Onwards #
@@ -925,7 +925,7 @@ startPage.whatCanYouClaim.h2 = Yr hyn y gallwch ei hawlio
 startPage.whatCanYouClaim.p1 = Mae’r Cynllun Cadw Swyddi yn sgil Coronafeirws wedi’i ymestyn tan 30 Medi 2021. Ar gyfer cyfnodau hawlio rhwng 1 Tachwedd 2020 a 30 Ebrill 2021, gallwch hawlio 80% o gyflog arferol cyflogai ar gyfer oriau na chawsant eu gweithio, hyd at uchafswm o £2,500 y mis.
 startPage.whatCanYouClaim.p2 = O 1 Gorffennaf 2021 ymlaen, mae’r swm y gallwch ei hawlio’n newid:
 
-startPage.whatCanYouClaim.table.column1HeadingHidden = Claim month
+startPage.whatCanYouClaim.table.column1HeadingHidden = Mis yr hawliad
 startPage.whatCanYouClaim.table.column2Heading = Cyfraniad y llywodraeth: cyflog am oriau na chawsant eu gweithio
 startPage.whatCanYouClaim.table.column3Heading = Cyfraniad y cyflogwr: cyflog am oriau na chawsant eu gweithio
 startPage.whatCanYouClaim.table.naughtPercent = 0%
@@ -967,13 +967,13 @@ startPage.about.whoCannotUse.p5 = Eich cyfrifoldeb chi yw gwneud yn siŵr bod y 
 
 startPage.beforeYouStart.h2 = Cyn i chi ddechrau
 startPage.beforeYouStart.p1 = Bydd angen y canlynol arnoch:
-startPage.beforeYouStart.p1.l1 = claim start date (for your first claim, this is when the first employee started furlough)
-startPage.beforeYouStart.p1.l2 = claim end date
-startPage.beforeYouStart.p1.l3 = pay dates (when the employee gets their pay)
-startPage.beforeYouStart.p1.l4 = dates of pay periods (the time periods that their pay covers)
-startPage.beforeYouStart.p1.l5 = regular payment amounts
-startPage.beforeYouStart.p1.l6 = additional payments (such as tips, discretionary bonuses, non-cash payments)
-startPage.beforeYouStart.p1.l7 = date furlough ended, if it is not ongoing
+startPage.beforeYouStart.p1.l1 = dyddiad dechrau’r cyfnod hawlio (ar gyfer eich hawliad cyntaf, dyma pryd y dechreuodd y cyflogai cyntaf ei gyfnod ffyrlo)
+startPage.beforeYouStart.p1.l2 = dyddiad gorffen y cyfnod hawlio
+startPage.beforeYouStart.p1.l3 = dyddiadau talu cyflog (pan fydd y cyflogai’n cael ei gyflog)
+startPage.beforeYouStart.p1.l4 = dyddiadau cyfnodau cyflog (y cyfnodau sy’n cael eu cwmpasu gan y cyflog)
+startPage.beforeYouStart.p1.l5 = symiau taliadau rheolaidd
+startPage.beforeYouStart.p1.l6 = taliadau ychwanegol (megis cildyrnau, bonysau dewisol, taliadau nad ydynt yn arian parod)
+startPage.beforeYouStart.p1.l7 = dyddiad y daeth y ffyrlo i ben, os nad yw’n parhau
 startPage.beforeYouStart.p2 = O 1 Gorffennaf ymlaen, os yw’r cyflogai ar ffyrlo hyblyg, bydd hefyd angen y canlynol arnoch:
 startPage.beforeYouStart.p2.l1 = {0}
 startPage.beforeYouStart.p2.l1.link = oriau arferol y cyflogai
@@ -986,38 +986,38 @@ startPage.beforeYouStart.p3.link = camau i’w cymryd cyn cyfrifo’ch hawliad
 # ------------------------------------------------
 onPayrollBefore30thOct2020.title = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 30 October 2020?
 onPayrollBefore30thOct2020.heading = A oedd y cyflogai hwn ar eich cyflogres ar neu cyn 30 October 2020?
-onPayrollBefore30thOct2020.hint = Enter Yes if you have made a payment of earnings to them in the tax year 2020/2021, which was reported to HMRC on a Real Time Information (RTi) Full Payment Submission (FPS) on or before 30 October 2020
-onPayrollBefore30thOct2020.error.required = Select yes if this employee on your payroll on or before 30 October 2020?
+onPayrollBefore30thOct2020.hint = Nodwch ‘Iawn’ os gwnaethoch daliad o enillion i’r cyflogai yn ystod blwyddyn dreth 2020/2021, a rhoddwyd gwybod am hynny i CThEM ar Gyflwyniad Taliadau Llawn (FPS) Gwybodaeth Amser Real (RTI) ar neu cyn 30 Hydref 2020.
+onPayrollBefore30thOct2020.error.required = Dewiswch ‘Iawn’ os oedd y cyflogai hwn ar eich cyflogres ar neu cyn 30 Hydref 2020.
 
 # StatutoryLeavePayPage Messages
 # ------------------------------------------------
-statutoryLeavePay.title = How much was this employee paid for the periods of statutory leave?
-statutoryLeavePay.heading = How much was this employee paid for the periods of statutory leave?
-statutoryLeavePay.label = How much was this employee paid for the periods of statutory leave?
-statutoryLeavePay.error.required = Enter the amount this employee was paid for the periods of statutory leave
-statutoryLeavePay.error.invalid = Enter a valid amount
-statutoryLeavePay.error.moreThan0 = The amount this employee was paid for the periods of statutory leave must be more than £0
-statutoryLeavePay.error.lessThan = The amount this employee was paid for the periods of statutory leave must be less than {0}
-statutoryLeavePay.details.title = What does statutory leave include?
-statutoryLeavePay.details.p1 = For this calculation, statutory leave only includes:
-statutoryLeavePay.details.l1 = statutory sick pay related leave
-statutoryLeavePay.details.l2 = family related statutory leave, for example paternity leave
-statutoryLeavePay.details.l3 = reduced rate paid leave following a period of statutory sick pay related leave
-statutoryLeavePay.details.l4 = reduced rate paid leave following a period of family related statutory leave
+statutoryLeavePay.title = Faint a dalwyd i’r cyflogai hwn am y cyfnodau o absenoldeb statudol?
+statutoryLeavePay.heading = Faint a dalwyd i’r cyflogai hwn am y cyfnodau o absenoldeb statudol?
+statutoryLeavePay.label = Faint a dalwyd i’r cyflogai hwn am y cyfnodau o absenoldeb statudol?
+statutoryLeavePay.error.required = Nodwch y swm a dalwyd i’r cyflogai hwn am y cyfnodau o absenoldeb statudol
+statutoryLeavePay.error.invalid = Nodwch y swm a dalwyd i’r cyflogai hwn am y cyfnodau o absenoldeb statudol
+statutoryLeavePay.error.moreThan0 = Mae’n rhaid i’r swm a dalwyd i’r cyflogai hwn am y cyfnodau o absenoldeb statudol fod yn fwy na 0
+statutoryLeavePay.error.lessThan = Mae’n rhaid i’r swm a dalwyd i’r cyflogai hwn am y cyfnodau o absenoldeb statudol fod yn llai na {0}
+statutoryLeavePay.details.title = Beth mae absenoldeb statudol yn ei gynnwys?
+statutoryLeavePay.details.p1 = Ar gyfer y cyfrifiad hwn, mae absenoldeb statudol yn cynnwys y canlynol yn unig:
+statutoryLeavePay.details.l1 = absenoldeb sy’n gysylltiedig â thâl salwch statudol
+statutoryLeavePay.details.l2 = absenoldeb statudol sy’n gysylltiedig â materion teuluol, er enghraifft absenoldeb tadolaeth
+statutoryLeavePay.details.l3 = absenoldeb â thâl ar gyfradd is yn dilyn cyfnod o absenoldeb sy’n gysylltiedig â thâl salwch statudol
+statutoryLeavePay.details.l4 = absenoldeb â thâl ar gyfradd is yn dilyn cyfnod o absenoldeb statudol sy’n gysylltiedig â materion teuluol
 
 # HasEmployeeBeenOnStatutoryLeave Messages
 # ------------------------------------------------
-hasEmployeeBeenOnStatutoryLeave.title = Has this employee been on statutory leave for part of the period between {0} and {1}?
-hasEmployeeBeenOnStatutoryLeave.heading = Has this employee been on statutory leave for part of the period between {0} and {1}?
-hasEmployeeBeenOnStatutoryLeave.checkYourAnswersLabel = Has employee been on statutory leave
-hasEmployeeBeenOnStatutoryLeave.error.required = Select yes if this employee has been on statutory leave for part of the period between {0} and {1}
-hasEmployeeBeenOnStatutoryLeave.p = For this calculation, statutory leave only includes:
-hasEmployeeBeenOnStatutoryLeave.bullet1 = statutory sick pay related leave
-hasEmployeeBeenOnStatutoryLeave.bullet2 = family related statutory leave, for example paternity leave
-hasEmployeeBeenOnStatutoryLeave.bullet3 = reduced rate paid leave following a period of statutory sick pay related leave
-hasEmployeeBeenOnStatutoryLeave.bullet4 = reduced rate paid leave following a period of family related statutory leave
-hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted = the day their employment started
-hasEmployeeBeenOnStatutoryLeave.insetText = If the employee was on statutory leave for the full period between these dates, you must answer ‘no’.
+hasEmployeeBeenOnStatutoryLeave.title = Ydy’r cyflogai hwn wedi bod ar absenoldeb statudol am ran o’r cyfnod rhwng {0} a {1}?
+hasEmployeeBeenOnStatutoryLeave.heading = Ydy’r cyflogai hwn wedi bod ar absenoldeb statudol am ran o’r cyfnod rhwng {0} a {1}?
+hasEmployeeBeenOnStatutoryLeave.checkYourAnswersLabel = Ydy’r cyflogai wedi bod ar absenoldeb statudol
+hasEmployeeBeenOnStatutoryLeave.error.required = Dewiswch ‘Iawn’ os yw’r cyflogai hwn wedi bod ar absenoldeb statudol am ran o’r cyfnod rhwng {0} a {1}
+hasEmployeeBeenOnStatutoryLeave.p = Ar gyfer y cyfrifiad hwn, mae absenoldeb statudol yn cynnwys y canlynol yn unig:
+hasEmployeeBeenOnStatutoryLeave.bullet1 = absenoldeb sy’n gysylltiedig â thâl salwch statudol
+hasEmployeeBeenOnStatutoryLeave.bullet2 = absenoldeb statudol sy’n gysylltiedig â materion teuluol, er enghraifft absenoldeb tadolaeth
+hasEmployeeBeenOnStatutoryLeave.bullet3 = absenoldeb â thâl ar gyfradd is yn dilyn cyfnod o absenoldeb sy’n gysylltiedig â thâl salwch statudol
+hasEmployeeBeenOnStatutoryLeave.bullet4 = absenoldeb â thâl ar gyfradd is yn dilyn cyfnod o absenoldeb statudol sy’n gysylltiedig â materion teuluol
+hasEmployeeBeenOnStatutoryLeave.dayEmploymentStarted = y diwrnod y dechreuodd ei gyflogaeth
+hasEmployeeBeenOnStatutoryLeave.insetText = Os oedd y cyflogai ar absenoldeb statudol am y cyfnod llawn rhwng y dyddiadau hyn, mae’n rhaid i chi ateb ‘Na’.
 
 # NumberOfStatLeaveDays Messages
 #------------------------------------------------
@@ -1029,9 +1029,9 @@ numberOfStatLeaveDays.error.required = Enter the number of days this employee wa
 numberOfStatLeaveDays.error.wholeNumber = Enter number of statutory leave days using whole numbers
 numberOfStatLeaveDays.error.minimum = The number of days this employee was on statutory leave must be {0} or more days
 numberOfStatLeaveDays.error.maximum = The number of days this employee was on statutory leave must be less than {0} days. If this employee was on statutory leave for the full period between {1} and {2}, then you should answer ‘no’ to the previous question
-numberOfStatLeaveDays.details.title = What does statutory leave include?
-numberOfStatLeaveDays.details.p1 = For this calculation, statutory leave only includes:
-numberOfStatLeaveDays.details.bullet1 = statutory sick pay related leave
-numberOfStatLeaveDays.details.bullet2 = family related statutory leave, for example paternity leave
-numberOfStatLeaveDays.details.bullet3 = reduced rate paid leave following a period of statutory sick pay related leave
-numberOfStatLeaveDays.details.bullet4 = reduced rate paid leave following a period of family related statutory leave
+numberOfStatLeaveDays.details.title = Beth mae absenoldeb statudol yn ei gynnwys?
+numberOfStatLeaveDays.details.p1 = Ar gyfer y cyfrifiad hwn, mae absenoldeb statudol yn cynnwys y canlynol yn unig:
+numberOfStatLeaveDays.details.bullet1 = absenoldeb sy’n gysylltiedig â thâl salwch statudol
+numberOfStatLeaveDays.details.bullet2 = absenoldeb statudol sy’n gysylltiedig â materion teuluol, er enghraifft absenoldeb tadolaeth
+numberOfStatLeaveDays.details.bullet3 = absenoldeb â thâl ar gyfradd is yn dilyn cyfnod o absenoldeb sy’n gysylltiedig â thâl salwch statudol
+numberOfStatLeaveDays.details.bullet4 = absenoldeb â thâl ar gyfradd is yn dilyn cyfnod o absenoldeb statudol sy’n gysylltiedig â materion teuluol
