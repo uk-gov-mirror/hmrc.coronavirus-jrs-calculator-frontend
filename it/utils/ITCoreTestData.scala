@@ -17,13 +17,12 @@
 package utils
 
 import java.util.UUID
-
 import models.FurloughStatus.FurloughEnded
 import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
 import models.PaymentFrequency.{FortNightly, FourWeekly, Monthly, Weekly}
 import models.TopUpStatus.NotToppedUp
-import models.{EmployeeStarted, UserAnswers}
+import models.{EmployeeRTISubmission, EmployeeStarted, UserAnswers}
 import play.api.libs.json.Json
 
 trait ITCoreTestData extends ITUserAnswersBuilder {
@@ -68,10 +67,27 @@ trait ITCoreTestData extends ITUserAnswersBuilder {
       .withFurloughStatus()
       .withPaymentFrequency(Weekly)
       .withPayMethod(Variable)
+      .withRtiSubmission(EmployeeRTISubmission.No)
       .withFurloughInLastTaxYear(false)
       .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
-      .withOnPayrollBefore30thOct2020(true)
       .withEmployeeStartDate("2020, 3, 20")
+      //Must be after employee start due to question deletion lookup
+      .withOnPayrollBefore30thOct2020(true)
+
+  def hasTheEmployerHadPreviousFurloughPeriodsMay2021 =
+    emptyUserAnswers
+      .withClaimPeriodStart("2021, 5, 1")
+      .withClaimPeriodEnd("2021, 5, 30")
+      .withFurloughStartDate("2021, 5, 10")
+      .withFurloughStatus()
+      .withPaymentFrequency(Weekly)
+      .withPayMethod(Variable)
+      .withFurloughInLastTaxYear(false)
+      .withRtiSubmission(EmployeeRTISubmission.No)
+      .withVariableLengthEmployed(EmployeeStarted.After1Feb2019)
+      .withEmployeeStartDate("2020, 3, 20")
+      //Must be after employee start due to question deletion lookup
+      .withOnPayrollBefore30thOct2020(false)
 
   def hasEmployeeBeenFurloughedAfterNovember =
     emptyUserAnswers

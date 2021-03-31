@@ -25,6 +25,7 @@ import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, EmployeeTypeService}
+import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
 import utils.PagerDutyHelper
 import utils.PagerDutyHelper.PagerDutyKeys._
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
