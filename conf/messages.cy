@@ -931,11 +931,11 @@ startPage.whatCanYouClaim.table.column3Heading = Cyfraniad y cyflogwr: cyflog am
 startPage.whatCanYouClaim.table.naughtPercent = 0%
 startPage.whatCanYouClaim.table.mayJunGovt = 80% hyd at £2,500
 startPage.whatCanYouClaim.table.julGovt = 70% hyd at £2,187.50
-startPage.whatCanYouClaim.table.augSepGovt = 60% hyd at £1,8750
+startPage.whatCanYouClaim.table.augSepGovt = 60% hyd at £1,875
 startPage.whatCanYouClaim.table.julyEmp = 10% hyd at £312.50
 startPage.whatCanYouClaim.table.augSepEmp = 20% hyd at £625
 
-startPage.whatCanYouClaim.p3 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi barhau i dalu 80% o’u cyflog i’ch cyflogeion sydd ar ffyrlo, hyd at uchafswm o £2,500 y mis, am y cyfnod y maent ar ffyrlo.
+startPage.whatCanYouClaim.p3 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn iddynt, ond nid oes rhaid i chi wneud hynny.
 startPage.whatCanYouClaim.p4 = Ni allwch hawlio cyfraniadau Yswiriant Gwladol a chyfraniadau pensiwn y cyflogwr, ond mae’n rhaid i’r cyflogwr dalu’r rhain o hyd.
 
 startPage.about.h2 = Ynglŷn â’r gyfrifiannell
