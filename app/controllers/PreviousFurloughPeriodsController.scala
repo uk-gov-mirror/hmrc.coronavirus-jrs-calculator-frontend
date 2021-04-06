@@ -17,13 +17,13 @@
 package controllers
 
 import java.time.{LocalDate, Month}
-
 import cats.data.Validated.{Invalid, Valid}
 import config.FrontendAppConfig
 import config.featureSwitch.{ExtensionTwoNewStarterFlow, FeatureSwitching}
 import controllers.actions._
 import forms.PreviousFurloughPeriodsFormProvider
 import handlers.ErrorHandler
+
 import javax.inject.Inject
 import models.EmployeeStarted.{After1Feb2019, OnOrBefore1Feb2019}
 import models.Mode
@@ -31,7 +31,7 @@ import models.requests.DataRequest
 import navigation.Navigator
 import pages.{EmployeeStartedPage, FurloughStartDatePage, OnPayrollBefore30thOct2020Page, PreviousFurloughPeriodsPage}
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -54,7 +54,11 @@ class PreviousFurloughPeriodsController @Inject()(
 )(implicit ec: ExecutionContext, appConfig: FrontendAppConfig, errorHandler: ErrorHandler)
     extends FrontendBaseController with I18nSupport with FeatureSwitching with EmployeeTypeUtil {
 
-  val form = formProvider()
+  def form()(implicit request: DataRequest[_]): Form[Boolean] =
+    formProvider(
+      employeeTypeResolver[LocalDate](type5aEmployeeResult = Some(nov1st2020),
+                                      type5bEmployeeResult = Some(may1st2021),
+                                      defaultResult = mar1st2020))
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.getV(PreviousFurloughPeriodsPage) match {

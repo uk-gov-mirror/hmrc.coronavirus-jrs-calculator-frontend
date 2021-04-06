@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package messages
 
-import javax.inject.Inject
-import forms.mappings.Mappings
-import play.api.data.Form
-import play.api.i18n.Messages
-import views.ViewUtils.dateToString
+object PreviousFurloughPeriodsMessages {
 
-import java.time.LocalDate
+  val heading = (date: String) => s"Has this employee been furloughed more than once since $date?"
 
-class PreviousFurloughPeriodsFormProvider @Inject() extends Mappings {
-
-  def apply(dateToShowOnError: LocalDate)(implicit messages: Messages): Form[Boolean] =
-    Form(
-      "value" -> boolean("previousFurloughPeriods.error.required", args = Seq(dateToString(dateToShowOnError)))
-    )
 }

@@ -44,8 +44,8 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new PreviousFurloughPeriodsFormProvider()
-  val form         = formProvider()
+  val formProvider                                             = new PreviousFurloughPeriodsFormProvider()
+  def form(dateToPassIntoFormProviderWhenFormError: LocalDate) = formProvider(dateToPassIntoFormProviderWhenFormError)
 
   val view = app.injector.instanceOf[PreviousFurloughPeriodsView]
 
@@ -114,13 +114,14 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
     "return OK and the correct view for a GET - showing 1st November 2020 when Feature Switch is disabled" in {
       val userAnswers = emptyUserAnswers
         .withEmployeeStartedAfter1Feb2019()
+        .withPayMethod(Variable)
       disable(ExtensionTwoNewStarterFlow)
       val result = controller(Some(userAnswers)).onPageLoad()(getRequest)
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, nov1st2020)(getRequest, messages).toString
+        view(form(nov1st2020), nov1st2020)(getRequest, messages).toString
       enable(ExtensionTwoNewStarterFlow)
     }
 
@@ -130,7 +131,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, nov1st2020)(getRequest, messages).toString
+        view(form(nov1st2020), nov1st2020)(getRequest, messages).toString
     }
 
     "return OK and the correct view for a GET when the user selected Yes to employee working for them before Feb 2019 - showing March 2020" in {
@@ -139,7 +140,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mar1st2020)(getRequest, messages).toString
+        view(form(mar1st2020), mar1st2020)(getRequest, messages).toString
     }
 
     "return OK and the correct view for a GET when the user selected No to employee working for them before Feb 2019" must {
@@ -147,14 +148,14 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
         val result = controller(Some(userAnswersEmployedAfter1stFeb2019(true))).onPageLoad()(getRequest)
         status(result) mustEqual OK
         contentAsString(result) mustEqual
-          view(form, nov1st2020)(getRequest, messages).toString
+          view(form(nov1st2020), nov1st2020)(getRequest, messages).toString
       }
 
       "show 1st May 2021 when the user answered No on OnPayrollBefore30thOct2020Page" in {
         val result = controller(Some(userAnswersEmployedAfter1stFeb2019(false))).onPageLoad()(getRequest)
         status(result) mustEqual OK
         contentAsString(result) mustEqual
-          view(form, may1st2021)(getRequest, messages).toString
+          view(form(may1st2021), may1st2021)(getRequest, messages).toString
       }
     }
 
@@ -166,7 +167,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), mar1st2020)(getRequest, messages).toString
+        view(form(mar1st2020).fill(true), mar1st2020)(getRequest, messages).toString
 
     }
 
@@ -208,7 +209,7 @@ class PreviousFurloughPeriodsControllerSpec extends SpecBaseControllerSpecs with
           .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
           .withFormUrlEncodedBody(("value", "invalid value"))
 
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+      val boundForm = form(mar1st2020).bind(Map("value" -> "invalid value"))
 
       val result      = controller(Some(userAnswers)).onSubmit()(request)
       val dataRequest = DataRequest(request, userAnswers.id, userAnswers)
