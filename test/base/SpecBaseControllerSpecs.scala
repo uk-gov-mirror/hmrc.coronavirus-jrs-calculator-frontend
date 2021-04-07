@@ -37,6 +37,7 @@ import play.api.test.FakeRequest
 import repositories.SessionRepository
 import utils.CoreTestData
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -82,4 +83,7 @@ trait SpecBaseControllerSpecs extends PlaySpec with GuiceOneAppPerSuite with Cor
     error: String
   ): JsError =
     JsError((path \ (idx - 1)) -> JsonValidationError(List(error)))
+
+  def dateToStringFmt(date: LocalDate): String = s"${date.getYear}, ${date.getMonth}, ${date.getDayOfMonth}"
+
 }

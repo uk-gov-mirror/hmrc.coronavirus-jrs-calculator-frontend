@@ -25,12 +25,12 @@ import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, EmployeeTypeService}
-import utils.ConfirmationTestCasesUtil.printOutConfirmationTestCases
-import utils.PagerDutyHelper
 import utils.PagerDutyHelper.PagerDutyKeys._
+import utils.{PagerDutyHelper, YearMonthHelper}
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
 import views.html._
 
+import java.time.Month._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,7 +49,7 @@ class ConfirmationController @Inject()(
   extensionView: JrsExtensionConfirmationView,
   auditService: AuditService,
   val navigator: Navigator)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext, appConfig: FrontendAppConfig)
-    extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration {
+    extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration with YearMonthHelper {
 
   //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
@@ -65,18 +65,18 @@ class ConfirmationController @Inject()(
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
         Future.successful(Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
       case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
-        data.metaData.claimPeriod.start.getMonthValue match {
-          case 8 =>
+        data.metaData.claimPeriod.start.getYearMonth match {
+          case yearMonth if yearMonth == AUGUST.inYear(y2020) =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
-          case 9 =>
+          case yearMonth if yearMonth == SEPTEMBER.inYear(y2020) =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(
               Ok(septemberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
-          case 10 =>
+          case yearMonth if yearMonth == OCTOBER.inYear(y2020) =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf)))
-          case 11 | 12 | 1 | 2 | 3 | 4 | 5 =>
+          case yearMonth if yearMonth.isBetweenInclusive(appConfig.extensionStartDate.getYearMonth, appConfig.schemeEndDate.getYearMonth) =>
             auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
             Future.successful(
               Ok(
@@ -87,7 +87,8 @@ class ConfirmationController @Inject()(
                   employeeTypeService.isType5NewStarter()
                 ))
             )
-          case _ => Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
+          case _ =>
+            Future.successful(Redirect(routes.ErrorController.somethingWentWrong()))
         }
       case Invalid(e) =>
         auditService.sendCalculationFailed(request.userAnswers)

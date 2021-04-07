@@ -30,10 +30,11 @@ import controllers.scenarios.FebruaryConfirmationScenarios._
 import controllers.scenarios.DecemberConfirmationScenarios._
 import controllers.scenarios.NovemberConfirmationScenarios._
 import controllers.scenarios.AprilConfirmationScenarios._
-import controllers.scenarios.MayConfirmationScenarios._
+import controllers.scenarios.MayConfirmationScenarios.{emptyUserAnswers, _}
+import models.PaymentFrequency.FourWeekly
 
-class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers
-  with BaseITConstants with ITCoreTestData {
+class ConfirmationControllerISpec
+    extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants with ITCoreTestData {
 
   val november: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     novemberFourWeeklyScenarios ++
@@ -103,13 +104,13 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
 
   val may: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     mayFixedFourWeeklyScenarios ++
-    mayFixedMonthlyScenarios ++
-    mayFixedTwoWeeklyScenarios ++
-    mayFixedWeeklyScenarios ++
-    mayVariableFourWeeklyScenarios ++
-    mayVariableMonthlyScenarios ++
-    mayVariableTwoWeeklyScenarios ++
-    mayVariableWeeklyScenarios
+      mayFixedMonthlyScenarios ++
+      mayFixedTwoWeeklyScenarios ++
+      mayFixedWeeklyScenarios ++
+      mayVariableFourWeeklyScenarios ++
+      mayVariableMonthlyScenarios ++
+      mayVariableTwoWeeklyScenarios ++
+      mayVariableWeeklyScenarios
   }
 
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
@@ -122,10 +123,8 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
 
       scenarios.foreach {
         case (scenarioSummary, scenarios) =>
-
           scenarios.zipWithIndex.foreach {
             case ((scenario, outcome), index) =>
-
               s"the user has answered the questions relating to $scenarioSummary for scenario ${index + 1}" in {
                 val userAnswers: UserAnswers = scenario
 
@@ -207,7 +206,6 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
       }
     }
 
-
     "redirect to another page" when {
 
       "the user has not answered the questions" in {
@@ -219,6 +217,39 @@ class ConfirmationControllerISpec extends IntegrationSpecBase with CreateRequest
         val res = getRequest("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
 
         //TODO Should redirect to reset or start again page
+        whenReady(res) { result =>
+          result should have(
+            httpStatus(SEE_OTHER),
+            redirectLocation("/job-retention-scheme-calculator/error")
+          )
+        }
+      }
+
+      s"claim period is after ${appConfig.schemeEndDate}" in {
+
+        println(dateToStringFmt(appConfig.schemeEndDate))
+
+        val userAnswers = emptyUserAnswers
+          .withFurloughStatus(FurloughStatus.FurloughEnded)
+          .withFurloughEndDate("2021-05-31")
+          .withPaymentFrequency(FourWeekly)
+          .withClaimPeriodStart(dateToStringFmt(appConfig.schemeEndDate.plusMonths(1)))
+          .withLastYear(List())
+          .withPayPeriodsList(PayPeriodsList.Yes)
+          .withPayMethod(PayMethod.Regular)
+          .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
+          .withRegularPayAmount(3300)
+          .withFurloughStartDate("2021-05-01")
+          .withClaimPeriodEnd("2021-05-31")
+          .withRegularLengthEmployed(RegularLengthEmployed.Yes)
+          .withPayDate(List("2021-04-30", "2021-05-28", "2021-06-25"))
+          .withUsualHours(List())
+          .withPartTimeHours(List())
+
+        setAnswers(userAnswers)
+
+        val res = getRequest("/confirmation")("sessionId" -> userAnswers.id, "X-Session-ID" -> userAnswers.id)
+
         whenReady(res) { result =>
           result should have(
             httpStatus(SEE_OTHER),

@@ -1,5 +1,6 @@
 package utils
 
+import config.FrontendAppConfig
 import models.UserAnswers
 import navigation.Navigator
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
@@ -11,6 +12,7 @@ import play.api.{Application, Environment, Mode}
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.LocalDate
 import java.util.Locale
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
@@ -24,6 +26,7 @@ trait IntegrationSpecBase
   implicit val hc: HeaderCarrier    = HeaderCarrier()
   implicit lazy val messagesApi     = app.injector.instanceOf[MessagesApi]
   implicit lazy val messages        = messagesApi.preferred(Seq(Lang(Locale.UK)))
+  implicit lazy val appConfig        = app.injector.instanceOf[FrontendAppConfig]
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
@@ -55,5 +58,8 @@ trait IntegrationSpecBase
     stopWiremock()
     super.afterAll()
   }
+
+  def dateToStringFmt(date: LocalDate): String = s"${date.getYear}-${date.getMonthValue}-${date.getDayOfMonth}"
+
 
 }
