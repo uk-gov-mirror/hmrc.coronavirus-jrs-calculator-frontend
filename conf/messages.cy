@@ -762,6 +762,9 @@ phaseTwoDetailedBreakdown.p2.a.href = https://www.gov.uk/guidance/calculate-how-
 phaseTwoDetailedBreakdown.p3 = Mae cyfrifiadau’n cael eu talgrynnu i’r geiniog agosaf, oni nodir yn wahanol.
 phaseTwoDetailedBreakdown.h3 = Ar gyfer cyfnod cyflog {0} i {1}
 
+phaseTwoDetailedBreakdown.statLeave.method2 = Rhoesoch wybod i ni fod y cyflogai hwn ar absenoldeb statudol rhwng {0} a {1}. Oherwydd hyn, ar gyfer Dull 2 mae’n rhaid i ni ddileu nifer y diwrnodau yr oedd ar absenoldeb statudol, a’r swm a dalwyd iddo am y cyfnodau hyn, o’r cyfrifiad.
+phaseTwoDetailedBreakdown.statLeave = Rhoesoch wybod i ni fod y cyflogai hwn ar absenoldeb statudol rhwng {0} a {1}. Oherwydd hyn, mae’n rhaid i ni ddileu nifer y diwrnodau yr oedd ar absenoldeb statudol, a’r swm a dalwyd iddo am y cyfnodau hyn, o’r cyfrifiad.
+
 phaseTwoReferencePayBreakdown.h4 = Cyfrifwch gyflog y cyflogai yn seiliedig ar ei ddiwrnodau ffyrlo
 
 phaseTwoReferencePayBreakdown.regular.p1 = Ystyriwch y cyflog yn y cyfnod cyflog:
@@ -1021,14 +1024,14 @@ hasEmployeeBeenOnStatutoryLeave.insetText = Os oedd y cyflogai ar absenoldeb sta
 
 # NumberOfStatLeaveDays Messages
 #------------------------------------------------
-numberOfStatLeaveDays.title = How many days was this employee on statutory leave between {0} and {1}?
-numberOfStatLeaveDays.heading = How many days was this employee on statutory leave between {0} and {1}?
-numberOfStatLeaveDays.label = How many days was this employee on statutory leave between {0} and {1}?
-numberOfStatLeaveDays.error.nonNumeric = Enter the number of statutory leave days using numbers
-numberOfStatLeaveDays.error.required = Enter the number of days this employee was on statutory leave between {0} and {1}
-numberOfStatLeaveDays.error.wholeNumber = Enter number of statutory leave days using whole numbers
-numberOfStatLeaveDays.error.minimum = The number of days this employee was on statutory leave must be {0} or more days
-numberOfStatLeaveDays.error.maximum = The number of days this employee was on statutory leave must be less than {0} days. If this employee was on statutory leave for the full period between {1} and {2}, then you should answer ‘no’ to the previous question
+numberOfStatLeaveDays.title = Sawl diwrnod yr oedd y cyflogai hwn ar absenoldeb statudol rhwng {0} a {1}?
+numberOfStatLeaveDays.heading = Sawl diwrnod yr oedd y cyflogai hwn ar absenoldeb statudol rhwng {0} a {1}?
+numberOfStatLeaveDays.label = Sawl diwrnod yr oedd y cyflogai hwn ar absenoldeb statudol rhwng {0} a {1}?
+numberOfStatLeaveDays.error.nonNumeric = Nodwch nifer y diwrnodau o absenoldeb statudol gan ddefnyddio rhifau
+numberOfStatLeaveDays.error.required = Nodwch nifer y diwrnodau yr oedd y cyflogai hwn ar absenoldeb statudol rhwng {0} a {1}
+numberOfStatLeaveDays.error.wholeNumber = Nodwch nifer y diwrnodau o absenoldeb statudol gan ddefnyddio rhifau cyfan
+numberOfStatLeaveDays.error.minimum = Mae’n rhaid i nifer y diwrnodau yr oedd y cyflogai hwn ar absenoldeb statudol fod yn {0} neu fwy o ddiwrnodau
+numberOfStatLeaveDays.error.maximum = Mae’n rhaid i nifer y diwrnodau yr oedd y cyflogai hwn ar absenoldeb statudol fod yn llai na {0} o ddiwrnodau. Os oedd y cyflogai hwn ar absenoldeb statudol am y cyfnod llawn rhwng {1} a {2}, dylech ateb ‘Na’ i’r cwestiwn blaenorol
 numberOfStatLeaveDays.details.title = Beth mae absenoldeb statudol yn ei gynnwys?
 numberOfStatLeaveDays.details.p1 = Ar gyfer y cyfrifiad hwn, mae absenoldeb statudol yn cynnwys y canlynol yn unig:
 numberOfStatLeaveDays.details.bullet1 = absenoldeb sy’n gysylltiedig â thâl salwch statudol
