@@ -40,6 +40,9 @@ trait YearMonthHelper {
 
     implicit def isBetweenInclusive(min: YearMonth, max: YearMonth): Boolean =
       yearMonth.isEqualToOrAfter(min) && yearMonth.isEqualToOrBefore(max)
+
+    implicit def stringFmt: String =
+      s"${yearMonth.getMonth.toString.toLowerCase}${yearMonth.getYear}"
   }
 
   implicit class localDateExt(date: LocalDate) {

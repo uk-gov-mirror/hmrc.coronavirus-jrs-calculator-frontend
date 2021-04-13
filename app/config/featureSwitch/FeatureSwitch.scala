@@ -74,3 +74,8 @@ object StatutoryLeaveFlow extends BooleanFeatureSwitch {
   override val name: String        = s"$prefix.statutoryLeaveFlow"
   override val displayText: String = "Enables the Statutory Leave flow (if selected)"
 }
+
+object WriteConfirmationTestCasesToFile extends BooleanFeatureSwitch {
+  override val name: String        = s"$prefix.writeConfirmationTestCasesToFile"
+  override val displayText: String = "writes the confirmation test cases to file"
+}

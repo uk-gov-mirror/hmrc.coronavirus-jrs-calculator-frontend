@@ -901,7 +901,7 @@ object MayConfirmationScenarios extends IntegrationSpecBase with CreateRequestHe
       -> 767.63
   ))
 
-  val mayVariableMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("May Variable Monthly Scenarios" -> Seq(
+  val  mayVariableMonthlyScenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = Seq("May Variable Monthly Scenarios" -> Seq(
     emptyUserAnswers
       .withFurloughStatus(FurloughStatus.FurloughEnded)
       .withEmployeeStartDate("2020-10-30")

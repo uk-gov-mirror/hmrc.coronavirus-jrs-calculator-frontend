@@ -17,24 +17,23 @@
 package controllers
 
 import assets.BaseITConstants
+import controllers.scenarios.AprilConfirmationScenarios._
 import controllers.scenarios.DecemberConfirmationScenarios._
 import controllers.scenarios.FebruaryConfirmationScenarios._
 import controllers.scenarios.JanuaryConfirmationScenarios._
 import controllers.scenarios.MarchConfirmationScenarios._
+import controllers.scenarios.MayConfirmationScenarios._
 import controllers.scenarios.NovemberConfirmationScenarios._
+import _root_.config.featureSwitch.{FeatureSwitching, WriteConfirmationTestCasesToFile}
+import controllers.scenarios.JuneConfirmationScenarios._
+import models.PaymentFrequency.FourWeekly
 import models._
 import play.api.test.Helpers._
 import utils.{CreateRequestHelper, CustomMatchers, ITCoreTestData, IntegrationSpecBase}
-import controllers.scenarios.JanuaryConfirmationScenarios._
-import controllers.scenarios.FebruaryConfirmationScenarios._
-import controllers.scenarios.DecemberConfirmationScenarios._
-import controllers.scenarios.NovemberConfirmationScenarios._
-import controllers.scenarios.AprilConfirmationScenarios._
-import controllers.scenarios.MayConfirmationScenarios.{emptyUserAnswers, _}
-import models.PaymentFrequency.FourWeekly
 
 class ConfirmationControllerISpec
-    extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants with ITCoreTestData {
+    extends IntegrationSpecBase with CreateRequestHelper with CustomMatchers with BaseITConstants with ITCoreTestData
+    with FeatureSwitching {
 
   val november: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
     novemberFourWeeklyScenarios ++
@@ -113,12 +112,22 @@ class ConfirmationControllerISpec
       mayVariableWeeklyScenarios
   }
 
+  val june: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
+    juneFixedFourWeeklyScenarios ++
+      juneFixedMonthlyScenarios ++
+      juneFixedTwoWeeklyScenarios ++
+      juneFixedWeeklyScenarios ++
+      juneVariableFourWeeklyScenarios ++
+      juneVariableMonthlyScenarios ++
+      juneVariableTwoWeeklyScenarios ++
+      juneVariableWeeklyScenarios
+  }
+
   val scenarios: Seq[(String, Seq[(UserAnswers, BigDecimal)])] = {
-    november ++ december ++ january ++ february ++ march ++ april ++ may
+    november ++ december ++ january ++ february ++ march ++ april ++ may ++ june
   }
 
   "GET /confirmation" should {
-
     "show the page" when {
 
       scenarios.foreach {

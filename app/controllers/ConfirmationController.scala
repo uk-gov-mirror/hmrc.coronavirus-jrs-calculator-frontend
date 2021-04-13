@@ -17,6 +17,7 @@
 package controllers
 
 import cats.data.Validated.{Invalid, Valid}
+import config.featureSwitch.{FeatureSwitching, WriteConfirmationTestCasesToFile}
 import config.{CalculatorVersionConfiguration, FrontendAppConfig}
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
@@ -25,6 +26,7 @@ import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, EmployeeTypeService}
+import utils.ConfirmationTestCasesUtil.writeConfirmationTestCasesToFile
 import utils.PagerDutyHelper.PagerDutyKeys._
 import utils.{PagerDutyHelper, YearMonthHelper}
 import viewmodels.{ConfirmationDataResultWithoutNicAndPension, PhaseOneConfirmationDataResult, PhaseTwoConfirmationDataResult}
@@ -49,13 +51,14 @@ class ConfirmationController @Inject()(
   extensionView: JrsExtensionConfirmationView,
   auditService: AuditService,
   val navigator: Navigator)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext, appConfig: FrontendAppConfig)
-    extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration with YearMonthHelper {
+    extends BaseController with ConfirmationControllerRequestHandler with CalculatorVersionConfiguration with YearMonthHelper
+    with FeatureSwitching {
 
   //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    /** Uncomment line to create integration test cases when going through journeys, either manually or via test packs.
-      * Set the number of cases to the amount of cases that will be executed. */
-//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 6)
+    if (isEnabled(WriteConfirmationTestCasesToFile)) {
+      writeConfirmationTestCasesToFile(request.userAnswers, loadResultData(request.userAnswers))
+    }
 
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>

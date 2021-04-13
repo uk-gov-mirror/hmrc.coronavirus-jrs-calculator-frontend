@@ -17,30 +17,41 @@
 package utils
 
 import cats.data.Validated.Valid
+import handlers.DataExtractor
 import models.EmployeeStarted.OnOrBefore1Feb2019
-import models.UserAnswers
+import models.{PayMethod, PaymentFrequency, UserAnswers}
 import models.UserAnswers.AnswerV
 import pages._
+import play.api.Logger.logger
 import viewmodels.{ConfirmationDataResult, ConfirmationDataResultWithoutNicAndPension}
 
+import java.time.{LocalDate, YearMonth}
 import scala.util.matching.Regex
 
 /**
- * For integration testing purposes only.
- */
-
+  * For integration testing purposes only.
+  */
 //scalastyle:off
-object ConfirmationTestCasesUtil {
+object ConfirmationTestCasesUtil extends FileUtil with YearMonthHelper {
 
-  var testCases: Seq[String] = Seq()
+  var testCases: Map[YearMonth, String] = Map()
 
-  def printOutConfirmationTestCases(userAnswers: UserAnswers, result: AnswerV[ConfirmationDataResult], numberOfCases: Int = 10): String = {
+  def writeConfirmationTestCasesToFile(userAnswers: UserAnswers, result: AnswerV[ConfirmationDataResult]): String = {
+
+    val claimYearMonth: YearMonth =
+      userAnswers.getV(ClaimPeriodEndPage).map((x: LocalDate) => x.getYearMonth).toOption.getOrElse(YearMonth.of(2000, 1))
+
+    val payType =
+      userAnswers.getV(PayMethodPage).map((x: PayMethod) => x.toString).toOption.getOrElse("Unknown pay type")
+
+    val payFrequency =
+      userAnswers.getV(PaymentFrequencyPage).map((x: PaymentFrequency) => x.toString).toOption.getOrElse("Unknown pay frequency")
 
     val date: Regex = """(\d{4})-(\d{2})-(\d{2})""".r
 
-    val periodDate: Regex = """Period\("(\d{4})-(\d{2})-(\d{2})"""".r
-    val periodDateSecond: Regex = """.toLocalDate,"(\d{4})-(\d{2})-(\d{2})"""".r
-    val usualHoursRegex: Regex = """UsualHours\("(\d{4})-(\d{2})-(\d{2})"""".r
+    val periodDate: Regex         = """Period\("(\d{4})-(\d{2})-(\d{2})"""".r
+    val periodDateSecond: Regex   = """.toLocalDate,"(\d{4})-(\d{2})-(\d{2})"""".r
+    val usualHoursRegex: Regex    = """UsualHours\("(\d{4})-(\d{2})-(\d{2})"""".r
     val partTimeHoursRegex: Regex = """PartTimeHours\("(\d{4})-(\d{2})-(\d{2})"""".r
 
     val text =s"""emptyUserAnswers
@@ -104,15 +115,16 @@ object ConfirmationTestCasesUtil {
         case partTimeHours => addLocalDate(partTimeHours)
       })
 
-    testCases = testCases ++ Seq(finalResult)
+    testCases = testCases ++ Map(claimYearMonth -> finalResult)
 
-    if(testCases.length >= numberOfCases){
-      println("Test cases done. See Outcome.")
-      println("#############################")
-      println(testCases.mkString(","))
-      Thread.sleep(30000)
-      println("#############################")
-      testCases = Seq()
+    testCases.foreach { testCase =>
+      val path     = s"it/controllers/scenarios/generatedUserAnswers/${testCase._1.stringFmt}/"
+      val filename = s"$payType${payFrequency.capitalize}"
+      val testCaseNoEmptyLine = testCase._2.replaceAll("(?m)(^\\s*$\\r?\\n)+", "")
+      val caseContent: String = s"$testCaseNoEmptyLine, \n"
+
+      writeFile(filename, caseContent, path, true)
+      logger.debug(s"[ConfirmationTestCasesUtil][writeConfirmationTestCasesToFile] test case written to $filename")
     }
 
     finalResult
