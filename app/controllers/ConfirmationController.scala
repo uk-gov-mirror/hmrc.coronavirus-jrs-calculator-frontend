@@ -45,8 +45,8 @@ class ConfirmationController @Inject()(
   viewWithDetailedBreakdowns: ConfirmationViewWithDetailedBreakdowns,
   phaseTwoView: PhaseTwoConfirmationView,
   noNicAndPensionView: NoNicAndPensionConfirmationView,
-  septemberConfirmationView: SeptemberConfirmationView,
-  octoberConfirmationView: OctoberConfirmationView,
+  seventyPercentConfirmationView: SeventyPercentConfirmationView,
+  sixtyPercentConfirmationView: SixtyPercentConfirmationView,
   extensionView: JrsExtensionConfirmationView,
   auditService: AuditService,
   val navigator: Navigator)(implicit val errorHandler: ErrorHandler, ec: ExecutionContext, appConfig: FrontendAppConfig)
@@ -71,10 +71,10 @@ class ConfirmationController @Inject()(
           case yearMonth if yearMonth == AUGUST.inYear(y2020) =>
             Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
           case yearMonth if yearMonth == SEPTEMBER.inYear(y2020) || yearMonth == JULY.inYear(y2021) =>
-            Ok(septemberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
+            Ok(seventyPercentConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
           case yearMonth
               if yearMonth == OCTOBER.inYear(y2020) || yearMonth == AUGUST.inYear(y2021) || yearMonth == SEPTEMBER.inYear(y2021) =>
-            Ok(octoberConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
+            Ok(sixtyPercentConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
           case yearMonth if yearMonth.isBetweenInclusive(appConfig.extensionStartDate.getYearMonth, appConfig.schemeEndDate.getYearMonth) =>
             Ok(
               extensionView(

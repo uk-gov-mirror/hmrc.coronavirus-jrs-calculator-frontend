@@ -46,8 +46,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
   val view          = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
   val noNicView     = app.injector.instanceOf[NoNicAndPensionConfirmationView]
   val phaseTwoView  = app.injector.instanceOf[PhaseTwoConfirmationView]
-  val septView      = app.injector.instanceOf[SeptemberConfirmationView]
-  val octView       = app.injector.instanceOf[OctoberConfirmationView]
+  val septView      = app.injector.instanceOf[SeventyPercentConfirmationView]
+  val octView       = app.injector.instanceOf[SixtyPercentConfirmationView]
   val extensionView = app.injector.instanceOf[JrsExtensionConfirmationView]
   val audit         = app.injector.instanceOf[AuditService]
   val service       = app.injector.instanceOf[EmployeeTypeService]
@@ -62,8 +62,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
     viewWithDetailedBreakdowns = view,
     phaseTwoView = phaseTwoView,
     noNicAndPensionView = noNicView,
-    septemberConfirmationView = septView,
-    octoberConfirmationView = octView,
+    seventyPercentConfirmationView = septView,
+    sixtyPercentConfirmationView = octView,
     extensionView = extensionView,
     auditService = audit,
     navigator = navigator
