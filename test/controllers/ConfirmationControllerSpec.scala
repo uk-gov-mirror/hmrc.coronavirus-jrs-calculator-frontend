@@ -43,14 +43,14 @@ import scala.concurrent.Future
 
 class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
-  val view          = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
-  val noNicView     = app.injector.instanceOf[NoNicAndPensionConfirmationView]
-  val phaseTwoView  = app.injector.instanceOf[PhaseTwoConfirmationView]
-  val septView      = app.injector.instanceOf[SeventyPercentConfirmationView]
-  val octView       = app.injector.instanceOf[SixtyPercentConfirmationView]
-  val extensionView = app.injector.instanceOf[JrsExtensionConfirmationView]
-  val audit         = app.injector.instanceOf[AuditService]
-  val service       = app.injector.instanceOf[EmployeeTypeService]
+  val view               = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
+  val noNicView          = app.injector.instanceOf[NoNicAndPensionConfirmationView]
+  val phaseTwoView       = app.injector.instanceOf[PhaseTwoConfirmationView]
+  val seventyPercentView = app.injector.instanceOf[SeventyPercentConfirmationView]
+  val sixtyPercentView   = app.injector.instanceOf[SixtyPercentConfirmationView]
+  val extensionView      = app.injector.instanceOf[JrsExtensionConfirmationView]
+  val audit              = app.injector.instanceOf[AuditService]
+  val service            = app.injector.instanceOf[EmployeeTypeService]
 
   val controller = new ConfirmationController(
     messagesApi = messagesApi,
@@ -62,8 +62,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
     viewWithDetailedBreakdowns = view,
     phaseTwoView = phaseTwoView,
     noNicAndPensionView = noNicView,
-    seventyPercentConfirmationView = septView,
-    sixtyPercentConfirmationView = octView,
+    seventyPercentConfirmationView = seventyPercentView,
+    sixtyPercentConfirmationView = sixtyPercentView,
     extensionView = extensionView,
     auditService = audit,
     navigator = navigator
@@ -90,7 +90,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
 
   "Confirmation Controller" must {
 
-    "return OK and the confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
+    "return OK and the confirmation view with detailed breakdowns for a GET (March 2020 journey)" in new CalculatorVersionConfiguration {
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(dummyUserAnswers))
 
@@ -138,7 +138,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         appConf).toString
     }
 
-    "return OK and the JRSExtension view with calculations, for a GET for dates 1st to 31st March 2021" in new CalculatorVersionConfiguration {
+    "return OK and the JRSExtension view with calculations, for a GET for dates 1st to 31st March 2021 (80% Grant)" in new CalculatorVersionConfiguration {
 
       def userAnswers(): UserAnswers =
         emptyUserAnswers
@@ -208,6 +208,186 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       status(result) mustEqual OK
       actual must include(VariableExtensionType5.heading)
 
+    }
+
+    "return OK and the JRSMayExtension view with calculations, for a GET for dates 1st to 31st July 2021 (70% Grant)" in new CalculatorVersionConfiguration {
+
+      val claimStartDate                  = "2021, 7, 1"
+      val claimEndDate                    = "2021, 7, 31"
+      val employeeIncomeForPeriod: Amount = Amount(10000.00)
+
+      def userAnswers(): UserAnswers =
+        mandatoryAnswersOnRegularMonthly
+          .withClaimPeriodStart(claimStartDate)
+          .withClaimPeriodEnd(claimEndDate)
+          .withFurloughStartDate("2020-03-01")
+          .withLastPayDate("2021-07-31")
+          .withRegularPayAmount(employeeIncomeForPeriod.value)
+          .withPayDate(List("2021-06-30", "2021-07-31"))
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers()))
+
+      val maxMonthFurloughGrant: BigDecimal = 2500
+
+      val payment: RegularPaymentWithPhaseTwoPeriod = {
+        RegularPaymentWithPhaseTwoPeriod(
+          regularPay = employeeIncomeForPeriod,
+          referencePay = employeeIncomeForPeriod,
+          phaseTwoPeriod = PhaseTwoPeriod(
+            periodWithPaymentDate = fullPeriodWithPaymentDate(start = claimStartDate, end = claimEndDate, paymentDate = claimEndDate),
+            actualHours = None,
+            usualHours = None
+          )
+        )
+      }
+
+      val breakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        ConfirmationViewBreakdownWithoutNicAndPension(
+          furlough = PhaseTwoFurloughCalculationResult(
+            total = maxMonthFurloughGrant,
+            periodBreakdowns = Seq(
+              PhaseTwoFurloughBreakdown(grant = Amount(maxMonthFurloughGrant),
+                                        paymentWithPeriod = payment,
+                                        furloughCap = FullPeriodCap(maxMonthFurloughGrant))
+            )
+          )
+        )
+      }
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val dataRequest                                  = DataRequest(request, userAnswers().id, userAnswers())
+
+      val result: Future[Result] = controller.onPageLoad()(request)
+
+      val actual: String = contentAsString(result)
+      val expected: String = seventyPercentView(
+        cvb = breakdown,
+        claimPeriod = period(start = claimStartDate, end = claimEndDate),
+        version = calculatorVersionConf
+      )(dataRequest, messages, appConf).toString
+
+      status(result) mustEqual OK
+      actual mustBe expected
+    }
+
+    "return OK and the JRSMayExtension view with calculations, for a GET for dates 1st to 31st August 2021 (60% Grant)" in new CalculatorVersionConfiguration {
+
+      val claimStartDate                  = "2021, 8, 1"
+      val claimEndDate                    = "2021, 8, 31"
+      val employeeIncomeForPeriod: Amount = Amount(10000.00)
+
+      def userAnswers(): UserAnswers =
+        mandatoryAnswersOnRegularMonthly
+          .withClaimPeriodStart(claimStartDate)
+          .withClaimPeriodEnd(claimEndDate)
+          .withFurloughStartDate("2020-03-01")
+          .withLastPayDate("2021-08-31")
+          .withRegularPayAmount(employeeIncomeForPeriod.value)
+          .withPayDate(List("2021-07-31", "2021-08-31"))
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers()))
+
+      val maxMonthFurloughGrant: BigDecimal = 2500
+
+      val payment: RegularPaymentWithPhaseTwoPeriod = {
+        RegularPaymentWithPhaseTwoPeriod(
+          regularPay = employeeIncomeForPeriod,
+          referencePay = employeeIncomeForPeriod,
+          phaseTwoPeriod = PhaseTwoPeriod(
+            periodWithPaymentDate = fullPeriodWithPaymentDate(start = claimStartDate, end = claimEndDate, paymentDate = claimEndDate),
+            actualHours = None,
+            usualHours = None
+          )
+        )
+      }
+
+      val breakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        ConfirmationViewBreakdownWithoutNicAndPension(
+          furlough = PhaseTwoFurloughCalculationResult(
+            total = maxMonthFurloughGrant,
+            periodBreakdowns = Seq(
+              PhaseTwoFurloughBreakdown(grant = Amount(maxMonthFurloughGrant),
+                                        paymentWithPeriod = payment,
+                                        furloughCap = FullPeriodCap(maxMonthFurloughGrant))
+            )
+          )
+        )
+      }
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val dataRequest                                  = DataRequest(request, userAnswers().id, userAnswers())
+
+      val result: Future[Result] = controller.onPageLoad()(request)
+
+      val actual: String = contentAsString(result)
+      val expected: String = sixtyPercentView(
+        cvb = breakdown,
+        claimPeriod = period(start = claimStartDate, end = claimEndDate),
+        version = calculatorVersionConf
+      )(dataRequest, messages, appConf).toString
+
+      status(result) mustEqual OK
+      actual mustBe expected
+    }
+
+    "return OK and the JRSMayExtension view with calculations, for a GET for dates 1st to 31st September 2021 (60% Grant)" in new CalculatorVersionConfiguration {
+
+      val claimStartDate                  = "2021, 9, 1"
+      val claimEndDate                    = "2021, 9, 30"
+      val employeeIncomeForPeriod: Amount = Amount(10000.00)
+
+      def userAnswers(): UserAnswers =
+        mandatoryAnswersOnRegularMonthly
+          .withClaimPeriodStart(claimStartDate)
+          .withClaimPeriodEnd(claimEndDate)
+          .withFurloughStartDate("2020-03-01")
+          .withLastPayDate("2021-09-30")
+          .withRegularPayAmount(employeeIncomeForPeriod.value)
+          .withPayDate(List("2021-08-31", "2021-09-30"))
+
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers()))
+
+      val maxMonthFurloughGrant: BigDecimal = 2500
+
+      val payment: RegularPaymentWithPhaseTwoPeriod = {
+        RegularPaymentWithPhaseTwoPeriod(
+          regularPay = employeeIncomeForPeriod,
+          referencePay = employeeIncomeForPeriod,
+          phaseTwoPeriod = PhaseTwoPeriod(
+            periodWithPaymentDate = fullPeriodWithPaymentDate(start = claimStartDate, end = claimEndDate, paymentDate = claimEndDate),
+            actualHours = None,
+            usualHours = None
+          )
+        )
+      }
+
+      val breakdown: ConfirmationViewBreakdownWithoutNicAndPension = {
+        ConfirmationViewBreakdownWithoutNicAndPension(
+          furlough = PhaseTwoFurloughCalculationResult(
+            total = maxMonthFurloughGrant,
+            periodBreakdowns = Seq(
+              PhaseTwoFurloughBreakdown(grant = Amount(maxMonthFurloughGrant),
+                                        paymentWithPeriod = payment,
+                                        furloughCap = FullPeriodCap(maxMonthFurloughGrant))
+            )
+          )
+        )
+      }
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val dataRequest                                  = DataRequest(request, userAnswers().id, userAnswers())
+
+      val result: Future[Result] = controller.onPageLoad()(request)
+
+      val actual: String = contentAsString(result)
+      val expected: String = sixtyPercentView(
+        cvb = breakdown,
+        claimPeriod = period(start = claimStartDate, end = claimEndDate),
+        version = calculatorVersionConf
+      )(dataRequest, messages, appConf).toString
+
+      status(result) mustEqual OK
+      actual mustBe expected
     }
   }
 }
