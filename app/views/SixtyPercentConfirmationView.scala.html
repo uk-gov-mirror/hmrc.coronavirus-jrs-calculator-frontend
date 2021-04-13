@@ -39,17 +39,17 @@ appConfig: config.FrontendAppConfig
 
 @(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: DataRequest[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@govukLayout(pageTitle = Some(titleNoForm("confirmation.october.title")), showBackButton = false, thisPage = ConfirmationPage) {
+@govukLayout(pageTitle = Some(titleNoForm("confirmation.sixtyPercent.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
 @confirmation {
 
-@h1(Html(messages("confirmation.october.heading")), classes = Some(""))
+@h1(Html(messages("confirmation.sixtyPercent.heading")), classes = Some(""))
 
 <div class="furlough-heading">
     <p>
-        @messages("confirmation.october.p1")
+        @messages("confirmation.sixtyPercent.p1")
         <br>
-        @messages("confirmation.october.p2")
+        @messages("confirmation.sixtyPercent.p2", messages(s"month.${claimPeriod.start.getMonthValue}"))
     </p>
     <p class="govuk-panel__title">&pound;@cvb.furlough.sixty.formatted("%.2f")</p>
 </div>
@@ -58,11 +58,11 @@ appConfig: config.FrontendAppConfig
 
 <div class="govuk-inset-text">
     @p{
-        @messages("confirmation.october.inset.p1.1")
+        @messages("confirmation.sixtyPercent.inset.p1.1")
         <span class="govuk-!-font-weight-bold">£@cvb.furlough.sixtyDiff.formatted("%.2f")</span>
-        @messages("confirmation.october.inset.p1.2", cvb.furlough.sixty.formatted("%.2f"), cvb.furlough.total.formatted("%.2f"))
+        @messages("confirmation.sixtyPercent.inset.p1.2", cvb.furlough.sixty.formatted("%.2f"), cvb.furlough.total.formatted("%.2f"))
     }
-    @p(Html(messages("confirmation.october.inset.p2")))
+    @p(Html(messages("confirmation.sixtyPercent.inset.p2")))
 </div>
 
 @p {
@@ -106,13 +106,13 @@ appConfig: config.FrontendAppConfig
 
 @for(detailedBreakdown <- cvb.detailedBreakdowns) {
     @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-    @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period)
+    @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period, claimPeriod.start.getMonth)
 }
 <hr>
 <br>
 
     <p class="govuk-body">
-        @messages("confirmation.october.eligibility")
+        @messages("confirmation.sixtyPercent.eligibility")
         <span class="govuk-!-font-weight-bold">£@cvb.furlough.sixtyDiff.formatted("%.2f.")</span>
     </p>
     <p class="govuk-body">@messages("confirmation.disclaimer")</p>

@@ -43,10 +43,10 @@ class FurloughCapHelper @Inject()() {
         messages(
           "furloughBreakdown.furloughCap.periodSpansMonthCap",
           monthOneFurloughDays,
-          Month.of(monthOne).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthOne"),
           monthOneDaily.formatted("%.2f"),
           monthTwoFurloughDays,
-          Month.of(monthTwo).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthTwo"),
           monthTwoDaily.formatted("%.2f"),
           value.formatted("%.2f")
         )
@@ -63,10 +63,10 @@ class FurloughCapHelper @Inject()() {
         messages(
           "phaseTwoFurloughBreakdown.furloughCap.periodSpansMonthCap.partTime",
           monthOneFurloughDays,
-          Month.of(monthOne).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthOne"),
           monthOneDaily.formatted("%.2f"),
           monthTwoFurloughDays,
-          Month.of(monthTwo).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthTwo"),
           monthTwoDaily.formatted("%.2f"),
           usual.formatted("%.2f"),
           furloughed.formatted("%.2f"),
@@ -92,10 +92,10 @@ class FurloughCapHelper @Inject()() {
         )
     }
 
-  def calculationForSept(cap: FurloughCap)(implicit messages: Messages): String =
+  def calculationForSeventyPercent(cap: FurloughCap, month: Month)(implicit messages: Messages): String =
     cap match {
       case FullPeriodCap(value) =>
-        messages("furloughBreakdown.september.furloughCap.fullPeriodCap", seventy(value))
+        messages("furloughBreakdown.seventyPercent.furloughCap.fullPeriodCap", seventy(value), messages(s"month.${month.getValue}"))
       case FullPeriodCapWithPartTime(value, unadjusted, usual, furloughed) =>
         messages(
           "phaseTwoFurloughBreakdown.furloughCap.fullPeriodCap.partTime",
@@ -108,10 +108,10 @@ class FurloughCapHelper @Inject()() {
         messages(
           "furloughBreakdown.furloughCap.periodSpansMonthCap",
           monthOneFurloughDays,
-          Month.of(monthOne).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthOne"),
           seventy(monthOneDaily),
           monthTwoFurloughDays,
-          Month.of(monthTwo).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthTwo"),
           seventy(monthTwoDaily),
           seventy(value)
         )
@@ -128,10 +128,10 @@ class FurloughCapHelper @Inject()() {
         messages(
           "phaseTwoFurloughBreakdown.furloughCap.periodSpansMonthCap.partTime",
           monthOneFurloughDays,
-          Month.of(monthOne).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthOne"),
           seventy(monthOneDaily),
           monthTwoFurloughDays,
-          Month.of(monthTwo).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthTwo"),
           seventy(monthTwoDaily),
           usual.formatted("%.2f"),
           furloughed.formatted("%.2f"),
@@ -157,10 +157,10 @@ class FurloughCapHelper @Inject()() {
         )
     }
 
-  def calculationForOct(cap: FurloughCap)(implicit messages: Messages): String =
+  def calculationForSixtyPercent(cap: FurloughCap, month: Month)(implicit messages: Messages): String =
     cap match {
       case FullPeriodCap(value) =>
-        messages("furloughBreakdown.october.furloughCap.fullPeriodCap", sixty(value))
+        messages("furloughBreakdown.sixtyPercent.furloughCap.fullPeriodCap", sixty(value), messages(s"month.${month.getValue}"))
       case FullPeriodCapWithPartTime(value, unadjusted, usual, furloughed) =>
         messages(
           "phaseTwoFurloughBreakdown.furloughCap.fullPeriodCap.partTime",
@@ -173,10 +173,10 @@ class FurloughCapHelper @Inject()() {
         messages(
           "furloughBreakdown.furloughCap.periodSpansMonthCap",
           monthOneFurloughDays,
-          Month.of(monthOne).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthOne"),
           sixty(monthOneDaily),
           monthTwoFurloughDays,
-          Month.of(monthTwo).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthTwo"),
           sixty(monthTwoDaily),
           sixty(value)
         )
@@ -193,10 +193,10 @@ class FurloughCapHelper @Inject()() {
         messages(
           "phaseTwoFurloughBreakdown.furloughCap.periodSpansMonthCap.partTime",
           monthOneFurloughDays,
-          Month.of(monthOne).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthOne"),
           sixty(monthOneDaily),
           monthTwoFurloughDays,
-          Month.of(monthTwo).getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+          messages(s"month.$monthTwo"),
           sixty(monthTwoDaily),
           usual.formatted("%.2f"),
           furloughed.formatted("%.2f"),

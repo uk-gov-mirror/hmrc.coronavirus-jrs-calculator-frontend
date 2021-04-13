@@ -230,24 +230,24 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
       )
     } else None
 
-  def detailedBreakdownMessageKeysSept()(implicit messages: Messages,
-                                         dataRequest: DataRequest[_],
-                                         appConfig: FrontendAppConfig): Seq[String] = {
+  def detailedBreakdownMessageKeysSeventyPercent()(implicit messages: Messages,
+                                                   dataRequest: DataRequest[_],
+                                                   appConfig: FrontendAppConfig): Seq[String] = {
     val helper = new BeenOnStatutoryLeaveHelper()
     furlough.periodBreakdowns.headOption
       .map {
         _.paymentWithPeriod match {
           case _: RegularPaymentWithPhaseTwoPeriod =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.september.p1.regular")
+              messages("phaseTwoDetailedBreakdown.seventyPercent.p1.regular")
             )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.september.p1.average")
+              messages("phaseTwoDetailedBreakdown.seventyPercent.p1.average")
             )
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.september.no.nic.pension.p1.cylb.1"),
+              messages("phaseTwoDetailedBreakdown.seventyPercent.no.nic.pension.p1.cylb.1"),
               messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2"),
               messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3", helper.boundaryEnd())
             )
@@ -265,15 +265,15 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
         _.paymentWithPeriod match {
           case _: RegularPaymentWithPhaseTwoPeriod =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.october.p1.regular")
+              messages("phaseTwoDetailedBreakdown.sixtyPercent.p1.regular")
             )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.october.p1.average")
+              messages("phaseTwoDetailedBreakdown.sixtyPercent.p1.average")
             )
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.october.no.nic.pension.p1.cylb.1"),
+              messages("phaseTwoDetailedBreakdown.sixtyPercent.no.nic.pension.p1.cylb.1"),
               messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.2"),
               messages("phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3", helper.boundaryEnd())
             )

@@ -29,6 +29,18 @@ class FurloughCapHelperSpec extends SpecBase {
     Helpers.stubMessagesApi(
       Map(
         "en" -> Map(
+          "month.1"                                                            -> "January",
+          "month.2"                                                            -> "February",
+          "month.3"                                                            -> "March",
+          "month.4"                                                            -> "April",
+          "month.5"                                                            -> "May",
+          "month.6"                                                            -> "June",
+          "month.7"                                                            -> "July",
+          "month.8"                                                            -> "August",
+          "month.9"                                                            -> "September",
+          "month.10"                                                           -> "October",
+          "month.11"                                                           -> "November",
+          "month.12"                                                           -> "December",
           "furloughBreakdown.furloughCap.fullPeriodCap"                        -> "{0}",
           "phaseTwoFurloughBreakdown.furloughCap.fullPeriodCap.partTime"       -> "{0}|{1}|{2}|{3}",
           "furloughBreakdown.furloughCap.periodSpansMonthCap"                  -> "{0}|{1}|{2}|{3}|{4}|{5}|{6}",
