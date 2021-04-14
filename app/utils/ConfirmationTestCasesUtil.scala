@@ -19,8 +19,8 @@ package utils
 import cats.data.Validated.Valid
 import handlers.DataExtractor
 import models.EmployeeStarted.OnOrBefore1Feb2019
-import models.{PayMethod, PaymentFrequency, UserAnswers}
 import models.UserAnswers.AnswerV
+import models.{PayMethod, PaymentFrequency, UserAnswers}
 import pages._
 import play.api.Logger.logger
 import viewmodels.{ConfirmationDataResult, ConfirmationDataResultWithoutNicAndPension}
@@ -32,7 +32,7 @@ import scala.util.matching.Regex
   * For integration testing purposes only.
   */
 //scalastyle:off
-object ConfirmationTestCasesUtil extends FileUtil with YearMonthHelper {
+object ConfirmationTestCasesUtil extends FileUtil with YearMonthHelper with DataExtractor {
 
   var testCases: Map[YearMonth, String] = Map()
 
@@ -46,6 +46,8 @@ object ConfirmationTestCasesUtil extends FileUtil with YearMonthHelper {
 
     val payFrequency =
       userAnswers.getV(PaymentFrequencyPage).map((x: PaymentFrequency) => x.toString).toOption.getOrElse("Unknown pay frequency")
+
+    val statutoryLeaveData = extractStatutoryLeaveData(userAnswers).toOption
 
     val date: Regex = """(\d{4})-(\d{2})-(\d{2})""".r
 
@@ -79,7 +81,6 @@ object ConfirmationTestCasesUtil extends FileUtil with YearMonthHelper {
                  |      ${userAnswers.getO(ClaimPeriodStartPage).flatMap(x => x.toOption.map(x => ".withClaimPeriodStart(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
                  |      ${".withLastYear(" + userAnswers.getList(LastYearPayPage).toString.replace("Valid(", "").replaceAll("\\)\\), LastYearPayment\\(",",").replaceAll("LastYearPayment\\(","").replaceAll(",Amount\\("," -> ") + ")"}
                  |      ${userAnswers.getO(FurloughInLastTaxYearPage).flatMap(x => x.toOption.map(x => ".withFurloughInLastTaxYear(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
-                 |      ${userAnswers.getO(StatutoryLeavePayPage).flatMap(x => x.toOption.map(x => ".withStatutoryLeavePay(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(PayPeriodsListPage).flatMap(x => x.toOption.map(x => ".withPayPeriodsList(PayPeriodsList." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(PartTimePeriodsPage).flatMap(x => x.toOption.map(x => ".withPartTimePeriods(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
                  |      ${userAnswers.getO(PayMethodPage).flatMap(x => x.toOption.map(x => ".withPayMethod(PayMethod." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
@@ -91,6 +92,7 @@ object ConfirmationTestCasesUtil extends FileUtil with YearMonthHelper {
                  |      ${userAnswers.getO(RegularLengthEmployedPage).flatMap(x => x.toOption.map(x => ".withRegularLengthEmployed(RegularLengthEmployed." + x.getClass.getSimpleName.replace("Valid(", "").replace("$", "") + ")")).getOrElse("")}
                  |      ${".withPayDate(" + userAnswers.getList(PayDatePage).toString.replace("Valid(", "") + ")"}
                  |      ${userAnswers.getO(LastYearPayPage).flatMap(x => x.toOption.map(x => ".withPayDate(" + x.toString.replace("Valid(", "") + ")")).getOrElse("")}
+                 |      ${statutoryLeaveData.flatMap(oData => oData.map(data => s".withStatutoryLeaveData(${data.days}, ${data.pay})")).getOrElse("")}
                  |      ${".withUsualHours(" + userAnswers.getList(PartTimeNormalHoursPage).toString.replace("Valid(", "") + ")"}
                  |      ${".withPartTimeHours(" + userAnswers.getList(PartTimeHoursPage).toString.replace("Valid(", "") + ")"}
                  |""".stripMargin.replaceAll("\n\n", "\n")

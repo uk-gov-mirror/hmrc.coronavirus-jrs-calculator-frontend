@@ -19,6 +19,7 @@ package controllers
 import assets.constants.ConfirmationConstants._
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
 import config.CalculatorVersionConfiguration
+import config.featureSwitch.{FeatureSwitching, WriteConfirmationTestCasesToFile}
 import messages.JRSExtensionConfirmationMessages.VariableExtensionType5
 import models.FurloughStatus.FurloughOngoing
 import models.NicCategory.Payable
@@ -41,7 +42,7 @@ import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDataBuilder {
+class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDataBuilder with FeatureSwitching {
 
   val view          = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
   val noNicView     = app.injector.instanceOf[NoNicAndPensionConfirmationView]
@@ -92,6 +93,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
 
     "return OK and the confirmation view with detailed breakdowns for a GET" in new CalculatorVersionConfiguration {
 
+      disable(WriteConfirmationTestCasesToFile)
+
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(dummyUserAnswers))
 
       val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
@@ -102,6 +105,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
     }
 
     "return OK and the phase two confirmation view with detailed breakdowns for a GET for dates 1st to 31st July 2020" in new CalculatorVersionConfiguration {
+
+      disable(WriteConfirmationTestCasesToFile)
 
       when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(phaseTwoJourney()))
 
@@ -139,6 +144,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
     }
 
     "return OK and the JRSExtension view with calculations, for a GET for dates 1st to 31st March 2021" in new CalculatorVersionConfiguration {
+
+      disable(WriteConfirmationTestCasesToFile)
 
       def userAnswers(): UserAnswers =
         emptyUserAnswers

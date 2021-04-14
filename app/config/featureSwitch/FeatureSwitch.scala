@@ -26,7 +26,8 @@ object FeatureSwitch {
     WelshLanguageFeature,
     ShowNewStartPage,
     ExtensionTwoNewStarterFlow,
-    StatutoryLeaveFlow
+    StatutoryLeaveFlow,
+    WriteConfirmationTestCasesToFile
   )
 
   val booleanFeatureSwitches: Seq[BooleanFeatureSwitch]       = switches.collect { case a: BooleanFeatureSwitch => a }

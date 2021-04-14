@@ -135,6 +135,9 @@ class ConfirmationControllerISpec
           scenarios.zipWithIndex.foreach {
             case ((scenario, outcome), index) =>
               s"the user has answered the questions relating to $scenarioSummary for scenario ${index + 1}" in {
+
+                disable(WriteConfirmationTestCasesToFile)
+
                 val userAnswers: UserAnswers = scenario
 
                 setAnswers(userAnswers)

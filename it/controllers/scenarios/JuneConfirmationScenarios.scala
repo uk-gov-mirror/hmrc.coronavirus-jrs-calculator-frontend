@@ -1279,7 +1279,6 @@ object JuneConfirmationScenarios
         .withClaimPeriodStart("2021-06-01")
         .withLastYear(List())
         .withFurloughInLastTaxYear(false)
-        .withStatutoryLeavePay(Amount(5714.4))
         .withPayPeriodsList(PayPeriodsList.Yes)
         .withPayMethod(PayMethod.Variable)
         .withPartTimeQuestion(PartTimeQuestion.PartTimeNo)
