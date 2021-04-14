@@ -29,6 +29,7 @@
     h3: components.h3,
     p: components.p,
     confirmation: helper.confirmationHeading,
+        nextSteps: helper.confirmationNextSteps,
         calculationDate: helper.calculationDate,
         additionalPayment: helper.additionalPaymentUpToEightyPercent,
     panelIndent: components.panelIndent,
@@ -52,19 +53,7 @@
 
     @calculationDate(version)
 
-    @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
-
-    <ul class="govuk-list govuk-list--number">
-        <li><a class="govuk-link" onClick="window.print()" href="">@messages("confirmation.print.this.page")</a> @messages("confirmation.no.nic.pension.nextSteps.li.1")</li>
-        <li>@messages("confirmation.no.nic.pension.nextSteps.li.2")</li>
-        <li>@messages("confirmation.no.nic.pension.nextSteps.li.3",
-            dateToStringWithoutYear(claimPeriod.start),
-            dateToString(claimPeriod.end))</li>
-        <li>@messages("confirmation.no.nic.pension.nextSteps.li.4")</li>
-        <li>@Html(messages("confirmation.no.nic.pension.nextSteps.li.4.1", link(appConfig.jobRetentionScheme,
-            "confirmation.no.nic.pension.nextSteps.li.4.2", true)))
-        </li>
-    </ul>
+    @nextSteps(claimPeriod)
 
     @button(messages("confirmation.startAgain"), href = Some(routes.ClaimPeriodQuestionController.onPageLoad()), classes = Some("govuk-button"))
 

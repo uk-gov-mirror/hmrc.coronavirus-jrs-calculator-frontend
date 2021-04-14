@@ -47,7 +47,7 @@ class JrsExtensionConfirmationViewSpec
     val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(3)
     val disclaimer: String                           = nonGreenContentParagraphChild(4)
     val nextStepsNumberedList: Int => String =
-      i => s"#main-content > div > div > div > ul.govuk-list.govuk-list--number > li:nth-child($i)"
+      i => s"#main-content > div > div > div > ol.govuk-list.govuk-list--number > li:nth-child($i)"
     val calculatePayList: Int => String       = i => s"#main-content > div > div > div > ol:nth-child(15) > li:nth-child($i)"
     val furloughGrantList: Int => String      = i => s"#main-content > div > div > div > ol:nth-child(18) > li:nth-child($i)"
     val breakdownParagraphOne: String         = nonGreenContentParagraphChild(9)
@@ -94,8 +94,7 @@ class JrsExtensionConfirmationViewSpec
     loadResultData(userAnswers).value.asInstanceOf[ConfirmationDataResultWithoutNicAndPension].confirmationViewBreakdown
   }
 
-  val nextStepsListMessage: Int => String =
-    (bullet: Int) => RegularType1.nextStepsListMessages(bullet, decClaimPeriod)
+  val nextStepsListMessage: Int => String = (bullet: Int) => nextStepsListMessages(bullet, decClaimPeriod)
   val calculatePayListMessage: Int => String = { (bullet: Int) =>
     RegularType1.calculatePayListMessages(bullet, 10000, 31, 31)
   }
@@ -108,7 +107,7 @@ class JrsExtensionConfirmationViewSpec
     RegularEmployeeTypeOneSelectors.dateAndCalculatorVersion      -> dateAndCalculatorVersion(dateToString(LocalDate.now()), "2"),
     RegularEmployeeTypeOneSelectors.indent                        -> AdditionalPaymentBlock.stillPayNICandPension,
     RegularEmployeeTypeOneSelectors.disclaimer                    -> disclaimerTopPage,
-    RegularEmployeeTypeOneSelectors.h2(1)                         -> RegularType1.h2NextSteps,
+    RegularEmployeeTypeOneSelectors.h2(1)                         -> h2NextSteps,
     RegularEmployeeTypeOneSelectors.nextStepsNumberedList(1)      -> nextStepsListMessage(1),
     RegularEmployeeTypeOneSelectors.nextStepsNumberedList(2)      -> nextStepsListMessage(2),
     RegularEmployeeTypeOneSelectors.nextStepsNumberedList(3)      -> nextStepsListMessage(3),
@@ -190,7 +189,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
     val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(3)
     val disclaimer: String                           = nonGreenContentParagraphChild(4)
     val nextStepsNumberedList: Int => String =
-      i => s"#main-content > div > div > div > ul.govuk-list.govuk-list--number > li:nth-child($i)"
+      i => s"#main-content > div > div > div > ol.govuk-list.govuk-list--number > li:nth-child($i)"
     val calculatePayList: Int => String       = i => s"#main-content > div > div > div > ol:nth-child(15) > li:nth-child($i)"
     val furloughGrantList: Int => String      = i => s"#main-content > div > div > div > ol:nth-child(18) > li:nth-child($i)"
     val breakdownParagraphOne: String         = nonGreenContentParagraphChild(9)
@@ -233,8 +232,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
 
   val userAnswers: UserAnswers = nov2020Type5Journey()
 
-  val nextStepsListMessage: Int => String =
-    (bullet: Int) => VariableExtensionType5.nextStepsListMessages(bullet, novClaimPeriod)
+  val nextStepsListMessage: Int => String = (bullet: Int) => nextStepsListMessages(bullet, novClaimPeriod)
 
   val furloughGrantListMessage: Int => String = { (bullet: Int) =>
     VariableExtensionType5.furloughGrantListMessages(bullet, 733.92, 80)
@@ -245,7 +243,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
     VariableEmployeeTypeFiveSelectors.dateAndCalculatorVersion -> dateAndCalculatorVersion(dateToString(LocalDate.now()), "2"),
     VariableEmployeeTypeFiveSelectors.indent                   -> AdditionalPaymentBlock.stillPayNICandPension,
     VariableEmployeeTypeFiveSelectors.disclaimer               -> disclaimerTopPage,
-    VariableEmployeeTypeFiveSelectors.h2(1)                    -> VariableExtensionType5.h2NextSteps,
+    VariableEmployeeTypeFiveSelectors.h2(1)                    -> h2NextSteps,
     VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(1) -> nextStepsListMessage(1),
     VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(2) -> nextStepsListMessage(2),
     VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(3) -> nextStepsListMessage(3),

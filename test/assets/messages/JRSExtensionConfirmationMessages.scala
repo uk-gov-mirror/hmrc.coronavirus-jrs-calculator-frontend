@@ -47,21 +47,22 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
       "You cannot claim for more money than you are going to pay out under the scheme."
   }
 
+  val h2NextSteps = "Next steps"
+
+  def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
+    messageNumber match {
+      case 1 => "Print or save a copy of this page for your records"
+      case 2 => "Make a note of the amount you can claim for this employee and the claim period."
+      case 3 =>
+        s"Use the calculator again for any other employees furloughed within this claim period ${dateToStringWithoutYear(period.start)} " +
+          s"to ${dateToString(period.`end`)} and make a note of the results."
+      case 4 => "Add all the results for each employee furloughed in this claim period together to get the total amount you can claim."
+      case 5 => "Make a claim through the Coronavirus Job Retention Scheme (opens in a new window or tab)."
+      case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
+    }
+
   object RegularType1 {
 
-    def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
-      messageNumber match {
-        case 1 => "Print or save a copy of this page for your records"
-        case 2 => "Make a note of the amount you can claim for this employee and the claim period."
-        case 3 =>
-          s"Use the calculator again for any other employees furloughed within this claim period ${dateToStringWithoutYear(period.start)} " +
-            s"to ${dateToString(period.`end`)} and make a note of the results."
-        case 4 => "Add all the results for each employee furloughed in this claim period together to get the total amount you can claim."
-        case 5 => "Make a claim through the Coronavirus Job Retention Scheme (opens in a new window or tab)."
-        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
-      }
-
-    val h2NextSteps               = "Next steps"
     val h2BreakdownOfCalculations = "Breakdown of calculations"
 
     val breakDownParagraphOne
@@ -146,19 +147,6 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
   object VariableExtensionType5 {
 
-    def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
-      messageNumber match {
-        case 1 => "Print or save a copy of this page for your records"
-        case 2 => "Make a note of the amount you can claim for this employee and the claim period."
-        case 3 =>
-          s"Use the calculator again for any other employees furloughed within this claim period ${dateToStringWithoutYear(period.start)} " +
-            s"to ${dateToString(period.`end`)} and make a note of the results."
-        case 4 => "Add all the results for each employee furloughed in this claim period together to get the total amount you can claim."
-        case 5 => "Make a claim through the Coronavirus Job Retention Scheme (opens in a new window or tab)."
-        case _ => s"This number $messageNumber is not valid. Are you sure there are that many bullets?"
-      }
-
-    val h2NextSteps               = "Next steps"
     val h2BreakdownOfCalculations = "Breakdown of calculations"
 
     def breakdownP1(boundaryStart: String, boundaryEnd: String) =

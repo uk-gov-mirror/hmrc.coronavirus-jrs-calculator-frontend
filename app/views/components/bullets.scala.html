@@ -18,8 +18,14 @@
 
 @(content: Seq[Html], isWarning: Boolean = false, numberList: Boolean = false, classes: String = "govuk-list")(implicit messages: Messages)
 
-<ul class="@classes govuk-list--bullet @if(isWarning){govuk-warning-text__text govuk-!-margin-top-5} @if(numberList){govuk-list govuk-list--number}">
+ @if(numberList) {
+  <ol class="@classes govuk-list--number @if(isWarning){govuk-warning-text__text govuk-!-margin-top-5}">@bullets</ol>
+ } else {
+  <ul class="@classes govuk-list--bullet @if(isWarning){govuk-warning-text__text govuk-!-margin-top-5}">@bullets</ul>
+ }
+
+@bullets = {
  @content.map { bullet =>
   <li>@bullet</li>
  }
-</ul>
+}
