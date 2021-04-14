@@ -54,11 +54,15 @@ class AdditionalPaymentUpToEightyPercentSpec extends ViewBehaviours {
 
   "additionalPaymentUpToEightyPercent" must {
 
-    "not render anything for EightyPercent" in {
+    "Only render the Still Pay NIC and Pensions message" must {
 
-      val html = headingHelper(calcResult, EightyPercent)
+      val html         = headingHelper(calcResult, EightyPercent)
+      implicit val doc = asDocument(dummyView(html))
 
-      html.body.trim mustBe ""
+      behave like pageWithExpectedMessages(
+        Seq(
+          Selectors.p(1) -> AdditionalPaymentBlock.stillPayNICandPension
+        ))
     }
 
     "render the expected 70% top up content" must {
@@ -69,7 +73,8 @@ class AdditionalPaymentUpToEightyPercentSpec extends ViewBehaviours {
       behave like pageWithExpectedMessages(
         Seq(
           Selectors.p(1) -> AdditionalPaymentBlock.p1(calcResult.seventyDiff, calcResult.seventy),
-          Selectors.p(2) -> AdditionalPaymentBlock.p2
+          Selectors.p(2) -> AdditionalPaymentBlock.p2,
+          Selectors.p(3) -> AdditionalPaymentBlock.stillPayNICandPension
         ))
     }
 
@@ -81,7 +86,8 @@ class AdditionalPaymentUpToEightyPercentSpec extends ViewBehaviours {
       behave like pageWithExpectedMessages(
         Seq(
           Selectors.p(1) -> AdditionalPaymentBlock.p1(calcResult.sixtyDiff, calcResult.sixty),
-          Selectors.p(2) -> AdditionalPaymentBlock.p2
+          Selectors.p(2) -> AdditionalPaymentBlock.p2,
+          Selectors.p(3) -> AdditionalPaymentBlock.stillPayNICandPension
         ))
     }
   }

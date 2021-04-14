@@ -36,13 +36,13 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
       s"You must pay this employee ${currencyFormatter(topup)} in addition to the furlough grant of ${currencyFormatter(grant)}. This adds up to 80% of their usual wage (${currencyFormatter(topup + grant)})."
     val p2 =
       "To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to."
+    val stillPayNICandPension =
+      "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
   }
 
   object RegularType1 {
 
     val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
-
-    val indent = "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
 
     val disclaimerTopPage = {
       "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. " +

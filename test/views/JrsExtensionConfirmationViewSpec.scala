@@ -44,7 +44,7 @@ class JrsExtensionConfirmationViewSpec
 
   object RegularEmployeeTypeOneSelectors extends BaseSelectors {
     val nonGreenContentParagraphChild: Int => String = (i: Int) => s"#main-content > div > div > div > p:nth-child($i)"
-    val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(2)
+    val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(3)
     val disclaimer: String                           = nonGreenContentParagraphChild(4)
     val nextStepsNumberedList: Int => String =
       i => s"#main-content > div > div > div > ul.govuk-list.govuk-list--number > li:nth-child($i)"
@@ -106,7 +106,7 @@ class JrsExtensionConfirmationViewSpec
   val expectedContent = Seq(
     RegularEmployeeTypeOneSelectors.h1                            -> heading,
     RegularEmployeeTypeOneSelectors.dateAndCalculatorVersion      -> RegularType1.dateAndCalculatorVersion(dateToString(LocalDate.now())),
-    RegularEmployeeTypeOneSelectors.indent                        -> RegularType1.indent,
+    RegularEmployeeTypeOneSelectors.indent                        -> AdditionalPaymentBlock.stillPayNICandPension,
     RegularEmployeeTypeOneSelectors.disclaimer                    -> RegularType1.disclaimerTopPage,
     RegularEmployeeTypeOneSelectors.h2(1)                         -> RegularType1.h2NextSteps,
     RegularEmployeeTypeOneSelectors.nextStepsNumberedList(1)      -> nextStepsListMessage(1),
@@ -187,7 +187,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
 
   object VariableEmployeeTypeFiveSelectors extends BaseSelectors {
     val nonGreenContentParagraphChild: Int => String = (i: Int) => s"#main-content > div > div > div > p:nth-child($i)"
-    val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(2)
+    val dateAndCalculatorVersion: String             = nonGreenContentParagraphChild(3)
     val disclaimer: String                           = nonGreenContentParagraphChild(4)
     val nextStepsNumberedList: Int => String =
       i => s"#main-content > div > div > div > ul.govuk-list.govuk-list--number > li:nth-child($i)"
