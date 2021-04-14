@@ -19,7 +19,7 @@ package views
 import assets.messages.PhaseTwoReferencePayBreakdownHelperMessages
 import cats.scalatest.ValidatedValues
 import handlers.ConfirmationControllerRequestHandler
-import messages.JRSExtensionConfirmationMessages.{RegularType1, VariableExtensionType5}
+import messages.JRSExtensionConfirmationMessages._
 import models.FurloughStatus.FurloughOngoing
 import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
@@ -104,7 +104,7 @@ class JrsExtensionConfirmationViewSpec
   }
 
   val expectedContent = Seq(
-    RegularEmployeeTypeOneSelectors.h1                            -> RegularType1.heading,
+    RegularEmployeeTypeOneSelectors.h1                            -> heading,
     RegularEmployeeTypeOneSelectors.dateAndCalculatorVersion      -> RegularType1.dateAndCalculatorVersion(dateToString(LocalDate.now())),
     RegularEmployeeTypeOneSelectors.indent                        -> RegularType1.indent,
     RegularEmployeeTypeOneSelectors.disclaimer                    -> RegularType1.disclaimerTopPage,
@@ -150,7 +150,7 @@ class JrsExtensionConfirmationViewSpec
     "for a Regular Pay Pre-Covid Employee (Employee Type 1)" should {
 
       behave like normalPage(messageKeyPrefix)
-      behave like pageWithHeading(heading = VariableExtensionType5.heading)
+      behave like pageWithHeading(heading = heading)
       behave like pageWithExpectedMessages(expectedContent)
 
       "behave like a page with a StartAnotherCalculation button" must {
@@ -241,7 +241,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
   }
 
   val expectedContent = Seq(
-    VariableEmployeeTypeFiveSelectors.h1 -> VariableExtensionType5.heading,
+    VariableEmployeeTypeFiveSelectors.h1 -> heading,
     VariableEmployeeTypeFiveSelectors.dateAndCalculatorVersion -> VariableExtensionType5.dateAndCalculatorVersion(
       dateToString(LocalDate.now())),
     VariableEmployeeTypeFiveSelectors.indent                   -> VariableExtensionType5.indent,
@@ -291,7 +291,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
   "for a Variable Pay New Starter Employee (Employee Type 5)" should {
 
     behave like normalPage(messageKeyPrefix)
-    behave like pageWithHeading(heading = VariableExtensionType5.heading)
+    behave like pageWithHeading(heading = heading)
     behave like pageWithExpectedMessages(expectedContent)
 
     "behave like a page with a StartAnotherCalculation button" must {

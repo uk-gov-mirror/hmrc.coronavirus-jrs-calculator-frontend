@@ -20,6 +20,7 @@
 @import pages.info.ConfirmationPage
 @import models.requests.DataRequest
 @import config.FrontendAppConfig
+@import views.ViewUtils._
 
 @this(
     govukLayout: templates.GovukLayoutWrapper,
@@ -27,7 +28,7 @@
     h2: components.h2,
     h3: components.h3,
     p: components.p,
-    confirmation: components.confirmation,
+    confirmation: helper.confirmationHeading,
     panelIndent: components.panelIndent,
     strong: components.strong,
     furloughBreakdown: helper.phaseTwoDetailedFurloughBreakdown,
@@ -43,20 +44,7 @@
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
-    @confirmation {
-
-        @h1(Html(messages("confirmation.no.nic.pension.heading")), classes = Some(""))
-
-        <div class="furlough-heading">
-            <p>
-                @messages("confirmation.no.nic.pension.p1")
-                <br>
-                @messages("confirmation.extension.p2")
-            </p>
-            <p class="govuk-panel__title">&pound;@cvb.furlough.total.formatted("%.2f")</p>
-        </div>
-
-    }
+    @confirmation(claimPeriod, cvb.furlough.total)
 
     @p {
         @strong(Html(messages("confirmation.calculated.on")))

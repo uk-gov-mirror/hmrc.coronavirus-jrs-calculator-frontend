@@ -277,6 +277,7 @@ pensionContribution.error.required = Dewiswch ‘Iawn’ os ydych yn talu cyfran
 
 confirmation.title = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
+confirmation.heading.eightyPercent = (Cyfradd yr Estyniad i’r Cynllun Cadw Swyddi yn sgil Coronafeirws: {0}% o gyflogau)
 confirmation.confirmation.p1 = Y swm a delir i’r cyflogai hwn sydd ar ffyrlo
 confirmation.confirmation.p2 = Cyfraniadau Yswiriant Gwladol y cyflogwr
 confirmation.confirmation.p3 = Isafswm cyfraniadau pensiwn y cyflogwr
@@ -353,8 +354,6 @@ confirmation.sixtyPercent.inset.p1.1 = Mae’n rhaid i chi dalu
 confirmation.sixtyPercent.inset.p1.2 = yn ychwanegol at y grant ffyrlo o £{0}. Mae hyn yn cynrychioli 80% o’i gyflog arferol (£{1}).
 confirmation.sixtyPercent.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
 confirmation.sixtyPercent.eligibility = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu 80% o gyflog cyflogeion sydd ar ffyrlo am y cyfnod y maent ar ffyrlo (hyd at uchafswm o £2,500 y mis). Y swm y mae’n rhaid i chi ei dalu i’r cyflogai hwn yn ogystal â’r grant yw
-
-confirmation.extension.p2 = (Cyfradd yr Estyniad i’r Cynllun Cadw Swyddi yn sgil Coronafeirws: 80% o gyflogau)
 
 claimPeriodStart.title = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.heading = Beth yw dyddiad dechrau’r hawliad hwn?

@@ -27,7 +27,7 @@ h1: components.h1,
 h2: components.h2,
 h3: components.h3,
 p: components.p,
-confirmation: components.confirmation,
+confirmation: helper.confirmationHeading,
 furloughBreakdown: helper.phaseTwoDetailedFurloughBreakdownSeventyPercent,
 nicBreakdown: helper.phaseTwoDetailedNicBreakdown,
 pensionBreakdown: helper.phaseTwoDetailedPensionBreakdown,
@@ -41,20 +41,7 @@ appConfig: config.FrontendAppConfig
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.seventyPercent.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
-@confirmation {
-
-@h1(Html(messages("confirmation.seventyPercent.heading")), classes = Some(""))
-
-<div class="furlough-heading">
-    <p>
-        @messages("confirmation.seventyPercent.p1")
-        <br>
-        @messages("confirmation.seventyPercent.p2", messages(s"month.${claimPeriod.start.getMonthValue}"))
-    </p>
-    <p class="govuk-panel__title">&pound;@cvb.furlough.seventy.formatted("%.2f")</p>
-</div>
-
-}
+@confirmation(claimPeriod, cvb.furlough.seventy, 70)
 
 <div class="govuk-inset-text">
     @p{

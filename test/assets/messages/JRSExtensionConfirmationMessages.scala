@@ -22,9 +22,16 @@ import utils.ValueFormatter
 
 object JRSExtensionConfirmationMessages extends ValueFormatter {
 
-  object RegularType1 {
+  val heading = "Claim amount for this employee"
 
-    val heading = "What you can claim for this employee"
+  object ConfirmationBlock {
+    def p1(percent: Int) = s"($percent% of their wages)"
+    def p2(claimPeriod: Period)(implicit messages: Messages) =
+      s"Claim period: ${dateToStringWithoutYear(claimPeriod.start)} to ${dateToString(claimPeriod.end)}"
+    def claimAmount(amount: BigDecimal) = s"£${amount.formatted("%.2f")}"
+  }
+
+  object RegularType1 {
 
     val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
 
@@ -67,8 +74,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
     val h4ParagraphOne = "Take the pay in pay period:"
 
-    def calculatePayListMessages(messageNumber: Int, pay: BigDecimal, daysInPeriod: Int, numberOfDaysFurloughed: Int)(
-      implicit messages: Messages): String =
+    def calculatePayListMessages(messageNumber: Int, pay: BigDecimal, daysInPeriod: Int, numberOfDaysFurloughed: Int): String =
       messageNumber match {
         case 1 => s"Start with ${currencyFormatter(pay)} (from pay period)."
         case 2 => s"Divide by $daysInPeriod (number of days in the pay period)."
@@ -80,8 +86,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
     val h4FurloughGrant = "Furlough grant"
 
-    def furloughGrantListMessages(messageNumber: Int, pay: BigDecimal, generosityPercentage: BigDecimal)(
-      implicit messages: Messages): String =
+    def furloughGrantListMessages(messageNumber: Int, pay: BigDecimal, generosityPercentage: BigDecimal): String =
       messageNumber match {
         case 1 => s"Take ${currencyFormatter(pay)} (pay based on furlough days)."
         case 2 => s"Multiply by $generosityPercentage%"
@@ -133,8 +138,6 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
   }
 
   object VariableExtensionType5 {
-
-    val heading = "What you can claim for this employee"
 
     val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
 
@@ -190,8 +193,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
     val h4FurloughGrant = "Furlough grant"
 
-    def furloughGrantListMessages(messageNumber: Int, pay: BigDecimal, generosityPercentage: BigDecimal)(
-      implicit messages: Messages): String =
+    def furloughGrantListMessages(messageNumber: Int, pay: BigDecimal, generosityPercentage: BigDecimal): String =
       messageNumber match {
         case 1 => s"Take ${currencyFormatter(pay)} (pay based on furlough days)."
         case 2 => s"Multiply by $generosityPercentage%"

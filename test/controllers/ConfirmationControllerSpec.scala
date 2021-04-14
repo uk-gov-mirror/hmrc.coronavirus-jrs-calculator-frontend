@@ -19,7 +19,7 @@ package controllers
 import assets.constants.ConfirmationConstants._
 import base.{CoreTestDataBuilder, SpecBaseControllerSpecs}
 import config.CalculatorVersionConfiguration
-import messages.JRSExtensionConfirmationMessages.VariableExtensionType5
+import messages.JRSExtensionConfirmationMessages._
 import models.FurloughStatus.FurloughOngoing
 import models.NicCategory.Payable
 import models.PartTimeQuestion.PartTimeNo
@@ -206,7 +206,7 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       )(dataRequest, messages, appConf).toString
 
       status(result) mustEqual OK
-      actual must include(VariableExtensionType5.heading)
+      actual must include(heading)
 
     }
 

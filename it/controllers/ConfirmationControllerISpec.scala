@@ -135,7 +135,7 @@ class ConfirmationControllerISpec
                 whenReady(res) { result =>
                   result should have(
                     httpStatus(OK),
-                    titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
+                    titleOf("Claim amount for this employee - Job Retention Scheme calculator - GOV.UK"),
                     contentExists(s"${outcome.setScale(2).toString()}", ".govuk-panel__title"),
                   )
                 }
@@ -154,7 +154,7 @@ class ConfirmationControllerISpec
         whenReady(res) { result =>
           result should have(
             httpStatus(OK),
-            titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK"),
+            titleOf("Claim amount for this employee - Job Retention Scheme calculator - GOV.UK"),
             contentExists(s"Total furlough grant for pay period = £")
           )
         }
@@ -170,7 +170,7 @@ class ConfirmationControllerISpec
         whenReady(res) { result =>
           result should have(
             httpStatus(OK),
-            titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK")
+            titleOf("Claim amount for this employee - Job Retention Scheme calculator - GOV.UK")
           )
         }
       }
@@ -185,7 +185,7 @@ class ConfirmationControllerISpec
         whenReady(res) { result =>
           result should have(
             httpStatus(OK),
-            titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK")
+            titleOf("Claim amount for this employee - Job Retention Scheme calculator - GOV.UK")
           )
         }
       }
@@ -200,7 +200,7 @@ class ConfirmationControllerISpec
         whenReady(res) { result =>
           result should have(
             httpStatus(OK),
-            titleOf("What you can claim for this employee - Job Retention Scheme calculator - GOV.UK")
+            titleOf("Claim amount for this employee - Job Retention Scheme calculator - GOV.UK")
           )
         }
       }
