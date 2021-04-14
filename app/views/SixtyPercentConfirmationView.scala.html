@@ -28,6 +28,7 @@ h2: components.h2,
 h3: components.h3,
 p: components.p,
 confirmation: helper.confirmationHeading,
+        calculationDate: helper.calculationDate,
         additionalPayment: helper.additionalPaymentUpToEightyPercent,
 furloughBreakdown: helper.phaseTwoDetailedFurloughBreakdownSixtyPercent,
 nicBreakdown: helper.phaseTwoDetailedNicBreakdown,
@@ -46,13 +47,7 @@ appConfig: config.FrontendAppConfig
 
     @additionalPayment(cvb.furlough, SixtyPercent)
 
-@p {
-<span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
-@dateToString(LocalDate.now())
-@Html(messages("confirmation.date.version", version))
-}
-
-@p(Html(messages("confirmation.disclaimer")))
+    @calculationDate(version)
 
 @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
 

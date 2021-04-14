@@ -105,9 +105,9 @@ class JrsExtensionConfirmationViewSpec
 
   val expectedContent = Seq(
     RegularEmployeeTypeOneSelectors.h1                            -> heading,
-    RegularEmployeeTypeOneSelectors.dateAndCalculatorVersion      -> RegularType1.dateAndCalculatorVersion(dateToString(LocalDate.now())),
+    RegularEmployeeTypeOneSelectors.dateAndCalculatorVersion      -> dateAndCalculatorVersion(dateToString(LocalDate.now()), "2"),
     RegularEmployeeTypeOneSelectors.indent                        -> AdditionalPaymentBlock.stillPayNICandPension,
-    RegularEmployeeTypeOneSelectors.disclaimer                    -> RegularType1.disclaimerTopPage,
+    RegularEmployeeTypeOneSelectors.disclaimer                    -> disclaimerTopPage,
     RegularEmployeeTypeOneSelectors.h2(1)                         -> RegularType1.h2NextSteps,
     RegularEmployeeTypeOneSelectors.nextStepsNumberedList(1)      -> nextStepsListMessage(1),
     RegularEmployeeTypeOneSelectors.nextStepsNumberedList(2)      -> nextStepsListMessage(2),
@@ -241,11 +241,10 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
   }
 
   val expectedContent = Seq(
-    VariableEmployeeTypeFiveSelectors.h1 -> heading,
-    VariableEmployeeTypeFiveSelectors.dateAndCalculatorVersion -> VariableExtensionType5.dateAndCalculatorVersion(
-      dateToString(LocalDate.now())),
-    VariableEmployeeTypeFiveSelectors.indent                   -> VariableExtensionType5.indent,
-    VariableEmployeeTypeFiveSelectors.disclaimer               -> VariableExtensionType5.disclaimerTopPage,
+    VariableEmployeeTypeFiveSelectors.h1                       -> heading,
+    VariableEmployeeTypeFiveSelectors.dateAndCalculatorVersion -> dateAndCalculatorVersion(dateToString(LocalDate.now()), "2"),
+    VariableEmployeeTypeFiveSelectors.indent                   -> AdditionalPaymentBlock.stillPayNICandPension,
+    VariableEmployeeTypeFiveSelectors.disclaimer               -> disclaimerTopPage,
     VariableEmployeeTypeFiveSelectors.h2(1)                    -> VariableExtensionType5.h2NextSteps,
     VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(1) -> nextStepsListMessage(1),
     VariableEmployeeTypeFiveSelectors.nextStepsNumberedList(2) -> nextStepsListMessage(2),

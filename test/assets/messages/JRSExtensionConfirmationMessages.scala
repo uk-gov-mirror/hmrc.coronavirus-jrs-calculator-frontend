@@ -40,14 +40,14 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
       "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
   }
 
+  def dateAndCalculatorVersion(todaysDate: String, version: String) = s"Calculated on: $todaysDate (Calculator Version v$version)"
+
+  val disclaimerTopPage = {
+    "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. " +
+      "You cannot claim for more money than you are going to pay out under the scheme."
+  }
+
   object RegularType1 {
-
-    val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
-
-    val disclaimerTopPage = {
-      "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. " +
-        "You cannot claim for more money than you are going to pay out under the scheme."
-    }
 
     def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
       messageNumber match {
@@ -145,15 +145,6 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
   }
 
   object VariableExtensionType5 {
-
-    val dateAndCalculatorVersion = (todaysDate: String) => s"Calculated on: $todaysDate (Calculator Version v2)"
-
-    val indent = "You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these"
-
-    val disclaimerTopPage = {
-      "The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. " +
-        "You cannot claim for more money than you are going to pay out under the scheme."
-    }
 
     def nextStepsListMessages(messageNumber: Int, period: Period)(implicit messages: Messages): String =
       messageNumber match {

@@ -29,6 +29,7 @@
     h3: components.h3,
     p: components.p,
     confirmation: helper.confirmationHeading,
+        calculationDate: helper.calculationDate,
         additionalPayment: helper.additionalPaymentUpToEightyPercent,
     panelIndent: components.panelIndent,
     strong: components.strong,
@@ -49,13 +50,7 @@
 
     @additionalPayment(cvb.furlough, EightyPercent)
 
-    @p {
-        @strong(Html(messages("confirmation.calculated.on")))
-        @dateToString(LocalDate.now())
-        @Html(messages("confirmation.date.version", version))
-    }
-
-    @p(Html(messages("confirmation.disclaimer")))
+    @calculationDate(version)
 
     @h2(Html(messages("confirmation.nextSteps.heading")), classes = Some("govuk-heading-m"))
 
