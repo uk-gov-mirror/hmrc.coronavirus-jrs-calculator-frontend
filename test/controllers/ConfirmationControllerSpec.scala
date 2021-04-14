@@ -43,14 +43,11 @@ import scala.concurrent.Future
 
 class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDataBuilder {
 
-  val view               = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
-  val noNicView          = app.injector.instanceOf[NoNicAndPensionConfirmationView]
-  val phaseTwoView       = app.injector.instanceOf[PhaseTwoConfirmationView]
-  val seventyPercentView = app.injector.instanceOf[SeventyPercentConfirmationView]
-  val sixtyPercentView   = app.injector.instanceOf[SixtyPercentConfirmationView]
-  val extensionView      = app.injector.instanceOf[JrsExtensionConfirmationView]
-  val audit              = app.injector.instanceOf[AuditService]
-  val service            = app.injector.instanceOf[EmployeeTypeService]
+  val view          = app.injector.instanceOf[ConfirmationViewWithDetailedBreakdowns]
+  val phaseTwoView  = app.injector.instanceOf[PhaseTwoConfirmationView]
+  val extensionView = app.injector.instanceOf[JrsExtensionConfirmationView]
+  val audit         = app.injector.instanceOf[AuditService]
+  val service       = app.injector.instanceOf[EmployeeTypeService]
 
   val controller = new ConfirmationController(
     messagesApi = messagesApi,
@@ -61,9 +58,6 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
     employeeTypeService = service,
     viewWithDetailedBreakdowns = view,
     phaseTwoView = phaseTwoView,
-    noNicAndPensionView = noNicView,
-    seventyPercentConfirmationView = seventyPercentView,
-    sixtyPercentConfirmationView = sixtyPercentView,
     extensionView = extensionView,
     auditService = audit,
     navigator = navigator
