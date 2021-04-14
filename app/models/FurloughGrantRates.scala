@@ -16,7 +16,18 @@
 
 package models
 
-sealed trait FurloughGrantRate { val value: Int }
-case object SixtyPercent   extends FurloughGrantRate { override val value: Int = 60 }
-case object SeventyPercent extends FurloughGrantRate { override val value: Int = 70 }
-case object EightyPercent  extends FurloughGrantRate { override val value: Int = 80 }
+sealed trait FurloughGrantRate {
+  val value: Int
+}
+case object SixtyPercent extends FurloughGrantRate {
+  override val value: Int       = 60
+  override def toString: String = "sixtyPercent"
+}
+case object SeventyPercent extends FurloughGrantRate {
+  override val value: Int       = 70
+  override def toString: String = "seventyPercent"
+}
+case object EightyPercent extends FurloughGrantRate {
+  override val value: Int       = 80
+  override def toString: String = "eightyPercent"
+}

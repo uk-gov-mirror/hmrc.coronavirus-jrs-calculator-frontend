@@ -30,6 +30,7 @@
     panelIndent: components.panelIndent,
     strong: components.strong,
     confirmation: helper.confirmationHeading,
+        additionalPayment: helper.additionalPaymentUpToEightyPercent,
     furloughBreakdown: helper.phaseTwoDetailedFurloughBreakdown,
     nicBreakdown: helper.phaseTwoDetailedNicBreakdown,
     pensionBreakdown: helper.phaseTwoDetailedPensionBreakdown,
@@ -43,7 +44,9 @@
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
-    @confirmation(claimPeriod, cvb.furlough.total)
+    @confirmation(claimPeriod, cvb.furlough)
+
+    @additionalPayment(cvb.furlough, EightyPercent)
 
     @p {
         @strong(Html(messages("confirmation.calculated.on")))

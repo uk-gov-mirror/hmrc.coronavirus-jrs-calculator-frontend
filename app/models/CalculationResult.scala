@@ -22,6 +22,13 @@ case class PhaseTwoFurloughCalculationResult(total: BigDecimal, periodBreakdowns
   def sixty       = periodBreakdowns.map(_.sixty).sum
   def seventyDiff = total - seventy
   def sixtyDiff   = total - sixty
+  def atRate(furloughGrantRate: FurloughGrantRate) = furloughGrantRate match {
+    case SixtyPercent   => sixty
+    case SeventyPercent => seventy
+    case EightyPercent  => total
+  }
+
+  def diffAtRate(furloughGrantRate: FurloughGrantRate) = total - atRate(furloughGrantRate)
 }
 case class NicCalculationResult(total: BigDecimal, periodBreakdowns: Seq[NicBreakdown])
 case class PhaseTwoNicCalculationResult(total: BigDecimal, periodBreakdowns: Seq[PhaseTwoNicBreakdown])

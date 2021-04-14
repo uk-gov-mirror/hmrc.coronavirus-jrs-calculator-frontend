@@ -316,6 +316,10 @@ confirmation.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens
 confirmation.startAgain = Start another calculation
 confirmation.webchat = Webchat help (opens in a new tab).
 
+confirmation.additionalPayment.inset.p1.1 = You must pay this employee
+confirmation.additionalPayment.inset.p1.2 = in addition to the furlough grant of £{0}. This adds up to 80% of their usual wage (£{1}).
+confirmation.additionalPayment.inset.p2 = To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to.
+confirmation.additionalPayment.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
 confirmation.no.nic.pension.insert.t1 = You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these
 confirmation.no.nic.pension.title = Claim amount for this employee
@@ -331,23 +335,11 @@ confirmation.no.nic.pension.nextSteps.li.4.2 = Coronavirus Job Retention Scheme 
 confirmation.no.nic.pension.breakdown.summary = Breakdown of calculations
 confirmation.no.nic.pension.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.
 
-confirmation.seventyPercent.title = Claim amount for this employee
-confirmation.seventyPercent.heading = Claim amount for this employee
 confirmation.seventyPercent.p1 = Furlough grant
 confirmation.seventyPercent.p2 = ({0} rate: 70% of wages)
-confirmation.seventyPercent.inset.p1.1 = You must pay this employee
-confirmation.seventyPercent.inset.p1.2 = in addition to the furlough grant of £{0}. This adds up to 80% of their usual wage (£{1}).
-confirmation.seventyPercent.inset.p2 = To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to.
-confirmation.seventyPercent.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
-confirmation.sixtyPercent.title = Claim amount for this employee
-confirmation.sixtyPercent.heading = Claim amount for this employee
 confirmation.sixtyPercent.p1 = Furlough grant
 confirmation.sixtyPercent.p2 = ({0} rate: 60% of wages)
-confirmation.sixtyPercent.inset.p1.1 = You must pay this employee
-confirmation.sixtyPercent.inset.p1.2 = in addition to the furlough grant of £{0}. This adds up to 80% of their usual wage (£{1}).
-confirmation.sixtyPercent.inset.p2 = To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to.
-confirmation.sixtyPercent.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
 confirmation.breakdown.heading = Breakdown of calculations
 confirmation.breakdown.p2 = You told us your employee gets paid a {0}

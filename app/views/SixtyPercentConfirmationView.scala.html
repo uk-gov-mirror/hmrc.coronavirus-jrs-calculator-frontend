@@ -28,6 +28,7 @@ h2: components.h2,
 h3: components.h3,
 p: components.p,
 confirmation: helper.confirmationHeading,
+        additionalPayment: helper.additionalPaymentUpToEightyPercent,
 furloughBreakdown: helper.phaseTwoDetailedFurloughBreakdownSixtyPercent,
 nicBreakdown: helper.phaseTwoDetailedNicBreakdown,
 pensionBreakdown: helper.phaseTwoDetailedPensionBreakdown,
@@ -39,18 +40,11 @@ appConfig: config.FrontendAppConfig
 
 @(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String)(implicit request: DataRequest[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@govukLayout(pageTitle = Some(titleNoForm("confirmation.sixtyPercent.title")), showBackButton = false, thisPage = ConfirmationPage) {
+@govukLayout(pageTitle = Some(titleNoForm("confirmation.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
-@confirmation(claimPeriod, cvb.furlough.sixty, SixtyPercent)
+    @confirmation(claimPeriod, cvb.furlough, SixtyPercent)
 
-<div class="govuk-inset-text">
-    @p{
-        @messages("confirmation.sixtyPercent.inset.p1.1")
-        <span class="govuk-!-font-weight-bold">£@cvb.furlough.sixtyDiff.formatted("%.2f")</span>
-        @messages("confirmation.sixtyPercent.inset.p1.2", cvb.furlough.sixty.formatted("%.2f"), cvb.furlough.total.formatted("%.2f"))
-    }
-    @p(Html(messages("confirmation.sixtyPercent.inset.p2")))
-</div>
+    @additionalPayment(cvb.furlough, SixtyPercent)
 
 @p {
 <span class="govuk-!-font-weight-bold">@messages("confirmation.calculated.on")</span>
@@ -99,8 +93,8 @@ appConfig: config.FrontendAppConfig
 <br>
 
     <p class="govuk-body">
-        @messages("confirmation.sixtyPercent.eligibility")
-        <span class="govuk-!-font-weight-bold">£@cvb.furlough.sixtyDiff.formatted("%.2f.")</span>
+        @messages("confirmation.additionalPayment.eligibility")
+        <span class="govuk-!-font-weight-bold">£@cvb.furlough.diffAtRate(SixtyPercent).formatted("%.2f.")</span>
     </p>
     <p class="govuk-body">@messages("confirmation.disclaimer")</p>
 

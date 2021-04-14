@@ -277,7 +277,8 @@ pensionContribution.error.required = Dewiswch ‘Iawn’ os ydych yn talu cyfran
 
 confirmation.title = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
-confirmation.heading.eightyPercent = (Cyfradd yr Estyniad i’r Cynllun Cadw Swyddi yn sgil Coronafeirws: {0}% o gyflogau)
+confirmation.heading.percent = (Cyfradd yr Estyniad i’r Cynllun Cadw Swyddi yn sgil Coronafeirws: {0}% o gyflogau)
+confirmation.heading.claimPeriod = Claim period: {0} to {1}
 confirmation.confirmation.p1 = Y swm a delir i’r cyflogai hwn sydd ar ffyrlo
 confirmation.confirmation.p2 = Cyfraniadau Yswiriant Gwladol y cyflogwr
 confirmation.confirmation.p3 = Isafswm cyfraniadau pensiwn y cyflogwr
@@ -337,23 +338,16 @@ confirmation.no.nic.pension.nextSteps.li.4.2 = Cynllun Cadw Swyddi yn sgil Coron
 confirmation.no.nic.pension.breakdown.summary = Dadansoddiad o gyfrifiadau
 confirmation.no.nic.pension.disclaimer = Mae canlyniadau’r cyfrifiad yn dibynnu ar gywirdeb yr wybodaeth a nodwyd gennych, yr ydych yn gyfrifol amdani. Ni allwch hawlio am fwy o arian nag yr ydych yn mynd i’w dalu allan o dan y cynllun.
 
-confirmation.seventyPercent.title = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
-confirmation.seventyPercent.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
+confirmation.additionalPayment.inset.p1.1 = Mae’n rhaid i chi dalu
+confirmation.additionalPayment.inset.p1.2 = yn ychwanegol at y grant ffyrlo o £{0}. Mae hyn yn cynrychioli 80% o’i gyflog arferol (£{1}).
+confirmation.additionalPayment.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
+confirmation.additionalPayment.eligibility = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu 80% o gyflog cyflogeion sydd ar ffyrlo am y cyfnod y maent ar ffyrlo (hyd at uchafswm o £2,500 y mis). Y swm y mae’n rhaid i chi ei dalu i’r cyflogai hwn yn ogystal â’r grant yw
+
 confirmation.seventyPercent.p1 = Grant ffyrlo
 confirmation.seventyPercent.p2 = (Cyfradd mis {0}: 70% o gyflogau)
-confirmation.seventyPercent.inset.p1.1 = Mae’n rhaid i chi dalu
-confirmation.seventyPercent.inset.p1.2 = yn ychwanegol at y grant ffyrlo o £{0}. Mae hyn yn cynrychioli 80% o’i gyflog arferol (£{1}).
-confirmation.seventyPercent.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
-confirmation.seventyPercent.eligibility = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu 80% o gyflog cyflogeion sydd ar ffyrlo am y cyfnod y maent ar ffyrlo (hyd at uchafswm o £2,500 y mis). Y swm y mae’n rhaid i chi ei dalu i’r cyflogai hwn yn ogystal â’r grant yw
 
-confirmation.sixtyPercent.title = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
-confirmation.sixtyPercent.heading = Yr hyn y gallwch ei hawlio ar gyfer y cyflogai hwn
 confirmation.sixtyPercent.p1 = Grant ffyrlo
 confirmation.sixtyPercent.p2 = (Cyfradd mis {0}: 60% o gyflogau)
-confirmation.sixtyPercent.inset.p1.1 = Mae’n rhaid i chi dalu
-confirmation.sixtyPercent.inset.p1.2 = yn ychwanegol at y grant ffyrlo o £{0}. Mae hyn yn cynrychioli 80% o’i gyflog arferol (£{1}).
-confirmation.sixtyPercent.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
-confirmation.sixtyPercent.eligibility = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu 80% o gyflog cyflogeion sydd ar ffyrlo am y cyfnod y maent ar ffyrlo (hyd at uchafswm o £2,500 y mis). Y swm y mae’n rhaid i chi ei dalu i’r cyflogai hwn yn ogystal â’r grant yw
 
 claimPeriodStart.title = Beth yw dyddiad dechrau’r hawliad hwn?
 claimPeriodStart.heading = Beth yw dyddiad dechrau’r hawliad hwn?

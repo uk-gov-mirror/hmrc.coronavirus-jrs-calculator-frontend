@@ -19,7 +19,7 @@
         h1: components.h1
 )
 
-@(claimPeriod: Period, amount: BigDecimal, percentage: FurloughGrantRate = EightyPercent)(implicit messages: Messages)
+@(claimPeriod: Period, calculation: PhaseTwoFurloughCalculationResult, percentage: FurloughGrantRate = EightyPercent)(implicit messages: Messages)
 
 
 @confirmation {
@@ -29,7 +29,7 @@
     <div class="furlough-heading">
         <p>@messages("confirmation.heading.percent", percentage.value)</p>
         <p>@messages("confirmation.heading.claimPeriod", dateToStringWithoutYear(claimPeriod.start), dateToString(claimPeriod.end))</p>
-        <p class="govuk-panel__title">&pound;@amount.formatted("%.2f")</p>
+        <p class="govuk-panel__title">&pound;@calculation.atRate(percentage).formatted("%.2f")</p>
     </div>
 
 }

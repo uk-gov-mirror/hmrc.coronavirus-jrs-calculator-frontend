@@ -28,7 +28,14 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
     def p1(percent: Int) = s"($percent% of their wages)"
     def p2(claimPeriod: Period)(implicit messages: Messages) =
       s"Claim period: ${dateToStringWithoutYear(claimPeriod.start)} to ${dateToString(claimPeriod.end)}"
-    def claimAmount(amount: BigDecimal) = s"£${amount.formatted("%.2f")}"
+    def claimAmount(amount: BigDecimal) = currencyFormatter(amount)
+  }
+
+  object AdditionalPaymentBlock {
+    def p1(topup: BigDecimal, grant: BigDecimal) =
+      s"You must pay this employee ${currencyFormatter(topup)} in addition to the furlough grant of ${currencyFormatter(grant)}. This adds up to 80% of their usual wage (${currencyFormatter(topup + grant)})."
+    val p2 =
+      "To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to."
   }
 
   object RegularType1 {

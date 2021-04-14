@@ -20,17 +20,16 @@ import messages.JRSExtensionConfirmationMessages._
 import models._
 import views.BaseSelectors
 import views.behaviours.ViewBehaviours
-import views.html.helper.confirmationHeading
+import views.html.helper.{additionalPaymentUpToEightyPercent, confirmationHeading}
 
 import java.time.LocalDate
 
-class ConfirmationHeadingSpec extends ViewBehaviours {
+class AdditionalPaymentUpToEightyPercentSpec extends ViewBehaviours {
 
-  val headingHelper = app.injector.instanceOf[confirmationHeading]
+  val headingHelper = app.injector.instanceOf[additionalPaymentUpToEightyPercent]
 
   object Selectors extends BaseSelectors
 
-  val claimPeriod = Period(LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1, 8))
   val calcResult = PhaseTwoFurloughCalculationResult(
     500,
     Seq(
@@ -53,33 +52,36 @@ class ConfirmationHeadingSpec extends ViewBehaviours {
     )
   )
 
-  "headingHelper" must {
+  "additionalPaymentUpToEightyPercent" must {
 
-    "render the expected 80% heading when not passed a custom percentage" must {
+    "not render anything for EightyPercent" in {
 
-      val html         = headingHelper(claimPeriod, calcResult)
+      val html = headingHelper(calcResult, EightyPercent)
+
+      html.body.trim mustBe ""
+    }
+
+    "render the expected 70% top up content" must {
+
+      val html         = headingHelper(calcResult, SeventyPercent)
       implicit val doc = asDocument(dummyView(html))
 
       behave like pageWithExpectedMessages(
         Seq(
-          Selectors.h1   -> heading,
-          Selectors.p(1) -> ConfirmationBlock.p1(80),
-          Selectors.p(2) -> ConfirmationBlock.p2(claimPeriod),
-          Selectors.p(3) -> ConfirmationBlock.claimAmount(calcResult.total)
+          Selectors.p(1) -> AdditionalPaymentBlock.p1(calcResult.seventyDiff, calcResult.seventy),
+          Selectors.p(2) -> AdditionalPaymentBlock.p2
         ))
     }
 
-    "render the supplied 70% heading when passed a custom percentage of 70%" must {
+    "render the expected 60% top up content" must {
 
-      val html         = headingHelper(claimPeriod, calcResult, SeventyPercent)
+      val html         = headingHelper(calcResult, SixtyPercent)
       implicit val doc = asDocument(dummyView(html))
 
       behave like pageWithExpectedMessages(
         Seq(
-          Selectors.h1   -> heading,
-          Selectors.p(1) -> ConfirmationBlock.p1(70),
-          Selectors.p(2) -> ConfirmationBlock.p2(claimPeriod),
-          Selectors.p(3) -> ConfirmationBlock.claimAmount(calcResult.seventy)
+          Selectors.p(1) -> AdditionalPaymentBlock.p1(calcResult.sixtyDiff, calcResult.sixty),
+          Selectors.p(2) -> AdditionalPaymentBlock.p2
         ))
     }
   }
