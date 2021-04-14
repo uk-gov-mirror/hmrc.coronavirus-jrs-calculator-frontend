@@ -121,11 +121,11 @@ case class PhaseTwoConfirmationViewBreakdown(furlough: PhaseTwoFurloughCalculati
         _.paymentWithPeriod match {
           case _: RegularPaymentWithPhaseTwoPeriod =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.p1.regular")
+              messages("phaseTwoDetailedBreakdown.p1.regular", EightyPercent.value)
             )
           case _: AveragePaymentWithPhaseTwoPeriod =>
             Seq(
-              messages("phaseTwoDetailedBreakdown.p1.average", helper.boundaryStart(), helper.boundaryEnd())
+              messages("phaseTwoDetailedBreakdown.p1.average", helper.boundaryStart(), helper.boundaryEnd(), EightyPercent.value)
             )
           case _: CylbPaymentWithPhaseTwoPeriod =>
             Seq(

@@ -335,12 +335,6 @@ confirmation.no.nic.pension.nextSteps.li.4.2 = Coronavirus Job Retention Scheme 
 confirmation.no.nic.pension.breakdown.summary = Breakdown of calculations
 confirmation.no.nic.pension.disclaimer = The results of the calculation rely on the accuracy of the information you entered, for which you are responsible. You cannot claim for more money than you are going to pay out under the scheme.
 
-confirmation.seventyPercent.p1 = Furlough grant
-confirmation.seventyPercent.p2 = ({0} rate: 70% of wages)
-
-confirmation.sixtyPercent.p1 = Furlough grant
-confirmation.sixtyPercent.p2 = ({0} rate: 60% of wages)
-
 confirmation.breakdown.heading = Breakdown of calculations
 confirmation.breakdown.p2 = You told us your employee gets paid a {0}
 
@@ -722,8 +716,6 @@ partTimeNormalHours.link = work out your employee’s usual hours and furloughed
 # Regular Pay, Employee Type 1 & 2 - Pre-Covid & Normal Pay Period before 30th October 2020 - Messages
 # ----------------------------------------------------------
 phaseTwoDetailedBreakdown.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days and furlough hours in each pay period. The furlough grant is 80% of this.
-phaseTwoDetailedBreakdown.seventyPercent.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days and furlough hours in each pay period. The furlough grant is 70% of this.
-phaseTwoDetailedBreakdown.sixtyPercent.p1.regular = You told us this employee gets paid a regular amount each time. We’ve worked out their daily earnings and multiplied by the number of furlough days and furlough hours in each pay period. The furlough grant is 60% of this.
 
 # Variable Pay, Employee Type 3 - Worked a Full Year Pre Covid - Messages for Pre-Sept, Sept, & Oct. JrsExtension uses default 80% version of messages
 # ----------------------------------------------------------
@@ -732,8 +724,6 @@ phaseTwoDetailedBreakdown.p1.cylb.2 = Method 1: we’ve taken the amounts they w
 phaseTwoDetailedBreakdown.p1.cylb.3 = Method 2: we’ve worked out their average daily earnings in the last tax year, by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020 if later). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period.
 
 phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is {0}% of this.
-phaseTwoDetailedBreakdown.seventyPercent.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 70% of this.
-phaseTwoDetailedBreakdown.sixtyPercent.no.nic.pension.p1.cylb.1 = You told us your employee gets paid a variable amount each time and has worked for you for more than 12 months. There are 2 methods we can use to work out pay. We’ve used the one that gave the higher figure. The furlough grant is 60% of this.
 
 phaseTwoDetailedBreakdown.statLeave.method2 = You told us this employee was on statutory leave between {0} and {1}. Because of this, for Method 2 we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation.
 phaseTwoDetailedBreakdown.statLeave = You told us this employee was on statutory leave between {0} and {1}. Because of this, we have to remove the number of days they were on statutory leave, and the amount they were paid for these periods from the calculation.
@@ -746,9 +736,6 @@ phaseTwoDetailedBreakdown.no.nic.pension.p1.cylb.3 = Method 2: we’ve worked ou
 # ----------------------------------------------------------
 
 phaseTwoDetailedBreakdown.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between {0} and {1}. Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is {2}% of this.
-phaseTwoDetailedBreakdown.seventyPercent.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020, whichever is earlier). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 70% of this.
-phaseTwoDetailedBreakdown.sixtyPercent.p1.average = You told us your employee gets paid a variable amount each time and has worked for you for less than 12 months. We’ve worked out their average daily earnings by dividing their total pay by the number of calendar days between 6 April 2019 and the day before furlough (or 5 April 2020, whichever is earlier). Then we’ve multiplied that by the number of furlough days and furlough hours in each pay period. The furlough grant is 60% of this.
-
 
 # Variable Pay, Employee Type 5 - Eligible for CJRS Extension claims only - Messages for Post-1st of November 2020
 # ----------------------------------------------------------
@@ -830,8 +817,6 @@ phaseTwoFurloughBreakdown.h4 = Furlough grant
 phaseTwoFurloughBreakdown.l1 = Take £{0} (pay based on furlough days).
 phaseTwoFurloughBreakdown.l1.partTime = Take £{0} (pay based on hours worked in this pay period).
 phaseTwoFurloughBreakdown.l2 = Multiply by {0}%
-phaseTwoFurloughBreakdown.seventyPercent.l2 = Multiply by 70% ({0} rate).
-phaseTwoFurloughBreakdown.sixtyPercent.l2 = Multiply by 60% ({0} rate).
 phaseTwoFurloughBreakdown.total = Total furlough grant for pay period = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p1 = Calculated furlough grant = £{0}
 phaseTwoFurloughBreakdown.furloughCap.p2 = The calculated furlough grant is more than the maximum furlough grant for this pay period. Because of this, you must use the maximum furlough grant, which is {0}
