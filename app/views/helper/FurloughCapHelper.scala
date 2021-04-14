@@ -27,7 +27,14 @@ import services.Calculators._
 
 class FurloughCapHelper @Inject()() {
 
-  def calculationFor(cap: FurloughCap)(implicit messages: Messages): String =
+  def calculationFor(cap: FurloughCap, furloughRate: FurloughGrantRate, month: Month)(implicit messages: Messages): String =
+    furloughRate match {
+      case SixtyPercent   => calculationForSixtyPercent(cap, month)
+      case SeventyPercent => calculationForSeventyPercent(cap, month)
+      case EightyPercent  => calculationForEighty(cap)
+    }
+
+  def calculationForEighty(cap: FurloughCap)(implicit messages: Messages): String =
     cap match {
       case FullPeriodCap(value) =>
         messages("furloughBreakdown.furloughCap.fullPeriodCap", value.formatted("%.2f"))

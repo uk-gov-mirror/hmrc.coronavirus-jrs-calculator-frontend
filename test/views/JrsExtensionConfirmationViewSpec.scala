@@ -25,7 +25,7 @@ import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
 import models.PaymentFrequency.Monthly
 import models.requests.DataRequest
-import models.{EmployeeStarted, Period, UserAnswers}
+import models.{EightyPercent, EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
 import utils.LocalDateHelpers.apr6th2020
@@ -140,7 +140,7 @@ class JrsExtensionConfirmationViewSpec
   implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
 
   def applyView(): HtmlFormat.Appendable =
-    view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2", isNewStarterType5 = false)
+    view(cvb = noNicAndPensionBreakdown, claimPeriod = decClaimPeriod, version = "2", isNewStarterType5 = false, EightyPercent)
 
   implicit val doc: Document = asDocument(applyView())
 
@@ -162,7 +162,7 @@ class JrsExtensionConfirmationViewSpec
       "behave like a page with correct links" must {
 
         "have a PrintOrSave link - brings up window.print() when clicked" in {
-          doc.select(RegularEmployeeTypeOneSelectors.printLink).attr("onClick") mustBe "window.print()"
+          doc.select(RegularEmployeeTypeOneSelectors.printLink).attr("onClick") mustBe "window.print();"
         }
 
         "have a Webchat link - opens a webchat/contact details page" in {
@@ -281,7 +281,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
   implicit val request: DataRequest[_] = fakeDataRequest(userAnswers)
 
   def applyView(): HtmlFormat.Appendable =
-    view(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = true)
+    view(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = true, EightyPercent)
 
   implicit val doc: Document = asDocument(applyView())
 
@@ -301,7 +301,7 @@ class EmployeeType5JrsExtensionConfirmationViewSpec
     "behave like a page with correct links" must {
 
       "have a PrintOrSave link - brings up window.print() when clicked" in {
-        doc.select(VariableEmployeeTypeFiveSelectors.printLink).attr("onClick") mustBe "window.print()"
+        doc.select(VariableEmployeeTypeFiveSelectors.printLink).attr("onClick") mustBe "window.print();"
       }
 
       "have a Webchat link - opens a webchat/contact details page" in {

@@ -26,7 +26,7 @@ import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
 import models.PaymentFrequency.Monthly
 import models.requests.DataRequest
-import models.{EmployeeStarted, Period, UserAnswers}
+import models.{EightyPercent, EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
 import utils.LocalDateHelpers._
@@ -77,7 +77,11 @@ class ConfirmationType4EmployeeViewSpec
     }
 
     def applyView(): HtmlFormat.Appendable =
-      extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = false)
+      extConfirmationView(cvb = noNicAndPensionBreakdown,
+                          claimPeriod = novClaimPeriod,
+                          version = "2",
+                          isNewStarterType5 = false,
+                          EightyPercent)
 
     implicit val doc: Document = asDocument(applyView())
 
@@ -96,7 +100,11 @@ class ConfirmationType4EmployeeViewSpec
     }
 
     def applyView(): HtmlFormat.Appendable =
-      extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = false)
+      extConfirmationView(cvb = noNicAndPensionBreakdown,
+                          claimPeriod = novClaimPeriod,
+                          version = "2",
+                          isNewStarterType5 = false,
+                          EightyPercent)
 
     implicit val doc: Document = asDocument(applyView())
 
@@ -118,7 +126,11 @@ class ConfirmationType4EmployeeViewSpec
     }
 
     def applyView(): HtmlFormat.Appendable =
-      extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = false)
+      extConfirmationView(cvb = noNicAndPensionBreakdown,
+                          claimPeriod = novClaimPeriod,
+                          version = "2",
+                          isNewStarterType5 = false,
+                          EightyPercent)
 
     implicit val doc: Document = asDocument(applyView())
 

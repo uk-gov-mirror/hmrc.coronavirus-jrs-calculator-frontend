@@ -30,6 +30,7 @@
     panelIndent: components.panelIndent,
     strong: components.strong,
     confirmation: helper.confirmationHeading,
+        footer: helper.confirmationFooter,
         nextSteps: helper.confirmationNextSteps,
         calculationDate: helper.calculationDate,
         additionalPayment: helper.additionalPaymentUpToEightyPercent,
@@ -42,13 +43,19 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(cvb: ConfirmationViewBreakdownWithoutNicAndPension, claimPeriod: Period, version: String, isNewStarterType5:Boolean = false)(implicit request: DataRequest[_], messages: Messages, appConfig: FrontendAppConfig)
+@(
+        cvb: ConfirmationViewBreakdownWithoutNicAndPension,
+        claimPeriod: Period,
+        version: String,
+        isNewStarterType5:Boolean = false,
+        furloughRate: FurloughGrantRate
+)(implicit request: DataRequest[_], messages: Messages, appConfig: FrontendAppConfig)
 
 @govukLayout(pageTitle = Some(titleNoForm("confirmation.no.nic.pension.title")), showBackButton = false, thisPage = ConfirmationPage) {
 
     @confirmation(claimPeriod, cvb.furlough)
 
-    @additionalPayment(cvb.furlough, EightyPercent)
+    @additionalPayment(cvb.furlough, furloughRate)
 
     @calculationDate(version)
 
@@ -58,32 +65,22 @@
 
     @h2(Html(messages("confirmation.no.nic.pension.breakdown.summary")), classes = Some("govuk-heading-m"))
 
-
-
-    @for(text <- cvb.detailedBreakdownMessageKeys(isNewStarterType5)) {
+    @for(text <- cvb.detailedBreakdownMessageKeys(furloughRate, isNewStarterType5)) {
         @p(Html(text))
     }
 
-<p class="govuk-body">
-    @messages("phaseTwoDetailedBreakdown.no.nic.pension.p2")
-    <a class="govuk-link" href="@messages("phaseTwoDetailedBreakdown.p2.a.href")" target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
-</p>
+    <p class="govuk-body">
+        @messages("phaseTwoDetailedBreakdown.no.nic.pension.p2")
+        <a class="govuk-link" href="@messages("phaseTwoDetailedBreakdown.p2.a.href")" target="_blank">@messages("phaseTwoDetailedBreakdown.p2.a")</a>
+    </p>
 
-@p(Html(messages("phaseTwoDetailedBreakdown.p3")))
+    @p(Html(messages("phaseTwoDetailedBreakdown.p3")))
 
-@for(detailedBreakdown <- cvb.detailedBreakdowns) {
-    @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
-    @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period, isNewStarterType5)
-}
-<hr>
-<br>
+    @for(detailedBreakdown <- cvb.detailedBreakdowns) {
+        @h3(Messages("phaseTwoDetailedBreakdown.h3", detailedBreakdown.payPeriodStart, detailedBreakdown.payPeriodEnd))
+        @furloughBreakdown(detailedBreakdown.furlough, detailedBreakdown.period, isNewStarterType5, claimPeriod.start.getMonth, furloughRate)
+    }
 
-<p class="govuk-body">@messages("confirmation.no.nic.pension.disclaimer")</p>
-
-<p class="govuk-body"><a class="govuk-link" onClick="window.print()" href="">@messages("confirmation.print.this.page")</a></p>
-
-@p(Html(link(appConfig.webchatHelpUrl, "confirmation.webchat", true)))
-
-@p(Html(link(routes.FeedbackSurveyController.startSurvey(), "confirmation.feedbackSurvey.label", true)))
+    @footer(cvb.furlough, furloughRate)
 }
 

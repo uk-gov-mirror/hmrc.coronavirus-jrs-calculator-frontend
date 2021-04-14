@@ -20,7 +20,7 @@ import cats.data.Validated.{Invalid, Valid}
 import config.{CalculatorVersionConfiguration, FrontendAppConfig}
 import controllers.actions._
 import handlers.{ConfirmationControllerRequestHandler, ErrorHandler}
-import models.UserAnswers
+import models.{EightyPercent, FurloughGrantRate, UserAnswers}
 import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -56,7 +56,7 @@ class ConfirmationController @Inject()(
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     /** Uncomment line to create integration test cases when going through journeys, either manually or via test packs.
       * Set the number of cases to the amount of cases that will be executed. */
-//    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 6)
+    //    printOutConfirmationTestCases(request.userAnswers, loadResultData(request.userAnswers), 6)
 
     loadResultData(request.userAnswers) match {
       case Valid(data: PhaseOneConfirmationDataResult) =>
@@ -65,27 +65,42 @@ class ConfirmationController @Inject()(
       case Valid(data: PhaseTwoConfirmationDataResult) =>
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
         Ok(phaseTwoView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
-      case Valid(data: ConfirmationDataResultWithoutNicAndPension) =>
+      case Valid(data: ConfirmationDataResultWithoutNicAndPension) => {
+
         auditService.sendCalculationPerformed(request.userAnswers, data.confirmationViewBreakdown)
-        data.metaData.claimPeriod.start.getYearMonth match {
-          case yearMonth if yearMonth == AUGUST.inYear(y2020) =>
-            Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
-          case yearMonth if yearMonth == SEPTEMBER.inYear(y2020) || yearMonth == JULY.inYear(y2021) =>
-            Ok(seventyPercentConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
-          case yearMonth
-              if yearMonth == OCTOBER.inYear(y2020) || yearMonth == AUGUST.inYear(y2021) || yearMonth == SEPTEMBER.inYear(y2021) =>
-            Ok(sixtyPercentConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
-          case yearMonth if yearMonth.isBetweenInclusive(appConfig.extensionStartDate.getYearMonth, appConfig.schemeEndDate.getYearMonth) =>
-            Ok(
-              extensionView(
-                data.confirmationViewBreakdown,
-                data.metaData.claimPeriod,
-                calculatorVersionConf,
-                employeeTypeService.isType5NewStarter()
-              ))
-          case _ =>
-            Redirect(routes.ErrorController.somethingWentWrong())
-        }
+
+        val furloughRate = FurloughGrantRate.rateForYearMonth(data.metaData.claimPeriod.start.getYearMonth)
+
+        Ok(
+          extensionView(
+            data.confirmationViewBreakdown,
+            data.metaData.claimPeriod,
+            calculatorVersionConf,
+            employeeTypeService.isType5NewStarter(),
+            furloughRate
+          ))
+
+//        data.metaData.claimPeriod.start.getYearMonth match {
+//          case yearMonth if yearMonth == AUGUST.inYear(y2020) =>
+//            Ok(noNicAndPensionView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf, false, EightyPercent))
+//          case yearMonth if yearMonth == SEPTEMBER.inYear(y2020) || yearMonth == JULY.inYear(y2021) =>
+//            Ok(seventyPercentConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
+//          case yearMonth
+//              if yearMonth == OCTOBER.inYear(y2020) || yearMonth == AUGUST.inYear(y2021) || yearMonth == SEPTEMBER.inYear(y2021) =>
+//            Ok(sixtyPercentConfirmationView(data.confirmationViewBreakdown, data.metaData.claimPeriod, calculatorVersionConf))
+//          case yearMonth if yearMonth.isBetweenInclusive(appConfig.extensionStartDate.getYearMonth, appConfig.schemeEndDate.getYearMonth) =>
+//            Ok(
+//              extensionView(
+//                data.confirmationViewBreakdown,
+//                data.metaData.claimPeriod,
+//                calculatorVersionConf,
+//                employeeTypeService.isType5NewStarter(),
+//                furloughRate
+//              ))
+//          case _ =>
+//            Redirect(routes.ErrorController.somethingWentWrong())
+//        }
+      }
       case Invalid(e) =>
         auditService.sendCalculationFailed(request.userAnswers)
         PagerDutyHelper.alert(CALCULATION_FAILED)

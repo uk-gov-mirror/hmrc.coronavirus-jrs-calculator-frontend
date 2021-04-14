@@ -35,8 +35,8 @@
 
     @if(breakdown.isCapped) {
         @p(Html(messages("furloughBreakdown.furloughCap.p1", breakdown.calculatedFurlough)))
-        @p(Html(messages("furloughBreakdown.furloughCap.p2", helper.calculationFor(breakdown.furloughCap))))
-        @p(Html(messages("furloughBreakdown.furloughCap.p3", helper.calculationFor(breakdown.furloughCap))))
+        @p(Html(messages("furloughBreakdown.furloughCap.p2", helper.calculationForEighty(breakdown.furloughCap))))
+        @p(Html(messages("furloughBreakdown.furloughCap.p3", helper.calculationForEighty(breakdown.furloughCap))))
     }
 
     <div class="govuk-inset-text govuk-!-font-size-24">

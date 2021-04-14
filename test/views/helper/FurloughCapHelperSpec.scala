@@ -22,6 +22,8 @@ import play.api.i18n.Messages
 import play.api.test.Helpers
 import views.helper.FurloughCapHelper
 
+import java.time.Month
+
 class FurloughCapHelperSpec extends SpecBase {
 
   val instance = new FurloughCapHelper()
@@ -54,49 +56,61 @@ class FurloughCapHelperSpec extends SpecBase {
   "calculationFor" must {
 
     "return a templated message for FullPeriodCap" in {
-      instance.calculationFor(FullPeriodCap(100.00)) mustBe "100.00"
+      instance.calculationFor(FullPeriodCap(100.00), EightyPercent, Month.NOVEMBER) mustBe "100.00"
     }
 
     "return a templated message for FullPeriodCapWithPartTime" in {
-      instance.calculationFor(FullPeriodCapWithPartTime(100.00, 200.00, 20.00, 10.00)) mustBe "200.00|20.00|10.00|100.00"
+      instance
+        .calculationFor(FullPeriodCapWithPartTime(100.00, 200.00, 20.00, 10.00), EightyPercent, Month.NOVEMBER) mustBe "200.00|20.00|10.00|100.00"
     }
 
     "return a templated message for PeriodSpansMonthCap" in {
       val cap = PeriodSpansMonthCap(2621.15, 17, 3, 80.65, 15, 4, 83.34)
 
-      instance.calculationFor(cap) mustBe "17|March|80.65|15|April|83.34|2621.15"
+      instance.calculationFor(cap, EightyPercent, Month.NOVEMBER) mustBe "17|March|80.65|15|April|83.34|2621.15"
     }
 
     "return a templated message for PeriodSpansMonthCapWithPartTime" in {
       val cap = PeriodSpansMonthCapWithPartTime(2621.15, 17, 3, 80.65, 15, 4, 83.34, 0.00, 0.00, 0.00)
 
-      instance.calculationFor(cap) mustBe "17|March|80.65|15|April|83.34|0.00|0.00|2621.15"
+      instance.calculationFor(cap, EightyPercent, Month.NOVEMBER) mustBe "17|March|80.65|15|April|83.34|0.00|0.00|2621.15"
     }
 
     "round the values for PeriodSpansMonthCap" in {
       val cap = PeriodSpansMonthCap(2621.150, 17, 3, 80.650, 15, 4, 83.340)
 
-      instance.calculationFor(cap) mustBe "17|March|80.65|15|April|83.34|2621.15"
+      instance.calculationFor(cap, EightyPercent, Month.NOVEMBER) mustBe "17|March|80.65|15|April|83.34|2621.15"
     }
 
     "return a templated message for PartialPeriodCap" in {
       val cap = PartialPeriodCap(1774.30, 22, 3, 80.65)
 
-      instance.calculationFor(cap) mustBe "22|March|80.65|1774.30"
+      instance.calculationFor(cap, EightyPercent, Month.NOVEMBER) mustBe "22|March|80.65|1774.30"
     }
 
     "return a templated message for PartialPeriodCapWithPartTime" in {
       val cap = PartialPeriodCapWithPartTime(1774.30, 22, 3, 80.65, 0.00, 0.00, 0.00)
 
-      instance.calculationFor(cap) mustBe "22|March|80.65|0.00|0.00|1774.30"
+      instance.calculationFor(cap, EightyPercent, Month.NOVEMBER) mustBe "22|March|80.65|0.00|0.00|1774.30"
     }
 
     "round the values for PartialPeriodCap" in {
       val cap = PartialPeriodCap(1774.3, 22, 3, 80.650)
 
-      instance.calculationFor(cap) mustBe "22|March|80.65|1774.30"
+      instance.calculationFor(cap, EightyPercent, Month.NOVEMBER) mustBe "22|March|80.65|1774.30"
     }
 
+    "return the correct values for 70% rate" in {
+      val cap = PartialPeriodCap(1774.3, 22, 3, 80.650)
+
+      instance.calculationFor(cap, SeventyPercent, Month.JULY) mustBe "22|March|70.57|1552.51"
+    }
+
+    "return the correct values for 60% rate" in {
+      val cap = PartialPeriodCap(1774.3, 22, 3, 80.650)
+
+      instance.calculationFor(cap, SixtyPercent, Month.AUGUST) mustBe "22|March|60.49|1330.73"
+    }
   }
 
 }

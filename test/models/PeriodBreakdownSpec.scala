@@ -53,7 +53,7 @@ class PeriodBreakdownSpec extends SpecBaseControllerSpecs with MustMatchers with
 
       val breakdown = PhaseTwoFurloughBreakdown(grant, payment, furloughCap)
 
-      breakdown.calculatedFurlough mustBe "1069.86"
+      breakdown.calculatedEighty mustBe "1069.86"
     }
   }
 

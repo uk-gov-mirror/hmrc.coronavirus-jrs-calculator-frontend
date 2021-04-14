@@ -109,12 +109,25 @@ sealed trait PhaseTwoPeriodBreakdown {
 
 final case class PhaseTwoFurloughBreakdown(grant: Amount, paymentWithPeriod: PaymentWithPhaseTwoPeriod, furloughCap: FurloughCap)
     extends PhaseTwoPeriodBreakdown {
-  def isCapped: Boolean          = (paymentWithPeriod.referencePay.value * 0.8) > furloughCap.value
-  def calculatedFurlough: String = Amount(paymentWithPeriod.referencePay.value * 0.8).halfUp.value.formatted("%.2f")
-  def calculatedSeventy: String  = Amount(paymentWithPeriod.referencePay.value * 0.7).halfUp.value.formatted("%.2f")
-  def calculatedSixty: String    = Amount(paymentWithPeriod.referencePay.value * 0.6).halfUp.value.formatted("%.2f")
-  def seventy                    = Amount((grant.value / 80) * 70).halfUp.value
-  def sixty                      = Amount((grant.value / 80) * 60).halfUp.value
+  def isCapped: Boolean         = (paymentWithPeriod.referencePay.value * 0.8) > furloughCap.value
+  def calculatedEighty: String  = Amount(paymentWithPeriod.referencePay.value * 0.8).halfUp.value.formatted("%.2f")
+  def calculatedSeventy: String = Amount(paymentWithPeriod.referencePay.value * 0.7).halfUp.value.formatted("%.2f")
+  def calculatedSixty: String   = Amount(paymentWithPeriod.referencePay.value * 0.6).halfUp.value.formatted("%.2f")
+
+  def seventy = Amount((grant.value / 80) * 70).halfUp.value
+  def sixty   = Amount((grant.value / 80) * 60).halfUp.value
+
+  def grantAmount(furloughGrantRate: FurloughGrantRate): BigDecimal = furloughGrantRate match {
+    case SixtyPercent   => sixty
+    case SeventyPercent => seventy
+    case EightyPercent  => grant.value
+  }
+
+  def calculatedFurlough(furloughGrantRate: FurloughGrantRate): String = furloughGrantRate match {
+    case SixtyPercent   => calculatedSixty
+    case SeventyPercent => calculatedSeventy
+    case EightyPercent  => calculatedEighty
+  }
 }
 
 final case class PhaseTwoNicBreakdown(grant: Amount,

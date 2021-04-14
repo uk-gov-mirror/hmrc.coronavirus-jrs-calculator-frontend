@@ -202,7 +202,8 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
         cvb = breakdown,
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
         version = calculatorVersionConf,
-        isNewStarterType5 = false
+        isNewStarterType5 = false,
+        EightyPercent
       )(dataRequest, messages, appConf).toString
 
       status(result) mustEqual OK
@@ -260,10 +261,12 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       val result: Future[Result] = controller.onPageLoad()(request)
 
       val actual: String = contentAsString(result)
-      val expected: String = seventyPercentView(
+      val expected: String = extensionView(
         cvb = breakdown,
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
-        version = calculatorVersionConf
+        version = calculatorVersionConf,
+        isNewStarterType5 = false,
+        SeventyPercent
       )(dataRequest, messages, appConf).toString
 
       status(result) mustEqual OK
@@ -320,10 +323,12 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       val result: Future[Result] = controller.onPageLoad()(request)
 
       val actual: String = contentAsString(result)
-      val expected: String = sixtyPercentView(
+      val expected: String = extensionView(
         cvb = breakdown,
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
-        version = calculatorVersionConf
+        version = calculatorVersionConf,
+        isNewStarterType5 = false,
+        SixtyPercent
       )(dataRequest, messages, appConf).toString
 
       status(result) mustEqual OK
@@ -380,10 +385,12 @@ class ConfirmationControllerSpec extends SpecBaseControllerSpecs with CoreTestDa
       val result: Future[Result] = controller.onPageLoad()(request)
 
       val actual: String = contentAsString(result)
-      val expected: String = sixtyPercentView(
+      val expected: String = extensionView(
         cvb = breakdown,
         claimPeriod = period(start = claimStartDate, end = claimEndDate),
-        version = calculatorVersionConf
+        version = calculatorVersionConf,
+        isNewStarterType5 = false,
+        SixtyPercent
       )(dataRequest, messages, appConf).toString
 
       status(result) mustEqual OK

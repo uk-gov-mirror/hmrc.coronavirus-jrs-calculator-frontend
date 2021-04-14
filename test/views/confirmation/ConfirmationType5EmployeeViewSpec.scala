@@ -26,7 +26,7 @@ import models.PartTimeQuestion.PartTimeNo
 import models.PayMethod.Variable
 import models.PaymentFrequency.Monthly
 import models.requests.DataRequest
-import models.{EmployeeStarted, Period, UserAnswers}
+import models.{EightyPercent, EmployeeStarted, Period, UserAnswers}
 import org.jsoup.nodes.Document
 import play.twirl.api.HtmlFormat
 import utils.LocalDateHelpers.apr6th2020
@@ -106,7 +106,11 @@ class ConfirmationType5EmployeeViewSpec
       }
 
       def applyView(): HtmlFormat.Appendable =
-        extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = true)
+        extConfirmationView(cvb = noNicAndPensionBreakdown,
+                            claimPeriod = novClaimPeriod,
+                            version = "2",
+                            isNewStarterType5 = true,
+                            EightyPercent)
 
       implicit val doc: Document = asDocument(applyView())
 
@@ -127,7 +131,11 @@ class ConfirmationType5EmployeeViewSpec
       }
 
       def applyView(): HtmlFormat.Appendable =
-        extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = novClaimPeriod, version = "2", isNewStarterType5 = true)
+        extConfirmationView(cvb = noNicAndPensionBreakdown,
+                            claimPeriod = novClaimPeriod,
+                            version = "2",
+                            isNewStarterType5 = true,
+                            EightyPercent)
 
       implicit val doc: Document = asDocument(applyView())
 
@@ -148,7 +156,11 @@ class ConfirmationType5EmployeeViewSpec
       }
 
       def applyView(): HtmlFormat.Appendable =
-        extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = mayClaimPeriod, version = "2", isNewStarterType5 = true)
+        extConfirmationView(cvb = noNicAndPensionBreakdown,
+                            claimPeriod = mayClaimPeriod,
+                            version = "2",
+                            isNewStarterType5 = true,
+                            EightyPercent)
 
       implicit val doc: Document = asDocument(applyView())
 
@@ -169,7 +181,11 @@ class ConfirmationType5EmployeeViewSpec
       }
 
       def applyView(): HtmlFormat.Appendable =
-        extConfirmationView(cvb = noNicAndPensionBreakdown, claimPeriod = mayClaimPeriod, version = "2", isNewStarterType5 = true)
+        extConfirmationView(cvb = noNicAndPensionBreakdown,
+                            claimPeriod = mayClaimPeriod,
+                            version = "2",
+                            isNewStarterType5 = true,
+                            EightyPercent)
 
       implicit val doc: Document = asDocument(applyView())
       doc.toString.contains(statLeaveOnly(None, dateToString(LocalDate.parse("2021-05-01")))) mustBe true

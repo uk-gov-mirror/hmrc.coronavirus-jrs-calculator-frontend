@@ -736,7 +736,7 @@ phaseTwoDetailedBreakdown.sixtyPercent.p1.average = Rhoesoch wybod i ni fod y cy
 # Variable Pay, Employee Type 5 - Eligible for CJRS Extension claims only - Messages for Post-1st of November 2020
 # ----------------------------------------------------------
 
-phaseTwoDetailedBreakdown.no.nic.p1.extension = Gwnaethoch roi gwybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro ac nad oedd ar eich cyflogres cyn 19 Mawrth 2020. Rydym wedi cyfrifo’i enillion dyddiol cyfartalog drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2020 (neu’r dyddiad y dechreuodd ei gyflogaeth, p’un bynnag sydd hwyraf) a’r diwrnod cyn iddo gael ei roi ar ffyrlo am y tro cyntaf ar neu ar ôl 1 Tachwedd 2020. Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo a’r oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn cyfateb i 80% o hyn.
+phaseTwoDetailedBreakdown.no.nic.p1.extension = Gwnaethoch roi gwybod i ni fod eich cyflogai yn cael cyflog amrywiol bob tro ac nad oedd ar eich cyflogres cyn 19 Mawrth 2020. Rydym wedi cyfrifo’i enillion dyddiol cyfartalog drwy rannu cyfanswm ei gyflog â nifer y diwrnodau calendr rhwng 6 Ebrill 2020 (neu’r dyddiad y dechreuodd ei gyflogaeth, p’un bynnag sydd hwyraf) a’r diwrnod cyn iddo gael ei roi ar ffyrlo am y tro cyntaf ar neu ar ôl 1 Tachwedd 2020. Yna, rydym wedi lluosi hynny â nifer y diwrnodau ffyrlo a’r oriau ffyrlo ym mhob cyfnod cyflog. Mae’r grant ffyrlo yn cyfateb i {2}% o hyn.
 
 # ----------------------------------------------------------
 
@@ -815,7 +815,7 @@ phaseTwoReferencePayBreakdown.cylb.higherOf.result = Cyfanswm cyflog yn seiliedi
 phaseTwoFurloughBreakdown.h4 = Grant ffyrlo
 phaseTwoFurloughBreakdown.l1 = Cymerwch £{0} (cyflog yn seiliedig ar ddiwrnodau ffyrlo).
 phaseTwoFurloughBreakdown.l1.partTime = Cymerwch £{0} (cyflog yn seiliedig ar yr oriau a weithiwyd yn ystod y cyfnod cyflog hwn).
-phaseTwoFurloughBreakdown.l2 = Lluoswch â 80%.
+phaseTwoFurloughBreakdown.l2 = Lluoswch â {0}%.
 phaseTwoFurloughBreakdown.seventyPercent.l2 = Lluoswch â 70% (cyfradd mis {0}).
 phaseTwoFurloughBreakdown.sixtyPercent.l2 = Lluoswch â 60% (cyfradd mis {0}).
 phaseTwoFurloughBreakdown.total = Cyfanswm y grant ffyrlo ar gyfer y cyfnod cyflog = £{0}

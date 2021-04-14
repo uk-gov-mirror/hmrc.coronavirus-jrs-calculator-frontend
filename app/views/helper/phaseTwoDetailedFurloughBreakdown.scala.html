@@ -15,6 +15,7 @@
  *@
 
 @import views.helper.FurloughCapHelper
+@import java.time.Month
 
 @this(
     h4: components.h4,
@@ -24,7 +25,13 @@
     appConfig: config.FrontendAppConfig
 )
 
-@(breakdown: PhaseTwoFurloughBreakdown, period: Periods, isNewStarterType5:Boolean)(implicit messages: Messages)
+@(
+        breakdown: PhaseTwoFurloughBreakdown,
+        period: Periods,
+        isNewStarterType5:Boolean,
+        month: Month,
+        furloughRate: FurloughGrantRate
+)(implicit messages: Messages)
 
     @referencePayBreakdown(breakdown.paymentWithPeriod, period, isNewStarterType5)
 
@@ -36,15 +43,15 @@
         } else {
             <li>@messages("phaseTwoFurloughBreakdown.l1", breakdown.paymentWithPeriod.referencePay.value.formatted("%.2f"))</li>
         }
-        <li>@messages("phaseTwoFurloughBreakdown.l2")</li>
+        <li>@messages("phaseTwoFurloughBreakdown.l2", furloughRate.value)</li>
     </ol>
 
     @if(breakdown.isCapped) {
-        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p1", breakdown.calculatedFurlough)))
-        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p2", helper.calculationFor(breakdown.furloughCap))))
-        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p3", helper.calculationFor(breakdown.furloughCap))))
+        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p1", breakdown.calculatedFurlough(furloughRate))))
+        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p2", helper.calculationFor(breakdown.furloughCap, furloughRate, month))))
+        @p(Html(messages("phaseTwoFurloughBreakdown.furloughCap.p3", helper.calculationFor(breakdown.furloughCap, furloughRate, month))))
     }
 
     <div class="govuk-inset-text govuk-!-font-size-24" id="total-furlough-grant">
-        @messages("phaseTwoFurloughBreakdown.total", breakdown.grant.value.formatted("%.2f"))
+        @messages("phaseTwoFurloughBreakdown.total", breakdown.grantAmount(furloughRate).formatted("%.2f"))
     </div>
