@@ -51,7 +51,7 @@ class ConfirmationHeadingSpec extends ViewBehaviours {
 
     "render the supplied 70% heading when passed a custom percentage of 70%" must {
 
-      val html         = headingHelper(claimPeriod, claimAmount, 70)
+      val html         = headingHelper(claimPeriod, claimAmount, SeventyPercent)
       implicit val doc = asDocument(dummyView(html))
 
       behave like pageWithExpectedMessages(

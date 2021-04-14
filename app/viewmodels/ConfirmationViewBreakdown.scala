@@ -256,9 +256,9 @@ case class ConfirmationViewBreakdownWithoutNicAndPension(furlough: PhaseTwoFurlo
       .getOrElse(Seq())
   }
 
-  def detailedBreakdownMessageKeysOct()(implicit messages: Messages,
-                                        dataRequest: DataRequest[_],
-                                        appConfig: FrontendAppConfig): Seq[String] = {
+  def detailedBreakdownMessageKeysSixtyPercent()(implicit messages: Messages,
+                                                 dataRequest: DataRequest[_],
+                                                 appConfig: FrontendAppConfig): Seq[String] = {
     val helper = new BeenOnStatutoryLeaveHelper()
     furlough.periodBreakdowns.headOption
       .map {
