@@ -33,7 +33,7 @@ object JRSExtensionConfirmationMessages extends ValueFormatter {
 
   object AdditionalPaymentBlock {
     def p1(topup: BigDecimal) =
-      s"You must pay this employee an additional £$topup to be eligible for this grant. This is because employees must be paid at least 80% of their wages."
+      s"You must pay this employee an additional ${currencyFormatter(topup)} to be eligible for this grant. This is because employees must be paid at least 80% of their wages."
     val p2 =
       "To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to."
     val stillPayNICandPension =
