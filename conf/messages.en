@@ -316,9 +316,7 @@ confirmation.nextSteps.li.4.2 = Job Retention Scheme online claim service (opens
 confirmation.startAgain = Start another calculation
 confirmation.webchat = Webchat help (opens in a new tab).
 
-confirmation.additionalPayment.inset.p1.1 = You must pay this employee
-confirmation.additionalPayment.inset.p1.2 = in addition to the furlough grant of £{0}. This adds up to 80% of their usual wage (£{1}).
-confirmation.additionalPayment.inset.p2 = To be eligible for the grant you must pay employees at least 80% of their wages for the time they are furloughed. You can choose to pay more than this but do not have to.
+confirmation.additionalPayment.inset.p1 = You must pay this employee an additional {0} to be eligible for this grant. This is because employees must be paid at least 80% of their wages.
 confirmation.additionalPayment.eligibility = To be eligible for the grant you must pay furloughed employees 80% of their wages for the time they are furloughed (up to a cap of £2,500 per month). The amount you must pay this employee in addition to the grant is
 
 confirmation.no.nic.pension.insert.t1 = You cannot claim for employer National Insurance and pension contributions, but the employer must still pay these

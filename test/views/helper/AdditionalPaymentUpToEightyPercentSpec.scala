@@ -72,9 +72,8 @@ class AdditionalPaymentUpToEightyPercentSpec extends ViewBehaviours {
 
       behave like pageWithExpectedMessages(
         Seq(
-          Selectors.p(1) -> AdditionalPaymentBlock.p1(calcResult.seventyDiff, calcResult.seventy),
-          Selectors.p(2) -> AdditionalPaymentBlock.p2,
-          Selectors.p(3) -> AdditionalPaymentBlock.stillPayNICandPension
+          Selectors.p(1) -> AdditionalPaymentBlock.p1(calcResult.diffAtRate(SeventyPercent)),
+          Selectors.p(2) -> AdditionalPaymentBlock.stillPayNICandPension
         ))
     }
 
@@ -85,9 +84,8 @@ class AdditionalPaymentUpToEightyPercentSpec extends ViewBehaviours {
 
       behave like pageWithExpectedMessages(
         Seq(
-          Selectors.p(1) -> AdditionalPaymentBlock.p1(calcResult.sixtyDiff, calcResult.sixty),
-          Selectors.p(2) -> AdditionalPaymentBlock.p2,
-          Selectors.p(3) -> AdditionalPaymentBlock.stillPayNICandPension
+          Selectors.p(1) -> AdditionalPaymentBlock.p1(calcResult.diffAtRate(SixtyPercent)),
+          Selectors.p(2) -> AdditionalPaymentBlock.stillPayNICandPension
         ))
     }
   }

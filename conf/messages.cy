@@ -338,8 +338,7 @@ confirmation.no.nic.pension.nextSteps.li.4.2 = Cynllun Cadw Swyddi yn sgil Coron
 confirmation.no.nic.pension.breakdown.summary = Dadansoddiad o gyfrifiadau
 confirmation.no.nic.pension.disclaimer = Mae canlyniadau’r cyfrifiad yn dibynnu ar gywirdeb yr wybodaeth a nodwyd gennych, yr ydych yn gyfrifol amdani. Ni allwch hawlio am fwy o arian nag yr ydych yn mynd i’w dalu allan o dan y cynllun.
 
-confirmation.additionalPayment.inset.p1.1 = Mae’n rhaid i chi dalu
-confirmation.additionalPayment.inset.p1.2 = yn ychwanegol at y grant ffyrlo o £{0}. Mae hyn yn cynrychioli 80% o’i gyflog arferol (£{1}).
+confirmation.additionalPayment.inset.p1 = You must pay this employee an additional £{0} to be eligible for this grant. This is because employees must be paid at least 80% of their wages.
 confirmation.additionalPayment.inset.p2 = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu o leiaf 80% o’u cyflog arferol i’ch cyflogeion am y cyfnod y maent ar ffyrlo. Gallwch ddewis talu mwy na hyn, ond does dim rhaid i chi wneud hynny.
 confirmation.additionalPayment.eligibility = Er mwyn bod yn gymwys ar gyfer y grant, mae’n rhaid i chi dalu 80% o gyflog cyflogeion sydd ar ffyrlo am y cyfnod y maent ar ffyrlo (hyd at uchafswm o £2,500 y mis). Y swm y mae’n rhaid i chi ei dalu i’r cyflogai hwn yn ogystal â’r grant yw
 

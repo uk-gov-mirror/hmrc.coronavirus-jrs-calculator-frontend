@@ -32,13 +32,7 @@
     } else {
 
         @p {
-            @messages(s"confirmation.additionalPayment.inset.p1.1")
-            <span class="govuk-!-font-weight-bold">£@calculation.diffAtRate(percentage).formatted("%.2f")</span>
-            @messages(s"confirmation.additionalPayment.inset.p1.2", calculation.atRate(percentage).formatted("%.2f"), calculation.total.formatted("%.2f"))
-        }
-
-        @p {
-            @messages(s"confirmation.additionalPayment.inset.p2")
+            @messages(s"confirmation.additionalPayment.inset.p1", s"£${calculation.diffAtRate(percentage).formatted("%.2f")}")
         }
 
         @p {

@@ -21,6 +21,7 @@ import java.time.Month._
 
 sealed trait FurloughGrantRate {
   val value: Int
+  def asPercentage: BigDecimal = BigDecimal(value) / 100
 }
 case object SixtyPercent   extends FurloughGrantRate { override val value: Int = 60 }
 case object SeventyPercent extends FurloughGrantRate { override val value: Int = 70 }

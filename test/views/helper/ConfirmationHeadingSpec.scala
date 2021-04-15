@@ -79,7 +79,7 @@ class ConfirmationHeadingSpec extends ViewBehaviours {
           Selectors.h1   -> heading,
           Selectors.p(1) -> ConfirmationBlock.p1(70),
           Selectors.p(2) -> ConfirmationBlock.p2(claimPeriod),
-          Selectors.p(3) -> ConfirmationBlock.claimAmount(calcResult.seventy)
+          Selectors.p(3) -> ConfirmationBlock.claimAmount(calcResult.atRate(SeventyPercent))
         ))
     }
   }
